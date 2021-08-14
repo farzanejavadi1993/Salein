@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="#fff"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Classes.ShowDetailActivity">
+
+    <RelativeLayout
+
+        android:id="@+id/land"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginLeft="25dp"
+
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/show_detail_shape"
+                    android:orientation="vertical">
+
+                    <TextView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="@dimen/margin10"
+                        android:layout_marginRight="15dp"
+                        android:gravity="right"
+                        android:text="@string/show_detail_title_description"
+                        android:textColor="#6C6A6A"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:id="@+id/tv_description_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+
+                        android:textColor="#6C6A6A"
+                        android:textSize="13sp" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:gravity="right"
+                        android:text="@string/launcher_order_customer_title"
+                        android:textColor="#6C6A6A"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:id="@+id/order_customer_comment_img"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_edit_blue" />
+
+                        <TextView
+                            android:gravity="right"
+                            android:id="@+id/tv_description_user"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="15dp"
+                            android:layout_toLeftOf="@+id/order_customer_comment_img"
+
+                            android:textColor="#6C6A6A"
+                            android:textSize="13sp" />
+                    </RelativeLayout>
+
+
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:layout_marginRight="25dp"
+                app:siBorderColor="@color/black"
+
+                app:siBorderWidth="1dp"
+                app:siRadius="@dimen/margin10"
+                android:src="@drawable/application_logo1"
+                android:layout_weight="0.6"
+                android:id="@+id/iv_product"
+                android:layout_marginBottom="35dp"
+                android:layout_marginTop="35dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+
+
+
+                />
+
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/card_detail_invoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/v_delete_order"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="@dimen/margin8"
+            android:gravity="center"
+            android:src="@drawable/ic_delete"
+            android:textColor="#474747"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_sum_pure_price_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="ج خالص" />
+
+        <TextView
+            android:id="@+id/tv_sum_price_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="ج مبلغ" />
+
+        <TextView
+            android:id="@+id/tv_discount_price_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="مبلغ تخفیف" />
+
+        <TextView
+            android:id="@+id/tv_discount_percent_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="درصد تخفیف" />
+
+        <TextView
+            android:id="@+id/tv_price_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="فی" />
+
+        <EditText
+            android:id="@+id/tv_amount_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:fontFamily="@font/iransans"
+            android:gravity="center"
+            android:inputType="number"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:hint="مقدار" />
+
+        <TextView
+            android:id="@+id/tv_name_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin4"
+            android:layout_weight="3"
+            android:gravity="right"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="نام کالا" />
+
+        <TextView
+            android:id="@+id/tv_row_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin8"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="ردیف" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:layout_marginBottom="@dimen/margin4"
+
+        android:id="@+id/rl_description_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <EditText
+            android:textStyle="bold"
+            android:fontFamily="@font/iransans"
+            android:id="@+id/tv_description_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+           android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:gravity="right"
+            android:hint="توضیحات"
+            android:textColor="#474747"
+            android:textSize="12sp"
+            tools:text="ردیف" />
+    </RelativeLayout>
+</LinearLayout>

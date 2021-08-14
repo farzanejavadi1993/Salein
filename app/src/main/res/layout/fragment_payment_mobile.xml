@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@color/white">
+
+
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin8"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/margin4"
+                android:rotationY="180"
+                android:src="@drawable/ic_back"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/confirm_pay"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                tools:ignore="RelativeOverlap" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin8"
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="14dp"
+            android:id="@+id/rl_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            >
+
+            <TextView
+                android:textStyle="bold"
+                android:text="@string/address"
+                android:textSize="14sp"
+                android:textColor="@color/medium_color"
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLocation"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_below="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/iransans"
+                android:textColor="#fff"
+                android:textSize="13sp"
+                android:text="@string/title_address"
+                android:background="@drawable/order_list_date_bottom"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:backgroundTint="@color/white"
+                android:id="@+id/cardLocation"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin8"
+                app:cardCornerRadius="12dp"
+                android:layout_below="@+id/tv_address"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/purple_700"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                tools:targetApi="lollipop">
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin8"
+                        android:layout_marginEnd="8dp"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_location"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitleLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/title_address"
+                        android:textColor="@color/medium_color"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_location"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/detail_address"
+                        android:textColor="@color/medium_color"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_location"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_location"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitleLocation" />
+
+
+                    <ImageView
+                        android:padding="6dp"
+                        android:id="@+id/iv_ok_address"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_tik"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/margin8"
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="14dp"
+            android:id="@+id/layoutPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_address"
+            >
+
+            <TextView
+                android:textStyle="bold"
+                android:text="@string/type_pay"
+                android:textSize="@dimen/text_large_mobile_size"
+                android:textColor="@color/medium_color"
+                android:id="@+id/tv_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_below="@+id/tv_payment"
+                app:strokeColor="#eee"
+                android:id="@+id/layout_payment_app"
+                app:strokeWidth="1.5dp"
+                android:backgroundTint="@color/white"
+                android:layout_height="68dp"
+                app:cardCornerRadius="12dp"
+                android:layout_width="match_parent"
+                tools:targetApi="lollipop">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_App"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/appicon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+
+                        android:id="@+id/tvTitlePayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/online_pay"
+                        android:textColor="@color/medium_color"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_App"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_marginRight="@dimen/margin10"
+                        android:textColor="@color/medium_color"
+                        android:textSize="12sp"
+                        android:id="@+id/tvDescriptionPayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/online_pay_description"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_App"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_App"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitlePayment" />
+
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:padding="6dp"
+                        android:id="@+id/iv_ok_payment_app"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_tik"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_below="@+id/layout_payment_app"
+                app:strokeColor="#eee"
+                android:id="@+id/layout_payment_place"
+                app:strokeWidth="1.5dp"
+                android:backgroundTint="@color/white"
+                android:layout_height="68dp"
+                app:cardCornerRadius="12dp"
+                android:layout_width="match_parent"
+                tools:targetApi="lollipop">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:padding="@dimen/margin10"
+                        android:id="@+id/iv_payment_place"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_payment_place"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitlePaymentPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/pay_place"
+                        android:textColor="@color/medium_color"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_marginRight="@dimen/margin10"
+                        android:textColor="#474747"
+                        android:textSize="12sp"
+                        android:id="@+id/tvDescriptionPaymentPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/pay_place_description"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentPlace" />
+
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:padding="6dp"
+                        android:id="@+id/iv_ok_payment_place"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_tik"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_below="@+id/layout_payment_place"
+                app:strokeColor="#eee"
+                android:id="@+id/layout_cash_box"
+                app:strokeWidth="1.5dp"
+                android:backgroundTint="@color/white"
+                android:layout_height="68dp"
+                app:cardCornerRadius="12dp"
+                android:layout_width="match_parent"
+                tools:targetApi="lollipop">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:padding="@dimen/margin10"
+                        android:id="@+id/iv_cash_box"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_cashbox"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitleCashBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/pay_cash"
+                        android:textColor="@color/medium_color"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_cash_box"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_marginRight="@dimen/margin10"
+                        android:textColor="#474747"
+                        android:textSize="12sp"
+                        android:id="@+id/tvDescriptionCashBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/pay_place_description"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_cash_box"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_cash_box"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitleCashBox" />
+
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:padding="6dp"
+                        android:id="@+id/iv_ok_cash_box"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_tik"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
+
+        <RelativeLayout
+
+            android:id="@+id/layoutWallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutPayment"
+            android:layout_marginTop="@dimen/margin8"
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="14dp">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:padding="@dimen/margin8"
+                    android:id="@+id/iv_App_off"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/margin10"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/app_off"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvWallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin10"
+                    android:text="@string/use_credit_club"
+                    android:textColor="@color/medium_color"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_App_off"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_App_off"
+                    app:layout_constraintTop_toTopOf="@+id/iv_App_off" />
+
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:padding="6dp"
+                    android:id="@+id/switchCompact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/margin10"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </RelativeLayout>
+
+        <TextView
+
+            android:layout_alignParentRight="true"
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:textColor="#474747"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/layoutWallet"
+            />
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/layout_registerButton"
+            android:layout_alignParentBottom="true"
+            android:background="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+            <TextView
+
+                android:id="@+id/order_list_btn_register"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="@drawable/order_item_recycle_group__card_background"
+                android:gravity="center"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:text= "@string/register_order"
+                android:textColor="#fff"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

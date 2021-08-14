@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350sp"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="87sp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/saleinicon128"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="300sp"
+            android:layout_margin="10sp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/margin10"
+                android:background="@drawable/shape_background_dialog"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tv_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="12sp"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="12sp"
+                        android:gravity="center"
+
+                        android:textColor="#2f2f2f"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/layoutButtons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_message"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginTop="10sp"
+                        android:layout_marginRight="15sp"
+                        android:layout_marginBottom="10sp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="100sp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_margin="8sp"
+                            android:layout_marginBottom="30dp"
+                            android:backgroundTint="@color/white"
+                            android:text="@string/no"
+                            android:textColor="@color/invite_friend_color"
+                            app:cornerRadius="15dp"
+                            app:strokeColor="@color/invite_friend_color"
+                            app:strokeWidth="1dp"
+                            tools:ignore="UnusedAttribute" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_ok"
+                            android:layout_width="100sp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_margin="8sp"
+                            android:layout_marginBottom="30dp"
+                            android:backgroundTint="@color/white"
+                            android:text="@string/ok"
+                            android:textColor="@color/colorGreenLight"
+                            app:cornerRadius="15dp"
+                            app:strokeColor="@color/colorGreenLight"
+                            app:strokeWidth="1dp"
+                            tools:ignore="UnusedAttribute" />
+
+                    </RelativeLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_returned"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_below="@+id/tv_message"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="@drawable/background_return"
+                        android:fontFamily="@font/iransans"
+                        android:text="@string/returned"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        app:cornerRadius="@dimen/margin10" />
+                </RelativeLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+

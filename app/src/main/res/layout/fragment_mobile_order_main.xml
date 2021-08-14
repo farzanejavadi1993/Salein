@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/light_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/frame_mobile"
+        android:layout_above="@+id/bottom_navigation_view_linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.gauravk.bubblenavigation.BubbleNavigationLinearView
+        android:rotationY="180"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_navigation_view_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        tools:targetApi="lollipop">
+
+
+
+        <com.gauravk.bubblenavigation.BubbleToggleView
+            android:rotationY="180"
+            android:id="@+id/l_item_home"
+            android:layout_weight="0.3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:bt_active="true"
+            app:bt_colorActive="#609524"
+            app:bt_colorInactive="#656262"
+            app:bt_icon="@drawable/ic_home"
+            app:bt_title="خانه"
+            app:bt_padding="@dimen/margin10"
+            app:bt_titlePadding="@dimen/margin10" />
+
+        <com.gauravk.bubblenavigation.BubbleToggleView
+            android:rotationY="180"
+            android:id="@+id/l_item_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:bt_active="true"
+            android:layout_weight="0.3"
+            app:bt_colorActive="#9C27B0"
+            app:bt_colorInactive="#656262"
+            app:bt_icon="@drawable/ic_profile"
+
+            app:bt_title="پروفایل"
+            app:bt_padding="@dimen/margin10"
+            app:bt_titlePadding="@dimen/margin10" />
+
+        <com.gauravk.bubblenavigation.BubbleToggleView
+            android:rotationY="180"
+            android:id="@+id/l_item_buy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:bt_active="true"
+            app:bt_colorActive="@color/purple_700"
+            app:bt_colorInactive="#656262"
+            app:bt_icon="@drawable/ic_buy"
+            android:layout_weight="0.3"
+            app:bt_title="خریدها"
+            app:bt_padding="@dimen/margin10"
+            app:bt_titlePadding="@dimen/margin10" />
+
+
+    </com.gauravk.bubblenavigation.BubbleNavigationLinearView>
+
+
+</RelativeLayout>
+
+</layout>

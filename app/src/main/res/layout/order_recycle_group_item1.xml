@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_item_recycle_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/order_img_logo"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal">
+
+
+    <TextView
+        android:id="@+id/order_item_recycle_group_txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/black_l"
+        android:textSize="@dimen/text_medium_mobile_size" />
+</RelativeLayout>

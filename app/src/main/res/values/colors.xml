@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_background_color">#FFFFFF</color>
+    <color name="hint_text_color">#a9a9a9</color>
+    <color name="bottom_background_inActive_color">#CCCCCC</color>
+    <color name="light_background">#F6F6F6</color>
+
+
+    <color name="purple_200">#1e88e5</color>
+    <color name="purple_500">#1e88e5</color>
+    <color name="purple_700">#1e88e5</color>
+    <color name="teal_200">#fff</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="black_light">#2f2f2f</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="very_light">#AAEFE5E5</color>
+    <color name="cliclColor">#AA337533</color>
+    <color name="colorLight">#eee</color>
+
+
+    <color name="blue600">#1e88e5</color>
+    <color name="blue500">#2196f3</color>
+    <color name="blue400">#42a5f5</color>
+    <color name="blue300">#64b5f6</color>
+    <color name="edt_color">#9A9292</color>
+    <color name="favorite_color">#FFE716</color>
+    <color name="invite_friend_color">#FF0000</color>
+
+    <color name="colorGreenLight">#12E613</color>
+
+    <color name="view_color">#ccc</color>
+    <color name="view_color_launcher">#6A6767</color>
+    <color name="launcher_linear_order_header_color">#F3F2F2</color>
+    <color name="launcher_linear_order_textView_header_color">#2f2f2f</color>
+    <color name="launcher_linear_header_bottom_order_color">#8F8A8A</color>
+    <color name="linear_delete_background_color">#DF5F56</color>
+    <color name="linear_delivery_background_color">#C8B933</color>
+    <color name="linear_print_background_color">#259A8F</color>
+    <color name="very_light_pink">#c4c4c4</color>
+    <color name="medium_color">#474747</color>
+
+
+    <color name="linear_edit_background_color">#57ADF3</color>
+    <color name="black_l">#6C6C6C</color>
+    <color name="black_l_large">#878686</color>
+
+
+    <color name="red_table">#FA4D4D</color>
+    <color name="blue_table">#00BFFF</color>
+    <color name="green_table">#56B156</color>
+    <color name="white_light">#fafafa</color>
+    <color name="orange_light">#F39E83</color>
+    <color name="orange_dark">#A17061</color>
+
+
+</resources>

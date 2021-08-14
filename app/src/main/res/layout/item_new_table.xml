@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="7dp"
+    android:rotationY="180"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:backgroundTint="@color/white"
+    android:elevation="@dimen/launcher_recycle_table_card_elevention"
+    app:cardCornerRadius="15dp"
+    app:strokeColor="#ccc"
+    app:strokeWidth="1dp"
+    tools:ignore="UnusedAttribute">
+
+    <RelativeLayout
+        android:paddingBottom="10dp"
+        android:id="@+id/rl_table"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_number_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/margin10"
+
+            android:textColor="#474747"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_capacity_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_number_table"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="@dimen/margin10"
+
+            android:textColor="#474747"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_status_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_capacity_table"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="@dimen/margin10"
+
+            android:textColor="#474747"
+            android:textSize="12sp" />
+
+
+        <ImageView
+            android:id="@+id/iv_table"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/tv_status_table"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin8"
+            android:src="@drawable/ic_bys"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

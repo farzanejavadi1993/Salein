@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:layout_margin="7dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="93dp"
+    android:padding="@dimen/launcher_recycle_table_card_padding"
+    android:id="@+id/launcher_recycle_table_card"
+    android:elevation="@dimen/launcher_recycle_table_card_elevention"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_height="80dp"
+    android:background="@drawable/launcher_item_recycle_table_card_background">
+
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/launcher_recycle_table_txt_timer"
+            style="@style/launcher_recycle_table_TextView"
+            />
+        <TextView
+            android:id="@+id/launcher_recycle_table_txt_name"
+            style="@style/launcher_recycle_table_TextView"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_plus_black"
+            android:id="@+id/launcher_recycle_table_img_plus"
+            android:layout_margin="@dimen/launcher_recycle_table_img_margin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+
+
+
+</RelativeLayout>

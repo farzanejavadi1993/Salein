@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/order_recycle_item_product_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin4"
+
+    android:background="@drawable/order_item_recycle_main_food_card_background">
+
+    <com.github.siyamed.shapeimageview.RoundedImageView
+        android:id="@+id/order_recycle_item_product_img"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:siBorderColor="#ccc"
+        app:siRadius="10dp"
+
+
+        />
+
+    <TextView
+        android:id="@+id/order_recycle_item_product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+     android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/margin10"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/order_toolbar_layout_background"
+        android:gravity="right"
+       android:padding="5dp"
+        android:textColor="@color/black_light"
+
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/order_recycle_item_product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_recycle_item_product_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_user_background"
+       android:padding="5dp"
+        android:textColor="#fff"
+        android:textSize="11sp" />
+
+
+    <RelativeLayout
+        android:id="@+id/order_recycle_item_product_bottom_card"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/order_recycle_main_food_choose_layout"
+        android:clickable="true"
+        android:focusable="true">
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/card_edit"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_edit"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <EditText
+                android:id="@+id/edt_description_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_minus"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/order_item_recycle_min_background"
+            android:src="@drawable/ic_minus" />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:id="@+id/order_recycle_item_product_txt_amount"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+
+            android:background="@drawable/text_view_background"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <ImageView
+            android:id="@+id/iv_max"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+           android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/order_item_recycle_max_background"
+            android:src="@drawable/ic_plus" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

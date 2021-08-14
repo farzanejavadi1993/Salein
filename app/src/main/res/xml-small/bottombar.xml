@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+    <tab
+        id="@+id/tab_favorites"
+        icon="@drawable/ic_home"
+        title="Favorites"
+        barColorWhenSelected="#5D4037" />
+
+    <tab
+        id="@+id/tab_setting"
+        icon="@drawable/ic_profile"
+        title="Favorites"
+        barColorWhenSelected="#5D4037" />
+
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/ic_profile"
+        title="Favorites"
+        barColorWhenSelected="#5D4037" />
+    <!-- You can use @color resources too! -->
+</tabs>
