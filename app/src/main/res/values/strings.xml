@@ -10,6 +10,7 @@
     <string name="send_code_part2">ارسال شد </string>
     <string name="enter_code">کد تایید 5 رقمی را وارد کنید </string>
     <string name="phone_number">شماره تلفن همراه</string>
+    <string name="code_number">کد تایید</string>
     <string name="order_saleIn_application">اپلیکیشن سفارش گیر سالین</string>
     <string name="user_name_text">نام کاربری</string>
     <string name="pass_word_text">رمز عبور</string>
@@ -18,10 +19,30 @@
     <string name="register">ثبت نام</string>
     <string name="version">1.0.0.8</string>
     <string name="login">ورود</string>
-    <string name="get_data_from_server">در حال دریافت اطلاعات از سرور...</string>
+    <string name="get_data_from_server">در حال دریافت اطلاعات از سرور</string>
+    <string name="complete_information">تکمیل اطلاعات</string>
     <string name="no">خیر</string>
     <string name="ok">بله</string>
     <string name="returned">بازگشت</string>
+
+    <string name="firstname_lastname_customer">نام و نام خانواگی </string>
+    <string name="firstname_lastname_customer_description">نام و نام خانواگی تحویل گیرنده را وارد کنید</string>
+    <string name="phone_number_customer">شماره موبایل</string>
+    <string name="phone_number_customer_description">شماره موبایل تحویل گیرنده را وارد کنید</string>
+    <string name="address_customer">آدرس </string>
+    <string name="Plaque_customer">پلاک </string>
+    <string name="man">مرد </string>
+    <string name="woman">زن </string>
+    <string name="logout">خروج از حساب </string>
+    <string name="register_information">ثبت اطلاعات </string>
+    <string name="register_gps">ثبت موقعیت </string>
+    <string name="info_account">نمایش اطلاعات کاربری </string>
+    <string name="first_last_name">نام و نام خانوادگی </string>
+    <string name="phone_number_account">شماره تلفن همراه </string>
+    <string name="add_credit">افزایش اعتبار کیف پول </string>
+    <string name="my_comment">نظرات من</string>
+    <string name="my_order">پیگیری سفارشات
+    </string>
     <string name="search_product">جستجوی نام کالا</string>
     <string name="name_customer">نام مشترک</string>
     <string name="sum_price">جمع مبلغ</string>
@@ -40,9 +61,11 @@
     <string name="use_credit_club">استفاده از اعتبار باشگاه</string>
     <string name="register_order">ثبت سفارش</string>
     <string name="address">آدرس</string>
+    <string name="add_address"> افزودن آدرس</string>
     <string name="choose_address">انتخاب آدرس</string>
     <string name="title_address">عنوان آدرس</string>
     <string name="detail_address">جزییات آدرس</string>
+    <string name="type_order">نوع سفارش</string>
 
 
 
@@ -70,9 +93,7 @@
     <string name="show_detail_title_description">توضیحات</string>
     <string name="link_KitGroup">تولید شده توسط <a href="http://www.kitgroup.ir/">کیت گروپ</a></string>
 
-    <string name="show_detail_comment_customer_description1">
-        سس مایونز کم چرب استفاده کنید...
-    </string>
+    <string name="show_detail_comment_customer_description1">سس مایونز کم چرب استفاده کنید</string>
     <string name="show_detail_comment_customer_description2">
         کم نمک بود دفعه قبل
 
@@ -81,7 +102,7 @@
         لطفا نمک بیشتر باشه و از فلفل هندی استفاد کنید....
 
     </string>
-    <string name="show_detail_comment_customer_description3">لطفا مقدار پاستا کمتر باشه و گوشت بیشتری بزارید برام...</string>
+    <string name="show_detail_comment_customer_description3">لطفا مقدار پاستا کمتر باشه و گوشت بیشتری بزارید برام</string>
     <string name="show_detail_text_description">اگر بخواهید کباب ها در زمان کمتری پخته شوند کباب ها را برای طعم دار کردن به مدت زیادتری در یخچال قرار دهید.
 اگر از زغال برای پخت کباب استفاده میکنید سعی کنید که اندازه زغال ها در منقل یک دست باشد تا حرارت در همه جا یکسان به کباب شما برسد.</string>
     <string name="launcher_order_txt_error">برای مشاهده سفارش مشتری روی میز مورد نظر کلیک کنید </string>

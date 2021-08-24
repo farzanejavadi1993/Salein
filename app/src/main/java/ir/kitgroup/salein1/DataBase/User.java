@@ -10,5 +10,6 @@ public class User extends SugarRecord {
     public String numberPos;
     public boolean CheckUser;
 
-    public String ACCGID ;
+
+
 }

@@ -20,6 +20,7 @@ public interface API {
     @POST("SyncData")
     Call<String> PostData(@Query("userName") String userName, @Query("password") String password,
                           @Body() String jsonObject,
+                          @Query("virtualParam") String virtualParam,
                           @Query("numberPos") String numberPos);
 
     @GET("OrderTypeSync")
@@ -41,7 +42,8 @@ public interface API {
 
 
     @POST("CreateAccount")
-    Call<String> addAccount(@Query("userName") String userName, @Query("password") String password, @Body() String jsonObject);
+    Call<String> addAccount(@Query("userName") String userName, @Query("password") String password
+   , @Body() String jsonObject,@Query("virtualParam") String virtualParam);
 
     @GET("tableSync")
     Call<String> getTable(@Query("userName") String userName, @Query("password") String password);
@@ -55,4 +57,6 @@ public interface API {
     Call<String> getInquiryAccount(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task);
 
 
+    @GET("SendSms")
+    Call<String> getSmsLogin(@Query("userName") String userName, @Query("password") String passWord,@Query("message") String message,@Query("mobile") String mobile);
 }

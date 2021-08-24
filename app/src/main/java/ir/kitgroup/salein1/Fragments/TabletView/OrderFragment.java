@@ -1,4 +1,4 @@
-package ir.kitgroup.salein1.Fragments;
+package ir.kitgroup.salein1.Fragments.TabletView;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -91,7 +91,6 @@ import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.Setting;
 import ir.kitgroup.salein1.DataBase.Tables;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.Models.Description;
 import ir.kitgroup.salein1.Models.ModelAccount;
@@ -99,6 +98,7 @@ import ir.kitgroup.salein1.Models.ModelDesc;
 import ir.kitgroup.salein1.Models.ModelLog;
 
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -207,6 +207,8 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
     private RelativeLayout cardGroup;
+
+
 
 
     //endregion Variable
@@ -374,7 +376,7 @@ public class OrderFragment extends Fragment implements Filterable {
             invoiceDetailAdapter.editAmountItemListener((GUID, amountString, Price, discountPercent) -> {
                 if (!amountString.equals("")) {
                     if (maxSales.equals("1")) {
-                        getMaxSales(userName, passWord, GUID, Price, discountPercent, GUID, "2", amountString, true);
+                        getMaxSales(userName, passWord, GUID, Price, discountPercent, GUID, "2", amountString, 1);
                     } else {
                         ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
                         CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
@@ -394,10 +396,10 @@ public class OrderFragment extends Fragment implements Filterable {
                             invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
 
-                            ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                             CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                             if (resultPrd.size() > 0) {
-                                LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
                             /*if (productList.indexOf(resultPrd.get(0)) >= 0)
                                 productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*/
                                 if (productList.contains(resultPrd.get(0)))
@@ -428,10 +430,10 @@ public class OrderFragment extends Fragment implements Filterable {
                         invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
 
-                        ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                        ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                         CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                         if (resultPrd.size() > 0) {
-                            LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
                        /* if (productList.indexOf(resultPrd.get(0)) >= 0)
                             productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*/
                             if (productList.contains(resultPrd.get(0)))
@@ -585,7 +587,7 @@ public class OrderFragment extends Fragment implements Filterable {
         btnRegisterDescription.setOnClickListener(v -> {
             ArrayList<Product> resultpr = new ArrayList<>();
             if (MainActivity.screenInches < 7) {
-                resultpr.addAll(LauncherOrganizationFragment.AllProduct);
+                resultpr.addAll(Util.AllProduct);
             }
             ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
             CollectionUtils.filter(result, r -> r.INV_DET_UID.equals(GuidInv));
@@ -849,7 +851,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 for (int i = 0; i < resultPrdGrp2_.size(); i++) {
                     int finalI = i;
-                    ArrayList<Product> tempPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2_.get(finalI).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
                     if (tempPrd.size() > 0)
 
@@ -869,7 +871,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
                 //region Full ProductList Because First Item ProductLevel2 Is True
-                ArrayList<Product> resultPrd_ = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
                 CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
 
                 if (resultPrd_.size() == 0) {
@@ -967,7 +969,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
             //region Full ProductList Because This Item ProductLevel1 Is True
-            ArrayList<Product> rstProduct = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+            ArrayList<Product> rstProduct = new ArrayList<>(Util.AllProduct);
             CollectionUtils.filter(rstProduct, r -> r.getPRDLVLUID2().equals(GUID) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
             if (rstProduct.size() == 0) {
                 ArrayList<ProductGroupLevel1> rstProductGroupLevel1s = new ArrayList<>();
@@ -1007,7 +1009,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
         //region CONFIGURATION DATA PRODUCT
-        productAdapter = new ProductAdapter1(getActivity(), productList);
+        productAdapter = new ProductAdapter1(getActivity(), productList,maxSales);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3) {
@@ -1058,98 +1060,98 @@ public class OrderFragment extends Fragment implements Filterable {
 
         productRecyclerview.addOnScrollListener(scrollListener);
         productRecyclerview.setAdapter(productAdapter);
-        productAdapter.setOnClickListener((GUID, Price, discount, MinOrPlus) -> {
-
-            if (maxSales.equals("1")) {
-                getMaxSales(userName, passWord, GUID, Price, discount, GUID, "1", "", MinOrPlus);
-            } else {
-                ArrayList<Product> resultProduct = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
-                CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
-
-                if (resultProduct.size() > 0) {
-                    double amount;
-                    if (MinOrPlus)
-                        amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
-                    else {
-                        if (LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                            amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
-
-                        else
-                            return;
-
-                    }
-
-
-                    LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
-
-
-                    ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
-                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                    //edit
-                    if (result.size() > 0) {
-                        Double sumprice = (amount * Float.parseFloat(Price));
-                        Double discountPrice = sumprice * discount;
-                        Double totalPrice = sumprice - discountPrice;
-                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
-                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-
-                        if (amount == 0) {
-                            invoiceDetailAdapter.notifyItemRemoved(invoiceDetailList.indexOf(result.get(0)));
-
-
-                        } else {
-                            invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
-                        }
-
-
-                    } else {
-                        Invoicedetail invoicedetail = new Invoicedetail();
-                        invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                        invoicedetail.INV_UID = factorGuid;
-                        invoicedetail.INV_DET_QUANTITY = String.valueOf(amount);
-                        invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-                        invoicedetail.INV_DET_DISCOUNT = "0";
-                        Double sumprice = (amount * Float.parseFloat(Price));
-                        Double discountPrice = sumprice * discount;
-                        Double totalPrice = sumprice - discountPrice;
-                        invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                        invoicedetail.INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                        invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                        invoicedetail.INV_DET_TAX = "0";
-                        invoicedetail.INV_DET_STATUS = true;
-                        invoicedetail.PRD_UID = GUID;
-                        invoicedetail.INV_DET_TAX_VALUE = "0";
-                        invoicedetail.INV_DET_DESCRIBTION = "";
-                        invoiceDetailList.add(invoicedetail);
-                        invoiceDetailAdapter.notifyDataSetChanged();
-
-                    }
-
-
-                        if (invoiceDetailList.size() > 0) {
-                            invoiceDetailRecycle.post(() -> invoiceDetailRecycle.smoothScrollToPosition(invoiceDetailList.size() - 1));
-
-                        }
-
-
-                    productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
-                }
-            }
-
-                if (invoiceDetailList.size() > 0) {
-
-                    btnSeenInvoice.setVisibility(View.VISIBLE);
-                } else {
-
-                    btnSeenInvoice.setVisibility(View.GONE);
-                }
-
-
-
-
-        });
+//        productAdapter.setOnClickListener((GUID, Price, discount,s, MinOrPlus) -> {
+//
+//            if (maxSales.equals("1")) {
+//                getMaxSales(userName, passWord, GUID, Price, discount, GUID, "1", "", MinOrPlus);
+//            } else {
+//                ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
+//                CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
+//
+//                if (resultProduct.size() > 0) {
+//                    double amount = 0;
+//                    if (MinOrPlus==1)
+//                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+//                    else if (MinOrPlus==2){
+//                        if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
+//                            amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
+//
+//                        else
+//                            return;
+//
+//                    }
+//
+//
+//                    Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
+//
+//
+//                    ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
+//                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
+//                    //edit
+//                    if (result.size() > 0) {
+//                        Double sumprice = (amount * Float.parseFloat(Price));
+//                        Double discountPrice = sumprice * discount;
+//                        Double totalPrice = sumprice - discountPrice;
+//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
+//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
+//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
+//
+//                        if (amount == 0) {
+//                            invoiceDetailAdapter.notifyItemRemoved(invoiceDetailList.indexOf(result.get(0)));
+//
+//
+//                        } else {
+//                            invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
+//                        }
+//
+//
+//                    } else {
+//                        Invoicedetail invoicedetail = new Invoicedetail();
+//                        invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
+//                        invoicedetail.INV_UID = factorGuid;
+//                        invoicedetail.INV_DET_QUANTITY = String.valueOf(amount);
+//                        invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
+//                        invoicedetail.INV_DET_DISCOUNT = "0";
+//                        Double sumprice = (amount * Float.parseFloat(Price));
+//                        Double discountPrice = sumprice * discount;
+//                        Double totalPrice = sumprice - discountPrice;
+//                        invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+//                        invoicedetail.INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
+//                        invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
+//                        invoicedetail.INV_DET_TAX = "0";
+//                        invoicedetail.INV_DET_STATUS = true;
+//                        invoicedetail.PRD_UID = GUID;
+//                        invoicedetail.INV_DET_TAX_VALUE = "0";
+//                        invoicedetail.INV_DET_DESCRIBTION = "";
+//                        invoiceDetailList.add(invoicedetail);
+//                        invoiceDetailAdapter.notifyDataSetChanged();
+//
+//                    }
+//
+//
+//                        if (invoiceDetailList.size() > 0) {
+//                            invoiceDetailRecycle.post(() -> invoiceDetailRecycle.smoothScrollToPosition(invoiceDetailList.size() - 1));
+//
+//                        }
+//
+//
+//                    productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
+//                }
+//            }
+//
+//                if (invoiceDetailList.size() > 0) {
+//
+//                    btnSeenInvoice.setVisibility(View.VISIBLE);
+//                } else {
+//
+//                    btnSeenInvoice.setVisibility(View.GONE);
+//                }
+//
+//
+//
+//
+//        });
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
                 ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
@@ -1237,11 +1239,11 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
 
-        ArrayList<Product> prstResult = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+        ArrayList<Product> prstResult = new ArrayList<>(Util.AllProduct);
         CollectionUtils.filter(prstResult, p -> p.getAmount() > 0);
         if (prstResult.size() > 0) {
             for (int i = 0; i < prstResult.size(); i++) {
-                LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(prstResult.get(i))).AMOUNT = 0.0;
+                Util.AllProduct.get(Util.AllProduct.indexOf(prstResult.get(i))).AMOUNT = 0.0;
             }
         }
 
@@ -1448,6 +1450,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
             Call<String> call = App.api.PostData(userName, passWord,
                     gson.toJson(jsonObject, typeJsonObject),
+                    "",
                     numberPos);
 
             call.enqueue(new Callback<String>() {
@@ -1550,7 +1553,7 @@ public class OrderFragment extends Fragment implements Filterable {
                     if (resultPrdGrp2.size() > 0) {
 
                         ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
-                        ArrayList<Product> tempPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                        ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
 
 
                         for (int j = 0; j < resultPrdGrp2.size(); j++) {
@@ -1596,7 +1599,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 if (resultPrdGrp2.size() > 0) {
                     for (int i = 0; i < resultPrdGrp2.size(); i++) {
-                        ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                        ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                         int finalI = i;
 
                         CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(resultPrdGrp2.get(finalI).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
@@ -1618,7 +1621,7 @@ public class OrderFragment extends Fragment implements Filterable {
                     if (productLevel2List.size() > 0)
                         productLevel2List.get(0).Click = true;
                     productLevel2Adapter.notifyDataSetChanged();
-                    ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
                     //CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()));
 
@@ -1634,7 +1637,7 @@ public class OrderFragment extends Fragment implements Filterable {
                     }
 
 
-                    ArrayList<Product> resultPrdAc = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> resultPrdAc = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrdAc, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
                     allProductActive.clear();
                     allProductActive.addAll(resultPrdAc);
@@ -1685,11 +1688,11 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 //edit Order
                 else {
-                    ArrayList<Product> result = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(result, R -> R.getAmount() > 0);
 
                     if (result.size() > 0) {
-                        LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
+                        Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
                     }
 
 
@@ -1705,13 +1708,13 @@ public class OrderFragment extends Fragment implements Filterable {
                     invoiceDetailList.addAll(invoicedetails);
                     invoiceDetailAdapter.notifyDataSetChanged();
                     for (int i = 0; i < invoicedetails.size(); i++) {
-                        ArrayList<Product> resultProducts = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                        ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
                         int finalI = i;
                         //CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(orderDetails.get(finalI).MainGuid) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
                         CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
                         if (resultProducts.size() > 0) {
-                            Double amount = (LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProducts.get(0))).getAmount() + Double.parseDouble(invoicedetails.get(finalI).INV_DET_QUANTITY));
-                            LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
+                            Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + Double.parseDouble(invoicedetails.get(finalI).INV_DET_QUANTITY));
+                            Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
                             productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
 
                                 if (invoiceDetailList.size() > 0) {
@@ -1782,7 +1785,7 @@ public class OrderFragment extends Fragment implements Filterable {
     }
 
     private void getMaxSales(String userName, String pass, String id, String Price, Double
-            discount, String GUID, String TYPE, String s, boolean MinOrPlus) {
+            discount, String GUID, String TYPE, String s, int MinOrPlus) {
 
 
         try {
@@ -1820,17 +1823,17 @@ public class OrderFragment extends Fragment implements Filterable {
                                 customProgress.hideProgress();
                                 return;
                             }
-                            ArrayList<Product> resultProduct = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                            ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
                             CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
 
                             if (resultProduct.size() > 0) {
-                                double amount;
-                                if (MinOrPlus)
-                                    amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+                                double amount = 0;
+                                if (MinOrPlus==1)
+                                    amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
 
-                                else {
-                                    if (LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                                        amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
+                                else if (MinOrPlus==2){
+                                    if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
+                                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
 
                                     else
                                         return;
@@ -1844,7 +1847,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                                     return;
                                 }
-                                LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
+                                Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
                                 //productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
 
                                 ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
@@ -1919,11 +1922,11 @@ public class OrderFragment extends Fragment implements Filterable {
                                 invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
 
-                                ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                                ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                                 //  CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
                                 CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                                 if (resultPrd.size() > 0) {
-                                    LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 //                                    if (productList.indexOf(resultPrd.get(0)) >= 0)
 //                                        productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));
 
@@ -2055,7 +2058,7 @@ public class OrderFragment extends Fragment implements Filterable {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject));
+            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject),"");
             customProgress.showProgress(getContext(), "در حال ثبت مشتری در سرور...", false);
             call.enqueue(new Callback<String>() {
                 @Override
@@ -2293,5 +2296,6 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
     }
+
 
 }

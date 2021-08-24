@@ -84,7 +84,7 @@
             android:background="@drawable/order_item_recycle_min_background"
             android:src="@drawable/ic_minus" />
 
-        <TextView
+        <EditText
             android:layout_centerInParent="true"
             android:id="@+id/order_recycle_item_product_txt_amount"
             android:layout_width="30dp"

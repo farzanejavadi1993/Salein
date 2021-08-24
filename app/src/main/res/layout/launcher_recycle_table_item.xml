@@ -6,7 +6,7 @@
     android:layout_width="93dp"
     android:padding="@dimen/launcher_recycle_table_card_padding"
     android:id="@+id/launcher_recycle_table_card"
-    android:elevation="@dimen/launcher_recycle_table_card_elevention"
+    android:elevation="@dimen/launcher_recycle_table_card_elevation"
     android:layout_marginRight="2dp"
     android:layout_marginLeft="2dp"
     android:layout_height="80dp"

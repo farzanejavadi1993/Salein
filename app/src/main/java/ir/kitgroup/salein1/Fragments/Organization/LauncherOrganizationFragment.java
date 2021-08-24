@@ -69,9 +69,9 @@ import ir.kitgroup.salein1.DataBase.ProductGroupLevel2;
 import ir.kitgroup.salein1.DataBase.Setting;
 import ir.kitgroup.salein1.DataBase.Tables;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.InvoiceDetail;
+import ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail;
 import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
-import ir.kitgroup.salein1.Fragments.OrderFragment;
+import ir.kitgroup.salein1.Fragments.TabletView.OrderFragment;
 
 
 import ir.kitgroup.salein1.Models.ModelProduct;
@@ -79,6 +79,7 @@ import ir.kitgroup.salein1.Models.ModelSetting;
 import ir.kitgroup.salein1.Models.ModelTable;
 import ir.kitgroup.salein1.Models.ModelTypeOrder;
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentLauncherOrganizationBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,8 +91,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
     //region Parameter
 
-    private static String price = "";
-    public static ArrayList<Product> AllProduct = new ArrayList<>();
+
+
 
 
 
@@ -149,7 +150,8 @@ public class LauncherOrganizationFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = sharedPreferences.edit();
         firstSync = sharedPreferences.getBoolean("firstSync", false);
-        price= sharedPreferences.getString("priceProduct", "0");
+
+
 
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
@@ -420,7 +422,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        AllProduct.clear();
+        Util.AllProduct.clear();
 
 
         super.onDestroy();
@@ -552,9 +554,6 @@ public class LauncherOrganizationFragment extends Fragment {
         }
     }
 
-    public static String getPrice() {
-        return price;
-    }
 
 
     private void getProduct() {
@@ -597,7 +596,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                         List<ir.kitgroup.salein1.DataBase.Product> products = iDs.getProductList();
 
-                        AllProduct.clear();
+                       Util.AllProduct.clear();
                         for (int i = 0; i < products.size(); i++) {
                             Product product = new Product();
                             product.I = products.get(i).I;
@@ -614,7 +613,7 @@ public class LauncherOrganizationFragment extends Fragment {
                             product.PU5 = products.get(i).PU5;
                             product.PERC_DIS = products.get(i).PERC_DIS;
                             product.PID1 = products.get(i).PID1;
-                            AllProduct.add(product);
+                            Util.AllProduct.add(product);
                             if (!firstSync)
                                 product.save();
                             else
@@ -707,7 +706,7 @@ public class LauncherOrganizationFragment extends Fragment {
                         Setting.saveInTx(settingsList);
                         editor.putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE);
                         editor.apply();
-                        price = iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE;
+
                         getTypeOrder();
 
 

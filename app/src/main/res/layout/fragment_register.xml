@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/login_background_color"
+        android:clickable="true"
+        android:focusable="true">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:elevation="@dimen/login_toolbar_elevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="lollipop">
+
+            <ImageView
+                android:id="@+id/iv_back_fragment"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="22dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/icon_normal_padding_size"
+                android:rotationY="180"
+                android:src="@drawable/ic_fi_rr_angle_small_left"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:text="@string/complete_information"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                android:textStyle="bold"
+                tools:ignore="RelativeOverlap" />
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/cardInfoCustomer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="right"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
+            <TextView
+                android:id="@+id/tvNameCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:text="@string/firstname_lastname_customer_description"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_F_L_name_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:background="@drawable/background_edittext"
+                android:fontFamily="@font/iransans"
+                android:gravity="right"
+                android:inputType="text"
+                android:layoutDirection="rtl"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:textStyle="bold"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvNameCustomer"
+                tools:ignore="Autofill,LabelFor" />
+
+
+            <TextView
+                android:id="@+id/tvPhoneNumberCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:text="@string/phone_number_customer"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_number_phone_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:background="@drawable/background_edittext"
+                android:enabled="false"
+                android:fontFamily="@font/iransans"
+                android:gravity="right"
+                android:inputType="number"
+                android:layoutDirection="rtl"
+                android:maxLength="11"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:textStyle="bold"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumberCustomer"
+                tools:ignore="Autofill,LabelFor,TextFields" />
+
+
+            <TextView
+                android:id="@+id/tvAddressCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:text="@string/address_customer"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_address_customer"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin8"
+                android:textStyle="bold"
+                android:background="@drawable/background_edittext"
+                android:fontFamily="@font/iransans"
+                android:gravity="right"
+                android:inputType="text"
+                android:layoutDirection="rtl"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAddressCustomer"
+                tools:ignore="Autofill,LabelFor" />
+
+            <TextView
+                android:id="@+id/tvPlaqueCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:text="@string/Plaque_customer"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_plaque_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin8"
+
+                android:background="@drawable/background_edittext"
+                android:fontFamily="@font/iransans"
+                android:gravity="right"
+                android:inputType="number"
+                android:layoutDirection="rtl"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:textStyle="bold"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumberCustomer"
+                tools:ignore="Autofill,LabelFor" />
+
+            <RadioGroup
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioWoman"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="22dp"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="right"
+                    android:text="@string/woman"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+
+                <RadioButton
+
+                    android:id="@+id/radioMan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="22dp"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="right"
+                    android:text="@string/man"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/accSingleMapOnForm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_register_information"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_height_size"
+            android:layout_marginStart="@dimen/normal_left_right_margin"
+            android:layout_marginEnd="@dimen/normal_left_right_margin"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/bottom_background_inActive_color"
+            android:enabled="false"
+            android:fontFamily="@font/iransans"
+            android:text="@string/register_gps"
+            android:textColor="@color/white"
+            app:cornerRadius="@dimen/box_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="UnusedAttribute" />
+
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardInfoCustomer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

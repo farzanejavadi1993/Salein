@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ir.kitgroup.salein1.Fragments.OrderFragment;
-import ir.kitgroup.salein1.Fragments.MobileView.OrderFragmentMobile;
+import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
+import ir.kitgroup.salein1.Fragments.TabletView.OrderFragment;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.Models.Description;
 import ir.kitgroup.salein1.R;
@@ -83,7 +83,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
             if(MainActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = true;
             else
-                OrderFragmentMobile.descriptionList.get(holder.getAdapterPosition()).Click = true;
+                MainOrderMobileFragment.descriptionList.get(holder.getAdapterPosition()).Click = true;
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.white));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_reserve_card_background));
                 clickItem.onRowClick(list.get(position).DSC, true);
@@ -91,7 +91,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
                 if(MainActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
                 else
-                    OrderFragmentMobile.descriptionList.get(holder.getAdapterPosition()).Click = false;
+                    MainOrderMobileFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
 
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.black));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_card_background));

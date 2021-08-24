@@ -2,82 +2,292 @@
 <layout xmlns:tools="http://schemas.android.com/tools">
 
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="@color/light_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
 
-    <FrameLayout
-        android:id="@+id/frame_mobile"
-        android:layout_above="@+id/bottom_navigation_view_linear"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <com.gauravk.bubblenavigation.BubbleNavigationLinearView
-        android:rotationY="180"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_navigation_view_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="8dp"
-        android:layoutDirection="rtl"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        tools:targetApi="lollipop">
+        android:layout_height="match_parent"
+        android:clickable="true"
+
+        android:focusable="true">
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/market" />
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="@dimen/margin8"
+                    android:layout_marginRight="12dp"
+                    android:elevation="@dimen/margin4"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    tools:ignore="UnusedAttribute">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+
+                            android:id="@+id/layout_account"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginEnd="2dp"
+                            android:layout_weight="0.5"
+                            android:background="@drawable/background_edittext"
+                            android:padding="5dp">
 
 
+                            <ImageView
+                                android:id="@+id/btn_add_account"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_plus_black"
+                                tools:ignore="ContentDescription" />
 
-        <com.gauravk.bubblenavigation.BubbleToggleView
-            android:rotationY="180"
-            android:id="@+id/l_item_home"
-            android:layout_weight="0.3"
-            android:layout_width="0dp"
+
+                            <EditText
+                                android:id="@+id/name_customer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/margin8"
+                                android:layout_toRightOf="@+id/btn_add_account"
+                                android:background="@android:color/transparent"
+                                android:fontFamily="@font/iransans"
+                                android:gravity="right|center_vertical"
+                                android:hint="@string/name_customer"
+                                android:inputType="text"
+                                android:paddingStart="16dp"
+                                android:paddingLeft="@dimen/order_toolbar_user_button_left_right_margin"
+                                android:paddingTop="6dp"
+                                android:paddingEnd="16dp"
+                                android:paddingRight="@dimen/order_toolbar_user_button_left_right_margin"
+                                android:paddingBottom="6dp"
+                                android:textColor="@color/medium_color"
+                                android:textSize="@dimen/text_normal_mobile_size"
+                                tools:ignore="Autofill" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="2dp"
+
+                            android:layout_weight="0.5"
+                            android:background="@drawable/background_edittext">
+
+
+                            <ImageView
+                                android:id="@+id/iv_search"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/margin8"
+                                android:layout_marginRight="@dimen/margin8"
+                                android:src="@drawable/ic_search"
+                                tools:ignore="ContentDescription" />
+
+                            <EditText
+
+                                android:id="@+id/edt_search_product"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/iv_search"
+                                android:backgroundTint="@android:color/transparent"
+                                android:fontFamily="@font/iransans"
+                                android:gravity="right"
+                                android:hint="@string/search_product"
+                                android:inputType="text"
+                                android:textColor="@color/medium_color"
+                                android:textSize="12sp"
+                                tools:targetApi="lollipop" />
+
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/accountRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="@dimen/margin8"
+                    android:id="@+id/order_recyclerView_productLevel2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="9.5dp"
+                    android:layoutDirection="rtl" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recyclerView_productLevel1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="9.5dp" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recyclerView_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginTop="8dp"
+
+                    android:layoutDirection="rtl"
+
+                    />
+
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/order_list_btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/margin10"
+                android:backgroundTint="@color/purple_700"
+
+                app:cardCornerRadius="20dp">
+
+                <TextView
+                    android:id="@+id/order_list_tv_register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="@dimen/margin10"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/margin10"
+                    android:paddingRight="@dimen/margin10"
+                    android:text="@string/complete_order"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <TextView
+                android:id="@+id/order_txt_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/normal_left_right_margin"
+                android:gravity="center"
+                android:textColor="@color/black_l"
+                android:textSize="@dimen/text_normal_mobile_size"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <FrameLayout
+
+            android:id="@+id/frame_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation_view_linear" />
+
+        <com.gauravk.bubblenavigation.BubbleNavigationLinearView
+            android:id="@+id/bottom_navigation_view_linear"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:bt_active="true"
-            app:bt_colorActive="#609524"
-            app:bt_colorInactive="#656262"
-            app:bt_icon="@drawable/ic_home"
-            app:bt_title="خانه"
-            app:bt_padding="@dimen/margin10"
-            app:bt_titlePadding="@dimen/margin10" />
-
-        <com.gauravk.bubblenavigation.BubbleToggleView
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
+            android:padding="12dp"
             android:rotationY="180"
-            android:id="@+id/l_item_profile"
-            android:layout_width="0dp"
+            tools:targetApi="lollipop">
+
+
+            <com.gauravk.bubblenavigation.BubbleToggleView
+                android:id="@+id/l_item_home"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:rotationY="180"
+                app:bt_active="true"
+                app:bt_colorActive="#609524"
+                app:bt_colorInactive="#656262"
+                app:bt_icon="@drawable/ic_home"
+                app:bt_padding="@dimen/margin10"
+                app:bt_title="خانه"
+                app:bt_titlePadding="@dimen/margin10" />
+
+            <com.gauravk.bubblenavigation.BubbleToggleView
+                android:id="@+id/l_item_buy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:rotationY="180"
+                app:bt_active="true"
+                app:bt_colorActive="@color/purple_700"
+                app:bt_colorInactive="#656262"
+                app:bt_icon="@drawable/ic_buy"
+                app:bt_padding="@dimen/margin10"
+                app:bt_title="خریدها"
+                app:bt_titlePadding="@dimen/margin10" />
+
+            <com.gauravk.bubblenavigation.BubbleToggleView
+                android:id="@+id/l_item_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:rotationY="180"
+                app:bt_active="true"
+                app:bt_colorActive="#9C27B0"
+                app:bt_colorInactive="#656262"
+                app:bt_icon="@drawable/ic_profile"
+
+                app:bt_padding="@dimen/margin10"
+                app:bt_title="پروفایل"
+                app:bt_titlePadding="@dimen/margin10" />
+
+
+        </com.gauravk.bubblenavigation.BubbleNavigationLinearView>
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:bt_active="true"
-            android:layout_weight="0.3"
-            app:bt_colorActive="#9C27B0"
-            app:bt_colorInactive="#656262"
-            app:bt_icon="@drawable/ic_profile"
-
-            app:bt_title="پروفایل"
-            app:bt_padding="@dimen/margin10"
-            app:bt_titlePadding="@dimen/margin10" />
-
-        <com.gauravk.bubblenavigation.BubbleToggleView
-            android:rotationY="180"
-            android:id="@+id/l_item_buy"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:bt_active="true"
-            app:bt_colorActive="@color/purple_700"
-            app:bt_colorInactive="#656262"
-            app:bt_icon="@drawable/ic_buy"
-            android:layout_weight="0.3"
-            app:bt_title="خریدها"
-            app:bt_padding="@dimen/margin10"
-            app:bt_titlePadding="@dimen/margin10" />
-
-
-    </com.gauravk.bubblenavigation.BubbleNavigationLinearView>
-
-
-</RelativeLayout>
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </layout>

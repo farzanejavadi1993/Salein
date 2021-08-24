@@ -28,11 +28,13 @@ import ir.kitgroup.salein1.DataBase.Invoicedetail;
 import ir.kitgroup.salein1.DataBase.Product;
 
 import ir.kitgroup.salein1.Fragments.MobileView.InVoiceDetailMobileFragment;
+import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 
-import ir.kitgroup.salein1.Fragments.MobileView.OrderFragmentMobile;
+import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 
 
 public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdapter.viewHolder> {
@@ -41,6 +43,9 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
     private final String type;//1 seen      //2 edit
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
+
+
+    private final DecimalFormat df;
 
 
     public interface DecriptionItem {
@@ -68,6 +73,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
         this.orderDetailList = orderDetailList;
         this.type=type;
+        df = new DecimalFormat();
 
 
     }
@@ -88,10 +94,12 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         if (type.equals("1")){
             holder.imgDelete.setImageBitmap(null);
             holder.imgDescription.setImageBitmap(null);
+            holder.edtDescription.setEnabled(false);
+            holder.edtAmount.setEnabled(false);
         }
         holder.rst = new ArrayList<>();
 
-        holder.rst.addAll(LauncherOrganizationFragment.AllProduct);
+        holder.rst.addAll(Util.AllProduct);
         CollectionUtils.filter(holder.rst, r -> r.getPRDUID().equals(invoicedetail.PRD_UID));
 
         if (holder.rst.size() > 0) {
@@ -121,6 +129,17 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                     String s = LauncherOrganizationFragment.toEnglishNumber(charSequence.toString());
+                    s = s.contains("٫") ? s.replace("٫", ".") : s;
+
+                    if (!s.isEmpty()) {
+                        if (s.contains(".") &&
+                                s.indexOf(".") == s.length() - 1) {
+                            return;
+                        } else if (s.contains("٫") &&
+                                s.indexOf("٫") == s.length() - 1) {
+                            return;
+                        }
+                    }
                     double amount = 0.0;
                     if (!s.equals("")) {
                         amount = Double.parseDouble(s);
@@ -158,7 +177,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         if (invoicedetail.INV_DET_QUANTITY.equals("0")) {
             holder.edtAmount.setText("");
         } else {
-            holder.edtAmount.setText(format.format(Double.parseDouble(invoicedetail.INV_DET_QUANTITY)));
+            holder.edtAmount.setText(df.format(Double.parseDouble(invoicedetail.INV_DET_QUANTITY)));
         }
 
         holder.edtAmount.addTextChangedListener(holder.textWatcher);
@@ -173,14 +192,14 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
             CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             if (result.size() > 0) {
-                ArrayList<Product> resultPrd_ = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
 
                 CollectionUtils.filter(resultPrd_, r -> r.getPRDUID().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                 if (resultPrd_.size() > 0) {
-                    LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
+                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
 
-                        if (OrderFragmentMobile.productList.contains(resultPrd_.get(0))) {
-                            OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultPrd_.get(0)));
+                        if (MainOrderMobileFragment.productList.contains(resultPrd_.get(0))) {
+                            MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd_.get(0)));
                         }
 
 
@@ -191,15 +210,15 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
 
 
-                    ArrayList<Product> allResultpr = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> allResultpr = new ArrayList<>(Util.AllProduct);
 
                     CollectionUtils.filter(allResultpr, r -> r.I.equals(result.get(0).PRD_UID));
                     if (allResultpr.size() > 0) {
                         if (allResultpr.get(0).descItem != null) {
 
-                            LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(allResultpr.get(0))).descItem = "";
+                            Util.AllProduct.get(Util.AllProduct.indexOf(allResultpr.get(0))).descItem = "";
 
-                                OrderFragmentMobile.productAdapter.notifyDataSetChanged();
+                                MainOrderMobileFragment.productAdapter.notifyDataSetChanged();
                         }
 
 

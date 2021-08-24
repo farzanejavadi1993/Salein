@@ -3,6 +3,7 @@ package ir.kitgroup.salein1.Fragments.Client.LoginClient;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,55 +12,57 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
+
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.Client.Register.MapFragment;
+import ir.kitgroup.salein1.Fragments.Client.Register.RegisterFragment;
+
+import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein1.Models.ModelAccount;
 import ir.kitgroup.salein1.Models.ModelLog;
 import ir.kitgroup.salein1.R;
 import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentConfirmCodeBinding;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class ConfirmCodeFragment extends Fragment {
 
-
-    //region Parameter
-    private User user;
+    //region  Parameter
     private FragmentConfirmCodeBinding binding;
+    private User user;
     //endregion Parameter
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding= FragmentConfirmCodeBinding.inflate(getLayoutInflater());
-
-
+        binding = FragmentConfirmCodeBinding.inflate(getLayoutInflater());
 
 
         return binding.getRoot();
 
     }
-
-
 
 
     @SuppressLint("SetTextI18n")
@@ -68,30 +71,24 @@ public class ConfirmCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        Bundle bundle=getArguments();
+        Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
 
 
-        //region Create User
-        User.deleteAll(User.class);
-        user=new User();
-        user.userName="admin";
-        user.passWord="0123";
-        //endregion Create User
+        user = Select.from(User.class).first();
 
 
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
         binding.tvEnterCode.setText(R.string.enter_code);
 
 
-
         //region Utilize Animation
-        Util.playLottieAnimation("register.json",binding.animationView);
+        Util.playLottieAnimation("register.json", binding.animationView);
         //endregion Utilize Animation
 
 
-        binding.edtMobile.addTextChangedListener(new TextWatcher() {
+        binding.edtCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -107,8 +104,7 @@ public class ConfirmCodeFragment extends Fragment {
                 if (Util.isValidCode(s.toString())) {
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnLogin.setEnabled(true);
-                }
-                else {
+                } else {
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                     binding.btnLogin.setEnabled(false);
                 }
@@ -117,15 +113,10 @@ public class ConfirmCodeFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> getInquiryAccount(user.userName,user.passWord,mobile));
 
 
-
-
     }
 
 
-
-
-
-        private void getInquiryAccount(String userName, String passWord, String mobile) {
+    private void getInquiryAccount(String userName, String passWord, String mobile) {
 
         try {
             Call<String> call = App.api.getInquiryAccount(userName, passWord, mobile, "", "", 1);
@@ -142,7 +133,7 @@ public class ConfirmCodeFragment extends Fragment {
                     try {
                         iDs = gson.fromJson(response.body(), typeIDs);
                     } catch (Exception e) {
-                        Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
                         binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                         binding.btnLogin.setEnabled(true);
                         binding.progressBar.setVisibility(View.GONE);
@@ -164,15 +155,29 @@ public class ConfirmCodeFragment extends Fragment {
                     } else {
 
                         //user is register
-                        if (iDs.getAccountList().size()>0){
-                            user.ACCGID=iDs.getAccountList().get(0).I;
+                        if (iDs.getAccountList().size() > 0) {
+                            Account.deleteAll(Account.class);
                             Account.saveInTx(iDs.getAccountList());
+                            getFragmentManager().popBackStack();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Ord_TYPE", "");
+                            bundle.putString("Tbl_GUID", "");
+                            bundle.putString("Inv_GUID", "");
+                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                            mainOrderMobileFragment.setArguments(bundle);
+                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment));
+                            replaceFragment.commit();
 
                         }
 
                         //user not register
                         else {
-                            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new MapFragment()).addToBackStack("MapF");
+                            getFragmentManager().popBackStack();
+                            Bundle bundle=new Bundle();
+                            bundle.putString("mobile",mobile);
+                            RegisterFragment registerFragment=new RegisterFragment();
+                            registerFragment.setArguments(bundle);
+                            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main,registerFragment );
                             addFragment.commit();
                         }
 
@@ -183,13 +188,12 @@ public class ConfirmCodeFragment extends Fragment {
                     }
 
 
-
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
 
-                    Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + t.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان." + t.toString(), Toast.LENGTH_SHORT).show();
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnLogin.setEnabled(true);
                     binding.progressBar.setVisibility(View.GONE);
@@ -199,7 +203,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         } catch (NetworkOnMainThreadException ex) {
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان." + ex.toString(), Toast.LENGTH_SHORT).show();
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             binding.progressBar.setVisibility(View.GONE);
@@ -207,6 +211,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
     }
+
 
 
 }

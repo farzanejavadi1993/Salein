@@ -6,6 +6,7 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
 import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.salein1.Util.Util;
 
 public class Product extends SugarRecord {
     @Unique
@@ -52,8 +53,8 @@ public class Product extends SugarRecord {
     public Double getPRDPRICEPERUNIT1() {
         Double showPrice = 0.0;
         try {
-            String priceList = LauncherOrganizationFragment.getPrice();
 
+            String priceList = Util.getPrice();
 
             switch (priceList) {
                 case "2":

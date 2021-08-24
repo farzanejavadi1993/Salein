@@ -1,6 +1,7 @@
 package ir.kitgroup.salein1.Classes;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -21,14 +22,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class App extends Application {
 
     public static API api;
+    public static Context context;
     public static Retrofit retrofit;
-    public static int mode =1;//1  ordOrganization  //2  OrdClient
+    public static int mode =2;//1  ordOrganization  //2  OrdClient
     private String baseUrl = "http://185.201.49.204:9696/api/REST/";
 
     private static SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-
-
 
     @Override
     public void onCreate() {
@@ -38,10 +38,11 @@ public class App extends Application {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         editor = sharedPreferences.edit();
 
+        context=getApplicationContext();
 
 
-        if (mode == 1) {
-            if (retrofit == null && User.count(User.class) > 0) {
+       // if (mode == 1) {
+            if (retrofit == null ) {
 
                 OkHttpClient client = new OkHttpClient.Builder()
                         .connectTimeout(30, TimeUnit.SECONDS)
@@ -58,7 +59,10 @@ public class App extends Application {
                         .setVersion(1.0)
                         .create();
 
-                String  baseUrl = "http://" + User.first(User.class).ipLocal + "/api/REST/";
+
+                //String  baseUrl = "http://" + User.first(User.class).ipLocal + "/api/REST/";
+                String  baseUrl = "http://109.125.133.149:9999/api/REST/";
+
 
 
                 retrofit = new Retrofit.Builder()
@@ -69,7 +73,8 @@ public class App extends Application {
 
                 api = retrofit.create(API.class);
             }
-        } else {
+       /* }
+        else {
             if (retrofit == null) {
 
                 OkHttpClient client = new OkHttpClient.Builder()
@@ -99,7 +104,7 @@ public class App extends Application {
 
                 api = retrofit.create(API.class);
             }
-        }
+        }*/
 
 
         super.onCreate();

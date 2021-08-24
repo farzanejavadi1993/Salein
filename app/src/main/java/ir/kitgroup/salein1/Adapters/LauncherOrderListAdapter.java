@@ -24,6 +24,7 @@ import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 
 
 public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrderListAdapter.viewHolder> {
@@ -94,7 +95,7 @@ public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrder
         holder.txtSumDiscount.setText(format.format(Double.parseDouble(invoicedetail.INV_DET_DISCOUNT)));
 
         ArrayList<Product> rst = new ArrayList<>();
-        rst.addAll(LauncherOrganizationFragment.AllProduct);
+        rst.addAll(Util.AllProduct);
         CollectionUtils.filter(rst, r -> r.getPRDUID().equals(invoicedetail.PRD_UID));
 
         if (rst.size()>0){

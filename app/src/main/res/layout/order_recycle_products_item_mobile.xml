@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin6"
-    android:layout_marginStart="@dimen/normal_left_right_margin"
-    android:layout_marginEnd="@dimen/normal_left_right_margin"
-    android:layout_marginBottom="6dp"
+
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="5dp"
     app:cardCornerRadius="15dp"
     app:cardElevation="4dp">
 
@@ -110,17 +110,17 @@
                 android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
                 android:src="@drawable/ic_minus1" />
 
-            <TextView
-
+            <EditText
+                android:inputType="numberDecimal"
                 android:id="@+id/order_recycle_item_product_txt_amount"
-                android:layout_width="30dp"
+                android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/iv_max"
-                android:background="@drawable/text_view_background"
+                android:background="@drawable/background_edittext"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="@color/white"
+                android:textColor="@color/medium_color"
                 android:textSize="11sp" />
 
             <ImageView

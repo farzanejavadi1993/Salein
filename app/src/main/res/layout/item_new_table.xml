@@ -9,7 +9,7 @@
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
     android:backgroundTint="@color/white"
-    android:elevation="@dimen/launcher_recycle_table_card_elevention"
+    android:elevation="@dimen/launcher_recycle_table_card_elevation"
     app:cardCornerRadius="15dp"
     app:strokeColor="#ccc"
     app:strokeWidth="1dp"

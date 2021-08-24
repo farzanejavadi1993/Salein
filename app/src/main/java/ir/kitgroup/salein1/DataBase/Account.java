@@ -67,6 +67,10 @@ public class Account extends SugarRecord {
     @SerializedName("ADR")
     @Expose
     public String ADR;
+
+    @SerializedName("ADR2")
+    @Expose
+    public String ADR2;
     @SerializedName("S")
     @Expose
     public String S;

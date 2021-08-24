@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <EditText
-
+                android:inputType="numberDecimal"
                 android:fontFamily="@font/iransans"
                 android:id="@+id/order_list_item_recycle_editText"
                 android:layout_marginRight="4sp"

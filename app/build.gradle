@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+
 }
 
 android {
@@ -84,9 +85,18 @@ dependencies {
 
 
 
-
     implementation "com.airbnb.android:lottie:+"
     implementation 'com.facebook.rebound:rebound:0.3.8'
+
+
+    implementation 'com.google.android.gms:play-services-base:17.6.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+
+
+
+
+
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

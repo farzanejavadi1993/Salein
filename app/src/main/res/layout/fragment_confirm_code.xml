@@ -56,7 +56,7 @@
             android:layout_height="@dimen/login_logo_size"
             android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/login_logo_margin_left_right"
-            android:layout_marginTop="@dimen/login_logo_margin_top"
+            android:layout_marginTop="@dimen/normal_margin_top"
             android:layout_marginEnd="@dimen/login_logo_margin_left_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,7 @@
             android:layout_marginTop="18dp"
             android:layout_marginEnd="22dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_x_large_mobile_size"
+            android:textSize="@dimen/text_xx_large_mobile_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/animation_view" />
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:layout_marginEnd="22dp"
-            android:hint="@string/mobile_number"
+            android:hint="@string/code_number"
             android:layoutDirection="rtl"
             android:textColorHint="@color/hint_text_color"
             app:boxCornerRadiusBottomEnd="@dimen/box_radius"
@@ -113,7 +113,7 @@
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_mobile"
+                android:id="@+id/edt_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/iransans"
@@ -121,6 +121,7 @@
                 android:layoutDirection="ltr"
                 android:maxLength="5"
                 android:textSize="12sp"
+
                 android:textColor="@color/medium_color"
                 android:textAlignment="textStart"
                 android:textDirection="firstStrongRtl" />
@@ -147,7 +148,7 @@
             android:layout_height="@dimen/bottom_height_size"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="12dp"
             android:backgroundTint="@color/bottom_background_inActive_color"
             android:enabled="false"
             android:fontFamily="@font/iransans"

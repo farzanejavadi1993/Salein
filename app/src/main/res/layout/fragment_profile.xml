@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<layout >
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,8 +11,7 @@
     android:background="@color/white"
     android:clickable="false"
     android:focusable="false"
-    android:gravity="center"
-    android:orientation="horizontal">
+    tools:ignore="RedundantNamespace">
 
     <TextView
         android:id="@+id/txtError"
@@ -21,7 +23,6 @@
 
     <LinearLayout
         android:id="@+id/viewLauncher"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -31,41 +32,41 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
-            android:elevation="4sp">
+            android:elevation="4sp"
+            tools:targetApi="lollipop">
 
             <TextView
-
                 android:id="@+id/txt_title_toolbar"
                 style="@style/launcher_toolbar_TextView"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="@dimen/normal_left_right_margin"
                 android:gravity="center"
-                android:text="نمایش اطلاعات کاربری"
-                android:textStyle="bold" />
+                android:text="@string/info_account"
+                android:textStyle="bold"
+                />
 
 
         </RelativeLayout>
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
             android:gravity="right"
             android:orientation="vertical"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="نام و نام خانواگی"
-                android:textColor="#474747"
-                android:textSize="13sp"
+                android:hint="@string/first_last_name"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_large_mobile_size"
                />
 
             <TextView
@@ -73,21 +74,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="فرزانه جوادی بایگی"
-                android:textColor="#474747"
-                android:textSize="15sp"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_x_large_mobile_size"
                 android:textStyle="bold" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
             android:background="#ccc" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="22dp"
@@ -100,9 +101,9 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="شماره تلفن همراه"
-                android:textColor="#474747"
-                android:textSize="13sp"
+                android:hint="@string/phone_number_account"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_large_mobile_size"
                 />
 
             <TextView
@@ -110,15 +111,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="09150469164"
-                android:textColor="#474747"
-                android:textSize="12sp"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_x_large_mobile_size"
                 android:textStyle="bold" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
             android:background="#ccc" />
 
         <LinearLayout
@@ -136,9 +137,9 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="آدرس"
-                android:textColor="#474747"
-                android:textSize="13sp"
+                android:hint="@string/address"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_large_mobile_size"
               />
 
             <TextView
@@ -146,8 +147,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="مشهد بولوار هدایت"
-                android:textColor="#474747"
-                android:textSize="12sp"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_x_large_mobile_size"
                 android:textStyle="bold" />
         </LinearLayout>
         <View
@@ -161,29 +162,30 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="54dp"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="22dp"
             android:gravity="right"
             android:orientation="horizontal"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:paddingBottom="5dp"
+            tools:ignore="UseCompoundDrawables">
             <TextView
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="افزایش اعتبار کیف پول"
-                android:textColor="#474747"
-                android:textSize="12sp"
+                android:text="@string/add_credit"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
                 android:textStyle="bold" />
             <ImageView
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/app_off"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-              />
+                tools:ignore="ContentDescription" />
 
 
         </LinearLayout>
@@ -196,29 +198,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="54dp"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="22dp"
             android:gravity="right"
             android:orientation="horizontal"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:paddingBottom="5dp"
+            tools:ignore="UseCompoundDrawables">
             <TextView
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="نظرات من"
+                android:text="@string/my_comment"
                 android:textColor="#474747"
                 android:textSize="12sp"
                 android:textStyle="bold" />
             <ImageView
+                android:padding="5dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_comment"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                />
+                tools:ignore="ContentDescription" />
 
 
         </LinearLayout>
@@ -227,6 +231,45 @@
             android:layout_height="0.5dp"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
+            android:background="#ccc" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:id="@+id/btn_order_list"
+            android:paddingBottom="5dp"
+            tools:ignore="UseCompoundDrawables">
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_order"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                android:textStyle="bold" />
+            <ImageView
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_buylist"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                tools:ignore="ContentDescription" />
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
             android:background="#ccc" />
 
     </LinearLayout>
@@ -239,14 +282,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_margin="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="22dp"
         android:backgroundTint="@color/red_table"
-        android:text="خروج از حساب"
+        android:text="@string/logout"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_xx_large_mobile_size"
         app:strokeColor="@color/red_table"
-        app:strokeWidth="1dp" />
+        app:strokeWidth="1dp"
+        tools:targetApi="lollipop" />
 </RelativeLayout>
+
+</layout>
 
 
 

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,12 +39,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+
 import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
+
 import ir.kitgroup.salein1.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein1.Adapters.InvoiceDetailAdapter;
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.Classes.CustomProgress;
 import ir.kitgroup.salein1.Classes.Utilities;
+
 import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.Invoicedetail;
 import ir.kitgroup.salein1.DataBase.OrderType;
@@ -51,13 +55,14 @@ import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.Setting;
 import ir.kitgroup.salein1.DataBase.Tables;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.OrderFragment;
-import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.salein1.Fragments.TabletView.OrderFragment;
 
 import ir.kitgroup.salein1.Models.Description;
+
 import ir.kitgroup.salein1.Models.ModelDesc;
 import ir.kitgroup.salein1.Models.ModelLog;
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentInvoiceDetailMobileBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,6 +76,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private String userName;
     private String passWord;
     private String Inv_GUID;
+
     private double sumPrice;
     private double sumPurePrice;
 
@@ -90,6 +96,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
     //endregion Variable Dialog Description
 
 
+    private int type;//1 edit && continue    //2 seen
+
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -106,18 +114,55 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+     /*   Account acc = Select.from(Account.class).where("I ='" + ord.ACC_CLB_UID + "'").first();
+        binding.orderNameCustomer.removeTextChangedListener(textWatcherAcc);
+        binding.orderNameCustomer.setText(acc.getACCCLBNAME());
+        binding.orderNameCustomer.addTextChangedListener(textWatcherAcc);
+        Acc_GUID = acc.getACCCLBUID();
+        binding.orderNameCustomer.setEnabled(false);*/
+
+
         Bundle bundle = getArguments();
         String type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
+        String Ord_TYPE = bundle.getString("Ord_TYPE");
         String Acc_NAME = bundle.getString("Acc_NAME");
         String Acc_GUID = bundle.getString("Acc_GUID");
-        String Ord_TYPE = bundle.getString("Ord_TYPE");
+        String status = bundle.getString("status");
+
+        if (status != null && status.equals("0"))
+            binding.btnResend.setVisibility(View.VISIBLE);
+
+
+        binding.btnResend.setOnClickListener(v -> {
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("Inv_GUID", Inv_GUID);
+            bundle1.putString("Tbl_GUID", Tbl_GUID);
+
+
+            bundle1.putString("Acc_NAME", Acc_NAME);
+            bundle1.putString("Acc_GUID", Acc_GUID);
+
+            bundle1.putString("DESC", binding.edtDescription.getText().toString());
+
+            bundle1.putString("Ord_TYPE", "");
+
+            bundle1.putString("Sum_PRICE", String.valueOf(sumPurePrice));
+            PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
+            paymentFragment.setArguments(bundle1);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
+        });
 
 
         customProgress = CustomProgress.getInstance();
 
 
+        if (App.mode == 2) {
+            binding.tvNameCustomer.setVisibility(View.GONE);
+            binding.txtTableNumber.setVisibility(View.GONE);
+            binding.txtTypeOrder.setVisibility(View.GONE);
+        }
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
             maxSales = setting.get(0).MAX_SALE;
@@ -166,7 +211,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         btnRegisterDescription.setOnClickListener(v -> {
             ArrayList<Product> resultPrd = new ArrayList<>();
             if (LauncherActivity.screenInches < 7) {
-                resultPrd.addAll(LauncherOrganizationFragment.AllProduct);
+                resultPrd.addAll(Util.AllProduct);
             }
             ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
             CollectionUtils.filter(result, r -> r.INV_DET_UID.equals(GuidInv));
@@ -185,7 +230,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     resultPrd.get(0).descItem = edtDescriptionItem.getText().toString() + " " + resultPrd.get(0).descItem;
 
 
-                    OrderFragmentMobile.productAdapter.notifyDataSetChanged();
+                MainOrderMobileFragment.productAdapter.notifyDataSetChanged();
             }
             dialogDescription.dismiss();
         });
@@ -195,23 +240,21 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Locale loc = new Locale("en_US");
         //seen
         if (type.equals("1")) {
-            binding.btnContinue.setVisibility(View.GONE);
+
+            binding.layoutContinue.setVisibility(View.GONE);
+            binding.layoutEditDelete.setVisibility(View.VISIBLE);
             Invoice invoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
             if (invoice != null) {
                 binding.edtDescription.setText(invoice.INV_DESCRIBTION);
 
 
-
                 Tables tbl1 = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
                 if (tbl1 != null)
-                    binding.txtNumberTable.setText(tbl1.N);
-
-
+                    binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
 
 
                 Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
                 binding.txtDate.setText((sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year);
-
 
 
                 OrderType orderType = Select.from(OrderType.class).where("c ='" + invoice.INV_TYPE_ORDER + "'").first();
@@ -220,8 +263,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
 
+                if (App.mode == 1)
+                    binding.tvNameCustomer.setText(invoice.Acc_name);
 
-                binding.tvNameCustomer.setText(invoice.Acc_name);
+
             }
 
 
@@ -232,7 +277,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         else {
             Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
             if (tbl1 != null)
-                binding.txtNumberTable.setText(tbl1.N);
+                binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
 
 
             Calendar calendar = Calendar.getInstance();
@@ -241,13 +286,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtDate.setText(text2);
 
 
-
             OrderType ordTY = Select.from(OrderType.class).where("c ='" + Ord_TYPE + "'").first();
 
             if (ordTY != null)
                 binding.txtTypeOrder.setText(ordTY.getN());
-
-
 
 
         }
@@ -261,10 +303,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
             invoiceDetailList.addAll(Select.from(Invoicedetail.class).where("INVUID ='" + Inv_GUID + "'").list());
 
         else
-            invoiceDetailList.addAll(OrderFragmentMobile.invoiceDetailList);
+            invoiceDetailList.addAll(MainOrderMobileFragment.invoiceDetailList);
 
 
-       sumPrice = 0;
+        sumPrice = 0;
         sumPurePrice = 0;
 
 
@@ -303,7 +345,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         }
                         invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
 
-                            OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
+                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
 
                         double sumprice = (amount * Float.parseFloat(Price));
                         double discountPrice = sumprice * discountPercent;
@@ -312,14 +354,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                            OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                        ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                        ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                         CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                         if (resultPrd.size() > 0) {
-                            LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                            if (OrderFragmentMobile.productList.contains(resultPrd.get(0))) {
-                                OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultPrd.get(0)));
+                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                            if (MainOrderMobileFragment.productList.contains(resultPrd.get(0))) {
+                                MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
                             }
 
                         }
@@ -349,7 +391,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
 
-                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
+                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
                     double sumprice = (amount * Float.parseFloat(Price));
                     double discountPrice = sumprice * discountPercent;
                     double totalPrice = sumprice - discountPrice;
@@ -357,15 +399,15 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                    ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                    ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                     if (resultPrd.size() > 0) {
-                        LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                        Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 
-                        if (OrderFragmentMobile.productList.contains(resultPrd.get(0))) {
-                            OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultPrd.get(0)));
+                        if (MainOrderMobileFragment.productList.contains(resultPrd.get(0))) {
+                            MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
                         }
 
 
@@ -405,8 +447,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 sumPurePrice = 0;
 
 
-
-                    OrderFragmentMobile.invoiceDetailList.remove(invoiceDetailList.get(positionStart));
+                MainOrderMobileFragment.invoiceDetailList.remove(invoiceDetailList.get(positionStart));
 
                 invoiceDetailList.remove(invoiceDetailList.get(positionStart));
 
@@ -471,10 +512,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
             Bundle bundle1 = new Bundle();
             bundle1.putString("Inv_GUID", Inv_GUID);
             bundle1.putString("Tbl_GUID", Tbl_GUID);
+
+
             bundle1.putString("Acc_NAME", Acc_NAME);
             bundle1.putString("Acc_GUID", Acc_GUID);
+
             bundle1.putString("DESC", binding.edtDescription.getText().toString());
-            bundle1.putString("Ord_TYPE", Ord_TYPE);
+            if (App.mode == 2)
+                bundle1.putString("Ord_TYPE", "");
+            else
+                bundle1.putString("Ord_TYPE", Ord_TYPE);
             bundle1.putString("Sum_PRICE", String.valueOf(sumPurePrice));
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
@@ -601,16 +648,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                             invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                                OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                            MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
-                            ArrayList<Product> resultPrd = new ArrayList<>(LauncherOrganizationFragment.AllProduct);
+                            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                             //  CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
                             CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                             if (resultPrd.size() > 0) {
-                                LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 
-                                if (OrderFragmentMobile.productList.contains(resultPrd.get(0))) {
-                                    OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultPrd.get(0)));
+                                if (MainOrderMobileFragment.productList.contains(resultPrd.get(0))) {
+                                    MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
                                 }
 
                             }
@@ -639,5 +686,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
     }
+
 
 }

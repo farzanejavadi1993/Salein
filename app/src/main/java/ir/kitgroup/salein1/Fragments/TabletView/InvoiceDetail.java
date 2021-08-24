@@ -1,4 +1,4 @@
-package ir.kitgroup.salein1.Fragments;
+package ir.kitgroup.salein1.Fragments.TabletView;
 
 import android.app.Dialog;
 import android.graphics.Typeface;
@@ -44,13 +44,13 @@ import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.Invoicedetail;
 import ir.kitgroup.salein1.DataBase.OrderType;
 import ir.kitgroup.salein1.DataBase.Product;
-import ir.kitgroup.salein1.Fragments.MobileView.OrderFragmentMobile;
-import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.Models.Description;
 import ir.kitgroup.salein1.Models.ModelDesc;
 import ir.kitgroup.salein1.Models.ModelLog;
 import ir.kitgroup.salein1.R;
+import ir.kitgroup.salein1.Util.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -238,7 +238,7 @@ public class InvoiceDetail extends Fragment {
             else if (MainActivity.screenInches >= 7)
                 invoiceDetailLargeList.addAll(OrderFragment.invoiceDetailList);
             else
-                invoiceDetailLargeList.addAll(OrderFragmentMobile.invoiceDetailList);
+                invoiceDetailLargeList.addAll(MainOrderMobileFragment.invoiceDetailList);
             InvoiceDetailLargeAdapter invoiceDetailLargeAdapter = new InvoiceDetailLargeAdapter(getContext(), invoiceDetailLargeList, type);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(invoiceDetailLargeAdapter);
@@ -334,9 +334,6 @@ public class InvoiceDetail extends Fragment {
             if(MainActivity.screenInches>=7) {
                 OrderFragment.invoiceDetailAdapter.notifyDataSetChanged();
                 OrderFragment.descriptionFactor = edtDescription.getText().toString();
-            }
-            else {
-                OrderFragmentMobile.invoiceDetailAdapter.notifyDataSetChanged();
             }
 
 
@@ -486,17 +483,17 @@ public class InvoiceDetail extends Fragment {
                                 return;
                             }
                             ArrayList<Product> resultProduct = new ArrayList<>();
-                            resultProduct.addAll(LauncherOrganizationFragment.AllProduct);
+                            resultProduct.addAll(Util.AllProduct);
                             CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
 
                             if (resultProduct.size() > 0) {
                                 double amount = 0.0;
                                 if (MinOrPlus)
-                                    amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+                                    amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
 
                                 else {
-                                    if (LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                                        amount = LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
+                                    if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
+                                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
 
                                     else
                                         return;
@@ -510,7 +507,7 @@ public class InvoiceDetail extends Fragment {
 
                                     return;
                                 }
-                                LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
+                                Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
                                 //productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
 
                                 ArrayList<Invoicedetail> result = new ArrayList<>();
@@ -533,10 +530,10 @@ public class InvoiceDetail extends Fragment {
                                         OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
                                         invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
                                     }else {
-                                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
-                                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                                        OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
+                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
+                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
+                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
                                         invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
                                     }
 
@@ -573,7 +570,7 @@ public class InvoiceDetail extends Fragment {
                                 if (MainActivity.screenInches>=7)
                                 OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultProduct.get(0)));
                                 else
-                                    OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultProduct.get(0)));
+                                    MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultProduct.get(0)));
                             }
 
 
@@ -612,21 +609,21 @@ public class InvoiceDetail extends Fragment {
                                 if (MainActivity.screenInches>=7)
                                 OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
                                 else
-                                    OrderFragmentMobile.invoiceDetailList.get(OrderFragmentMobile.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
                                 ArrayList<Product> resultPrd = new ArrayList<>();
-                                resultPrd.addAll(LauncherOrganizationFragment.AllProduct);
+                                resultPrd.addAll(Util.AllProduct);
                                 //  CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
                                 CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                                 if (resultPrd.size() > 0) {
-                                    LauncherOrganizationFragment.AllProduct.get(LauncherOrganizationFragment.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
                                     if (MainActivity.screenInches >= 7) {
                                         if (OrderFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
                                             OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultPrd.get(0)));
                                         }
                                     } else {
-                                        if (OrderFragmentMobile.productList.indexOf(resultPrd.get(0)) >= 0) {
-                                            OrderFragmentMobile.productAdapter.notifyItemChanged(OrderFragmentMobile.productList.indexOf(resultPrd.get(0)));
+                                        if (MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
+                                            MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
                                         }
                                     }
                                 }
