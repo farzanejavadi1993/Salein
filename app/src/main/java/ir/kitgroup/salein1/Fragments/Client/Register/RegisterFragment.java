@@ -10,8 +10,6 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +21,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.cedarstudios.cedarmapssdk.CedarMapsStyle;
+import com.cedarstudios.cedarmapssdk.CedarMapsStyleConfigurator;
+import com.cedarstudios.cedarmapssdk.listeners.OnStyleConfigurationListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
-
 
 
 import java.lang.reflect.Type;
@@ -50,9 +48,8 @@ import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.User;
 import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 
-import ir.kitgroup.salein1.Models.ModelLog;
+import ir.kitgroup.salein1.models.ModelLog;
 import ir.kitgroup.salein1.R;
-import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentRegisterBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,8 +57,8 @@ import retrofit2.Response;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class RegisterFragment extends Fragment implements OnMapReadyCallback,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
+        ActivityCompat.OnRequestPermissionsResultCallback*/ {
     //region  Parameter
     private FragmentRegisterBinding binding;
     private Boolean name = false;
@@ -71,12 +68,12 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
     private final List<Account> accountsList = new ArrayList<>();
     private User user;
     private int gender = 0;
-    private GoogleMap mGoogleMap;
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 99;
     private Boolean getGps = false;
-    private  LocationManager locationManager;
-    private Boolean registerGps=false;
-
+    private LocationManager locationManager;
+    private Boolean registerGps = false;
+    private MapboxMap mMapboxMap;
 
 
     //endregion Parameter
@@ -114,20 +111,15 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
         });
 
 
-
-
-
-
         binding.btnRegisterInformation.setOnClickListener(v -> {
-            if (!registerGps){
-                binding.accSingleMapOnForm.setVisibility(View.GONE);
+            if (!registerGps) {
+                binding.mapView.setVisibility(View.GONE);
                 binding.cardInfoCustomer.setVisibility(View.VISIBLE);
-                registerGps=true;
+                registerGps = true;
                 binding.btnRegisterInformation.setEnabled(true);
                 binding.btnRegisterInformation.setText("ثبت اطلاعات");
                 binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            }
-            else {
+            } else {
 
 
                 if (
@@ -144,7 +136,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
                 account.I = UUID.randomUUID().toString();
                 account.N = binding.edtFLNameCustomer.getText().toString();
                 account.M = binding.edtNumberPhoneCustomer.getText().toString();
-                account.ADR = binding.edtAddressCustomer.getText().toString() + binding.edtPlaqueCustomer.getText().toString();
+                account.ADR = binding.edtAddressCustomer.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString();
                 account.S = String.valueOf(gender);
                 accountsList.clear();
                 accountsList.add(account);
@@ -154,17 +146,37 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
         });
 
 
+          locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-
-        binding.accSingleMapOnForm.onCreate(savedInstanceState);
+      /*  binding.accSingleMapOnForm.onCreate(savedInstanceState);
         binding.accSingleMapOnForm.onResume();
-        binding.accSingleMapOnForm.getMapAsync(this);
+        binding.accSingleMapOnForm.getMapAsync(this);*/
 
+        binding.mapView.getMapAsync(mapboxMap -> {
+            mMapboxMap = mapboxMap;
 
+            CedarMapsStyleConfigurator.configure(
+                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
+                        @Override
+                        public void onSuccess(Style.Builder styleBuilder) {
+                            mapboxMap.setStyle(styleBuilder);
+                        }
 
+                        @Override
+                        public void onFailure(@NonNull String errorMessage) {
+                           // Log.e(TAG, errorMessage);
+                        }
+                    });
+
+            mMapboxMap.setMaxZoomPreference(17);
+            mMapboxMap.setMinZoomPreference(6);
+
+            mMapboxMap.addOnMapClickListener(point -> {
+               // Log.i(TAG, "Tapped on map");
+                return true;
+            });
+        });
     }
-
 
 
     private static class JsonObjectAccount {
@@ -172,6 +184,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
         public List<Account> Account;
 
     }
+
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
 
@@ -184,7 +197,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject),"");
+            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnRegisterInformation.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
@@ -212,7 +225,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
                         bundle.putString("Inv_GUID", "");
                         MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                         mainOrderMobileFragment.setArguments(bundle);
-                        FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment,"MainOrderMobileFragment");
+                        FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
                         replaceFragment.commit();
 
 
@@ -252,6 +265,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
 
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -263,8 +277,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            getGps=true;
-
+            getGps = true;
 
 
             enableMyLocation();
@@ -274,7 +287,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
             Objects.requireNonNull(getActivity()).finish();
         }
     }
-    private void enableMyLocation() {
+   private void enableMyLocation() {
 
         try {
 
@@ -297,25 +310,25 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
                 try {
 
 
-                    mGoogleMap.setMyLocationEnabled(true);
-
-
-                    mGoogleMap.setOnMyLocationChangeListener(location2 -> {
-
-
-                        mGoogleMap.addMarker(new MarkerOptions().position(
-                                    new LatLng(location2.getLatitude(), location2.getLongitude())));
-
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(location2.getLatitude(), location2.getLongitude()), 15f));
-
-                        binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                        binding.btnRegisterInformation.setEnabled(true);
-
-
-                            mGoogleMap.setOnMyLocationChangeListener(null);
-
-                    });
+//                    mGoogleMap.setMyLocationEnabled(true);
+//
+//
+//                    mGoogleMap.setOnMyLocationChangeListener(location2 -> {
+//
+//
+//                        mGoogleMap.addMarker(new MarkerOptions().position(
+//                                    new LatLng(location2.getLatitude(), location2.getLongitude())));
+//
+//                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                                    new LatLng(location2.getLatitude(), location2.getLongitude()), 15f));
+//
+//                        binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+//                        binding.btnRegisterInformation.setEnabled(true);
+//
+//
+//                            mGoogleMap.setOnMyLocationChangeListener(null);
+//
+//                    });
                 } catch (Exception ex) {
 
                     Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
@@ -327,34 +340,7 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
             Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
         }
     }
-    @Override
-    public void onMapReady(final @NotNull GoogleMap googleMap) {
 
-
-
-
-        if (!getGps) {
-
-            mGoogleMap = googleMap;
-            enableMyLocation();
-        }
-
-        googleMap.setOnMapClickListener(latLng -> {
-            googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(
-                    new LatLng(latLng.latitude, latLng.longitude)));
-
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnRegisterInformation.setEnabled(true);
-
-        });
-
-
-
-
-
-
-    }
 
     private void AlertNoGPS() {
 
@@ -388,11 +374,6 @@ public class RegisterFragment extends Fragment implements OnMapReadyCallback,
 
 
     }
-
-
-
-
-
 
 
 }

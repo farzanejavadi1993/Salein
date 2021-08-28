@@ -35,7 +35,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="79" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
+            android:value="84" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -45,9 +45,9 @@
 
 
 
-        <meta-data
+       <!-- <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/api_key" />
+            android:value="@string/api_key" />-->
         <activity
             android:name=".MainActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">

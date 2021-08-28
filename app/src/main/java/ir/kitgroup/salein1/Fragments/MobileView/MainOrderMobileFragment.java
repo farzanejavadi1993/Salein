@@ -78,7 +78,7 @@ import ir.kitgroup.salein1.Classes.RecyclerViewLoadMoreScroll;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
 
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.OrderType;
 import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.ProductGroupLevel1;
@@ -86,14 +86,14 @@ import ir.kitgroup.salein1.DataBase.ProductGroupLevel2;
 import ir.kitgroup.salein1.DataBase.Setting;
 import ir.kitgroup.salein1.DataBase.User;
 
-import ir.kitgroup.salein1.Models.Description;
+import ir.kitgroup.salein1.models.Description;
 
-import ir.kitgroup.salein1.Models.ModelAccount;
-import ir.kitgroup.salein1.Models.ModelDesc;
-import ir.kitgroup.salein1.Models.ModelLog;
-import ir.kitgroup.salein1.Models.ModelProduct;
-import ir.kitgroup.salein1.Models.ModelSetting;
-import ir.kitgroup.salein1.Models.ModelTypeOrder;
+import ir.kitgroup.salein1.models.ModelAccount;
+import ir.kitgroup.salein1.models.ModelDesc;
+import ir.kitgroup.salein1.models.ModelLog;
+import ir.kitgroup.salein1.models.ModelProduct;
+import ir.kitgroup.salein1.models.ModelSetting;
+import ir.kitgroup.salein1.models.ModelTypeOrder;
 import ir.kitgroup.salein1.R;
 
 import ir.kitgroup.salein1.Util.Util;
@@ -110,58 +110,56 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     //region Parameter
     private FragmentMobileOrderMainBinding binding;
 
-    private SharedPreferences.Editor editor;
-    private Boolean firstSync = false;
+    private SharedPreferences sharedPreferences;
+
+    String maxSales;
 
 
-    private String error = "";
+    private String error;
 
     private CustomProgress customProgress;
-    private String Ord_TYPE = "";
+    private String Ord_TYPE;
+    private String Tbl_GUID;
+    private String Inv_GUID;
 
-    private String Tbl_GUID = "";
-    public static String Inv_GUID = "";
-
-    private String userName = "";
-    private String passWord = "";
+    private String userName;
+    private String passWord;
 
 
     private TextWatcher textWatcherProduct;
     private final Object mLock = new Object();
     private ArrayList<Product> mOriginalValues;
-    private final ArrayList<Product> emptyListProduct = new ArrayList<>();
+    private ArrayList<Product> emptyListProduct;
     private int emptyListProductFlag = 0;
 
 
-    private final ArrayList<ProductGroupLevel1> AllProductLevel1 = new ArrayList<>();
-    private final ArrayList<ProductGroupLevel1> productLevel1List = new ArrayList<>();
+    private ArrayList<ProductGroupLevel1> AllProductLevel1;
+    private ArrayList<ProductGroupLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
 
 
-    private final ArrayList<ProductGroupLevel2> AllProductLevel2 = new ArrayList<>();
-    private final ArrayList<ProductGroupLevel2> productLevel2List = new ArrayList<>();
+    private ArrayList<ProductGroupLevel2> AllProductLevel2;
+    private ArrayList<ProductGroupLevel2> productLevel2List;
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-    public static ArrayList<Product> productList = new ArrayList<>();
-    private final ArrayList<Product> productListData = new ArrayList<>();
-    private final ArrayList<Product> allProductActive = new ArrayList<>();
-    @SuppressLint("StaticFieldLeak")
-    public static ProductAdapter1 productAdapter;
-    private boolean isLastPage = false;
-    private boolean isLoading = false;
-    private int currentPage = 1;
-    private int totalPage;
+    private ArrayList<Product> productList;
+    private ArrayList<Product> productListData;
+    private ArrayList<Product> allProductActive;
 
-    private String maxSales = "0";
+    private ProductAdapter1 productAdapter;
+    private boolean isLastPage;
+    private boolean isLoading;
+    private int currentPage;
+    private int totalPage;
 
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
-    public static ArrayList<Description> descriptionList = new ArrayList<>();
+    private ArrayList<Description> descriptionList;
     private DescriptionAdapter descriptionAdapter;
-    private String GuidInv = "";
+    private String GuidInv;
     //endregion Variable Dialog Description
 
 
@@ -173,9 +171,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     //endregion Dialog
 
 
-    public static ArrayList<Invoicedetail> invoiceDetailList = new ArrayList<>();
-
-
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
@@ -185,11 +180,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private TextWatcher textWatcherAcc;
     private AccountAdapter accAdapter;
-    private final ArrayList<Account> accList = new ArrayList<>();
+    private ArrayList<Account> accList;
 
 
     //region Variable DialogAddAccount
-    private final List<Account> accountsList = new ArrayList<>();
+    private List<Account> accountsList;
     private Dialog dialogAddAccount;
     private EditText edtNameUser;
     private EditText edtAddressUser;
@@ -208,185 +203,274 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
+        customProgress = CustomProgress.getInstance();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
+            Invoice.deleteInTx(invoice);
+            for (InvoiceDetail   invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()){
+                InvoiceDetail.deleteInTx(invoiceDetail);
+            }
+
+        }
+
+        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+        CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
+        if (prdResult.size() > 0) {
+            for (int i = 0; i < prdResult.size(); i++) {
+                Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
+            }
+        }
+
+        if (App.mode == 1) {
+            binding.bottomNavigationViewLinear.setVisibility(View.GONE);
+            //region Cast DialogAddAcc
+            dialogAddAccount = new Dialog(getActivity());
+            dialogAddAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogAddAccount.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialogAddAccount.setContentView(R.layout.dialog_add_account);
+            dialogAddAccount.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialogAddAccount.setCancelable(false);
 
 
+            ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
+            edtNameUser = dialogAddAccount.findViewById(R.id.edt_name_account);
+            edtMobileUser = dialogAddAccount.findViewById(R.id.edt_mobile_account);
+            edtAddressUser = dialogAddAccount.findViewById(R.id.edt_address_account);
+            RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
+            RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
+            MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_account);
+            radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    gender = 0;
+                }
+            });
+            radioWoman.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    gender = 1;
+                }
+            });
+
+            imgCloseAddDialog.setOnClickListener(v -> dialogAddAccount.dismiss());
 
 
+            btnRegisterAccount.setOnClickListener(v -> {
+                if (edtNameUser.getText().toString().equals("") || edtMobileUser.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "لطفا فیلد نام مشتری و شماره موبایل مشتری را پر کنید.", Toast.LENGTH_SHORT).show();
+                } else if (!edtMobileUser.getText().toString().equals("1") && (edtMobileUser.getText().toString().length() < 11 || edtMobileUser.getText().toString().length() > 11)) {
+                    Toast.makeText(getActivity(), "شماره موبایل صحیح نمی باشد.", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Account account = new Account();
+                    account.I = UUID.randomUUID().toString();
+                    account.N = edtNameUser.getText().toString();
+                    account.M = edtMobileUser.getText().toString();
+                    account.ADR = edtAddressUser.getText().toString();
+                    account.S = String.valueOf(gender);
+                    accountsList.clear();
+                    accountsList.add(account);
+                    addAccount(userName, passWord, accountsList);
+
+                }
+            });
+            //endregion Cast DialogAddAcc
+            accAdapter = new AccountAdapter(getActivity(), accList);
+            binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.accountRecyclerView.setAdapter(accAdapter);
+            textWatcherAcc = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    Acc_GUID = "";
+                    Acc_NAME = "";
+
+                    if (s.toString().isEmpty()) {
+                        binding.accountRecyclerView.setVisibility(View.GONE);
+                        binding.nameCustomer.setHint("نام مشترک");
+                    } else {
+                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
+                        getAccountSearch(s.toString());
+                    }
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            };
+
+            accAdapter.setOnClickItemListener((GUID, name) -> {
+                Acc_GUID = GUID;
+                Acc_NAME = name;
+                binding.nameCustomer.removeTextChangedListener(textWatcherAcc);
+                binding.nameCustomer.setText(name);
+                binding.accountRecyclerView.setVisibility(View.GONE);
+                binding.nameCustomer.addTextChangedListener(textWatcherAcc);
+            });
+
+
+            binding.btnAddAccount.setOnClickListener(v -> {
+                edtNameUser.setText("");
+                edtAddressUser.setText("");
+                edtMobileUser.setText("");
+                dialogAddAccount.show();
+            });
+
+
+            binding.nameCustomer.addTextChangedListener(textWatcherAcc);
+        } else {
+
+            Acc_NAME = Select.from(Account.class).first().N;
+            Acc_GUID = Select.from(Account.class).first().I;
+            binding.layoutAccount.setVisibility(View.GONE);
+            binding.bottomNavigationViewLinear.setNavigationChangeListener((view12, position) -> {
+                if (view12.getId() == R.id.item_home) {
+                    final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                    for (int i = 1; i <= size1; i++) {
+                        getFragmentManager().popBackStack();
+                    }
+                    productAdapter.notifyDataSetChanged();
+
+                } else if (view12.getId() == R.id.item_invoice_detail) {
+                    final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                    for (int i = 1; i <= size1; i++) {
+                        getFragmentManager().popBackStack();
+                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
+                    bundle.putString("Inv_GUID", Inv_GUID);
+                    bundle.putString("Tbl_GUID", Tbl_GUID);
+                    bundle.putString("Ord_TYPE", Ord_TYPE);
+                    bundle.putString("Acc_Name", Acc_NAME);
+                    bundle.putString("Acc_GUID", Acc_GUID);
+
+                    InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                    inVoiceDetailFragmentMobile.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_mobile, inVoiceDetailFragmentMobile).addToBackStack("InVoiceDetailF").commit();
+
+                } else if (view12.getId() == R.id.item_profile) {
+                    final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                    for (int i = 1; i <= size1; i++) {
+                        getFragmentManager().popBackStack();
+                    }
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new ProfileFragment()).addToBackStack("ProfileF").commit();
+
+
+                }
+
+
+            });
+
+        }
+
+
+        //region First Value Parameter
+
+        Inv_GUID = "";
+        AllProductLevel1 = new ArrayList<>();
+        productLevel1List = new ArrayList<>();
+        AllProductLevel2 = new ArrayList<>();
+        productLevel2List = new ArrayList<>();
+        productListData = new ArrayList<>();
+        productList = new ArrayList<>();
+        emptyListProduct = new ArrayList<>();
+        productListData = new ArrayList<>();
+        allProductActive = new ArrayList<>();
+        emptyListProduct = new ArrayList<>();
+        descriptionList = new ArrayList<>();
+        accList = new ArrayList<>();
+        accountsList = new ArrayList<>();
+
+        isLastPage = false;
+        isLoading = false;
+        currentPage = 1;
+
+
+        error = "";
+
+
+        Ord_TYPE = "";
+        Tbl_GUID = "";
+
+        Util.AllProduct.clear();
+
+        maxSales = "0";
+        List<Setting> setting = Select.from(Setting.class).list();
+        if (setting.size() > 0)
+            maxSales = setting.get(0).MAX_SALE;
+
+
+        userName = Select.from(User.class).first().userName;
+        passWord = Select.from(User.class).first().passWord;
+
+
+        //endregion First Value Parameter
+
+
+        //region Get Bundle
         Bundle bnd = getArguments();
         assert bnd != null;
         Ord_TYPE = bnd.getString("Ord_TYPE");
         Tbl_GUID = bnd.getString("Tbl_GUID");
-        Tbl_GUID = bnd.getString("Inv_GUID");
+        Inv_GUID = bnd.getString("Inv_GUID");
+        //endregion Get Bundle
 
-        Util.AllProduct.clear();
-        AllProductLevel1.clear();
-        productLevel1List.clear();
-        AllProductLevel2.clear();
-        productLevel2List.clear();
-        productListData.clear();
-        productList.clear();
-        emptyListProduct.clear();
-        productListData.clear();
-         allProductActive.clear();
+        //region Create Order
 
-        if (App.mode != 2) {
-            binding.bottomNavigationViewLinear.setVisibility(View.GONE);
+        if (Inv_GUID.equals("")) {
+            Inv_GUID = UUID.randomUUID().toString();
+            Invoice order = new Invoice();
+            order.INV_UID = Inv_GUID;
+            Invoice.save(order);
+        }
+        //edit Order
+        else {
+            ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(result, R -> R.getAmount() > 0);
+
+            if (result.size() > 0) {
+                Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
+            }
+
+
+            Invoice ord = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
+            List<InvoiceDetail> invoicedetails = Select.from(InvoiceDetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
+
+            for (int i = 0; i < invoicedetails.size(); i++) {
+                ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
+                int finalI = i;
+
+                CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
+                if (resultProducts.size() > 0) {
+                    Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + invoicedetails.get(finalI).INV_DET_QUANTITY);
+                    Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
+                    productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
+
+
+                    if (App.mode == 1)
+                        binding.orderListBtnRegister.setVisibility(View.VISIBLE);
+
+
+                }
+            }
+
+
         }
 
 
-        binding.bottomNavigationViewLinear.setCurrentActiveItem(0);
-        binding.bottomNavigationViewLinear.clearFocus();
-
-        binding.bottomNavigationViewLinear.setNavigationChangeListener((view12, position) -> {
-            if (view12.getId() == R.id.l_item_profile) {
-                final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i = 1; i <= size1; i++) {
-                    getFragmentManager().popBackStack();
-                }
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new ProfileFragment()).addToBackStack("ProfileF").commit();
-
-
-            } else if (view12.getId() == R.id.l_item_home) {
-                final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i = 1; i <= size1; i++) {
-                    getFragmentManager().popBackStack();
-                }
-
-            } else if (view12.getId() == R.id.l_item_buy) {
-                final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i = 1; i <= size1; i++) {
-                    getFragmentManager().popBackStack();
-                }
-                Bundle bundle = new Bundle();
-                bundle.putString("type", "2");
-                bundle.putString("Inv_GUID", Inv_GUID);
-                bundle.putString("Tbl_GUID", Tbl_GUID);
-                bundle.putString("Ord_TYPE", Ord_TYPE);
-                bundle.putString("Acc_Name", Acc_NAME);
-                bundle.putString("Acc_GUID", Acc_GUID);
-
-                InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
-                inVoiceDetailFragmentMobile.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_mobile, inVoiceDetailFragmentMobile).addToBackStack("InVoiceDetailF").commit();
-
-            }
-
-        });
-        customProgress = CustomProgress.getInstance();
-
-        //region Cast DialogAddAcc
-        dialogAddAccount = new Dialog(getActivity());
-        dialogAddAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogAddAccount.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogAddAccount.setContentView(R.layout.dialog_add_account);
-        dialogAddAccount.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialogAddAccount.setCancelable(false);
-
-
-        ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
-        edtNameUser = dialogAddAccount.findViewById(R.id.edt_name_account);
-        edtMobileUser = dialogAddAccount.findViewById(R.id.edt_mobile_account);
-        edtAddressUser = dialogAddAccount.findViewById(R.id.edt_address_account);
-        RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
-        RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
-        MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_account);
-        radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                gender = 0;
-            }
-        });
-        radioWoman.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                gender = 1;
-            }
-        });
-
-        imgCloseAddDialog.setOnClickListener(v -> dialogAddAccount.dismiss());
-
-
-        btnRegisterAccount.setOnClickListener(v -> {
-            if (edtNameUser.getText().toString().equals("") || edtMobileUser.getText().toString().equals("")) {
-                Toast.makeText(getActivity(), "لطفا فیلد نام مشتری و شماره موبایل مشتری را پر کنید.", Toast.LENGTH_SHORT).show();
-            } else if (!edtMobileUser.getText().toString().equals("1") && (edtMobileUser.getText().toString().length() < 11 || edtMobileUser.getText().toString().length() > 11)) {
-                Toast.makeText(getActivity(), "شماره موبایل صحیح نمی باشد.", Toast.LENGTH_SHORT).show();
-            } else {
-
-                Account account = new Account();
-                account.I = UUID.randomUUID().toString();
-                account.N = edtNameUser.getText().toString();
-                account.M = edtMobileUser.getText().toString();
-                account.ADR = edtAddressUser.getText().toString();
-                account.S = String.valueOf(gender);
-                accountsList.clear();
-                accountsList.add(account);
-                addAccount(userName, passWord, accountsList);
-
-            }
-        });
-        //endregion Cast DialogAddAcc
-        accAdapter = new AccountAdapter(getActivity(), accList);
-        binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        binding.accountRecyclerView.setAdapter(accAdapter);
-        textWatcherAcc = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                Acc_GUID = "";
-                Acc_NAME = "";
-
-                if (s.toString().isEmpty()) {
-                    binding.accountRecyclerView.setVisibility(View.GONE);
-                    binding.nameCustomer.setHint("نام مشترک");
-                } else {
-                    binding.accountRecyclerView.setVisibility(View.VISIBLE);
-                    getAccountSearch(s.toString());
-                }
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        };
-        accAdapter.setOnClickItemListener((GUID, name) -> {
-            Acc_GUID = GUID;
-            Acc_NAME = name;
-            binding.nameCustomer.removeTextChangedListener(textWatcherAcc);
-            binding.nameCustomer.setText(name);
-            binding.accountRecyclerView.setVisibility(View.GONE);
-            binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-
-
-        });
-
-        binding.btnAddAccount.setOnClickListener(v -> {
-            edtNameUser.setText("");
-            edtAddressUser.setText("");
-            edtMobileUser.setText("");
-            dialogAddAccount.show();
-        });
-
-        binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-
-
-        if (App.mode == 2) {
-            Acc_NAME = Select.from(Account.class).first().N;
-            Acc_GUID = Select.from(Account.class).first().I;
-            binding.layoutAccount.setVisibility(View.GONE);
-        } else {
-            binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-        }
+        //endregion Create Order
 
 
         //region Cast Variable Dialog
@@ -404,28 +488,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
-
             getProduct();
         });
 
         //endregion Cast Variable Dialog
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = sharedPreferences.edit();
-        firstSync = sharedPreferences.getBoolean("firstSync", false);
-
-
-        for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
-            Invoice.deleteInTx(invoice);
-        }
-
-
-        List<Setting> setting = Select.from(Setting.class).list();
-        if (setting.size() > 0)
-            maxSales = setting.get(0).MAX_SALE;
-
-
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
 
 
         //region Cast DialogDescription
@@ -465,53 +531,48 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         btnRegisterDescription.setOnClickListener(v -> {
-            ArrayList<Product> resultpr = new ArrayList<>();
-            if (LauncherActivity.screenInches < 7) {
-                resultpr.addAll(Util.AllProduct);
+            ArrayList<Product> resultPrd = new ArrayList<>();
+
+            InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
+            if (invDetail != null) {
+                invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
+                invDetail.update();
+                if (LauncherActivity.screenInches < 7) {
+                    resultPrd.addAll(Util.AllProduct);
+                    CollectionUtils.filter(resultPrd, r -> r.I.equals(invDetail.PRD_UID));
+                }
+
             }
-            ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
-            CollectionUtils.filter(result, r -> r.INV_DET_UID.equals(GuidInv));
-            if (result.size() > 0) {
 
-                invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
+            if (resultPrd.size() > 0) {
 
-                CollectionUtils.filter(resultpr, r -> r.I.equals(result.get(0).PRD_UID));
-            }
-
-
-
-            if (resultpr.size() > 0) {
-                if (resultpr.get(0).descItem == null)
-                    resultpr.get(0).descItem = edtDescriptionItem.getText().toString();
-                else
-                    resultpr.get(0).descItem = edtDescriptionItem.getText().toString() + " " + resultpr.get(0).descItem;
+                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).descItem = edtDescriptionItem.getText().toString();
                 productAdapter.notifyDataSetChanged();
             }
+
             dialogDescription.dismiss();
         });
-        //endregion Cast DialogDescription
 
-
-        textWatcherProduct = new TextWatcher() {
+        edtDescriptionItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                searchProduct(s.toString());
-
+                if (s.toString().isEmpty()) {
+                    for (int i = 0; i < descriptionList.size(); i++) {
+                        descriptionList.get(i).Click = false;
+                    }
+                    descriptionAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
-        };
-
-        binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
+        });
+        //endregion Cast DialogDescription
 
 
         //region CONFIGURATION DATA PRODUCT_LEVEL1
@@ -723,11 +784,31 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         //region CONFIGURATION DATA PRODUCT
-        productAdapter = new ProductAdapter1(getActivity(), productList,maxSales);
 
+        //region Cast Product Configuration
+        textWatcherProduct = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                searchProduct(s.toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
+        //endregion Cast Product Configuration
+
+        productAdapter=new ProductAdapter1(getContext(),productList,maxSales,Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
         RecyclerViewLoadMoreScroll scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
@@ -752,23 +833,27 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         });
 
 
+
         binding.orderRecyclerViewProduct.addOnScrollListener(scrollListener);
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
         productAdapter.setOnClickListener(() -> {
-            if (MainOrderMobileFragment.invoiceDetailList.size() > 0)
-                binding.lItemBuy.setBadgeText(String.valueOf(invoiceDetailList.size()));
-            else
-                binding.lItemBuy.setBadgeText(null);
-            binding.orderListBtnRegister.setVisibility(View.VISIBLE);
-        });
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+            if (invDetails.size() > 0) {
+                binding.itemInvoiceDetail.setBadgeText(String.valueOf(invDetails.size()));
+                if (App.mode == 1)
+                    binding.orderListBtnRegister.setVisibility(View.VISIBLE);
+            } else
+                binding.itemInvoiceDetail.setBadgeText(null);
 
+        });
 
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
-                ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
+
                 if (result.size() > 0) {
                     edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
                     descriptionList.clear();
@@ -803,11 +888,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 sumPrice = 0;
                 sumPurePrice = 0;
 
-
-                for (int i = 0; i < invoiceDetailList.size(); i++) {
-                    sumPrice = sumPrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_QUANTITY)
-                            * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT);
-                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+                    sumPrice = (float) (sumPrice + invoiceDetails.get(i).INV_DET_QUANTITY
+                            * Float.parseFloat(invoiceDetails.get(i).INV_DET_PRICE_PER_UNIT));
+                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetails.get(i).INV_DET_TOTAL_AMOUNT);
                 }
 
 
@@ -820,47 +905,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion CONFIGURATION DATA PRODUCT
 
 
-
-
-        edtDescriptionItem.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().isEmpty()) {
-                    for (int i = 0; i < descriptionList.size(); i++) {
-                        descriptionList.get(i).Click = false;
-                    }
-                    descriptionAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-
-        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-        CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
-        if (prdResult.size() > 0) {
-            for (int i = 0; i < prdResult.size(); i++) {
-                Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
-            }
-        }
-
-
         //region Action BtnRegister
         binding.orderListBtnRegister.setOnClickListener(view1 -> {
-
-            if (invoiceDetailList.size() == 0) {
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+            if (invDetails.size() == 0) {
                 Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
             } else {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("type", "2");
+                bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Tbl_GUID", Tbl_GUID);
                 bundle.putString("Ord_TYPE", Ord_TYPE);
@@ -874,14 +927,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         });
         //endregion Action BtnRegister
-       isAllPermissionGranted();
+
+
+        isAllPermissionGranted();
 
         return binding.getRoot();
 
 
     }
-
-
 
 
     @Override
@@ -1009,20 +1062,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     //region Method
 
 
-    public List<Product> getDataViews(int j, int size) {
-        List<Product> dataViews = new ArrayList<>();
-        for (int i = j; i < size; i++) {
-            if (productListData.size() > i) {
-                dataViews.add(productListData.get(i));
-
-            } else {
-                isLastPage = true;
-            }
-        }
-        return dataViews;
-    }
-
-
     @SuppressLint("StaticFieldLeak")
     private void getProducts() {
         new AsyncTask() {
@@ -1037,15 +1076,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             @SuppressLint({"SetTextI18n", "StaticFieldLeak"})
             @Override
             protected void onPostExecute(Object o) {
-
-                AllProductLevel1.clear();
-                AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
-
-                AllProductLevel2.clear();
-                AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
-
-                // LauncherFragment.AllProduct.clear();
-                //LauncherFragment.AllProduct.addAll(Select.from(Product.class).list());
 
 
                 productLevel1List.clear();
@@ -1177,55 +1207,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
 
-                //region Create Order
 
-                //create Order
-                if (Inv_GUID.equals("")) {
-
-                    Inv_GUID = UUID.randomUUID().toString();
-                    Invoice order = new Invoice();
-                    order.INV_UID = Inv_GUID;
-                    Invoice.save(order);
-
-
-                }
-
-                //edit Order
-                else {
-                    ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(result, R -> R.getAmount() > 0);
-
-                    if (result.size() > 0) {
-                        Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
-                    }
-
-
-                    Invoice ord = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-                    List<Invoicedetail> invoicedetails = Select.from(Invoicedetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
-                    invoiceDetailList.clear();
-                    invoiceDetailList.addAll(invoicedetails);
-
-                    for (int i = 0; i < invoicedetails.size(); i++) {
-                        ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
-                        int finalI = i;
-                        //CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(orderDetails.get(finalI).MainGuid) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
-                        CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
-                        if (resultProducts.size() > 0) {
-                            Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + Double.parseDouble(invoicedetails.get(finalI).INV_DET_QUANTITY));
-                            Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
-                            productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
-
-
-                            binding.orderListBtnRegister.setVisibility(View.VISIBLE);
-
-
-                        }
-                    }
-
-
-                }
-
-                //endregion Create Order
 
                 binding.progressbar.setVisibility(View.GONE);
 
@@ -1245,7 +1227,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    public void loadMore() {
+    private void loadMore() {
 
 
         int pageSize = 18;
@@ -1285,8 +1267,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-
-    public void searchProduct(String search) {
+    private void searchProduct(String search) {
 
 
         if (binding.orderRecyclerViewProduct.getAdapter() != null) {
@@ -1395,57 +1376,25 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         List<ir.kitgroup.salein1.DataBase.Product> products = iDs.getProductList();
 
                         Util.AllProduct.clear();
-                        for (int i = 0; i < products.size(); i++) {
-                            Product product = new Product();
-                            product.I = products.get(i).I;
-                            product.STS = products.get(i).STS;
-                            product.PID2 = products.get(i).PID2;
-                            product.PID1 = products.get(i).PID1;
-                            product.N = products.get(i).N;
-                            product.AMOUNT=0.0;
-                            product.DES = products.get(i).DES;
-                            product.NIP = products.get(i).NIP;
-                            product.PU1 = products.get(i).PU1;
-                            product.PU2 = products.get(i).PU2;
-                            product.PU3 = products.get(i).PU3;
-                            product.PU4 = products.get(i).PU4;
-                            product.PU5 = products.get(i).PU5;
-                            product.PERC_DIS = products.get(i).PERC_DIS;
-                            product.PID1 = products.get(i).PID1;
-                            Util.AllProduct.add(product);
-                            if (!firstSync)
-                                product.save();
-                            else
-                                product.update();
-
-                            if (!products.get(i).IMG.equals("0"))
-                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, Objects.requireNonNull(getActivity()));
-
+                        ArrayList<Product> products1 = new ArrayList<>(products);
+                        CollectionUtils.filter(products1, p -> !p.IMG.equals("0"));
+                        if (products1.size() > 0) {
+                            for (int i = 0; i < products1.size(); i++) {
+                                SaveImageToStorage(StringToImage(products1.get(i).IMG), products1.get(i).I, Objects.requireNonNull(getActivity()));
+                            }
                         }
+                        Util.AllProduct.addAll(products);
 
 
-                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
-
-                        if (!firstSync)
-                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
-                        else
-                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
-                                PrdGroupLevel1.update();
-                            }
+                        AllProductLevel1.clear();
+                        if (iDs.getProductLevel1List() != null)
+                            AllProductLevel1.addAll(iDs.getProductLevel1List());
 
 
-                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
+                        AllProductLevel2.clear();
+                        if (iDs.getProductLevel2List() != null)
+                            AllProductLevel2.addAll(iDs.getProductLevel2List());
 
-                        if (!firstSync)
-                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-                        else
-                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
-                                prdGroupLevel2.update();
-                            }
-
-
-                        editor.putBoolean("firstSync", true);
-                        editor.apply();
 
                         getSetting();
 
@@ -1503,8 +1452,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.deleteAll(Setting.class);
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
                         Setting.saveInTx(settingsList);
-                        editor.putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE);
-                        editor.apply();
+                        sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
 
                         getTypeOrder();
 
@@ -1592,11 +1540,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     }
 
-    static public Bitmap StringToImage(String image) {
+    private Bitmap StringToImage(String image) {
         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
-
 
 
     private void showError(String error) {
@@ -1609,7 +1556,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding.progressbar.setVisibility(View.GONE);
     }
 
-    static public void SaveImageToStorage(Bitmap bitmapImage, String ID, Context context) {
+    private void SaveImageToStorage(Bitmap bitmapImage, String ID, Context context) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
 
@@ -1787,29 +1734,19 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 88) {
 
-            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED
-            )
-            ) {
+            if (grantResults.length <= 0 || (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
 
-                getProduct();
-            } else {
+                Toast.makeText(getActivity(), "برای مشاهده تصاویر کالاها لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getActivity(), "برای مشاهده صاویر کالاها لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
-                getProduct();
             }
-        } else {
-
-            Toast.makeText(getActivity(), "برای مشاهده صاویر کالاها لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
-            getProduct();
         }
+        getProduct();
 
 
     }
 
 
-
-
-    public static void deleteDirectory(File file) {
+    private void deleteDirectory(File file) {
         if (file.isDirectory()) {
 
 
@@ -1837,6 +1774,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             file.delete();
         }
     }
+
     private void isAllPermissionGranted() {
 
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)

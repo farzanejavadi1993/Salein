@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.cedarstudios.cedarmapssdk.CedarMaps;
+import com.cedarstudios.cedarmapssdk.model.MapID;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,7 +27,7 @@ public class App extends Application {
     public static Context context;
     public static Retrofit retrofit;
     public static int mode =2;//1  ordOrganization  //2  OrdClient
-    private String baseUrl = "http://185.201.49.204:9696/api/REST/";
+
 
     private static SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -60,8 +62,8 @@ public class App extends Application {
                         .create();
 
 
-                //String  baseUrl = "http://" + User.first(User.class).ipLocal + "/api/REST/";
-                String  baseUrl = "http://109.125.133.149:9999/api/REST/";
+                String  baseUrl = "http://192.168.20.8:96/api/REST/";
+               // String  baseUrl = "http://109.125.133.149:9999/api/REST/";
 
 
 
@@ -106,6 +108,12 @@ public class App extends Application {
             }
         }*/
 
+
+        CedarMaps.getInstance()
+                .setClientID("sportapp-6594917192157661130")
+                .setClientSecret("b2uejHNwb3J0YXBw4V7hZnhRDiV3fQ8aqbTay-mjSd1IXllmWRN1EezGsss=")
+                .setContext(this)
+                .setMapID(MapID.MIX);
 
         super.onCreate();
     }

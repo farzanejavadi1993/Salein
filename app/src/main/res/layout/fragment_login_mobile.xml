@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/inputMobile"
-            app:layout_constraintStart_toStartOf="@+id/inputMobile"
+            app:layout_constraintEnd_toEndOf="@+id/inputMobile"
             app:layout_constraintTop_toTopOf="@+id/inputMobile" />
 
 

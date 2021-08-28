@@ -26,7 +26,7 @@ import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.Classes.Utilities;
 import ir.kitgroup.salein1.DataBase.Invoice;
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.Tables;
 
 import ir.kitgroup.salein1.R;
@@ -73,11 +73,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             if (invoice != null) {
                 Utilities util = new Utilities();
                 Locale loc = new Locale("en_US");
-                Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
-                String date = (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year;
+                //Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
+               // String date = (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year;
 
 
-                holder.tvStatus.setText(date);
+              //  holder.tvStatus.setText(date);
                 holder.tableName.setText(invoice.Acc_name);
                 holder.tvCapacity.setText("سفارش بیرون بر");
             }
@@ -103,8 +103,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
                 Invoice ord3 = Select.from(Invoice.class).where("TBLUID ='" + table.I + "'").first();
                 String guid = ord3.INV_UID;
                 ord3.delete();
-                for (Invoicedetail ordDetail : Select.from(Invoicedetail.class).where("INVUID = '" + guid + "'").list()) {
-                    Invoicedetail.deleteInTx(ordDetail);
+                for (InvoiceDetail ordDetail : Select.from(InvoiceDetail.class).where("INVUID = '" + guid + "'").list()) {
+                    InvoiceDetail.deleteInTx(ordDetail);
                 }
             } catch (Exception ignored) {
 

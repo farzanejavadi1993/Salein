@@ -135,10 +135,11 @@
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/inputCode"
-            app:layout_constraintStart_toStartOf="@+id/inputCode"
+
+            app:layout_constraintEnd_toEndOf="@+id/inputCode"
             app:layout_constraintTop_toTopOf="@+id/inputCode" />
 
 

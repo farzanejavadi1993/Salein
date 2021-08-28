@@ -61,7 +61,7 @@ import ir.kitgroup.salein1.Adapters.TypeOrderAdapter;
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.OrderType;
 import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.ProductGroupLevel1;
@@ -69,15 +69,14 @@ import ir.kitgroup.salein1.DataBase.ProductGroupLevel2;
 import ir.kitgroup.salein1.DataBase.Setting;
 import ir.kitgroup.salein1.DataBase.Tables;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail;
 import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein1.Fragments.TabletView.OrderFragment;
 
 
-import ir.kitgroup.salein1.Models.ModelProduct;
-import ir.kitgroup.salein1.Models.ModelSetting;
-import ir.kitgroup.salein1.Models.ModelTable;
-import ir.kitgroup.salein1.Models.ModelTypeOrder;
+import ir.kitgroup.salein1.models.ModelProduct;
+import ir.kitgroup.salein1.models.ModelSetting;
+import ir.kitgroup.salein1.models.ModelTable;
+import ir.kitgroup.salein1.models.ModelTypeOrder;
 import ir.kitgroup.salein1.R;
 import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentLauncherOrganizationBinding;
@@ -179,8 +178,8 @@ public class LauncherOrganizationFragment extends Fragment {
                 if (Invoice.count(Invoice.class) > 0)
                     Invoice.deleteAll(Invoice.class);
 
-                if (Invoicedetail.count(Invoicedetail.class) > 0)
-                    Invoicedetail.deleteAll(Invoicedetail.class);
+                if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                    InvoiceDetail.deleteAll(InvoiceDetail.class);
 
                 if (OrderType.count(OrderType.class) > 0)
                     OrderType.deleteAll(OrderType.class);
@@ -307,7 +306,7 @@ public class LauncherOrganizationFragment extends Fragment {
                     bundle.putString("Acc_NAME", "");
                     bundle.putString("Acc_GUID", "");
                     bundle.putString("Ord_TYPE", "");
-                    InvoiceDetail invoiceDetailFragment = new InvoiceDetail();
+                    ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail invoiceDetailFragment = new ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail();
                     invoiceDetailFragment.setArguments(bundle);
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, invoiceDetailFragment, "InvoiceDetailFragment").addToBackStack("InvoiceDetailF").commit();
                 } else {
@@ -619,8 +618,8 @@ public class LauncherOrganizationFragment extends Fragment {
                             else
                                 product.update();
 
-                            if (!products.get(i).IMG.equals("0"))
-                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, Objects.requireNonNull(getActivity()));
+                          /*  if (!products.get(i).IMG.equals("0"))
+                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, Objects.requireNonNull(getActivity()));*/
 
                         }
 

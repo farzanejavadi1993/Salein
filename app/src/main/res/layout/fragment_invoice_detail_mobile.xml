@@ -3,289 +3,270 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:clickable="true"
-        android:focusable="true">
-
 
         <RelativeLayout
-            android:id="@+id/order_list_date_layout"
+            android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/order_list_date_bottom">
+            android:layout_height="match_parent"
+            android:background="#D8D8D8"
+            android:clickable="true"
+            android:focusable="true">
 
 
-            <TextView
-
-                android:id="@+id/tvName_customer"
+            <RelativeLayout
+                android:id="@+id/order_list_date_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="@dimen/margin10"
-                android:fontFamily="@font/iransans"
-                android:hint="@string/name_customer"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="@dimen/text_normal_mobile_size" />
+                android:background="@drawable/order_list_date_bottom">
 
-            <TextView
-                android:id="@+id/txt_table_number"
-                android:layout_width="wrap_content"
+
+                <TextView
+
+                    android:id="@+id/tvName_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/margin10"
+                    android:fontFamily="@font/iransans"
+                    android:hint="@string/name_customer"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="@dimen/text_normal_mobile_size" />
+
+                <TextView
+                    android:id="@+id/txt_table_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin10"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="@dimen/margin10"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+
+                <TextView
+
+                    android:id="@+id/txt_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvName_customer"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/margin10"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+
+
+                <TextView
+                    android:id="@+id/txt_type_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvName_customer"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin10"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/margin10"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/margin10"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="@dimen/margin10"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium_mobile_size" />
+                android:layout_above="@+id/order_list_layout_sumPrice_detail_order"
+                android:layout_below="@+id/order_list_date_layout"
+                android:orientation="vertical">
 
-            <TextView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_detail_invoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl" />
 
-                android:id="@+id/txt_date"
-                android:layout_width="wrap_content"
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:id="@+id/order_list_layout_sumPrice_detail_order"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvName_customer"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="@dimen/margin10"
-                android:layout_marginBottom="8dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium_mobile_size" />
+                android:layout_alignParentBottom="true"
+
+                android:background="@drawable/order_sum_price_order_list_layout"
+                android:elevation="@dimen/margin4"
+                android:orientation="vertical"
+                tools:targetApi="lollipop">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8sp"
+                    android:layout_marginTop="@dimen/margin10"
+                    android:layout_marginRight="8sp">
+
+                    <TextView
+                        android:id="@+id/order_list_sumPrice_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/sum_price"
+                        android:textColor="@color/black_l"
+                        android:textSize="@dimen/text_medium_mobile_size"
+                        tools:ignore="RelativeOverlap" />
+
+                    <TextView
+                        android:id="@+id/sumPrice_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/rial_0"
+                        android:textColor="@color/black_light"
+                        android:textSize="@dimen/text_medium_mobile_size" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="8sp">
+
+                    <TextView
+                        android:id="@+id/order_list_purePrice_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/pure_price"
+                        android:textColor="@color/black_l"
+                        android:textSize="@dimen/text_medium_mobile_size"
+                        tools:ignore="RelativeOverlap" />
+
+                    <TextView
+                        android:id="@+id/purePrice_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/rial_0"
+                        android:textColor="@color/black_light"
+                        android:textSize="@dimen/text_medium_mobile_size" />
+                </RelativeLayout>
 
 
-            <TextView
-                android:id="@+id/txt_type_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvName_customer"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="@dimen/margin10"
-                android:layout_marginBottom="8dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium_mobile_size" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="8sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="8sp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center|bottom"
+                    >
+
+
+                    <TextView
+
+                        android:id="@+id/btn_continue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/order_item_recycle_group__card_background"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="@string/continue_"
+                        android:textColor="#fff"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/layout_edit_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="8sp"
+                    android:layout_marginTop="@dimen/margin4"
+                    android:layout_marginRight="8sp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center|bottom"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_marginLeft="2dp"
+                        android:visibility="gone"
+                        app:cornerRadius="@dimen/margin4"
+                        android:fontFamily="@font/iransans"
+                        android:layout_marginRight="4dp"
+                        android:id="@+id/btn_resend"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.33"
+                        android:backgroundTint="@color/purple_700"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="ارسال مجدد"
+                        android:textColor="#fff"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_marginLeft="2dp"
+                        app:cornerRadius="@dimen/margin4"
+                        android:fontFamily="@font/iransans"
+                        android:layout_marginRight="4dp"
+                        android:id="@+id/btn_delete"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.33"
+                        android:backgroundTint="@color/red_table"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="حذف"
+                        android:textColor="#fff"
+
+
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_marginLeft="4dp"
+                        app:cornerRadius="@dimen/margin4"
+                        android:fontFamily="@font/iransans"
+                        android:layout_marginRight="@dimen/margin2"
+                        android:id="@+id/btn_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.33"
+                        android:backgroundTint="@color/green_table"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="ویرایش"
+                        android:textColor="#fff"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+
+
+
+                </LinearLayout>
+            </LinearLayout>
 
 
         </RelativeLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/order_list_layout_sumPrice_detail_order"
-            android:layout_below="@+id/order_list_date_layout"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_detail_invoice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layoutDirection="rtl" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/order_list_layout_sumPrice_detail_order"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/order_sum_price_order_list_layout"
-            android:elevation="@dimen/margin4"
-            android:orientation="vertical"
-            tools:targetApi="lollipop">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="@dimen/margin10"
-                android:layout_marginRight="8sp">
-
-                <TextView
-                    android:id="@+id/order_list_sumPrice_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/sum_price"
-                    android:textColor="@color/black_l"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="RelativeOverlap" />
-
-                <TextView
-                    android:id="@+id/sumPrice_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
-                    android:textSize="@dimen/text_medium_mobile_size" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="8sp">
-
-                <TextView
-                    android:id="@+id/order_list_purePrice_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/pure_price"
-                    android:textColor="@color/black_l"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="RelativeOverlap" />
-
-                <TextView
-                    android:id="@+id/purePrice_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
-                    android:textSize="@dimen/text_medium_mobile_size" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="8sp">
-
-                <EditText
-                    android:id="@+id/edt_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/border_edittext"
-                    android:fontFamily="@font/iransans"
-                    android:hint="@string/description"
-                    android:inputType="text"
-                    android:padding="10dp"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black_l"
-                    android:textDirection="firstStrongRtl"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="Autofill" />
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/layout_continue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="8sp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center|bottom"
-              >
-
-
-                <TextView
-
-                    android:id="@+id/btn_continue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/order_item_recycle_group__card_background"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="@string/continue_"
-                    android:textColor="#fff"
-                    android:textSize="12sp" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/layout_edit_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="@dimen/margin4"
-                android:layout_marginRight="8sp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center|bottom"
-                android:orientation="horizontal">
-                <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="2dp"
-                    android:visibility="gone"
-                    app:cornerRadius="@dimen/margin4"
-                    android:layout_marginRight="4dp"
-                    android:id="@+id/btn_resend"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:backgroundTint="@color/purple_700"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="ارسال مجدد"
-                    android:textColor="#fff"
-                    android:textSize="12sp"
-                    tools:ignore="HardcodedText" />
-                <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="2dp"
-                    app:cornerRadius="@dimen/margin4"
-                    android:layout_marginRight="4dp"
-                    android:id="@+id/btn_delete"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:backgroundTint="@color/red_table"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="حذف"
-                    android:textColor="#fff"
-                    android:textSize="12sp"
-                    tools:ignore="HardcodedText" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="4dp"
-                    app:cornerRadius="@dimen/margin4"
-                    android:layout_marginRight="@dimen/margin2"
-                    android:id="@+id/btn_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:backgroundTint="@color/green_table"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="ویرایش"
-                    android:textColor="#fff"
-                    android:textSize="12sp"
-                    tools:ignore="HardcodedText" />
-
-
-
-            </LinearLayout>
-        </LinearLayout>
-
-
-    </RelativeLayout>
 
 </layout>

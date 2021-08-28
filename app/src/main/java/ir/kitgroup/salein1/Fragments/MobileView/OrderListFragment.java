@@ -72,7 +72,7 @@ public class OrderListFragment extends Fragment {
             bundle.putString("type", "1");
             bundle.putString("Inv_GUID", Inv_GUID);
             bundle.putString("Tbl_GUID", "");
-            bundle.putString("Ord_TYPE",invoice.INV_TYPE_ORDER);
+            bundle.putString("Ord_TYPE",String.valueOf(invoice.INV_TYPE_ORDER));
 
             InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
             inVoiceDetailFragmentMobile.setArguments(bundle);

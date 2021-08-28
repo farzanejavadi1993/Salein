@@ -61,12 +61,12 @@ public class LoginClientFragment extends Fragment {
         //region Create User
         User.deleteAll(User.class);
         User user = new User();
+       user.userName = "admin";
+       user.passWord = "123";
+       user.ipLocal = "192.168.20.8:96";
 //        user.userName = "admin";
-//        user.passWord = "123";
-//        user.ipLocal = "192.168.20.8:96";
-        user.userName = "admin";
-        user.passWord = "0123";
-        user.ipLocal = "109.125.133.149:9999";
+//        user.passWord = "0123";
+//        user.ipLocal = "109.125.133.149:9999";
         user.save();
         //endregion Create User
 

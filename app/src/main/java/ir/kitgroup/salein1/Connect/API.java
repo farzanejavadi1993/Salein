@@ -59,4 +59,9 @@ public interface API {
 
     @GET("SendSms")
     Call<String> getSmsLogin(@Query("userName") String userName, @Query("password") String passWord,@Query("message") String message,@Query("mobile") String mobile);
+
+
+    @GET("GetInvoice")
+    Call<String> getInvoice(@Query("userName") String userName, @Query("passWord") String passWord,@Query("InvoiceId") String InvoiceId);
+
 }

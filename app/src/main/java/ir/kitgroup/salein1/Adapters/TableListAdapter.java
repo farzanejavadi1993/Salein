@@ -2,40 +2,26 @@ package ir.kitgroup.salein1.Adapters;
 
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.card.MaterialCardView;
 import com.orm.query.Select;
-
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.Classes.Utilities;
 import ir.kitgroup.salein1.DataBase.Invoice;
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
-import ir.kitgroup.salein1.DataBase.OrderType;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.Tables;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.R;
@@ -152,8 +138,8 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.view
                         Invoice ord3 = Select.from(Invoice.class).where("TBLUID ='" + table.I + "'").first();
                         String guid = ord3.INV_UID;
                         ord3.delete();
-                        for (Invoicedetail ordDetail : Select.from(Invoicedetail.class).where("INVUID = '" + guid + "'").list()) {
-                            Invoicedetail.deleteInTx(ordDetail);
+                        for (InvoiceDetail ordDetail : Select.from(InvoiceDetail.class).where("INVUID = '" + guid + "'").list()) {
+                            InvoiceDetail.deleteInTx(ordDetail);
                         }
                     } catch (Exception e) {
 
@@ -178,14 +164,14 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.view
                 else
                 holder.tableName.setText("شماره فاکتور : " + (holder.getAdapterPosition()+1)+"("+"ناموفق"+")");
 
-            holder.tvCapacity.setText("جمع مبلغ : " + format.format(Double.parseDouble(invoice.INV_EXTENDED_AMOUNT)));
+            holder.tvCapacity.setText("جمع مبلغ : " + format.format(invoice.INV_EXTENDED_AMOUNT));
 
 
             Utilities util = new Utilities();
             Locale loc = new Locale("en_US");
-            Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
-            String date=(sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (String.valueOf(sc.strMonth)) + "\t" + String.valueOf(sc.year);
-            holder.tvStatus.setText("تاریخ فاکتور : " + date );
+           // Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
+          //  String date=(sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (String.valueOf(sc.strMonth)) + "\t" + String.valueOf(sc.year);
+           // holder.tvStatus.setText("تاریخ فاکتور : " + date );
         }
 
 

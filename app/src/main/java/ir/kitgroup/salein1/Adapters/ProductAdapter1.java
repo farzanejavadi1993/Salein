@@ -48,35 +48,38 @@ import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein1.Classes.App;
 import ir.kitgroup.salein1.Classes.Constant;
 import ir.kitgroup.salein1.Classes.CustomProgress;
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.User;
-import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
+
 import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 import ir.kitgroup.salein1.Fragments.TabletView.OrderFragment;
 import ir.kitgroup.salein1.Fragments.ShowDetailFragment;
 
-import ir.kitgroup.salein1.Models.ModelLog;
+import ir.kitgroup.salein1.models.ModelLog;
 import ir.kitgroup.salein1.R;
-import ir.kitgroup.salein1.Util.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ir.kitgroup.salein1.Util.Util.AllProduct;
 
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
 
     private final Context context;
 
-    private CustomProgress customProgress;
+    private final CustomProgress customProgress;
 
-    private final List<Product> productsList ;
+    private final List<Product> productsList;
 
     private final String maxSale;
 
+    private final String Inv_GUID;
+
     private final DecimalFormat df;
 
-    private  final DecimalFormat format = new DecimalFormat("#,###,###,###");
+    private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
     public interface ClickItem {
@@ -105,21 +108,19 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Context context, List<Product> productsList,String maxSale) {
+    public ProductAdapter1(Context context, List<Product> productsList, String maxSale, String Inv_GUID) {
         this.context = context;
         this.productsList = productsList;
-        this.maxSale=maxSale;
-        customProgress=CustomProgress.getInstance();
-
+        this.maxSale = maxSale;
+        this.Inv_GUID = Inv_GUID;
+        customProgress = CustomProgress.getInstance();
         df = new DecimalFormat();
-        //df.setMaximumFractionDigits(2);
 
 
     }
 
 
     public void addLoadingView() {
-        //add loading item
         new Handler().post(() -> {
             productsList.add(null);
             notifyItemInserted(productsList.size() - 1);
@@ -127,7 +128,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
     public void removeLoadingView() {
-        //Remove loading item
         productsList.remove(productsList.size() - 1);
         notifyItemRemoved(productsList.size());
     }
@@ -169,15 +169,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
 
 
-      
-
         if (productsList.get(holder.getAdapterPosition()) != null) {
-            holder.itemClick = false;
 
 
             String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
             File file = new File(yourFilePath);
-
 
             if (file.exists()) {
 
@@ -193,42 +189,24 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             } else {
-
-
                 holder.productImage.setImageResource(R.drawable.application_logo1);
-
-
             }
+
 
             final int newColor = context.getResources().getColor(R.color.purple_500);
             holder.ivEdit.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
 
 
-
-
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getPRDNAME());
-
 
             if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
                 holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()) + " ریال ");
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
             holder.tab = 0;
             holder.productImage.setOnClickListener(view -> {
                 holder.tab++;
-                if (holder.tab == 3) {
+                if (holder.tab == 2) {
                     holder.tab = 0;
                     Bundle bundle = new Bundle();
                     bundle.putString("Id", productsList.get(holder.getAdapterPosition()).I);
@@ -239,72 +217,73 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             });
 
-            if (productsList.get(holder.getAdapterPosition()).descItem != null)
-                holder.edtDesc.setText(productsList.get(holder.getAdapterPosition()).descItem);
-            else
-                holder.edtDesc.setText("");
 
 
 
 
-            if (productsList.get(holder.getAdapterPosition()).getAmount() > 0) {
+            ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
+            CollectionUtils.filter(resultPrd, r -> r.I.equals(productsList.get(holder.getAdapterPosition()).I));
 
-                holder.ivMinus.setVisibility(View.VISIBLE);
-                holder.ProductAmountTxt.setVisibility(View.VISIBLE);
-            } else {
-                holder.ivMinus.setVisibility(View.GONE);
-                holder.ProductAmountTxt.setVisibility(View.GONE);
+            if (resultPrd.size() > 0) {
+                if (resultPrd.get(0).getAmount() > 0) {
+                    holder.ivMinus.setVisibility(View.VISIBLE);
+                    holder.ProductAmountTxt.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ivMinus.setVisibility(View.GONE);
+                    holder.ProductAmountTxt.setVisibility(View.GONE);
+                }
             }
+
+
+            if (productsList.get(holder.getAdapterPosition()).descItem != null) {
+                if (resultPrd.size()>0)
+                holder.edtDesc.setText(resultPrd.get(0).descItem);
+
+            } else
+                holder.edtDesc.setText("");
 
             holder.ivMax.setOnClickListener(view -> {
 
 
-                    holder.itemClick = true;
-                    doAction(
-                            holder.textWatcher,
-                            holder.ProductAmountTxt,
-                            holder.ivMinus,
-                            holder.getAdapterPosition(),
-                            Select.from(User.class).first().userName,
-                            Select.from(User.class).first().passWord,
-                            maxSale,
-                            String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()),
-                            productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,
-                            productsList.get(holder.getAdapterPosition()).getPRDUID(),
-                            "",
-                            1
+                doAction(
+                        holder.textWatcher,
+                        holder.ProductAmountTxt,
+                        holder.ivMinus,
+                        Select.from(User.class).first().userName,
+                        Select.from(User.class).first().passWord,
+                        maxSale,
+                        productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                        "",
+                        1
 
 
-                    );
-                    //clickItem.onClick();
+                );
+                //clickItem.onClick();
 
 
             });
 
             holder.ivMinus.setOnClickListener(v -> {
 
-                    doAction(
-                            holder.textWatcher,
-                            holder.ProductAmountTxt,
-                            holder.ivMinus,
-                            holder.getAdapterPosition(),
-                            Select.from(User.class).first().userName,
-                            Select.from(User.class).first().passWord,
-                            maxSale,
-                            String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()),
-                            productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,
-                            productsList.get(holder.getAdapterPosition()).getPRDUID(),
-                            "",
-                            2
+                doAction(
+                        holder.textWatcher,
+                        holder.ProductAmountTxt,
+                        holder.ivMinus,
+                        Select.from(User.class).first().userName,
+                        Select.from(User.class).first().passWord,
+                        maxSale,
+                        productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                        "",
+                        2
 
-                    );
-                    //clickItem.onClick(productsList.get(holder.getAdapterPosition()).getPRDUID(), String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()), productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,"", 2);
+                );
+                //clickItem.onClick(productsList.get(holder.getAdapterPosition()).getPRDUID(), String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()), productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,"", 2);
 
             });
 
 
-            if (holder.textWatcher==null){
-                holder.textWatcher=new TextWatcher() {
+            if (holder.textWatcher == null) {
+                holder.textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -325,24 +304,18 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
                         }
 
-                            doAction(
-                                    holder.textWatcher,
-                                    holder.ProductAmountTxt,
-                                    holder.ivMinus,
-                                    holder.getAdapterPosition(),
-                                    Select.from(User.class).first().userName,
-                                    Select.from(User.class).first().passWord,
-                                    maxSale,
-                                    String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()),
-                                    productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,
-                                    productsList.get(holder.getAdapterPosition()).getPRDUID(),
-                                    s.toString(),
-                                    3
+                        doAction(
+                                holder.textWatcher,
+                                holder.ProductAmountTxt,
+                                holder.ivMinus,
+                                Select.from(User.class).first().userName,
+                                Select.from(User.class).first().passWord,
+                                maxSale,
+                                productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                                s,
+                                3
 
-                            );
-                           // clickItem.onClick(productsList.get(holder.getAdapterPosition()).getPRDUID(), String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()), productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,s.toString(), 3);
-
-
+                        );
 
 
                     }
@@ -356,17 +329,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
-            holder.ProductAmountTxt.setText(df.format(productsList.get(holder.getAdapterPosition()).getAmount()));
+            if (resultPrd.size() > 0) {
+                holder.ProductAmountTxt.setText(df.format(resultPrd.get(0).getAmount()));
+            }
+
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
-
-
-
-
 
 
             holder.ivEdit.setOnClickListener(v -> {
                 if (productsList.get(holder.getAdapterPosition()).AMOUNT != null) {
-
                     descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).I, productsList.get(holder.getAdapterPosition()).AMOUNT);
                 } else {
                     Toast.makeText(context, " برای کالا  مقداروارد کنید", Toast.LENGTH_SHORT).show();
@@ -374,8 +345,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
         }
-      
-        
+
 
     }
 
@@ -385,7 +355,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private int tab = 0;
 
 
-        private boolean itemClick = false;
         private final TextView productName;
         private final TextView productPrice;
         private final EditText ProductAmountTxt;
@@ -418,7 +387,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             ProductAmountTxt = itemView.findViewById(R.id.order_recycle_item_product_txt_amount);
 
 
-
             ivMinus = itemView.findViewById(R.id.iv_minus);
             ivMax = itemView.findViewById(R.id.iv_max);
 
@@ -447,13 +415,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         }
     }
-    private void getMaxSales(TextWatcher textWatcher,EditText ProductAmountTxt,ImageView ivMinus,String userName, String pass, String Price, Double
-            discount, String GuidProduct,String s, int MinOrPlus) {
-        customProgress.showProgress(context,  "دریافت مانده",false);
+
+    private void getMaxSales(TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+        customProgress.showProgress(context, "در حال دریافت مانده کالا..", false);
 
         try {
 
-            Call<String> call = App.api.getMaxSales(userName, pass, GuidProduct);
+            Call<String> call = App.api.getMaxSales(userName, pass, Prd_GUID);
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -481,35 +449,38 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     if (remain != -1000000000) {
 
-                        if (Integer.parseInt(response.body()) <= 0) {
+                        if (remain <= 0) {
                             Toast.makeText(context, "این کالا موجود نمی باشد", Toast.LENGTH_SHORT).show();
                             customProgress.hideProgress();
                             return;
                         }
-                        ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
-                        CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GuidProduct));
+                        ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
+                        CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
 
                         if (resultProduct.size() > 0) {
                             double amount = 0;
                             if (MinOrPlus == 1)
-                                amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+                                amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+
 
                             else if (MinOrPlus == 2) {
-                                if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                                    amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
-
+                                if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
+                                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
                                 else
                                     return;
 
-                            }
-                            else {
+
+                            } else {
                                 try {
-                                    amount=Float.parseFloat(s);
-                                }catch (Exception ignored){
+                                    amount = Float.parseFloat(s);
+
+                                } catch (Exception ignored) {
 
                                 }
                             }
 
+
+                            AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
 
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
@@ -517,19 +488,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                 return;
                             }
-                            Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
 
 
-                            ArrayList<Invoicedetail> result = new ArrayList<>(MainOrderMobileFragment.invoiceDetailList);
-                            CollectionUtils.filter(result, r -> r.PRD_UID.equals(GuidProduct));
-                            //edit
+                            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+                            ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
+                            CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+
+                            //edit row
                             if (result.size() > 0) {
-
-
+                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
                                 if (amount == 0) {
-                                    MainOrderMobileFragment.invoiceDetailList.remove(result.get(0));
+                                    if (invoiceDetail != null)
+                                        invoiceDetail.delete();
 
-                                    if (MinOrPlus!=3) {
+
+                                    if (MinOrPlus != 3) {
                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                         ProductAmountTxt.setText("0");
                                         ProductAmountTxt.addTextChangedListener(textWatcher);
@@ -542,55 +515,36 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     return;
                                 }
 
-                                Double sumprice = (amount * Float.parseFloat(Price));
-                                Double discountPrice = sumprice * discount;
-                                Double totalPrice = sumprice - discountPrice;
-                                MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
-                                MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                                MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
 
-                                if (MinOrPlus!=3){
+                                if (invoiceDetail!=null){
+                                    invoiceDetail.INV_DET_QUANTITY=amount;
+                                    invoiceDetail.update();
+                                }
+
+                                if (MinOrPlus != 3) {
                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                     ProductAmountTxt.setText(df.format(amount));
                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                 }
 
-
-                                ivMinus.setVisibility(View.VISIBLE);
-                                ProductAmountTxt.setVisibility(View.VISIBLE);
-
-
-
                             }
+                            //create row
                             else {
-                                Invoicedetail invoicedetail = new Invoicedetail();
+                                InvoiceDetail invoicedetail = new InvoiceDetail();
                                 invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                                invoicedetail.INV_UID = MainOrderMobileFragment.Inv_GUID;
-                                invoicedetail.INV_DET_QUANTITY = String.valueOf(amount);
-                                invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-                                invoicedetail.INV_DET_DISCOUNT = "0";
-                                Double sumprice = (amount * Float.parseFloat(Price));
-                                Double discountPrice = sumprice * discount;
-                                Double totalPrice = sumprice - discountPrice;
-                                invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                invoicedetail.INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                                invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                invoicedetail.INV_DET_TAX = "0";
-                                invoicedetail.INV_DET_STATUS = true;
-                                invoicedetail.PRD_UID = GuidProduct;
-                                invoicedetail.INV_DET_TAX_VALUE = "0";
-                                invoicedetail.INV_DET_DESCRIBTION = "";
-                                MainOrderMobileFragment.invoiceDetailList.add(invoicedetail);
+                                invoicedetail.INV_UID = Inv_GUID;
+                                invoicedetail.INV_DET_QUANTITY = amount;
+                                invoicedetail.PRD_UID = Prd_GUID;
+                                invoicedetail.save();
 
 
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText(df.format(amount));
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
-                                ivMinus.setVisibility(View.VISIBLE);
-                                ProductAmountTxt.setVisibility(View.VISIBLE);
 
                             }
+                            ivMinus.setVisibility(View.VISIBLE);
+                            ProductAmountTxt.setVisibility(View.VISIBLE);
 
 
                             clickItem.onClick();
@@ -621,108 +575,95 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void doAction(TextWatcher textWatcher,EditText ProductAmountTxt,ImageView ivMinus,int position,String userName, String passWord, String maxSales, String Price, double discount, String Inv_GUID, String  s, int MinOrPlus){
+    private void doAction(TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (maxSales.equals("1")) {
-            getMaxSales(textWatcher,ProductAmountTxt,ivMinus,userName, passWord, Price, discount, Inv_GUID,s, MinOrPlus);
-        }
-        else {
-            ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
-            CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Inv_GUID));
+            getMaxSales(textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+        } else {
+            ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
+            CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
 
             if (resultProduct.size() > 0) {
                 double amount = 0;
                 if (MinOrPlus == 1)
-                    amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
+                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
                 else if (MinOrPlus == 2) {
-                    if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
+                    if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
+                        amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
 
                     else
                         return;
 
-                }else {
+                } else {
                     try {
-                        amount=Float.parseFloat(s);
-                    }catch (Exception e){
+                        amount = Float.parseFloat(s);
+                    } catch (Exception ignored) {
 
                     }
                 }
 
 
-                Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
+                AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
 
+                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
+                CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
 
-                ArrayList<Invoicedetail> result = new ArrayList<>(MainOrderMobileFragment.invoiceDetailList);
-                CollectionUtils.filter(result, r -> r.PRD_UID.equals(Inv_GUID));
                 //edit
                 if (result.size() > 0) {
+                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID +"'").first();
                     if (amount == 0) {
-                        MainOrderMobileFragment.invoiceDetailList.remove(result.get(0));
+                        if (invoiceDetail!=null)
+                            invoiceDetail.delete();
 
-                       if (MinOrPlus!=3) {
-                           ProductAmountTxt.removeTextChangedListener(textWatcher);
 
-                           ProductAmountTxt.setText("0");
-                           ProductAmountTxt.addTextChangedListener(textWatcher);
-                           ivMinus.setVisibility(View.GONE);
-                           ProductAmountTxt.setVisibility(View.GONE);
-                       }
+                        if (MinOrPlus != 3) {
+                            ProductAmountTxt.removeTextChangedListener(textWatcher);
+                            ProductAmountTxt.setText("0");
+                            ProductAmountTxt.addTextChangedListener(textWatcher);
+                            ivMinus.setVisibility(View.GONE);
+                            ProductAmountTxt.setVisibility(View.GONE);
+                        }
 
-                       clickItem.onClick();
-                       return;
+                        clickItem.onClick();
+                        return;
                     }
 
-                    Double sumprice = (amount * Float.parseFloat(Price));
-                    Double discountPrice = sumprice * discount;
-                    Double totalPrice = sumprice - discountPrice;
-                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
-                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                   if (MinOrPlus!=3){
-                       ProductAmountTxt.removeTextChangedListener(textWatcher);
-                       ProductAmountTxt.setText(df.format(amount));
-                       ProductAmountTxt.addTextChangedListener(textWatcher);
-                   }
+                    if (invoiceDetail!=null){
+                        invoiceDetail.INV_DET_QUANTITY=amount;
+                        invoiceDetail.update();
+                    }
 
-
-                    ivMinus.setVisibility(View.VISIBLE);
-                    ProductAmountTxt.setVisibility(View.VISIBLE);
+                    if (MinOrPlus != 3) {
+                        ProductAmountTxt.removeTextChangedListener(textWatcher);
+                        ProductAmountTxt.setText(df.format(amount));
+                        ProductAmountTxt.addTextChangedListener(textWatcher);
+                    }
 
 
 
-                } else {
-                    Invoicedetail invoicedetail = new Invoicedetail();
+                }
+                //Create
+                else {
+                    InvoiceDetail invoicedetail = new InvoiceDetail();
                     invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                    invoicedetail.INV_UID = MainOrderMobileFragment.Inv_GUID;
-                    invoicedetail.INV_DET_QUANTITY = String.valueOf(amount);
-                    invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-                    invoicedetail.INV_DET_DISCOUNT = "0";
-                    Double sumprice = (amount * Float.parseFloat(Price));
-                    Double discountPrice = sumprice * discount;
-                    Double totalPrice = sumprice - discountPrice;
-                    invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                    invoicedetail.INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-                    invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                    invoicedetail.INV_DET_TAX = "0";
-                    invoicedetail.INV_DET_STATUS = true;
-                    invoicedetail.PRD_UID = Inv_GUID;
-                    invoicedetail.INV_DET_TAX_VALUE = "0";
-                    invoicedetail.INV_DET_DESCRIBTION = "";
-                    MainOrderMobileFragment.invoiceDetailList.add(invoicedetail);
+                    invoicedetail.INV_UID = Inv_GUID;
+                    invoicedetail.INV_DET_QUANTITY = amount;
+                    invoicedetail.PRD_UID = Prd_GUID;
+                    invoicedetail.save();
+
 
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
-
                     ProductAmountTxt.setText(df.format(amount));
                     ProductAmountTxt.addTextChangedListener(textWatcher);
-                    ivMinus.setVisibility(View.VISIBLE);
-                    ProductAmountTxt.setVisibility(View.VISIBLE);
+
+
 
                     clickItem.onClick();
 
                 }
-
+                ivMinus.setVisibility(View.VISIBLE);
+                ProductAmountTxt.setVisibility(View.VISIBLE);
 
 
             }

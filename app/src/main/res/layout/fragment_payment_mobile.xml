@@ -17,6 +17,7 @@
             android:layout_height="?attr/actionBarSize">
 
             <ImageView
+                android:id="@+id/iv_back"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_alignParentEnd="true"
@@ -45,80 +46,74 @@
 
 
         <RelativeLayout
-
+            android:layout_below="@+id/toolbar"
             android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="14dp"
-            android:layout_marginLeft="14dp"
-            android:id="@+id/rl_type_order"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="22dp"
+            android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
+
             >
 
             <TextView
                 android:textStyle="bold"
-                android:text="@string/type_order"
-                android:textSize="14sp"
+                android:text="@string/address"
+                android:textSize="13sp"
                 android:textColor="@color/medium_color"
-                android:id="@+id/tv_type_order"
+                android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
 
 
 
+
             <com.google.android.material.card.MaterialCardView
-                android:backgroundTint="@color/white"
-                android:id="@+id/card_type_order"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp"
-                android:layout_below="@+id/tv_type_order"
-                app:strokeWidth="1dp"
+                android:layout_marginTop="@dimen/margin8"
+
+                android:layout_below="@+id/tv_address"
                 app:strokeColor="@color/purple_700"
+                android:id="@+id/layout_address"
+                app:strokeWidth="1.5dp"
+                android:backgroundTint="@color/white"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
                 tools:targetApi="lollipop">
                 <androidx.constraintlayout.widget.ConstraintLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginRight="@dimen/margin8"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:rotation="270"
-                        android:padding="@dimen/margin4"
-                        android:src="@drawable/ic_back"
-                        android:id="@+id/iv_type_order"
+                        android:padding="@dimen/margin10"
+                        android:id="@+id/iv_address"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin8"
-                        android:layout_marginEnd="8dp"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_location"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/tv_title_type_order"
+
+                        android:layout_marginLeft="@dimen/margin10"
+                        android:id="@+id/tvTAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="12dp"
+
                         android:textColor="@color/medium_color"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_type_order"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_type_order"
-                        app:layout_constraintTop_toTopOf="@+id/iv_type_order" />
-
-
-
-
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_address"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_address"
+                        app:layout_constraintTop_toTopOf="@+id/iv_address" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -128,19 +123,21 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="14dp"
-            android:layout_marginLeft="14dp"
+
+            android:layout_below="@+id/layoutAddress"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="22dp"
             android:id="@+id/layoutPayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_type_order"
+
             >
 
             <TextView
                 android:textStyle="bold"
                 android:text="@string/type_pay"
-                android:textSize="@dimen/text_x_large_mobile_size"
+                android:textSize="13sp"
                 android:textColor="@color/medium_color"
                 android:id="@+id/tv_payment"
                 android:layout_width="wrap_content"
@@ -158,7 +155,7 @@
                 android:id="@+id/layout_payment_place"
                 app:strokeWidth="1.5dp"
                 android:backgroundTint="@color/white"
-                android:layout_height="68dp"
+                android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 android:layout_width="match_parent"
                 tools:targetApi="lollipop">
@@ -189,7 +186,7 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:text="@string/pay_place"
                         android:textColor="@color/medium_color"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -197,7 +194,7 @@
                     <TextView
                         android:layout_marginRight="@dimen/margin10"
                         android:textColor="#474747"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:id="@+id/tvDescriptionPaymentPlace"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -231,57 +228,246 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_below="@id/layoutPayment"
 
-            android:id="@+id/layoutWallet"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="22dp"
+            android:id="@+id/rl_type_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutPayment"
-            android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="14dp"
-            android:layout_marginLeft="14dp">
 
+            >
 
-
-
-
-        </RelativeLayout>
-
-        <TextView
-
-            android:layout_alignParentRight="true"
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:textColor="#474747"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:layout_below="@+id/layoutWallet"
-            />
-
-        <RelativeLayout
-
-            android:id="@+id/layout_registerButton"
-            android:layout_alignParentBottom="true"
-            android:background="#fff"
-            android:layout_width="match_parent"
-            android:layout_height="80dp">
             <TextView
 
-                android:id="@+id/order_list_btn_register"
+                android:textStyle="bold"
+                android:text="@string/type_order"
+                android:textSize="13sp"
+                android:textColor="@color/medium_color"
+                android:id="@+id/tv_type_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:layout_marginTop="8dp"
+                app:ms_background_color="#FBFBFB"
+                android:layout_below="@+id/tv_type_order"
+
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="22dp"
-                android:layout_marginRight="22dp"
-                android:background="@drawable/order_item_recycle_group__card_background"
-                android:gravity="center"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:text= "@string/register_order"
-                android:textColor="#fff"
-                android:textSize="12sp" />
+                android:layout_height="45dp"/>
+
+
+
+
+
         </RelativeLayout>
+
+
+
+
+        <LinearLayout
+
+            android:id="@+id/order_list_layout_sumPrice_detail_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            android:background="@drawable/order_sum_price_order_list_layout"
+            android:elevation="@dimen/margin4"
+            android:orientation="vertical"
+            tools:targetApi="lollipop">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="8sp">
+
+                <TextView
+                    android:id="@+id/order_list_sumPrice_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/sum_price"
+                    android:textColor="@color/black_l"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:id="@+id/sumPrice_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/black_light"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp">
+
+                <TextView
+                    android:id="@+id/order_list_purePrice_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/pure_price"
+                    android:textColor="@color/black_l"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:id="@+id/purePrice_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/black_light"
+                    android:textSize="@dimen/text_medium_mobile_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8sp">
+
+                <EditText
+                    android:id="@+id/edt_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/border_edittext"
+                    android:fontFamily="@font/iransans"
+                    android:hint="@string/description"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black_l"
+                    android:textDirection="firstStrongRtl"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="Autofill" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8sp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center|bottom"
+                >
+
+
+                <TextView
+                    android:id="@+id/order_list_btn_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/order_item_recycle_group__card_background"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="ارسال سفارش"
+                    android:textColor="#fff"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/layout_edit_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="@dimen/margin4"
+                android:layout_marginRight="8sp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center|bottom"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginLeft="2dp"
+                    android:visibility="gone"
+                    app:cornerRadius="@dimen/margin4"
+                    android:fontFamily="@font/iransans"
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/btn_resend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:backgroundTint="@color/purple_700"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="ارسال مجدد"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    tools:ignore="HardcodedText" />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginLeft="2dp"
+                    app:cornerRadius="@dimen/margin4"
+                    android:fontFamily="@font/iransans"
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/btn_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:backgroundTint="@color/red_table"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="حذف"
+                    android:textColor="#fff"
+
+
+                    android:textSize="12sp"
+                    tools:ignore="HardcodedText" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginLeft="4dp"
+                    app:cornerRadius="@dimen/margin4"
+                    android:fontFamily="@font/iransans"
+                    android:layout_marginRight="@dimen/margin2"
+                    android:id="@+id/btn_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:backgroundTint="@color/green_table"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="ویرایش"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    tools:ignore="HardcodedText" />
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 </layout>

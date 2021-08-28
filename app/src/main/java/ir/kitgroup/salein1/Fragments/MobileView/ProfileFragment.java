@@ -20,7 +20,7 @@ import java.util.List;
 
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.OrderType;
 import ir.kitgroup.salein1.DataBase.Product;
 import ir.kitgroup.salein1.DataBase.ProductGroupLevel1;
@@ -67,7 +67,7 @@ public class ProfileFragment  extends Fragment {
             binding.tvName.setText(account.N);
             binding.tvMobile.setText(account.M);
 
-            if (account.ADR!=null && account.ADR.equals("")){
+            if (account.ADR!=null && !account.ADR.equals("")){
                 binding.tvAddress.setText(account.ADR);
 
             }else {
@@ -86,8 +86,8 @@ public class ProfileFragment  extends Fragment {
             if (Invoice.count(Invoice.class) > 0)
                 Invoice.deleteAll(Invoice.class);
 
-            if (Invoicedetail.count(Invoicedetail.class) > 0)
-                Invoicedetail.deleteAll(Invoicedetail.class);
+            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                InvoiceDetail.deleteAll(InvoiceDetail.class);
 
             if (OrderType.count(OrderType.class) > 0)
                 OrderType.deleteAll(OrderType.class);

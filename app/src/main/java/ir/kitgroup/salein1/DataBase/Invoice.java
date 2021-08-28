@@ -1,82 +1,255 @@
 package ir.kitgroup.salein1.DataBase;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 
 import java.util.Date;
 
 public class Invoice extends SugarRecord {
 
-    public String TBL_UID;//ای دی میز
-    public String INV_UID ; //ای دی فاکتور
-    public String INV_TOTAL_AMOUNT ;// جمع فاکنور
-    public String INV_TOTAL_DISCOUNT ;//جمع تخفیف فاکتور
-    public String INV_PERCENT_DISCOUNT ;//درصد تخفیف فاکتور
-    public String INV_DET_TOTAL_DISCOUNT ;// جمع تخفیفات ردیف فاکتور
-    public String INV_EXTENDED_AMOUNT ;//جمع خالص فاکتور
-    public Date INV_DATE ;//تاریخ
-    public Date INV_DUE_DATE ;//تاریخ تحویل
-    public String INV_DESCRIBTION;//توضیحات
-    public Boolean INV_STATUS ;//حذف نشدهtrue و حذف شده false
-    public String ACC_CLB_UID;//ای دی مشترک
-    public String INV_TOTAL_TAX ;//مالیات
-    public String INV_TOTAL_COST;//هزینه
-    /// <summary>
-    /// در انتظار پرداخت 1
-    /// دارای مانده 2
-    /// تسویه شده 3
-    /// ابطال 4
-    /// </summary>
-    public String INV_PAYMENT_STATUS ;
-    public Boolean INV_FORMAL;//رسمی true
-    public String INV_TYPE_ORDER ; // نوع سفارش بیرون بر یا داخلی
+    @SerializedName("TBL_UID")//ای دی میز
+    @Expose
+    public String TBL_UID;
+
+    @SerializedName("INV_UID")//ای دی فاکتور
+    @Expose
+    public String INV_UID;
+
+    @SerializedName("ACC_UID")
+    @Expose
+    public String accUid;
+
+    @SerializedName("INV_TOTAL_AMOUNT")// جمع فاکنور
+    @Expose
+    public Double INV_TOTAL_AMOUNT;
+
+    @SerializedName("INV_TOTAL_DISCOUNT")//جمع تخفیف فاکتور
+    @Expose
+    public Double INV_TOTAL_DISCOUNT;
+
+    @SerializedName("INV_PERCENT_DISCOUNT")//درصد تخفیف فاکتور
+    @Expose
+    public Double INV_PERCENT_DISCOUNT;
+
+    @SerializedName("INV_DET_TOTAL_DISCOUNT")// جمع تخفیفات ردیف فاکتور
+    @Expose
+    public Double INV_DET_TOTAL_DISCOUNT;
+
+    @SerializedName("INV_TOTAL_TAX")//مالیات
+    @Expose
+    public Double INV_TOTAL_TAX;
+
+    @SerializedName("INV_TOTAL_COST")//هزینه
+    @Expose
+    public Double INV_TOTAL_COST;
+
+    @SerializedName("INV_DATE")
+    @Expose
+    public Date INV_DATE;
+
+    @SerializedName("INV_DATE_PERSIAN")
+    @Expose
+    public String invDatePersian;
+
+    @SerializedName("INV_DUE_DATE")//تاریخ تحویل
+    @Expose
+    public Date INV_DUE_DATE;
+
+    @SerializedName("INV_DATE1")
+    @Expose
+    public String INV_DATE1;
+
+
+    @SerializedName("INV_STATUS")//حذف نشدهtrue و حذف شده false
+    @Expose
+    public Boolean INV_STATUS;
+
+
+    @SerializedName("INV_DUE_DATE1")//تاریخ تحویل
+    @Expose
+    public String INV_DUE_DATE1;
+
+
+
+
+    @SerializedName("ROW_NUMBER")
+    @Expose
+    public Integer rowNumber;
+
+
+    @SerializedName("INV_SYNC")
+    @Expose
+    public String invSync;
+
+    @SerializedName("INV_PARENT_UID")
+    @Expose
+    public Object invParentUid;
+    @SerializedName("BUS_UNIT_UID")
+    @Expose
+    public String busUnitUid;
+    @SerializedName("FIS_PERIOD_UID")
+    @Expose
+    public String fisPeriodUid;
+    @SerializedName("SAL_CAT_UID")
+    @Expose
+    public String salCatUid;
+    @SerializedName("INV_NUMBER")
+    @Expose
+    public String invNumber;
+    @SerializedName("INV_DAILY_NUMBER")
+    @Expose
+    public String invDailyNumber;
+    @SerializedName("INV_DEPOSIT")
+    @Expose
+    public Double invDeposit;
+    @SerializedName("INV_EXTENDED_AMOUNT")//جمع خالص فاکتور
+    @Expose
+    public Double INV_EXTENDED_AMOUNT;
+    @SerializedName("INV_TOTAL_EXCHANGE")
+    @Expose
+    public Double invTotalExchange;
+    @SerializedName("INV_DISCOUNT_EXCHANGE")
+    @Expose
+    public Double invDiscountExchange;
+    @SerializedName("INV_EXTENDED_EXCHANGE")
+    @Expose
+    public Object invExtendedExchange;
+    @SerializedName("INV_REFERENCE")
+    @Expose
+    public Object invReference;
+    @SerializedName("INV_DUE_DATE_PERSIAN")
+    @Expose
+    public String invDueDatePersian;
+    @SerializedName("INV_DUE_TIME")
+    @Expose
+    public String invDueTime;
+    @SerializedName("INV_DESCRIBTION")//توضیحات
+    @Expose
+    public String INV_DESCRIBTION;
+    @SerializedName("INV_STATUS_CONTROL")
+    @Expose
+    public Boolean invStatusControl;
+    @SerializedName("INV_FINAL_STATUS_CONTROL")
+    @Expose
+    public Boolean invFinalStatusControl;
+    @SerializedName("INVOICE_FINAL_STATUS_CONTROL")
+    @Expose
+    public Object invoiceFinalStatusControl;
+    @SerializedName("SYS_USR_CREATEDON")
+    @Expose
+    public String sysUsrCreatedon;
+    @SerializedName("SYS_USR_CREATEDBY")
+    @Expose
+    public String sysUsrCreatedby;
+    @SerializedName("SYS_USR_MODIFIEDON")
+    @Expose
+    public String sysUsrModifiedon;
+    @SerializedName("SYS_USR_MODIFIEDBY")
+    @Expose
+    public String sysUsrModifiedby;
+    @SerializedName("INV_TIME")
+    @Expose
+    public String invTime;
+    @SerializedName("SYS_USR_USERNAME")
+    @Expose
+    public String sysUsrUsername;
+    @SerializedName("CST_UID")
+    @Expose
+    public Object cstUid;
+    @SerializedName("ACC_CLB_UID")//ای دی مشترک
+    @Expose
+    public String ACC_CLB_UID;
+    @SerializedName("INV_APPLICANT_UID")
+    @Expose
+    public String invApplicantUid;
+    @SerializedName("ACC_NAME")
+    @Expose
+    public Object accName;
+    @SerializedName("ACC_CLB_NAME")
+    @Expose
+    public Object accClbName;
+    @SerializedName("INV_PAYMENT_STATUS")
+    @Expose
+    public Integer invPaymentStatus;
+    @SerializedName("INV_SECTION")
+    @Expose
+    public Integer invSection;
+    @SerializedName("INV_START_TIME")
+    @Expose
+    public String invStartTime;
+    @SerializedName("INV_END_TIME")
+    @Expose
+    public String invEndTime;
+    @SerializedName("INV_CHARGE")
+    @Expose
+    public Boolean invCharge;
+    @SerializedName("INV_FORMAL")
+    @Expose
+    public Boolean invFormal;
+    @SerializedName("INV_TYPE_ORDER")// نوع سفارش بیرون بر یا داخلی
+    @Expose
+    public Integer INV_TYPE_ORDER;
+    @SerializedName("INV_CURRENCY")
+    @Expose
+    public Integer invCurrency;
+    @SerializedName("INV_PRINT")
+    @Expose
+    public Boolean invPrint;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public String Acc_name ;
     public Boolean SendStatus=false ;
 
 
-    public String getTableID() {
-        return TBL_UID;
-    }
-
-    public String getFactorID() {
-        return INV_UID;
-    }
-
-    public String getSumPrice() {
-        return INV_TOTAL_AMOUNT;
-    }
-
-    public String getSumDiscountRow() {
-        return INV_DET_TOTAL_DISCOUNT;
-    }
-    public String getSumPurePrice() {
-        return INV_EXTENDED_AMOUNT;
-    }
-
-    public Date getDateOrder() {
-        return INV_DATE;
-    }
-
-    public Date getDeliveryDate() {
-        return INV_DUE_DATE;
-    }
-
-    public String getDescription() {
-        return INV_DESCRIBTION;
-    }
-
-
-
-    public String getAccountId() {
-        return ACC_CLB_UID;
-    }
-
-
-
-
-
-    public String getTypeOrder() {
-        return INV_TYPE_ORDER;
-    }
 
 
 

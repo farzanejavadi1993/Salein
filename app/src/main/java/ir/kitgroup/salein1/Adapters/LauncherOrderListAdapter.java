@@ -19,9 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import ir.kitgroup.salein1.DataBase.Invoicedetail;
+import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.Product;
-import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 import ir.kitgroup.salein1.MainActivity;
 import ir.kitgroup.salein1.R;
 import ir.kitgroup.salein1.Util.Util;
@@ -29,7 +28,7 @@ import ir.kitgroup.salein1.Util.Util;
 
 public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrderListAdapter.viewHolder> {
 
-    private List<Invoicedetail> orderDetailList = new ArrayList<>();
+    private List<InvoiceDetail> orderDetailList = new ArrayList<>();
     private Context context;
     private int fontSize=0;
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
@@ -52,7 +51,7 @@ public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrder
         this.editAmountItem=editAmountItem;
     }
 
-    public LauncherOrderListAdapter(Context context, List<Invoicedetail> orderDetailList) {
+    public LauncherOrderListAdapter(Context context, List<InvoiceDetail> orderDetailList) {
         this.context = context;
         this.orderDetailList = orderDetailList;
 
@@ -87,11 +86,11 @@ public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrder
             holder.cardBackground.setBackground(bgLight);
         }
 
-        final Invoicedetail invoicedetail = orderDetailList.get(position);
+        final InvoiceDetail invoicedetail = orderDetailList.get(position);
         holder.mainGUID= invoicedetail.PRD_UID;
         holder.row.setText(String.valueOf(holder.getAdapterPosition()+1));
 
-        holder.txtDiscount.setText(format.format(Double.parseDouble(invoicedetail.INV_DET_PERCENT_DISCOUNT)));
+        holder.txtDiscount.setText(format.format(invoicedetail.INV_DET_PERCENT_DISCOUNT));
         holder.txtSumDiscount.setText(format.format(Double.parseDouble(invoicedetail.INV_DET_DISCOUNT)));
 
         ArrayList<Product> rst = new ArrayList<>();
@@ -104,7 +103,7 @@ public class LauncherOrderListAdapter extends RecyclerView.Adapter<LauncherOrder
         }
 
         holder.sumPriceProduct.setText(format.format(Float.parseFloat(invoicedetail.INV_DET_TOTAL_AMOUNT)));
-        holder.countProduct.setText(format.format(Double.parseDouble(invoicedetail.INV_DET_QUANTITY)));
+        holder.countProduct.setText(format.format(invoicedetail.INV_DET_QUANTITY));
 
 
 

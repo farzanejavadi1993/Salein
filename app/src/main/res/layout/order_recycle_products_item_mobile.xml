@@ -111,6 +111,7 @@
                 android:src="@drawable/ic_minus1" />
 
             <EditText
+                android:fontFamily="@font/iransans"
                 android:inputType="numberDecimal"
                 android:id="@+id/order_recycle_item_product_txt_amount"
                 android:layout_width="60dp"

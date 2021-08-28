@@ -36,8 +36,8 @@ import ir.kitgroup.salein1.DataBase.User;
 import ir.kitgroup.salein1.Fragments.Client.Register.RegisterFragment;
 
 import ir.kitgroup.salein1.Fragments.MobileView.MainOrderMobileFragment;
-import ir.kitgroup.salein1.Models.ModelAccount;
-import ir.kitgroup.salein1.Models.ModelLog;
+import ir.kitgroup.salein1.models.ModelAccount;
+import ir.kitgroup.salein1.models.ModelLog;
 import ir.kitgroup.salein1.R;
 import ir.kitgroup.salein1.Util.Util;
 import ir.kitgroup.salein1.databinding.FragmentConfirmCodeBinding;
