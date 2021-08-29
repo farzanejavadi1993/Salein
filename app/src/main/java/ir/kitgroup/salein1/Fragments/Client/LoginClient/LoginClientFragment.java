@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.User;
 
 import ir.kitgroup.salein1.R;
@@ -53,22 +54,28 @@ public class LoginClientFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        //region Utilize Animation
-        Util.playLottieAnimation("register3.json", binding.animationView);
-        //endregion Utilize Animation
+
 
 
         //region Create User
         User.deleteAll(User.class);
         User user = new User();
+       /* user.userName = "admin";
+        user.passWord = "123";
+        user.ipLocal = "192.168.20.8:96";*/
        user.userName = "admin";
        user.passWord = "123";
        user.ipLocal = "192.168.20.8:96";
-//        user.userName = "admin";
-//        user.passWord = "0123";
-//        user.ipLocal = "109.125.133.149:9999";
+      // user.ipLocal = "109.125.133.149:9999";
         user.save();
         //endregion Create User
+
+
+
+
+        if (App.mode==2)
+            binding.tvWelcome.setText("به هایپر گوشت دنیوی خوش آمدید");
+
 
 
         binding.edtMobile.addTextChangedListener(new TextWatcher() {

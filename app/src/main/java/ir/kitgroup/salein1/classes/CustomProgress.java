@@ -1,4 +1,4 @@
-package ir.kitgroup.salein1.Classes;
+package ir.kitgroup.salein1.classes;
 
 import android.app.Dialog;
 import android.content.Context;

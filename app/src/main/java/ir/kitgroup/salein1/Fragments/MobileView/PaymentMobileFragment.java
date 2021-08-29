@@ -46,8 +46,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.CustomProgress;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.CustomProgress;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.InvoiceDetail;
@@ -220,10 +220,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
         Account acc = Select.from(Account.class).first();
-        if (!acc.ADR.equals(""))
+        if (acc!=null &&  acc.ADR!=null && !acc.ADR.equals(""))
             binding.tvTAddress.setText(acc.ADR);
         else
-
             binding.tvTAddress.setText("ناموجود");
 
 

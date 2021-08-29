@@ -1,22 +1,26 @@
-package ir.kitgroup.salein1.Classes;
+package ir.kitgroup.salein1.classes;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.model.MapID;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.orm.SugarContext;
+import com.orm.query.Select;
 
 import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 
 import ir.kitgroup.salein1.Connect.API;
 import ir.kitgroup.salein1.DataBase.User;
+import ir.kitgroup.salein1.R;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -62,7 +66,8 @@ public class App extends Application {
                         .create();
 
 
-                String  baseUrl = "http://192.168.20.8:96/api/REST/";
+                //String  baseUrl = "http://"+Select.from(User.class).first().ipLocal+"/api/REST/";
+               String  baseUrl = "http://192.168.20.8:96/api/REST/";
                // String  baseUrl = "http://109.125.133.149:9999/api/REST/";
 
 
@@ -115,6 +120,9 @@ public class App extends Application {
                 .setContext(this)
                 .setMapID(MapID.MIX);
 
+
+
+       // Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         super.onCreate();
     }
 }

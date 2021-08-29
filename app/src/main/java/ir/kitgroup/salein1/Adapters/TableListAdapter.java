@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.Utilities;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.Utilities;
 import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.InvoiceDetail;
 import ir.kitgroup.salein1.DataBase.Tables;

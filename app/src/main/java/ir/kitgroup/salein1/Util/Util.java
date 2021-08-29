@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.Product;
 
 public class Util {
@@ -52,6 +53,12 @@ public class Util {
     public static String getPrice() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.context);
         return sharedPreferences.getString("priceProduct","");
+    }
+
+    public static void hideKeyBoard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
     }
 
 }

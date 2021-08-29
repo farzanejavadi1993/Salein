@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 
 import android.os.Bundle;
@@ -22,12 +23,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import com.airbnb.lottie.model.layer.Layer;
 import com.cedarstudios.cedarmapssdk.CedarMapsStyle;
 import com.cedarstudios.cedarmapssdk.CedarMapsStyleConfigurator;
 import com.cedarstudios.cedarmapssdk.listeners.OnStyleConfigurationListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import com.mapbox.android.core.permissions.PermissionsManager;
+
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.orm.query.Select;
 
@@ -42,7 +52,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 
 import ir.kitgroup.salein1.DataBase.User;
@@ -57,23 +67,32 @@ import retrofit2.Response;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
-        ActivityCompat.OnRequestPermissionsResultCallback*/ {
+
+public class RegisterFragment extends Fragment  {
     //region  Parameter
+
+
     private FragmentRegisterBinding binding;
-    private Boolean name = false;
-    private final Boolean phone = true;
-    private Boolean address = false;
-    private Boolean plaque = false;
     private final List<Account> accountsList = new ArrayList<>();
     private User user;
     private int gender = 0;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 99;
-    private Boolean getGps = false;
     private LocationManager locationManager;
     private Boolean registerGps = false;
     private MapboxMap mMapboxMap;
+
+
+    private PermissionsManager permissionsManager;
+    private static final String DROPPED_MARKER_LAYER_ID = "DROPPED_MARKER_LAYER_ID";
+    private Layer droppedMarkerLayer;
+
+
+
+
+
+    private double longitude=0.0;
+    private double latitude=0.0;
 
 
     //endregion Parameter
@@ -83,17 +102,15 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(getLayoutInflater());
 
-        return binding.getRoot();
-    }
 
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+       // Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
 
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
+
+
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
         binding.edtNumberPhoneCustomer.setText(mobile);
@@ -112,14 +129,14 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
 
 
         binding.btnRegisterInformation.setOnClickListener(v -> {
-            if (!registerGps) {
-                binding.mapView.setVisibility(View.GONE);
+         /*   if (!registerGps) {
+             //   binding.mapLayer.setVisibility(View.GONE);
                 binding.cardInfoCustomer.setVisibility(View.VISIBLE);
                 registerGps = true;
                 binding.btnRegisterInformation.setEnabled(true);
                 binding.btnRegisterInformation.setText("ثبت اطلاعات");
                 binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            } else {
+            } else {*/
 
 
                 if (
@@ -142,41 +159,49 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
                 accountsList.add(account);
                 addAccount(user.userName, user.passWord, accountsList);
 
-            }
+           // }
         });
 
 
-          locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
-      /*  binding.accSingleMapOnForm.onCreate(savedInstanceState);
-        binding.accSingleMapOnForm.onResume();
-        binding.accSingleMapOnForm.getMapAsync(this);*/
 
-        binding.mapView.getMapAsync(mapboxMap -> {
-            mMapboxMap = mapboxMap;
-
-            CedarMapsStyleConfigurator.configure(
-                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
-                        @Override
-                        public void onSuccess(Style.Builder styleBuilder) {
-                            mapboxMap.setStyle(styleBuilder);
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull String errorMessage) {
-                           // Log.e(TAG, errorMessage);
-                        }
-                    });
-
-            mMapboxMap.setMaxZoomPreference(17);
-            mMapboxMap.setMinZoomPreference(6);
-
-            mMapboxMap.addOnMapClickListener(point -> {
-               // Log.i(TAG, "Tapped on map");
-                return true;
-            });
-        });
+        return binding.getRoot();
     }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+       /* binding.mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                mMapboxMap = mapboxMap;
+
+                CedarMapsStyleConfigurator.configure(
+                        CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
+                            @Override
+                            public void onSuccess(Style.Builder styleBuilder) {
+                                mapboxMap.setStyle(styleBuilder);
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull String errorMessage) {
+
+                            }
+                        });
+
+                mMapboxMap.setMaxZoomPreference(17);
+                mMapboxMap.setMinZoomPreference(6);
+
+                mMapboxMap.addOnMapClickListener(point -> {
+
+                    return true;
+                });
+            }
+        });*/
+
+    }
+
+
 
 
     private static class JsonObjectAccount {
@@ -184,7 +209,6 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
         public List<Account> Account;
 
     }
-
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
 
@@ -266,7 +290,7 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
 
     }
 
-    @Override
+   @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
@@ -277,7 +301,7 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            getGps = true;
+           // getGps = true;
 
 
             enableMyLocation();
@@ -287,7 +311,7 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
             Objects.requireNonNull(getActivity()).finish();
         }
     }
-   private void enableMyLocation() {
+    private void enableMyLocation() {
 
         try {
 
@@ -302,7 +326,7 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
 
-            }else if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2) {
+            } else if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2) {
 
                 AlertNoGPS();
             } else {
@@ -310,25 +334,7 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
                 try {
 
 
-//                    mGoogleMap.setMyLocationEnabled(true);
-//
-//
-//                    mGoogleMap.setOnMyLocationChangeListener(location2 -> {
-//
-//
-//                        mGoogleMap.addMarker(new MarkerOptions().position(
-//                                    new LatLng(location2.getLatitude(), location2.getLongitude())));
-//
-//                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//                                    new LatLng(location2.getLatitude(), location2.getLongitude()), 15f));
-//
-//                        binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-//                        binding.btnRegisterInformation.setEnabled(true);
-//
-//
-//                            mGoogleMap.setOnMyLocationChangeListener(null);
-//
-//                    });
+
                 } catch (Exception ex) {
 
                     Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
@@ -340,8 +346,6 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
             Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
         }
     }
-
-
     private void AlertNoGPS() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -372,8 +376,19 @@ public class RegisterFragment extends Fragment /*implements OnMapReadyCallback,
         }
 
 
-
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

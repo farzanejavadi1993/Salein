@@ -9,22 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-
+        android:background="@color/very_light"
         android:focusable="true">
 
         <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/market" />
 
         <RelativeLayout
-
+            android:layout_above="@+id/bottom_navigation_view_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             >
 
             <LinearLayout
+
                 android:id="@+id/mainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -162,7 +164,8 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginBottom="60dp"
+
+
                     android:id="@+id/order_recyclerView_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

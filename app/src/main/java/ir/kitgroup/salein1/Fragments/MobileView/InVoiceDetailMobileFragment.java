@@ -44,9 +44,9 @@ import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein1.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein1.Adapters.InvoiceDetailAdapter;
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.CustomProgress;
-import ir.kitgroup.salein1.Classes.Utilities;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.CustomProgress;
+import ir.kitgroup.salein1.classes.Utilities;
 
 import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.InvoiceDetail;

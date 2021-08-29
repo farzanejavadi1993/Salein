@@ -74,11 +74,11 @@ import ir.kitgroup.salein1.Adapters.ProductAdapter1;
 import ir.kitgroup.salein1.Adapters.ProductLevel1Adapter;
 
 import ir.kitgroup.salein1.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.CustomProgress;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.CustomProgress;
 
-import ir.kitgroup.salein1.Classes.PaginationScrollListener;
-import ir.kitgroup.salein1.Classes.RecyclerViewLoadMoreScroll;
+import ir.kitgroup.salein1.classes.PaginationScrollListener;
+import ir.kitgroup.salein1.classes.RecyclerViewLoadMoreScroll;
 
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;

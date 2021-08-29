@@ -14,11 +14,12 @@ import android.widget.TextView;
 
 
 import com.google.android.material.button.MaterialButton;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.orm.query.Select;
 
 import java.util.Objects;
 
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 
 import ir.kitgroup.salein1.DataBase.User;
@@ -42,7 +43,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         View viewRoot = binding.getRoot();
         setContentView(viewRoot);

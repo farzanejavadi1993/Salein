@@ -58,7 +58,8 @@ import java.util.Objects;
 import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein1.Adapters.TableAdapter;
 import ir.kitgroup.salein1.Adapters.TypeOrderAdapter;
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.Fragments.MobileView.InVoiceDetailMobileFragment;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
 import ir.kitgroup.salein1.DataBase.InvoiceDetail;
@@ -299,16 +300,19 @@ public class LauncherOrganizationFragment extends Fragment {
                 Invoice invoice =Select.from(Invoice.class).where("TBLUID ='" + T_GUID + "'").first();
 
                 if (invoice != null) {
+
                     Bundle bundle = new Bundle();
-                    bundle.putString("type", "1");
+                    bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
                     bundle.putString("Inv_GUID", invoice.INV_UID);
-                    bundle.putString("Tbl_GUID", "");
-                    bundle.putString("Acc_NAME", "");
-                    bundle.putString("Acc_GUID", "");
                     bundle.putString("Ord_TYPE", "");
-                    ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail invoiceDetailFragment = new ir.kitgroup.salein1.Fragments.TabletView.InvoiceDetail();
-                    invoiceDetailFragment.setArguments(bundle);
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, invoiceDetailFragment, "InvoiceDetailFragment").addToBackStack("InvoiceDetailF").commit();
+                    bundle.putString("Acc_Name", "");
+                    bundle.putString("Acc_GUID", "");
+
+
+                    InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                    inVoiceDetailFragmentMobile.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
+
                 } else {
                     Toast.makeText(getActivity(), "فاکتور این سفارش در تبلت موجود نمی باشد.", Toast.LENGTH_SHORT).show();
                 }
@@ -618,8 +622,8 @@ public class LauncherOrganizationFragment extends Fragment {
                             else
                                 product.update();
 
-                          /*  if (!products.get(i).IMG.equals("0"))
-                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, Objects.requireNonNull(getActivity()));*/
+                            if (!products.get(i).IMG.equals("0"))
+                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, Objects.requireNonNull(getActivity()));
 
                         }
 

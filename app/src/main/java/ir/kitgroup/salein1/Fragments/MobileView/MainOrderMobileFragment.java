@@ -70,10 +70,10 @@ import ir.kitgroup.salein1.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein1.Adapters.ProductAdapter1;
 import ir.kitgroup.salein1.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein1.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.CustomProgress;
-import ir.kitgroup.salein1.Classes.PaginationScrollListener;
-import ir.kitgroup.salein1.Classes.RecyclerViewLoadMoreScroll;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.CustomProgress;
+import ir.kitgroup.salein1.classes.PaginationScrollListener;
+import ir.kitgroup.salein1.classes.RecyclerViewLoadMoreScroll;
 
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.Invoice;
@@ -112,7 +112,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private SharedPreferences sharedPreferences;
 
-    String maxSales;
+    private String maxSales;
+    private List<Setting> setting;
 
 
     private String error;
@@ -203,7 +204,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -211,9 +212,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         customProgress = CustomProgress.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
             Invoice.deleteInTx(invoice);
-            for (InvoiceDetail   invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()){
+            for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
                 InvoiceDetail.deleteInTx(invoiceDetail);
             }
 
@@ -228,6 +230,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
 
         if (App.mode == 1) {
+
             binding.bottomNavigationViewLinear.setVisibility(View.GONE);
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
@@ -279,6 +282,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
             });
             //endregion Cast DialogAddAcc
+            accList = new ArrayList<>();
             accAdapter = new AccountAdapter(getActivity(), accList);
             binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             binding.accountRecyclerView.setAdapter(accAdapter);
@@ -298,7 +302,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         binding.accountRecyclerView.setVisibility(View.GONE);
                         binding.nameCustomer.setHint("نام مشترک");
                     } else {
-                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
+
                         getAccountSearch(s.toString());
                     }
 
@@ -331,7 +335,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             binding.nameCustomer.addTextChangedListener(textWatcherAcc);
         } else {
-
+            binding.orderListBtnRegister.setVisibility(View.GONE);
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
             binding.layoutAccount.setVisibility(View.GONE);
@@ -390,8 +394,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         allProductActive = new ArrayList<>();
         emptyListProduct = new ArrayList<>();
         descriptionList = new ArrayList<>();
-        accList = new ArrayList<>();
         accountsList = new ArrayList<>();
+        if (productAdapter!=null) {
+            productAdapter.notifyDataSetChanged();
+            productLevel1Adapter.notifyDataSetChanged();
+            productLevel2Adapter.notifyDataSetChanged();
+        }
 
         isLastPage = false;
         isLoading = false;
@@ -488,7 +496,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
-            getProduct();
+            if (App.mode == 2)
+                getProduct();
+            else
+                getProducts();
         });
 
         //endregion Cast Variable Dialog
@@ -807,7 +818,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter=new ProductAdapter1(getContext(),productList,maxSales,Inv_GUID);
+        productAdapter = new ProductAdapter1(getContext(), productList, maxSales, Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
@@ -831,7 +842,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 return isLoading;
             }
         });
-
 
 
         binding.orderRecyclerViewProduct.addOnScrollListener(scrollListener);
@@ -907,6 +917,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         //region Action BtnRegister
         binding.orderListBtnRegister.setOnClickListener(view1 -> {
+            if (App.mode == 1 && Acc_GUID.equals("")) {
+                Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
+                return;
+            }
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetails.size() == 0) {
                 Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
@@ -917,6 +931,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Tbl_GUID", Tbl_GUID);
                 bundle.putString("Ord_TYPE", Ord_TYPE);
+                bundle.putString("Acc_Name", Acc_NAME);
+                bundle.putString("Acc_GUID", Acc_GUID);
+
 
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
@@ -1078,6 +1095,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             protected void onPostExecute(Object o) {
 
 
+                if (App.mode == 1) {
+                    Util.AllProduct.clear();
+                    AllProductLevel1.clear();
+                    AllProductLevel2.clear();
+                    Util.AllProduct.addAll(Select.from(Product.class).list());
+                    AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
+                    AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
+                }
                 productLevel1List.clear();
 
                 for (int i = 0; i < AllProductLevel1.size(); i++) {
@@ -1162,10 +1187,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     if (resultPrd.size() == 0) {
 
                         ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                        CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
+                        if (productLevel2List.size() > 0)
+                            CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
 
                         if (rst.size() > 0) {
-                            binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
+                            if (productLevel2List.size() > 0)
+                                binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
 
                         }
                     }
@@ -1206,7 +1233,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
-
 
 
                 binding.progressbar.setVisibility(View.GONE);
@@ -1664,6 +1690,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         try {
 
+            // customProgress.showProgress(getContext(),"در حال پیدا کردن مشتری",false);
             Call<String> call = App.api.getAccountSearch("saleinkit_api", userName, passWord, word);
 
             call.enqueue(new Callback<String>() {
@@ -1678,7 +1705,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         iDs = gson.fromJson(response.body(), typeIDs);
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است", Toast.LENGTH_SHORT).show();
+                        customProgress.hideProgress();
                         return;
+
                     }
 
                     assert iDs != null;
@@ -1691,9 +1720,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                             String description = iDs0.getLogs().get(0).getDescription();
                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                            customProgress.hideProgress();
+                            return;
 
                         } else {
                             Toast.makeText(getActivity(), "لیست دریافت شده از مشتریان نا معتبر می باشد", Toast.LENGTH_SHORT).show();
+                            customProgress.hideProgress();
+                            return;
                         }
 
                     } else {
@@ -1701,6 +1734,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         accList.clear();
                         accList.addAll(iDs.getAccountList());
                         accAdapter.notifyDataSetChanged();
+                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
+                        customProgress.hideProgress();
 
 
                     }
@@ -1710,14 +1745,16 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-
                     Toast.makeText(getActivity(), "خطای تایم اوت در دریافت مشتریان", Toast.LENGTH_SHORT).show();
+
+                    customProgress.hideProgress();
                 }
             });
 
 
         } catch (NetworkOnMainThreadException ignored) {
             Toast.makeText(getActivity(), "خطا در اتصال به سرور برای دریافت مشتریان", Toast.LENGTH_SHORT).show();
+            customProgress.hideProgress();
         }
 
 
@@ -1740,7 +1777,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             }
         }
-        getProduct();
+        if (App.mode == 2)
+            getProduct();
+        else
+            getProducts();
 
 
     }
@@ -1780,7 +1820,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            getProduct();
+            if (App.mode == 2)
+                getProduct();
+            else
+                getProducts();
 
 
         } else {

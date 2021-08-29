@@ -68,7 +68,6 @@
     <string name="type_order">نوع سفارش</string>
 
 
-
     <string name="api_key">AIzaSyBtqQBKEW7fvUihpkqdPtoK4i39-WZGxRw</string>
     <string name="launcher_toolbar_title">دریافت سفارشات</string>
     <string name="launcher_toolbar_get_out_button">بیرون بر</string>
@@ -109,4 +108,7 @@
 
     <string name="show_detail_customer_title_description"> توضیحات شما</string>
     <string name="name_customer_text">نام مشترک : </string>
+
+    <string name="mapbox_access_token">pk.eyJ1IjoiZGV2ZWxvcGVyZ2lybDIwMTc3IiwiYSI6ImNrcmFieGN3azB3cGQydm1jOG9ienJheGMifQ._cTGNkLzOYMwCryu_YQnLw</string>
+
 </resources>

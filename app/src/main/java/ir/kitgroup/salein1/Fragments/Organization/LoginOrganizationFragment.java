@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 import ir.kitgroup.salein1.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein1.Connect.API;
-import ir.kitgroup.salein1.Classes.App;
-import ir.kitgroup.salein1.Classes.CustomProgress;
+import ir.kitgroup.salein1.classes.App;
+import ir.kitgroup.salein1.classes.CustomProgress;
 
 import ir.kitgroup.salein1.DataBase.User;
 

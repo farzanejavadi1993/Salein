@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
 
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.User;
 import ir.kitgroup.salein1.Fragments.Organization.LauncherOrganizationFragment;
 import ir.kitgroup.salein1.Fragments.Organization.LoginOrganizationFragment;

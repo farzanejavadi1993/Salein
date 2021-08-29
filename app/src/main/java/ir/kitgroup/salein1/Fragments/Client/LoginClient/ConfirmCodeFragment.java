@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -30,7 +31,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 
-import ir.kitgroup.salein1.Classes.App;
+import ir.kitgroup.salein1.classes.App;
 import ir.kitgroup.salein1.DataBase.Account;
 import ir.kitgroup.salein1.DataBase.User;
 import ir.kitgroup.salein1.Fragments.Client.Register.RegisterFragment;
@@ -87,29 +88,152 @@ public class ConfirmCodeFragment extends Fragment {
         Util.playLottieAnimation("register.json", binding.animationView);
         //endregion Utilize Animation
 
-
-        binding.edtCode.addTextChangedListener(new TextWatcher() {
+        binding.edtV1.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if (Util.isValidCode(s.toString())) {
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-                } else {
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-                    binding.btnLogin.setEnabled(false);
+            public void afterTextChanged(Editable editable) {
+                if(editable.length() == 1){
+                    binding.edtV2.requestFocus();
                 }
+
             }
         });
+        binding.edtV2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length() == 1){
+                    binding.edtV3.requestFocus();
+                }
+
+            }
+        });
+        binding.edtV3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length() == 1){
+                    binding.edtV4.requestFocus();
+                }
+
+            }
+        });
+        binding.edtV4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length() == 1){
+                    binding.edtV5.requestFocus();
+                }
+
+            }
+        });
+        binding.edtV5.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                    if(editable.length() == 1){
+                        Util.hideKeyBoard(getActivity(), binding.edtV5);
+                    }
+
+
+            }
+        });
+        binding.edtV1.setOnFocusChangeListener((view1, b) -> {
+            if(b){
+                setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
+            }else {
+                setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
+            }
+        });
+        binding.edtV2.setOnFocusChangeListener((view1, b) -> {
+            if(b){
+                setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
+            }else {
+                setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
+            }
+        });
+        binding.edtV3.setOnFocusChangeListener((view1, b) -> {
+            if(b){
+                setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
+            }else {
+                setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
+            }
+        });
+        binding.edtV4.setOnFocusChangeListener((view1, b) -> {
+            if(b){
+                setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
+            }else {
+                setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
+            }
+        });
+        binding.edtV5.setOnFocusChangeListener((view1, b) -> {
+            if(b){
+                setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
+                binding.btnLogin.setEnabled(true);
+                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            }else {
+                binding.btnLogin.setEnabled(false);
+                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
+            }
+
+
+        });
+
+
+
+
+
+
+
+
         binding.btnLogin.setOnClickListener(v -> getInquiryAccount(user.userName,user.passWord,mobile));
 
 
@@ -165,7 +289,7 @@ public class ConfirmCodeFragment extends Fragment {
                             bundle.putString("Inv_GUID", "");
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
-                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment));
+                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment,"MainOrderMobileFragment"));
                             replaceFragment.commit();
 
                         }
@@ -212,6 +336,8 @@ public class ConfirmCodeFragment extends Fragment {
 
     }
 
-
+    private void setEditBackground(int drawable, EditText view){
+        view.setBackground(getResources().getDrawable(drawable));
+    }
 
 }
