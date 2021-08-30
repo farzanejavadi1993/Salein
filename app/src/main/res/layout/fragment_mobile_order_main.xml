@@ -226,7 +226,32 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_navigation_view_linear" />
 
-        <com.gauravk.bubblenavigation.BubbleNavigationLinearView
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@drawable/navigation_view_colored"
+            app:itemIconSize="24dp"
+            app:itemTextColor="@drawable/navigation_view_colored"
+            app:menu="@menu/bottom_nav_menu"
+            android:id="@+id/bottom_navigation_view_linear"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:elevation="8dp"
+
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:textDirection="rtl"
+            tools:targetApi="lollipop"
+
+            >
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+     <!--   <com.gauravk.bubblenavigation.BubbleNavigationLinearView
             android:id="@+id/bottom_navigation_view_linear"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -284,7 +309,7 @@
                 app:bt_titlePadding="@dimen/margin10" />
 
 
-        </com.gauravk.bubblenavigation.BubbleNavigationLinearView>
+        </com.gauravk.bubblenavigation.BubbleNavigationLinearView>-->
 
         <ProgressBar
             android:id="@+id/progressbar"

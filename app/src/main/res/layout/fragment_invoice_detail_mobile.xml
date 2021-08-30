@@ -119,9 +119,8 @@
                         android:textColor="@color/black_l"
                         android:textSize="@dimen/text_medium_mobile_size"
                         tools:ignore="RelativeOverlap" />
-
                     <TextView
-                        android:id="@+id/sumPrice_txt"
+                        android:id="@+id/purePrice_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -129,6 +128,7 @@
                         android:text="@string/rial_0"
                         android:textColor="@color/black_light"
                         android:textSize="@dimen/text_medium_mobile_size" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -150,7 +150,7 @@
                         tools:ignore="RelativeOverlap" />
 
                     <TextView
-                        android:id="@+id/purePrice_txt"
+                        android:id="@+id/sumPrice_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -158,6 +158,8 @@
                         android:text="@string/rial_0"
                         android:textColor="@color/black_light"
                         android:textSize="@dimen/text_medium_mobile_size" />
+
+
                 </RelativeLayout>
 
 

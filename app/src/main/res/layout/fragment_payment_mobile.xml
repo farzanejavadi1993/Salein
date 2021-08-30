@@ -32,12 +32,11 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                style="@style/launcher_toolbar_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/confirm_pay"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_normal_mobile_size"
                 tools:ignore="RelativeOverlap" />
         </RelativeLayout>
 
@@ -83,37 +82,24 @@
                 tools:targetApi="lollipop">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:layout_margin="@dimen/margin10"
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:padding="@dimen/margin10"
-                        android:id="@+id/iv_address"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin10"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_location"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
 
                     <TextView
 
-                        android:layout_marginLeft="@dimen/margin10"
+
                         android:id="@+id/tvTAddress"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
 
                         android:textColor="@color/medium_color"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_address"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_address"
-                        app:layout_constraintTop_toTopOf="@+id/iv_address" />
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -268,6 +254,38 @@
         </RelativeLayout>
 
 
+        <RelativeLayout
+            android:layout_below="@id/rl_type_order"
+
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="22dp"
+            android:id="@+id/rl_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <TextView
+                android:visibility="gone"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="اصلاح سفارش"
+                android:textSize="13sp"
+                android:textColor="@color/green_table"
+                android:id="@+id/tv_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+
+
+
+
+
+
+        </RelativeLayout>
+
 
 
         <LinearLayout
@@ -301,7 +319,7 @@
                     tools:ignore="RelativeOverlap" />
 
                 <TextView
-                    android:id="@+id/sumPrice_txt"
+                    android:id="@+id/purePrice_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -309,6 +327,8 @@
                     android:text="@string/rial_0"
                     android:textColor="@color/black_light"
                     android:textSize="@dimen/text_medium_mobile_size" />
+
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -329,8 +349,9 @@
                     android:textSize="@dimen/text_medium_mobile_size"
                     tools:ignore="RelativeOverlap" />
 
+
                 <TextView
-                    android:id="@+id/purePrice_txt"
+                    android:id="@+id/sumPrice_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"

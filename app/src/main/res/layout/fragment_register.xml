@@ -30,6 +30,8 @@
 
 
             <TextView
+
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -45,7 +47,7 @@
 
 
         <LinearLayout
-
+            android:visibility="gone"
             android:id="@+id/cardInfoCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +58,20 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
+            <TextView
+                android:textStyle="bold"
+                android:lineSpacingExtra="@dimen/margin10"
+                android:layout_marginTop="12dp"
+                android:textColor="#474747"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginRight="22dp"
+                android:layout_marginLeft="22dp"
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="لطفا در وارد کردن اطلاعات دقت کنید سفارشات به اطلاعات درج شد در این قسمت ارسال خواهد شد." />
 
             <TextView
                 android:id="@+id/tvNameCustomer"
@@ -174,6 +190,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvAddressCustomer"
                 tools:ignore="Autofill,LabelFor" />
 
+
+
+
             <TextView
                 android:id="@+id/tvPlaqueCustomer"
                 android:layout_width="wrap_content"
@@ -246,8 +265,10 @@
             </RadioGroup>
 
         </LinearLayout>
-<!--
+
         <FrameLayout
+
+            android:id="@+id/layoutMap"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -255,6 +276,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 >
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/white"
+                app:elevation="6dp"
+                app:pressedTranslationZ="12dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/ic_cross"
+                android:layout_marginLeft="@dimen/margin8"
+                android:layout_marginTop="@dimen/margin6"
+                tools:ignore="VectorDrawableCompat" />
 
             <com.cedarstudios.cedarmapssdk.MapView
                 android:id="@+id/mapView"
@@ -264,7 +298,7 @@
 
             />
 
-        </FrameLayout>-->
+        </FrameLayout>
 
 
 
@@ -275,8 +309,7 @@
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/bottom_background_inActive_color"
-            android:enabled="false"
+            android:backgroundTint="@color/purple_700"
             android:fontFamily="@font/iransans"
             android:text="@string/register_gps"
             android:textColor="@color/white"
@@ -297,6 +330,40 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardInfoCustomer" />
+
+        <com.google.android.material.card.MaterialCardView
+
+            android:id="@+id/card_address"
+            android:layout_width="0dp"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="12dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" >
+            <RelativeLayout
+                android:padding="@dimen/margin10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="#000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/pro"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
