@@ -60,18 +60,29 @@
                 android:text="@string/address"
                 android:textSize="13sp"
                 android:textColor="@color/medium_color"
-                android:id="@+id/tv_address"
+                android:id="@+id/edt_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
 
+            <TextView
+
+                android:layout_alignParentLeft="true"
+                android:textStyle="bold"
+                android:text="افزودن آدرس"
+                android:textSize="13sp"
+                android:textColor="@color/purple_700"
+                android:id="@+id/tv_add_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
 
 
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_marginTop="@dimen/margin8"
 
-                android:layout_below="@+id/tv_address"
+                android:layout_below="@+id/edt_address"
                 app:strokeColor="@color/purple_700"
                 android:id="@+id/layout_address"
                 app:strokeWidth="1.5dp"
@@ -88,15 +99,14 @@
 
                     <TextView
 
-
+                        android:padding="@dimen/margin10"
+                        android:background="@android:color/transparent"
                         android:id="@+id/tvTAddress"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-
                         android:textColor="@color/medium_color"
                         android:textSize="12sp"
                         android:textStyle="bold"
-
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

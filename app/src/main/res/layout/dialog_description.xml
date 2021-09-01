@@ -34,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="@dimen/margin10"
-                android:background="@drawable/shape_background_dialog"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="#2f2f2f"
+                android:backgroundTint="@color/white"
                 app:cardCornerRadius="15dp">
 
 

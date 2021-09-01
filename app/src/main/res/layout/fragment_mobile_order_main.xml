@@ -16,7 +16,7 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/market" />
+            android:src="@drawable/top_pas" />
 
         <RelativeLayout
             android:layout_above="@+id/bottom_navigation_view_linear"
@@ -229,10 +229,10 @@
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-
+            android:backgroundTint="@color/very_light"
             app:labelVisibilityMode="labeled"
             app:itemIconTint="@drawable/navigation_view_colored"
-            app:itemIconSize="24dp"
+            app:itemIconSize="20dp"
             app:itemTextColor="@drawable/navigation_view_colored"
             app:menu="@menu/bottom_nav_menu"
             android:id="@+id/bottom_navigation_view_linear"
@@ -241,75 +241,15 @@
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:elevation="8dp"
-
             android:layoutDirection="rtl"
             android:orientation="horizontal"
-            android:padding="12dp"
             android:textDirection="rtl"
             tools:targetApi="lollipop"
 
             >
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
-     <!--   <com.gauravk.bubblenavigation.BubbleNavigationLinearView
-            android:id="@+id/bottom_navigation_view_linear"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:elevation="8dp"
-            android:layoutDirection="rtl"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:rotationY="180"
-            tools:targetApi="lollipop">
 
-
-            <com.gauravk.bubblenavigation.BubbleToggleView
-                android:id="@+id/item_home"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:rotationY="180"
-                app:bt_active="true"
-                app:bt_colorActive="#609524"
-                app:bt_colorInactive="#656262"
-                app:bt_icon="@drawable/ic_home"
-                app:bt_padding="@dimen/margin10"
-                app:bt_title="خانه"
-                app:bt_titlePadding="@dimen/margin10" />
-
-            <com.gauravk.bubblenavigation.BubbleToggleView
-                android:id="@+id/item_invoice_detail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:rotationY="180"
-                app:bt_active="true"
-                app:bt_colorActive="@color/purple_700"
-                app:bt_colorInactive="#656262"
-                app:bt_icon="@drawable/ic_buy"
-                app:bt_padding="@dimen/margin10"
-                app:bt_title="خریدها"
-                app:bt_titlePadding="@dimen/margin10" />
-
-            <com.gauravk.bubblenavigation.BubbleToggleView
-                android:id="@+id/item_profile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:rotationY="180"
-                app:bt_active="true"
-                app:bt_colorActive="#9C27B0"
-                app:bt_colorInactive="#656262"
-                app:bt_icon="@drawable/ic_profile"
-
-                app:bt_padding="@dimen/margin10"
-                app:bt_title="پروفایل"
-                app:bt_titlePadding="@dimen/margin10" />
-
-
-        </com.gauravk.bubblenavigation.BubbleNavigationLinearView>-->
 
         <ProgressBar
             android:id="@+id/progressbar"

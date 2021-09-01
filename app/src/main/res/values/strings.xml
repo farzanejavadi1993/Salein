@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SaleIn Order</string>
+    <string name="app_name">Top kabab</string>
     <string name="login_register_text">ورود ثبت نام</string>
     <string name="welcome_text">به اپلیکیشن سفارش گیر سالین خوش آمدید</string>
     <string name="mobile_number">شماره تلفن همراه</string>
@@ -36,7 +36,8 @@
     <string name="logout">خروج از حساب </string>
     <string name="register_information">ثبت اطلاعات </string>
     <string name="register_gps">ثبت موقعیت </string>
-    <string name="info_account">نمایش اطلاعات کاربری </string>
+    <string name="info_account">اطلاعات کاربری </string>
+    <string name="setting">تنظیمات </string>
     <string name="first_last_name">نام و نام خانوادگی </string>
     <string name="phone_number_account">شماره تلفن همراه </string>
     <string name="add_credit">افزایش اعتبار کیف پول </string>

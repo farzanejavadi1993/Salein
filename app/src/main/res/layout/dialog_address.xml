@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="340dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginRight="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:gravity="right"
+            android:text="از بین آدرس های زیر یکی را انتخاب کنید"
+            android:textStyle="bold"
+            android:textColor="@color/medium_color"
+            android:layout_marginTop="14dp"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/edt_address"
+            app:strokeColor="@color/very_light_pink"
+            android:id="@+id/layout_address1"
+            app:strokeWidth="1.5dp"
+            android:backgroundTint="@color/white"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            android:layout_width="match_parent"
+            tools:targetApi="lollipop">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/margin10"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:layout_marginEnd="12dp"
+                    android:padding="@dimen/margin10"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/tvTAddress1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/edt_address"
+            app:strokeColor="@color/very_light_pink"
+            android:id="@+id/layout_address2"
+            app:strokeWidth="1.5dp"
+            android:backgroundTint="@color/white"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            android:layout_width="match_parent"
+            tools:targetApi="lollipop">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/margin10"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:layout_marginEnd="12dp"
+                    android:padding="@dimen/margin10"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/tvTAddress2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_marginBottom="14dp"
+            android:gravity="center"
+            android:text="چنانچه آدرس سفارش شما هیچ کدام از این دو آدرس نمی باشد به پروفایل خود مراجعه کرده و آدرس اول یا دوم را ویرایش کنید."
+            android:textColor="@color/medium_color"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <RelativeLayout
+            android:id="@+id/layoutButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="10sp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:fontFamily="@font/iransans"
+                android:layout_alignParentRight="true"
+                android:layout_margin="8sp"
+                android:layout_marginBottom="30dp"
+                android:textSize="11sp"
+                android:backgroundTint="@color/white"
+                android:text="انتخاب آدرس "
+                android:textColor="@color/colorGreenLight"
+                app:cornerRadius="15dp"
+                app:strokeColor="@color/colorGreenLight"
+                app:strokeWidth="1dp"
+                tools:ignore="UnusedAttribute" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit"
+                android:fontFamily="@font/iransans"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="8sp"
+                android:textSize="11sp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/white"
+                android:text="ویرایش آدرس"
+                android:textColor="@color/purple_700"
+                app:cornerRadius="15dp"
+                app:strokeColor="@color/purple_700"
+                app:strokeWidth="1dp"
+                tools:ignore="UnusedAttribute" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

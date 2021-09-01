@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ir.kitgroup.salein1order">
+    package="ir.kitgroup.order">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="ir.kitgroup.salein1order.classes.App"
+        android:name="ir.kitgroup.order.classes.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
@@ -19,7 +19,10 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Salein"
         tools:replace="android:supportsRtl">
-        <activity android:name="ir.kitgroup.salein1order.Activities.Classes.LauncherActivity">
+        <activity android:name="ir.kitgroup.order.Activities.Classes.LauncherActivity"
+
+
+            android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ir.kitgroup.salein1order.Activities.Classes.ShowDetailActivity"
+            android:name="ir.kitgroup.order.Activities.Classes.ShowDetailActivity"
             android:windowSoftInputMode="stateHidden" />
 
         <meta-data
@@ -35,20 +38,20 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="84" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
+            android:value="90" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.salein1order.DataBase" />
+            android:value="ir.kitgroup.order.DataBase" />
         <!--
  <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
         -->
         <activity
-            android:name="ir.kitgroup.salein1order.MainActivity"
+            android:name="ir.kitgroup.order.MainActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"></activity>
     </application>
 

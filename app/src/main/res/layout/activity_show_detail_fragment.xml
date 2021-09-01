@@ -35,7 +35,7 @@
 
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/show_detail_shape"
+
                     android:orientation="vertical">
 
                     <TextView

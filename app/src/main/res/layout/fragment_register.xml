@@ -2,8 +2,8 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto">
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,6 @@
             tools:targetApi="lollipop">
 
 
-
             <TextView
 
                 android:id="@+id/tv_title"
@@ -47,11 +46,9 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/cardInfoCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:gravity="right"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,25 +57,25 @@
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
             <TextView
-                android:textStyle="bold"
-                android:lineSpacingExtra="@dimen/margin10"
-                android:layout_marginTop="12dp"
-                android:textColor="#474747"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_marginRight="22dp"
-                android:layout_marginLeft="22dp"
                 android:id="@+id/textView2"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="لطفا در وارد کردن اطلاعات دقت کنید سفارشات به اطلاعات درج شد در این قسمت ارسال خواهد شد." />
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="22dp"
+                android:gravity="center"
+                android:text="لطفا در وارد کردن اطلاعات دقت کنید سفارشات به اطلاعات درج شد در این قسمت ارسال خواهد شد."
+                android:textColor="#474747"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvNameCustomer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
-                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
+                android:layout_marginTop="14dp"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:text="@string/firstname_lastname_customer_description"
                 android:textColor="@color/medium_color"
@@ -102,9 +99,9 @@
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                android:textStyle="bold"
                 android:textColor="@color/medium_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
-                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:text="@string/phone_number_customer"
                 android:textColor="@color/medium_color"
@@ -143,9 +140,9 @@
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                android:textStyle="bold"
                 android:textColor="@color/medium_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,6 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:text="@string/address_customer"
                 android:textColor="@color/medium_color"
@@ -165,40 +163,74 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/edt_address_customer"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
+            <LinearLayout
                 android:layout_marginStart="@dimen/normal_left_right_margin"
-                android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:layout_marginTop="@dimen/margin8"
-                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:background="@drawable/background_edittext"
-                android:fontFamily="@font/iransans"
-                android:gravity="right"
-                android:inputType="text"
-                android:layoutDirection="rtl"
-                android:paddingLeft="16dp"
-                android:paddingTop="12dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                android:textColor="@color/medium_color"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvAddressCustomer"
-                tools:ignore="Autofill,LabelFor" />
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:id="@+id/edt_address_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin8"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="right|top|center"
+                    android:inputType="textShortMessage|textMultiLine"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
 
+                    android:singleLine="false"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+
+                    />
+
+                <TextView
+                    android:text="آدرس دقیق تر خود را وارد کنید."
+                    android:gravity="right"
+                    android:textSize="12dp"
+                    android:textColor="@color/green_table"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <EditText
+
+                    android:hint="توضیحات تکمیلی..."
+                    android:id="@+id/edt_address_customer_complete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_edittext"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="right|top|center"
+                    android:inputType="textShortMessage|textMultiLine"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="12dp"
+                    android:singleLine="false"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+
+                    />
+            </LinearLayout>
 
 
 
             <TextView
+
                 android:id="@+id/tvPlaqueCustomer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/normal_top_bottom_child_margin"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin10"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:text="@string/Plaque_customer"
                 android:textColor="@color/medium_color"
@@ -211,9 +243,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
-                android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:layout_marginTop="@dimen/margin8"
-
+                android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:background="@drawable/background_edittext"
                 android:fontFamily="@font/iransans"
                 android:gravity="right"
@@ -223,9 +254,9 @@
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                android:textStyle="bold"
                 android:textColor="@color/medium_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -236,7 +267,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -269,26 +300,15 @@
         <FrameLayout
 
             android:id="@+id/layoutMap"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
->
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/white"
-                app:elevation="6dp"
-                app:pressedTranslationZ="12dp"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/ic_cross"
-                android:layout_marginLeft="@dimen/margin8"
-                android:layout_marginTop="@dimen/margin6"
-                tools:ignore="VectorDrawableCompat" />
+
+
 
             <com.cedarstudios.cedarmapssdk.MapView
                 android:id="@+id/mapView"
@@ -296,12 +316,105 @@
                 android:layout_height="match_parent"
                 mapbox:mapbox_cameraZoom="14"
 
-            />
+                />
+
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_location"
+                tools:ignore="ContentDescription" />
 
         </FrameLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/rl_floating"
+            android:layout_height="match_parent"
+            android:layout_marginTop="70dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="@dimen/margin6"
+                android:backgroundTint="#eee"
+                android:src="@drawable/ic_cross"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:pressedTranslationZ="12dp" />
 
+            <com.google.android.material.card.MaterialCardView
+
+                android:id="@+id/card_address"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="6dp"
+                android:layout_toRightOf="@+id/floating"
+                android:backgroundTint="#eee"
+                app:cardCornerRadius="12dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="@color/purple_700"
+               >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+             >
+
+                    <EditText
+                        android:paddingStart="5dp"
+                       android:paddingEnd="5dp"
+                        android:id="@+id/edt_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@android:color/transparent"
+                        android:enabled="false"
+                        android:fontFamily="@font/iransans"
+                        android:hint=""
+                        android:inputType="textShortMessage|textMultiLine"
+                        android:textColor="#000"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:gravity="right"
+                       android:padding="5dp"
+                        android:id="@+id/edt_address_complete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/edt_address"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@android:color/transparent"
+                        android:enabled="true"
+                        android:fontFamily="@font/iransans"
+                        android:hint="توضیحات تکمیلی..."
+                        android:inputType="textShortMessage|textMultiLine"
+                        android:textColor="#000"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ProgressBar
+                        android:id="@+id/pro"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
             android:layout_width="match_parent"
@@ -321,53 +434,18 @@
             tools:ignore="UnusedAttribute" />
 
         <ProgressBar
-            android:visibility="gone"
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardInfoCustomer" />
 
-        <com.google.android.material.card.MaterialCardView
-
-            android:id="@+id/card_address"
-            android:layout_width="0dp"
-            android:backgroundTint="@color/white"
-            app:cardCornerRadius="12dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" >
-            <RelativeLayout
-                android:padding="@dimen/margin10"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/tv_address"
-                    android:layout_alignParentRight="true"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ProgressBar
-                    android:visibility="gone"
-                    android:id="@+id/pro"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"/>
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 </layout>

@@ -109,7 +109,7 @@
                         android:layout_margin="8dp"
                         android:layout_marginLeft="@dimen/margin8"
                         android:layout_toRightOf="@+id/btn_add_account"
-                        android:background="@drawable/sync_account_shape"
+
                         android:gravity="center"
                         android:hint="@string/name_customer"
                         android:paddingLeft="@dimen/order_toolbar_user_button_left_right_margin"
