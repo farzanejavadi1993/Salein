@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.Adapters.DescriptionAdapter;
 import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
 import ir.kitgroup.order.Adapters.InvoiceDetailLargeAdapter;
@@ -43,7 +44,7 @@ import ir.kitgroup.order.classes.Utilities;
 import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.OrderType;
 import ir.kitgroup.order.DataBase.Product;
-import ir.kitgroup.order.MainActivity;
+
 import ir.kitgroup.order.models.Description;
 import ir.kitgroup.order.models.ModelDesc;
 import ir.kitgroup.order.models.ModelLog;
@@ -120,7 +121,7 @@ public class InvoiceDetail extends Fragment {
         //region Tablet
         int fontSize = 0;
         View view = null;
-        if (MainActivity.screenInches >= 7) {
+        if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
             view = inflater.inflate(R.layout.fragment_invoice_detail, container, false);
             TextView tvRow = view.findViewById(R.id.tv_row_order);
@@ -154,7 +155,7 @@ public class InvoiceDetail extends Fragment {
 
 
             if (type.equals("1")) {
-                //  if (MainActivity.screenInches>=7)
+                //  if (LauncherActivity.screenInches>=7)
                 //  rlBottom.setVisibility(View.VISIBLE);
                 Invoice invoice = Select.from(Invoice.class).where("INVUID ='" + factorGID + "'").first();
                 if (invoice != null) {
@@ -233,7 +234,7 @@ public class InvoiceDetail extends Fragment {
             invoiceDetailLargeList.clear();
             if (type.equals("1"))
                 invoiceDetailLargeList.addAll(Select.from(ir.kitgroup.order.DataBase.InvoiceDetail.class).where("INVUID ='" + factorGID + "'").list());
-            else if (MainActivity.screenInches >= 7)
+            else if (LauncherActivity.screenInches >= 7)
                 invoiceDetailLargeList.addAll(OrderFragment.invoiceDetailList);
 //            else
 //                invoiceDetailLargeList.addAll(MainOrderMobileFragment.invoiceDetailList);
@@ -329,7 +330,7 @@ public class InvoiceDetail extends Fragment {
     public void onDestroy() {
 
         if (type.equals("2")) {
-            if (MainActivity.screenInches >= 7) {
+            if (LauncherActivity.screenInches >= 7) {
                 OrderFragment.invoiceDetailAdapter.notifyDataSetChanged();
                 OrderFragment.descriptionFactor = edtDescription.getText().toString();
             }
@@ -518,7 +519,7 @@ public class InvoiceDetail extends Fragment {
                                     invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
                                     invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
 
-                                    if (MainActivity.screenInches >= 7) {
+                                    if (LauncherActivity.screenInches >= 7) {
                                         OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
                                         OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
                                         OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
@@ -555,14 +556,14 @@ public class InvoiceDetail extends Fragment {
 
                                 }
 
-                                if (MainActivity.screenInches >= 7) {
+                                if (LauncherActivity.screenInches >= 7) {
 
                                     if (invoiceDetailList.size() > 0) {
                                         recyclerView.post(() -> recyclerView.smoothScrollToPosition(invoiceDetailList.size() - 1));
 
                                     }
                                 }
-                                if (MainActivity.screenInches >= 7)
+                                if (LauncherActivity.screenInches >= 7)
                                     OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultProduct.get(0)));
                                /* else
                                     MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultProduct.get(0)));*/
@@ -580,7 +581,7 @@ public class InvoiceDetail extends Fragment {
                                     if (Integer.parseInt(response.body()) - amount < 0) {
                                         Toast.makeText(getActivity(), "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
                                         invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = 0.0;
-                                        if (MainActivity.screenInches >= 7)
+                                        if (LauncherActivity.screenInches >= 7)
                                             OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = "0";
                                         else
                                             OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = "0";
@@ -591,7 +592,7 @@ public class InvoiceDetail extends Fragment {
                                     }
                                 }
                                 invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                if (MainActivity.screenInches >= 7)
+                                if (LauncherActivity.screenInches >= 7)
                                     OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
                                 else
                                     OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
@@ -601,7 +602,7 @@ public class InvoiceDetail extends Fragment {
 
 
                                 invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                if (MainActivity.screenInches >= 7)
+                                if (LauncherActivity.screenInches >= 7)
                                     OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 //                                else
 //                                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
@@ -612,7 +613,7 @@ public class InvoiceDetail extends Fragment {
                                 CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                                 if (resultPrd.size() > 0) {
                                     Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                                    if (MainActivity.screenInches >= 7) {
+                                    if (LauncherActivity.screenInches >= 7) {
                                         if (OrderFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
                                             OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultPrd.get(0)));
                                         }

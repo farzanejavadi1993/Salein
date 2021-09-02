@@ -32,6 +32,7 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 
 import java.io.File;
@@ -189,7 +190,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             } else {
-                holder.productImage.setImageResource(R.drawable.application_logo1);
+                holder.productImage.setImageResource(R.drawable.goosht);
             }
 
 
@@ -199,9 +200,32 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getPRDNAME());
 
-            if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
-                holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()) + " ریال ");
+            if (productsList.get(holder.getAdapterPosition()).PERC_DIS != 0.0) {
+                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+                    holder.productDiscountPercent.setVisibility(View.VISIBLE);
+                    holder.productOldPrice.setVisibility(View.VISIBLE);
+                    holder.Line.setVisibility(View.VISIBLE);
+
+                    holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).PERC_DIS) + "%");
+                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()));
+                    holder.Line.setText("------------");
+                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() * (productsList.get(holder.getAdapterPosition()).PERC_DIS / 100);
+                    double newPrice = productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() - discountPrice;
+                    holder.productPrice.setText(format.format(newPrice) + " ریال ");
+                }
+
+            }else {
+                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+                    holder.productDiscountPercent.setVisibility(View.GONE);
+                    holder.productOldPrice.setVisibility(View.GONE);
+                    holder.Line.setVisibility(View.GONE);
+                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1())+ " ریال ");
+                }
+
             }
+
+
+
 
             holder.tab = 0;
             holder.productImage.setOnClickListener(view -> {
@@ -227,6 +251,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (resultPrd.size() > 0) {
                 if (resultPrd.get(0).getAmount() > 0) {
                     holder.ivMinus.setVisibility(View.VISIBLE);
+
                     holder.ProductAmountTxt.setVisibility(View.VISIBLE);
                 } else {
                     holder.ivMinus.setVisibility(View.GONE);
@@ -336,7 +361,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
 
 
-            holder.ivEdit.setOnClickListener(v -> {
+            holder.cardEdit.setOnClickListener(v -> {
                 if (productsList.get(holder.getAdapterPosition()).AMOUNT != null) {
                     descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).I, productsList.get(holder.getAdapterPosition()).AMOUNT);
                 } else {
@@ -356,10 +381,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
         private final TextView productName;
+        private final TextView unit;
         private final TextView productPrice;
+        private final TextView productOldPrice;
+        private final TextView productDiscountPercent;
+        private final TextView Line;
         private final EditText ProductAmountTxt;
 
-        private final EditText edtDesc;
+        private final TextView edtDesc;
+        private final RelativeLayout cardEdit;
         private final ImageView ivEdit;
         private final RoundedImageView productImage;
 
@@ -373,14 +403,19 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             super(itemView);
 
             RelativeLayout cardView = itemView.findViewById(R.id.order_recycle_item_product_layout);
+            cardEdit = itemView.findViewById(R.id.card_edit);
             ivEdit = itemView.findViewById(R.id.iv_edit);
             edtDesc = itemView.findViewById(R.id.edt_description_temp);
 
 
             productName = itemView.findViewById(R.id.order_recycle_item_product_name);
+            unit = itemView.findViewById(R.id.unit);
 
 
             productPrice = itemView.findViewById(R.id.order_recycle_item_product_price);
+            productOldPrice = itemView.findViewById(R.id.order_recycle_item_product_old_price);
+            productDiscountPercent = itemView.findViewById(R.id.order_recycle_item_product_discountPercent);
+            Line = itemView.findViewById(R.id.order_recycle_item_product_line);
 
 
             productImage = itemView.findViewById(R.id.order_recycle_item_product_img);

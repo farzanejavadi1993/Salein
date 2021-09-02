@@ -2,16 +2,20 @@ package ir.kitgroup.order.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +25,7 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -44,6 +49,8 @@ import java.util.List;
 
 import java.util.UUID;
 
+import ir.kitgroup.order.Adapters.OrderTypePaymentAdapter;
+import ir.kitgroup.order.DataBase.ProductGroupLevel2;
 import ir.kitgroup.order.Fragments.Client.Register.RegisterFragment;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
@@ -70,6 +77,8 @@ public class PaymentMobileFragment extends Fragment {
 
 
     //region Parameter
+    private SharedPreferences sharedPreferences;
+
     private FragmentPaymentMobileBinding binding;
 
     private CustomProgress customProgress;
@@ -87,21 +96,21 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Dialog dialogAddress;
-    private MaterialCardView lAdr1;
-    private MaterialCardView lAdr2;
+    private RadioButton lAdr1;
+    private RadioButton lAdr2;
+    private RadioGroup radioGroup;
     private MaterialButton btnEdit;
     private MaterialButton btnChoose;
 
-    private TextView txtAddress1;
-    private TextView txtAddress2;
+
     private int typeAddress = 0;
     private String address = "ناموجود";
 
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
-    private ArrayList<Integer> codeList = new ArrayList<>();
-    private String Ord_TYPE;
+
+    private Integer Ord_TYPE = -1;
 
 
     List<InvoiceDetail> invDetails;
@@ -113,6 +122,7 @@ public class PaymentMobileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES);
         return binding.getRoot();
     }
@@ -139,7 +149,9 @@ public class PaymentMobileFragment extends Fragment {
         String Acc_GUID = bundle.getString("Acc_GUID");
 
 
-        Ord_TYPE = bundle.getString("Ord_TYPE");
+        String ord_type = bundle.getString("Ord_TYPE");
+        if (!ord_type.equals(""))
+            Ord_TYPE = Integer.parseInt(ord_type);
         String Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
         String Sum_PRICE = bundle.getString("Sum_PRICE");
         boolean edit = bundle.getBoolean("EDIT");
@@ -171,7 +183,6 @@ public class PaymentMobileFragment extends Fragment {
         btnNo = dialog.findViewById(R.id.btn_cancel);
 
 
-        String finalOrd_TYPE1 = Ord_TYPE;
         btnReturned.setOnClickListener(v -> {
 
 
@@ -187,6 +198,7 @@ public class PaymentMobileFragment extends Fragment {
                         getFragmentManager().popBackStack();
                     }
                 }
+
 
 
                 assert getFragmentManager() != null;
@@ -206,8 +218,7 @@ public class PaymentMobileFragment extends Fragment {
                     tables.ACT = true;
 
 
-                    if (!finalOrd_TYPE1.equals(""))
-                        tables.C = Integer.parseInt(finalOrd_TYPE1);
+                    tables.C = Ord_TYPE;
 
 
                     tables.RSV = false;
@@ -254,35 +265,32 @@ public class PaymentMobileFragment extends Fragment {
         dialogAddress.setContentView(R.layout.dialog_address);
         dialogAddress.setCancelable(false);
 
-        lAdr1 = dialogAddress.findViewById(R.id.layout_address1);
-        lAdr2 = dialogAddress.findViewById(R.id.layout_address2);
+        lAdr1 = dialogAddress.findViewById(R.id.radioAddress1);
+        lAdr2 = dialogAddress.findViewById(R.id.radioAddress2);
+        lAdr2 = dialogAddress.findViewById(R.id.radioAddress2);
         btnEdit = dialogAddress.findViewById(R.id.btn_edit);
         btnChoose = dialogAddress.findViewById(R.id.btn_choose);
-
-        txtAddress1 = dialogAddress.findViewById(R.id.tvTAddress1);
-        txtAddress2 = dialogAddress.findViewById(R.id.tvTAddress2);
+        radioGroup = dialogAddress.findViewById(R.id.radio);
 
 
-        lAdr1.setOnClickListener(v -> {
-            lAdr2.setStrokeColor(getResources().getColor(R.color.very_light_pink));
-            lAdr1.setStrokeColor(getResources().getColor(R.color.purple_700));
-            typeAddress = 1;
-            address=txtAddress1.getText().toString();
-
+        lAdr1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                typeAddress = 1;
+                address = lAdr1.getText().toString();
+            }
         });
 
-
-        lAdr2.setOnClickListener(v -> {
-            lAdr1.setStrokeColor(getResources().getColor(R.color.very_light_pink));
-            lAdr2.setStrokeColor(getResources().getColor(R.color.purple_700));
-            typeAddress = 2;
-            address=txtAddress2.getText().toString();
+        lAdr2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                typeAddress = 2;
+                address = lAdr2.getText().toString();
+            }
         });
 
 
         btnChoose.setOnClickListener(v -> {
 
-            if (typeAddress==0){
+            if (typeAddress == 0) {
                 Toast.makeText(getActivity(), "آدرس را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -292,70 +300,64 @@ public class PaymentMobileFragment extends Fragment {
 
         btnEdit.setOnClickListener(v -> {
 
-                    dialogAddress.dismiss();
-                    typeAddress=0;
-                    address="ناموجود";
-                    Bundle bundle1=new Bundle();
-                    bundle1.putString("edit","1");
-                    ProfileFragment profileFragment=new ProfileFragment();
-                    profileFragment.setArguments(bundle1);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, profileFragment,"ProfileFragment").addToBackStack("ProfileF").commit();
+            dialogAddress.dismiss();
+            typeAddress = 0;
+            address = "ناموجود";
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("edit", "1");
+            ProfileFragment profileFragment = new ProfileFragment();
+            profileFragment.setArguments(bundle1);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, profileFragment, "ProfileFragment").addToBackStack("ProfileF").commit();
 
-                });
+        });
 
-        if (acc!=null && acc.ADR!=null && !acc.ADR.equals(""))
-        txtAddress1.setText(acc.ADR);
+        if (acc != null && acc.ADR != null && !acc.ADR.equals(""))
+            lAdr1.setText(acc.ADR);
         else
-            txtAddress1.setText("ناموجود");
+            lAdr1.setText("ناموجود");
 
 
-        if (acc!=null && acc.ADR1!=null && !acc.ADR1.equals(""))
-            txtAddress2.setText(acc.ADR1);
+        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
+            lAdr2.setText(acc.ADR1);
         else
-            txtAddress2.setText("ناموجود");
-
+            lAdr2.setText("ناموجود");
 
 
         //endregion Cast DialogAddress
 
 
-
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") &&  acc.ADR1 != null && !acc.ADR1.equals("")){
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
             dialogAddress.show();
-        }
-        else if  (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
+        } else if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
             binding.tvTAddress.setText(acc.ADR);
-            typeAddress=1;
-            address=acc.ADR;
-        }
-        else if  (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+            typeAddress = 1;
+            address = acc.ADR;
+        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
             binding.tvTAddress.setText(acc.ADR1);
-            typeAddress=2;
-            address=acc.ADR1;
-        }
-        else {
+            typeAddress = 2;
+            address = acc.ADR1;
+        } else {
             binding.tvTAddress.setText("ناموجود");
-            typeAddress=0;
-            address="ناموجود";
+            typeAddress = 0;
+            address = "ناموجود";
         }
 
 
         binding.tvAddAddress.setOnClickListener(v -> {
-            typeAddress=0;
-            address="ناموجود";
+            typeAddress = 0;
+            address = "ناموجود";
 
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("") &&  acc.ADR1 != null && !acc.ADR1.equals("")){
+            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
                 dialogAddress.show();
                 return;
             }
-            Bundle bundle1=new Bundle();
-            bundle1.putString("edit_address","1");
-            bundle1.putString("mobile","");
-            RegisterFragment registerFragment=new RegisterFragment();
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("edit_address", "1");
+            bundle1.putString("mobile", "");
+            RegisterFragment registerFragment = new RegisterFragment();
             registerFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF").commit();
         });
-
 
 
         binding.sumPriceTxt.setText(format.format(Double.parseDouble(Sum_PRICE)) + "ریال");
@@ -374,32 +376,53 @@ public class PaymentMobileFragment extends Fragment {
             }
         });
 
-        if (App.mode == 2) {
-            List<OrderType> OrdT = Select.from(OrderType.class).where("TY =" + 2).list();
-            if (OrdT.size() > 0) {
 
+        List<OrderType> OrdT = Select.from(OrderType.class).where("TY =" + 2).list();
 
-                codeList.clear();
-                for (int i = 0; i < OrdT.size(); i++) {
-                    binding.spinner.setItems(OrdT.get(i).getN());
-                    codeList.add(OrdT.get(i).getC());
-                    Ord_TYPE = String.valueOf(OrdT.get(0).getC());
+        if (OrdT.size() > 1) {
+            OrderTypePaymentAdapter orderTypePaymentAdapter = new OrderTypePaymentAdapter(getActivity(), OrdT);
+            LinearLayoutManager manager = new LinearLayoutManager(getContext());
+            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            manager.setReverseLayout(true);
+            binding.recyclerViewOrderType.setLayoutManager(manager);
+            binding.recyclerViewOrderType.setScrollingTouchSlop(View.FOCUS_LEFT);
+            binding.recyclerViewOrderType.setAdapter(orderTypePaymentAdapter);
+            orderTypePaymentAdapter.setOnClickListener((GUID, code) -> {
+                Ord_TYPE = code;
+
+                //region UnClick Old Item
+                ArrayList<OrderType> list = new ArrayList<>(OrdT);
+                CollectionUtils.filter(list, r -> r.Click);
+                if (list.size() > 0) {
+                    OrdT.get(OrdT.indexOf(list.get(0))).Click = false;
                 }
+                //endregion UnClick Old Item
 
-            }
+
+                //region Click New Item
+                ArrayList<OrderType> list2 = new ArrayList<>(OrdT);
+                CollectionUtils.filter(list2, r -> r.getI().equals(GUID));
+                if (list2.size() > 0) {
+                    OrdT.get(OrdT.indexOf(list2.get(0))).Click = true;
+                }
+                //endregion Click New Item
+
+
+                orderTypePaymentAdapter.notifyDataSetChanged();
+            });
+        } else if (OrdT.size() == 1) {
+            Ord_TYPE = OrdT.get(0).getC();
+
         }
-        binding.spinner.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
-
-            Ord_TYPE = String.valueOf(codeList.get(position));
-
-        });
 
 
-        String finalOrd_TYPE = Ord_TYPE;
         binding.orderListBtnRegister.setOnClickListener(v -> {
 
-            if (address.equals("ناموجود") || typeAddress==0){
+            if (address.equals("ناموجود") || typeAddress == 0) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (Ord_TYPE == null || Ord_TYPE == -1) {
+                Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
             rlButtons.setVisibility(View.VISIBLE);
@@ -469,17 +492,15 @@ public class PaymentMobileFragment extends Fragment {
             invoice.INV_STATUS = true;
             invoice.ACC_CLB_UID = Acc_GUID;
             invoice.TBL_UID = Tbl_GUID;
-            if (!finalOrd_TYPE.equals(""))
-                invoice.INV_TYPE_ORDER = Integer.parseInt(finalOrd_TYPE);
+            invoice.INV_TYPE_ORDER = Ord_TYPE;
 
 
-            if (typeAddress==1) {
+            if (typeAddress == 1) {
                 invoice.ACC_CLB_ADDRESS = "1";
-                invoice.ACC_CLB_DEFAULT_ADDRESS="1";
-            }
-            else if (typeAddress==2) {
+                invoice.ACC_CLB_DEFAULT_ADDRESS = "1";
+            } else if (typeAddress == 2) {
                 invoice.ACC_CLB_ADDRESS2 = "2";
-                invoice.ACC_CLB_DEFAULT_ADDRESS="2";
+                invoice.ACC_CLB_DEFAULT_ADDRESS = "2";
             }
 
             invoice.Acc_name = Acc_NAME;
@@ -535,9 +556,14 @@ public class PaymentMobileFragment extends Fragment {
                     Type typeIDs = new TypeToken<ModelLog>() {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
+                    int message = 0;
+                    String description = "";
+                    if (iDs != null) {
+                        message = iDs.getLogs().get(0).getMessage();
+                        description = iDs.getLogs().get(0).getDescription();
+                    }
 
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
+
                     rlButtons.setVisibility(View.GONE);
                     btnReturned.setVisibility(View.VISIBLE);
                     if (message == 1) {
@@ -555,6 +581,13 @@ public class PaymentMobileFragment extends Fragment {
                         tvMessage.setText("خطا در ارسال" + "\n" + description + "\n" + "این سفارش ذخیره می شود با مرجعه به پروفایل خود سفارش را مجددارسال کنید");
                         dialog.show();
                     } else if (message == 3) {
+                        Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
+                        invoice.SendStatus = false;
+                        invoice.save();
+                        tvMessage.setText("خطا در ارسال" + "\n" + description + "\n" + "این سفارش ذخیره می شود با مرجعه به پروفایل خود سفارش را مجددارسال کنید");
+                        dialog.show();
+
+                    } else {
                         Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
                         invoice.SendStatus = false;
                         invoice.save();

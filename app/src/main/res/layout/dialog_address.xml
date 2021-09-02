@@ -20,82 +20,39 @@
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <com.google.android.material.card.MaterialCardView
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/edt_address"
-            app:strokeColor="@color/very_light_pink"
-            android:id="@+id/layout_address1"
-            app:strokeWidth="1.5dp"
-            android:backgroundTint="@color/white"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
+        <RadioGroup
+
+            android:layoutDirection="rtl"
+            android:id="@+id/radio"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            tools:targetApi="lollipop">
-            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:textDirection="rtl"
+                android:layoutDirection="rtl"
+                android:textSize="12sp"
+                android:textColor="@color/medium_color"
+                android:fontFamily="@font/iransans"
+                android:id="@+id/radioAddress1"
                 android:layout_width="match_parent"
-                android:layout_margin="@dimen/margin10"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
+            </RadioButton>
 
-                <TextView
-                    android:layout_marginEnd="12dp"
-                    android:padding="@dimen/margin10"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/tvTAddress1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <RadioButton
 
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/edt_address"
-            app:strokeColor="@color/very_light_pink"
-            android:id="@+id/layout_address2"
-            app:strokeWidth="1.5dp"
-            android:backgroundTint="@color/white"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            android:layout_width="match_parent"
-            tools:targetApi="lollipop">
-            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/radioAddress2"
+                android:textDirection="rtl"
+                android:layoutDirection="rtl"
+                android:textSize="12sp"
+                android:textColor="@color/medium_color"
+                android:fontFamily="@font/iransans"
                 android:layout_width="match_parent"
-                android:layout_margin="@dimen/margin10"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
+            </RadioButton>
+        </RadioGroup>
 
-                <TextView
-                    android:layout_marginEnd="12dp"
-                    android:padding="@dimen/margin10"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/tvTAddress2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvDescription"

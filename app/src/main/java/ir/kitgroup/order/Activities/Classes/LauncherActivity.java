@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -39,12 +41,14 @@ public class LauncherActivity extends AppCompatActivity {
     public static double screenInches = 0.0;
 
     private Dialog dialog;
+    private SharedPreferences sharedPreferences;
     //endregion Parameter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     //    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         View viewRoot = binding.getRoot();
         setContentView(viewRoot);
@@ -79,6 +83,7 @@ public class LauncherActivity extends AppCompatActivity {
 //            if (App.mode==1)
 //                getSupportFragmentManager().popBackStack();
 //            else
+
                 finish();
 
         });

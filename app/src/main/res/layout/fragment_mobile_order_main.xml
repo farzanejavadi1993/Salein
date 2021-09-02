@@ -16,7 +16,7 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/top_pas" />
+            android:src="@drawable/donyavi_pas" />
 
         <RelativeLayout
             android:layout_above="@+id/bottom_navigation_view_linear"

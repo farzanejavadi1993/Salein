@@ -14,16 +14,21 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import com.cedarstudios.cedarmapssdk.CedarMaps;
@@ -32,6 +37,7 @@ import com.cedarstudios.cedarmapssdk.CedarMapsStyleConfigurator;
 import com.cedarstudios.cedarmapssdk.listeners.OnStyleConfigurationListener;
 
 import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
+import com.cedarstudios.cedarmapssdk.model.geocoder.forward.ForwardGeocode;
 import com.cedarstudios.cedarmapssdk.model.geocoder.reverse.ReverseGeocode;
 
 import com.google.gson.Gson;
@@ -60,6 +66,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
@@ -101,6 +108,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private User user;
     private int gender = 0;
 
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 99;
     private LocationManager locationManager;
     private Boolean registerGps = false;
@@ -120,6 +128,11 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
     private double longitude = 0.0;
     private double latitude = 0.0;
+
+
+
+
+
 
 
     //endregion Parameter
@@ -236,6 +249,9 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         super.onViewCreated(view, savedInstanceState);
 
 
+
+
+
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync(mapboxMap -> {
             this.mMapboxMap = mapboxMap;
@@ -277,18 +293,17 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
             mMapboxMap.addOnCameraIdleListener(() -> reverseGeocode(mMapboxMap.getCameraPosition()));
 
-//            this.mMapboxMap.addOnMapClickListener(point -> {
-//
-//                addMarkerToMapViewAtPosition(point);
-//                reverseGeocode(mapboxMap.getCameraPosition());
-//
-//                return true;
-//            });
+
 
 
             binding.floating.setOnClickListener(v -> setupCurrentLocationButton());
 
         });
+
+
+
+
+
 
 
     }
@@ -670,35 +685,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                     }
                 });
 
-//
-//        CedarMaps.getInstance().reverseGeocode(
-//                position.target,
-//                null,
-//                "short",
-//                null,
-//                false, new ReverseGeocodeResultListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull ReverseGeocode result) {
-//                        binding.progressBar.setVisibility(View.GONE);
-//                        binding.tvAddress.setVisibility(View.VISIBLE);
-//
-//                        String address = result.getFormattedAddress();
-//                        if (address != null) {
-//                            binding.tvAddress.setText(address);
-//                        } else {
-//                            binding.tvAddress.setText("R.string.no_address_available");
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull String errorMessage) {
-//                        binding.progressBar.setVisibility(View.GONE);
-//                        binding.tvAddress.setVisibility(View.VISIBLE);
-//
-//                        binding.tvAddress.setText("getString(R.string.parse_error)");
-//                    }
-//                });
+
 
     }
 
@@ -751,6 +738,11 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         super.onDetach();
 
     }
+
+
+
+
+
 
 
 }

@@ -134,18 +134,18 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int emptyListProductFlag = 0;
 
 
-    private ArrayList<ProductGroupLevel1> AllProductLevel1;
-    private ArrayList<ProductGroupLevel1> productLevel1List;
+    private ArrayList<ProductGroupLevel1> AllProductLevel1=new ArrayList<>();
+    private ArrayList<ProductGroupLevel1> productLevel1List=new ArrayList<>();
     private ProductLevel1Adapter productLevel1Adapter;
 
 
-    private ArrayList<ProductGroupLevel2> AllProductLevel2;
-    private ArrayList<ProductGroupLevel2> productLevel2List;
+    private ArrayList<ProductGroupLevel2> AllProductLevel2=new ArrayList<>();
+    private ArrayList<ProductGroupLevel2> productLevel2List=new ArrayList<>();
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-    private ArrayList<Product> productList;
-    private ArrayList<Product> productListData;
+    private ArrayList<Product> productList=new ArrayList<>();
+    private ArrayList<Product> productListData=new ArrayList<>();
     private ArrayList<Product> allProductActive;
 
     private ProductAdapter1 productAdapter;
@@ -199,6 +199,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int counter;
 
 
+    private Boolean firstSync=false;
+
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -213,6 +215,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
         customProgress = CustomProgress.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        firstSync=sharedPreferences.getBoolean("firstSync",false);
 
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
             Invoice.deleteInTx(invoice);
@@ -341,23 +344,22 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             Acc_GUID = Select.from(Account.class).first().I;
             binding.layoutAccount.setVisibility(View.GONE);
 
-           /* if (!Inv_GUID_ORG.equals(""))
-                binding.bottomNavigationViewLinear.getMenu().getItem(R.id.profile).setVisible(false);*/
+
 
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.home);
-            binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها ");
+            binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
             binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
 
 
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 if (invDetails.size() > 0) {
                     counter=invDetails.size();
-                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها "+counter);
+                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید "+counter);
                     if (App.mode == 1)
                         binding.orderListBtnRegister.setVisibility(View.VISIBLE);
                 } else
 
-                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها ");
+                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
                 final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
                 if (Inv_GUID_ORG.equals("")) {
                     for (int i = 1; i <= size1; i++) {
@@ -407,18 +409,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         counter=0;
         Inv_GUID = "";
         Inv_GUID_ORG = "";
-        AllProductLevel1 = new ArrayList<>();
-        productLevel1List = new ArrayList<>();
-        AllProductLevel2 = new ArrayList<>();
-        productLevel2List = new ArrayList<>();
-        productListData = new ArrayList<>();
-        productList = new ArrayList<>();
+
         emptyListProduct = new ArrayList<>();
-        productListData = new ArrayList<>();
         allProductActive = new ArrayList<>();
-        emptyListProduct = new ArrayList<>();
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
+
+        if (productLevel1List.size() <= 1) {
+            binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+        }
         if (productAdapter != null) {
             productAdapter.notifyDataSetChanged();
             productLevel1Adapter.notifyDataSetChanged();
@@ -429,14 +428,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         isLoading = false;
         currentPage = 1;
 
-
         error = "";
-
 
         Ord_TYPE = "";
         Tbl_GUID = "";
 
-        Util.AllProduct.clear();
+
 
         String maxSales = "0";
         List<Setting> setting = Select.from(Setting.class).list();
@@ -446,6 +443,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
+
+
 
 
         //endregion First Value Parameter
@@ -459,6 +458,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         Inv_GUID = bnd.getString("Inv_GUID");
         Inv_GUID_ORG = bnd.getString("Inv_GUID");
         //endregion Get Bundle
+
 
         //region Create Order
 
@@ -649,6 +649,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                         tempPrdLvl2.add(resultPrdGrp2_.get(i));
                 }
+
+
 
 
                 productLevel2List.clear();
@@ -849,12 +851,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             if (invDetails.size() > 0) {
               //  binding.itemInvoiceDetail.setBadgeText(String.valueOf(invDetails.size()));
                 counter=invDetails.size();
-                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها "+counter);
+                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید "+counter);
                 if (App.mode == 1)
                     binding.orderListBtnRegister.setVisibility(View.VISIBLE);
             } else
               // binding.itemInvoiceDetail.setBadgeText(null);
-                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها ");
+                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
 
         });
 
@@ -951,7 +953,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion Action BtnRegister
 
 
-        isAllPermissionGranted();
+
+        if (Util.AllProduct.size()==0){
+            isAllPermissionGranted();
+        }else {
+
+            getSetting();
+        }
+
+
         return binding.getRoot();
 
 
@@ -1108,6 +1118,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
                 }
 
+                AllProductLevel1.clear();
+                AllProductLevel2.clear();
+                AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
+                AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
+
                 productLevel1List.clear();
 
                 for (int i = 0; i < AllProductLevel1.size(); i++) {
@@ -1203,6 +1218,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     }
 
 
+                    //change by me
+                    AllProductLevel2.clear();
+                    AllProductLevel2.addAll(productLevel2List);
+
+
                     ArrayList<Product> resultPrdAc = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrdAc, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
                     allProductActive.clear();
@@ -1232,12 +1252,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                        if (invoicedetails.size() > 0) {
                            // binding.itemInvoiceDetail.setBadgeText(String.valueOf(invoicedetails.size()));
                            counter=invoicedetails.size();
-                           binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها "+counter);
+                           binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید "+counter);
                        }
                         else
                            // binding.itemInvoiceDetail.setBadgeText(null);
 
-                        binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خریدها");
+                        binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید");
 
 
                         for (int i = 0; i < invoicedetails.size(); i++) {
@@ -1464,17 +1484,46 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Util.AllProduct.addAll(products);
 
 
+
+
+
+
                         AllProductLevel1.clear();
                         if (iDs.getProductLevel1List() != null)
                             AllProductLevel1.addAll(iDs.getProductLevel1List());
+
+                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
+
+                        if (!firstSync)
+                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
+                        else
+                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
+                                PrdGroupLevel1.update();
+                            }
+
+
+
 
 
                         AllProductLevel2.clear();
                         if (iDs.getProductLevel2List() != null)
                             AllProductLevel2.addAll(iDs.getProductLevel2List());
+                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
+                            if (!firstSync)
+                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
+                        else
+                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
+                                prdGroupLevel2.update();
+                            }
 
 
-                        getSetting();
+                        sharedPreferences.edit().putBoolean("firstSync", true).apply();
+
+
+
+
+
+                        getTypeOrder();
 
 
                     }
@@ -1504,6 +1553,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         try {
 
+            binding.progressbar.setVisibility(View.VISIBLE);
             Call<String> call = App.api.getSetting(userName, passWord);
 
             call.enqueue(new Callback<String>() {
@@ -1532,7 +1582,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.saveInTx(settingsList);
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
 
-                        getTypeOrder();
+                        getProducts();
 
 
                     }
@@ -1593,7 +1643,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     } else {
                         OrderType.deleteAll(OrderType.class);
                         OrderType.saveInTx(iDs.getOrderTypes());
-                        getProducts();
+                   getSetting();
 
 
                     }

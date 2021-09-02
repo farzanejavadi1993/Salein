@@ -225,7 +225,6 @@
 
         <RelativeLayout
             android:layout_below="@id/layoutPayment"
-
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="22dp"
             android:layout_marginLeft="22dp"
@@ -246,17 +245,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
 
-
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:layout_marginTop="8dp"
-                app:ms_background_color="#FBFBFB"
-                android:layout_below="@+id/tv_type_order"
-
-                android:id="@+id/spinner"
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="@dimen/margin8"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"/>
-
+                android:id="@+id/recyclerViewOrderType"
+                android:layout_below="@+id/tv_type_order"
+                android:layout_height="wrap_content"/>
 
 
 

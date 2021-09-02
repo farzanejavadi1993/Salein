@@ -731,7 +731,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     }
 
                     if (iDs != null) {
-                       Invoice inv=Select.from(Invoice.class).where("INVUID ='"+Inv_GUID+"'").first();
+                       /*Invoice inv=Select.from(Invoice.class).where("INVUID ='"+Inv_GUID+"'").first();
                         if (inv!=null){
                             inv.delete();
                             Invoice.saveInTx(iDs.getInvoice());
@@ -742,7 +742,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         }
 
 
-                        InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
+                        InvoiceDetail.saveInTx(iDs.getInvoiceDetail());*/
 
 
 

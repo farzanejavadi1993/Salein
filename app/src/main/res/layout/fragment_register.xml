@@ -46,6 +46,7 @@
 
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/cardInfoCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -297,6 +298,18 @@
 
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:id="@+id/recyclerView"
+           />
+
         <FrameLayout
 
             android:id="@+id/layoutMap"
@@ -414,6 +427,7 @@
                         android:visibility="gone" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
+
         </RelativeLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"

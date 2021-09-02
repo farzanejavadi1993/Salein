@@ -38,11 +38,12 @@ public class App extends Application {
     @Override
     public void onCreate() {
         SugarContext.init(getApplicationContext());
+        User.deleteAll(User.class);
         if (Select.from(User.class).list().size() == 0) {
             User user = new User();
-            user.ipLocal = "192.168.20.8:96";
+            user.ipLocal = "109.125.133.149:9999";
             user.userName = "admin";
-            user.passWord = "123";
+            user.passWord = "0123";
             user.save();
         }
         baseUrl="http://" + Select.from(User.class).first().ipLocal + "/api/REST/";

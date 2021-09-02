@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.Adapters.AccountAdapter;
 import ir.kitgroup.order.Adapters.DescriptionAdapter;
 import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
@@ -91,7 +92,7 @@ import ir.kitgroup.order.DataBase.Product;
 import ir.kitgroup.order.DataBase.Setting;
 import ir.kitgroup.order.DataBase.Tables;
 import ir.kitgroup.order.DataBase.User;
-import ir.kitgroup.order.MainActivity;
+
 import ir.kitgroup.order.models.Description;
 import ir.kitgroup.order.models.ModelAccount;
 import ir.kitgroup.order.models.ModelDesc;
@@ -586,7 +587,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
         btnRegisterDescription.setOnClickListener(v -> {
             ArrayList<Product> resultpr = new ArrayList<>();
-            if (MainActivity.screenInches < 7) {
+            if (LauncherActivity.screenInches < 7) {
                 resultpr.addAll(Util.AllProduct);
             }
             ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
@@ -788,7 +789,7 @@ public class OrderFragment extends Fragment implements Filterable {
         //region CONFIGURATION DATA PRODUCT_LEVEL1
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
 
-        if (MainActivity.screenInches < 7) {
+        if (LauncherActivity.screenInches < 7) {
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             manager.setReverseLayout(true);
@@ -921,7 +922,7 @@ public class OrderFragment extends Fragment implements Filterable {
         //region CONFIGURATION DATA PRODUCTLEVEL2
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
 
-        if (MainActivity.screenInches < 7) {
+        if (LauncherActivity.screenInches < 7) {
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             manager.setReverseLayout(true);
@@ -1019,7 +1020,7 @@ public class OrderFragment extends Fragment implements Filterable {
             }
         };
 
-        if (MainActivity.screenInches < 7) {
+        if (LauncherActivity.screenInches < 7) {
             productRecyclerview.setLayoutManager(linearLayoutManager);
             productRecyclerview.setScrollingTouchSlop(View.FOCUS_LEFT);
             scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);

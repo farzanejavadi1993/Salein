@@ -16,8 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.Fragments.TabletView.OrderFragment;
-import ir.kitgroup.order.MainActivity;
+
 import ir.kitgroup.order.models.Description;
 import ir.kitgroup.order.R;
 
@@ -47,7 +48,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (MainActivity.screenInches >= 7) {
+        if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;
@@ -79,7 +80,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         holder.itemView.setOnClickListener(view -> {
 
             if (!description.Click) {
-            if(MainActivity.screenInches>=7)
+            if(LauncherActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = true;
             else
 
@@ -88,7 +89,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_reserve_card_background));
                 clickItem.onRowClick(list.get(position).DSC, true,holder.getAdapterPosition());
             } else {
-                if(MainActivity.screenInches>=7)
+                if(LauncherActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
                 else
                   //  MainOrderMobileFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
@@ -122,7 +123,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
             tableName = itemView.findViewById(R.id.launcher_recycle_table_txt_name);
             cardView = itemView.findViewById(R.id.launcher_recycle_table_card);
             tableName.setTextSize(fontSize);
-            if (MainActivity.screenInches >= 7) {
+            if (LauncherActivity.screenInches >= 7) {
 
 
             } else {

@@ -18,12 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.Utilities;
 import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.DataBase.Tables;
-import ir.kitgroup.order.MainActivity;
+
 import ir.kitgroup.order.R;
 
 
@@ -59,7 +60,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.view
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (MainActivity.screenInches >= 7) {
+        if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;
@@ -240,18 +241,18 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.view
 
            // tableName.setTextSize(fontSize);
             if (App.mode==1){
-                if (MainActivity.screenInches >= 7) {
+                if (LauncherActivity.screenInches >= 7) {
                     int height = 0;
-                    if (MainActivity.width > MainActivity.height)
-                        height = MainActivity.width / 2;
+                    if (LauncherActivity.width > LauncherActivity.height)
+                        height = LauncherActivity.width / 2;
                     else
-                        height = MainActivity.height / 2;
+                        height = LauncherActivity.height / 2;
                     rlTable.getLayoutParams().width = (int) (height / 3.3);
                     rlTable.getLayoutParams().height = (int) (height / 4.2);
 
 
                 } else {
-                    int height = MainActivity.width;
+                    int height = LauncherActivity.width;
                     rlTable.getLayoutParams().width = (int) (height / 2.5);
                     rlTable.getLayoutParams().height = (int) (height / 3.1);
 

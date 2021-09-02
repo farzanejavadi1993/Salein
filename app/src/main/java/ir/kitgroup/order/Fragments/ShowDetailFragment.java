@@ -17,13 +17,18 @@ import androidx.fragment.app.Fragment;
 
 import com.orm.query.Select;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.DataBase.Product;
-import ir.kitgroup.order.MainActivity;
+
 import ir.kitgroup.order.R;
+import ir.kitgroup.order.Util.Util;
 
 public class ShowDetailFragment  extends Fragment {
 
@@ -36,7 +41,7 @@ public class ShowDetailFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (MainActivity.screenInches >= 7) {
+        if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
             view = inflater.inflate(R.layout.activity_show_detail_fragment, container, false);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -54,15 +59,19 @@ public class ShowDetailFragment  extends Fragment {
         ivProduct =view. findViewById(R.id.iv_product);
         tvDescriptionProduct =view. findViewById(R.id.tv_description_product);
         tvDescriptionUser = view.findViewById(R.id.tv_description_user);
-        Product prd = Select.from(Product.class).where("I ='" + Id + "'").first();
 
-        if (prd != null) {
+        ArrayList<Product> arrayList=new ArrayList<>();
+        arrayList.addAll(Util.AllProduct);
+        CollectionUtils.filter(arrayList, a->a.I.equals(Id));
+
+
+        if (arrayList.size()>0) {
 
    /*         File file = new File(Environment.getExternalStoragePublicDirectory("SaleIn") +
                     "/Images/",
                     prd.I.toUpperCase() + ".jpg");*/
 
-            String yourFilePath = getActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) +"/"+"SaleIn"+"/"+ prd.I.toUpperCase() + ".jpg";
+            String yourFilePath = getActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) +"/"+"SaleIn"+"/"+ arrayList.get(0).I.toUpperCase() + ".jpg";
             File file = new File(yourFilePath);
 
             if (file.exists()) {
@@ -78,7 +87,7 @@ public class ShowDetailFragment  extends Fragment {
                 }
 
                 ivProduct.setImageBitmap(image);
-                tvDescriptionProduct.setText(prd.DES);
+                tvDescriptionProduct.setText(arrayList.get(0).DES);
             }
         }
         return view;

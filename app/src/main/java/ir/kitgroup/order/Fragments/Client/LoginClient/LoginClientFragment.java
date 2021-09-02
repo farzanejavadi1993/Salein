@@ -66,8 +66,8 @@ public class LoginClientFragment extends Fragment {
 
 
 
-       // if (App.mode == 2)
-          //binding.tvWelcome.setText("به هایپر گوشت دنیوی خوش آمدید");
+        if (App.mode == 2)
+         binding.tvWelcome.setText("به هایپر گوشت دنیوی خوش آمدید");
 
 
         binding.edtMobile.addTextChangedListener(new TextWatcher() {
