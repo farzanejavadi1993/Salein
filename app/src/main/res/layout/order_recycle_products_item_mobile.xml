@@ -146,11 +146,11 @@
             <TextView
                 android:singleLine="true"
                 android:id="@+id/unit"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="2dp"
                 android:layout_marginLeft="10dp"
                 android:text="کیلو گرم"
                 android:textColor="@color/medium_color"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:layout_centerVertical="true"
                android:layout_toLeftOf="@+id/iv_minus"
                 android:layout_width="wrap_content"
@@ -163,7 +163,7 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
                 android:src="@drawable/ic_minus1" />
 
@@ -182,13 +182,12 @@
                 android:textSize="11sp" />
 
             <ImageView
-
                 android:id="@+id/iv_max"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/ic_plus1" />
 

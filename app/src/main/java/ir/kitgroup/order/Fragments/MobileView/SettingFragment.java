@@ -32,6 +32,7 @@ import ir.kitgroup.order.Fragments.Client.LoginClient.LoginClientFragment;
 
 import ir.kitgroup.order.R;
 
+import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.databinding.FragmentSettingBinding;
 
 public class SettingFragment extends Fragment {
@@ -100,6 +101,7 @@ public class SettingFragment extends Fragment {
 
             if (!Select.from(User.class).list().get(0).CheckUser) {
                 if (User.count(User.class) > 0)
+                    if(App.mode==1);
                     User.deleteAll(User.class);
             }
 
@@ -107,11 +109,7 @@ public class SettingFragment extends Fragment {
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
-            List<User> user = Select.from(User.class).list();
-            if (user.size() > 0) {
-                // user.get(0).Exit = true;
-                user.get(0).save();
-            }
+
 
 
             sharedPreferences.edit().putBoolean("firstSync", false).apply();

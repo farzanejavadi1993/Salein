@@ -56,11 +56,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         getSizeMobile();
 
-        if (screenInches>=7){
-            Toast.makeText(this, "دذ حال حاضر برنامه روی تبلت قابل اجرا نیست", Toast.LENGTH_SHORT).show();
-            finish();
 
-        }
 
     /*    getPackageManager().setComponentEnabledSetting(
                 new ComponentName("package.name", "package.name.MainActivity-Flavor-One"),

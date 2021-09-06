@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+
             android:gravity="right"
             android:text="از بین آدرس های زیر یکی را انتخاب کنید"
             android:textStyle="bold"
@@ -21,26 +22,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <RadioGroup
-
+            android:layout_marginTop="@dimen/margin8"
             android:layoutDirection="rtl"
             android:id="@+id/radio"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RadioButton
-                android:textDirection="rtl"
-                android:layoutDirection="rtl"
+                android:button="@null"
+                android:paddingStart="@dimen/margin10"
+                android:paddingEnd="@dimen/margin10"
+
+                android:background="@drawable/radio_btn_background"
+                android:gravity="right|center_vertical"
                 android:textSize="12sp"
                 android:textColor="@color/medium_color"
                 android:fontFamily="@font/iransans"
                 android:id="@+id/radioAddress1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="60dp">
 
             </RadioButton>
 
             <RadioButton
-
+                android:button="@null"
+                android:paddingStart="@dimen/margin10"
+                android:paddingEnd="@dimen/margin10"
+                android:layout_marginTop="@dimen/margin10"
+                android:background="@drawable/radio_btn_background"
+                android:gravity="right|center_vertical"
                 android:id="@+id/radioAddress2"
                 android:textDirection="rtl"
                 android:layoutDirection="rtl"
@@ -48,7 +58,7 @@
                 android:textColor="@color/medium_color"
                 android:fontFamily="@font/iransans"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="60dp">
 
             </RadioButton>
         </RadioGroup>

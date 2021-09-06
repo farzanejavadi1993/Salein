@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.preference.PreferenceManager;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +36,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,8 +53,8 @@ import java.util.List;
 import java.util.UUID;
 
 import ir.kitgroup.order.Adapters.OrderTypePaymentAdapter;
-import ir.kitgroup.order.DataBase.ProductGroupLevel2;
-import ir.kitgroup.order.Fragments.Client.Register.RegisterFragment;
+import ir.kitgroup.order.models.PaymentRecieptDetail;
+import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
 import ir.kitgroup.order.DataBase.Account;
@@ -96,8 +99,8 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Dialog dialogAddress;
-    private RadioButton lAdr1;
-    private RadioButton lAdr2;
+    private RadioButton radioAddress1;
+    private RadioButton radioAddress2;
     private RadioGroup radioGroup;
     private MaterialButton btnEdit;
     private MaterialButton btnChoose;
@@ -113,7 +116,13 @@ public class PaymentMobileFragment extends Fragment {
     private Integer Ord_TYPE = -1;
 
 
-    List<InvoiceDetail> invDetails;
+    private List<InvoiceDetail> invDetails;
+
+    public static Boolean doActionEditAddress = false;
+
+
+
+    private String typePayment="-1";
     //end region Parameter
 
 
@@ -134,12 +143,12 @@ public class PaymentMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         customProgress = CustomProgress.getInstance();
-
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
         numberPos = Select.from(User.class).first().numberPos;
         if (numberPos != null && numberPos.equals(""))
             numberPos = "0";
+
 
 
         Bundle bundle = getArguments();
@@ -148,9 +157,8 @@ public class PaymentMobileFragment extends Fragment {
         String Acc_NAME = bundle.getString("");
         String Acc_GUID = bundle.getString("Acc_GUID");
 
-
         String ord_type = bundle.getString("Ord_TYPE");
-        if (!ord_type.equals(""))
+        if (ord_type != null && !ord_type.equals(""))
             Ord_TYPE = Integer.parseInt(ord_type);
         String Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
         String Sum_PRICE = bundle.getString("Sum_PRICE");
@@ -165,10 +173,13 @@ public class PaymentMobileFragment extends Fragment {
             binding.tvError.setVisibility(View.VISIBLE);
 
 
+
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-
         Account acc = Select.from(Account.class).first();
+
+
+
 
         //region Cast DialogSendOrder
         dialog = new Dialog(getActivity());
@@ -198,7 +209,6 @@ public class PaymentMobileFragment extends Fragment {
                         getFragmentManager().popBackStack();
                     }
                 }
-
 
 
                 assert getFragmentManager() != null;
@@ -258,6 +268,7 @@ public class PaymentMobileFragment extends Fragment {
 
         //endregion Cast DialogSendOrder
 
+
         //region Cast DialogAddress
         dialogAddress = new Dialog(getActivity());
         dialogAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -265,25 +276,25 @@ public class PaymentMobileFragment extends Fragment {
         dialogAddress.setContentView(R.layout.dialog_address);
         dialogAddress.setCancelable(false);
 
-        lAdr1 = dialogAddress.findViewById(R.id.radioAddress1);
-        lAdr2 = dialogAddress.findViewById(R.id.radioAddress2);
-        lAdr2 = dialogAddress.findViewById(R.id.radioAddress2);
+        radioAddress1 = dialogAddress.findViewById(R.id.radioAddress1);
+        radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
+        radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
         btnEdit = dialogAddress.findViewById(R.id.btn_edit);
         btnChoose = dialogAddress.findViewById(R.id.btn_choose);
         radioGroup = dialogAddress.findViewById(R.id.radio);
 
 
-        lAdr1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 typeAddress = 1;
-                address = lAdr1.getText().toString();
+                address = radioAddress1.getText().toString();
             }
         });
 
-        lAdr2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 typeAddress = 2;
-                address = lAdr2.getText().toString();
+                address = radioAddress2.getText().toString();
             }
         });
 
@@ -300,35 +311,83 @@ public class PaymentMobileFragment extends Fragment {
 
         btnEdit.setOnClickListener(v -> {
 
+            if (typeAddress == 0) {
+                Toast.makeText(getActivity(), "آدرس مورد نظر خود را وارد کنید.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             dialogAddress.dismiss();
-            typeAddress = 0;
-            address = "ناموجود";
+
+
+
             Bundle bundle1 = new Bundle();
-            bundle1.putString("edit", "1");
-            ProfileFragment profileFragment = new ProfileFragment();
-            profileFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, profileFragment, "ProfileFragment").addToBackStack("ProfileF").commit();
+            bundle1.putString("edit_address", "1");
+            bundle1.putString("type", String.valueOf(typeAddress));
+            MapFragment mapFragment = new MapFragment();
+            mapFragment.setArguments(bundle1);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
 
         });
 
         if (acc != null && acc.ADR != null && !acc.ADR.equals(""))
-            lAdr1.setText(acc.ADR);
+            radioAddress1.setText(acc.ADR);
+
+
         else
-            lAdr1.setText("ناموجود");
+            radioAddress1.setText("ناموجود");
 
 
         if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
-            lAdr2.setText(acc.ADR1);
+            radioAddress2.setText(acc.ADR1);
         else
-            lAdr2.setText("ناموجود");
+            radioAddress2.setText("ناموجود");
 
 
         //endregion Cast DialogAddress
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
-            dialogAddress.show();
-        } else if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
+        binding.layoutPaymentPlace.setOnClickListener(v -> {
+            binding.ivOkPaymentOnline.setVisibility(View.GONE);
+            View view1 = getLayoutInflater().inflate(R.layout.popup_place_payment, null);
+            PopupWindow popupWindow = new PopupWindow(view1, LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                popupWindow.setElevation(10.0F);
+            }
+
+             popupWindow.setOutsideTouchable(true);
+            popupWindow.showAsDropDown(v);
+
+
+            ConstraintLayout btnPos = view1.findViewById(R.id.layout_pos);
+            ConstraintLayout btnMoney = view1.findViewById(R.id.layout_money);
+
+
+            btnPos.setOnClickListener(v1 -> {
+                typePayment="2";
+                binding.tvTypePaymentPlace.setText("پرداخت با کارت");
+                popupWindow.dismiss();
+            });
+
+
+            btnMoney.setOnClickListener(v12 -> {
+
+                typePayment="1";
+                binding.tvTypePaymentPlace.setText("پرداخت نقدی");
+                popupWindow.dismiss();
+            });
+
+        });
+
+
+        binding.layoutPaymentOnline.setOnClickListener(v -> {
+            binding.tvTypePaymentPlace.setText("");
+            binding.ivOkPaymentOnline.setVisibility(View.VISIBLE);
+            typePayment="4";
+        });
+
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
             binding.tvTAddress.setText(acc.ADR);
             typeAddress = 1;
             address = acc.ADR;
@@ -342,10 +401,11 @@ public class PaymentMobileFragment extends Fragment {
             address = "ناموجود";
         }
 
+        if (doActionEditAddress)
+            dialogAddress.show();
 
         binding.tvAddAddress.setOnClickListener(v -> {
-            typeAddress = 0;
-            address = "ناموجود";
+
 
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
                 dialogAddress.show();
@@ -353,10 +413,10 @@ public class PaymentMobileFragment extends Fragment {
             }
             Bundle bundle1 = new Bundle();
             bundle1.putString("edit_address", "1");
-            bundle1.putString("mobile", "");
-            RegisterFragment registerFragment = new RegisterFragment();
-            registerFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF").commit();
+            bundle1.putString("type", String.valueOf(typeAddress));
+            MapFragment mapFragment = new MapFragment();
+            mapFragment.setArguments(bundle1);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
         });
 
 
@@ -364,17 +424,13 @@ public class PaymentMobileFragment extends Fragment {
         binding.purePriceTxt.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
 
         if (App.mode == 1) {
-
             binding.rlTypeOrder.setVisibility(View.GONE);
+            binding.layoutAddress.setVisibility(View.GONE);
         }
 
 
-        binding.ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStack();
-            }
-        });
+        binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
+
 
 
         List<OrderType> OrdT = Select.from(OrderType.class).where("TY =" + 2).list();
@@ -410,19 +466,29 @@ public class PaymentMobileFragment extends Fragment {
 
                 orderTypePaymentAdapter.notifyDataSetChanged();
             });
-        } else if (OrdT.size() == 1) {
+        }
+        else if (OrdT.size() == 1) {
             Ord_TYPE = OrdT.get(0).getC();
+            binding.rlTypeOrder.setVisibility(View.GONE);
 
         }
 
 
+
+
+
         binding.orderListBtnRegister.setOnClickListener(v -> {
 
-            if (address.equals("ناموجود") || typeAddress == 0) {
+            if ((address.equals("ناموجود") || typeAddress == 0 ) && App.mode==2) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (Ord_TYPE == null || Ord_TYPE == -1) {
+            }
+            else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            else if (typePayment.equals("-1")){
+                Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
             rlButtons.setVisibility(View.VISIBLE);
@@ -453,15 +519,17 @@ public class PaymentMobileFragment extends Fragment {
                 int finalI = i;
                 CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
                 if (prdResult.size() > 0) {
-                    double sumpurePrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
-                    double discountPrice = sumpurePrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
-                    double totalPrice = sumpurePrice - discountPrice;//جمع خالص ردیف
+                    double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
+                    double discountPrice = sumTotalPrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
+                    double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
-                    sumPurePrice = sumPurePrice + sumpurePrice;//جمع کل فاکتور
-                    sumPrice = sumPrice + totalPrice;//جمع خالص فاکتور
-                    invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(sumpurePrice);
+                    sumPurePrice = sumPurePrice + sumTotalPrice;//جمع کل فاکتور
+                    sumPrice = sumPrice + totalPurePrice;//جمع خالص فاکتور
+                    invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                     invDetails.get(i).ROW_NUMBER = i + 1;
+                    invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
+                    invDetails.get(i).INV_DET_DISCOUNT =String.valueOf(discountPrice);
                     invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
                     sumDiscount = sumDiscount + discountPrice;
                     sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
@@ -510,7 +578,15 @@ public class PaymentMobileFragment extends Fragment {
 
             List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").list();
             List<InvoiceDetail> invoiceDetailList = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            SendOrder(listInvoice, invoiceDetailList);
+            List<PaymentRecieptDetail> clsPaymentRecieptDetails=new ArrayList<>();
+            PaymentRecieptDetail cl=new PaymentRecieptDetail();
+            cl.PAY_RCIPT_DET_DESCRIBTION=listInvoice.get(0).INV_DESCRIBTION;
+            cl.PAY_RCIPT_DET_TOTAL_AMOUNT=listInvoice.get(0).INV_EXTENDED_AMOUNT;
+            cl.PAY_RCIPT_DET_TYPE=typePayment;
+            clsPaymentRecieptDetails.add(cl);
+
+
+            SendOrder(listInvoice, invoiceDetailList,clsPaymentRecieptDetails);
 
 
         });
@@ -522,11 +598,12 @@ public class PaymentMobileFragment extends Fragment {
 
     private static class JsonObject {
         public List<Invoice> Invoice;
-        public List<ir.kitgroup.order.DataBase.InvoiceDetail> InvoiceDetail;
+        public List<InvoiceDetail> InvoiceDetail;
+        public List<PaymentRecieptDetail> PaymentRecieptDetail;
     }
 
 
-    void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail) {
+    void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail,List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
 
         try {
 
@@ -534,6 +611,9 @@ public class PaymentMobileFragment extends Fragment {
             JsonObject jsonObject = new JsonObject();
             jsonObject.Invoice = invoice;
             jsonObject.InvoiceDetail = invoiceDetail;
+            jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
+
+
             Gson gson = new Gson();
             Type typeJsonObject = new TypeToken<JsonObject>() {
             }.getType();
@@ -632,4 +712,9 @@ public class PaymentMobileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        doActionEditAddress=false;
+    }
 }

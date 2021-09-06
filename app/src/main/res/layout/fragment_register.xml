@@ -29,7 +29,6 @@
 
 
             <TextView
-
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/cardInfoCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,20 +163,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
                 android:layout_marginTop="@dimen/margin8"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:background="@drawable/background_edittext"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="vertical">
+
                 <EditText
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
                     android:id="@+id/edt_address_customer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin8"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
                     android:fontFamily="@font/iransans"
                     android:gravity="right|top|center"
                     android:inputType="textShortMessage|textMultiLine"
@@ -194,23 +193,24 @@
                     />
 
                 <TextView
-                    android:text="آدرس دقیق تر خود را وارد کنید."
-                    android:gravity="right"
-                    android:textSize="12dp"
-                    android:textColor="@color/green_table"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="آدرس دقیق تر خود را وارد کنید."
+                    android:textColor="@color/green_table"
+                    android:textSize="12dp" />
+
                 <EditText
 
-                    android:hint="توضیحات تکمیلی..."
                     android:id="@+id/edt_address_customer_complete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edittext"
                     android:fontFamily="@font/iransans"
                     android:gravity="right|top|center"
+                    android:hint="توضیحات تکمیلی..."
                     android:inputType="textShortMessage|textMultiLine"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
@@ -222,7 +222,6 @@
 
                     />
             </LinearLayout>
-
 
 
             <TextView
@@ -298,137 +297,15 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:id="@+id/recyclerView"
-           />
-
-        <FrameLayout
-
-            android:id="@+id/layoutMap"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
 
 
 
-            <com.cedarstudios.cedarmapssdk.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                mapbox:mapbox_cameraZoom="14"
-
-                />
 
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_location"
-                tools:ignore="ContentDescription" />
 
-        </FrameLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/rl_floating"
-            android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="@dimen/margin6"
-                android:backgroundTint="#eee"
-                android:src="@drawable/ic_cross"
-                app:elevation="6dp"
-                app:fabSize="normal"
-                app:pressedTranslationZ="12dp" />
-
-            <com.google.android.material.card.MaterialCardView
-
-                android:id="@+id/card_address"
-                android:layout_width="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="6dp"
-                android:layout_toRightOf="@+id/floating"
-                android:backgroundTint="#eee"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="@color/purple_700"
-               >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-             >
-
-                    <EditText
-                        android:paddingStart="5dp"
-                       android:paddingEnd="5dp"
-                        android:id="@+id/edt_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@android:color/transparent"
-                        android:enabled="false"
-                        android:fontFamily="@font/iransans"
-                        android:hint=""
-                        android:inputType="textShortMessage|textMultiLine"
-                        android:textColor="#000"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:gravity="right"
-                       android:padding="5dp"
-                        android:id="@+id/edt_address_complete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/edt_address"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@android:color/transparent"
-                        android:enabled="true"
-                        android:fontFamily="@font/iransans"
-                        android:hint="توضیحات تکمیلی..."
-                        android:inputType="textShortMessage|textMultiLine"
-                        android:textColor="#000"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <ProgressBar
-                        android:id="@+id/pro"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:visibility="gone" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </RelativeLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
             android:layout_width="match_parent"
@@ -438,7 +315,7 @@
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/purple_700"
             android:fontFamily="@font/iransans"
-            android:text="@string/register_gps"
+            android:text="@string/register_information"
             android:textColor="@color/white"
             app:cornerRadius="@dimen/box_radius"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -452,8 +329,8 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardInfoCustomer" />

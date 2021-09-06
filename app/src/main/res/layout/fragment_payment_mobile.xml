@@ -141,84 +141,171 @@
                 android:layout_alignParentRight="true" />
 
 
+           <com.google.android.material.card.MaterialCardView
+               android:layout_below="@+id/tv_payment"
+               android:layout_marginTop="@dimen/margin10"
+               android:id="@+id/layout_payment_place"
+               android:backgroundTint="@color/white"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="12dp"
+               android:layout_width="match_parent"
+               tools:targetApi="lollipop">
+               <androidx.constraintlayout.widget.ConstraintLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+
+                   <ImageView
+                       android:padding="@dimen/margin10"
+                       android:id="@+id/iv_payment_place"
+                       android:layout_width="40dp"
+                       android:layout_height="40dp"
+                       android:layout_alignParentRight="true"
+                       android:layout_centerVertical="true"
+                       android:layout_margin="@dimen/margin10"
+                       android:layout_marginEnd="10dp"
+                       android:src="@drawable/ic_payment_place"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintEnd_toEndOf="parent"
+                       app:layout_constraintTop_toTopOf="parent"
+                       tools:ignore="ContentDescription" />
+
+                   <TextView
+
+                       android:id="@+id/tvTitlePaymentPlace"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="10dp"
+                       android:layout_marginRight="@dimen/margin10"
+                       android:text="@string/pay_place"
+                       android:textColor="@color/medium_color"
+                       android:textSize="12sp"
+                       android:textStyle="bold"
+                       app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                       app:layout_constraintTop_toTopOf="parent" />
+
+                   <TextView
+                       android:layout_marginRight="@dimen/margin10"
+                       android:textColor="#474747"
+                       android:textSize="11sp"
+                       android:id="@+id/tvDescriptionPaymentPlace"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="4dp"
+                       android:layout_marginEnd="8dp"
+                       android:text="@string/pay_place_description"
+                       app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
+                       app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                       app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentPlace" />
 
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="@dimen/margin8"
+                   <ImageView
+                       android:rotation="270"
+                       android:padding="12dp"
+                       android:id="@+id/iv_ok_payment_place"
+                       android:layout_width="36dp"
+                       android:layout_height="36dp"
+                       android:layout_alignParentRight="true"
+                       android:layout_centerVertical="true"
+                       android:layout_margin="@dimen/margin10"
+                       android:layout_marginStart="10dp"
+                       android:src="@drawable/ic_fi_rr_angle_small_left"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toTopOf="parent"
+                       tools:ignore="ContentDescription" />
 
-                android:layout_below="@+id/tv_payment"
-                app:strokeColor="#eee"
-                android:id="@+id/layout_payment_place"
-                app:strokeWidth="1.5dp"
-                android:backgroundTint="@color/white"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                android:layout_width="match_parent"
-                tools:targetApi="lollipop">
-                <androidx.constraintlayout.widget.ConstraintLayout
+                   <TextView
+                       android:textColor="@color/green_table"
+                       android:textSize="12sp"
+                       android:id="@+id/tv_type_payment_place"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginEnd="10dp"
+                       app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentPlace"
+                       app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentPlace"
+                       app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentPlace" />
+               </androidx.constraintlayout.widget.ConstraintLayout>
+           </com.google.android.material.card.MaterialCardView>
+           <com.google.android.material.card.MaterialCardView
+                    android:layout_marginTop="@dimen/margin10"
+
+                    android:layout_below="@+id/layout_payment_place"
+                    app:strokeColor="#ddd"
+                    android:id="@+id/layout_payment_online"
+                    app:strokeWidth="1.5dp"
+                    android:backgroundTint="@color/white"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    tools:targetApi="lollipop">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                    <ImageView
-                        android:padding="@dimen/margin10"
-                        android:id="@+id/iv_payment_place"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin10"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_payment_place"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        <ImageView
+                            android:padding="@dimen/margin10"
+                            android:id="@+id/iv_payment_online"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/margin10"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/club"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
 
-                    <TextView
-                        android:id="@+id/tvTitlePaymentPlace"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="@dimen/margin10"
-                        android:text="@string/pay_place"
-                        android:textColor="@color/medium_color"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/tvTitlePaymentOnline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="@dimen/margin10"
+                            android:text="پرداخت آنلاین"
+                            android:textColor="@color/medium_color"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:layout_marginRight="@dimen/margin10"
-                        android:textColor="#474747"
-                        android:textSize="11sp"
-                        android:id="@+id/tvDescriptionPaymentPlace"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/pay_place_description"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                        app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentPlace" />
+                        <TextView
+                            android:layout_marginRight="@dimen/margin10"
+                            android:textColor="#474747"
+                            android:textSize="11sp"
+                            android:id="@+id/tvDescriptionPaymentOnline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="پرداخت از باشگاه گوشت دنیوی"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentOnline" />
 
 
-                    <ImageView
-                        android:visibility="gone"
-                        android:padding="6dp"
-                        android:id="@+id/iv_ok_payment_place"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin10"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/ic_tik"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        <ImageView
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:id="@+id/iv_ok_payment_online"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/margin10"
+                            android:layout_marginStart="10dp"
+                            android:src="@drawable/ic_tik"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+
+
 
 
         </RelativeLayout>

@@ -29,7 +29,7 @@ public class App extends Application {
     public static Context context;
     private static String baseUrl="";
     public static Retrofit retrofit;
-    public static int mode = 2;//1  ordOrganization  //2  OrdClient
+    public static int mode = 1;//1  ordOrganization  //2  OrdClient
 
 
     private static SharedPreferences sharedPreferences;
@@ -38,12 +38,13 @@ public class App extends Application {
     @Override
     public void onCreate() {
         SugarContext.init(getApplicationContext());
+        if (App.mode==2)
         User.deleteAll(User.class);
         if (Select.from(User.class).list().size() == 0) {
             User user = new User();
-            user.ipLocal = "109.125.133.149:9999";
+            user.ipLocal = "192.168.20.8:96";
             user.userName = "admin";
-            user.passWord = "0123";
+            user.passWord = "123";
             user.save();
         }
         baseUrl="http://" + Select.from(User.class).first().ipLocal + "/api/REST/";

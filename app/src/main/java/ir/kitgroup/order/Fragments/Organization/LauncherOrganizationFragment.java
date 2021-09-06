@@ -569,7 +569,7 @@ public class LauncherOrganizationFragment extends Fragment {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord);
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord,"2");
 
 
             call.enqueue(new Callback<String>() {

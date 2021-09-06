@@ -24,7 +24,7 @@ import java.util.Locale;
 
 import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.classes.App;
-import ir.kitgroup.order.classes.Utilities;
+import ir.kitgroup.order.Util.Utilities;
 import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.DataBase.Tables;

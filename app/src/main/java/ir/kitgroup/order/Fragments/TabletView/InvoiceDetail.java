@@ -40,7 +40,7 @@ import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
 import ir.kitgroup.order.Adapters.InvoiceDetailLargeAdapter;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
-import ir.kitgroup.order.classes.Utilities;
+import ir.kitgroup.order.Util.Utilities;
 import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.OrderType;
 import ir.kitgroup.order.DataBase.Product;

@@ -31,6 +31,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 
+import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.DataBase.Account;
 import ir.kitgroup.order.DataBase.User;
@@ -52,6 +53,7 @@ public class ConfirmCodeFragment extends Fragment {
     //region  Parameter
     private FragmentConfirmCodeBinding binding;
     private User user;
+
     //endregion Parameter
 
     @Nullable
@@ -299,9 +301,9 @@ public class ConfirmCodeFragment extends Fragment {
                             getFragmentManager().popBackStack();
                             Bundle bundle=new Bundle();
                             bundle.putString("mobile",mobile);
-                            RegisterFragment registerFragment=new RegisterFragment();
-                            registerFragment.setArguments(bundle);
-                            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main,registerFragment );
+                            MapFragment mapFragment=new MapFragment();
+                            mapFragment.setArguments(bundle);
+                            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mapFragment,"MapFragment" );
                             addFragment.commit();
                         }
 

@@ -122,7 +122,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
             Double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPRDPRICEPERUNIT1());
             Double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS/100);
             Double totalPrice = sumprice - discountPrice;
-            holder.sumPrice.setText(df.format(totalPrice));
+            holder.sumPrice.setText(format.format(totalPrice));
 
 
         }

@@ -3,6 +3,7 @@ package ir.kitgroup.order.Adapters;
 import androidx.annotation.NonNull;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 import com.cedarstudios.cedarmapssdk.model.geocoder.forward.ForwardGeocode;
 
 import java.util.List;
+
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
+import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
 
 import ir.kitgroup.order.R;
 
@@ -98,12 +102,16 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
 
         @Override
         public void onClick(View v) {
-//            MainActivity mainActivity = (MainActivity) v.getContext();
-//            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentById(R.id.content);
-//            if (fragment instanceof ForwardGeocodeFragment) {
-//                ForwardGeocodeFragment fgf = (ForwardGeocodeFragment)fragment;
-//                fgf.showItemOnMap(mItem);
-//            }
+            LauncherActivity mainActivity = (LauncherActivity) v.getContext();
+
+
+
+
+            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("MapFragment");
+            if (fragment instanceof MapFragment) {
+                MapFragment fgf = (MapFragment)fragment;
+                fgf.showItemOnMap(mItem);
+            }
         }
     }
 

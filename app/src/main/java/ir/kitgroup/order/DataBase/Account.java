@@ -24,6 +24,12 @@ public class Account extends SugarRecord {
     @SerializedName("M2")
     @Expose
     private String M2;
+
+    @SerializedName("CRDT")
+    @Expose
+    public Double CRDT;
+
+
     @SerializedName("P1")
     @Expose
     private String P1;

@@ -954,12 +954,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
 
-        if (Util.AllProduct.size()==0){
+       // if (Util.AllProduct.size()==0){
             isAllPermissionGranted();
-        }else {
+       /* }else {
 
             getSetting();
-        }
+        }*/
 
 
         return binding.getRoot();
@@ -1444,7 +1444,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord);
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord,"2");
 
 
             call.enqueue(new Callback<String>() {

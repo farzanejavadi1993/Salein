@@ -13,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0.13"
+        versionName "1.0.0.14"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -95,7 +95,11 @@ dependencies {
 
 
 
+
+
+
     implementation 'com.cedarmaps:CedarMapsSDK:4.0.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.6.0'
 
 
     testImplementation 'junit:junit:4.13.2'

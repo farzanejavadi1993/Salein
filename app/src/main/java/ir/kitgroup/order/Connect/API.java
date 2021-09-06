@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 public interface API {
 
     @GET("productSync")
-    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password);
+    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password,@Query("task") String task);
 
 
     @GET("AccountSync")
@@ -68,6 +68,12 @@ public interface API {
 
     @GET("DeleteInvoice")
     Call<String> getDeleteInvoice(@Query("userName") String userName, @Query("passWord") String passWord,@Query("InvoiceId") String InvoiceId);
+
+
+
+    @POST("UpdateAccount")
+    Call<String> UpdateAccount(@Query("userName") String userName, @Query("passWord") String passWord, @Body() String jsonAccount,
+                               @Query("virtualParam") String virtualParam);
 
 
 }
