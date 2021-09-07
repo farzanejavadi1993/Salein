@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,12 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import ir.kitgroup.order.DataBase.Account;
 import ir.kitgroup.order.DataBase.User;
-import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
-import ir.kitgroup.order.Fragments.Client.Register.RegisterFragment;
 import ir.kitgroup.order.R;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;

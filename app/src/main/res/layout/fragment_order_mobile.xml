@@ -170,7 +170,7 @@
     android:layout_margin="@dimen/margin10"
     app:cardCornerRadius="20dp"
 
-    android:id="@+id/order_list_btn_register"
+    android:id="@+id/btn_register_order"
    >
 
         <TextView

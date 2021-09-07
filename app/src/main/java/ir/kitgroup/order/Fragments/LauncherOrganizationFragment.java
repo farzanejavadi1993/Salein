@@ -1,4 +1,4 @@
-package ir.kitgroup.order.Fragments.Organization;
+package ir.kitgroup.order.Fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -90,13 +90,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     //region Parameter
-
-
-
-
-
-
-
     private FragmentLauncherOrganizationBinding binding;
 
 

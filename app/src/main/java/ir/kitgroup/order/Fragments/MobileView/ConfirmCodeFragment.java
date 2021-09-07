@@ -1,4 +1,4 @@
-package ir.kitgroup.order.Fragments.Client.LoginClient;
+package ir.kitgroup.order.Fragments.MobileView;
 
 
 import android.annotation.SuppressLint;
@@ -31,13 +31,10 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 
-import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.DataBase.Account;
 import ir.kitgroup.order.DataBase.User;
-import ir.kitgroup.order.Fragments.Client.Register.RegisterFragment;
 
-import ir.kitgroup.order.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.order.models.ModelAccount;
 import ir.kitgroup.order.models.ModelLog;
 import ir.kitgroup.order.R;

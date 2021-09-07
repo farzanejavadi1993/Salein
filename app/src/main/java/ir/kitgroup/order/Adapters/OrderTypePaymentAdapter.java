@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.material.card.MaterialCardView;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -91,7 +93,7 @@ public class OrderTypePaymentAdapter extends RecyclerView.Adapter<OrderTypePayme
 
 
         private final TextView name;
-        private final RelativeLayout cardView;
+        private final MaterialCardView cardView;
 
 
         public viewHolder(View itemView) {

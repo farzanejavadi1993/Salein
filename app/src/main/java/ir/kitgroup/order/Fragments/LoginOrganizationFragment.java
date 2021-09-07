@@ -1,4 +1,4 @@
-package ir.kitgroup.order.Fragments.Organization;
+package ir.kitgroup.order.Fragments;
 
 import android.annotation.SuppressLint;
 

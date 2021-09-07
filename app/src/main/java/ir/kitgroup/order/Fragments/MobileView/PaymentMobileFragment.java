@@ -54,7 +54,6 @@ import java.util.UUID;
 
 import ir.kitgroup.order.Adapters.OrderTypePaymentAdapter;
 import ir.kitgroup.order.models.PaymentRecieptDetail;
-import ir.kitgroup.order.Fragments.Client.Register.MapFragment;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
 import ir.kitgroup.order.DataBase.Account;
@@ -66,7 +65,7 @@ import ir.kitgroup.order.DataBase.Tables;
 import ir.kitgroup.order.DataBase.User;
 
 
-import ir.kitgroup.order.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.order.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.order.Util.Util;
 import ir.kitgroup.order.models.ModelLog;
 import ir.kitgroup.order.R;
@@ -477,7 +476,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-        binding.orderListBtnRegister.setOnClickListener(v -> {
+        binding.btnRegisterOrder.setOnClickListener(v -> {
 
             if ((address.equals("ناموجود") || typeAddress == 0 ) && App.mode==2) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
@@ -647,27 +646,15 @@ public class PaymentMobileFragment extends Fragment {
                     rlButtons.setVisibility(View.GONE);
                     btnReturned.setVisibility(View.VISIBLE);
                     if (message == 1) {
-
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
                         Invoice invoice2 = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
                         invoice2.SendStatus = true;
                         invoice2.save();
 
                         dialog.show();
-                    } else if (message == 2) {
-                        Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-                        invoice.SendStatus = false;
-                        invoice.save();
-                        tvMessage.setText("خطا در ارسال" + "\n" + description + "\n" + "این سفارش ذخیره می شود با مرجعه به پروفایل خود سفارش را مجددارسال کنید");
-                        dialog.show();
-                    } else if (message == 3) {
-                        Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-                        invoice.SendStatus = false;
-                        invoice.save();
-                        tvMessage.setText("خطا در ارسال" + "\n" + description + "\n" + "این سفارش ذخیره می شود با مرجعه به پروفایل خود سفارش را مجددارسال کنید");
-                        dialog.show();
+                    }
 
-                    } else {
+               else {
                         Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
                         invoice.SendStatus = false;
                         invoice.save();

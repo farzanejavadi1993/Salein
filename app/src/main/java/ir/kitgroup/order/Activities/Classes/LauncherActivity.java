@@ -4,20 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 
 import com.google.android.material.button.MaterialButton;
-import com.mapbox.mapboxsdk.Mapbox;
+
 import com.orm.query.Select;
 
 import java.util.Objects;
@@ -27,9 +27,9 @@ import ir.kitgroup.order.DataBase.Account;
 
 import ir.kitgroup.order.DataBase.User;
 import ir.kitgroup.order.Fragments.MobileView.MainOrderMobileFragment;
-import ir.kitgroup.order.Fragments.Organization.LauncherOrganizationFragment;
-import ir.kitgroup.order.Fragments.Client.LoginClient.LoginClientFragment;
-import ir.kitgroup.order.Fragments.Organization.LoginOrganizationFragment;
+import ir.kitgroup.order.Fragments.LauncherOrganizationFragment;
+import ir.kitgroup.order.Fragments.MobileView.LoginClientFragment;
+import ir.kitgroup.order.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.order.R;
 import ir.kitgroup.order.databinding.ActivityLauncherBinding;
 
@@ -41,14 +41,18 @@ public class LauncherActivity extends AppCompatActivity {
     public static double screenInches = 0.0;
 
     private Dialog dialog;
-    private SharedPreferences sharedPreferences;
+
     //endregion Parameter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    //    Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    /*    getPackageManager().setComponentEnabledSetting(
+                new ComponentName("package.name", "package.name.MainActivity-Flavor-One"),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);*/
+
+
+
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         View viewRoot = binding.getRoot();
         setContentView(viewRoot);
@@ -58,9 +62,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
-    /*    getPackageManager().setComponentEnabledSetting(
-                new ComponentName("package.name", "package.name.MainActivity-Flavor-One"),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);*/
+
 
 
         dialog = new Dialog(this);
@@ -76,12 +78,7 @@ public class LauncherActivity extends AppCompatActivity {
         btnNo.setOnClickListener(v -> dialog.dismiss());
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
-//            if (App.mode==1)
-//                getSupportFragmentManager().popBackStack();
-//            else
-
-                finish();
-
+            finish();
         });
 
 

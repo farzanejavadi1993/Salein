@@ -28,7 +28,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -48,7 +47,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
@@ -70,7 +68,7 @@ import java.util.UUID;
 import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.Adapters.AccountAdapter;
 import ir.kitgroup.order.Adapters.DescriptionAdapter;
-import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
+import ir.kitgroup.order.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.order.Adapters.ProductAdapter1;
 import ir.kitgroup.order.Adapters.ProductLevel1Adapter;
 
@@ -78,7 +76,6 @@ import ir.kitgroup.order.Adapters.ProductLevel2Adapter;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
 
-import ir.kitgroup.order.classes.PaginationScrollListener;
 import ir.kitgroup.order.classes.RecyclerViewLoadMoreScroll;
 
 import ir.kitgroup.order.DataBase.Account;
@@ -93,6 +90,7 @@ import ir.kitgroup.order.DataBase.Setting;
 import ir.kitgroup.order.DataBase.Tables;
 import ir.kitgroup.order.DataBase.User;
 
+import ir.kitgroup.order.databinding.OrderFragmentBinding;
 import ir.kitgroup.order.models.Description;
 import ir.kitgroup.order.models.ModelAccount;
 import ir.kitgroup.order.models.ModelDesc;
@@ -107,28 +105,26 @@ import retrofit2.Response;
 import static java.lang.Math.min;
 
 
-
 public class OrderFragment extends Fragment implements Filterable {
 
     //region Variable
-    private String orderType = "";
-    private String AccGuid = "";
-    private String tblGUID = "";
-    private String factorGuid;
+
+    private OrderFragmentBinding binding;
+    private String Ord_TYPE = "";
+    private String Acc_GUID = "";
+    private String Tbl_GUID = "";
+    private String Inv_GUID;
 
     private String userName = "";
     private String passWord = "";
     private String numberPos = "";
 
 
-    private EditText AccNm;
     private TextWatcher textWatcherAcc;
-    private RecyclerView recyclerAcc;
     private AccountAdapter accAdapter;
     private final ArrayList<Account> accList = new ArrayList<>();
 
 
-    private EditText edtSearchProduct;
     private TextWatcher textWatcherProduct;
     private final Object mLock = new Object();
     private ArrayList<Product> mOriginalValues;
@@ -137,23 +133,23 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
     private final ArrayList<ProductGroupLevel1> AllProductLevel1 = new ArrayList<>();
-    public static ArrayList<ProductGroupLevel1> productLevel1List = new ArrayList<>();
+    private final ArrayList<ProductGroupLevel1> productLevel1List = new ArrayList<>();
     private ProductLevel1Adapter productLevel1Adapter;
+    public int sizeGroupList = 0;
 
 
-    private LinearLayout subGroupLayout;
     private final ArrayList<ProductGroupLevel2> AllProductLevel2 = new ArrayList<>();
-    public ArrayList<ProductGroupLevel2> productLevel2List = new ArrayList<>();
+    private ArrayList<ProductGroupLevel2> productLevel2List = new ArrayList<>();
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-    private RecyclerView productRecyclerview;
     private RecyclerViewLoadMoreScroll scrollListener;
-    public static ArrayList<Product> productList = new ArrayList<>();
-    public ArrayList<Product> productListData = new ArrayList<>();
-    public ArrayList<Product> allProductActive = new ArrayList<>();
-    @SuppressLint("StaticFieldLeak")
-    public static ProductAdapter1 productAdapter;
+    private final ArrayList<Product> productList = new ArrayList<>();
+    private final ArrayList<Product> productListData = new ArrayList<>();
+    private final ArrayList<Product> allProductActive = new ArrayList<>();
+
+
+    private ProductAdapter1 productAdapter;
     private boolean isLastPage = false;
     private boolean isLoading = false;
     private int currentPage = 1;
@@ -161,15 +157,12 @@ public class OrderFragment extends Fragment implements Filterable {
     private String maxSales = "0";
 
 
-    private TextView txtError;
-
-
     private CustomProgress customProgress;
 
 
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
-    public static ArrayList<Description> descriptionList = new ArrayList<>();
+    private ArrayList<Description> descriptionList = new ArrayList<>();
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv = "";
 
@@ -184,32 +177,16 @@ public class OrderFragment extends Fragment implements Filterable {
     //endregion Variable DialogAddAccount
 
 
-    private RecyclerView invoiceDetailRecycle;
-    public static ArrayList<InvoiceDetail> invoiceDetailList = new ArrayList<>();
+    private final ArrayList<InvoiceDetail> invoiceDetailList = new ArrayList<>();
     @SuppressLint("StaticFieldLeak")
-    public static InvoiceDetailAdapter invoiceDetailAdapter;
+    private InvoiceDetailMobileAdapter invoiceDetailAdapter;
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
-    private float sumPrice = 0;
+    private Double sumPurePrice = 0.0;
 
-    private float sumPurePrice = 0;
-    private TextView sumPurePriceTxt;
-    @SuppressLint("StaticFieldLeak")
-    public static String descriptionFactor;
 
     private Dialog dialog;
-
-
-    private TextView btnSeenInvoice;
-    private TextView btnRegisterOrder;
-    private MaterialCardView layoutBtnRegisterOrder;
-    private TextView txtTableNumber;
-
-
-    private RelativeLayout cardGroup;
-
-
 
 
     //endregion Variable
@@ -223,158 +200,231 @@ public class OrderFragment extends Fragment implements Filterable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
-        View view;
-        int fontSize;
+        binding = OrderFragmentBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+
         customProgress = CustomProgress.getInstance();
+
+
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        Tbl_GUID = bundle.getString("Tbl_GUID");
+        Inv_GUID = bundle.getString("Inv_GUID");
+        Ord_TYPE = bundle.getString("Ord_TYPE");
+
+        OrderType ordTY = Select.from(OrderType.class).where("c ='" + Ord_TYPE + "'").first();
+        if (ordTY != null)
+            binding.txtTypeOrder.setText(ordTY.getN());
+
+
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
             maxSales = setting.get(0).MAX_SALE;
 
 
-        Bundle bundle = getArguments();
-        assert bundle != null;
-        tblGUID = bundle.getString("TGID");
-        factorGuid = bundle.getString("factorGuid");
-        orderType = bundle.getString("orderType");
-        //invoiceDetailAdapter = new InvoiceDetailAdapter(invoiceDetailList, "2");
+        // userName = Select.from(User.class).list().get(0).userName;
+        // passWord = Select.from(User.class).list().get(0).passWord;
+
+        userName = "admin";
+        passWord = "123";
 
 
+        //region Create Order
 
-        //region Tablet Mode
+        //create Order
+        if (Inv_GUID.equals("")) {
+            Inv_GUID = UUID.randomUUID().toString();
+            Invoice order = new Invoice();
+            order.INV_UID = Inv_GUID;
+            order.save(order);
+        }
+
+        //edit Order
+        else {
+            ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(result, R -> R.getAmount() > 0);
+
+            if (result.size() > 0) {
+                Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
+            }
 
 
-            Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            view = inflater.inflate(R.layout.order_fragment, container, false);
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            fontSize = 13;
+            Invoice ord = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
+            List<InvoiceDetail> invoicedetails = Select.from(InvoiceDetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
+            Account acc = Select.from(Account.class).where("I ='" + ord.ACC_CLB_UID + "'").first();
+            binding.orderNameCustomer.removeTextChangedListener(textWatcherAcc);
+            binding.orderNameCustomer.setText(acc.getACCCLBNAME());
+            binding.orderNameCustomer.addTextChangedListener(textWatcherAcc);
+            Acc_GUID = acc.getACCCLBUID();
+            binding.orderNameCustomer.setEnabled(false);
+            invoiceDetailList.clear();
+            invoiceDetailList.addAll(invoicedetails);
+            invoiceDetailAdapter.notifyDataSetChanged();
+            for (int i = 0; i < invoicedetails.size(); i++) {
+                ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
+                int finalI = i;
+                //CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(orderDetails.get(finalI).MainGuid) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
+                CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
+                if (resultProducts.size() > 0) {
+                    Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + invoicedetails.get(finalI).INV_DET_QUANTITY);
+                    Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
+                    productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
 
+                    if (invoiceDetailList.size() > 0) {
+                        binding.invoiceRecyclerView.post(() -> binding.invoiceRecyclerView.smoothScrollToPosition(invoiceDetailList.size() - 1));
+                    }
+
+
+                }
+            }
+
+
+        }
+        //endregion Create Order
+
+
+        if (App.mode == 2) {
+            binding.rlAccount.setVisibility(View.GONE);
+        } else {
 
             numberPos = Select.from(User.class).list().get(0).numberPos;
-            if (numberPos.equals(""))
+            if (numberPos != null && numberPos.equals(""))
                 numberPos = "0";
-            invoiceDetailList.clear();
 
+            //region Configuration Account
+            accAdapter = new AccountAdapter(getActivity(), accList);
+            binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.accountRecyclerView.setAdapter(accAdapter);
+            textWatcherAcc = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            //region Cast DialogSendOrder
-            dialog = new Dialog(getActivity());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.setContentView(R.layout.custom_dialog);
-            dialog.setCancelable(false);
-            TextView tvMessage = dialog.findViewById(R.id.tv_message);
-            RelativeLayout rlButtons = dialog.findViewById(R.id.layoutButtons);
-            MaterialButton btnReturned = dialog.findViewById(R.id.btn_returned);
-            rlButtons.setVisibility(View.GONE);
-            btnReturned.setVisibility(View.VISIBLE);
-
-            tvMessage.setText("سفارش با موفقیت ارسال شد");
-            btnReturned.setOnClickListener(v -> {
-
-
-                for (int i = 0; i < invoiceDetailList.size(); i++) {
-
-                    invoiceDetailList.get(i).ROW_NUMBER = i + 1;
                 }
 
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (tblGUID.equals("")) {
-                    Tables tables = new Tables();
-                    tables.N = "بیرون بر";
-                    tables.ACT = true;
-                    if (!orderType.equals(""))
-                        tables.C = Integer.parseInt(orderType);
-                    tables.RSV = false;
-                    tables.I = UUID.randomUUID().toString();
-                    Invoice inv = Select.from(Invoice.class).where("INVUID ='" + factorGuid + "'").first();
-                    if (inv != null) {
-                        inv.TBL_UID = tables.I;
-                        inv.save();
+                    Acc_GUID = "";
+
+                    if (s.toString().isEmpty()) {
+                        binding.accountRecyclerView.setVisibility(View.GONE);
+                        binding.orderNameCustomer.setHint("نام مشترک");
+                    } else {
+
+                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
+                        getAccountSearch(s.toString());
                     }
-                    tables.save();
-                } else {
-                    Tables tb = Select.from(Tables.class).where("I ='" + tblGUID + "'").first();
-                    if (tb != null)
-                        tb.ACT = true;
-                    assert tb != null;
-                    tb.update();
+
+
                 }
 
-               // LauncherFragment.tableAdapter.notifyDataSetChanged();
+                @Override
+                public void afterTextChanged(Editable s) {
 
-                dialog.dismiss();
-                assert getFragmentManager() != null;
-                getFragmentManager().popBackStack();
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                assert frg != null;
-                ft.detach(frg);
-                ft.attach(frg);
-                ft.commit();
+                }
+            };
+            binding.orderNameCustomer.addTextChangedListener(textWatcherAcc);
+
+
+            accAdapter.setOnClickItemListener((GUID, name) -> {
+
+                Acc_GUID = GUID;
+
+                binding.orderNameCustomer.removeTextChangedListener(textWatcherAcc);
+                binding.orderNameCustomer.setText(name);
+                binding.accountRecyclerView.setVisibility(View.GONE);
+                binding.orderNameCustomer.addTextChangedListener(textWatcherAcc);
 
 
             });
 
-            //endregion Cast DialogSendOrder
 
-
-
-            subGroupLayout = view.findViewById(R.id.order_card_subGroup);
-            txtTableNumber = view.findViewById(R.id.txt_number_table);
-            txtTableNumber.setTextSize(fontSize);
-            TextView txtTypeOrder = view.findViewById(R.id.edt_type_order);
-            txtTypeOrder.setTextSize(fontSize);
-
-
-            invoiceDetailRecycle = view.findViewById(R.id.order_list_recyclerView);
-            btnSeenInvoice = view.findViewById(R.id.order_seen_detail_invoice);
-            btnSeenInvoice.setTextSize(fontSize);
-
-
-            sumPurePriceTxt = view.findViewById(R.id.order_list_purePrice_txt);
-            sumPurePriceTxt.setTextSize(fontSize);
-
-            TextView sumPurePriceTv = view.findViewById(R.id.order_list_purePrice_tv);
-            sumPurePriceTv.setTextSize(fontSize);
-
-
-            TextView txtPayment = view.findViewById(R.id.txtTypePayment);
-            txtPayment.setTextSize(fontSize);
-
-            MaterialCardView btnPayment = view.findViewById(R.id.order_list_payment);
-
-            btnPayment.setOnClickListener(v -> {
-
-                PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), btnPayment);
-
-                popup.getMenuInflater()
-                        .inflate(R.menu.menu, popup.getMenu());
-                popup.setOnMenuItemClickListener(item -> {
-                    txtPayment.setText(item.getTitle());
-
-                        btnRegisterOrder.setEnabled(true);
-                        btnRegisterOrder.setBackground(getActivity().getResources().getDrawable(R.drawable.order_sumprice_order_list_button_layout));
-
-                    return true;
-                });
-
-                popup.show();
+            binding.btnAddAccount.setOnClickListener(v -> {
+                edtNameUser.setText("");
+                edtAddressUser.setText("");
+                edtMobileUser.setText("");
+                dialogAddAccount.show();
             });
-
-            //region CONFIGURATION DATA INVOICE_DETAIL
-
-
-            invoiceDetailAdapter.notifyDataSetChanged();
-
-            invoiceDetailRecycle.setLayoutManager(new LinearLayoutManager(getActivity()));
-            invoiceDetailRecycle.setLayoutManager(new LinearLayoutManager(getActivity()));
-            invoiceDetailRecycle.setHasFixedSize(false);
-            invoiceDetailRecycle.setAdapter(invoiceDetailAdapter);
-            invoiceDetailRecycle.setNestedScrollingEnabled(false);
+            //endregion Configuration Account
+        }
 
 
-          /*  invoiceDetailAdapter.editAmountItemListener((GUID, amountString, Price, discountPercent) -> {
+        //region Cast DialogSendOrder
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(false);
+        TextView tvMessage = dialog.findViewById(R.id.tv_message);
+        RelativeLayout rlButtons = dialog.findViewById(R.id.layoutButtons);
+        MaterialButton btnReturned = dialog.findViewById(R.id.btn_returned);
+        rlButtons.setVisibility(View.GONE);
+        btnReturned.setVisibility(View.VISIBLE);
+
+        tvMessage.setText("سفارش با موفقیت ارسال شد");
+        btnReturned.setOnClickListener(v -> {
+            for (int i = 0; i < invoiceDetailList.size(); i++) {
+
+                invoiceDetailList.get(i).ROW_NUMBER = i + 1;
+            }
+
+            if (Tbl_GUID.equals("")) {
+                Tables tables = new Tables();
+                tables.N = "بیرون بر";
+                tables.ACT = true;
+                if (!Ord_TYPE.equals(""))
+                    tables.C = Integer.parseInt(Ord_TYPE);
+                tables.RSV = false;
+                tables.I = UUID.randomUUID().toString();
+                Invoice inv = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
+                if (inv != null) {
+                    inv.TBL_UID = tables.I;
+                    inv.save();
+                }
+                tables.save();
+            } else {
+                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                if (tb != null)
+                    tb.ACT = true;
+                assert tb != null;
+                tb.update();
+            }
+
+            // LauncherFragment.tableAdapter.notifyDataSetChanged();
+
+            dialog.dismiss();
+            assert getFragmentManager() != null;
+            getFragmentManager().popBackStack();
+            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            assert frg != null;
+            ft.detach(frg);
+            ft.attach(frg);
+            ft.commit();
+
+
+        });
+
+        //endregion Cast DialogSendOrder
+
+
+        //region CONFIGURATION DATA INVOICE_DETAIL
+
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(invoiceDetailList, "2", Inv_GUID);
+
+
+        binding.invoiceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.invoiceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.invoiceRecyclerView.setHasFixedSize(false);
+        binding.invoiceRecyclerView.setAdapter(invoiceDetailAdapter);
+        binding.invoiceRecyclerView.setNestedScrollingEnabled(false);
+
+
+        /*  invoiceDetailAdapter.editAmountItemListener((GUID, amountString, Price, discountPercent) -> {
                 if (!amountString.equals("")) {
                     if (maxSales.equals("1")) {
                         getMaxSales(userName, passWord, GUID, Price, discountPercent, GUID, "2", amountString, 1);
@@ -401,8 +451,11 @@ public class OrderFragment extends Fragment implements Filterable {
                             CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                             if (resultPrd.size() > 0) {
                                 Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                            *//*if (productList.indexOf(resultPrd.get(0)) >= 0)
-                                productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*//*
+                            */
+        /*
+                            if (productList.indexOf(resultPrd.get(0)) >= 0)
+                                productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*/
+        /*
                                 if (productList.contains(resultPrd.get(0)))
                                     productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));
                             }
@@ -435,8 +488,10 @@ public class OrderFragment extends Fragment implements Filterable {
                         CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                         if (resultPrd.size() > 0) {
                             Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                       *//* if (productList.indexOf(resultPrd.get(0)) >= 0)
-                            productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*//*
+                       */
+        /* if (productList.indexOf(resultPrd.get(0)) >= 0)
+                            productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));*/
+        /*
                             if (productList.contains(resultPrd.get(0)))
                                 productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));
 
@@ -447,107 +502,136 @@ public class OrderFragment extends Fragment implements Filterable {
 
             });*/
 
-            invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onChanged() {
-                    super.onChanged();
 
-                    sumPrice = 0;
-                    sumPurePrice = 0;
+        invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
 
 
-                    for (int i = 0; i < invoiceDetailList.size(); i++) {
-                        sumPrice = (float) (sumPrice +invoiceDetailList.get(i).INV_DET_QUANTITY
-                                                        * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT));
-                        sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+                sumPurePrice = 0.0;
+
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        Double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        Double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        Double purePrice = sumprice - discountPrice;
+
+                        sumPurePrice = sumPurePrice + purePrice;
+
                     }
 
-                    sumPurePriceTxt.setText(format.format(sumPurePrice) + " ریال ");
-
-
                 }
+                binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
-                @Override
-                public void onItemRangeRemoved(int positionStart, int itemCount) {
-                    super.onItemRangeRemoved(positionStart, itemCount);
-                    sumPrice = 0;
-                    sumPurePrice = 0;
+            }
 
-                  invoiceDetailList.remove(invoiceDetailList.get(positionStart));
-                    for (int i = 0; i < invoiceDetailList.size(); i++) {
-                        sumPrice = (float) (sumPrice + invoiceDetailList.get(i).INV_DET_QUANTITY
-                                                        * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT));
-                        sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                sumPurePrice = 0.0;
+
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        Double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        Double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        Double purePrice = sumprice - discountPrice;
+
+                        sumPurePrice = sumPurePrice + purePrice;
+
                     }
 
-
-                        sumPurePriceTxt.setText(format.format(sumPurePrice) + " ریال ");
-
-
-
-
                 }
-
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount) {
-                    super.onItemRangeChanged(positionStart, itemCount);
-                    sumPrice = 0;
-                    sumPurePrice = 0;
+                binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
 
-                    for (int i = 0; i < invoiceDetailList.size(); i++) {
-                        sumPrice = (float) (sumPrice +invoiceDetailList.get(i).INV_DET_QUANTITY
-                                                        * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT));
-                        sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                sumPurePrice = 0.0;
+
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        Double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        Double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        Double purePrice = sumprice - discountPrice;
+
+                        sumPurePrice = sumPurePrice + purePrice;
+
                     }
 
-
-
-                        sumPurePriceTxt.setText(format.format(sumPurePrice) + " ریال ");
-
-
-
                 }
+                binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+
+
+            }
+        });
+
+
+        invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
+            edtDescriptionItem.setText(description);
+            descriptionList.clear();
+            GuidInv = GUIDInv;
+            getDescription(userName, passWord, GUIDPrd);
+        });
+        //endregion CONFIGURATION DATA INVOICE_DETAIL
+
+
+        //region Action BtnSeenInvoice
+        binding.btnSeenDetailInvoice.setOnClickListener(v -> {
+            Bundle bundle12 = new Bundle();
+            bundle12.putString("type", "2");
+            bundle12.putString("Inv_GUID",Inv_GUID);
+            bundle12.putString("Acc_NAME", binding.orderNameCustomer.getText().toString());
+            bundle12.putString("Ord_TYPE", Ord_TYPE);
+            InvoiceDetailTabletFragment invoiceDetailFragment = new InvoiceDetailTabletFragment();
+            invoiceDetailFragment.setArguments(bundle12);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, invoiceDetailFragment, "InvoiceDetailFragment").addToBackStack("InvoiceDetailF").commit();
+        });
+
+
+        //endregion Action BtnSeenInvoice
+
+
+        //region Action BtnTypePayment
+        binding.btnTypePayment.setOnClickListener(v -> {
+
+            PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), binding.btnTypePayment);
+
+            popup.getMenuInflater()
+                    .inflate(R.menu.menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                binding.txtTypePayment.setText(item.getTitle());
+                binding.btnRegisterOrder.setEnabled(true);
+                binding.btnRegisterOrder.setBackground(getActivity().getResources().getDrawable(R.drawable.order_sumprice_order_list_button_layout));
+
+                return true;
             });
 
-            invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
+            popup.show();
+        });
+        //endregion Action BtnTypePayment
 
-                edtDescriptionItem.setText(description);
-                descriptionList.clear();
-                GuidInv = GUIDInv;
-                getDescription(userName, passWord, GUIDPrd);
-            });
-
-
-            //endregion CONFIGURATION DATA INVOICE_DETAIL
-
-
-            OrderType ordTY = Select.from(OrderType.class).where("c ='" + orderType + "'").first();
-            if (ordTY != null)
-                txtTypeOrder.setText(ordTY.getN());
-
-
-            //region Action BtnSeenInvoice
-
-            btnSeenInvoice.setOnClickListener(v -> {
-                Bundle bundle12 = new Bundle();
-                bundle12.putString("type", "2");
-                bundle12.putString("GUID", "");
-                bundle12.putString("NameCustomer", AccNm.getText().toString());
-                bundle12.putString("orderType", orderType);
-                ir.kitgroup.order.Fragments.TabletView.InvoiceDetail invoiceDetailFragment = new ir.kitgroup.order.Fragments.TabletView.InvoiceDetail();
-                invoiceDetailFragment.setArguments(bundle12);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, invoiceDetailFragment, "InvoiceDetailFragment").addToBackStack("InvoiceDetailF").commit();
-            });
-
-
-            //endregion Action BtnSeenInvoice
-
-
-
-        //endregion Tablet Mode
-        userName = Select.from(User.class).list().get(0).userName;
-        passWord = Select.from(User.class).list().get(0).passWord;
 
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
@@ -570,7 +654,7 @@ public class OrderFragment extends Fragment implements Filterable {
         recyclerDescription.setAdapter(descriptionAdapter);
 
 
-        descriptionAdapter.setOnClickItemListener((desc, click,position) -> {
+        descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
             if (click) {
                 String description = edtDescriptionItem.getText().toString();
                 edtDescriptionItem.setText(description + "   " + "'" + desc + "'");
@@ -622,17 +706,11 @@ public class OrderFragment extends Fragment implements Filterable {
 
         ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
         edtNameUser = dialogAddAccount.findViewById(R.id.edt_name_account);
-        edtNameUser.setTextSize(fontSize);
         edtMobileUser = dialogAddAccount.findViewById(R.id.edt_mobile_account);
-        edtMobileUser.setTextSize(fontSize);
         edtAddressUser = dialogAddAccount.findViewById(R.id.edt_address_account);
-        edtAddressUser.setTextSize(fontSize);
         RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
-        radioMan.setTextSize(fontSize);
         RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
-        radioWoman.setTextSize(fontSize);
         MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_account);
-        btnRegisterAccount.setTextSize(fontSize);
         radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 gender = 0;
@@ -669,150 +747,23 @@ public class OrderFragment extends Fragment implements Filterable {
         //endregion Cast DialogAddAcc
 
 
-        //region CAST VARIABLE
-
-        AccNm = view.findViewById(R.id.order_name_customer);
-        AccNm.setTextSize(fontSize);
-
-        recyclerAcc = view.findViewById(R.id.accountRecyclerView);
-
-        // RelativeLayout btnSyncAcc = view.findViewById(R.id.img_sync_account);
-        RelativeLayout btnAddAcc = view.findViewById(R.id.btn_add_account);
-        if (App.mode == 2) {
-            btnAddAcc.setVisibility(View.GONE);
-        }
-        //  ImageView ivSyncAcc = view.findViewById(R.id.iv_filter);
-
-        edtSearchProduct = view.findViewById(R.id.edt_search_product);
-        edtSearchProduct.setTextSize(fontSize);
-
-        productRecyclerview = view.findViewById(R.id.order_recyclerView_product);
-
-        RecyclerView productLevel1Recyclerview = view.findViewById(R.id.order_recyclerView_productLevel2);
-        RecyclerView productLevel2Recyclerview = view.findViewById(R.id.order_recyclerView_productLevel2);
-
-        txtError = view.findViewById(R.id.order_txt_error);
-        txtError.setTextSize(fontSize);
-
-        btnRegisterOrder = view.findViewById(R.id.order_list_btn_register);
-        btnRegisterOrder.setTextSize(fontSize);
-
-        cardGroup = view.findViewById(R.id.order_card_group);
-        //endregion CAST VARIABLE
-
-
-        accAdapter = new AccountAdapter(getActivity(), accList);
-        recyclerAcc.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerAcc.setAdapter(accAdapter);
-        textWatcherAcc = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                AccGuid = "";
-
-                if (s.toString().isEmpty()) {
-                    recyclerAcc.setVisibility(View.GONE);
-                    AccNm.setHint("نام مشترک");
-                } else {
-                   /*if (!s.equals("0") && !s.equals("09")) {
-                        recyclerAcc.setVisibility(View.VISIBLE);
-                        searchAccount(LauncherFragment.toEnglishNumber(s.toString()));
-                    }
-*/
-                    recyclerAcc.setVisibility(View.VISIBLE);
-                    getAccountSearch(s.toString());
-                }
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        };
-
-
-        AccNm.addTextChangedListener(textWatcherAcc);
-
-
-        accAdapter.setOnClickItemListener((GUID, name) -> {
-
-            AccGuid = GUID;
-
-            AccNm.removeTextChangedListener(textWatcherAcc);
-            AccNm.setText(name);
-            recyclerAcc.setVisibility(View.GONE);
-            AccNm.addTextChangedListener(textWatcherAcc);
-
-
-        });
-
-
-
-        btnAddAcc.setOnClickListener(v -> {
-            edtNameUser.setText("");
-            edtAddressUser.setText("");
-            edtMobileUser.setText("");
-            dialogAddAccount.show();
-        });
-
-
-        textWatcherProduct = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
-                searchProduct(s.toString());
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        };
-        edtSearchProduct.addTextChangedListener(textWatcherProduct);
-
-
         //region CONFIGURATION DATA PRODUCT_LEVEL1
+
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
+        binding.orderRecyclerViewProductLevel1.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.orderRecyclerViewProductLevel1.setHasFixedSize(false);
+        binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
 
-        if (LauncherActivity.screenInches < 7) {
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager.setReverseLayout(true);
-            productLevel1Recyclerview.setLayoutManager(manager);
-            productLevel1Recyclerview.setScrollingTouchSlop(View.FOCUS_LEFT);
-
-        } else {
-            productLevel1Recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        }
-
-
-        productLevel1Recyclerview.setHasFixedSize(false);
-        productLevel1Recyclerview.setAdapter(productLevel1Adapter);
 
         //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
-            productRecyclerview.post(() -> productRecyclerview.scrollToPosition(0));
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
             currentPage = 1;
-            txtError.setText("");
-            edtSearchProduct.removeTextChangedListener(textWatcherProduct);
-            edtSearchProduct.setText("");
-            edtSearchProduct.addTextChangedListener(textWatcherProduct);
+            binding.orderTxtError.setText("");
+            binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
+            binding.edtSearchProduct.setText("");
+            binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
 
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
@@ -865,7 +816,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 if (tempPrdLvl2.size() > 0) {
                     productLevel2List.get(0).Click = true;
-                    subGroupLayout.setVisibility(View.VISIBLE);
+                    binding.orderCardSubGroup.setVisibility(View.VISIBLE);
                 }
 
                 productLevel2Adapter.notifyDataSetChanged();
@@ -880,7 +831,7 @@ public class OrderFragment extends Fragment implements Filterable {
                     CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
 
                     if (rst.size() > 0) {
-                        txtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
+                        binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
 
                     }
                 }
@@ -902,8 +853,8 @@ public class OrderFragment extends Fragment implements Filterable {
                 CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(GUID));
 
                 if (rst.size() > 0) {
-                    txtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
-                    subGroupLayout.setVisibility(View.GONE);
+                    binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
+                    binding.orderCardSubGroup.setVisibility(View.GONE);
                 }
 
                 productList.clear();
@@ -916,36 +867,48 @@ public class OrderFragment extends Fragment implements Filterable {
         //endregion Click Item ProductLevel1
 
 
+        textWatcherProduct = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                searchProduct(s.toString());
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
+
         //endregion CONFIGURATION DATA PRODUCT_LEVEL1
 
 
-        //region CONFIGURATION DATA PRODUCTLEVEL2
+        //region CONFIGURATION DATA PRODUCT_LEVEL_2
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
+        binding.orderRecyclerViewProductLevel2.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.orderRecyclerViewProductLevel2.setHasFixedSize(false);
+        binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
 
-        if (LauncherActivity.screenInches < 7) {
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager.setReverseLayout(true);
-            productLevel2Recyclerview.setLayoutManager(manager);
-            productLevel2Recyclerview.setScrollingTouchSlop(View.FOCUS_LEFT);
-
-        } else {
-            productLevel2Recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        }
-
-        productLevel2Recyclerview.setHasFixedSize(false);
-        productLevel2Recyclerview.setAdapter(productLevel2Adapter);
 
         //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
-            productRecyclerview.post(() -> productRecyclerview.scrollToPosition(0));
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
             currentPage = 1;
-            txtError.setText("");
-            edtSearchProduct.removeTextChangedListener(textWatcherProduct);
-            edtSearchProduct.setText("");
-            edtSearchProduct.addTextChangedListener(textWatcherProduct);
+            binding.orderTxtError.setText("");
+            binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
+            binding.edtSearchProduct.setText("");
+            binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
 
             //region UnClick Old Item
@@ -983,7 +946,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 }
                 if (rstProductGroupLevel1s.size() > 0) {
-                    txtError.setText("هیچ نوع از " + rstProductGroupLevel2s.get(0).getPRDLVLNAME() + " " + "در دسته " + rstProductGroupLevel1s.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
+                    binding.orderTxtError.setText("هیچ نوع از " + rstProductGroupLevel2s.get(0).getPRDLVLNAME() + " " + "در دسته " + rstProductGroupLevel1s.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
 
                 }
             }
@@ -998,21 +961,22 @@ public class OrderFragment extends Fragment implements Filterable {
                     productList.add(rstProduct.get(i));
             }
 
-            //  productAdapter=null;
-            // productAdapter=new ProductAdapter1(getActivity(),productList);
+
             productAdapter.notifyDataSetChanged();
-            //enregion Full ProductList Because This Item ProductLevel1 Is True
+            //endregion Full ProductList Because This Item ProductLevel1 Is True
         });
+
 
         //endregion Click Item ProductLevel2
 
-        //endregion CONFIGURATION DATA PRODUCTLEVEL2
+        //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
 
 
         //region CONFIGURATION DATA PRODUCT
-        productAdapter = new ProductAdapter1(getActivity(), productList,maxSales,"");
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        productAdapter = new ProductAdapter1(getActivity(), productList, maxSales, Inv_GUID);
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3) {
             @Override
             protected boolean isLayoutRTL() {
@@ -1020,139 +984,176 @@ public class OrderFragment extends Fragment implements Filterable {
             }
         };
 
-        if (LauncherActivity.screenInches < 7) {
-            productRecyclerview.setLayoutManager(linearLayoutManager);
-            productRecyclerview.setScrollingTouchSlop(View.FOCUS_LEFT);
-            scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
-            productRecyclerview.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
 
-                @Override
-                protected void loadMoreItems() {
+        binding.orderRecyclerViewProduct.setLayoutManager(gridLayoutManager);
+        scrollListener = new RecyclerViewLoadMoreScroll(gridLayoutManager);
+        scrollListener.setOnLoadMoreListener(() -> {
 
-                    currentPage++;
-                    loadMore();
+            int i = currentPage * 18;
+
+            currentPage++;
+            int size = currentPage * 18;
+            LoadMoreData(i, size);
+        });
+
+
+        binding.orderRecyclerViewProduct.addOnScrollListener(scrollListener);
+        binding.orderRecyclerViewProduct.setAdapter(productAdapter);
+
+
+        productAdapter.setOnClickListener(() -> {
+                    List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+                    if (invDetails.size() > 0) {
+                        binding.btnSeenDetailInvoice.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.btnSeenDetailInvoice.setVisibility(View.GONE);
+                    }
+                    invoiceDetailList.clear();
+                    invoiceDetailList.addAll(invDetails);
+                    invoiceDetailAdapter.notifyDataSetChanged();
+
+
+                }
+        );
+
+
+        invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
+
+            if (maxSales.equals("1")) {
+                getMaxSales(userName, passWord, Prd_GUID, s, Price, discountPercent);
+            } else {
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+                CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+                if (result.size() > 0) {
+                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                    double amount = 0.0;
+                    if (!s.equals(""))
+                        amount = Double.parseDouble(s);
+
+                    if (invoiceDetail != null) {
+                        invoiceDetail.INV_DET_QUANTITY = amount;
+                        invoiceDetail.update();
+                    }
+
+
+                    ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
+                    CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(Prd_GUID));
+                    if (resultPrd.size() > 0) {
+                        Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+
+
+                        sumPurePrice = 0.0;
+
+
+                        List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                        for (int i = 0; i < invoiceDetails.size(); i++) {
+
+                            ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                            int finalI = i;
+                            CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+
+                            if (prdResult.size() > 0) {
+                                Double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                                Double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                                Double totalPrice = sumprice - discountPrice;
+
+
+                                sumPurePrice = sumPurePrice + totalPrice;
+
+                            }
+
+                        }
+
+
+                        binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+                        invoiceDetailAdapter.notifyDataSetChanged();
+
+                    }
                 }
 
-                @Override
-                public boolean isLastPage() {
-                    return isLastPage;
+
+            }
+        });
+
+
+        invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+
+                sumPurePrice = 0.0;
+
+
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+                CollectionUtils.filter(result, r -> r.PRD_UID.equals(invoiceDetailList.get(positionStart).PRD_UID));
+                if (result.size() > 0) {
+                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                    if (invoiceDetail != null)
+                        invoiceDetail.delete();
                 }
 
-                @Override
-                public boolean isLoading() {
-                    return isLoading;
+                invoiceDetailList.remove(invoiceDetailList.get(positionStart));
+
+
+                for (int i = 0; i < invoiceDetailList.size(); i++) {
+
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetailList.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        double totalPrice = sumprice - discountPrice;
+
+
+                        sumPurePrice = sumPurePrice + totalPrice;
+
+                    }
+
                 }
-            });
-
-        } else {
-            productRecyclerview.setLayoutManager(gridLayoutManager);
-            scrollListener = new RecyclerViewLoadMoreScroll(gridLayoutManager);
-            scrollListener.setOnLoadMoreListener(() -> {
-
-                int i = currentPage * 18;
-
-                currentPage++;
-                int size = currentPage * 18;
-                LoadMoreData(i, size);
-            });
 
 
-        }
+                binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
-        productRecyclerview.addOnScrollListener(scrollListener);
-        productRecyclerview.setAdapter(productAdapter);
-//        productAdapter.setOnClickListener((GUID, Price, discount,s, MinOrPlus) -> {
-//
-//            if (maxSales.equals("1")) {
-//                getMaxSales(userName, passWord, GUID, Price, discount, GUID, "1", "", MinOrPlus);
-//            } else {
-//                ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
-//                CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
-//
-//                if (resultProduct.size() > 0) {
-//                    double amount = 0;
-//                    if (MinOrPlus==1)
-//                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
-//                    else if (MinOrPlus==2){
-//                        if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-//                            amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
-//
-//                        else
-//                            return;
-//
-//                    }
-//
-//
-//                    Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
-//
-//
-//                    ArrayList<Invoicedetail> result = new ArrayList<>(invoiceDetailList);
-//                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-//                    //edit
-//                    if (result.size() > 0) {
-//                        Double sumprice = (amount * Float.parseFloat(Price));
-//                        Double discountPrice = sumprice * discount;
-//                        Double totalPrice = sumprice - discountPrice;
-//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = String.valueOf(amount);
-//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-//                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-//
-//                        if (amount == 0) {
-//                            invoiceDetailAdapter.notifyItemRemoved(invoiceDetailList.indexOf(result.get(0)));
-//
-//
-//                        } else {
-//                            invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
-//                        }
-//
-//
-//                    } else {
-//                        Invoicedetail invoicedetail = new Invoicedetail();
-//                        invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-//                        invoicedetail.INV_UID = factorGuid;
-//                        invoicedetail.INV_DET_QUANTITY = String.valueOf(amount);
-//                        invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-//                        invoicedetail.INV_DET_DISCOUNT = "0";
-//                        Double sumprice = (amount * Float.parseFloat(Price));
-//                        Double discountPrice = sumprice * discount;
-//                        Double totalPrice = sumprice - discountPrice;
-//                        invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-//                        invoicedetail.INV_DET_PERCENT_DISCOUNT = String.valueOf(discount * 100);
-//                        invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-//                        invoicedetail.INV_DET_TAX = "0";
-//                        invoicedetail.INV_DET_STATUS = true;
-//                        invoicedetail.PRD_UID = GUID;
-//                        invoicedetail.INV_DET_TAX_VALUE = "0";
-//                        invoicedetail.INV_DET_DESCRIBTION = "";
-//                        invoiceDetailList.add(invoicedetail);
-//                        invoiceDetailAdapter.notifyDataSetChanged();
-//
-//                    }
-//
-//
-//                        if (invoiceDetailList.size() > 0) {
-//                            invoiceDetailRecycle.post(() -> invoiceDetailRecycle.smoothScrollToPosition(invoiceDetailList.size() - 1));
-//
-//                        }
-//
-//
-//                    productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
-//                }
-//            }
-//
-//                if (invoiceDetailList.size() > 0) {
-//
-//                    btnSeenInvoice.setVisibility(View.VISIBLE);
-//                } else {
-//
-//                    btnSeenInvoice.setVisibility(View.GONE);
-//                }
-//
-//
-//
-//
-//        });
+
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+
+
+            }
+        });
+
+
+        invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
+
+            edtDescriptionItem.setText(description);
+            descriptionList.clear();
+            GuidInv = GUIDInv;
+            getDescription(userName, passWord, GUIDPrd);
+        });
+
+
+
+
+        invoiceDetailAdapter.setOnDeleteListener(GUID -> {
+            ArrayList<Product> rst = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(rst,r->r.I.equals(GUID));
+            productList.get(productList.indexOf(rst.get(0))).AMOUNT=0.0;
+            productAdapter.notifyDataSetChanged();
+
+        });
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
                 ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
@@ -1187,19 +1188,26 @@ public class OrderFragment extends Fragment implements Filterable {
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-                sumPrice = 0;
-                sumPurePrice = 0;
+                sumPurePrice = 0.0;
 
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
 
-                for (int i = 0; i < invoiceDetailList.size(); i++) {
-                    sumPrice = (float) (sumPrice + invoiceDetailList.get(i).INV_DET_QUANTITY
-                                                * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT));
-                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        Double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        Double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        Double purePrice = sumprice - discountPrice;
+
+                        sumPurePrice = sumPurePrice + purePrice;
+
+                    }
+
                 }
-
-
-                    sumPurePriceTxt.setText(format.format(sumPurePrice) + " ریال ");
-                    //  tvSumPriceHeader.setText(format.format(sumPurePrice) + " ریال ");
+                binding.txtPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
 
             }
@@ -1229,15 +1237,14 @@ public class OrderFragment extends Fragment implements Filterable {
         });
 
 
-            if (tblGUID.equals(""))
-                txtTableNumber.setText("خارج سالن");
-            else {
-                Tables tb = Select.from(Tables.class).where("I ='" + tblGUID + "'").first();
-                if (tb != null)
+        if (Tbl_GUID.equals(""))
+            binding.txtNumberTable.setText("خارج سالن");
+        else {
+            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+            if (tb != null)
 
-                    txtTableNumber.setText("میز شماره " + tb.N);
-            }
-
+                binding.txtNumberTable.setText("میز شماره " + tb.N);
+        }
 
 
         ArrayList<Product> prstResult = new ArrayList<>(Util.AllProduct);
@@ -1250,7 +1257,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
         //region Action BtnRegister
-        btnRegisterOrder.setOnClickListener(view1 -> {
+        binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
           /* Tables tb= Select.from(Tables.class).where("I ='" + tblGUID + "'").first();
 
@@ -1258,7 +1265,7 @@ public class OrderFragment extends Fragment implements Filterable {
                 Toast.makeText(getActivity(), "میز رزرو شده است", Toast.LENGTH_SHORT).show();
                 return;
             }*/
-            if (AccGuid.equals("")) {
+            if (Acc_GUID.equals("")) {
 
                 Toast.makeText(getActivity(), "مشترک مورد نظر را انتخاب کنید", Toast.LENGTH_SHORT).show();
             } else if (invoiceDetailList.size() == 0) {
@@ -1266,46 +1273,46 @@ public class OrderFragment extends Fragment implements Filterable {
                 Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
             } else {
 
-                    Date date = Calendar.getInstance().getTime();
+                Date date = Calendar.getInstance().getTime();
 
-                    float sumPrice = 0;
-                    float sumDiscount = 0;
-                    float sumPurePrice = 0;
+                float sumPrice = 0;
+                float sumDiscount = 0;
+                float sumPurePrice = 0;
 
-                    for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + factorGuid + "'").list()) {
-                        InvoiceDetail.deleteInTx(invoicedetail);
-                    }
-                    for (int i = 0; i < invoiceDetailList.size(); i++) {
-                        sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
-                        sumPrice = (float) (sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT)));
-                        invoiceDetailList.get(i).ROW_NUMBER = i + 1;
-                        sumDiscount = sumDiscount + Float.parseFloat(invoiceDetailList.get(i).INV_DET_DISCOUNT);
-                    }
-                    InvoiceDetail.saveInTx(invoiceDetailList);
-                    Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + factorGuid + "'").first();
-                    invoice.INV_UID = factorGuid;
-                    invoice.INV_TOTAL_AMOUNT = (double)sumPrice;//جمع فاکنور
-                    invoice.INV_TOTAL_DISCOUNT = 0.0;
-                    invoice.INV_PERCENT_DISCOUNT = 0.0;
-                    invoice.INV_DET_TOTAL_DISCOUNT = (double)sumDiscount;
-                    invoice.INV_DESCRIBTION = descriptionFactor;
-                    invoice.INV_TOTAL_TAX = 0.0;
-                    invoice.INV_TOTAL_COST = 0.0;
-                    invoice.INV_EXTENDED_AMOUNT = (double)sumPurePrice;
-                    invoice.INV_DATE = date;
-                    invoice.INV_DUE_DATE = date;
-                    invoice.INV_STATUS = true;
-                    invoice.ACC_CLB_UID = AccGuid;
-                    invoice.TBL_UID = tblGUID;
-                    invoice.INV_TYPE_ORDER = Integer.parseInt(orderType);
-                    invoice.Acc_name = AccNm.getText().toString();
-                    invoice.save();
-                   // LauncherFragment.factorGuid = factorGuid;
+                for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
+                    InvoiceDetail.deleteInTx(invoicedetail);
+                }
+                for (int i = 0; i < invoiceDetailList.size(); i++) {
+                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailList.get(i).INV_DET_TOTAL_AMOUNT);
+                    sumPrice = (float) (sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * Float.parseFloat(invoiceDetailList.get(i).INV_DET_PRICE_PER_UNIT)));
+                    invoiceDetailList.get(i).ROW_NUMBER = i + 1;
+                    sumDiscount = sumDiscount + Float.parseFloat(invoiceDetailList.get(i).INV_DET_DISCOUNT);
+                }
+                InvoiceDetail.saveInTx(invoiceDetailList);
+                Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
+                invoice.INV_UID = Inv_GUID;
+                invoice.INV_TOTAL_AMOUNT = (double) sumPrice;//جمع فاکنور
+                invoice.INV_TOTAL_DISCOUNT = 0.0;
+                invoice.INV_PERCENT_DISCOUNT = 0.0;
+                invoice.INV_DET_TOTAL_DISCOUNT = (double) sumDiscount;
+                // invoice.INV_DESCRIBTION = descriptionFactor;
+                invoice.INV_TOTAL_TAX = 0.0;
+                invoice.INV_TOTAL_COST = 0.0;
+                invoice.INV_EXTENDED_AMOUNT = (double) sumPurePrice;
+                invoice.INV_DATE = date;
+                invoice.INV_DUE_DATE = date;
+                invoice.INV_STATUS = true;
+                invoice.ACC_CLB_UID = Acc_GUID;
+                invoice.TBL_UID = Tbl_GUID;
+                invoice.INV_TYPE_ORDER = Integer.parseInt(Ord_TYPE);
+                invoice.Acc_name = binding.orderNameCustomer.getText().toString();
+                invoice.save();
+                // LauncherFragment.factorGuid = factorGuid;
 
 
-                    List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + factorGuid + "'").list();
-                    List<InvoiceDetail> invoiceDetailList = Select.from(InvoiceDetail.class).where("INVUID ='" + factorGuid + "'").list();
-                    SendOrder(listInvoice, invoiceDetailList);
+                List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").list();
+                List<InvoiceDetail> invoiceDetailList = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                SendOrder(listInvoice, invoiceDetailList);
 
 
             }
@@ -1426,6 +1433,7 @@ public class OrderFragment extends Fragment implements Filterable {
         invoiceDetailAdapter = null;
         productAdapter = null;
     }
+
 
     //endregion Override Method
 
@@ -1574,9 +1582,7 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 }
                 if (productLevel1List.size() <= 1) {
-                    cardGroup.setVisibility(View.GONE
-
-                    );
+                    binding.orderCardGroup.setVisibility(View.GONE);
                 }
                 productLevel1Adapter.notifyDataSetChanged();
                 ArrayList<ProductGroupLevel1> rst1 = new ArrayList<>(productLevel1List);
@@ -1609,7 +1615,7 @@ public class OrderFragment extends Fragment implements Filterable {
                         }
                     }
 
-                        subGroupLayout.setVisibility(View.VISIBLE);
+                    binding.orderCardSubGroup.setVisibility(View.VISIBLE);
 
 
                     ArrayList<ProductGroupLevel2> rst2 = new ArrayList<>(productLevel2List);
@@ -1632,7 +1638,7 @@ public class OrderFragment extends Fragment implements Filterable {
                         CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
 
                         if (rst.size() > 0) {
-                            txtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
+                            binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
 
                         }
                     }
@@ -1660,8 +1666,8 @@ public class OrderFragment extends Fragment implements Filterable {
                     CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel1List.get(0).getPRDLVLUID()));
 
                     if (rst.size() > 0) {
-                        txtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
-                        subGroupLayout.setVisibility(View.GONE);
+                        binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
+                        binding.orderCardSubGroup.setVisibility(View.GONE);
                     }
 
 
@@ -1674,61 +1680,6 @@ public class OrderFragment extends Fragment implements Filterable {
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
 
-                //region Create Order
-
-                //create Order
-                if (factorGuid.equals("")) {
-
-                    factorGuid = UUID.randomUUID().toString();
-                    Invoice order = new Invoice();
-                    order.INV_UID = factorGuid;
-                    order.save(order);
-
-
-                }
-
-                //edit Order
-                else {
-                    ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(result, R -> R.getAmount() > 0);
-
-                    if (result.size() > 0) {
-                        Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
-                    }
-
-
-                    Invoice ord = Select.from(Invoice.class).where("INVUID = '" + factorGuid + "'").first();
-                    List<InvoiceDetail> invoicedetails = Select.from(InvoiceDetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
-                    Account acc = Select.from(Account.class).where("I ='" + ord.ACC_CLB_UID + "'").first();
-                    AccNm.removeTextChangedListener(textWatcherAcc);
-                    AccNm.setText(acc.getACCCLBNAME());
-                    AccNm.addTextChangedListener(textWatcherAcc);
-                    AccGuid = acc.getACCCLBUID();
-                    AccNm.setEnabled(false);
-                    invoiceDetailList.clear();
-                    invoiceDetailList.addAll(invoicedetails);
-                    invoiceDetailAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < invoicedetails.size(); i++) {
-                        ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
-                        int finalI = i;
-                        //CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(orderDetails.get(finalI).MainGuid) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
-                        CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
-                        if (resultProducts.size() > 0) {
-                            Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + invoicedetails.get(finalI).INV_DET_QUANTITY);
-                            Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
-                            productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
-
-                                if (invoiceDetailList.size() > 0) {
-                                    invoiceDetailRecycle.post(() -> invoiceDetailRecycle.smoothScrollToPosition(invoiceDetailList.size() - 1));
-                                }
-
-
-                        }
-                    }
-
-
-                }
-                //endregion Create Order
 
                 customProgress.hideProgress();
                 //  getAccount(userName, passWord);
@@ -1746,52 +1697,12 @@ public class OrderFragment extends Fragment implements Filterable {
     }
 
 
-    public void loadMore() {
-
-
-        int pageSize = 18;
-        isLoading = true;
-//        if (productListData.size() != 0) ;
-        final ArrayList<Product> items = new ArrayList<>();
-        totalPage = (productListData.size() + pageSize - 1) / pageSize;
-
-        if (totalPage > 1) { ///////////////////
-
-            int start = ((currentPage * pageSize) - (pageSize - 1)) - 1;
-            int end = (min((start + 1) + pageSize - 1, productListData.size())) - 1;
-
-            new Handler().postDelayed(() -> {
-                try {
-
-                    items.addAll(productListData.subList(start, end));
-                    if (currentPage != 1) productAdapter.removeLoadingView();
-                    productList.addAll(items);
-                    productAdapter.notifyDataSetChanged();
-
-                    // check weather is last page or not
-                    if (currentPage < totalPage) {
-                        productAdapter.addLoadingView();
-                    } else {
-                        isLastPage = true;
-                    }
-
-                    isLoading = false;
-                } catch (Exception e) {
-
-                    Toast.makeText(getActivity(), "لطفا صبر کنید...", Toast.LENGTH_SHORT).show();
-                }
-
-            }, 500);
-        }
-    }
-
-    private void getMaxSales(String userName, String pass, String id, String Price, Double
-            discount, String GUID, String TYPE, String s, int MinOrPlus) {
+    private void getMaxSales(String userName, String pass, String Prd_GUID, String s, double Price, double discount) {
 
 
         try {
 
-            Call<String> call = App.api.getMaxSales(userName, pass, id);
+            Call<String> call = App.api.getMaxSales(userName, pass, Prd_GUID);
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1800,7 +1711,6 @@ public class OrderFragment extends Fragment implements Filterable {
 
                     int remain = -1000000000;
                     try {
-                        assert response.body() != null;
                         remain = Integer.parseInt(response.body());
                     } catch (Exception e) {
                         Gson gson = new Gson();
@@ -1808,137 +1718,63 @@ public class OrderFragment extends Fragment implements Filterable {
                         }.getType();
                         ModelLog iDs = gson.fromJson(response.body(), typeIDs);
 
-                        assert iDs != null;
                         int message = iDs.getLogs().get(0).getMessage();
                         String description = iDs.getLogs().get(0).getDescription();
-                        if (message != 1)
+                        if (message != 1) {
                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-
-
+                        }
                     }
 
                     if (remain != -1000000000) {
-                        if (TYPE.equals("1")) {
-                            if (Integer.parseInt(response.body()) <= 0) {
-                                Toast.makeText(getActivity(), "این کالا موجود نمی باشد", Toast.LENGTH_SHORT).show();
-                                customProgress.hideProgress();
-                                return;
-                            }
-                            ArrayList<Product> resultProduct = new ArrayList<>(Util.AllProduct);
-                            CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(GUID));
-
-                            if (resultProduct.size() > 0) {
-                                double amount = 0;
-                                if (MinOrPlus==1)
-                                    amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() + 1;
-
-                                else if (MinOrPlus==2){
-                                    if (Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() >= 1)
-                                        amount = Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).getAmount() - 1;
-
-                                    else
-                                        return;
-
-                                }
 
 
-                                if (Integer.parseInt(response.body()) - amount < 0) {
+                        ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+                        ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+
+                        CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+                        CollectionUtils.filter(resultPrd1, r -> r.I.equals(Prd_GUID));
+
+                        if (result.size() > 0) {
+                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                            double amount = 0.0;
+                            if (!s.equals("")) {
+                                amount = Double.parseDouble(s);
+                                if (remain - amount < 0) {
                                     Toast.makeText(getActivity(), "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
-                                    customProgress.hideProgress();
 
+                                    if (invoiceDetail != null) {
+                                        invoiceDetail.INV_DET_QUANTITY = 0.0;
+                                        invoiceDetail.update();
+                                        if (resultPrd1.size() > 0) {
+                                            resultPrd1.get(0).AMOUNT = 0.0;
+                                            productAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    invoiceDetailAdapter.notifyDataSetChanged();
+                                    customProgress.hideProgress();
                                     return;
                                 }
-                                Util.AllProduct.get(Util.AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
-                                //productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
-
-                                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                                CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                                //edit
-                                if (result.size() > 0) {
-                                    Double sumprice = (amount * Float.parseFloat(Price));
-                                    Double discountPrice = sumprice * discount;
-                                    Double totalPrice = sumprice - discountPrice;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                    invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
-                                } else {
-                                    InvoiceDetail invoicedetail = new InvoiceDetail();
-                                    invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                                    invoicedetail.INV_UID = factorGuid;
-                                    invoicedetail.INV_DET_QUANTITY = amount;
-                                    invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-                                    invoicedetail.INV_DET_DISCOUNT = "0";
-                                    Double sumprice = (amount * Float.parseFloat(Price));
-                                    Double discountPrice = sumprice * discount;
-                                    Double totalPrice = sumprice - discountPrice;
-                                    invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                    invoicedetail.INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                    invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                    invoicedetail.INV_DET_TAX = "0";
-                                    invoicedetail.INV_DET_STATUS = true;
-                                    invoicedetail.PRD_UID = GUID;
-                                    invoicedetail.INV_DET_TAX_VALUE = "0";
-                                    invoicedetail.INV_DET_DESCRIBTION = "";
-                                    invoiceDetailList.add(invoicedetail);
-                                    invoiceDetailAdapter.notifyDataSetChanged();
-
-                                }
-
-
-
-                                    if (invoiceDetailList.size() > 0) {
-                                        invoiceDetailRecycle.post(() -> invoiceDetailRecycle.smoothScrollToPosition(invoiceDetailList.size() - 1));
-
-                                    }
-
-                                productAdapter.notifyItemChanged(productList.indexOf(resultProduct.get(0)));
                             }
 
-
-                        } else {
-                            ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                            CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                            if (result.size() > 0) {
-                                double amount = 0.0;
-                                if (!s.equals("")) {
-                                    amount = Double.parseDouble(s);
-                                    if (Integer.parseInt(response.body()) - amount < 0) {
-                                        Toast.makeText(getActivity(), "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
-                                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = 0.0;
-                                        invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = "0";
-                                        invoiceDetailAdapter.notifyDataSetChanged();
-                                        customProgress.hideProgress();
-                                        return;
-                                    }
-                                }
-                                invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-
-                                Double sumprice = (amount * Float.parseFloat(Price));
-                                Double discountPrice = sumprice * discount;
-                                Double totalPrice = sumprice - discountPrice;
-
-
-                                invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-
-
-                                ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                                //  CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID) && r.getPRDREMAIN()>0 && r.getPRDPRICEPERUNIT1()>0);
-                                CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
-                                if (resultPrd.size() > 0) {
-                                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-//                                    if (productList.indexOf(resultPrd.get(0)) >= 0)
-//                                        productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));
-
-                                    if (productList.contains(resultPrd.get(0)))
-                                        productAdapter.notifyItemChanged(productList.indexOf(resultPrd.get(0)));
-
-
-                                }
+                            if (invoiceDetail != null) {
+                                invoiceDetail.INV_DET_QUANTITY = amount;
+                                invoiceDetail.update();
 
                             }
+
+                            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
+                            CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(Prd_GUID));
+                            if (resultPrd.size() > 0) {
+                                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+
+                            }
+
+                            productAdapter.notifyDataSetChanged();
+                            invoiceDetailAdapter.notifyDataSetChanged();
+
                         }
+
                     }
 
 
@@ -1965,21 +1801,21 @@ public class OrderFragment extends Fragment implements Filterable {
     public void searchProduct(String search) {
 
 
-        if (productRecyclerview.getAdapter() != null) {
+        if (binding.orderRecyclerViewProduct.getAdapter() != null) {
             getFilter().filter(search);
         }
 
     }
 
 
-    /*public void searchAccount(String search) {
+    public void searchAccount(String search) {
 
 
-        if (recyclerAcc.getAdapter() != null) {
-            ((Filterable) recyclerAcc.getAdapter()).getFilter().filter(search);
+        if (binding.accountRecyclerView.getAdapter() != null) {
+            ((Filterable) binding.accountRecyclerView.getAdapter()).getFilter().filter(search);
         }
 
-    }*/
+    }
 
     private void getDescription(String userName, String pass, String id) {
 
@@ -2059,7 +1895,7 @@ public class OrderFragment extends Fragment implements Filterable {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject),"");
+            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
             customProgress.showProgress(getContext(), "در حال ثبت مشتری در سرور...", false);
             call.enqueue(new Callback<String>() {
                 @Override
@@ -2077,10 +1913,10 @@ public class OrderFragment extends Fragment implements Filterable {
                         Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                         dialogAddAccount.dismiss();
                         customProgress.hideProgress();
-                        AccGuid = accountsList.get(0).I;
-                        AccNm.removeTextChangedListener(textWatcherAcc);
-                        AccNm.setText(accountsList.get(0).N);
-                        AccNm.addTextChangedListener(textWatcherAcc);
+                        Acc_GUID = accountsList.get(0).I;
+                        binding.orderNameCustomer.removeTextChangedListener(textWatcherAcc);
+                        binding.orderNameCustomer.setText(accountsList.get(0).N);
+                        binding.orderNameCustomer.addTextChangedListener(textWatcherAcc);
                         accountsList.clear();
                         getAccount(userName, pass);
 
@@ -2110,61 +1946,6 @@ public class OrderFragment extends Fragment implements Filterable {
 
 
     }
-
-
-  /*  private PopupWindow initiatePopupWindow(MaterialCardView pop) {
-
-         PopupWindow mDropdown = null;
-        LayoutInflater mInflater;
-        try {
-
-            mInflater = (LayoutInflater) getActivity()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = mInflater.inflate(R.layout.popup_menu, null);
-
-
-            final TextView itemA= layout.findViewById(R.id.ItemA);
-          *//*  layout.measure(View.MeasureSpec.UNSPECIFIED,
-                    View.MeasureSpec.UNSPECIFIED);*//*
-            mDropdown = new PopupWindow(layout, FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,true);
-           // Drawable background = getResources().getDrawable(android.R.drawable.btn_default_small);
-           // mDropdown.setBackgroundDrawable(background);
-            mDropdown.showAsDropDown(pop, 5, 5);
-
-
-//            WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-//            float width = (wm.getDefaultDisplay().getWidth() * 2) / 3;
-//            mDropdown.setWidth((int) width);
-//            mDropdown.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mDropdown;
-
-    }
-
-
-    private void setPopUpWindow(MaterialCardView pop) {
-        PopupWindow mDropdown = null;
-
-        LayoutInflater inflater = (LayoutInflater)
-                getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.popup_menu, null);
-
-        TextView itemA = view.findViewById(R.id.ItemA);
-        TextView itemB = view.findViewById(R.id.ItemB);
-
-
-        mDropdown = new PopupWindow(view, 300, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
-        mDropdown.showAsDropDown(pop);
-
-
-        //endregion Method
-
-    }*/
-
 
     void getAccount(String user, String pass) {
 
@@ -2206,8 +1987,8 @@ public class OrderFragment extends Fragment implements Filterable {
                         accList.clear();
 
 
-                       //LauncherFragment.AllAccount.clear();
-                       //LauncherFragment.AllAccount.addAll(iDs.getAccountList());
+                        //LauncherFragment.AllAccount.clear();
+                        //LauncherFragment.AllAccount.addAll(iDs.getAccountList());
                         Toast.makeText(getActivity(), "بارگیری موفق", Toast.LENGTH_SHORT).show();
 
                     }
@@ -2230,7 +2011,6 @@ public class OrderFragment extends Fragment implements Filterable {
         }
 
     }
-
 
     private void getAccountSearch(String word) {
 

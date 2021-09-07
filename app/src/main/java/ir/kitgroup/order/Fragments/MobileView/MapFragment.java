@@ -1,4 +1,4 @@
-package ir.kitgroup.order.Fragments.Client.Register;
+package ir.kitgroup.order.Fragments.MobileView;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -72,8 +72,6 @@ import java.util.Objects;
 import ir.kitgroup.order.Adapters.SearchViewAdapter;
 import ir.kitgroup.order.DataBase.Account;
 import ir.kitgroup.order.DataBase.User;
-import ir.kitgroup.order.Fragments.MobileView.PaymentMobileFragment;
-import ir.kitgroup.order.Fragments.MobileView.ProfileFragment;
 import ir.kitgroup.order.R;
 import ir.kitgroup.order.Util.Util;
 import ir.kitgroup.order.classes.App;
@@ -85,7 +83,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static android.content.Context.USER_SERVICE;
 import static android.os.Looper.getMainLooper;
 
 public class  MapFragment extends Fragment implements PermissionsListener {

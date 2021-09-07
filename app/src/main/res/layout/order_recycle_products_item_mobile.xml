@@ -67,9 +67,6 @@
                 android:gravity="right"
                 android:textColor="@color/black_l"
                 android:textSize="@dimen/text_medium_mobile_size" />
-
-
-
             <TextView
               android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/order_recycle_item_product_old_price"

@@ -339,7 +339,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             binding.nameCustomer.addTextChangedListener(textWatcherAcc);
         } else {
-            binding.orderListBtnRegister.setVisibility(View.GONE);
+            binding.btnRegisterOrder.setVisibility(View.GONE);
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
             binding.layoutAccount.setVisibility(View.GONE);
@@ -356,7 +356,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     counter=invDetails.size();
                     binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید "+counter);
                     if (App.mode == 1)
-                        binding.orderListBtnRegister.setVisibility(View.VISIBLE);
+                        binding.btnRegisterOrder.setVisibility(View.VISIBLE);
                 } else
 
                     binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
@@ -853,7 +853,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 counter=invDetails.size();
                 binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید "+counter);
                 if (App.mode == 1)
-                    binding.orderListBtnRegister.setVisibility(View.VISIBLE);
+                    binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
               // binding.itemInvoiceDetail.setBadgeText(null);
                 binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
@@ -921,7 +921,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         //region Action BtnRegister
-        binding.orderListBtnRegister.setOnClickListener(view1 -> {
+        binding.btnRegisterOrder.setOnClickListener(view1 -> {
             if (App.mode == 1 && Acc_GUID.equals("")) {
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
@@ -954,12 +954,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
 
-       // if (Util.AllProduct.size()==0){
+        if (Util.AllProduct.size()==0){
             isAllPermissionGranted();
-       /* }else {
+       }else {
 
             getSetting();
-        }*/
+        }
 
 
         return binding.getRoot();
@@ -1275,7 +1275,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                                 if (App.mode == 1)
-                                    binding.orderListBtnRegister.setVisibility(View.VISIBLE);
+                                    binding.btnRegisterOrder.setVisibility(View.VISIBLE);
 
 
                             }

@@ -25,16 +25,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.DataBase.Product;
 
-import ir.kitgroup.order.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.order.Fragments.LauncherOrganizationFragment;
 
 import ir.kitgroup.order.R;
 import ir.kitgroup.order.Util.Util;
 
 
-public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdapter.viewHolder> {
+public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {
 
     private final List<InvoiceDetail> orderDetailList;
 
@@ -67,7 +68,19 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         this.editAmountItem = editAmountItem;
     }
 
-    public InvoiceDetailAdapter(List<InvoiceDetail> orderDetailList, String type, String Inv_GUID) {
+
+    public interface DeleteItem {
+        void onDelete(String GUID);
+    }
+
+    private DeleteItem deleteItem;
+
+    public void setOnDeleteListener(DeleteItem deleteItem) {
+        this.deleteItem = deleteItem;
+    }
+
+
+    public InvoiceDetailMobileAdapter(List<InvoiceDetail> orderDetailList, String type, String Inv_GUID) {
 
         this.orderDetailList = orderDetailList;
         this.type = type;
@@ -105,8 +118,6 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         if (holder.rst.size() > 0) {
 
 
-
-
             if (holder.rst.get(0).PERC_DIS != 0.0) {
                 holder.discount.setText(format.format(holder.rst.get(0).PERC_DIS) + "%");
 
@@ -119,9 +130,9 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
             holder.price.setText(format.format(holder.rst.get(0).getPRDPRICEPERUNIT1()));
 
 
-            Double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPRDPRICEPERUNIT1());
-            Double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS/100);
-            Double totalPrice = sumprice - discountPrice;
+            double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS / 100);
+            double totalPrice = sumprice - discountPrice;
             holder.sumPrice.setText(format.format(totalPrice));
 
 
@@ -153,7 +164,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                         amount = Double.parseDouble(s);
                     }
                     Double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
-                    Double discountPrice = sumprice *holder.rst.get(0).PERC_DIS / 100;
+                    Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
                     Double totalPrice = sumprice - discountPrice;
                     holder.sumPrice.setText(format.format(totalPrice));
                     editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
@@ -170,7 +181,6 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
         }
         holder.imgDescription.setOnClickListener(v -> decriptionItem.onRowDescription(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID, orderDetailList.get(holder.getAdapterPosition()).INV_DET_DESCRIBTION));
-
 
 
         holder.edtAmount.removeTextChangedListener(holder.textWatcher);
@@ -205,7 +215,6 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                 notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
 
 
-
                 ArrayList<Product> allResultPr = new ArrayList<>(Util.AllProduct);
 
                 CollectionUtils.filter(allResultPr, r -> r.I.equals(result.get(0).PRD_UID));
@@ -223,6 +232,8 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
             holder.imgDelete.setEnabled(true);
             holder.imgDelete.setVisibility(View.VISIBLE);
+            if (LauncherActivity.screenInches >= 7)
+                deleteItem.onDelete(holder.rst.get(0).I);
         });
 
 

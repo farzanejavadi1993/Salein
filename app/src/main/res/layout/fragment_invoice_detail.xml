@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+
 <RelativeLayout
     android:background="#F4F4F4"
     android:focusable="true"
@@ -309,3 +312,5 @@
 
 
 </RelativeLayout>
+
+</layout>

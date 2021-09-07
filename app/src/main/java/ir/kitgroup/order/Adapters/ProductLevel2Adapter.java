@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.material.card.MaterialCardView;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -110,7 +112,7 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
 
         private String GUID;
         private final TextView subGroupName;
-        private final RelativeLayout cardView;
+        private final MaterialCardView cardView;
 
 
         public viewHolder(View itemView) {

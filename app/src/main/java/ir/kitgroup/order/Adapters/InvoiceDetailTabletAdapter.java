@@ -29,14 +29,13 @@ import java.util.List;
 import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.DataBase.Product;
-import ir.kitgroup.order.Fragments.Organization.LauncherOrganizationFragment;
-import ir.kitgroup.order.Fragments.TabletView.OrderFragment;
+import ir.kitgroup.order.Fragments.LauncherOrganizationFragment;
 
 import ir.kitgroup.order.R;
 import ir.kitgroup.order.Util.Util;
 
 
-public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetailLargeAdapter.viewHolder> {
+public class InvoiceDetailTabletAdapter extends RecyclerView.Adapter<InvoiceDetailTabletAdapter.viewHolder> {
 
 
     private List<InvoiceDetail> invoicedetails = new ArrayList<>();
@@ -59,7 +58,7 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
 
 
 
-    public InvoiceDetailLargeAdapter(Context context, List<InvoiceDetail> orderDetailList, String type) {
+    public InvoiceDetailTabletAdapter(Context context, List<InvoiceDetail> orderDetailList, String type) {
         this.context = context;
         this.invoicedetails = orderDetailList;
         this.type=type;
@@ -99,7 +98,8 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
             holder.ivDelete.setImageBitmap(null);
             holder.edtAmount.setEnabled(false);
             holder.tvDescription.setEnabled(false);
-        }else {
+        }
+        else {
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.edtAmount.setEnabled(true);
             holder.tvDescription.setEnabled(true);
@@ -153,13 +153,13 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
                     Double totalPrice = sumprice - discountPrice;
                     holder.tvSumPurePrice.setText(format.format(totalPrice));
 
-                    if (LauncherActivity.screenInches>=7){
+                   /* if (LauncherActivity.screenInches>=7){
                         OrderFragment.invoiceDetailList.get(holder.getAdapterPosition()).INV_DET_QUANTITY=amount;
                         OrderFragment.invoiceDetailList.get(holder.getAdapterPosition()).INV_DET_TOTAL_AMOUNT=String.valueOf(totalPrice);
                         OrderFragment.invoiceDetailList.get(holder.getAdapterPosition()).INV_DET_DISCOUNT=String.valueOf(discountPrice);
                         OrderFragment.invoiceDetailAdapter.notifyDataSetChanged();
                     }
-
+*/
 
 
 
@@ -169,15 +169,15 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
                     CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(invoicedetail.PRD_UID));
                     if (resultPrd.size() > 0) {
                         Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                       if (LauncherActivity.screenInches>=7){
+                      /* if (LauncherActivity.screenInches>=7){
                            if (OrderFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
                                OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultPrd.get(0)));
                            }
                        }else {
-                           /*if (MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
+                           *//*if (MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
                                MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
-                           }*/
-                       }
+                           }*//*
+                       }*/
 
                     }
 
@@ -216,9 +216,9 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if (LauncherActivity.screenInches>=7){
+                    /*if (LauncherActivity.screenInches>=7){
                         OrderFragment.invoiceDetailList.get(holder.getAdapterPosition()).INV_DET_DESCRIBTION= charSequence.toString();
-                    }/*else {
+                    }*//*else {
                         MainOrderMobileFragment.invoiceDetailList.get(holder.getAdapterPosition()).INV_DET_DESCRIBTION= charSequence.toString();
                     }*/
 
@@ -285,9 +285,9 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
                 holder.ivDelete.setVisibility(View.GONE);
                 holder.ivDelete.setEnabled(false);
                 ArrayList<InvoiceDetail> result = new ArrayList<>();
-                if (LauncherActivity.screenInches>=7){
+               /* if (LauncherActivity.screenInches>=7){
                     result.addAll(OrderFragment.invoiceDetailList);
-                }/*else {
+                }*//*else {
                     result.addAll(MainOrderMobileFragment.invoiceDetailList);
                 }*/
 
@@ -300,9 +300,9 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
                     if (resultPrd_.size() > 0) {
                         Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
                        if (LauncherActivity.screenInches>=7){
-                           if (OrderFragment.productList.indexOf(resultPrd_.get(0)) >= 0) {
+                          /* if (OrderFragment.productList.indexOf(resultPrd_.get(0)) >= 0) {
                                OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultPrd_.get(0)));
-                           }
+                           }*/
                        }/*else {
                            if (MainOrderMobileFragment.productList.indexOf(resultPrd_.get(0)) >= 0) {
                                MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd_.get(0)));
@@ -310,8 +310,8 @@ public class InvoiceDetailLargeAdapter extends RecyclerView.Adapter<InvoiceDetai
                        }*/
 
                     }
-                    if (LauncherActivity.screenInches>=7)
-                    OrderFragment.invoiceDetailAdapter.notifyItemRemoved(OrderFragment.invoiceDetailList.indexOf(result.get(0)));
+                  //  if (LauncherActivity.screenInches>=7)
+                  //  OrderFragment.invoiceDetailAdapter.notifyItemRemoved(OrderFragment.invoiceDetailList.indexOf(result.get(0)));
 
 
                 }

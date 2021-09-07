@@ -1,4 +1,4 @@
-package ir.kitgroup.order.Fragments.Client.Register;
+package ir.kitgroup.order.Fragments.MobileView;
 
 import android.Manifest;
 import android.app.AlertDialog;

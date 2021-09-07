@@ -16,8 +16,6 @@ import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import ir.kitgroup.order.DataBase.Account;
 import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.InvoiceDetail;
@@ -28,7 +26,6 @@ import ir.kitgroup.order.DataBase.ProductGroupLevel2;
 import ir.kitgroup.order.DataBase.Setting;
 import ir.kitgroup.order.DataBase.Tables;
 import ir.kitgroup.order.DataBase.User;
-import ir.kitgroup.order.Fragments.Client.LoginClient.LoginClientFragment;
 
 import ir.kitgroup.order.R;
 

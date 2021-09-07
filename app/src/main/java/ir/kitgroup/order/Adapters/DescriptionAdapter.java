@@ -79,7 +79,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
         holder.itemView.setOnClickListener(view -> {
 
-            if (!description.Click) {
+          /*  if (!description.Click) {
             if(LauncherActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = true;
             else
@@ -88,7 +88,8 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.white));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_reserve_card_background));
                 clickItem.onRowClick(list.get(position).DSC, true,holder.getAdapterPosition());
-            } else {
+            }
+            else {
                 if(LauncherActivity.screenInches>=7)
                 OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
                 else
@@ -97,7 +98,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.black));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_card_background));
                 clickItem.onRowClick(list.get(position).DSC, false,holder.getAdapterPosition());
-            }
+            }*/
 
 
         });

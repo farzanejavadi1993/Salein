@@ -45,7 +45,7 @@ import java.util.Objects;
 import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.order.Adapters.DescriptionAdapter;
-import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
+import ir.kitgroup.order.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
 import ir.kitgroup.order.Util.Utilities;
@@ -83,7 +83,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumPurePrice;
 
     private List<InvoiceDetail> invoiceDetailList;
-    private InvoiceDetailAdapter invoiceDetailAdapter;
+    private InvoiceDetailMobileAdapter invoiceDetailAdapter;
 
     private CustomProgress customProgress;
 
@@ -340,7 +340,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.purePriceTxt.setText(format.format(sumPurePrice) + " ریال ");
 
 
-        invoiceDetailAdapter = new InvoiceDetailAdapter(invoiceDetailList, type, Inv_GUID);
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(invoiceDetailList, type, Inv_GUID);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setHasFixedSize(false);
@@ -646,7 +646,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                         ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+                        ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+
                         CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+                        CollectionUtils.filter(resultPrd1, r -> r.I.equals(Prd_GUID));
                         if (result.size() > 0) {
                             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
                             double amount = 0.0;
@@ -658,6 +661,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     if (invoiceDetail != null) {
                                         invoiceDetail.INV_DET_QUANTITY = 0.0;
                                         invoiceDetail.update();
+                                        if (resultPrd1.size()>0) {
+                                            resultPrd1.get(0).AMOUNT = 0.0;
+                                        }
                                     }
 
                                     invoiceDetailAdapter.notifyDataSetChanged();

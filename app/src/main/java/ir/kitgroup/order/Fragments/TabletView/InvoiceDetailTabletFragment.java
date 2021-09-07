@@ -10,9 +10,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,12 +29,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.UUID;
 
-import ir.kitgroup.order.Activities.Classes.LauncherActivity;
 import ir.kitgroup.order.Adapters.DescriptionAdapter;
-import ir.kitgroup.order.Adapters.InvoiceDetailAdapter;
-import ir.kitgroup.order.Adapters.InvoiceDetailLargeAdapter;
+import ir.kitgroup.order.Adapters.InvoiceDetailMobileAdapter;
+import ir.kitgroup.order.Adapters.InvoiceDetailTabletAdapter;
+import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.classes.App;
 import ir.kitgroup.order.classes.CustomProgress;
 import ir.kitgroup.order.Util.Utilities;
@@ -45,59 +41,48 @@ import ir.kitgroup.order.DataBase.Invoice;
 import ir.kitgroup.order.DataBase.OrderType;
 import ir.kitgroup.order.DataBase.Product;
 
+import ir.kitgroup.order.databinding.FragmentInvoiceDetailBinding;
 import ir.kitgroup.order.models.Description;
 import ir.kitgroup.order.models.ModelDesc;
 import ir.kitgroup.order.models.ModelLog;
-import ir.kitgroup.order.R;
 import ir.kitgroup.order.Util.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class InvoiceDetail extends Fragment {
+public class InvoiceDetailTabletFragment extends Fragment {
+
+
+    private FragmentInvoiceDetailBinding binding;
+
 
     private CustomProgress customProgress;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
-    private RecyclerView recyclerView;
-    public static ArrayList<ir.kitgroup.order.DataBase.InvoiceDetail> invoiceDetailList = new ArrayList<>();
-    public InvoiceDetailAdapter invoiceDetailAdapter;
+    private ArrayList<InvoiceDetail> invoiceDetailList = new ArrayList<>();
+    private InvoiceDetailMobileAdapter invoiceDetailAdapter;
     private String maxSales = "0";
-    private EditText edtDescriptionItem;
 
 
     private String userName;
     private String passWord;
 
 
-    public ArrayList<ir.kitgroup.order.DataBase.InvoiceDetail> invoiceDetailLargeList = new ArrayList<>();
-    private float sumPrice = 0;
-    private TextView sumPriceTxt;
-    private float sumPurePrice = 0;
-    private TextView sumPurePriceTxt;
+    private ArrayList<InvoiceDetail> invoiceDetailLargeList = new ArrayList<>();
+    private double sumPrice = 0;
+    private double sumPurePrice = 0;
 
 
-    private TextView tvTitle;
-    private String factorGID = "";
+    private String Inv_GUID = "";
     private String type = "";
-
-    private TextView tvPurePrice;
-    private TextView tvSumDiscount;
-    private TextView tvTotalPrice;
-
-
-    private EditText edtDescription;
 
 
     private Dialog dialogDescription;
-    public static ArrayList<Description> descriptionList = new ArrayList<>();
+    private ArrayList<Description> descriptionList = new ArrayList<>();
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv = "";
-
-
-    private LinearLayout rlBottom;
 
 
     @Nullable
@@ -105,79 +90,42 @@ public class InvoiceDetail extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
-        Bundle bundle = getArguments();
-        type = bundle.getString("type");
-        factorGID = bundle.getString("FGUID");
-        String TGID = bundle.getString("TGID");
-        String ACCNM = bundle.getString("ACCNM");
-        String ACCGID = bundle.getString("ACCGID");
-        String OTYPE = bundle.getString("OTYPE");
-
+        binding = FragmentInvoiceDetailBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
 
         customProgress = CustomProgress.getInstance();
 
-
-        //region Tablet
-        int fontSize = 0;
-        View view = null;
-        if (LauncherActivity.screenInches >= 7) {
-            fontSize = 13;
-            view = inflater.inflate(R.layout.fragment_invoice_detail, container, false);
-            TextView tvRow = view.findViewById(R.id.tv_row_order);
-            TextView tvName = view.findViewById(R.id.tv_name_order);
-            TextView edtAmount = view.findViewById(R.id.tv_amount_order);
-            TextView tvPrice = view.findViewById(R.id.tv_price_order);
-            TextView tvDiscountPercent = view.findViewById(R.id.tv_discount_percent_order);
-            TextView tvSumDiscountPrice = view.findViewById(R.id.tv_discount_price_order);
-            TextView tvSumPrice = view.findViewById(R.id.tv_sum_price_order);
-            TextView tvSumPurePrice = view.findViewById(R.id.tv_sum_pure_price_order);
-            recyclerView = view.findViewById(R.id.recycler_invoice_detail);
-            TextView tvDate = view.findViewById(R.id.tvDate);
-            TextView tvNameCustomer = view.findViewById(R.id.tvNameCustomer);
-            TextView tvTypeOrder = view.findViewById(R.id.tvTypeOrder);
-
-            tvTotalPrice = view.findViewById(R.id.launcher_order_sumPrice_txt);
-            tvPurePrice = view.findViewById(R.id.launcher_order_totalPrice_txt);
-            tvSumDiscount = view.findViewById(R.id.launcher_order_discount_txt);
-            rlBottom = view.findViewById(R.id.rl_bottom);
-            edtDescription = view.findViewById(R.id.edt_description_order);
+        Bundle bundle = getArguments();
+        type = bundle.getString("type");
+        Inv_GUID = bundle.getString("Inv_GUID");
+        String Tbl_GUID = bundle.getString("Tbl_GUID");
+        String Acc_NAME = bundle.getString("Acc_NAME");
+        String Acc_GUID = bundle.getString("Acc_GUID");
+        String Ord_TYPE = bundle.getString("Ord_TYPE");
 
 
-            tvRow.setTextSize(fontSize);
-            tvName.setTextSize(fontSize);
-            edtAmount.setTextSize(fontSize);
-            tvPrice.setTextSize(fontSize);
-            tvSumDiscountPrice.setTextSize(fontSize);
-            tvDiscountPercent.setTextSize(fontSize);
-            tvSumPrice.setTextSize(fontSize);
-            tvSumPurePrice.setTextSize(fontSize);
+
 
 
             if (type.equals("1")) {
-                //  if (LauncherActivity.screenInches>=7)
-                //  rlBottom.setVisibility(View.VISIBLE);
-                Invoice invoice = Select.from(Invoice.class).where("INVUID ='" + factorGID + "'").first();
+
+                Invoice invoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
                 if (invoice != null) {
-
-
                     String text1 = "نام مشترک : " + invoice.Acc_name;
                     SpannableString ss1 = new SpannableString(text1);
                     StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
                     ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvNameCustomer.setText(ss1);
+                    binding.tvNameCustomer.setText(ss1);
 
 
                     Utilities util = new Utilities();
                     Locale loc = new Locale("en_US");
                     Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
-
-
                     String text2 = "تاریخ ایجاد : " + (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + ((sc.strMonth)) + "\t" + (sc.year);
                     SpannableString ss2 = new SpannableString(text2);
                     StyleSpan boldSpan2 = new StyleSpan(Typeface.BOLD);
                     ss2.setSpan(boldSpan2, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvDate.setText(ss2);
+                    binding.tvDate.setText(ss2);
 
 
                     OrderType orderType = Select.from(OrderType.class).where("c ='" + invoice.INV_TYPE_ORDER + "'").first();
@@ -189,19 +137,20 @@ public class InvoiceDetail extends Fragment {
                     SpannableString ss3 = new SpannableString(text3);
                     StyleSpan boldSpan3 = new StyleSpan(Typeface.BOLD);
                     ss3.setSpan(boldSpan3, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvTypeOrder.setText(ss3);
+                    binding.tvTypeOrder.setText(ss3);
                 }
 
 
-            } else {
-//                String text1 = "نام مشترک : ";
-//                String nameCustomer = bundle.getString("ACCNM");
-//                if (!nameCustomer.equals("نام مشترک"))
-//                    text1 = "نام مشترک : " + nameCustomer;
-//                SpannableString ss1 = new SpannableString(text1);
-//                StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
-//                ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                tvNameCustomer.setText(ss1);
+            }
+            else {
+                String text1 = "نام مشترک : ";
+                String nameCustomer = bundle.getString("Acc_NAME");
+                if (!nameCustomer.equals("نام مشترک"))
+                    text1 = "نام مشترک : " + nameCustomer;
+                SpannableString ss1 = new SpannableString(text1);
+                StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
+                ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvNameCustomer.setText(ss1);
 
 
                 Calendar calendar = Calendar.getInstance();
@@ -212,10 +161,10 @@ public class InvoiceDetail extends Fragment {
                 SpannableString ss2 = new SpannableString(text2);
                 StyleSpan boldSpan2 = new StyleSpan(Typeface.BOLD);
                 ss2.setSpan(boldSpan2, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tvDate.setText(ss2);
+                binding.tvDate.setText(ss2);
 
 
-                String orderType = bundle.getString("OTYPE");
+                String orderType = bundle.getString("Ord_TYPE");
                 OrderType ordTY = Select.from(OrderType.class).where("c ='" + orderType + "'").first();
                 String text3 = "نوع سفارش : " + " ";
 
@@ -225,26 +174,26 @@ public class InvoiceDetail extends Fragment {
                 SpannableString ss3 = new SpannableString(text3);
                 StyleSpan boldSpan3 = new StyleSpan(Typeface.BOLD);
                 ss3.setSpan(boldSpan3, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tvTypeOrder.setText(ss3);
+                binding.tvTypeOrder.setText(ss3);
 
 
             }
 
 
+
             invoiceDetailLargeList.clear();
-            if (type.equals("1"))
-                invoiceDetailLargeList.addAll(Select.from(ir.kitgroup.order.DataBase.InvoiceDetail.class).where("INVUID ='" + factorGID + "'").list());
-            else if (LauncherActivity.screenInches >= 7)
-                invoiceDetailLargeList.addAll(OrderFragment.invoiceDetailList);
-//            else
-//                invoiceDetailLargeList.addAll(MainOrderMobileFragment.invoiceDetailList);
-            InvoiceDetailLargeAdapter invoiceDetailLargeAdapter = new InvoiceDetailLargeAdapter(getContext(), invoiceDetailLargeList, type);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(invoiceDetailLargeAdapter);
-            recyclerView.setHasFixedSize(false);
+            invoiceDetailLargeList.addAll(Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list());
 
 
-            recyclerView.post(() -> recyclerView.smoothScrollToPosition(invoiceDetailLargeList.size() - 1));
+            InvoiceDetailTabletAdapter invoiceDetailLargeAdapter = new InvoiceDetailTabletAdapter(getContext(), invoiceDetailLargeList, type);
+            binding.recyclerInvoiceDetail.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.recyclerInvoiceDetail.setAdapter(invoiceDetailLargeAdapter);
+            binding.recyclerInvoiceDetail.setHasFixedSize(false);
+
+
+            if (invoiceDetailLargeList.size()>0)
+
+            binding.recyclerInvoiceDetail.post(() -> binding.recyclerInvoiceDetail.smoothScrollToPosition(invoiceDetailLargeList.size() - 1));
 
 
             invoiceDetailLargeAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -270,57 +219,49 @@ public class InvoiceDetail extends Fragment {
                 }
             });
 
-            invoiceDetailLargeAdapter.SetOnEditItem(new InvoiceDetailLargeAdapter.EditItem() {
-                @Override
-                public void onRowEdit() {
 
-                    float sumPrice = 0;
-                    float sumPurePrice = 0;
-                    double sumDiscountPrice = 0;
+            invoiceDetailLargeAdapter.SetOnEditItem(() -> {
 
-
-                    for (int i = 0; i < invoiceDetailLargeList.size(); i++) {
-                        sumPrice = (float) (sumPrice + invoiceDetailLargeList.get(i).INV_DET_QUANTITY
-                                * Float.parseFloat(invoiceDetailLargeList.get(i).INV_DET_PRICE_PER_UNIT));
-                        sumDiscountPrice = sumDiscountPrice + Double.parseDouble(invoiceDetailLargeList.get(i).INV_DET_DISCOUNT);
-                        sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailLargeList.get(i).INV_DET_TOTAL_AMOUNT);
-                    }
+                double sumPrice = 0;
+                double sumPurePrice = 0;
+                double sumDiscountPrice = 0;
 
 
-                    String text1 = "جمع فاکتور : " + format.format(sumPrice) + " ریال ";
-                    SpannableString ss1 = new SpannableString(text1);
-                    StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
-                    ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvTotalPrice.setText(ss1);
-
-
-                    String text2 = "جمع تخفیف : " + format.format(sumDiscountPrice) + " ریال ";
-                    SpannableString ss2 = new SpannableString(text2);
-                    StyleSpan boldSpan2 = new StyleSpan(Typeface.BOLD);
-                    ss2.setSpan(boldSpan2, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvSumDiscount.setText(ss2);
-
-
-                    String text3 = "جمع خالص : " + format.format(sumPurePrice) + " ریال ";
-                    SpannableString ss3 = new SpannableString(text3);
-                    StyleSpan boldSpan3 = new StyleSpan(Typeface.BOLD);
-                    ss3.setSpan(boldSpan3, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvPurePrice.setText(ss3);
-
-
+                for (int i = 0; i < invoiceDetailLargeList.size(); i++) {
+                    sumPrice = (float) (sumPrice + invoiceDetailLargeList.get(i).INV_DET_QUANTITY
+                            * Float.parseFloat(invoiceDetailLargeList.get(i).INV_DET_PRICE_PER_UNIT));
+                    sumDiscountPrice = sumDiscountPrice + Double.parseDouble(invoiceDetailLargeList.get(i).INV_DET_DISCOUNT);
+                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetailLargeList.get(i).INV_DET_TOTAL_AMOUNT);
                 }
+
+
+                String text1 = "جمع فاکتور : " + format.format(sumPrice) + " ریال ";
+                SpannableString ss1 = new SpannableString(text1);
+                StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
+                ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvSumPriceOrder.setText(ss1);
+
+
+                String text2 = "جمع تخفیف : " + format.format(sumDiscountPrice) + " ریال ";
+                SpannableString ss2 = new SpannableString(text2);
+                StyleSpan boldSpan2 = new StyleSpan(Typeface.BOLD);
+                ss2.setSpan(boldSpan2, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvDiscountPercentOrder.setText(ss2);
+
+
+                String text3 = "جمع خالص : " + format.format(sumPurePrice) + " ریال ";
+                SpannableString ss3 = new SpannableString(text3);
+                StyleSpan boldSpan3 = new StyleSpan(Typeface.BOLD);
+                ss3.setSpan(boldSpan3, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvSumPurePriceOrder.setText(ss3);
+
+
             });
 
 
-            ShowData(invoiceDetailLargeList);
-        }
-        //endregion Tablet
+        //    ShowData(invoiceDetailLargeList);
 
 
-        //region Mobile
-
-
-        //endregion Mobile
 
         return view;
 
@@ -330,10 +271,10 @@ public class InvoiceDetail extends Fragment {
     public void onDestroy() {
 
         if (type.equals("2")) {
-            if (LauncherActivity.screenInches >= 7) {
+         /*   if (LauncherActivity.screenInches >= 7) {
                 OrderFragment.invoiceDetailAdapter.notifyDataSetChanged();
                 OrderFragment.descriptionFactor = edtDescription.getText().toString();
-            }
+            }*/
 
 
         }
@@ -360,21 +301,21 @@ public class InvoiceDetail extends Fragment {
         SpannableString ss1 = new SpannableString(text1);
         StyleSpan boldSpan1 = new StyleSpan(Typeface.BOLD);
         ss1.setSpan(boldSpan1, 0, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvTotalPrice.setText(ss1);
+        binding.tvSumPriceOrder.setText(ss1);
 
 
         String text2 = "جمع تخفیف : " + format.format(sumDiscount);
         SpannableString ss2 = new SpannableString(text2);
         StyleSpan boldSpan2 = new StyleSpan(Typeface.BOLD);
         ss2.setSpan(boldSpan2, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvSumDiscount.setText(ss2);
+        binding.tvDiscountPriceOrder.setText(ss2);
 
 
         String text3 = "جمع خالص : " + format.format(sumPurePrice);
         SpannableString ss3 = new SpannableString(text3);
         StyleSpan boldSpan3 = new StyleSpan(Typeface.BOLD);
         ss3.setSpan(boldSpan3, 0, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvPurePrice.setText(ss3);
+        binding.tvSumPurePriceOrder.setText(ss3);
 
 
     }
@@ -407,7 +348,7 @@ public class InvoiceDetail extends Fragment {
 
 
                     for (int i = 0; i < descriptionList.size(); i++) {
-                        if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                        if (binding.edtDescriptionOrder.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
                             descriptionList.get(i).Click = true;
                         }
 
@@ -509,64 +450,38 @@ public class InvoiceDetail extends Fragment {
                                 ArrayList<ir.kitgroup.order.DataBase.InvoiceDetail> result = new ArrayList<>();
                                 result.addAll(invoiceDetailList);
                                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                                //edit
+
+
+                                //edit row
                                 if (result.size() > 0) {
-                                    Double sumprice = (amount * Float.parseFloat(Price));
-                                    Double discountPrice = sumprice * discount;
-                                    Double totalPrice = sumprice - discountPrice;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                    invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
+                                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                                    if (amount == 0) {
+                                        if (invoiceDetail != null)
+                                            invoiceDetail.delete();
 
-                                    if (LauncherActivity.screenInches >= 7) {
-                                        OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                        OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                        OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                        OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                        invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
-                                    }/*else {
-                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                        MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                        invoiceDetailAdapter.notifyItemChanged(invoiceDetailList.indexOf(result.get(0)));
-                                    }*/
+                                        return;
+                                    }
 
-                                } else {
-                                    ir.kitgroup.order.DataBase.InvoiceDetail invoicedetail = new ir.kitgroup.order.DataBase.InvoiceDetail();
-                                    invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                                    invoicedetail.INV_UID = factorGID;
-                                    invoicedetail.INV_DET_QUANTITY = amount;
-                                    invoicedetail.INV_DET_PRICE_PER_UNIT = Price;
-                                    invoicedetail.INV_DET_DISCOUNT = "0";
-                                    Double sumprice = (amount * Float.parseFloat(Price));
-                                    Double discountPrice = sumprice * discount;
-                                    Double totalPrice = sumprice - discountPrice;
-                                    invoicedetail.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                    invoicedetail.INV_DET_PERCENT_DISCOUNT = discount * 100;
-                                    invoicedetail.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                                    invoicedetail.INV_DET_TAX = "0";
-                                    invoicedetail.INV_DET_STATUS = true;
-                                    invoicedetail.PRD_UID = GUID;
-                                    invoicedetail.INV_DET_TAX_VALUE = "0";
-                                    invoicedetail.INV_DET_DESCRIBTION = "";
-                                    invoiceDetailList.add(invoicedetail);
-                                    invoiceDetailAdapter.notifyDataSetChanged();
+
+                                    if (invoiceDetail!=null){
+                                        invoiceDetail.INV_DET_QUANTITY=amount;
+                                        invoiceDetail.update();
+                                    }
+
+
 
                                 }
 
-                                if (LauncherActivity.screenInches >= 7) {
+
+
+
+
 
                                     if (invoiceDetailList.size() > 0) {
-                                        recyclerView.post(() -> recyclerView.smoothScrollToPosition(invoiceDetailList.size() - 1));
+                                        binding.recyclerInvoiceDetail.post(() -> binding.recyclerInvoiceDetail.smoothScrollToPosition(invoiceDetailList.size() - 1));
 
                                     }
-                                }
-                                if (LauncherActivity.screenInches >= 7)
-                                    OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultProduct.get(0)));
-                               /* else
-                                    MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultProduct.get(0)));*/
+
                             }
 
 
@@ -581,29 +496,29 @@ public class InvoiceDetail extends Fragment {
                                     if (Integer.parseInt(response.body()) - amount < 0) {
                                         Toast.makeText(getActivity(), "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
                                         invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = 0.0;
-                                        if (LauncherActivity.screenInches >= 7)
+                                      /*  if (LauncherActivity.screenInches >= 7)
                                             OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = "0";
                                         else
                                             OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = "0";
-
+*/
                                         invoiceDetailAdapter.notifyDataSetChanged();
                                         customProgress.hideProgress();
                                         return;
                                     }
                                 }
                                 invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
-                                if (LauncherActivity.screenInches >= 7)
+                              /*  if (LauncherActivity.screenInches >= 7)
                                     OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
                                 else
-                                    OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;
+                                    OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_QUANTITY = amount;*/
                                 Double sumprice = (amount * Float.parseFloat(Price));
                                 Double discountPrice = sumprice * discount;
                                 Double totalPrice = sumprice - discountPrice;
 
 
                                 invoiceDetailList.get(invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
-                                if (LauncherActivity.screenInches >= 7)
-                                    OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
+                               /* if (LauncherActivity.screenInches >= 7)
+                                    OrderFragment.invoiceDetailList.get(OrderFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);*/
 //                                else
 //                                    MainOrderMobileFragment.invoiceDetailList.get(MainOrderMobileFragment.invoiceDetailList.indexOf(result.get(0))).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPrice);
 
@@ -613,7 +528,7 @@ public class InvoiceDetail extends Fragment {
                                 CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(GUID));
                                 if (resultPrd.size() > 0) {
                                     Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
-                                    if (LauncherActivity.screenInches >= 7) {
+                                    /*if (LauncherActivity.screenInches >= 7) {
                                         if (OrderFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
                                             OrderFragment.productAdapter.notifyItemChanged(OrderFragment.productList.indexOf(resultPrd.get(0)));
                                         }
@@ -621,7 +536,7 @@ public class InvoiceDetail extends Fragment {
 //                                        if (MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)) >= 0) {
 //                                            MainOrderMobileFragment.productAdapter.notifyItemChanged(MainOrderMobileFragment.productList.indexOf(resultPrd.get(0)));
 //                                        }
-                                    }
+                                    }*/
                                 }
 
                             }

@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,6 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 
 import java.io.File;
@@ -53,7 +53,7 @@ import ir.kitgroup.order.DataBase.InvoiceDetail;
 import ir.kitgroup.order.DataBase.Product;
 import ir.kitgroup.order.DataBase.User;
 
-import ir.kitgroup.order.Fragments.Organization.LauncherOrganizationFragment;
+import ir.kitgroup.order.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.order.Fragments.TabletView.OrderFragment;
 import ir.kitgroup.order.Fragments.ShowDetailFragment;
 
@@ -201,7 +201,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getPRDNAME());
 
             if (productsList.get(holder.getAdapterPosition()).PERC_DIS != 0.0) {
-                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0 ) {
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
@@ -378,6 +378,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     static class viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
+        private int sizeGroup = 0;
 
 
         private final TextView productName;
@@ -424,7 +425,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             ivMinus = itemView.findViewById(R.id.iv_minus);
             ivMax = itemView.findViewById(R.id.iv_max);
-
+            LauncherActivity mainActivity = (LauncherActivity) itemView.getContext();
+            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("OrderFragment");
+            if (fragment instanceof OrderFragment) {
+                OrderFragment fgf = (OrderFragment)fragment;
+                sizeGroup=fgf.sizeGroupList;
+            }
 
             if (LauncherActivity.screenInches >= 7 && productImage != null) {
                 if (LauncherActivity.screenInches >= 7) {
@@ -434,7 +440,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     else
                         height = LauncherActivity.height / 2;
 
-                    if (OrderFragment.productLevel1List.size() <= 1) {
+                    if (sizeGroup<= 1) {
                         cardView.getLayoutParams().width = (int) (height / 2.7);
                     } else {
                         cardView.getLayoutParams().width = (int) (height / 2.95);
