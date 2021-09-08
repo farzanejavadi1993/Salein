@@ -9,7 +9,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.ordersaleinapplication"
+        applicationId "ir.kitgroup.order"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
