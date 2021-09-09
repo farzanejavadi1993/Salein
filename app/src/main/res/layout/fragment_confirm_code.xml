@@ -9,16 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:background="@color/white"
+
         android:focusable="true">
 
 <RelativeLayout
-    android:background="@drawable/donyavi1"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-
+   <!-- <RelativeLayout
+     android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btn_login"
+        android:layout_alignParentBottom="true"
+        android:layout_width="300dp"
+        android:background="@drawable/meat22"
+        android:layout_height="300dp"/>-->
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
@@ -46,6 +53,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -62,11 +70,11 @@
         <TextView
 
             android:layout_below="@+id/relativeLayout"
-
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
             android:id="@+id/tv_message"
             android:gravity="center"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
 
@@ -76,7 +84,7 @@
             />
 
     <ImageView
-        android:src="@drawable/goosht"
+        android:src="@mipmap/ic_logo"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/tv_message"
 
@@ -85,12 +93,13 @@
 
 
         <TextView
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="220dp"
           android:layout_below="@+id/relativeLayout"
             android:textStyle="bold"
             android:gravity="right"
             android:id="@+id/tvEnterCode"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="22dp"
         android:textColor="@color/medium_color"
@@ -102,9 +111,10 @@
 
 
         <LinearLayout
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/tvEnterCode"
             android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="45dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
@@ -168,6 +178,7 @@
                 android:textAlignment="center" />
 
             <EditText
+
                 android:id="@+id/edt_v5"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -193,14 +204,16 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:visibility="gone"
-
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.button.MaterialButton
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/linearLayout"
             android:id="@+id/btn_login"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="@dimen/bottom_height_size"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginEnd="@dimen/normal_left_right_margin"

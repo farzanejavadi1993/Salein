@@ -10,6 +10,11 @@
         android:focusable="true"
         android:orientation="horizontal">
 
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressbar"
+            android:layout_width="1dp"
+            android:layout_height="1dp"/>
 
         <LinearLayout
             android:id="@+id/order_card_main"

@@ -9,11 +9,11 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.order"
+        applicationId "ir.kitgroup.salein"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0.16"
+        versionName "1.0.0.18"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

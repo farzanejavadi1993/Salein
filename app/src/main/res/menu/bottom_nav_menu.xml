@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_buylist"
         />
     <item android:title="خانه"
-        android:id="@+id/home"
+        android:id="@+id/homee"
         android:icon="@drawable/ic_home"
         />
 </menu>

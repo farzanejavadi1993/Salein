@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ir.kitgroup.order">
+    package="ir.kitgroup.salein">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -12,17 +12,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="ir.kitgroup.order.classes.App"
+        android:name="ir.kitgroup.salein.classes.App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_meat_logo"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_meat_logo"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="false"
         android:theme="@style/Theme.Salein"
         tools:replace="android:supportsRtl">
-        <activity android:name="ir.kitgroup.order.Activities.Classes.LauncherActivity"
-
+        <activity android:name="ir.kitgroup.salein.Activities.Classes.LauncherActivity"
+            android:screenOrientation="portrait"
 
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">
             <intent-filter>
@@ -37,13 +37,13 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="92" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
+            android:value="93" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.order.DataBase" />
+            android:value="ir.kitgroup.salein.DataBase" />
         <!--
  <meta-data
             android:name="com.google.android.geo.API_KEY"

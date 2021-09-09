@@ -141,6 +141,7 @@
             android:layout_toRightOf="@+id/order_recycle_item_product_img">
 
             <TextView
+                android:visibility="gone"
                 android:singleLine="true"
                 android:id="@+id/unit"
                 android:layout_marginRight="2dp"

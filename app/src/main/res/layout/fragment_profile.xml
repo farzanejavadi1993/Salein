@@ -84,6 +84,7 @@
                             tools:ignore="ContentDescription" />
 
                         <TextView
+                            android:id="@+id/txt_name"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@id/iv_profile"
                             android:layout_width="wrap_content"
@@ -105,7 +106,7 @@
                             android:layout_height="wrap_content"
                             tools:text="فرزانه جوادی بایگی"
                             android:textColor="@color/medium_color"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
                     <View
@@ -138,6 +139,7 @@
                             tools:ignore="ContentDescription" />
 
                         <TextView
+                            android:id="@+id/txt_mobile"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/iv_phone"
                             android:layout_width="wrap_content"
@@ -148,6 +150,7 @@
                             />
 
                         <EditText
+
                             android:gravity="left"
                             android:layout_centerVertical="true"
                             android:background="@android:color/transparent"
@@ -159,7 +162,7 @@
                             android:layout_height="wrap_content"
                             tools:text="09150469164"
                             android:textColor="@color/medium_color"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
                     <View
@@ -195,14 +198,15 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 tools:ignore="ContentDescription" />
+
                             <TextView
-                                android:layout_toLeftOf="@+id/iv_address1"
+                                android:id="@+id/txt_address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/iv_address1"
                                 android:text="آدرس 1 "
                                 android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_large_mobile_size"
-                                />
+                                android:textSize="12sp" />
                         </RelativeLayout>
 
 
@@ -219,7 +223,7 @@
                             android:layout_height="wrap_content"
                             tools:text="مشهد بولوار هدایت"
                             android:textColor="@color/medium_color"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                     <View
@@ -256,12 +260,13 @@
                                 android:layout_height="30dp"
                                 tools:ignore="ContentDescription" />
                             <TextView
+                                android:id="@+id/txt_address2"
                                 android:layout_toLeftOf="@+id/iv_address2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="آدرس 2"
                                 android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_large_mobile_size"
+                                android:textSize="12sp"
                                 />
                         </RelativeLayout>
 
@@ -279,7 +284,7 @@
                             android:layout_height="wrap_content"
                             tools:text="مشهد بولوار هدایت"
                             android:textColor="@color/medium_color"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 

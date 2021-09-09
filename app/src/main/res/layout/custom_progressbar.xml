@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:padding="10sp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
+
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:id="@+id/progress_text"
@@ -19,15 +20,16 @@
         android:textSize="12sp" />
 
 
-    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ProgressBar
+        android:layout_centerVertical="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/spin_kit"
         android:layout_alignParentLeft="true"
-        android:visibility="gone"
-        style="@style/SpinKitView.Large.Circle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@id/progress_text"
         android:layout_centerHorizontal="true"
-        app:SpinKit_Color="@color/blue600" />
+         />
 
 </RelativeLayout>

@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:clickable="true"
-        android:focusable="true"
-        android:background="@color/white">
-
+        android:focusable="true">
 
 
         <RelativeLayout
@@ -32,6 +32,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:id="@+id/tvTitle"
                 style="@style/launcher_toolbar_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,71 +42,68 @@
         </RelativeLayout>
 
 
-
-
-
         <RelativeLayout
-            android:layout_below="@+id/toolbar"
-            android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="@dimen/margin8"
+            android:layout_marginRight="22dp"
 
             >
 
             <TextView
-                android:textStyle="bold"
-                android:text="@string/address"
-                android:textSize="13sp"
-                android:textColor="@color/medium_color"
                 android:id="@+id/edt_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:text="@string/address"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <TextView
 
-                android:layout_alignParentLeft="true"
-                android:textStyle="bold"
-                android:text="افزودن آدرس"
-                android:textSize="13sp"
-                android:textColor="@color/purple_700"
                 android:id="@+id/tv_add_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
-
+                android:layout_alignParentLeft="true"
+                android:text="افزودن آدرس"
+                android:textColor="@color/purple_700"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="@dimen/margin8"
-
-                android:layout_below="@+id/edt_address"
-                app:strokeColor="@color/purple_700"
                 android:id="@+id/layout_address"
-                app:strokeWidth="1.5dp"
-                android:backgroundTint="@color/white"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
+
                 android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edt_address"
+                android:layout_marginTop="@dimen/margin8"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="#ddd"
+                app:strokeWidth="1.5dp"
                 tools:targetApi="lollipop">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_margin="@dimen/margin10"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin10">
 
 
                     <TextView
 
-                        android:padding="@dimen/margin10"
-                        android:background="@android:color/transparent"
                         android:id="@+id/tvTAddress"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/margin10"
                         android:textColor="@color/medium_color"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -120,263 +118,255 @@
 
         <RelativeLayout
 
-            android:layout_below="@+id/layoutAddress"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             android:id="@+id/layoutPayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutAddress"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
 
             >
 
             <TextView
-                android:textStyle="bold"
-                android:text="@string/type_pay"
-                android:textSize="13sp"
-                android:textColor="@color/medium_color"
                 android:id="@+id/tv_payment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:text="@string/type_pay"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
 
-           <com.google.android.material.card.MaterialCardView
-               android:layout_below="@+id/tv_payment"
-               android:layout_marginTop="@dimen/margin10"
-               android:id="@+id/layout_payment_place"
-               android:backgroundTint="@color/white"
-               android:layout_height="wrap_content"
-               app:cardCornerRadius="12dp"
-               android:layout_width="match_parent"
-               tools:targetApi="lollipop">
-               <androidx.constraintlayout.widget.ConstraintLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layout_payment_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_payment"
+                android:layout_marginTop="@dimen/margin10"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="12dp"
+                tools:targetApi="lollipop">
 
-                   <ImageView
-                       android:padding="@dimen/margin10"
-                       android:id="@+id/iv_payment_place"
-                       android:layout_width="40dp"
-                       android:layout_height="40dp"
-                       android:layout_alignParentRight="true"
-                       android:layout_centerVertical="true"
-                       android:layout_margin="@dimen/margin10"
-                       android:layout_marginEnd="10dp"
-                       android:src="@drawable/ic_payment_place"
-                       app:layout_constraintBottom_toBottomOf="parent"
-                       app:layout_constraintEnd_toEndOf="parent"
-                       app:layout_constraintTop_toTopOf="parent"
-                       tools:ignore="ContentDescription" />
-
-                   <TextView
-
-                       android:id="@+id/tvTitlePaymentPlace"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginTop="10dp"
-                       android:layout_marginRight="@dimen/margin10"
-                       android:text="@string/pay_place"
-                       android:textColor="@color/medium_color"
-                       android:textSize="12sp"
-                       android:textStyle="bold"
-                       app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                       app:layout_constraintTop_toTopOf="parent" />
-
-                   <TextView
-                       android:layout_marginRight="@dimen/margin10"
-                       android:textColor="#474747"
-                       android:textSize="11sp"
-                       android:id="@+id/tvDescriptionPaymentPlace"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginTop="4dp"
-                       android:layout_marginEnd="8dp"
-                       android:text="@string/pay_place_description"
-                       app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
-                       app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                       app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentPlace" />
-
-
-                   <ImageView
-                       android:rotation="270"
-                       android:padding="12dp"
-                       android:id="@+id/iv_ok_payment_place"
-                       android:layout_width="36dp"
-                       android:layout_height="36dp"
-                       android:layout_alignParentRight="true"
-                       android:layout_centerVertical="true"
-                       android:layout_margin="@dimen/margin10"
-                       android:layout_marginStart="10dp"
-                       android:src="@drawable/ic_fi_rr_angle_small_left"
-                       app:layout_constraintBottom_toBottomOf="parent"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toTopOf="parent"
-                       tools:ignore="ContentDescription" />
-
-                   <TextView
-                       android:textColor="@color/green_table"
-                       android:textSize="12sp"
-                       android:id="@+id/tv_type_payment_place"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginEnd="10dp"
-                       app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentPlace"
-                       app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentPlace"
-                       app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentPlace" />
-               </androidx.constraintlayout.widget.ConstraintLayout>
-           </com.google.android.material.card.MaterialCardView>
-           <com.google.android.material.card.MaterialCardView
-                    android:layout_marginTop="@dimen/margin10"
-
-                    android:layout_below="@+id/layout_payment_place"
-                    app:strokeColor="#ddd"
-                    android:id="@+id/layout_payment_online"
-                    app:strokeWidth="1.5dp"
-                    android:backgroundTint="@color/white"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    tools:targetApi="lollipop">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    android:layout_height="match_parent">
 
-                        <ImageView
-                            android:padding="@dimen/margin10"
-                            android:id="@+id/iv_payment_online"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_margin="@dimen/margin10"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/club"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/iv_payment_place"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:padding="@dimen/margin10"
+                        android:src="@drawable/ic_payment_place"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
-                        <TextView
-                            android:id="@+id/tvTitlePaymentOnline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="@dimen/margin10"
-                            android:text="پرداخت آنلاین"
-                            android:textColor="@color/medium_color"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
 
-                        <TextView
-                            android:layout_marginRight="@dimen/margin10"
-                            android:textColor="#474747"
-                            android:textSize="11sp"
-                            android:id="@+id/tvDescriptionPaymentOnline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginEnd="8dp"
-                            android:text="پرداخت از باشگاه گوشت دنیوی"
-                            app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
-                            app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentOnline" />
+                        android:id="@+id/tvTitlePaymentPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/pay_place"
+                        android:textColor="@color/medium_color"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionPaymentPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/pay_place_description"
+                        android:textColor="#474747"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentPlace" />
 
 
-                        <ImageView
-                            android:visibility="gone"
-                            android:padding="6dp"
-                            android:id="@+id/iv_ok_payment_online"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_margin="@dimen/margin10"
-                            android:layout_marginStart="10dp"
-                            android:src="@drawable/ic_tik"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/iv_ok_payment_place"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:padding="12dp"
+                        android:rotation="270"
+                        android:src="@drawable/ic_fi_rr_angle_small_left"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tv_type_payment_place"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/green_table"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentPlace"
+                        app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentPlace"
+                        app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentPlace" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layout_payment_online"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_payment_place"
+                android:layout_marginTop="@dimen/margin10"
+
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="#ddd"
+                app:strokeWidth="1.5dp"
+                tools:targetApi="lollipop">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_payment_online"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginEnd="10dp"
+                        android:padding="@dimen/margin10"
+                        android:src="@drawable/club"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitlePaymentOnline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="پرداخت آنلاین"
+                        android:textColor="@color/medium_color"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionPaymentOnline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="پرداخت از باشگاه"
+                        android:textColor="#474747"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitlePaymentOnline" />
 
 
-
-
+                    <ImageView
+                        android:id="@+id/iv_ok_payment_online"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin10"
+                        android:layout_marginStart="10dp"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_tik"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_below="@id/layoutPayment"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             android:id="@+id/rl_type_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/layoutPayment"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
 
             >
 
             <TextView
 
-                android:textStyle="bold"
-                android:text="@string/type_order"
-                android:textSize="13sp"
-                android:textColor="@color/medium_color"
                 android:id="@+id/tv_type_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:text="@string/type_order"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="@dimen/margin8"
-                android:layout_width="match_parent"
                 android:id="@+id/recyclerViewOrderType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_type_order"
-                android:layout_height="wrap_content"/>
-
-
+                android:layout_marginTop="@dimen/margin8" />
 
 
         </RelativeLayout>
 
 
         <RelativeLayout
-            android:layout_below="@id/rl_type_order"
-
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             android:id="@+id/rl_error"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rl_type_order"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="22dp"
 
             >
 
             <TextView
-                android:visibility="gone"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="اصلاح سفارش"
-                android:textSize="13sp"
-                android:textColor="@color/green_table"
                 android:id="@+id/tv_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-
-
-
-
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:text="اصلاح سفارش"
+                android:textColor="@color/green_table"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
 
         </RelativeLayout>
-
 
 
         <LinearLayout
@@ -489,8 +479,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="8sp"
                 android:layout_marginBottom="10dp"
-                android:gravity="center|bottom"
-                >
+                android:gravity="center|bottom">
 
 
                 <TextView
@@ -509,7 +498,6 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/layout_edit_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -519,63 +507,65 @@
                 android:layout_marginRight="8sp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center|bottom"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="2dp"
-                    android:visibility="gone"
-                    app:cornerRadius="@dimen/margin4"
-                    android:fontFamily="@font/iransans"
-                    android:layout_marginRight="4dp"
                     android:id="@+id/btn_resend"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="4dp"
                     android:layout_weight="0.33"
                     android:backgroundTint="@color/purple_700"
+                    android:fontFamily="@font/iransans"
                     android:gravity="center"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
                     android:text="ارسال مجدد"
                     android:textColor="#fff"
                     android:textSize="12sp"
-                    tools:ignore="HardcodedText" />
-                <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="2dp"
+                    android:visibility="gone"
                     app:cornerRadius="@dimen/margin4"
-                    android:fontFamily="@font/iransans"
-                    android:layout_marginRight="4dp"
+                    tools:ignore="HardcodedText" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_delete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="4dp"
                     android:layout_weight="0.33"
                     android:backgroundTint="@color/red_table"
+                    android:fontFamily="@font/iransans"
                     android:gravity="center"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
                     android:text="حذف"
                     android:textColor="#fff"
-
-
                     android:textSize="12sp"
+
+
+                    app:cornerRadius="@dimen/margin4"
                     tools:ignore="HardcodedText" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:layout_marginLeft="4dp"
-                    app:cornerRadius="@dimen/margin4"
-                    android:fontFamily="@font/iransans"
-                    android:layout_marginRight="@dimen/margin2"
                     android:id="@+id/btn_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="@dimen/margin2"
                     android:layout_weight="0.33"
                     android:backgroundTint="@color/green_table"
+                    android:fontFamily="@font/iransans"
                     android:gravity="center"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
                     android:text="ویرایش"
                     android:textColor="#fff"
                     android:textSize="12sp"
+                    app:cornerRadius="@dimen/margin4"
                     tools:ignore="HardcodedText" />
-
 
 
             </LinearLayout>

@@ -45,13 +45,13 @@
 
 
         <LinearLayout
+
             android:id="@+id/cardInfoCustomer"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
@@ -193,6 +193,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/greentv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
@@ -308,7 +309,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="@dimen/bottom_height_size"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
@@ -320,7 +321,7 @@
             app:cornerRadius="@dimen/box_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+      
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="UnusedAttribute" />
 
