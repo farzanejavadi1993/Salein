@@ -156,92 +156,89 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
-        }else {
+        }
+        if (App.mode==1 && type.equals("2")){
             binding.layoutSave.setVisibility(View.VISIBLE);
-            binding.layoutSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Date date = Calendar.getInstance().getTime();
-                    @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
-                            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    double sumDiscount=0.0;
-                    double sumDiscountPercent=0.0;
-                    List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    for (int i = 0; i < invDetails.size(); i++) {
-                        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                        int finalI = i;
-                        CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
-                        if (prdResult.size() > 0) {
-                            double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
-                            double discountPrice = sumTotalPrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
-                            double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
+            binding.layoutSave.setOnClickListener(v -> {
+                Date date = Calendar.getInstance().getTime();
+
+                double sumDiscount=0.0;
+                double sumDiscountPercent=0.0;
+                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invDetails.size(); i++) {
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
+                    if (prdResult.size() > 0) {
+                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
+                        double discountPrice = sumTotalPrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
+                        double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
-                            sumPurePrice = sumPurePrice + sumTotalPrice;//جمع کل فاکتور
-                            sumPrice = sumPrice + totalPurePrice;//جمع خالص فاکتور
-                            invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
-                            invDetails.get(i).ROW_NUMBER = i + 1;
-                            invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
-                            invDetails.get(i).INV_DET_DISCOUNT =String.valueOf(discountPrice);
-                            invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
-                            sumDiscount = sumDiscount + discountPrice;
-                            sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
+                        sumPurePrice = sumPurePrice + sumTotalPrice;//جمع کل فاکتور
+                        sumPrice = sumPrice + totalPurePrice;//جمع خالص فاکتور
+                        invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
+                        invDetails.get(i).ROW_NUMBER = i + 1;
+                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
+                        invDetails.get(i).INV_DET_DISCOUNT =String.valueOf(discountPrice);
+                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
+                        sumDiscount = sumDiscount + discountPrice;
+                        sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
 
-
-                        }
 
                     }
-
-
-
-                    for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
-                        InvoiceDetail.deleteInTx(invoicedetail);
-                    }
-                    InvoiceDetail.saveInTx(invDetails);
-
-                    Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-
-                    invoice.INV_UID = Inv_GUID;
-                    invoice.INV_TOTAL_AMOUNT = sumPurePrice;//جمع فاکنور
-                    invoice.INV_TOTAL_DISCOUNT = 0.0;
-                    invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
-                    invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;
-                    invoice.INV_DESCRIBTION = "";
-                    invoice.INV_TOTAL_TAX = 0.0;
-                    invoice.INV_TOTAL_COST = 0.0;
-                    invoice.INV_EXTENDED_AMOUNT = sumPrice;
-                    invoice.INV_DATE = date;
-                    invoice.INV_DUE_DATE = date;
-                    invoice.INV_STATUS = true;
-                    invoice.ACC_CLB_UID = Acc_GUID;
-                    invoice.TBL_UID = Tbl_GUID;
-                    invoice.INV_TYPE_ORDER = Integer.parseInt(Ord_TYPE);
-                    invoice.Acc_name = Acc_NAME;
-                    invoice.save();
-
-                   Tables tb= Select.from(Tables.class).where("I ='" +Tbl_GUID+ "'").first();
-                   if (tb!=null) {
-                       tb.SV = true;
-                       tb.save();
-                   }
-                    assert getFragmentManager() != null;
-
-                    Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    if (frg != null) {
-                        final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-
-                            for (int i = 1; i <= size1; i++) {
-                                getFragmentManager().popBackStack();
-                            }
-
-                        ft.detach(frg);
-                        ft.attach(frg);
-                        ft.commit();
-                    }
-
 
                 }
+
+
+
+                for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
+                    InvoiceDetail.deleteInTx(invoicedetail);
+                }
+                InvoiceDetail.saveInTx(invDetails);
+
+                Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
+
+                invoice.INV_UID = Inv_GUID;
+                invoice.INV_TOTAL_AMOUNT = sumPurePrice;//جمع فاکنور
+                invoice.INV_TOTAL_DISCOUNT = 0.0;
+                invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
+                invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;
+                invoice.INV_DESCRIBTION = "";
+                invoice.INV_TOTAL_TAX = 0.0;
+                invoice.INV_TOTAL_COST = 0.0;
+                invoice.INV_EXTENDED_AMOUNT = sumPrice;
+                invoice.INV_DATE = date;
+                invoice.INV_DUE_DATE = date;
+                invoice.INV_STATUS = true;
+                invoice.ACC_CLB_UID = Acc_GUID;
+                invoice.TBL_UID = Tbl_GUID;
+                invoice.INV_TYPE_ORDER = Integer.parseInt(Ord_TYPE);
+                invoice.Acc_name = Acc_NAME;
+                invoice.save();
+
+               Tables tb= Select.from(Tables.class).where("I ='" +Tbl_GUID+ "'").first();
+               if (tb!=null) {
+                   tb.SV = true;
+                   tb.save();
+               }
+                assert getFragmentManager() != null;
+
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                if (frg != null) {
+                    final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+
+                        for (int i = 1; i <= size1; i++) {
+                            getFragmentManager().popBackStack();
+                        }
+
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commit();
+                }
+
+
             });
         }
 
