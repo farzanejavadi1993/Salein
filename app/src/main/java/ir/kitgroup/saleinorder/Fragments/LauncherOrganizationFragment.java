@@ -101,7 +101,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     private TableAdapter tableAdapter;
-    private final ArrayList<Tables> tablesList = new ArrayList<>();
+    private  ArrayList<Tables> tablesList;
 
     private TypeOrderAdapter getOutOrderAdapter;
     private final ArrayList<OrderType> getOutOrderList = new ArrayList<>();
@@ -137,6 +137,8 @@ public class LauncherOrganizationFragment extends Fragment {
         }
 
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
+
+        tablesList = new ArrayList<>();
 
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

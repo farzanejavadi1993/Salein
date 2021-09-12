@@ -105,11 +105,8 @@ public class SettingFragment extends Fragment {
                 Tables.deleteAll(Tables.class);
 
             if (App.mode==1){
-                if (!Select.from(User.class).list().get(0).CheckUser) {
-                    if (User.count(User.class) > 0)
-                        User.deleteAll(User.class);
-                }
-
+                if (User.count(User.class) > 0)
+                    User.deleteAll(User.class);
             }
 
 

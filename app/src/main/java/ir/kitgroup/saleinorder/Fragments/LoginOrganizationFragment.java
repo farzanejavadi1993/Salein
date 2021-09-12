@@ -168,6 +168,7 @@ public class LoginOrganizationFragment extends Fragment {
                         user.ipLocal = ipOrganization;
                         user.ipStatic = "";
                         user.numberPos = saleCode;
+                        user.CheckUser = true;
                         user.save();
 
                         customProgress.hideProgress();
