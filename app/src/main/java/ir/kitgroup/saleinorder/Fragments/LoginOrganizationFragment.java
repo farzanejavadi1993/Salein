@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 
 import android.content.pm.ActivityInfo;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,6 +107,17 @@ public class LoginOrganizationFragment extends Fragment {
             );
 
         });
+
+
+        try {
+            String appVersion = appVersion();
+            binding.loginVersionNumber.setText(" نسخه " + appVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        binding.tvDevelop.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 
@@ -187,6 +201,11 @@ public class LoginOrganizationFragment extends Fragment {
         }
 
 
+    }
+
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        return pInfo.versionName;
     }
 
 }

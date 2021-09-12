@@ -96,7 +96,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-
                 android:background="@drawable/order_sum_price_order_list_layout"
                 android:elevation="@dimen/margin4"
                 android:orientation="vertical"
@@ -164,34 +163,68 @@
 
 
 
-                <RelativeLayout
-                    android:id="@+id/layout_continue"
+                <LinearLayout
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="4dp"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:layout_marginLeft="8sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="8sp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center|bottom"
-                    >
-
-
-                    <TextView
-
-                        android:id="@+id/btn_continue"
-                        android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:id="@+id/layout_continue"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_marginRight="@dimen/margin4"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/order_item_recycle_group__card_background"
-                        android:gravity="center"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:text="@string/continue_"
-                        android:textColor="#fff"
-                        android:textSize="11sp" />
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center|bottom"
+                        >
 
-                </RelativeLayout>
+
+                        <TextView
+
+                            android:id="@+id/btn_continue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:background="@drawable/order_item_recycle_group__card_background"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:text="@string/continue_"
+                            android:textColor="#fff"
+                            android:textSize="11sp" />
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:visibility="gone"
+                        android:layout_weight="0.5"
+                        android:id="@+id/layout_save"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin4"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center|bottom"
+                        >
+
+
+                        <TextView
+                            android:id="@+id/btn_save"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:background="@drawable/save_background"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:text="ذخیره"
+                            android:textColor="#fff"
+                            android:textSize="11sp" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:visibility="gone"

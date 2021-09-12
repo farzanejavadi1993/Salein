@@ -8,7 +8,7 @@ public class User extends SugarRecord {
     public String ipLocal;
     public String ipStatic;
     public String numberPos;
-    public boolean CheckUser;
+    public boolean CheckUser=false;
 
 
 

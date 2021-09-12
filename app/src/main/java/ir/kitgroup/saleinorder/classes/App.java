@@ -29,7 +29,7 @@ public class App extends Application {
     public static Context context;
     private static String baseUrl = "";
     public static Retrofit retrofit;
-    public static int mode = 2;//1  ordOrganization  //2  OrdClient
+    public static int mode = 1;//1  ordOrganization  //2  OrdClient
 
 
     private static SharedPreferences sharedPreferences;
@@ -42,12 +42,12 @@ public class App extends Application {
             User.deleteAll(User.class);
         if (Select.from(User.class).list().size() == 0) {
             User user = new User();
-    user.ipLocal = "109.125.133.149:9999";
+            /*user.ipLocal = "109.125.133.149:9999";
             user.userName = "admin";
-            user.passWord = "0123";
-   /*    user.ipLocal = "185.201.49.204:9696";
+            user.passWord = "0123";*/
+            user.ipLocal = "185.201.49.204:9696";
             user.userName = "admin";
-            user.passWord = "123";*/
+            user.passWord = "123";
 
             user.save();
         }

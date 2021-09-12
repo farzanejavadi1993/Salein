@@ -124,7 +124,7 @@ public class LauncherOrganizationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
         if (LauncherActivity.screenInches >= 7) {
@@ -139,11 +139,9 @@ public class LauncherOrganizationFragment extends Fragment {
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
 
 
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = sharedPreferences.edit();
         firstSync = sharedPreferences.getBoolean("firstSync", false);
-
 
 
         userName = Select.from(User.class).first().userName;
@@ -206,10 +204,9 @@ public class LauncherOrganizationFragment extends Fragment {
                 assert getFragmentManager() != null;
                 getFragmentManager().popBackStack();
 
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main,  new LoginOrganizationFragment()).addToBackStack("UserF").commit();
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment()).addToBackStack("UserF").commit();
                 dialog.dismiss();
-            }
-            else if (TypeClickButton.equals("error")){
+            } else if (TypeClickButton.equals("error")) {
                 getProduct();
             }
 
@@ -280,7 +277,6 @@ public class LauncherOrganizationFragment extends Fragment {
         flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
 
 
-
         tableAdapter = new TableAdapter(getContext(), tablesList);
         binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
         binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
@@ -290,7 +286,7 @@ public class LauncherOrganizationFragment extends Fragment {
         tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID) -> {
 
             if (Reserve) {
-                Invoice invoice =Select.from(Invoice.class).where("TBLUID ='" + T_GUID + "'").first();
+                Invoice invoice = Select.from(Invoice.class).where("TBLUID ='" + T_GUID + "'").first();
 
                 if (invoice != null) {
 
@@ -492,7 +488,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
             if (Objects.requireNonNull(file.list()).length == 0) {
 
-                   file.delete();
+                file.delete();
 
 
             } else {
@@ -534,7 +530,6 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-
     private void getProduct() {
 
         error = "";
@@ -545,7 +540,7 @@ public class LauncherOrganizationFragment extends Fragment {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord,"2");
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2");
 
 
             call.enqueue(new Callback<String>() {
@@ -570,12 +565,11 @@ public class LauncherOrganizationFragment extends Fragment {
                     if (iDs == null) {
                         error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
                         showError(error);
-                    }
-                    else {
+                    } else {
 
                         List<ir.kitgroup.saleinorder.DataBase.Product> products = iDs.getProductList();
 
-                       Util.AllProduct.clear();
+                        Util.AllProduct.clear();
                         for (int i = 0; i < products.size(); i++) {
                             Product product = new Product();
                             product.I = products.get(i).I;
@@ -806,7 +800,14 @@ public class LauncherOrganizationFragment extends Fragment {
                     }
                     if (iDs != null) {
 
-                        List<Tables> tbl = Select.from(Tables.class).list();
+                        List<Tables> tbl = Select.from(Tables.class).list();//کل میزها
+
+                        ArrayList<Tables> tblList = new ArrayList<>(tbl);
+                        CollectionUtils.filter(tblList, t -> t.SV!=null && t.SV);//میزهایی که سفارش آنها ذخیره شده است
+
+
+
+                        //حذف کردن تمام میزهایی که بیرون بر نیستند
                         CollectionUtils.filter(tbl, t -> !t.N.equals("بیرون بر") && t.C == null);
                         for (int i = 0; i < tbl.size(); i++) {
                             Tables t = Select.from(Tables.class).where("I ='" + tbl.get(i).I + "'").first();
@@ -814,14 +815,30 @@ public class LauncherOrganizationFragment extends Fragment {
                                 t.delete();
                         }
 
+                        //ذخیره تمام میزها
                         CollectionUtils.filter(iDs.getTables(), t -> t.ST);
                         Tables.saveInTx(iDs.getTables());
-                        CollectionUtils.filter(iDs.getTables(), t -> !t.N.equals("بیرون بر") && t.C == null);
-                        tablesList.addAll(iDs.getTables());
+
+
+                        //وضعیت زرد یا ذخیره برای میزها ست شود
+                        if (tblList.size()>0){
+                            for (int i=0;i<tblList.size();i++){
+                                Tables tb=Select.from(Tables.class).where("I ='" +tblList.get(i).I+ "'").first();
+                                if (tb!=null){
+                                    tb.SV=true;
+                                    tb.save();
+                                }
+                            }
+                        }
+
+
+                        //فقط میزهایی که بیرون بر نیستن نمایش داده شود
+                        List<Tables> tables=Select.from(Tables.class).list();
+                        CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null);
+                        tablesList.clear();
+                        tablesList.addAll(tables);
                         tableAdapter.notifyDataSetChanged();
                         binding.progressbar.setVisibility(View.GONE);
-
-
 
 
                     } else {
@@ -852,10 +869,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     }
-
-
-
-
 
 
     private void filter(String viewName) {

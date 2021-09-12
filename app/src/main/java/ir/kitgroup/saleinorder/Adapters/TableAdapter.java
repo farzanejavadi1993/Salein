@@ -84,7 +84,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
 
-        } else {
+        }
+        else {
             holder.iv_bicycle.setVisibility(View.GONE);
             holder.tableName.setVisibility(View.VISIBLE);
             holder.tableName.setText("میز شماره : " + table.N);
@@ -93,8 +94,16 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
         }
 
+        if (!table.N.equals("بیرون بر") && table.SV!=null && table.SV ) {
+            holder.iv_bicycle.setVisibility(View.GONE);
+            holder.tvStatus.setText("میز مشغول است"+"\n"+"سفارش ذخیره شده");
+            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.yellow_table));
 
-        if (!table.N.equals("بیرون بر") && !table.ACT && !table.RSV) {
+
+
+
+        }
+        else if (!table.N.equals("بیرون بر") && !table.ACT && !table.RSV) {
             holder.iv_bicycle.setVisibility(View.GONE);
             holder.tvStatus.setText("میز خالی است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.green_table));
@@ -111,13 +120,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             }
 
 
-        } else if (!table.N.equals("بیرون بر") && table.RSV) {
+        }
+        else if (!table.N.equals("بیرون بر") && table.RSV) {
             holder.iv_bicycle.setVisibility(View.GONE);
             holder.tvStatus.setText("میز رزرو شده است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.blue_table));
 
 
-        } else if (!table.N.equals("بیرون بر")) {
+        }
+        else if (!table.N.equals("بیرون بر")) {
             holder.iv_bicycle.setVisibility(View.GONE);
             holder.tvStatus.setText("میز مشغول است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.red_table));
@@ -127,12 +138,17 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
         holder.itemView.setOnClickListener(view -> {
+            if (table.SV!=null && table.SV) {
+                clickItem.onRowClick(table.N, true, table.I);
 
-            if (!table.ACT && !table.RSV) {
+            }
+
+            else if (!table.ACT && !table.RSV) {
                 //vacant
                 clickItem.onRowClick(table.N, false, table.I);
 
-            } else if (table.RSV) {
+            }
+            else if (table.RSV) {
                 clickItem.onRowClick("میز رزرو شده است", true, table.I);
             } else {
                 clickItem.onRowClick("میز مشغول است.", true, table.I);

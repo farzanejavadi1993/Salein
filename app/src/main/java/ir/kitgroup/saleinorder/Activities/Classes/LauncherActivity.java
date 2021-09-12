@@ -114,9 +114,9 @@ public class LauncherActivity extends AppCompatActivity {
 
 
         else {
-            if (Select.from(User.class).list().size() > 0) {
+            if ( Select.from(User.class).list().get(0).CheckUser ) {
 
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment());
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(),"LauncherFragment");
             } else {
 
                 replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());

@@ -11,6 +11,7 @@ public class Tables extends SugarRecord {
     public  Boolean ST;//SYS_STATUS
     public  Boolean ACT;//true busy red        false free green
     public  Boolean RSV;//true blue
+    public  Boolean SV;//true YELLOW    SAVE ORDER
     public  Integer C;//get out order
 
 

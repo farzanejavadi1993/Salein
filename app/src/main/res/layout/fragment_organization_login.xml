@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_marginRight="22dp"
+        android:layout_marginLeft="22dp"
+    android:layout_centerHorizontal="true"
+    android:layout_width="360dp"
+    android:layout_height="match_parent">
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -147,12 +154,13 @@
         android:textSize="14sp" />
 
     <TextView
+
         android:id="@+id/loginVersionNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/layoutLoginBtn"
         android:gravity="center"
-        android:text="@string/version"
+
         android:textColor="@color/blue600"
         android:textSize="@dimen/text_normal_mobile_size" />
     <RelativeLayout
@@ -178,7 +186,7 @@
 
 
 
-
+</RelativeLayout>
 
 </RelativeLayout>
 </layout>
