@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ir.kitgroup.salein">
+    package="ir.kitgroup.saleinorder">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="ir.kitgroup.salein.classes.App"
+        android:name="ir.kitgroup.saleinorder.classes.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
@@ -21,7 +21,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Salein"
         tools:replace="android:supportsRtl">
-        <activity android:name="ir.kitgroup.salein.Activities.Classes.LauncherActivity"
+        <activity android:name="ir.kitgroup.saleinorder.Activities.Classes.LauncherActivity"
             android:screenOrientation="portrait"
 
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">
@@ -43,7 +43,7 @@
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.salein.DataBase" />
+            android:value="ir.kitgroup.saleinorder.DataBase" />
         <!--
  <meta-data
             android:name="com.google.android.geo.API_KEY"
