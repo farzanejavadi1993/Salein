@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.airbnb.lottie.LottieAnimationView;
+
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Util {
 
     }
 
-    public static void playLottieAnimation(String json, LottieAnimationView animationView) {
+   /* public static void playLottieAnimation(String json, LottieAnimationView animationView) {
 
         if (animationView.isAnimating()) {
             animationView.pauseAnimation();
@@ -53,7 +53,7 @@ public class Util {
 
         animationView.loop(true);
         animationView.playAnimation();
-    }
+    }*/
     public static String getPrice() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.context);
         return sharedPreferences.getString("priceProduct","");

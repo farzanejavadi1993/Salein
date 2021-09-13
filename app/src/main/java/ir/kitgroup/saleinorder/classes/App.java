@@ -27,9 +27,9 @@ public class App extends Application {
 
     public static API api;
     public static Context context;
-    private static String baseUrl = "";
+    private  String baseUrl = "";
     public static Retrofit retrofit;
-    public static int mode = 1;//1  ordOrganization  //2  OrdClient
+    public static int mode = 2;//1  ordOrganization  //2  OrdClient
 
 
     private static SharedPreferences sharedPreferences;

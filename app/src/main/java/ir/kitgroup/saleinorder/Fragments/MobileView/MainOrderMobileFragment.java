@@ -43,6 +43,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -99,6 +101,8 @@ import ir.kitgroup.saleinorder.R;
 
 import ir.kitgroup.saleinorder.Util.Util;
 import ir.kitgroup.saleinorder.databinding.FragmentMobileOrderMainBinding;
+
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -249,7 +253,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
 
         if (App.mode == 1) {
-
+            binding.defineCompany.setVisibility(View.GONE);
+            binding.layoutAccount.setVisibility(View.VISIBLE);
+            binding.layoutSearchProduct.setVisibility(View.VISIBLE);
             binding.bottomNavigationViewLinear.setVisibility(View.GONE);
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
@@ -358,7 +364,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
             binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-        } else {
+        }
+        else {
+
+
             binding.btnRegisterOrder.setVisibility(View.GONE);
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
@@ -367,18 +376,25 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
             binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
+
+
+
+
+            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+
+
             binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
 
 
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 if (invDetails.size() > 0) {
                     counter = invDetails.size();
-                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید " + counter);
+                    binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                     if (App.mode == 1)
                         binding.btnRegisterOrder.setVisibility(View.VISIBLE);
                 } else
 
-                    binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
+                    binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
                 final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
                 if (Inv_GUID_ORG.equals("")) {
                     for (int i = 1; i <= size1; i++) {
@@ -406,7 +422,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                         InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                         inVoiceDetailFragmentMobile.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_mobile, inVoiceDetailFragmentMobile).addToBackStack("InVoiceDetailF").commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile,"InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailF").commit();
 
                         return true;
 
@@ -759,6 +775,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
 
+
+
+
+
         //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
@@ -899,12 +919,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             if (invDetails.size() > 0) {
                 //  binding.itemInvoiceDetail.setBadgeText(String.valueOf(invDetails.size()));
                 counter = invDetails.size();
-                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید " + counter);
+                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                 if (App.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
                 // binding.itemInvoiceDetail.setBadgeText(null);
-                binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
+                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
         });
 
@@ -1285,11 +1305,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         if (invoicedetails.size() > 0) {
                             // binding.itemInvoiceDetail.setBadgeText(String.valueOf(invoicedetails.size()));
                             counter = invoicedetails.size();
-                            binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید " + counter);
+                            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                         } else
                             // binding.itemInvoiceDetail.setBadgeText(null);
 
-                            binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید");
+                            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+
 
 
                         for (int i = 0; i < invoicedetails.size(); i++) {
@@ -1956,6 +1977,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     }, 88);
         }
+    }
+
+
+    public  void  setHomeBottomBar(){
+        binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
     }
 
 }

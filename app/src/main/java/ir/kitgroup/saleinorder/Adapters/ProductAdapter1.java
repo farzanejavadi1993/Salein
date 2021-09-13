@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -46,6 +45,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ir.kitgroup.saleinorder.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinorder.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.saleinorder.Util.Util;
 import ir.kitgroup.saleinorder.classes.App;
 import ir.kitgroup.saleinorder.classes.Constant;
@@ -54,7 +54,6 @@ import ir.kitgroup.saleinorder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinorder.DataBase.Product;
 import ir.kitgroup.saleinorder.DataBase.User;
 
-import ir.kitgroup.saleinorder.Fragments.TabletView.OrderFragment;
 import ir.kitgroup.saleinorder.Fragments.ShowDetailFragment;
 
 import ir.kitgroup.saleinorder.models.ModelLog;
@@ -438,12 +437,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             ivMinus = itemView.findViewById(R.id.iv_minus);
             ivMax = itemView.findViewById(R.id.iv_max);
-            LauncherActivity mainActivity = (LauncherActivity) itemView.getContext();
-            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("OrderFragment");
-            if (fragment instanceof OrderFragment) {
-                OrderFragment fgf = (OrderFragment) fragment;
-                sizeGroup = fgf.sizeGroupList;
-            }
+
 
             if (LauncherActivity.screenInches >= 7 && productImage != null) {
                 if (LauncherActivity.screenInches >= 7) {

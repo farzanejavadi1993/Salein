@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -117,7 +118,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         if (type.equals("1")) {
             holder.imgDelete.setImageBitmap(null);
-            holder.imgDescription.setImageBitmap(null);
+            holder.imgDescription.setEnabled(false);
             holder.edtDescription.setEnabled(false);
             holder.edtAmount.setEnabled(false);
         }
@@ -273,7 +274,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         private final TextView price;
         private final TextView sumPrice;
         private final ImageView imgDelete;
-        private final ImageView imgDescription;
+        private final RelativeLayout imgDescription;
         private final EditText edtAmount;
 
 
@@ -286,7 +287,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             price = itemView.findViewById(R.id.order_list_item_recycle_txt_price);
             sumPrice = itemView.findViewById(R.id.order_list_item_recycle_txt_sumPrice);
             imgDelete = itemView.findViewById(R.id.order_list_item_recycle_img_delete);
-            imgDescription = itemView.findViewById(R.id.iv_description);
+            imgDescription = itemView.findViewById(R.id.layout_description);
             edtAmount = itemView.findViewById(R.id.order_list_item_recycle_editText);
             edtDescription = itemView.findViewById(R.id.edt_description);
 

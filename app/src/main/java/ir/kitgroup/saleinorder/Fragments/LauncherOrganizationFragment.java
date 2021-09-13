@@ -71,7 +71,6 @@ import ir.kitgroup.saleinorder.DataBase.Setting;
 import ir.kitgroup.saleinorder.DataBase.Tables;
 import ir.kitgroup.saleinorder.DataBase.User;
 import ir.kitgroup.saleinorder.Fragments.MobileView.MainOrderMobileFragment;
-import ir.kitgroup.saleinorder.Fragments.TabletView.OrderFragment;
 
 
 import ir.kitgroup.saleinorder.models.ModelProduct;
@@ -101,7 +100,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     private TableAdapter tableAdapter;
-    private  ArrayList<Tables> tablesList;
+    private ArrayList<Tables> tablesList;
 
     private TypeOrderAdapter getOutOrderAdapter;
     private final ArrayList<OrderType> getOutOrderList = new ArrayList<>();
@@ -321,17 +320,10 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Inv_GUID", "");
 
 
-                if (LauncherActivity.screenInches >= 7) {
-                    OrderFragment orderFragment = new OrderFragment();
-                    orderFragment.setArguments(bundle);
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, orderFragment, "OrderFragment").addToBackStack("OrderF").commit();
+                MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                mainOrderMobileFragment.setArguments(bundle);
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
 
-                } else {
-
-                    MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                    mainOrderMobileFragment.setArguments(bundle);
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
-                }
 
             }
         });
@@ -376,15 +368,10 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putString("Ord_TYPE", String.valueOf(code));
             bundle.putString("Inv_GUID", "");
 
-            if (LauncherActivity.screenInches >= 7) {
-                OrderFragment orderFragment = new OrderFragment();
-                orderFragment.setArguments(bundle);
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, orderFragment, "OrderFragment").addToBackStack("OrderF").commit();
-            } else {
-                MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                mainOrderMobileFragment.setArguments(bundle);
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
-            }
+
+            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+            mainOrderMobileFragment.setArguments(bundle);
+            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
 
 
         });
@@ -807,8 +794,7 @@ public class LauncherOrganizationFragment extends Fragment {
                         List<Tables> tbl = Select.from(Tables.class).list();//کل میزها
 
                         ArrayList<Tables> tblList = new ArrayList<>(tbl);
-                        CollectionUtils.filter(tblList, t -> t.SV!=null && t.SV);//میزهایی که سفارش آنها ذخیره شده است
-
+                        CollectionUtils.filter(tblList, t -> t.SV != null && t.SV);//میزهایی که سفارش آنها ذخیره شده است
 
 
                         //حذف کردن تمام میزهایی که بیرون بر نیستند
@@ -825,11 +811,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
                         //وضعیت زرد یا ذخیره برای میزها ست شود
-                        if (tblList.size()>0){
-                            for (int i=0;i<tblList.size();i++){
-                                Tables tb=Select.from(Tables.class).where("I ='" +tblList.get(i).I+ "'").first();
-                                if (tb!=null){
-                                    tb.SV=true;
+                        if (tblList.size() > 0) {
+                            for (int i = 0; i < tblList.size(); i++) {
+                                Tables tb = Select.from(Tables.class).where("I ='" + tblList.get(i).I + "'").first();
+                                if (tb != null) {
+                                    tb.SV = true;
                                     tb.save();
                                 }
                             }
@@ -837,7 +823,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
                         //فقط میزهایی که بیرون بر نیستن نمایش داده شود
-                        List<Tables> tables=Select.from(Tables.class).list();
+                        List<Tables> tables = Select.from(Tables.class).list();
                         CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null);
                         tablesList.clear();
                         tablesList.addAll(tables);

@@ -8,20 +8,20 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
         android:background="#EEEEF1"
+        android:clickable="true"
         android:focusable="true">
 
-       <!--<com.github.siyamed.shapeimageview.RoundedImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/donyavi_pas" />-->
+        <!--<com.github.siyamed.shapeimageview.RoundedImageView
+             android:id="@+id/image"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:src="@drawable/donyavi_pas" />-->
 
         <RelativeLayout
-            android:layout_above="@+id/bottom_navigation_view_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation_view_linear"
 
             >
 
@@ -35,7 +35,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="@dimen/margin8"
                     android:layout_marginRight="12dp"
@@ -46,16 +46,15 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="45dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <RelativeLayout
-
+                            android:visibility="gone"
                             android:id="@+id/layout_account"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:layout_marginEnd="2dp"
                             android:layout_weight="0.5"
                             android:background="@drawable/background_edittext"
@@ -85,10 +84,8 @@
                                 android:hint="@string/name_customer"
                                 android:inputType="text"
                                 android:paddingStart="16dp"
-                                android:paddingLeft="@dimen/order_toolbar_user_button_left_right_margin"
                                 android:paddingTop="6dp"
                                 android:paddingEnd="16dp"
-                                android:paddingRight="@dimen/order_toolbar_user_button_left_right_margin"
                                 android:paddingBottom="6dp"
                                 android:textColor="@color/medium_color"
                                 android:textSize="@dimen/text_normal_mobile_size"
@@ -96,37 +93,29 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:visibility="gone"
+                            android:id="@+id/layout_search_product"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="2dp"
-
                             android:layout_weight="0.5"
                             android:background="@drawable/background_edittext">
 
-
-                            <ImageView
-                                android:id="@+id/iv_search"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/margin8"
-                                android:layout_marginRight="@dimen/margin8"
-                                android:src="@drawable/ic_search"
-                                tools:ignore="ContentDescription" />
 
                             <EditText
 
                                 android:id="@+id/edt_search_product"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/iv_search"
                                 android:backgroundTint="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right"
                                 android:hint="@string/search_product"
                                 android:inputType="text"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
                                 android:textColor="@color/medium_color"
                                 android:textSize="12sp"
                                 tools:targetApi="lollipop" />
@@ -134,8 +123,46 @@
 
                         </RelativeLayout>
 
-
                     </LinearLayout>
+
+                    <RelativeLayout
+                        android:padding="@dimen/margin10"
+                        android:background="@drawable/background_edittext"
+                        android:id="@+id/define_company"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_centerVertical="true"
+                            android:id="@+id/iv_search"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="@dimen/margin8"
+                            android:layout_marginRight="@dimen/margin8"
+                            android:src="@drawable/ic_search"
+                            tools:ignore="ContentDescription" />
+
+                        <com.github.siyamed.shapeimageview.RoundedImageView
+                            android:src="@drawable/goosht"
+                            app:siRadius="20dp"
+                            android:id="@+id/iv_icon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center_vertical|right" />
+
+                        <TextView
+                            android:layout_marginRight="@dimen/margin8"
+                            android:layout_toLeftOf="@+id/iv_icon"
+                            android:layout_centerVertical="true"
+                            android:text="گوشت دنیوی"
+                            android:textStyle="bold"
+                            android:textColor="@color/purple_700"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </RelativeLayout>
 
 
                 </com.google.android.material.card.MaterialCardView>
@@ -147,31 +174,30 @@
                     android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginTop="@dimen/margin8"
                     android:id="@+id/order_recyclerView_productLevel2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin8"
                     android:layout_marginEnd="9.5dp"
                     android:layoutDirection="rtl" />
-
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_productLevel1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="9.5dp" />
+                    android:layout_marginEnd="9.5dp"
+                    android:scrollbarSize="8dp"
+                    android:scrollbars="horizontal"
 
+
+                    />
 
                 <androidx.recyclerview.widget.RecyclerView
-
-
                     android:id="@+id/order_recyclerView_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:layout_marginTop="8dp"
-
                     android:layoutDirection="rtl"
 
                     />
@@ -227,23 +253,22 @@
             android:layout_above="@+id/bottom_navigation_view_linear" />
 
 
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:backgroundTint="@color/very_light"
-            app:labelVisibilityMode="labeled"
-            app:itemIconTint="@drawable/navigation_view_colored"
-            app:itemIconSize="20dp"
-            app:itemTextColor="@drawable/navigation_view_colored"
-            app:menu="@menu/bottom_nav_menu"
             android:id="@+id/bottom_navigation_view_linear"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
+            android:backgroundTint="@color/very_light"
             android:elevation="8dp"
             android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:textDirection="rtl"
+            app:itemIconSize="20dp"
+            app:itemIconTint="@drawable/navigation_view_colored"
+            app:itemTextColor="@drawable/navigation_view_colored"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav_menu"
             tools:targetApi="lollipop"
 
             >

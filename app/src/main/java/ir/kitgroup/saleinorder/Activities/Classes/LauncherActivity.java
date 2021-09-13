@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinorder.Activities.Classes;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
@@ -22,6 +23,8 @@ import com.orm.query.Select;
 
 import java.util.Objects;
 
+import ir.kitgroup.saleinorder.Fragments.MobileView.InVoiceDetailMobileFragment;
+import ir.kitgroup.saleinorder.Fragments.MobileView.MapFragment;
 import ir.kitgroup.saleinorder.classes.App;
 import ir.kitgroup.saleinorder.DataBase.Account;
 
@@ -145,6 +148,8 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+
+
         final int size = getSupportFragmentManager().getBackStackEntryCount();
         if (size==0){
             textExit.setText("آیا از برنامه خارج می شوید؟");
@@ -152,17 +157,27 @@ public class LauncherActivity extends AppCompatActivity {
             dialog.show();
 
         }
-        else if (
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF") ||
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             textExit.setText("آیا از برنامه خارج می شوید؟");
           type=0;
             dialog.show();
         }
+        else  if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")){
+
+
+            Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+            if (fragment instanceof MainOrderMobileFragment) {
+                MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
+                fgf.setHomeBottomBar();
+            }
+        }
 
         else
             getSupportFragmentManager().popBackStack();
     }
+
+
+
 }
