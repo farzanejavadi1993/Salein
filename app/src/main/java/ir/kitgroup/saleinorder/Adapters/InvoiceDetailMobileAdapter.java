@@ -20,6 +20,7 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
     private int fontSize=0;
+    private int fontLargeSize=0;
 
     private final DecimalFormat df;
 
@@ -93,10 +95,14 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (LauncherActivity.screenInches>=7)
-            fontSize=13;
-        else
-            fontSize=11;
+        if (LauncherActivity.screenInches>=7) {
+            fontSize = 13;
+            fontLargeSize=14;
+        }
+        else {
+            fontSize = 11;
+            fontLargeSize=12;
+        }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.invoice_list_item_recycle, parent, false);
         return new viewHolder(view);
     }
@@ -110,15 +116,15 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         InvoiceDetail invoicedetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
 
 
+
         holder.name.setTextSize(fontSize);
-        holder.price.setTextSize(fontSize);
+        holder.price.setTextSize(fontLargeSize);
         holder.edtAmount.setTextSize(fontSize);
         holder.edtDescription.setTextSize(fontSize);
-        holder.sumPrice.setTextSize(fontSize);
+        holder.sumPrice.setTextSize(fontLargeSize);
 
         if (type.equals("1")) {
             holder.imgDelete.setImageBitmap(null);
-            holder.imgDescription.setEnabled(false);
             holder.edtDescription.setEnabled(false);
             holder.edtAmount.setEnabled(false);
         }
@@ -143,9 +149,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
             double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPRDPRICEPERUNIT1());
-            double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS / 100);
-            double totalPrice = sumprice - discountPrice;
-            holder.sumPrice.setText(format.format(totalPrice));
+           /* double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS / 100);
+            double totalPrice = sumprice - discountPrice;*/
+            holder.sumPrice.setText(format.format(sumprice));
 
 
         }
@@ -176,9 +182,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                         amount = Double.parseDouble(s);
                     }
                     Double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
-                    Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
-                    Double totalPrice = sumprice - discountPrice;
-                    holder.sumPrice.setText(format.format(totalPrice));
+                   /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
+                    Double totalPrice = sumprice - discountPrice;*/
+                    holder.sumPrice.setText(format.format(sumprice));
                     editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
 
 
@@ -262,7 +268,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         private ArrayList<Product> rst;
 
-        private final EditText edtDescription;
+        private final TextView edtDescription;
 
 
         private final TextView discount;

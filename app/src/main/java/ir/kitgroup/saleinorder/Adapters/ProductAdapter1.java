@@ -80,6 +80,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private final DecimalFormat df;
 
     private int fontSize = 0;
+    private int fontLargeSize = 0;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -151,10 +152,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (viewType == Constant.VIEW_TYPE_ITEM) {
             if (LauncherActivity.screenInches >= 7) {
                 fontSize = 13;
+                fontLargeSize = 14;
                 return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_tablet, parent,
                         false));
             } else {
                 fontSize = 11;
+                fontLargeSize = 12;
                 return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
                         false));
             }
@@ -195,21 +198,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
-            if (LauncherActivity.screenInches < 7) {
-                holder.productOldPrice.setTextSize(12);
-                holder.productDiscountPercent.setTextSize(12);
-                holder.productPrice.setTextSize(12);
-            }else {
-
-
-            holder.productOldPrice.setTextSize(fontSize);
-            holder.productDiscountPercent.setTextSize(fontSize);
+            holder.productOldPrice.setTextSize(fontLargeSize);
+            holder.productDiscountPercent.setTextSize(fontLargeSize);
             holder.Line.setTextSize(fontSize);
-            holder.productPrice.setTextSize(fontSize);
+            holder.productPrice.setTextSize(fontLargeSize);
             holder.edtDesc.setTextSize(fontSize);
             holder.ProductAmountTxt.setTextSize(fontSize);
             //  holder.unit.setTextSize(fontSize);
-            }
+
 
         /*    final int newColor = context.getResources().getColor(R.color.purple_500);
             holder.ivEdit.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);*/
