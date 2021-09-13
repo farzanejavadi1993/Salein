@@ -70,6 +70,7 @@ import ir.kitgroup.saleinorder.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinorder.Adapters.ProductAdapter1;
 import ir.kitgroup.saleinorder.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.saleinorder.Adapters.ProductLevel2Adapter;
+import ir.kitgroup.saleinorder.DataBase.Tables;
 import ir.kitgroup.saleinorder.classes.App;
 import ir.kitgroup.saleinorder.classes.CustomProgress;
 import ir.kitgroup.saleinorder.classes.PaginationScrollListener;
@@ -228,9 +229,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         firstSync = sharedPreferences.getBoolean("firstSync", false);
 
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
-            Invoice.deleteInTx(invoice);
-            for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
-                InvoiceDetail.deleteInTx(invoiceDetail);
+            Tables tb=Select.from(Tables.class).where("I ='" + invoice.TBL_UID+"'").first();
+            if (tb==null || tb.SV==null  || !tb.SV) {
+                Invoice.deleteInTx(invoice);
+                for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
+
+                    InvoiceDetail.deleteInTx(invoiceDetail);
+                }
             }
 
         }
@@ -483,7 +488,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region Create Order
 
         List<Invoice> invoicese = Select.from(Invoice.class).list();
-        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@"));
+        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT==null);
         if (invoicese.size() > 0) {
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
             CollectionUtils.filter(invoiceDetails, i -> i.INV_UID.equals(invoicese.get(0).INV_UID));
@@ -526,10 +531,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
-            if (App.mode == 2)
+
                 getProduct();
-            else
-                getProducts();
+
         });
 
         //endregion Cast Variable Dialog
@@ -1146,16 +1150,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             @SuppressLint({"SetTextI18n", "StaticFieldLeak"})
             @Override
             protected void onPostExecute(Object o) {
-
-
-                if (App.mode == 1) {
-                    Util.AllProduct.clear();
-                    AllProductLevel1.clear();
-                    AllProductLevel2.clear();
-                    Util.AllProduct.addAll(Select.from(Product.class).list());
-                    AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
-                    AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
-                }
 
                 AllProductLevel1.clear();
                 AllProductLevel2.clear();
@@ -1909,10 +1903,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             }
         }
-        if (App.mode == 2)
+
             getProduct();
-        else
-            getProducts();
+
 
 
     }
@@ -1952,10 +1945,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            if (App.mode == 2)
                 getProduct();
-            else
-                getProducts();
+
 
 
         } else {

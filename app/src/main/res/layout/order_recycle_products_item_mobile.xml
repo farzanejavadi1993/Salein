@@ -66,7 +66,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="right"
                 android:textColor="@color/black_l"
-                android:textSize="@dimen/text_medium_mobile_size" />
+                android:textSize="12sp" />
             <TextView
               android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/order_recycle_item_product_old_price"
@@ -77,9 +77,10 @@
                 android:layout_marginTop="5dp"
                 android:gravity="right"
                 android:textColor="@color/red_table"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/order_recycle_item_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,32 +89,22 @@
                 android:layout_marginTop="5dp"
                 android:gravity="right"
                 android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_medium_mobile_size" />
+                android:textSize="12sp" />
 
 
         </RelativeLayout>
 
 
         <RelativeLayout
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginRight="@dimen/margin10"
             android:id="@+id/card_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l_Price"
             android:layout_toRightOf="@+id/order_recycle_item_product_img">
 
-            <ImageView
-                android:id="@+id/iv_edit"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="4dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_edit" />
+
 
             <TextView
                 android:layout_marginTop="5dp"
@@ -122,11 +113,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="@dimen/margin10"
-                android:layout_toLeftOf="@id/iv_edit"
                 android:background="@android:color/transparent"
                 android:enabled="false"
                 android:fontFamily="@font/iransans"
-                android:hint="توضیحات سفارش"
+                android:hint="توضیحات شما"
                 android:singleLine="true"
                 android:textColor="#474747"
                 android:textSize="@dimen/text_medium_mobile_size" />

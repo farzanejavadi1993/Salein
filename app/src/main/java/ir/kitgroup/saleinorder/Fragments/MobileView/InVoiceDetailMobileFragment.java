@@ -636,6 +636,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         binding.btnDelete.setOnClickListener(v -> {
+
+            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+            if (tb != null) {
+                tb.SV = false;
+                tb.save();
+            }
             if (status.equals("-"))
                 getDeleteInvoice(userName, passWord, Inv_GUID);
 
@@ -648,8 +654,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
                 return;
             }
-            bundle.putString("Ord_TYPE", "");
-            bundle.putString("Tbl_GUID", "");
+            bundle.putString("Ord_TYPE", Ord_TYPE);
+            bundle.putString("Tbl_GUID", Tbl_GUID);
             bundle.putString("Inv_GUID", Inv_GUID);
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
             mainOrderMobileFragment.setArguments(bundle);

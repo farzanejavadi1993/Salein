@@ -209,7 +209,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment()).addToBackStack("UserF").commit();
                 dialog.dismiss();
             } else if (TypeClickButton.equals("error")) {
-                getProduct();
+                getSetting();
             }
 
 
@@ -295,9 +295,10 @@ public class LauncherOrganizationFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
                     bundle.putString("Inv_GUID", invoice.INV_UID);
-                    bundle.putString("Ord_TYPE", "");
-                    bundle.putString("Acc_Name", "");
-                    bundle.putString("Acc_GUID", "");
+                    bundle.putString("Ord_TYPE", String.valueOf(invoice.INV_TYPE_ORDER));
+                    bundle.putString("Acc_NAME", invoice.Acc_name);
+                    bundle.putString("Acc_GUID", invoice.ACC_CLB_UID);
+                    bundle.putString("Tbl_GUID", invoice.TBL_UID);
 
 
                     InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
@@ -399,7 +400,8 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-        isAllPermissionGranted();
+        getSetting();
+        /*isAllPermissionGranted();*/
 
         return binding.getRoot();
 
@@ -432,7 +434,7 @@ public class LauncherOrganizationFragment extends Fragment {
             )
             ) {
 
-                getProduct();
+                getSetting();
             } else {
 
                 Toast.makeText(getActivity(), "لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
@@ -519,7 +521,7 @@ public class LauncherOrganizationFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            getProduct();
+            getSetting();
 
 
         } else {

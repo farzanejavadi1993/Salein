@@ -106,7 +106,7 @@ public class PaymentMobileFragment extends Fragment {
     private int typeAddress = 0;
     private String address = "ناموجود";
 
-    private int fontSize=0;
+    private int fontSize = 0;
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -120,8 +120,8 @@ public class PaymentMobileFragment extends Fragment {
     public static Boolean setADR1 = false;
 
 
-
-    private String typePayment="-1";
+    private String typePayment = "-1";
+    private String Tbl_GUID;
     //end region Parameter
 
 
@@ -151,10 +151,9 @@ public class PaymentMobileFragment extends Fragment {
             numberPos = "0";
 
 
-
         Bundle bundle = getArguments();
         Inv_GUID = bundle.getString("Inv_GUID");
-        String Tbl_GUID = bundle.getString("Tbl_GUID");
+        Tbl_GUID = bundle.getString("Tbl_GUID");
         String Acc_NAME = bundle.getString("");
         String Acc_GUID = bundle.getString("Acc_GUID");
 
@@ -165,14 +164,14 @@ public class PaymentMobileFragment extends Fragment {
         String Sum_PRICE = bundle.getString("Sum_PRICE");
         boolean edit = bundle.getBoolean("EDIT");
 
-        int fontBigSize=0;
-        int fontSize=0;
-        if (LauncherActivity.screenInches>=7){
-            fontBigSize=14;
-            fontSize=13;
-        }else {
-            fontBigSize=12;
-            fontSize=11;
+        int fontBigSize = 0;
+        int fontSize = 0;
+        if (LauncherActivity.screenInches >= 7) {
+            fontBigSize = 14;
+            fontSize = 13;
+        } else {
+            fontBigSize = 12;
+            fontSize = 11;
         }
 
 
@@ -201,7 +200,6 @@ public class PaymentMobileFragment extends Fragment {
         binding.orderListPurePriceTv.setTextSize(fontSize);
 
 
-
         Invoice inv1 = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
         if (edit && inv1 != null && inv1.INV_DESCRIBTION != null) {
             binding.edtDescription.setText(inv1.INV_DESCRIBTION);
@@ -218,12 +216,9 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
-
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
         Account acc = Select.from(Account.class).first();
-
-
 
 
         //region Cast DialogSendOrder
@@ -329,7 +324,6 @@ public class PaymentMobileFragment extends Fragment {
         btnChoose = dialogAddress.findViewById(R.id.btn_choose);
 
 
-
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 typeAddress = 1;
@@ -362,7 +356,6 @@ public class PaymentMobileFragment extends Fragment {
                 return;
             }
             dialogAddress.dismiss();
-
 
 
             Bundle bundle1 = new Bundle();
@@ -411,7 +404,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             btnPos.setOnClickListener(v1 -> {
-                typePayment="2";
+                typePayment = "2";
                 binding.tvTypePaymentPlace.setText("پرداخت با کارت");
                 popupWindow.dismiss();
             });
@@ -419,7 +412,7 @@ public class PaymentMobileFragment extends Fragment {
 
             btnMoney.setOnClickListener(v12 -> {
 
-                typePayment="1";
+                typePayment = "1";
                 binding.tvTypePaymentPlace.setText("پرداخت نقدی");
                 popupWindow.dismiss();
             });
@@ -429,7 +422,7 @@ public class PaymentMobileFragment extends Fragment {
 
         binding.layoutPaymentOnline.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
-            typePayment="-1";
+            typePayment = "-1";
          /*   binding.tvTypePaymentPlace.setText("");
             binding.ivOkPaymentOnline.setVisibility(View.VISIBLE);
             typePayment="4";*/
@@ -440,8 +433,7 @@ public class PaymentMobileFragment extends Fragment {
             binding.tvTAddress.setText(acc.ADR);
             typeAddress = 1;
             address = acc.ADR;
-        }
-            else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
             binding.tvTAddress.setText(acc.ADR1);
             typeAddress = 2;
             address = acc.ADR1;
@@ -450,7 +442,6 @@ public class PaymentMobileFragment extends Fragment {
             typeAddress = 0;
             address = "ناموجود";
         }
-
 
 
         binding.layoutAddress.setOnClickListener(v -> {
@@ -481,7 +472,6 @@ public class PaymentMobileFragment extends Fragment {
         binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
-
         List<OrderType> OrdT = Select.from(OrderType.class).where("TY =" + 2).list();
 
 
@@ -495,12 +485,12 @@ public class PaymentMobileFragment extends Fragment {
             binding.recyclerViewOrderType.setAdapter(orderTypePaymentAdapter);
 
 
-            if (inv1!=null && inv1.INV_TYPE_ORDER!=null) {
+            if (inv1 != null && inv1.INV_TYPE_ORDER != null) {
                 ArrayList<OrderType> list2 = new ArrayList<>(OrdT);
                 CollectionUtils.filter(list2, r -> r.getC().equals(inv1.INV_TYPE_ORDER));
                 if (list2.size() > 0) {
                     OrdT.get(OrdT.indexOf(list2.get(0))).Click = true;
-                    Ord_TYPE =inv1.INV_TYPE_ORDER;
+                    Ord_TYPE = inv1.INV_TYPE_ORDER;
                 }
                 orderTypePaymentAdapter.notifyDataSetChanged();
 
@@ -528,30 +518,24 @@ public class PaymentMobileFragment extends Fragment {
 
                 orderTypePaymentAdapter.notifyDataSetChanged();
             });
-        }
-        else if (OrdT.size() == 1) {
+        } else if (OrdT.size() == 1) {
             Ord_TYPE = OrdT.get(0).getC();
             binding.rlTypeOrder.setVisibility(View.GONE);
 
         }
 
 
-
-
-
         binding.btnRegisterOrder.setOnClickListener(v -> {
 
-            if ((address.equals("ناموجود") || typeAddress == 0 ) && App.mode==2) {
+            if ((address.equals("ناموجود") || typeAddress == 0) && App.mode == 2) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
-            }
-            else if (Ord_TYPE == null || Ord_TYPE == -1) {
+            } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
-            }
-            else if (typePayment.equals("-1")){
+            } else if (typePayment.equals("-1")) {
                 tvMessage.setText("نوع پرداخت مشخص نشده است. سفارش به صورت موقت ارسال میشود . از ارسال سفارش اطمینان دارید ؟");
-            }else {
+            } else {
                 tvMessage.setText(" از ارسال سفارش اطمینان دارید ؟");
             }
             rlButtons.setVisibility(View.VISIBLE);
@@ -590,7 +574,7 @@ public class PaymentMobileFragment extends Fragment {
                     invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                     invDetails.get(i).ROW_NUMBER = i + 1;
                     invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
-                    invDetails.get(i).INV_DET_DISCOUNT =String.valueOf(discountPrice);
+                    invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
                     invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
                     sumDiscount = sumDiscount + discountPrice;
                     sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
@@ -635,7 +619,7 @@ public class PaymentMobileFragment extends Fragment {
             } else if (typeAddress == 2) {
                 invoice.ACC_CLB_ADDRESS2 = "2";
                 invoice.ACC_CLB_DEFAULT_ADDRESS = "2";
-            }else {
+            } else {
                 invoice.ACC_CLB_ADDRESS = "1";
                 invoice.ACC_CLB_DEFAULT_ADDRESS = "1";
             }
@@ -647,21 +631,21 @@ public class PaymentMobileFragment extends Fragment {
 
             List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").list();
             // List<InvoiceDetail> invoiceDetailList = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            List<InvoiceDetail> invoiceDetailList =invDetails;
+
+            List<InvoiceDetail> invoiceDetailList = invDetails;
 
 
-            List<PaymentRecieptDetail> clsPaymentRecieptDetails=new ArrayList<>();
-            if (!typePayment.equals("-1")){
-                PaymentRecieptDetail cl=new PaymentRecieptDetail();
-                cl.PAY_RCIPT_DET_DESCRIBTION=listInvoice.get(0).INV_DESCRIBTION;
-                cl.PAY_RCIPT_DET_TOTAL_AMOUNT=listInvoice.get(0).INV_EXTENDED_AMOUNT;
-                cl.PAY_RCIPT_DET_TYPE=typePayment;
+            List<PaymentRecieptDetail> clsPaymentRecieptDetails = new ArrayList<>();
+            if (!typePayment.equals("-1")) {
+                PaymentRecieptDetail cl = new PaymentRecieptDetail();
+                cl.PAY_RCIPT_DET_DESCRIBTION = listInvoice.get(0).INV_DESCRIBTION;
+                cl.PAY_RCIPT_DET_TOTAL_AMOUNT = listInvoice.get(0).INV_EXTENDED_AMOUNT;
+                cl.PAY_RCIPT_DET_TYPE = typePayment;
                 clsPaymentRecieptDetails.add(cl);
             }
 
 
-
-            SendOrder(listInvoice, invoiceDetailList,clsPaymentRecieptDetails);
+            SendOrder(listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
 
 
         });
@@ -683,7 +667,7 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-    void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail,List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+    void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
 
         try {
 
@@ -728,10 +712,14 @@ public class PaymentMobileFragment extends Fragment {
                     btnReturned.setVisibility(View.VISIBLE);
                     if (message == 1) {
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
-                        dialog.show();
-                    }
 
-                    else {
+                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                        if (tb != null) {
+                            tb.SV = false;
+                            tb.save();
+                        }
+                        dialog.show();
+                    } else {
                         Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
                         if (!invoice.INV_SYNC.equals("-")) {
                             invoice.INV_SYNC = "#";
@@ -765,12 +753,10 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        setADR1=false;
+        setADR1 = false;
     }
 }
