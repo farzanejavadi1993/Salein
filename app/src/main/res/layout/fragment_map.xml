@@ -31,7 +31,6 @@
 
 
             <androidx.appcompat.widget.SearchView
-
                 android:backgroundTint="@android:color/transparent"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"

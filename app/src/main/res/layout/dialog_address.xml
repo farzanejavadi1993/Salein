@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-
             android:gravity="right"
             android:text="از بین آدرس های زیر یکی را انتخاب کنید"
             android:textStyle="bold"
@@ -64,16 +63,7 @@
         </RadioGroup>
 
 
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_marginBottom="14dp"
-            android:gravity="center"
-            android:text="چنانچه آدرس سفارش شما هیچ کدام از این دو آدرس نمی باشد به پروفایل خود مراجعه کرده و آدرس اول یا دوم را ویرایش کنید."
-            android:textColor="@color/medium_color"
-            android:layout_marginTop="12dp"
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
 
 
         <RelativeLayout
@@ -84,22 +74,7 @@
             android:layout_marginBottom="10sp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_choose"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:fontFamily="@font/iransans"
-                android:layout_alignParentRight="true"
-                android:layout_margin="8sp"
-                android:layout_marginBottom="30dp"
-                android:textSize="11sp"
-                android:backgroundTint="@color/white"
-                android:text="انتخاب آدرس "
-                android:textColor="@color/colorGreenLight"
-                app:cornerRadius="15dp"
-                app:strokeColor="@color/colorGreenLight"
-                app:strokeWidth="1dp"
-                tools:ignore="UnusedAttribute" />
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_edit"
@@ -111,7 +86,7 @@
                 android:textSize="11sp"
                 android:layout_marginBottom="30dp"
                 android:backgroundTint="@color/white"
-                android:text="ویرایش آدرس"
+                android:text=" آدرس جدید"
                 android:textColor="@color/purple_700"
                 app:cornerRadius="15dp"
                 app:strokeColor="@color/purple_700"

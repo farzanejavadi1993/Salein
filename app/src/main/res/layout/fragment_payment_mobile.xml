@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="افزودن آدرس"
+                android:text="تغییر آدرس"
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -382,36 +382,7 @@
             android:orientation="vertical"
             tools:targetApi="lollipop">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="@dimen/margin10"
-                android:layout_marginRight="8sp">
 
-                <TextView
-                    android:id="@+id/order_list_sumPrice_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/sum_price"
-                    android:textColor="@color/black_l"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="RelativeOverlap" />
-
-                <TextView
-                    android:id="@+id/purePrice_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
-                    android:textSize="@dimen/text_medium_mobile_size" />
-
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -426,21 +397,22 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="8dp"
-                    android:text="@string/pure_price"
+                    android:text="قابل پرداخت"
                     android:textColor="@color/black_l"
-                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textSize="12sp"
                     tools:ignore="RelativeOverlap" />
 
 
                 <TextView
-                    android:id="@+id/sumPrice_txt"
+                    android:textStyle="bold"
+                    android:id="@+id/tvSumPurePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="8dp"
                     android:text="@string/rial_0"
                     android:textColor="@color/black_light"
-                    android:textSize="@dimen/text_medium_mobile_size" />
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
