@@ -3,6 +3,8 @@ package ir.kitgroup.salein.Fragments.MobileView;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -88,6 +91,7 @@ public class PaymentMobileFragment extends Fragment {
     private String numberPos = "";
     private Dialog dialog;
     private TextView tvMessage;
+    private ImageView ivIcon;
     private String Inv_GUID;
     private RelativeLayout rlButtons;
     private MaterialButton btnReturned;
@@ -107,6 +111,7 @@ public class PaymentMobileFragment extends Fragment {
     private String address = "ناموجود";
 
     private int fontSize = 0;
+    private int imageIconDialog;
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -132,6 +137,37 @@ public class PaymentMobileFragment extends Fragment {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES);
+
+
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+            switch (pInfo.packageName){
+                case "ir.kitgroup.salein":
+
+                    imageIconDialog=R.drawable.saleinicon128;
+
+                    break;
+
+                case "ir.kitgroup.saleintop":
+
+                    imageIconDialog=R.drawable.top_png;
+
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+
+                    imageIconDialog=R.drawable.meat_png;
+
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
         return binding.getRoot();
@@ -226,6 +262,9 @@ public class PaymentMobileFragment extends Fragment {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
         tvMessage = dialog.findViewById(R.id.tv_message);
+        ivIcon = dialog.findViewById(R.id.iv_icon);
+
+        ivIcon.setImageResource(imageIconDialog);
         rlButtons = dialog.findViewById(R.id.layoutButtons);
         btnReturned = dialog.findViewById(R.id.btn_returned);
         btnOk = dialog.findViewById(R.id.btn_ok);

@@ -688,7 +688,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle.putString("Inv_GUID", Inv_GUID);
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
             mainOrderMobileFragment.setArguments(bundle);
-            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileFX");
+            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileFX");
             replaceFragment.commit();
         });
 

@@ -202,7 +202,7 @@ public class OrderListFragment extends Fragment {
                         List<Invoice> invoices=Select.from(Invoice.class).list();
                         CollectionUtils.filter(invoices,i->!i.INV_SYNC.equals("@"));
                         list.addAll(invoices);
-                        if (lists.size()==0){
+                        if (list.size()==0){
                             binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText("هیچ سفارشی وجود ندارد");

@@ -45,13 +45,16 @@
                     tools:ignore="UnusedAttribute">
 
                     <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/layout_search_customer"
+                        android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <RelativeLayout
-                            android:visibility="gone"
+
                             android:id="@+id/layout_account"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -81,7 +84,7 @@
                                 android:background="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right|center_vertical"
-                                android:hint="@string/name_customer"
+                                android:hint="جستجوی نام مشترک"
                                 android:inputType="text"
                                 android:paddingStart="16dp"
                                 android:paddingTop="6dp"
@@ -93,7 +96,6 @@
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:visibility="gone"
                             android:id="@+id/layout_search_product"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -103,9 +105,9 @@
 
 
                             <EditText
-
+                                android:background="@drawable/background_edittext"
                                 android:id="@+id/edt_search_product"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
@@ -126,6 +128,7 @@
                     </LinearLayout>
 
                     <RelativeLayout
+
                         android:padding="@dimen/margin10"
                         android:background="@drawable/background_edittext"
                         android:id="@+id/define_company"
@@ -187,12 +190,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="9.5dp"
-                    android:scrollbarSize="8dp"
-                    android:scrollbars="horizontal"
-
-
-                    />
+                    android:layout_marginEnd="9.5dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_product"
@@ -213,7 +211,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/margin10"
                 android:backgroundTint="@color/purple_700"
-
                 app:cardCornerRadius="20dp">
 
                 <TextView
@@ -270,9 +267,7 @@
             app:itemTextColor="@drawable/navigation_view_colored"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu"
-            tools:targetApi="lollipop"
-
-            >
+            tools:targetApi="lollipop">
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -283,6 +278,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone" />
+
+
     </RelativeLayout>
 
 </layout>

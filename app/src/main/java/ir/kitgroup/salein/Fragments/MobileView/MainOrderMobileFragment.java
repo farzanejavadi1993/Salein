@@ -170,6 +170,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     //region Dialog
     private Dialog dialog;
+    private ImageView ivIcon;
     private TextView textMessageDialog;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
@@ -206,6 +207,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private Boolean firstSync = false;
 
     private  int imageLogo;
+    private  int imgIconDialog;
     private  int imgBackground=0;
     private  String nameCompany;
 
@@ -236,6 +238,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 case "ir.kitgroup.salein":
                     nameCompany="سالین دمو";
                     imageLogo=R.drawable.salein;
+                    imgIconDialog=R.drawable.saleinicon128;
 
 
                     break;
@@ -244,6 +247,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     nameCompany="رستوران تاپ کباب";
                     imageLogo=R.drawable.top;
                     imgBackground=R.drawable.top_pas;
+                    imgIconDialog=R.drawable.top_png;
 
                     break;
 
@@ -252,6 +256,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     nameCompany="هایپر گوشت دنیوی";
                     imageLogo=R.drawable.goosht;
                     imgBackground=R.drawable.donyavi_pas;
+                    imgIconDialog=R.drawable.meat_png;
 
                     break;
             }
@@ -296,8 +301,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         if (App.mode == 1) {
             binding.defineCompany.setVisibility(View.GONE);
-            binding.layoutAccount.setVisibility(View.VISIBLE);
-            binding.layoutSearchProduct.setVisibility(View.VISIBLE);
+            binding.layoutSearchCustomer.setVisibility(View.VISIBLE);
             binding.bottomNavigationViewLinear.setVisibility(View.GONE);
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
@@ -409,14 +413,17 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
         else {
 
+            binding.defineCompany.setVisibility(View.VISIBLE);
+            binding.layoutSearchCustomer.setVisibility(View.GONE);
+            binding.layoutAccount.setVisibility(View.GONE);
 
             binding.btnRegisterOrder.setVisibility(View.GONE);
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
-            binding.layoutAccount.setVisibility(View.GONE);
+
 
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
-            binding.bottomNavigationViewLinear.getMenu().getItem(1).setTitle("خرید ");
+
 
 
 
@@ -476,6 +483,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         }
+
+
+
+
 
 
         //region First Value Parameter
@@ -581,6 +592,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         dialog.setCancelable(false);
 
         textMessageDialog = dialog.findViewById(R.id.tv_message);
+        ivIcon = dialog.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imgIconDialog);
         btnOkDialog = dialog.findViewById(R.id.btn_ok);
         btnNoDialog = dialog.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> dialog.dismiss());
@@ -1063,7 +1076,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         isAllPermissionGranted();
 
 
-        //getSetting();
+
 
 
         return binding.getRoot();

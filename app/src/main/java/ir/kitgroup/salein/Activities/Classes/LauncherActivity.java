@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -45,6 +46,8 @@ public class LauncherActivity extends AppCompatActivity {
 
     private Dialog dialog;
     private  TextView textExit;
+    private ImageView ivIcon;
+    private int imageIconDialog;
 
 
     private int type=0;
@@ -53,9 +56,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    /*    getPackageManager().setComponentEnabledSetting(
-                new ComponentName("package.name", "package.name.MainActivity-Flavor-One"),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);*/
+
 
 
 
@@ -70,7 +71,32 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
+            switch (pInfo.packageName){
+                case "ir.kitgroup.salein":
+
+                    imageIconDialog=R.drawable.saleinicon128;
+
+                    break;
+
+                case "ir.kitgroup.saleintop":
+
+                    imageIconDialog=R.drawable.top_png;
+
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+
+                    imageIconDialog=R.drawable.meat_png;
+
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -79,6 +105,8 @@ public class LauncherActivity extends AppCompatActivity {
         dialog.setCancelable(false);
 
          textExit = dialog.findViewById(R.id.tv_message);
+         ivIcon = dialog.findViewById(R.id.iv_icon);
+         ivIcon.setImageResource(imageIconDialog);
 
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
