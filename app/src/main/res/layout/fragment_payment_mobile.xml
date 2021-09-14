@@ -125,9 +125,7 @@
             android:layout_below="@+id/layoutAddress"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-
-            >
+            android:layout_marginRight="22dp">
 
             <TextView
                 android:id="@+id/tv_payment"
@@ -266,7 +264,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="@dimen/margin10"
-                        android:text="پرداخت آنلاین"
+                        android:text="استفاده از اعتبار باشگاه"
                         android:textColor="@color/medium_color"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -274,13 +272,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvDescriptionPaymentOnline"
+                        android:id="@+id/tvCredit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="@dimen/margin10"
-                        android:text="پرداخت از باشگاه"
+                        android:text="موجودی : 0 ریال"
                         android:textColor="#474747"
                         android:textSize="11sp"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
@@ -392,10 +390,34 @@
                 android:layout_marginRight="8sp">
 
                 <TextView
+
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/order_list_transport_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="هزینه ارسال"
+                    android:textColor="@color/black_l"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+                <TextView
+                    android:layout_toLeftOf="@+id/order_list_transport_tv"
+                    android:id="@+id/tv_transport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin8"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/black_light"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_marginLeft="@dimen/margin8"
                     android:id="@+id/order_list_purePrice_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                   android:layout_toRightOf="@+id/tvSumPurePrice"
                     android:layout_marginRight="8dp"
                     android:text="قابل پرداخت"
                     android:textColor="@color/black_l"

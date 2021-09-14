@@ -127,6 +127,9 @@ public class PaymentMobileFragment extends Fragment {
 
     private String typePayment = "-1";
     private String Tbl_GUID;
+    private  double credit=0.0;
+
+    private double sumTransport=100000;
     //end region Parameter
 
 
@@ -224,7 +227,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         binding.tvTitlePaymentOnline.setTextSize(fontSize);
-        binding.tvDescriptionPaymentOnline.setTextSize(fontSize);
+        binding.tvCredit.setTextSize(fontSize);
         binding.tvTypeOrder.setTextSize(fontBigSize);
 
 
@@ -232,6 +235,9 @@ public class PaymentMobileFragment extends Fragment {
 
         binding.tvSumPurePrice.setTextSize(fontBigSize);
         binding.orderListPurePriceTv.setTextSize(fontBigSize);
+        binding.orderListTransportTv.setTextSize(fontBigSize);
+        binding.tvTransport.setTextSize(fontBigSize);
+        binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
 
 
         Invoice inv1 = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
@@ -254,6 +260,8 @@ public class PaymentMobileFragment extends Fragment {
 
         Account acc = Select.from(Account.class).first();
 
+        if (acc!=null && acc.CRDT!=null)
+        binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT)+" ریال ");
 
         //region Cast DialogSendOrder
         dialog = new Dialog(getActivity());
@@ -396,10 +404,9 @@ public class PaymentMobileFragment extends Fragment {
 
         if (acc != null && acc.ADR != null && !acc.ADR.equals(""))
             radioAddress1.setText(acc.ADR);
-
-
         else
             radioAddress1.setText("ناموجود");
+
 
 
         if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
@@ -448,6 +455,8 @@ public class PaymentMobileFragment extends Fragment {
 
 
         binding.layoutPaymentOnline.setOnClickListener(v -> {
+
+
             Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
             typePayment = "-1";
          /*   binding.tvTypePaymentPlace.setText("");
@@ -623,7 +632,7 @@ public class PaymentMobileFragment extends Fragment {
             Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
 
             invoice.INV_UID = Inv_GUID;
-            invoice.INV_TOTAL_AMOUNT = sumPurePrice;//جمع فاکنور
+            invoice.INV_TOTAL_AMOUNT = sumPurePrice+sumTransport;//جمع فاکنور
             invoice.INV_TOTAL_DISCOUNT = 0.0;
             invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
             invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;

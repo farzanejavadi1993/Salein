@@ -84,7 +84,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumPrice;
     private double sumPurePrice;
     private double sumDiscounts;
-    private double sumTransport=100000;
+
 
     private List<InvoiceDetail> invoiceDetailList;
     private InvoiceDetailMobileAdapter invoiceDetailAdapter;
@@ -210,7 +210,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
 
                 invoice.INV_UID = Inv_GUID;
-                invoice.INV_TOTAL_AMOUNT = sumPurePrice+sumTransport;//جمع فاکنور
+                invoice.INV_TOTAL_AMOUNT = sumPurePrice;//جمع فاکنور
                 invoice.INV_TOTAL_DISCOUNT = 0.0;
                 invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
                 invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;
@@ -257,6 +257,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
 
+
         binding.tvNameCustomer.setTextSize(fontSize);
         binding.txtDate.setTextSize(fontSize);
         binding.txtTypeOrder.setTextSize(fontSize);
@@ -269,10 +270,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.tvSumPrice.setTextSize(fontLargeSize);
         binding.orderListSumDiscountTv.setTextSize(fontLargeSize);
         binding.tvSumDiscount.setTextSize(fontLargeSize);
-        binding.orderListTransportTv.setTextSize(fontLargeSize);
-        binding.tvTransport.setTextSize(fontLargeSize);
 
-        binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
 
 
 
@@ -303,7 +301,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             if (edit)
                 bundle1.putBoolean("EDIT", true);
 
-            bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice+sumTransport));
+            bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
 
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
@@ -493,7 +491,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-        binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+        binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
@@ -556,7 +554,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     }
 
-                    binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+                    binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
                     binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
                     binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
                     invoiceDetailAdapter.notifyDataSetChanged();
@@ -604,7 +602,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
 
-                binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+                binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
                 binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
                 binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
@@ -649,7 +647,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
 
-                binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+                binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
                 binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
                 binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 

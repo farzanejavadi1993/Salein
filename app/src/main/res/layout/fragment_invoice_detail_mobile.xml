@@ -132,28 +132,7 @@
                     android:textStyle="bold" />
 
 
-                <TextView
-                    android:id="@+id/order_list_sumDiscount_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:layout_toRightOf="@+id/tvSumDiscount"
-                    android:text="جمع تخفیف"
-                    android:textColor="@color/green_table"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="RelativeOverlap" />
 
-                <TextView
-                    android:id="@+id/tvSumDiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/green_table"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    android:textStyle="bold" />
 
 
             </RelativeLayout>
@@ -164,30 +143,33 @@
                 android:layout_marginLeft="8sp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="8sp">
-
-
                 <TextView
 
                     android:layout_alignParentRight="true"
-                    android:id="@+id/order_list_transport_tv"
+                    android:id="@+id/order_list_sumDiscount_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="8dp"
-                    android:text="هزینه ارسال"
-                    android:textColor="@color/black_l"
+                    android:text="جمع تخفیف"
+                    android:textColor="@color/green_table"
                     android:textSize="@dimen/text_medium_mobile_size"
                     tools:ignore="RelativeOverlap" />
+
                 <TextView
-                    android:layout_toLeftOf="@+id/order_list_transport_tv"
-                    android:id="@+id/tv_transport"
+                    android:layout_toLeftOf="@+id/order_list_sumDiscount_tv"
+                    android:id="@+id/tvSumDiscount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin8"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
+                    android:textColor="@color/green_table"
                     android:textSize="@dimen/text_medium_mobile_size"
                     android:textStyle="bold" />
+
+
+
+
 
 
                 <TextView
