@@ -126,7 +126,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private double latitude = 0.0;
 
 
-
     private int fontSize = 0;
 
 
@@ -190,32 +189,26 @@ public class MapFragment extends Fragment implements PermissionsListener {
         Address2 = dialogAddress.findViewById(R.id.btn_2);
 
 
-       Address1.setOnClickListener(v -> {
+        Address1.setOnClickListener(v -> {
 
 
-           Account accountORG = Select.from(Account.class).first();
-           Account account = new Account();
-           account.I = accountORG.I;
-           account.N = accountORG.N;
-           account.M = accountORG.M;
-           account.ADR1 = accountORG.ADR1;
-           setADR1 = false;
-           account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-
-           ArrayList<Account> list = new ArrayList<>();
-           list.add(account);
-           dialogAddress.dismiss();
-           UpdateAccount(userName, passWord, list, 1, "");
-       });
-
-
-
-
-
-
-
-
-
+            Account accountORG = Select.from(Account.class).first();
+            Account account = new Account();
+            account.I = accountORG.I;
+            account.N = accountORG.N;
+            account.M = accountORG.M;
+            account.ADR1 = accountORG.ADR1;
+            account.LAT1 = accountORG.LAT1;
+            account.LNG1 = accountORG.LNG1;
+            setADR1 = false;
+            account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
+            account.LAT = latitude;
+            account.LNG = longitude;
+            ArrayList<Account> list = new ArrayList<>();
+            list.add(account);
+            dialogAddress.dismiss();
+            UpdateAccount(userName, passWord, list, 1, "");
+        });
 
 
         Address2.setOnClickListener(v -> {
@@ -226,9 +219,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.N = accountORG.N;
             account.M = accountORG.M;
             account.ADR = accountORG.ADR;
+            account.LAT = accountORG.LAT;
+            account.LNG = accountORG.LNG;
             setADR1 = true;
             account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-
+            account.LAT1 = latitude;
+            account.LNG1 = longitude;
             ArrayList<Account> list = new ArrayList<>();
             list.add(account);
             dialogAddress.dismiss();
@@ -247,7 +243,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
 
-
             Account accountORG = Select.from(Account.class).first();
 
             //edit Address when going from PaymentFragment
@@ -258,13 +253,21 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
                 account.ADR1 = accountORG.ADR1;
+                account.LAT = accountORG.LAT;
+                account.LNG = accountORG.LNG;
+                account.LAT1 = accountORG.LAT1;
+                account.LNG1 = accountORG.LNG1;
 
                 if (account.ADR == null) {
                     account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
+                    account.LAT = latitude;
+                    account.LNG = longitude;
                 } else if (account.ADR1 == null) {
                     setADR1 = true;
                     account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                } else  {
+                    account.LAT1 = latitude;
+                    account.LNG1 = longitude;
+                } else {
                     dialogAddress.show();
                     return;
                 }
@@ -285,15 +288,25 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
+                account.LAT = accountORG.LAT;
+                account.LNG = accountORG.LNG;
+
+                account.LAT1 = accountORG.LAT1;
+                account.LNG1 = accountORG.LNG1;
                 if (type.equals("1")) {
                     account.ADR1 = accountORG.ADR1;
                     account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-
+                    account.LAT = latitude;
+                    account.LNG = longitude;
                 } else {
 
                     account.ADR = accountORG.ADR;
                     account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
+                    account.LAT1 = latitude;
+                    account.LNG1 = longitude;
                 }
+
+
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
                 UpdateAccount(userName, passWord, list, 0, type);
@@ -889,7 +902,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
 
-                    if (iDs!=null){
+                    if (iDs != null) {
                         int message = iDs.getLogs().get(0).getMessage();
                         String description = iDs.getLogs().get(0).getDescription();
 
@@ -913,6 +926,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                     frg.setArguments(bundle1);
                                 if (flag == 1) {
                                     PaymentMobileFragment.setADR1 = setADR1;
+                                    PaymentMobileFragment.onceSee = true;
 
                                 }
 
@@ -927,7 +941,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                         }
-                    }else {
+                    } else {
                         Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
                     }
 

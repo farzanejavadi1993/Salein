@@ -49,9 +49,27 @@ public class Account extends SugarRecord {
     @Expose
     private String CCD;
 
+    @SerializedName("LAT")
+    @Expose
+    public Double LAT;
 
-    public double lat;
-    public double lng;
+
+
+    @SerializedName("LNG")
+    @Expose
+    public Double LNG;
+
+    @SerializedName("LAT1")
+    @Expose
+    public Double LAT1;
+
+
+
+    @SerializedName("LNG1")
+    @Expose
+    public Double LNG1;
+
+
 
     public String getM() {
         return M;

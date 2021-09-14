@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -75,6 +76,11 @@ import ir.kitgroup.salein.databinding.FragmentPaymentMobileBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 
 public class PaymentMobileFragment extends Fragment {
 
@@ -122,13 +128,14 @@ public class PaymentMobileFragment extends Fragment {
 
 
     public static Boolean setADR1 = false;
+    public static Boolean onceSee = false;
 
 
     private String typePayment = "-1";
     private String Tbl_GUID;
     private double credit = 0.0;
 
-    private double sumTransport = 100000;
+    private double sumTransport = 0.0;
     //end region Parameter
 
 
@@ -364,6 +371,24 @@ public class PaymentMobileFragment extends Fragment {
 
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+
+                if (acc.LAT == null || acc.LNG == null) {
+                    Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                double distance = getDistanceMeters(new LatLng(acc.LAT, acc.LNG), new LatLng(36.3372681586972, 59.58892393983855));
+                double price = PriceTransport(distance,Double.parseDouble(Sum_PURE_PRICE));
+                if (price==-1.0){
+                    Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
+                    dialogAddress.dismiss();
+
+                    return;
+                }else {
+                    sumTransport=price;
+                    binding.tvTransport.setText(format.format(price)+"ریال");
+                    binding.tvSumPurePrice.setText(format.format(Sum_PURE_PRICE) +sumTransport+"ریال");
+
+                }
                 typeAddress = 1;
                 address = radioAddress1.getText().toString();
                 binding.tvTAddress.setText(address);
@@ -371,8 +396,27 @@ public class PaymentMobileFragment extends Fragment {
             }
         });
 
+
+
         radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+
+                if (acc.LAT1 == null || acc.LNG1 == null) {
+                    Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                double distance = getDistanceMeters(new LatLng(acc.LAT, acc.LNG), new LatLng(36.3372681586972, 59.58892393983855));
+                double price = PriceTransport(distance,Double.parseDouble(Sum_PURE_PRICE));
+                if (price==-1.0){
+                    Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }else {
+                    sumTransport=price;
+                    binding.tvTransport.setText(format.format(price)+"ریال");
+                    binding.tvSumPurePrice.setText(format.format(Sum_PURE_PRICE) +sumTransport+"ریال");
+
+                }
                 typeAddress = 2;
                 address = radioAddress2.getText().toString();
                 binding.tvTAddress.setText(address);
@@ -409,14 +453,21 @@ public class PaymentMobileFragment extends Fragment {
 
 
         if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
-            binding.tvTAddress.setText(acc.ADR);
-            typeAddress = 1;
-            address = acc.ADR;
+            if (onceSee) {
+                binding.tvTAddress.setText(acc.ADR);
+                typeAddress = 1;
+                address = acc.ADR;
+            }
         } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
-            binding.tvTAddress.setText(acc.ADR1);
-            typeAddress = 2;
-            address = acc.ADR1;
-        } else {
+            if (onceSee){
+                binding.tvTAddress.setText(acc.ADR1);
+                typeAddress = 2;
+                address = acc.ADR1;
+            }
+
+        }
+        else {
+            if (onceSee)
             binding.tvTAddress.setText("ناموجود");
             typeAddress = 0;
             address = "ناموجود";
@@ -789,5 +840,58 @@ public class PaymentMobileFragment extends Fragment {
         super.onDestroy();
 
         setADR1 = false;
+        onceSee = false;
+    }
+
+
+    private long getDistanceMeters(LatLng StartP, LatLng EndP) {
+
+        double l1 = toRadians(StartP.getLatitude());
+        double l2 = toRadians(EndP.getLatitude());
+        double g1 = toRadians(StartP.getLongitude());
+        double g2 = toRadians(EndP.getLongitude());
+
+        double dist = acos(sin(l1) * sin(l2) + cos(l1) * cos(l2) * cos(g1 - g2));
+        if (dist < 0) {
+            dist = dist + Math.PI;
+        }
+
+        return Math.round(dist * 6378100);
+    }
+
+    private double PriceTransport(double distance,double SumPurePrice) {
+        double priceTransport = -1.0;
+        if (0 < distance && distance <= 5) {
+            priceTransport = 70000;
+        } else if (5 < distance && distance <= 15) {
+            priceTransport = 150000;
+        } else if (15 < distance && distance <= 30) {
+            priceTransport = 200000;
+        } else if (30 < distance && distance < 45) {
+            priceTransport = 300000;
+        }
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+            switch (pInfo.packageName) {
+                case "ir.kitgroup.saleinmeat":
+
+                    imageIconDialog = R.drawable.meat_png;
+                    if (SumPurePrice>2000000){
+                        priceTransport=0.0;
+                    }
+                    if (0 < distance && distance <= 3) {
+                        priceTransport = 0.0;
+                    }
+
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        return priceTransport;
+
     }
 }
