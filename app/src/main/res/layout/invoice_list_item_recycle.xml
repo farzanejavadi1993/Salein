@@ -55,33 +55,32 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="12dp">
 
             <RelativeLayout
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:id="@+id/layout_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
 
                 <ImageView
                     android:id="@+id/iv_minus_invoice"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="12dp"
+                    android:layout_toLeftOf="@+id/order_list_item_recycle_editText"
                     android:background="@drawable/minus_background"
                     android:src="@drawable/ic_minus_red" />
 
                 <EditText
+                    android:layout_toLeftOf="@+id/iv_max_invoice"
                     android:id="@+id/order_list_item_recycle_editText"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="4sp"
-                    android:layout_marginRight="4sp"
+
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/iransans"
                     android:gravity="center"
@@ -89,7 +88,8 @@
                     android:padding="5sp"
                     android:text="0 "
                     android:textColor="@color/black_l"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/iv_max_invoice"
@@ -111,16 +111,15 @@
                 android:layout_marginLeft="12dp"
 
                 android:textColor="@color/black_l"
-                android:textSize="@dimen/order_list_item_recycle_txt_price_size"
-             />
+                android:textSize="@dimen/order_list_item_recycle_txt_price_size" />
 
             <TextView
 
                 android:id="@+id/order_list_item_recycle_txt_sumPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/order_list_item_recycle_txt_price"
                 android:layout_alignParentLeft="true"
-               android:layout_below="@+id/order_list_item_recycle_txt_price"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="5dp"
 
@@ -131,11 +130,11 @@
 
 
         <ImageView
-            android:layout_marginLeft="12dp"
             android:id="@+id/order_list_item_recycle_img_delete"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
             android:layout_marginRight="@dimen/margin10"
             android:src="@drawable/ic_close" />
 
