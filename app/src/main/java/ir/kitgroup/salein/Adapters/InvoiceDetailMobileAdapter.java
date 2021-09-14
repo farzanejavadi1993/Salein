@@ -266,7 +266,17 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
         holder.ivMinus.setOnClickListener(v -> {
+            holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+            double amount=0.0;
+            if (invoicedetail.INV_DET_QUANTITY>=1) {
+                 amount = invoicedetail.INV_DET_QUANTITY - 1;
+            }
+            holder.edtAmount.setText(format.format(amount));
+            holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
+            double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            holder.sumPrice.setText(format.format(sumprice));
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
         });
 
     }

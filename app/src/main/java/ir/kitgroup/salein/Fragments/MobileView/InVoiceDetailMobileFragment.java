@@ -84,7 +84,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumPrice;
     private double sumPurePrice;
     private double sumDiscounts;
-    private double sumTransport=10000;
+    private double sumTransport=100000;
 
     private List<InvoiceDetail> invoiceDetailList;
     private InvoiceDetailMobileAdapter invoiceDetailAdapter;
@@ -272,7 +272,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.orderListTransportTv.setTextSize(fontLargeSize);
         binding.tvTransport.setTextSize(fontLargeSize);
 
-        binding.tvTransport.setText(format.format(sumTransport));
+        binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
 
 
 
@@ -573,6 +573,40 @@ public class InVoiceDetailMobileFragment extends Fragment {
             public void onChanged() {
                 super.onChanged();
 
+                sumPrice = 0;
+                sumPurePrice = 0;
+                sumDiscounts = 0;
+
+
+                List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+
+
+
+
+                for (int i = 0; i < invoiceDetail.size(); i++) {
+
+                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+                    int finalI = i;
+                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetail.get(finalI).PRD_UID));
+
+                    if (prdResult.size() > 0) {
+                        double sumprice = (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        double totalPrice = sumprice - discountPrice;
+
+                        sumPrice = sumPrice + (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        sumPurePrice = sumPurePrice + totalPrice;
+                        sumDiscounts = sumDiscounts + discountPrice;
+
+                    }
+
+                }
+
+
+                binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+                binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
+                binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
             }
 

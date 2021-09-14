@@ -82,15 +82,17 @@
                 android:id="@+id/order_list_item_recycle_txt_sumPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_toRightOf="@+id/layout"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="5dp"
                 android:textColor="@color/black_light"
                 android:textSize="11sp" />
             <RelativeLayout
+                android:layout_marginLeft="12dp"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/layout"
                 android:background="@drawable/order_list_item_recycle_ediittext_shape"
-                android:layout_toRightOf="@+id/order_list_item_recycle_txt_sumPrice"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content">
                 <ImageView
