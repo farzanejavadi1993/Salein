@@ -49,6 +49,10 @@ public class Account extends SugarRecord {
     @Expose
     private String CCD;
 
+
+    public double lat;
+    public double lng;
+
     public String getM() {
         return M;
     }

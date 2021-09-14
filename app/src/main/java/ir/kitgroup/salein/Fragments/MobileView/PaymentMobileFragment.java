@@ -106,7 +106,6 @@ public class PaymentMobileFragment extends Fragment {
     private MaterialButton btnNewAddress;
 
 
-
     private int typeAddress = 0;
     private String address = "ناموجود";
 
@@ -127,9 +126,9 @@ public class PaymentMobileFragment extends Fragment {
 
     private String typePayment = "-1";
     private String Tbl_GUID;
-    private  double credit=0.0;
+    private double credit = 0.0;
 
-    private double sumTransport=100000;
+    private double sumTransport = 100000;
     //end region Parameter
 
 
@@ -145,32 +144,29 @@ public class PaymentMobileFragment extends Fragment {
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName){
+            switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
 
-                    imageIconDialog=R.drawable.saleinicon128;
+                    imageIconDialog = R.drawable.saleinicon128;
 
                     break;
 
                 case "ir.kitgroup.saleintop":
 
-                    imageIconDialog=R.drawable.top_png;
+                    imageIconDialog = R.drawable.top_png;
 
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
 
-                    imageIconDialog=R.drawable.meat_png;
+                    imageIconDialog = R.drawable.meat_png;
 
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-
-
 
 
         return binding.getRoot();
@@ -181,13 +177,6 @@ public class PaymentMobileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        customProgress = CustomProgress.getInstance();
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
-        numberPos = Select.from(User.class).first().numberPos;
-        if (numberPos != null && numberPos.equals(""))
-            numberPos = "0";
 
 
         Bundle bundle = getArguments();
@@ -200,7 +189,6 @@ public class PaymentMobileFragment extends Fragment {
         if (ord_type != null && !ord_type.equals(""))
             Ord_TYPE = Integer.parseInt(ord_type);
         String Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
-        String Sum_PRICE = bundle.getString("Sum_PRICE");
         boolean edit = bundle.getBoolean("EDIT");
 
         int fontBigSize = 0;
@@ -212,6 +200,14 @@ public class PaymentMobileFragment extends Fragment {
             fontBigSize = 12;
             fontSize = 11;
         }
+
+
+        customProgress = CustomProgress.getInstance();
+        userName = Select.from(User.class).first().userName;
+        passWord = Select.from(User.class).first().passWord;
+        numberPos = Select.from(User.class).first().numberPos;
+        if (numberPos != null && numberPos.equals(""))
+            numberPos = "0";
 
 
         binding.tvTitle.setTextSize(fontSize);
@@ -243,25 +239,20 @@ public class PaymentMobileFragment extends Fragment {
         Invoice inv1 = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
         if (edit && inv1 != null && inv1.INV_DESCRIBTION != null) {
             binding.edtDescription.setText(inv1.INV_DESCRIBTION);
-          /*  if (inv1.ACC_CLB_DEFAULT_ADDRESS!=null && inv1.ACC_CLB_DEFAULT_ADDRESS.equals("1"))
+            if (edit && inv1.ACC_CLB_DEFAULT_ADDRESS != null && inv1.ACC_CLB_DEFAULT_ADDRESS.equals("1"))
                 binding.tvTAddress.setText(Select.from(Account.class).first().ADR);
-            else
-                binding.tvTAddress.setText(Select.from(Account.class).first().ADR1);*/
+            else if (edit && inv1.ACC_CLB_DEFAULT_ADDRESS != null && inv1.ACC_CLB_DEFAULT_ADDRESS.equals("2"))
+                binding.tvTAddress.setText(Select.from(Account.class).first().ADR1);
         }
 
 
         if (edit) {
             binding.tvError.setVisibility(View.VISIBLE);
-
         }
 
 
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-        Account acc = Select.from(Account.class).first();
-
-        if (acc!=null && acc.CRDT!=null)
-        binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT)+" ریال ");
 
         //region Cast DialogSendOrder
         dialog = new Dialog(getActivity());
@@ -355,6 +346,9 @@ public class PaymentMobileFragment extends Fragment {
         //endregion Cast DialogSendOrder
 
 
+        Account acc = Select.from(Account.class).first();
+
+
         //region Cast DialogAddress
         dialogAddress = new Dialog(getActivity());
         dialogAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -366,7 +360,6 @@ public class PaymentMobileFragment extends Fragment {
         radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
         radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
         btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
-
 
 
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -388,8 +381,6 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-
-
         btnNewAddress.setOnClickListener(v -> {
 
             dialogAddress.dismiss();
@@ -408,7 +399,6 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress1.setText("ناموجود");
 
 
-
         if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
             radioAddress2.setText(acc.ADR1);
         else
@@ -416,6 +406,40 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //endregion Cast DialogAddress
+
+
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
+            binding.tvTAddress.setText(acc.ADR);
+            typeAddress = 1;
+            address = acc.ADR;
+        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+            binding.tvTAddress.setText(acc.ADR1);
+            typeAddress = 2;
+            address = acc.ADR1;
+        } else {
+            binding.tvTAddress.setText("ناموجود");
+            typeAddress = 0;
+            address = "ناموجود";
+        }
+
+
+        if (acc != null && acc.CRDT != null)
+            binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+
+        binding.layoutAddress.setOnClickListener(v -> {
+
+
+            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
+                dialogAddress.show();
+                return;
+            }
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("edit_address", "1");
+            bundle1.putString("type", String.valueOf(typeAddress));
+            MapFragment mapFragment = new MapFragment();
+            mapFragment.setArguments(bundle1);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+        });
 
 
         binding.layoutPaymentPlace.setOnClickListener(v -> {
@@ -465,38 +489,7 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
-            binding.tvTAddress.setText(acc.ADR);
-            typeAddress = 1;
-            address = acc.ADR;
-        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
-            binding.tvTAddress.setText(acc.ADR1);
-            typeAddress = 2;
-            address = acc.ADR1;
-        } else {
-            binding.tvTAddress.setText("ناموجود");
-            typeAddress = 0;
-            address = "ناموجود";
-        }
-
-
-        binding.layoutAddress.setOnClickListener(v -> {
-
-
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
-                dialogAddress.show();
-                return;
-            }
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("edit_address", "1");
-            bundle1.putString("type", String.valueOf(typeAddress));
-            MapFragment mapFragment = new MapFragment();
-            mapFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
-        });
-
-
-        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
+        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
 
         if (App.mode == 1) {
             binding.rlTypeOrder.setVisibility(View.GONE);
@@ -504,12 +497,7 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
-        binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
-
-
         List<OrderType> OrdT = Select.from(OrderType.class).where("TY =" + 2).list();
-
-
         if (OrdT.size() > 1) {
             OrderTypePaymentAdapter orderTypePaymentAdapter = new OrderTypePaymentAdapter(getActivity(), OrdT);
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -580,8 +568,8 @@ public class PaymentMobileFragment extends Fragment {
 
         });
 
-
         btnNo.setOnClickListener(v -> dialog.dismiss());
+
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
             Date date = Calendar.getInstance().getTime();
@@ -593,8 +581,20 @@ public class PaymentMobileFragment extends Fragment {
             double sumDiscountPercent = 0;
             double sumPurePrice = 0;
 
+            InvoiceDetail invoiceDetailTransport = new InvoiceDetail();
+            invoiceDetailTransport.INV_DET_UID = UUID.randomUUID().toString();
+            invoiceDetailTransport.INV_UID = Inv_GUID;
+            invoiceDetailTransport.ROW_NUMBER = invDetails.size() + 1;
+            invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
+            invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(sumTransport);
+            invoiceDetailTransport.INV_DET_PERCENT_DISCOUNT = 0.0;
+            invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
+            invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
+            invoiceDetailTransport.PRD_UID = Util.AllProduct.get(Util.AllProduct.size() - 1).I;
+            invoiceDetailTransport.INV_DET_DESCRIBTION = "هزینه توزیع";
+            invDetails.add(invoiceDetailTransport);
 
-            for (int i = 0; i < invDetails.size(); i++) {
+            for (int i = 0; i < invDetails.size() - 1; i++) {
                 ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                 int finalI = i;
                 CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
@@ -604,8 +604,8 @@ public class PaymentMobileFragment extends Fragment {
                     double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
-                    sumPurePrice = sumPurePrice + sumTotalPrice;//جمع کل فاکتور
-                    sumPrice = sumPrice + totalPurePrice;//جمع خالص فاکتور
+                    sumPrice = sumPrice + sumTotalPrice;//جمع کل فاکتور
+                    sumPurePrice = sumPurePrice + totalPurePrice;//جمع خالص فاکتور
                     invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                     invDetails.get(i).ROW_NUMBER = i + 1;
                     invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
@@ -619,27 +619,23 @@ public class PaymentMobileFragment extends Fragment {
 
             }
 
-          /*  List<InvoiceDetail> invoiceList = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-            for (int i = 0; i < invoiceList.size(); i++) {
-                InvoiceDetail.delete(invoiceList.get(i));
-            }*/
-
             for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
                 InvoiceDetail.deleteInTx(invoicedetail);
             }
+
             InvoiceDetail.saveInTx(invDetails);
 
             Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
 
             invoice.INV_UID = Inv_GUID;
-            invoice.INV_TOTAL_AMOUNT = sumPurePrice+sumTransport;//جمع فاکنور
+            invoice.INV_TOTAL_AMOUNT = sumPrice + sumTransport;//جمع فاکنور
             invoice.INV_TOTAL_DISCOUNT = 0.0;
-            invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
+            invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent * 100;
             invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;
             invoice.INV_DESCRIBTION = binding.edtDescription.getText().toString();
             invoice.INV_TOTAL_TAX = 0.0;
             invoice.INV_TOTAL_COST = 0.0;
-            invoice.INV_EXTENDED_AMOUNT = sumPrice;
+            invoice.INV_EXTENDED_AMOUNT = sumPurePrice + sumTransport;
             invoice.INV_DATE = date;
             invoice.INV_DUE_DATE = date;
             invoice.INV_STATUS = true;
@@ -686,7 +682,7 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-
+        binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
         /*        clickItemPay(binding.layoutPaymentPlace, binding.ivOkPaymentPlace);*/
