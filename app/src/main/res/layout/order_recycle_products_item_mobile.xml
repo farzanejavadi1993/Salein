@@ -27,17 +27,30 @@
             app:siRadius="10dp" />
 
         <TextView
+
             android:id="@+id/order_recycle_item_product_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginStart="@dimen/margin10"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginEnd="@dimen/margin10"
-            android:layout_toRightOf="@+id/order_recycle_item_product_img"
             android:gravity="right"
             android:textColor="@color/medium_color"
             android:textSize="@dimen/text_normal_mobile_size" />
+
+        <TextView
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/order_recycle_item_product_name"
+            android:id="@+id/order_recycle_item_product_discountPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="right"
+            android:layout_toRightOf="@+id/order_recycle_item_product_img"
+            android:textColor="@color/red_table"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_marginLeft="10dp"
@@ -67,17 +80,7 @@
                 android:gravity="right"
                 android:textColor="@color/black_l"
                 android:textSize="12sp" />
-            <TextView
-              android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/order_recycle_item_product_old_price"
-                android:id="@+id/order_recycle_item_product_discountPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20%"
-                android:layout_marginTop="5dp"
-                android:gravity="right"
-                android:textColor="@color/red_table"
-                android:textSize="12sp" />
+
 
             <TextView
                 android:textStyle="bold"

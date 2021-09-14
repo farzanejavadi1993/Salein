@@ -23,7 +23,7 @@
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:layout_weight="0.65"
                 android:id="@+id/iv_product"
-                android:src="@drawable/application_logo1"
+
                 android:layout_marginBottom="15dp"
 
                 android:layout_width="match_parent"

@@ -118,7 +118,7 @@
 
                 app:siBorderWidth="1dp"
                 app:siRadius="@dimen/margin10"
-                android:src="@drawable/application_logo1"
+
                 android:layout_weight="0.6"
                 android:id="@+id/iv_product"
                 android:layout_marginBottom="35dp"

@@ -272,6 +272,16 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/tv_successFull_pay_online"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/green_table"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentOnline"
+                        app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentOnline"
+                        app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentOnline" />
+                    <TextView
                         android:id="@+id/tvCredit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -1,6 +1,8 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -86,6 +88,28 @@ public class ShowDetailFragment  extends Fragment {
 
                 ivProduct.setImageBitmap(image);
                 tvDescriptionProduct.setText(arrayList.get(0).DES);
+            }else {
+                try {
+                    PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+                    switch (pInfo.packageName){
+                        case "ir.kitgroup.salein":
+                            ivProduct.setImageResource(R.drawable.application_logo1);
+                            break;
+
+                        case "ir.kitgroup.saleintop":
+                            ivProduct.setImageResource(R.drawable.top_png);
+
+                            break;
+
+
+                        case "ir.kitgroup.saleinmeat":
+                            ivProduct.setImageResource(R.drawable.meat_png);
+                            break;
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return view;

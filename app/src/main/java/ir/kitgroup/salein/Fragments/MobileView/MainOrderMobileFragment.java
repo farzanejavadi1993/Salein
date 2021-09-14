@@ -113,7 +113,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     //region Parameter
 
-    private int fontSize = 0;
     private FragmentMobileOrderMainBinding binding;
 
     private SharedPreferences sharedPreferences;
@@ -170,7 +169,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     //region Dialog
     private Dialog dialog;
-    private ImageView ivIcon;
     private TextView textMessageDialog;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
@@ -221,6 +219,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
 
+        int fontSize;
         if (LauncherActivity.screenInches >= 7)
             fontSize = 14;
         else
@@ -592,7 +591,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         dialog.setCancelable(false);
 
         textMessageDialog = dialog.findViewById(R.id.tv_message);
-        ivIcon = dialog.findViewById(R.id.iv_icon);
+        ImageView ivIcon = dialog.findViewById(R.id.iv_icon);
         ivIcon.setImageResource(imgIconDialog);
         btnOkDialog = dialog.findViewById(R.id.btn_ok);
         btnNoDialog = dialog.findViewById(R.id.btn_cancel);
@@ -648,8 +647,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         btnRegisterDescription.setOnClickListener(v -> {
-            ArrayList<Product> resultPrd = new ArrayList<>();
-            resultPrd.addAll(Util.AllProduct);
+            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
             if (invDetail != null) {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
@@ -928,7 +926,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getContext(), productList, maxSales, Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, maxSales, Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3) {
             @Override
@@ -1372,7 +1370,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
                             int finalI = i;
 
-                            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                          //  List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                             CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
                             if (resultProducts.size() > 0) {
@@ -1415,7 +1413,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                 customProgress.hideProgress();
-                binding.progressbar.setVisibility(View.GONE);
+
 
 
                 super.onPostExecute(o);
@@ -1547,7 +1545,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         error = "";
 
         customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
-        binding.progressbar.setVisibility(View.VISIBLE);
+
         String yourFilePath = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
         File file = new File(yourFilePath);
         deleteDirectory(file);
@@ -1652,7 +1650,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         try {
 
-            binding.progressbar.setVisibility(View.VISIBLE);
             Call<String> call = App.api.getSetting(userName, passWord);
 
             call.enqueue(new Callback<String>() {
@@ -1779,7 +1776,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         dialog.dismiss();
         dialog.show();
         customProgress.hideProgress();
-        binding.progressbar.setVisibility(View.GONE);
+
     }
 
     private void SaveImageToStorage(Bitmap bitmapImage, String ID, Context context) {
@@ -2035,6 +2032,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     public  void  setHomeBottomBar(){
         binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
+    }
+
+    public  void  setHomeBottomBarAndClearBadge(){
+        binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
+        binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
     }
 
 }

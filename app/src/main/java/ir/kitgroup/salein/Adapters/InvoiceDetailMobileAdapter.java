@@ -114,7 +114,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
         holder.name.setTextSize(fontSize);
-        holder.price.setTextSize(fontLargeSize);
+        holder.price.setTextSize(fontSize);
         holder.edtAmount.setTextSize(fontSize);
         holder.edtDescription.setTextSize(fontSize);
         holder.sumPrice.setTextSize(fontLargeSize);

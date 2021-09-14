@@ -3,6 +3,8 @@ package ir.kitgroup.salein.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -191,8 +193,30 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 holder.productImage.setImageBitmap(image);
 
 
-            } else {
-                holder.productImage.setImageResource(R.drawable.application_logo1);
+            }
+            else {
+                try {
+                    PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+
+                    switch (pInfo.packageName){
+                        case "ir.kitgroup.salein":
+                            holder.productImage.setImageResource(R.drawable.application_logo1);
+                            break;
+
+                        case "ir.kitgroup.saleintop":
+                            holder.productImage.setImageResource(R.drawable.top_png);
+
+                            break;
+
+
+                        case "ir.kitgroup.saleinmeat":
+                            holder.productImage.setImageResource(R.drawable.meat_png);
+                            break;
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
             }
 
 
