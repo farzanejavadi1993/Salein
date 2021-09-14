@@ -557,13 +557,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
                                 AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount((double) remain);
-                                if (MinOrPlus != 3) {
+                               // if (MinOrPlus != 3) {
                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                     ProductAmountTxt.setText(df.format(remain));
                                     ProductAmountTxt.addTextChangedListener(textWatcher);
 
 
-                                }
+                              // }
                                 if (resultInvoice.size() > 0) {
                                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
                                     if (invoiceDetail != null) {
@@ -613,7 +613,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                     ProductAmountTxt.setText(df.format(amount));
                                     ProductAmountTxt.addTextChangedListener(textWatcher);
-                                }
+                               }
 
                             }
                             //create row

@@ -889,44 +889,49 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
 
-                    assert iDs != null;
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
+                    if (iDs!=null){
+                        int message = iDs.getLogs().get(0).getMessage();
+                        String description = iDs.getLogs().get(0).getDescription();
 
-                    if (message == 1) {
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                        Account.deleteAll(Account.class);
-                        Account.saveInTx(accounts);
-                        assert getFragmentManager() != null;
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
-                        bundle1.putString("type", locationAddress);
-                        Fragment frg = null;
-                        if (flag == 0)
-                            frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
-                        else
-                            frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
-
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        if (frg != null) {
+                        if (message == 1) {
+                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                            Account.deleteAll(Account.class);
+                            Account.saveInTx(accounts);
+                            assert getFragmentManager() != null;
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
+                            bundle1.putString("type", locationAddress);
+                            Fragment frg = null;
                             if (flag == 0)
-                                frg.setArguments(bundle1);
-                            if (flag == 1) {
-                                PaymentMobileFragment.setADR1 = setADR1;
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
+                            else
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
 
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            if (frg != null) {
+                                if (flag == 0)
+                                    frg.setArguments(bundle1);
+                                if (flag == 1) {
+                                    PaymentMobileFragment.setADR1 = setADR1;
+
+                                }
+
+                                getFragmentManager().popBackStack();
+                                ft.detach(frg);
+                                ft.attach(frg);
+                                ft.commit();
                             }
 
-                            getFragmentManager().popBackStack();
-                            ft.detach(frg);
-                            ft.attach(frg);
-                            ft.commit();
+
+                        } else {
+
+                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                         }
-
-
-                    } else {
-
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
                     }
+
+
                     binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnRegisterInformation.setEnabled(true);
                     customProgress.hideProgress();

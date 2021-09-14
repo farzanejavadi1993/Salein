@@ -85,9 +85,9 @@ public class LoginClientFragment extends Fragment {
 
             switch (pInfo.packageName){
                 case "ir.kitgroup.salein":
-                    messageWelcome="به سالین دمو خوش آمدید";
+                    messageWelcome="به سالین خوش آمدید";
                     imageLogo=R.drawable.salein;
-                   messageCode= "کد تایید ورود به سالین دمو";
+                   messageCode= "کد تایید ورود به سالین";
                     break;
 
                 case "ir.kitgroup.saleintop":

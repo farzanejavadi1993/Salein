@@ -236,7 +236,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             switch (pInfo.packageName){
                 case "ir.kitgroup.salein":
-                    nameCompany="سالین دمو";
+                    nameCompany="سالین";
                     imageLogo=R.drawable.salein;
                     imgIconDialog=R.drawable.saleinicon128;
 
@@ -1682,7 +1682,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
 
                         getProducts();
-
 
                     }
 

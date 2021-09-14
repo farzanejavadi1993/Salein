@@ -42,8 +42,8 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     private final String Inv_GUID;//1 seen      //2 edit
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
-    private int fontSize=0;
-    private int fontLargeSize=0;
+    private int fontSize = 0;
+    private int fontLargeSize = 0;
 
     private final DecimalFormat df;
 
@@ -94,13 +94,12 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (LauncherActivity.screenInches>=7) {
+        if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
-            fontLargeSize=14;
-        }
-        else {
+            fontLargeSize = 14;
+        } else {
             fontSize = 11;
-            fontLargeSize=12;
+            fontLargeSize = 12;
         }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.invoice_list_item_recycle, parent, false);
         return new viewHolder(view);
@@ -111,9 +110,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
 
 
-
         InvoiceDetail invoicedetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
-
 
 
         holder.name.setTextSize(fontSize);
@@ -180,7 +177,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                     if (!s.equals("")) {
                         amount = Double.parseDouble(s);
                     }
-                    Double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+                    double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
                    /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
                     Double totalPrice = sumprice - discountPrice;*/
                     holder.sumPrice.setText(format.format(sumprice));
@@ -203,8 +200,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         holder.edtAmount.removeTextChangedListener(holder.textWatcher);
         if (invoicedetail.INV_DET_QUANTITY.equals("0")) {
             holder.edtAmount.setText("");
-        }
-        else {
+        } else {
             holder.edtAmount.setText(df.format(invoicedetail.INV_DET_QUANTITY));
         }
 
@@ -234,7 +230,6 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
 
 
-
                 ArrayList<Product> allResultPr = new ArrayList<>(Util.AllProduct);
 
                 CollectionUtils.filter(allResultPr, r -> r.I.equals(result.get(0).PRD_UID));
@@ -255,6 +250,24 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 deleteItem.onDelete(holder.rst.get(0).I);
         });
 
+
+        holder.ivMax.setOnClickListener(v -> {
+
+            holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+            double amount = invoicedetail.INV_DET_QUANTITY + 1;
+            holder.edtAmount.setText(format.format(amount));
+            holder.edtAmount.addTextChangedListener(holder.textWatcher);
+
+            double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            holder.sumPrice.setText(format.format(sumprice));
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+
+        });
+
+
+        holder.ivMinus.setOnClickListener(v -> {
+
+        });
 
     }
 
@@ -281,6 +294,8 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         private final ImageView imgDelete;
         private final RelativeLayout imgDescription;
         private final EditText edtAmount;
+        private final ImageView ivMax;
+        private final ImageView ivMinus;
 
 
         public viewHolder(View itemView) {
@@ -295,6 +310,8 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             imgDescription = itemView.findViewById(R.id.layout_description);
             edtAmount = itemView.findViewById(R.id.order_list_item_recycle_editText);
             edtDescription = itemView.findViewById(R.id.edt_description);
+            ivMax = itemView.findViewById(R.id.iv_max_invoice);
+            ivMinus = itemView.findViewById(R.id.iv_minus_invoice);
 
 
         }
