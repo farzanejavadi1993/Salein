@@ -704,7 +704,16 @@ public class PaymentMobileFragment extends Fragment {
             invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
             invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
 
-            invoiceDetailTransport.PRD_UID = Util.AllProduct.get(Util.AllProduct.size() - 1).I;
+            ArrayList<Product> result=new ArrayList<>();
+            result.addAll(Util.AllProduct);
+            CollectionUtils.filter(result,r->r.N.equals("توزیع"));
+            if (result.size()>0){
+                invoiceDetailTransport.PRD_UID = result.get(0).I;
+            }else {
+                Toast.makeText(getActivity(), "خطا در ارسال مبلغ توزیع", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             invoiceDetailTransport.INV_DET_DESCRIBTION =  "توزیع";
             invDetails.add(invoiceDetailTransport);
 

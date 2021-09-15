@@ -133,6 +133,7 @@
 
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/txtSumTransport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -143,6 +144,7 @@
                     android:textSize="@dimen/text_medium_mobile_size"
                     tools:ignore="RelativeOverlap" />
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_sumTransport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

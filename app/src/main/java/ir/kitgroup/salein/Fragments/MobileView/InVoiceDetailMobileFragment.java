@@ -460,10 +460,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     sumTransport = Double.parseDouble(invDetails.get(i).INV_DET_TOTAL_AMOUNT);
                     invDetails.remove(invDetails.get(i));
                     binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
+                    binding.tvSumTransport.setVisibility(View.VISIBLE);
+                    binding.txtSumTransport.setVisibility(View.VISIBLE);
+
                 }
             }
-        }else {
-            binding.tvSumTransport.setText("");
+        }
+        if (type.equals("2")){
             binding.tvSumTransport.setVisibility(View.GONE);
             binding.txtSumTransport.setVisibility(View.GONE);
         }
@@ -494,7 +497,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
+        if (type.equals("1"))
         binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+        else
+            binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 

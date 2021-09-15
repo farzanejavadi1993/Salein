@@ -102,7 +102,6 @@ import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -137,17 +136,17 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int emptyListProductFlag = 0;
 
 
-    private ArrayList<ProductGroupLevel1> AllProductLevel1 ;
-    private ArrayList<ProductGroupLevel1> productLevel1List ;
+    private ArrayList<ProductGroupLevel1> AllProductLevel1;
+    private ArrayList<ProductGroupLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
 
 
-    private ArrayList<ProductGroupLevel2> AllProductLevel2 ;
-    private ArrayList<ProductGroupLevel2> productLevel2List ;
+    private ArrayList<ProductGroupLevel2> AllProductLevel2;
+    private ArrayList<ProductGroupLevel2> productLevel2List;
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-    private ArrayList<Product> productList ;
+    private ArrayList<Product> productList;
     private ArrayList<Product> productListData;
     private ArrayList<Product> allProductActive;
 
@@ -204,10 +203,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private Boolean firstSync = false;
 
-    private  int imageLogo;
-    private  int imgIconDialog;
-    private  int imgBackground=0;
-    private  String nameCompany;
+    private int imageLogo;
+    private int imgIconDialog;
+    private int imgBackground = 0;
+    private String nameCompany;
 
     //endregion Parameter
 
@@ -229,33 +228,32 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName){
+            switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
-                    nameCompany="سالین";
-                    imageLogo=R.drawable.salein;
-                    imgIconDialog=R.drawable.saleinicon128;
+                    nameCompany = "سالین";
+                    imageLogo = R.drawable.salein;
+                    imgIconDialog = R.drawable.saleinicon128;
 
 
                     break;
 
                 case "ir.kitgroup.saleintop":
-                    nameCompany="رستوران تاپ کباب";
-                    imageLogo=R.drawable.top;
-                    imgBackground=R.drawable.top_pas;
-                    imgIconDialog=R.drawable.top_png;
+                    nameCompany = "رستوران تاپ کباب";
+                    imageLogo = R.drawable.top;
+                    imgBackground = R.drawable.top_pas;
+                    imgIconDialog = R.drawable.top_png;
 
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
-                    nameCompany="هایپر گوشت دنیوی";
-                    imageLogo=R.drawable.goosht;
-                    imgBackground=R.drawable.donyavi_pas;
-                    imgIconDialog=R.drawable.meat_png;
+                    nameCompany = "هایپر گوشت دنیوی";
+                    imageLogo = R.drawable.goosht;
+                    imgBackground = R.drawable.donyavi_pas;
+                    imgIconDialog = R.drawable.meat_png;
 
                     break;
             }
@@ -266,9 +264,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         binding.ivIconCompany.setImageResource(imageLogo);
         binding.tvCompany.setText(nameCompany);
-        if (imgBackground!=0)
+        if (imgBackground != 0)
             binding.image.setImageResource(imgBackground);
-
 
 
         binding.edtSearchProduct.setTextSize(fontSize);
@@ -279,8 +276,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         firstSync = sharedPreferences.getBoolean("firstSync", false);
 
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
-            Tables tb=Select.from(Tables.class).where("I ='" + invoice.TBL_UID+"'").first();
-            if (tb==null || tb.SV==null  || !tb.SV) {
+            Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
+            if (tb == null || tb.SV == null || !tb.SV) {
                 Invoice.deleteInTx(invoice);
                 for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
 
@@ -387,9 +384,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             accAdapter.setOnClickItemListener((GUID, name) -> {
                 Account.deleteAll(Account.class);
-                Account account=new Account();
-                account.I=GUID;
-                account.N=name;
+                Account account = new Account();
+                account.I = GUID;
+                account.N = name;
                 Account.saveInTx(account);
                 Acc_GUID = GUID;
                 Acc_NAME = name;
@@ -409,8 +406,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
             binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-        }
-        else {
+        } else {
 
             binding.defineCompany.setVisibility(View.VISIBLE);
             binding.layoutSearchCustomer.setVisibility(View.GONE);
@@ -424,9 +420,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
 
 
-
-
-
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
 
@@ -435,6 +428,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 if (invDetails.size() > 0) {
+                    for (int i = 0; i < invDetails.size(); i++) {
+                        if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+
+                            invDetails.remove(invDetails.get(i));
+
+                        }
+                    }
                     counter = invDetails.size();
                     binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                     if (App.mode == 1)
@@ -469,7 +469,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                         InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                         inVoiceDetailFragmentMobile.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile,"InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailF").commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailF").commit();
 
                         return true;
 
@@ -482,10 +482,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         }
-
-
-
-
 
 
         //region First Value Parameter
@@ -555,7 +551,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region Create Order
 
         List<Invoice> invoicese = Select.from(Invoice.class).list();
-        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT==null);
+        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT == null);
         if (invoicese.size() > 0) {
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
             CollectionUtils.filter(invoiceDetails, i -> i.INV_UID.equals(invoicese.get(0).INV_UID));
@@ -601,7 +597,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
 
-                getProduct();
+            getProduct();
 
         });
 
@@ -826,9 +822,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
         binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
-
-
-
 
 
         //region Click Item ProductLevel2
@@ -1072,9 +1065,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         isAllPermissionGranted();
-
-
-
 
 
         return binding.getRoot();
@@ -1356,6 +1346,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         List<InvoiceDetail> invoicedetails = Select.from(InvoiceDetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
                         if (invoicedetails.size() > 0) {
                             // binding.itemInvoiceDetail.setBadgeText(String.valueOf(invoicedetails.size()));
+
+                            for (int i = 0; i < invoicedetails.size(); i++) {
+                                if (invoicedetails.get(i).INV_DET_DESCRIBTION != null && invoicedetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+
+                                    invoicedetails.remove(invoicedetails.get(i));
+
+                                }
+                            }
                             counter = invoicedetails.size();
                             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                         } else
@@ -1364,13 +1362,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
 
-
                         for (int i = 0; i < invoicedetails.size(); i++) {
 
                             ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
                             int finalI = i;
 
-                          //  List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                            //  List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                             CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
                             if (resultProducts.size() > 0) {
@@ -1413,7 +1410,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                 customProgress.hideProgress();
-
 
 
                 super.onPostExecute(o);
@@ -1975,8 +1971,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             }
         }
 
-            getProduct();
-
+        getProduct();
 
 
     }
@@ -2016,8 +2011,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-                getProduct();
-
+            getProduct();
 
 
         } else {
@@ -2030,11 +2024,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    public  void  setHomeBottomBar(){
+    public void setHomeBottomBar() {
         binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
     }
 
-    public  void  setHomeBottomBarAndClearBadge(){
+    public void setHomeBottomBarAndClearBadge() {
         binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
         binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
     }
