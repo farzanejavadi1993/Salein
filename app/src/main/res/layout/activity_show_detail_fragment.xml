@@ -65,6 +65,7 @@
 
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
@@ -77,6 +78,7 @@
                         android:textStyle="bold" />
 
                     <RelativeLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
@@ -91,7 +93,7 @@
                             android:layout_height="22dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_edit_blue" />
+                             />
 
                         <TextView
                             android:gravity="right"

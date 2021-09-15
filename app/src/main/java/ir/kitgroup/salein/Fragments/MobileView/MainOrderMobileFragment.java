@@ -208,6 +208,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int imgBackground = 0;
     private String nameCompany;
 
+    private String time="2";
+
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -250,7 +252,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                 case "ir.kitgroup.saleinmeat":
-                    nameCompany = "هایپر گوشت دنیوی";
+                    nameCompany = " گوشت دنیوی";
                     imageLogo = R.drawable.goosht;
                     imgBackground = R.drawable.donyavi_pas;
                     imgIconDialog = R.drawable.meat_png;
@@ -274,6 +276,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         customProgress = CustomProgress.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         firstSync = sharedPreferences.getBoolean("firstSync", false);
+        if (!firstSync)
+            time="2";
+        else
+            time="1";
+
 
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
             Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
@@ -297,7 +304,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         if (App.mode == 1) {
             binding.defineCompany.setVisibility(View.GONE);
-            binding.layoutSearchCustomer.setVisibility(View.VISIBLE);
+            binding.layoutAccount.setVisibility(View.VISIBLE);
+            binding.layoutSearchProduct.setVisibility(View.VISIBLE);
             binding.bottomNavigationViewLinear.setVisibility(View.GONE);
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
@@ -409,8 +417,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         } else {
 
             binding.defineCompany.setVisibility(View.VISIBLE);
-            binding.layoutSearchCustomer.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.GONE);
+            binding.layoutSearchProduct.setVisibility(View.VISIBLE);
 
             binding.btnRegisterOrder.setVisibility(View.GONE);
             Acc_NAME = Select.from(Account.class).first().N;
@@ -419,7 +427,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
 
-
+            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setBackgroundColor(getActivity().getResources().getColor(R.color.red_table));
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
 
@@ -597,7 +605,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
 
-            getProduct();
+            getProduct(time);
 
         });
 
@@ -1536,7 +1544,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void getProduct() {
+    private void getProduct(String time) {
 
         error = "";
 
@@ -1547,7 +1555,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2");
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord,"2" );
 
 
             call.enqueue(new Callback<String>() {
@@ -1971,7 +1979,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             }
         }
 
-        getProduct();
+        getProduct(time);
 
 
     }
@@ -2011,7 +2019,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            getProduct();
+            getProduct(time);
 
 
         } else {

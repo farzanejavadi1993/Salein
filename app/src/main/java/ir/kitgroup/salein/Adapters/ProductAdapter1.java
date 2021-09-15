@@ -191,6 +191,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     e.printStackTrace();
                 }
                 holder.productImage.setImageBitmap(image);
+                holder.productImage1.setImageBitmap(null);
 
 
             }
@@ -200,17 +201,23 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     switch (pInfo.packageName){
                         case "ir.kitgroup.salein":
-                            holder.productImage.setImageResource(R.drawable.application_logo1);
+                            holder.productImage.setImageResource(R.drawable.white);
+                            holder.productImage1.setImageResource(R.drawable.salein);
                             break;
 
                         case "ir.kitgroup.saleintop":
-                            holder.productImage.setImageResource(R.drawable.top_png);
+                            holder.productImage.setImageResource(R.drawable.white);
+                            holder.productImage1.setImageResource(R.drawable.top_png);
+
 
                             break;
 
 
                         case "ir.kitgroup.saleinmeat":
-                            holder.productImage.setImageResource(R.drawable.meat_png);
+
+
+                            holder.productImage.setImageResource(R.drawable.white);
+                            holder.productImage1.setImageResource(R.drawable.meat_png);
                             break;
                     }
                 } catch (PackageManager.NameNotFoundException e) {
@@ -423,6 +430,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final RelativeLayout cardEdit;
 
         private final RoundedImageView productImage;
+        private final ImageView productImage1;
 
 
         private final ImageView ivMinus;
@@ -450,6 +458,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             productImage = itemView.findViewById(R.id.order_recycle_item_product_img);
+            productImage1 = itemView.findViewById(R.id.order_recycle_item_product_img1);
             ProductAmountTxt = itemView.findViewById(R.id.order_recycle_item_product_txt_amount);
 
 

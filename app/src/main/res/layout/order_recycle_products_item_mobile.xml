@@ -16,15 +16,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.github.siyamed.shapeimageview.RoundedImageView
-            android:id="@+id/order_recycle_item_product_img"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="8dp"
-            app:siBorderColor="#AAA9A9"
-            app:siBorderWidth="0.5dp"
-            app:siRadius="10dp" />
+        <RelativeLayout
+            android:id="@+id/layout_Image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:id="@+id/order_recycle_item_product_img"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="8dp"
+                app:siBorderColor="#AAA9A9"
+                app:siBorderWidth="0.5dp"
+                app:siRadius="10dp" />
+
+            <ImageView
+
+                android:layout_centerInParent="true"
+                android:id="@+id/order_recycle_item_product_img1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="8dp"
+                />
+
+        </RelativeLayout>
 
         <TextView
 
@@ -48,7 +63,7 @@
             android:layout_height="wrap_content"
 
             android:gravity="right"
-            android:layout_toRightOf="@+id/order_recycle_item_product_img"
+            android:layout_toRightOf="@+id/layout_Image"
             android:textColor="@color/red_table"
             android:textSize="12sp" />
 
@@ -56,7 +71,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:id="@+id/l_Price"
-            android:layout_toRightOf="@+id/order_recycle_item_product_img"
+            android:layout_toRightOf="@+id/layout_Image"
             android:layout_below="@+id/order_recycle_item_product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -105,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l_Price"
-            android:layout_toRightOf="@+id/order_recycle_item_product_img">
+            android:layout_toRightOf="@+id/layout_Image">
 
 
 
@@ -131,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/order_recycle_item_product_img">
+            android:layout_toRightOf="@+id/layout_Image">
 
             <TextView
                 android:visibility="gone"
@@ -150,8 +165,8 @@
             <ImageView
 
                 android:id="@+id/iv_minus"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="4dp"
@@ -175,8 +190,8 @@
 
             <ImageView
                 android:id="@+id/iv_max"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"

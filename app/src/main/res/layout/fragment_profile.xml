@@ -63,234 +63,192 @@
 
 
                     </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_marginTop="@dimen/margin10"
+
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginLeft="@dimen/normal_left_right_margin"
-                        android:layout_marginRight="@dimen/normal_left_right_margin"
-                        android:orientation="vertical"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
-                        <ImageView
-                            android:layout_centerVertical="true"
-                            android:padding="5dp"
-                            android:id="@+id/iv_profile"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_profile"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/txt_name"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@id/iv_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/first_last_name"
-                            android:textColor="@color/medium_color"
-                            android:textSize="12sp"
-                            />
-
-                        <EditText
-                            android:fontFamily="@font/iransans"
-                            android:background="@android:color/transparent"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_alignParentLeft="true"
-                            android:id="@+id/tvName"
-                            android:gravity="left"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="فرزانه جوادی بایگی"
-                            android:textColor="@color/medium_color"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginLeft="@dimen/normal_left_right_margin"
-                        android:layout_marginRight="@dimen/normal_left_right_margin"
-                        android:background="#ccc" />
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginLeft="22dp"
-                        android:layout_marginTop="@dimen/margin10"
+                        app:strokeColor="#ddd"
+                        app:cardCornerRadius="@dimen/margin2"
+                        android:layout_marginTop="12dp"
                         android:layout_marginRight="22dp"
-                        android:orientation="vertical"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
-                        <ImageView
-
-                            android:layout_centerVertical="true"
-                            android:padding="5dp"
-                            android:id="@+id/iv_phone"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_phone"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/txt_mobile"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/iv_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/phone_number_account"
-                            android:textColor="@color/medium_color"
-                            android:textSize="@dimen/text_large_mobile_size"
-                            />
-
-                        <EditText
-
-                            android:gravity="left"
-                            android:layout_centerVertical="true"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:layout_marginLeft="@dimen/margin10"
-                            android:layout_alignParentLeft="true"
-                            android:id="@+id/tvMobile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="09150469164"
-                            android:textColor="@color/medium_color"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </RelativeLayout>
-                    <View
-                        android:id="@+id/view1"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginLeft="@dimen/normal_left_right_margin"
-                        android:layout_marginRight="@dimen/normal_left_right_margin"
-                        android:background="#ccc" />
-
-                    <LinearLayout
-                        android:id="@+id/l_adr1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginLeft="22dp"
-                        android:layout_marginTop="@dimen/margin10"
-                        android:layout_marginRight="22dp"
-                        android:gravity="right"
-                        android:orientation="vertical"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
-
+                        app:strokeWidth="1dp"
+                        android:layout_height="wrap_content">
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <ImageView
+                            <EditText
+                                android:textStyle="bold"
+                                android:layout_marginRight="12dp"
+                                android:gravity="right"
+                              android:layout_marginLeft="39dp"
+                                android:fontFamily="@font/iransans"
+                                android:backgroundTint="@android:color/transparent"
+                                android:id="@+id/txt_name"
                                 android:layout_centerVertical="true"
-                                android:padding="5dp"
-                                android:id="@+id/iv_address1"
-                                android:layout_alignParentRight="true"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_location"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                tools:ignore="ContentDescription" />
-
-                            <TextView
-                                android:id="@+id/txt_address"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_toLeftOf="@+id/iv_address1"
-                                android:text="آدرس 1 "
+                                android:hint="@string/first_last_name"
+                                android:textColor="@color/medium_color"
+                                android:textSize="12sp"/>
+
+                            <ImageView
+
+                                android:layout_marginLeft="12dp"
+                                android:src="@drawable/ic_profile"
+                                android:layout_centerVertical="true"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"/>
+                        </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        app:strokeColor="#ddd"
+                        app:cardCornerRadius="@dimen/margin2"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginLeft="22dp"
+                        app:strokeWidth="1dp"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <EditText
+
+                              android:layout_marginRight="12dp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:gravity="right"
+                                android:layout_centerVertical="true"
+                                android:fontFamily="@font/iransans"
+                                android:layout_marginLeft="39dp"
+                                android:layout_alignParentLeft="true"
+                                android:id="@+id/tvMobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="شماره تلفن"
+                                android:textColor="@color/medium_color"
+                                android:textSize="12sp"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+
+                                android:layout_marginLeft="12dp"
+                                android:src="@drawable/ic_phone"
+                                android:layout_centerVertical="true"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"/>
+                        </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                  <RelativeLayout
+                      android:id="@+id/editAddress1"
+                      android:layout_marginLeft="22dp"
+                      android:layout_marginRight="22dp"
+                      android:layout_marginTop="15dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                      <ImageView
+                          android:id="@+id/marker1"
+                          android:src="@drawable/ic_location_marker"
+                          android:layout_alignParentRight="true"
+                          android:layout_width="25dp"
+                          android:layout_height="25dp"/>
+                      <TextView
+
+                          android:layout_toLeftOf="@+id/marker1"
+                          android:text="ویرایش آدرس 1"
+                          android:layout_marginRight="12dp"
+                          android:textStyle="bold"
+                          android:textColor="#474747"
+                          android:textSize="12sp"
+                          android:gravity="right"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"/>
+                  </RelativeLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        app:strokeColor="#ddd"
+                        app:cardCornerRadius="@dimen/margin2"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginLeft="22dp"
+                        app:strokeWidth="1dp"
+
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:textStyle="bold"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="@dimen/margin10"
+                                android:backgroundTint="@android:color/transparent"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:gravity="right"
+                                android:id="@+id/txt_address1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="آدرس 1 "
                                 android:textColor="@color/medium_color"
                                 android:textSize="12sp" />
                         </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
 
+                    <RelativeLayout
+                        android:id="@+id/editAddress2"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/marker2"
+                            android:src="@drawable/ic_location_marker"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
                         <TextView
-                            android:enabled="false"
-                            android:inputType="textShortMessage|textMultiLine"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:layout_marginTop="@dimen/margin2"
-                            android:layout_marginRight="@dimen/margin10"
-                            android:layout_marginLeft="@dimen/margin10"
-                            android:id="@+id/tvAddress1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="مشهد بولوار هدایت"
-                            android:textColor="@color/medium_color"
+                            android:layout_toLeftOf="@+id/marker2"
+                            android:text="ویرایش آدرس 2"
+                            android:layout_marginRight="12dp"
+                            android:textStyle="bold"
+                            android:textColor="#474747"
                             android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                    <View
+                            android:gravity="right"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </RelativeLayout>
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginLeft="22dp"
+                        app:strokeColor="#ddd"
+                        app:cardCornerRadius="@dimen/margin2"
+                        android:layout_marginTop="4dp"
                         android:layout_marginRight="22dp"
-                        android:background="#ccc" />
-
-                    <LinearLayout
-
-                        android:id="@+id/l_adr2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginLeft="22dp"
-                        android:layout_marginTop="@dimen/margin10"
-                        android:layout_marginRight="22dp"
-                        android:gravity="right"
-                        android:orientation="vertical"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
+                        app:strokeWidth="1dp"
 
+                        android:layout_height="wrap_content">
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_centerVertical="true"
-                                android:padding="5dp"
-                                android:id="@+id/iv_address2"
-                                android:layout_alignParentRight="true"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_location"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                tools:ignore="ContentDescription" />
                             <TextView
+                                android:textStyle="bold"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="@dimen/margin10"
+                                android:backgroundTint="@android:color/transparent"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:gravity="right"
                                 android:id="@+id/txt_address2"
-                                android:layout_toLeftOf="@+id/iv_address2"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="آدرس 2"
+                                android:hint="آدرس 2 "
                                 android:textColor="@color/medium_color"
-                                android:textSize="12sp"
-                                />
+                                android:textSize="12sp" />
                         </RelativeLayout>
-
-
-                        <TextView
-                            android:enabled="false"
-                            android:inputType="textShortMessage|textMultiLine"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:layout_marginTop="@dimen/margin2"
-                            android:layout_marginRight="@dimen/margin10"
-                            android:layout_marginLeft="@dimen/margin10"
-                            android:id="@+id/tvAddress2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="مشهد بولوار هدایت"
-                            android:textColor="@color/medium_color"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-
-
-
+                    </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
 

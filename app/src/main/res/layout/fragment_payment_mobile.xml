@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="تغییر آدرس"
+                android:text="انتخاب آدرس"
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -146,6 +146,8 @@
                 android:layout_marginTop="@dimen/margin10"
                 android:backgroundTint="@color/white"
                 app:cardCornerRadius="12dp"
+                app:strokeColor="#ddd"
+                app:strokeWidth="1.5dp"
                 tools:targetApi="lollipop">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -197,6 +199,7 @@
 
 
                     <ImageView
+                        android:visibility="gone"
                         android:id="@+id/iv_ok_payment_place"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
@@ -204,9 +207,9 @@
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/margin10"
                         android:layout_marginStart="10dp"
-                        android:padding="12dp"
-                        android:rotation="270"
-                        android:src="@drawable/ic_fi_rr_angle_small_left"
+                        android:padding="6dp"
+
+                        android:src="@drawable/ic_tik"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

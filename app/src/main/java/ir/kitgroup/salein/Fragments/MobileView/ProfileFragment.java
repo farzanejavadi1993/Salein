@@ -69,56 +69,51 @@ public class ProfileFragment extends Fragment {
 
 
         binding.txtTitleToolbar.setTextSize(fontSize);
-        binding.tvName.setTextSize(fontSize);
-        binding.tvMobile.setTextSize(fontSize);
-        binding.tvAddress2.setTextSize(fontSize);
-        binding.tvAddress1.setTextSize(fontSize);
         binding.txtName.setTextSize(fontSize);
-        binding.txtMobile.setTextSize(fontSize);
-        binding.txtAddress.setTextSize(fontSize);
+        binding.tvMobile.setTextSize(fontSize);
         binding.txtAddress2.setTextSize(fontSize);
+        binding.txtAddress1.setTextSize(fontSize);
 
 
 
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
 
-        binding.tvAddress1.setText("");
-        binding.tvAddress2.setText("");
-        binding.tvMobile.setText("");
-        binding.tvName.setText("");
+
+
 
         Account account = Select.from(Account.class).first();
 
 
+
         if (account != null) {
-            binding.tvName.setText(account.N);
+            binding.txtName.setText(account.N);
             binding.tvMobile.setText(account.M);
 
             if (account.ADR != null && !account.ADR.equals("")) {
-                binding.tvAddress1.setText(account.ADR);
+                binding.txtAddress1.setText(account.ADR);
 
             } else {
-                binding.tvAddress1.setText("ناموجود");
+                binding.txtAddress1.setText("ناموجود");
             }
 
 
             if (account.ADR1 != null && !account.ADR1.equals("")) {
-                binding.tvAddress2.setText(account.ADR1);
+                binding.txtAddress2.setText(account.ADR1);
 
             } else {
-                binding.tvAddress2.setText("ناموجود");
+                binding.txtAddress2.setText("ناموجود");
             }
 
 
             if (type.equals("1") && !address.equals("")) {
-                binding.tvAddress1.setText(address);
+                binding.txtAddress1.setText(address);
             } else if (type.equals("2") && !address.equals("")) {
-                binding.tvAddress2.setText(address);
+                binding.txtAddress2.setText(address);
             }
 
 
-            binding.lAdr1.setOnClickListener(v -> {
+            binding.editAddress1.setOnClickListener(v -> {
 
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("edit_address", "2");
@@ -128,7 +123,7 @@ public class ProfileFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
             });
 
-            binding.lAdr2.setOnClickListener(v -> {
+            binding.editAddress2.setOnClickListener(v -> {
 
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("edit_address", "2");
@@ -147,11 +142,11 @@ public class ProfileFragment extends Fragment {
                         Account account1 = new Account();
                         account1.I=accountORG.I;
                         account1.M = binding.tvMobile.getText().toString();
-                        account1.N = binding.tvName.getText().toString();
-                        if (!binding.tvAddress1.getText().toString().equals("ناموجود"))
-                            account1.ADR = binding.tvAddress1.getText().toString();
-                        if (!binding.tvAddress2.getText().toString().equals("ناموجود"))
-                            account1.ADR1 = binding.tvAddress2.getText().toString();
+                        account1.N = binding.txtName.getText().toString();
+                        if (!binding.txtAddress1.getText().toString().equals("ناموجود"))
+                            account1.ADR = binding.txtAddress1.getText().toString();
+                        if (!binding.txtAddress2.getText().toString().equals("ناموجود"))
+                            account1.ADR1 = binding.txtAddress2.getText().toString();
 
                         List<Account> list = new ArrayList<>();
                         list.add(account1);

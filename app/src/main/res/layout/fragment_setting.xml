@@ -127,7 +127,7 @@
                 android:textStyle="bold" />
             <ImageView
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/app_off"
+                android:src="@drawable/club"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 tools:ignore="ContentDescription" />

@@ -45,21 +45,21 @@
                     tools:ignore="UnusedAttribute">
 
                     <LinearLayout
-                        android:visibility="gone"
+                        android:background="@drawable/background_edittext"
                         android:id="@+id/layout_search_customer"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <RelativeLayout
-
+                            android:visibility="gone"
                             android:id="@+id/layout_account"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="2dp"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.33"
                             android:background="@drawable/background_edittext"
                             android:padding="5dp">
 
@@ -77,7 +77,7 @@
                             <EditText
                                 android:id="@+id/name_customer"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/margin8"
                                 android:layout_toRightOf="@+id/btn_add_account"
@@ -94,14 +94,23 @@
                                 android:textSize="@dimen/text_normal_mobile_size"
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
-
                         <RelativeLayout
                             android:id="@+id/layout_search_product"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.33"
                             android:background="@drawable/background_edittext">
+                            <ImageView
+                                android:layout_centerVertical="true"
+                                android:id="@+id/iv_search"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="@dimen/margin8"
+                                android:layout_marginRight="@dimen/margin8"
+                                android:src="@drawable/ic_search"
+                                tools:ignore="ContentDescription" />
 
 
                             <EditText
@@ -124,49 +133,40 @@
 
 
                         </RelativeLayout>
+                        <RelativeLayout
+
+                            android:padding="@dimen/margin10"
+                            android:id="@+id/define_company"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.33"
+                            android:layout_height="wrap_content">
+
+
+                            <com.github.siyamed.shapeimageview.CircularImageView
+                                android:src="@drawable/salein"
+
+                                android:id="@+id/iv_icon_company"
+                                android:layout_width="50dp"
+                                app:siBorderColor="#EEEEF1"
+                                android:layout_height="50dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="center_vertical|right" />
+
+                            <TextView
+                                android:id="@+id/tv_company"
+                                android:layout_marginRight="@dimen/margin8"
+                                android:layout_toLeftOf="@+id/iv_icon_company"
+                                android:layout_centerVertical="true"
+                                android:textStyle="bold"
+                                android:textColor="@color/purple_700"
+                                android:textSize="18sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </RelativeLayout>
 
                     </LinearLayout>
 
-                    <RelativeLayout
 
-                        android:padding="@dimen/margin10"
-                        android:background="@drawable/background_edittext"
-                        android:id="@+id/define_company"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_centerVertical="true"
-                            android:id="@+id/iv_search"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="@dimen/margin8"
-                            android:layout_marginRight="@dimen/margin8"
-                            android:src="@drawable/ic_search"
-                            tools:ignore="ContentDescription" />
-
-                        <com.github.siyamed.shapeimageview.RoundedImageView
-                            android:src="@drawable/salein"
-                            app:siRadius="20dp"
-                            android:id="@+id/iv_icon_company"
-                            android:layout_width="50dp"
-                            app:siBorderColor="#EEEEF1"
-                            android:layout_height="50dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="center_vertical|right" />
-
-                        <TextView
-                            android:id="@+id/tv_company"
-                            android:layout_marginRight="@dimen/margin8"
-                            android:layout_toLeftOf="@+id/iv_icon_company"
-                            android:layout_centerVertical="true"
-                            android:textStyle="bold"
-                            android:textColor="@color/purple_700"
-                            android:textSize="18sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </RelativeLayout>
 
 
                 </com.google.android.material.card.MaterialCardView>

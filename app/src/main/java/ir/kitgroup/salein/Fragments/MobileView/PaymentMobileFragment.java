@@ -550,36 +550,38 @@ public class PaymentMobileFragment extends Fragment {
             }
 
             binding.ivOkPaymentOnline.setVisibility(View.GONE);
-            View view1 = getLayoutInflater().inflate(R.layout.popup_place_payment, null);
-            PopupWindow popupWindow = new PopupWindow(view1, LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
 
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                popupWindow.setElevation(10.0F);
-            }
-
-            popupWindow.setOutsideTouchable(true);
-            popupWindow.showAsDropDown(v);
-
-
-            ConstraintLayout btnPos = view1.findViewById(R.id.layout_pos);
-            ConstraintLayout btnMoney = view1.findViewById(R.id.layout_money);
-
-
-            btnPos.setOnClickListener(v1 -> {
-                typePayment = "2";
-                binding.tvTypePaymentPlace.setText("پرداخت با کارت");
-                popupWindow.dismiss();
-            });
-
-
-            btnMoney.setOnClickListener(v12 -> {
-
-                typePayment = "1";
-                binding.tvTypePaymentPlace.setText("پرداخت نقدی");
-                popupWindow.dismiss();
-            });
+//            View view1 = getLayoutInflater().inflate(R.layout.popup_place_payment, null);
+//            PopupWindow popupWindow = new PopupWindow(view1, LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                popupWindow.setElevation(10.0F);
+//            }
+//
+//            popupWindow.setOutsideTouchable(true);
+//            popupWindow.showAsDropDown(v);
+//
+//
+//            ConstraintLayout btnPos = view1.findViewById(R.id.layout_pos);
+//            ConstraintLayout btnMoney = view1.findViewById(R.id.layout_money);
+//
+//
+//            btnPos.setOnClickListener(v1 -> {
+//                typePayment = "2";
+//                binding.tvTypePaymentPlace.setText("پرداخت با کارت");
+//                popupWindow.dismiss();
+//            });
+//
+//
+//            btnMoney.setOnClickListener(v12 -> {
+//
+//                typePayment = "1";
+//                binding.tvTypePaymentPlace.setText("پرداخت نقدی");
+//                popupWindow.dismiss();
+//            });
 
         });
 
@@ -670,9 +672,9 @@ public class PaymentMobileFragment extends Fragment {
                 Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else if (typePayment.equals("-1")) {
-                tvMessage.setText("نوع پرداخت مشخص نشده است. سفارش به صورت موقت ارسال میشود . از ارسال اطمینان دارید ؟");
+                tvMessage.setText("از ارسال سفارش اطمینان دارید ؟");
             } else {
-                tvMessage.setText(" از ارسال سفارش اطمینان دارید ؟");
+                tvMessage.setText("از ارسال سفارش اطمینان دارید ؟");
             }
             rlButtons.setVisibility(View.VISIBLE);
             btnReturned.setVisibility(View.GONE);
