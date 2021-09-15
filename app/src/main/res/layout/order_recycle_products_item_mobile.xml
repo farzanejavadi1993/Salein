@@ -150,13 +150,14 @@
             <ImageView
 
                 android:id="@+id/iv_minus"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
-                android:src="@drawable/ic_minus1" />
+                android:background="@drawable/minus_background"
+                android:src="@drawable/ic_minus_red" />
 
             <EditText
                 android:fontFamily="@font/iransans"
@@ -174,13 +175,16 @@
 
             <ImageView
                 android:id="@+id/iv_max"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ic_plus1" />
+                android:background="@drawable/plus_background"
+                android:src="@drawable/ic_plus_white"
+
+                />
 
 
         </RelativeLayout>

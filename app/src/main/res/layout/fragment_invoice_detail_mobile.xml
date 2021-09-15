@@ -132,7 +132,27 @@
                     android:textStyle="bold" />
 
 
-
+                <TextView
+                    android:id="@+id/txtSumTransport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_toRightOf="@+id/tv_sumTransport"
+                    android:text="هزینه ارسال"
+                    android:textColor="@color/black_l"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+                <TextView
+                    android:id="@+id/tv_sumTransport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin8"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/black_light"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
 
 
             </RelativeLayout>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -100,8 +102,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private CustomProgress customProgress;
 
     private Dialog dialogAddress;
-    private MaterialButton Address1;
-    private MaterialButton Address2;
+    private int imgIconDialog;
 
 
     private String address = "";
@@ -166,6 +167,36 @@ public class MapFragment extends Fragment implements PermissionsListener {
         binding.btnRegisterInformation.setTextSize(fontSize);
 
 
+
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+            switch (pInfo.packageName){
+                case "ir.kitgroup.salein":
+
+                    imgIconDialog=R.drawable.saleinicon128;
+
+
+                    break;
+
+                case "ir.kitgroup.saleintop":
+
+                    imgIconDialog=R.drawable.top_png;
+
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+
+                    imgIconDialog=R.drawable.meat_png;
+
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
@@ -185,11 +216,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
         dialogAddress.setContentView(R.layout.dialog_change_address);
         dialogAddress.setCancelable(true);
 
-        Address1 = dialogAddress.findViewById(R.id.btn_1);
-        Address2 = dialogAddress.findViewById(R.id.btn_2);
+        MaterialButton address1 = dialogAddress.findViewById(R.id.btn_1);
+        MaterialButton address2 = dialogAddress.findViewById(R.id.btn_2);
+        ImageView ivIcon = dialogAddress.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imgIconDialog);
 
-
-        Address1.setOnClickListener(v -> {
+        address1.setOnClickListener(v -> {
 
 
             Account accountORG = Select.from(Account.class).first();
@@ -211,7 +243,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
 
 
-        Address2.setOnClickListener(v -> {
+        address2.setOnClickListener(v -> {
 
             Account accountORG = Select.from(Account.class).first();
             Account account = new Account();

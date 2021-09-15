@@ -254,10 +254,6 @@ public class PaymentMobileFragment extends Fragment {
         Invoice inv1 = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
         if (edit && inv1 != null && inv1.INV_DESCRIBTION != null) {
             binding.edtDescription.setText(inv1.INV_DESCRIBTION);
-            if (edit && inv1.ACC_CLB_DEFAULT_ADDRESS != null && inv1.ACC_CLB_DEFAULT_ADDRESS.equals("1"))
-                binding.tvTAddress.setText(Select.from(Account.class).first().ADR);
-            else if (edit && inv1.ACC_CLB_DEFAULT_ADDRESS != null && inv1.ACC_CLB_DEFAULT_ADDRESS.equals("2"))
-                binding.tvTAddress.setText(Select.from(Account.class).first().ADR1);
         }
 
 
@@ -267,7 +263,13 @@ public class PaymentMobileFragment extends Fragment {
 
 
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+        for (int i = 0; i < invDetails.size(); i++) {
+            if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
 
+                invDetails.remove(invDetails.get(i));
+
+            }
+        }
 
         //region Cast DialogSendOrder
         dialog = new Dialog(getActivity());
@@ -402,7 +404,8 @@ public class PaymentMobileFragment extends Fragment {
                     dialogAddress.dismiss();
 
                     return;
-                } else {
+                }
+                else {
                     sumTransport = price;
                     binding.tvTransport.setText(format.format(price) + "ریال");
                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
@@ -667,7 +670,7 @@ public class PaymentMobileFragment extends Fragment {
                 Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else if (typePayment.equals("-1")) {
-                tvMessage.setText("نوع پرداخت مشخص نشده است. سفارش به صورت موقت ارسال میشود . از ارسال سفارش اطمینان دارید ؟");
+                tvMessage.setText("نوع پرداخت مشخص نشده است. سفارش به صورت موقت ارسال میشود . از ارسال اطمینان دارید ؟");
             } else {
                 tvMessage.setText(" از ارسال سفارش اطمینان دارید ؟");
             }

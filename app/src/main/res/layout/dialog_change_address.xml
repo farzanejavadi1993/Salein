@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-
+            android:id="@+id/iv_icon"
             android:layout_width="100dp"
             android:layout_height="87dp"
             android:layout_centerHorizontal="true"
@@ -42,7 +42,7 @@
 
 
                     <TextView
-                        android:layout_marginTop="@dimen/margin10"
+                        android:layout_marginTop="15dp"
                         android:text="کدام آدرس را ویرایش میکنید؟"
                         android:id="@+id/tv_message"
                         android:layout_width="match_parent"
@@ -59,16 +59,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/scroll"
-                    android:layout_marginLeft="15sp"
-                    android:layout_marginTop="10sp"
-                    android:layout_marginRight="15sp"
-                    android:layout_marginBottom="10sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_1"
                         android:fontFamily="@font/iransans"
-                        android:layout_width="100sp"
+                        android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_margin="8sp"
@@ -79,12 +79,14 @@
                         app:cornerRadius="15dp"
                         app:strokeColor="@color/purple_700"
                         app:strokeWidth="1dp"
+                        android:textSize="11sp"
                         tools:ignore="UnusedAttribute" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_2"
+                        android:textSize="11sp"
                         android:fontFamily="@font/iransans"
-                        android:layout_width="100sp"
+                        android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
                         android:layout_margin="8sp"

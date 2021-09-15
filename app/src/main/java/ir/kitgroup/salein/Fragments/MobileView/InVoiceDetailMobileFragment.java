@@ -107,6 +107,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private int fontLargeSize = 0;
 
     private String status;
+    private double sumTransport = 0.0;
     //endregion Variable Dialog Description
 
 
@@ -118,11 +119,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding = FragmentInvoiceDetailMobileBinding.inflate(getLayoutInflater());
         if (LauncherActivity.screenInches >= 7) {
             fontSize = 13;
-            fontLargeSize=14;
-        }
-        else {
+            fontLargeSize = 14;
+        } else {
             fontSize = 11;
-            fontLargeSize=12;
+            fontLargeSize = 12;
         }
         return binding.getRoot();
     }
@@ -146,8 +146,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         passWord = Select.from(User.class).list().get(0).passWord;
 
 
-
-
         Bundle bundle = getArguments();
         String type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
@@ -162,13 +160,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
         }
-        if (App.mode==1 && type.equals("2")){
+        if (App.mode == 1 && type.equals("2")) {
             binding.layoutSave.setVisibility(View.VISIBLE);
             binding.layoutSave.setOnClickListener(v -> {
                 Date date = Calendar.getInstance().getTime();
 
-                double sumDiscount=0.0;
-                double sumDiscountPercent=0.0;
+                double sumDiscount = 0.0;
+                double sumDiscountPercent = 0.0;
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 for (int i = 0; i < invDetails.size(); i++) {
                     ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
@@ -180,17 +178,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
-
-
-
-                        sumPurePrice = sumPurePrice + totalPurePrice ; //جمع خالص فاکتور
-                        sumPrice = sumPrice +sumTotalPrice ; // جمع کل فاکتور
+                        sumPurePrice = sumPurePrice + totalPurePrice; //جمع خالص فاکتور
+                        sumPrice = sumPrice + sumTotalPrice; // جمع کل فاکتور
 
 
                         invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                         invDetails.get(i).ROW_NUMBER = i + 1;
                         invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
-                        invDetails.get(i).INV_DET_DISCOUNT =String.valueOf(discountPrice);
+                        invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
                         invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
                         sumDiscount = sumDiscount + discountPrice;
                         sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
@@ -199,7 +194,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     }
 
                 }
-
 
 
                 for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
@@ -227,11 +221,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 invoice.Acc_name = Acc_NAME;
                 invoice.save();
 
-               Tables tb= Select.from(Tables.class).where("I ='" +Tbl_GUID+ "'").first();
-               if (tb!=null) {
-                   tb.SV = true;
-                   tb.save();
-               }
+                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                if (tb != null) {
+                    tb.SV = true;
+                    tb.save();
+                }
                 assert getFragmentManager() != null;
 
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
@@ -239,9 +233,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 if (frg != null) {
                     final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
 
-                        for (int i = 1; i <= size1; i++) {
-                            getFragmentManager().popBackStack();
-                        }
+                    for (int i = 1; i <= size1; i++) {
+                        getFragmentManager().popBackStack();
+                    }
 
                     ft.detach(frg);
                     ft.attach(frg);
@@ -251,11 +245,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             });
         }
-
-
-
-
-
 
 
         binding.tvNameCustomer.setTextSize(fontSize);
@@ -270,8 +259,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.tvSumPrice.setTextSize(fontLargeSize);
         binding.orderListSumDiscountTv.setTextSize(fontLargeSize);
         binding.tvSumDiscount.setTextSize(fontLargeSize);
-
-
+        binding.tvSumTransport.setTextSize(fontLargeSize);
+        binding.txtSumTransport.setTextSize(fontLargeSize);
 
 
         binding.btnContinue.setTextSize(fontSize);
@@ -383,7 +372,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                 status = invoice.INV_SYNC;
 
-                if (App.mode==2) {
+                if (App.mode == 2) {
                     if (status != null && status.equals("*")) {
                         binding.btnResend.setVisibility(View.GONE);
                         binding.btnDelete.setVisibility(View.GONE);
@@ -397,8 +386,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         binding.btnDelete.setVisibility(View.VISIBLE);
                         binding.btnEdit.setVisibility(View.VISIBLE);
                     }
-                }
-                else {
+                } else {
                     binding.btnResend.setVisibility(View.GONE);
                     binding.btnDelete.setVisibility(View.VISIBLE);
                     binding.btnEdit.setVisibility(View.VISIBLE);
@@ -466,8 +454,21 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         invoiceDetailList.clear();
-        if (type.equals("1"))
-        CollectionUtils.filter(invDetails,i->i.INV_DET_DESCRIBTION!=null && !i.INV_DET_DESCRIBTION.equals("توزیع"));
+        if (type.equals("1") || edit) {
+            for (int i = 0; i < invDetails.size(); i++) {
+                if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+                    sumTransport = Double.parseDouble(invDetails.get(i).INV_DET_TOTAL_AMOUNT);
+                    invDetails.remove(invDetails.get(i));
+                    binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
+                }
+            }
+        }else {
+            binding.tvSumTransport.setText("");
+            binding.tvSumTransport.setVisibility(View.GONE);
+            binding.txtSumTransport.setVisibility(View.GONE);
+        }
+
+
         invoiceDetailList.addAll(invDetails);
        /* if (type.equals("1")) {
             getInVoice(userName, passWord, Inv_GUID);
@@ -480,9 +481,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
             CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
 
             if (prdResult.size() > 0) {
-               double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
-               double discountPrice = sumpriceE * (prdResult.get(0).PERC_DIS / 100);
-               double totalPrice = sumpriceE - discountPrice;
+                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                double discountPrice = sumpriceE * (prdResult.get(0).PERC_DIS / 100);
+                double totalPrice = sumpriceE - discountPrice;
 
                 sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
                 sumPurePrice = sumPurePrice + totalPrice;
@@ -493,12 +494,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-        binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+        binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
 
-        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(),invoiceDetailList, type);
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setHasFixedSize(false);
@@ -579,9 +580,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                 List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-
-
 
 
                 for (int i = 0; i < invoiceDetail.size(); i++) {
@@ -948,7 +946,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                             status = iDs.getInvoice().get(0).INV_SYNC;
 
-                            if (App.mode==2) {
+                            if (App.mode == 2) {
                                 if (status != null && status.equals("*")) {
                                     binding.btnResend.setVisibility(View.GONE);
                                     binding.btnDelete.setVisibility(View.GONE);
@@ -962,8 +960,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     binding.btnDelete.setVisibility(View.VISIBLE);
                                     binding.btnEdit.setVisibility(View.VISIBLE);
                                 }
-                            }
-                            else {
+                            } else {
                                 binding.btnDelete.setVisibility(View.VISIBLE);
                                 binding.btnEdit.setVisibility(View.VISIBLE);
                                 binding.btnResend.setVisibility(View.GONE);
