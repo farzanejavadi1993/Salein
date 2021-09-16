@@ -44,7 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class RegisterFragment extends Fragment  {
+public class RegisterFragment extends Fragment {
     //region  Parameter
 
 
@@ -52,9 +52,7 @@ public class RegisterFragment extends Fragment  {
     private final List<Account> accountsList = new ArrayList<>();
     private User user;
     private int gender = 0;
-    private int fontSize=0;
-
-
+    private int fontSize = 0;
 
 
     //endregion Parameter
@@ -69,18 +67,16 @@ public class RegisterFragment extends Fragment  {
         String mobile = bundle.getString("mobile");
         String address1 = bundle.getString("address1");
         String address2 = bundle.getString("address2");
+        double latitude = bundle.getDouble("lat");
+        double longitude = bundle.getDouble("lng");
 
 
-        if (LauncherActivity.screenInches>=7) {
+        if (LauncherActivity.screenInches >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);
-        }
-        else
-            fontSize=12;
-
-
-
+        } else
+            fontSize = 12;
 
 
         binding.tvNameCustomer.setTextSize(fontSize);
@@ -118,26 +114,26 @@ public class RegisterFragment extends Fragment  {
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
 
+            if (
+                    binding.edtFLNameCustomer.getText().toString().isEmpty() ||
+                            binding.edtNumberPhoneCustomer.getText().toString().isEmpty() ||
+                            binding.edtAddressCustomer.getText().toString().isEmpty() ||
+                            binding.edtPlaqueCustomer.getText().toString().isEmpty()
+            ) {
+                Toast.makeText(getActivity(), "لطفا تمام فیلد ها را پر کنید", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                if (
-                        binding.edtFLNameCustomer.getText().toString().isEmpty() ||
-                                binding.edtNumberPhoneCustomer.getText().toString().isEmpty() ||
-                                binding.edtAddressCustomer.getText().toString().isEmpty() ||
-                                binding.edtPlaqueCustomer.getText().toString().isEmpty()
-                ) {
-                    Toast.makeText(getActivity(), "لطفا تمام فیلد ها را پر کنید", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            Account account = new Account();
+            account.I = UUID.randomUUID().toString();
+            account.N = binding.edtFLNameCustomer.getText().toString();
+            account.M = binding.edtNumberPhoneCustomer.getText().toString();
+            account.ADR = longitude+"longitude"+binding.edtAddressCustomer.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString()+"latitude"+latitude;
+            account.S = String.valueOf(gender);
+            accountsList.clear();
+            accountsList.add(account);
+            addAccount(user.userName, user.passWord, accountsList);
 
-                Account account = new Account();
-                account.I = UUID.randomUUID().toString();
-                account.N = binding.edtFLNameCustomer.getText().toString();
-                account.M = binding.edtNumberPhoneCustomer.getText().toString();
-                account.ADR = binding.edtAddressCustomer.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString();
-                account.S = String.valueOf(gender);
-                accountsList.clear();
-                accountsList.add(account);
-                addAccount(user.userName, user.passWord, accountsList);
 
 
         });
@@ -147,15 +143,11 @@ public class RegisterFragment extends Fragment  {
     }
 
 
-
-
-
-
     private static class JsonObjectAccount {
 
         public List<Account> Account;
 
-}
+    }
 
     private void addAccount(String userName, String pass, List<Account> accounts) {
 

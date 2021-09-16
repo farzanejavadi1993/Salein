@@ -178,19 +178,19 @@
                     android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recyclerView_productLevel1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="9.5dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_productLevel2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin8"
                     android:layout_marginEnd="9.5dp"
                     android:layoutDirection="rtl" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/order_recyclerView_productLevel1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="9.5dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_product"

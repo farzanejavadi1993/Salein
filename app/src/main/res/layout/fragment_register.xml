@@ -309,7 +309,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_height_size"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginEnd="@dimen/normal_left_right_margin"

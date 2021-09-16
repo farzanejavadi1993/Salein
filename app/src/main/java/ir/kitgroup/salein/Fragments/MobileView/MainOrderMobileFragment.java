@@ -208,7 +208,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int imgBackground = 0;
     private String nameCompany;
 
-    private String time="2";
+    private String time = "2";
 
     //endregion Parameter
 
@@ -277,9 +277,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         firstSync = sharedPreferences.getBoolean("firstSync", false);
         if (!firstSync)
-            time="2";
+            time = "2";
         else
-            time="1";
+            time = "1";
 
 
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
@@ -514,9 +514,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
 
-        if (productLevel1List.size() <= 1) {
-            binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-        }
+
         if (productAdapter != null) {
             productAdapter.notifyDataSetChanged();
             productLevel1Adapter.notifyDataSetChanged();
@@ -1238,10 +1236,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     if (resultPrdGrp2.size() > 0) {
 
                         ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
-                        ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
 
 
                         for (int j = 0; j < resultPrdGrp2.size(); j++) {
+                            ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
                             int finalJ = j;
                             CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2.get(finalJ).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
                             if (tempPrd.size() > 0)
@@ -1322,8 +1320,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                     //change by me
-                    AllProductLevel2.clear();
-                    AllProductLevel2.addAll(productLevel2List);
+                   // AllProductLevel2.clear();
+                    //AllProductLevel2.addAll(productLevel2List);
 
 
                     ArrayList<Product> resultPrdAc = new ArrayList<>(Util.AllProduct);
@@ -1412,7 +1410,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     productLevel2List.clear();
                     productLevel2Adapter.notifyDataSetChanged();
                 }
-
+                if (productLevel1List.size() <= 1) {
+                    binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                }
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
 
@@ -1555,7 +1555,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord,"2" );
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2");
 
 
             call.enqueue(new Callback<String>() {

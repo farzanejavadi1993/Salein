@@ -130,7 +130,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/edt_address"
@@ -151,6 +151,8 @@
                         android:textStyle="bold" />
 
                     <EditText
+                        android:layout_marginBottom="@dimen/margin10"
+                        android:layout_marginTop="5dp"
                         android:id="@+id/edt_address_complete"
                         android:layout_width="360dp"
                         android:layout_height="wrap_content"
@@ -197,7 +199,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_height_size"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
@@ -211,7 +213,6 @@
             app:cornerRadius="@dimen/box_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="UnusedAttribute" />
 

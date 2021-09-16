@@ -230,12 +230,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.N = accountORG.N;
             account.M = accountORG.M;
             account.ADR1 = accountORG.ADR1;
-            account.LAT1 = accountORG.LAT1;
-            account.LNG1 = accountORG.LNG1;
+            //account.LAT1 = accountORG.LAT1;
+           // account.LNG1 = accountORG.LNG1;
             setADR1 = false;
             account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-            account.LAT = latitude;
-            account.LNG = longitude;
+           // account.LAT = latitude;
+           // account.LNG = longitude;
             ArrayList<Account> list = new ArrayList<>();
             list.add(account);
             dialogAddress.dismiss();
@@ -251,12 +251,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.N = accountORG.N;
             account.M = accountORG.M;
             account.ADR = accountORG.ADR;
-            account.LAT = accountORG.LAT;
-            account.LNG = accountORG.LNG;
+           // account.LAT = accountORG.LAT;
+           // account.LNG = accountORG.LNG;
             setADR1 = true;
             account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-            account.LAT1 = latitude;
-            account.LNG1 = longitude;
+            //account.LAT1 = latitude;
+            //account.LNG1 = longitude;
             ArrayList<Account> list = new ArrayList<>();
             list.add(account);
             dialogAddress.dismiss();
@@ -285,20 +285,20 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
                 account.ADR1 = accountORG.ADR1;
-                account.LAT = accountORG.LAT;
-                account.LNG = accountORG.LNG;
-                account.LAT1 = accountORG.LAT1;
-                account.LNG1 = accountORG.LNG1;
+               // account.LAT = accountORG.LAT;
+               // account.LNG = accountORG.LNG;
+               // account.LAT1 = accountORG.LAT1;
+               // account.LNG1 = accountORG.LNG1;
 
                 if (account.ADR == null) {
                     account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                    account.LAT = latitude;
-                    account.LNG = longitude;
+                   // account.LAT = latitude;
+                   // account.LNG = longitude;
                 } else if (account.ADR1 == null) {
                     setADR1 = true;
                     account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                    account.LAT1 = latitude;
-                    account.LNG1 = longitude;
+                  //  account.LAT1 = latitude;
+                   // account.LNG1 = longitude;
                 } else {
                     dialogAddress.show();
                     return;
@@ -320,22 +320,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
-                account.LAT = accountORG.LAT;
-                account.LNG = accountORG.LNG;
+               //account.LAT = accountORG.LAT;
+               //account.LNG = accountORG.LNG;
 
-                account.LAT1 = accountORG.LAT1;
-                account.LNG1 = accountORG.LNG1;
+               //account.LAT1 = accountORG.LAT1;
+               //account.LNG1 = accountORG.LNG1;
                 if (type.equals("1")) {
                     account.ADR1 = accountORG.ADR1;
                     account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                    account.LAT = latitude;
-                    account.LNG = longitude;
+                  //  account.LAT = latitude;
+                  //  account.LNG = longitude;
                 } else {
 
                     account.ADR = accountORG.ADR;
                     account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                    account.LAT1 = latitude;
-                    account.LNG1 = longitude;
+                   // account.LAT1 = latitude;
+                   // account.LNG1 = longitude;
                 }
 
 
@@ -352,6 +352,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
             Bundle bundle1 = new Bundle();
             bundle1.putString("mobile", mobile);
             bundle1.putString("address1", address);
+            bundle1.putDouble("lat", latitude);
+            bundle1.putDouble("lng", longitude);
             bundle1.putString("address2", binding.edtAddressComplete.getText().toString());
             RegisterFragment registerFragment = new RegisterFragment();
             registerFragment.setArguments(bundle1);
