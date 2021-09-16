@@ -148,8 +148,9 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/layout_Image">
 
+
             <TextView
-                android:visibility="gone"
+               android:visibility="gone"
                 android:singleLine="true"
                 android:id="@+id/unit"
                 android:layout_marginRight="2dp"
@@ -173,6 +174,15 @@
                 android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
                 android:background="@drawable/minus_background"
                 android:src="@drawable/ic_minus_red" />
+
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/progress"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/unit"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
 
             <EditText
                 android:fontFamily="@font/iransans"

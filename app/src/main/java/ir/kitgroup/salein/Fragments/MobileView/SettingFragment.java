@@ -122,6 +122,7 @@ public class SettingFragment extends Fragment {
             LoginClientFragment userFragment = new LoginClientFragment();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, userFragment).commit();
 
+
         });
 
 

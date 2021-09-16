@@ -2,11 +2,13 @@ package ir.kitgroup.salein.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -29,6 +31,7 @@ import androidx.annotation.Nullable;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -51,10 +54,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter;
+import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
@@ -95,8 +100,8 @@ public class PaymentMobileFragment extends Fragment {
 
     private String userName;
     private String passWord;
-    private double lat=0.0;
-    private double lng=0.0;
+    private double lat = 0.0;
+    private double lng = 0.0;
     private String numberPos = "";
     private Dialog dialog;
     private TextView tvMessage;
@@ -106,8 +111,6 @@ public class PaymentMobileFragment extends Fragment {
     private MaterialButton btnReturned;
     private MaterialButton btnOk;
     private MaterialButton btnNo;
-
-
 
 
     private Dialog dialogAddress;
@@ -120,6 +123,7 @@ public class PaymentMobileFragment extends Fragment {
     private int typeAddress = 0;
     private String address = "ناموجود";
 
+
     private int fontSize = 0;
     private int imageIconDialog;
 
@@ -127,6 +131,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Integer Ord_TYPE = -1;
+    private String Sum_PURE_PRICE  =  "0";
 
 
     private List<InvoiceDetail> invDetails;
@@ -141,8 +146,10 @@ public class PaymentMobileFragment extends Fragment {
     private double credit = 0.0;
 
     private double sumTransport = 0.0;
+    private String link = "";
 
-    private List<Account> accountsList=new ArrayList<>();
+
+    private Account acc;
     //end region Parameter
 
 
@@ -162,6 +169,7 @@ public class PaymentMobileFragment extends Fragment {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog = R.drawable.saleinicon128;
+                    link = "http://185.201.49.204:4008/";
 
                     break;
 
@@ -202,7 +210,7 @@ public class PaymentMobileFragment extends Fragment {
         String ord_type = bundle.getString("Ord_TYPE");
         if (ord_type != null && !ord_type.equals(""))
             Ord_TYPE = Integer.parseInt(ord_type);
-        String Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
+         Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
         boolean edit = bundle.getBoolean("EDIT");
 
         int fontBigSize = 0;
@@ -369,13 +377,12 @@ public class PaymentMobileFragment extends Fragment {
         //endregion Cast DialogSendOrder
 
 
-        Account acc = Select.from(Account.class).first();
-        accountsList.clear();
-        accountsList.add(acc);
+        acc = Select.from(Account.class).first();
 
 
-        //when get Credit User
-       // getAccount(userName,passWord,accountsList);
+
+        if (acc!=null && acc.M!=null)
+        getInquiryAccount(userName,passWord,acc.M);
 
         //region Cast DialogAddress
         dialogAddress = new Dialog(getActivity());
@@ -404,8 +411,7 @@ public class PaymentMobileFragment extends Fragment {
                     dialogAddress.dismiss();
 
                     return;
-                }
-                else {
+                } else {
                     sumTransport = price;
                     binding.tvTransport.setText(format.format(price) + "ریال");
                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
@@ -426,7 +432,7 @@ public class PaymentMobileFragment extends Fragment {
                     return;
                 }
                 double distance = getDistanceMeters(new LatLng(acc.LAT1, acc.LNG1), new LatLng(lat, lng));
-                double price = PriceTransport(distance/1000, Double.parseDouble(Sum_PURE_PRICE));
+                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
 
@@ -457,74 +463,14 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals(""))
-            radioAddress1.setText(acc.ADR);
-        else
-            radioAddress1.setText("ناموجود");
 
-
-        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
-            radioAddress2.setText(acc.ADR1);
-        else
-            radioAddress2.setText("ناموجود");
 
 
         //endregion Cast DialogAddress
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
-            if (onceSee) {
-
-                double distance = getDistanceMeters(new LatLng(acc.LAT, acc.LNG), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    sumTransport = price;
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                }
-
-                binding.tvTAddress.setText(acc.ADR);
-                typeAddress = 1;
-                address = acc.ADR;
-
-            }
-        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
-            if (onceSee) {
-
-                double distance = getDistanceMeters(new LatLng(acc.LAT1, acc.LNG1), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    sumTransport = price;
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                }
 
 
-                binding.tvTAddress.setText(acc.ADR1);
-                typeAddress = 2;
-                address = acc.ADR1;
-            }
-
-        } else {
-            if (onceSee)
-                binding.tvTAddress.setText("ناموجود");
-            typeAddress = 0;
-            address = "ناموجود";
-        }
-
-
-        if (acc != null && acc.CRDT != null)
-            binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
 
         binding.layoutAddress.setOnClickListener(v -> {
 
@@ -545,6 +491,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.layoutPaymentPlace.setOnClickListener(v -> {
 
             binding.tvSuccessFullPayOnline.setText("");
+
             if (acc != null && acc.CRDT != null && acc.CRDT >= (Double.parseDouble(Sum_PURE_PRICE) + sumTransport)) {
                 binding.tvCredit.setText(format.format(acc.CRDT));
             }
@@ -587,12 +534,23 @@ public class PaymentMobileFragment extends Fragment {
 
 
         binding.layoutPaymentOnline.setOnClickListener(v -> {
-
+            binding.ivOkPaymentPlace.setVisibility(View.GONE);
             if (acc != null && acc.CRDT != null && acc.CRDT >= (Double.parseDouble(Sum_PURE_PRICE) + sumTransport)) {
                 binding.tvSuccessFullPayOnline.setText("پرداخت موفقیت آمیز");
                 binding.tvCredit.setText(String.valueOf(acc.CRDT - (Double.parseDouble(Sum_PURE_PRICE) + sumTransport)));
                 typePayment = "4";
-            }else {
+                binding.ivOkPaymentOnline.setVisibility(View.VISIBLE);
+            } else if (!link.equals("")) {
+                Uri uri = Uri.parse(link);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                startActivityForResult(intent,44);
+
+
+
+
+
+            } else {
                 Toast.makeText(getActivity(), "انتقال به باشگاه مشتریان ، در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
                 typePayment = "-1";
             }
@@ -706,17 +664,17 @@ public class PaymentMobileFragment extends Fragment {
             invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
             invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
 
-            ArrayList<Product> result=new ArrayList<>();
+            ArrayList<Product> result = new ArrayList<>();
             result.addAll(Util.AllProduct);
-            CollectionUtils.filter(result,r->r.N.equals("توزیع"));
-            if (result.size()>0){
+            CollectionUtils.filter(result, r -> r.N.equals("توزیع"));
+            if (result.size() > 0) {
                 invoiceDetailTransport.PRD_UID = result.get(0).I;
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "خطا در ارسال مبلغ توزیع", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            invoiceDetailTransport.INV_DET_DESCRIBTION =  "توزیع";
+            invoiceDetailTransport.INV_DET_DESCRIBTION = "توزیع";
             invDetails.add(invoiceDetailTransport);
 
             for (int i = 0; i < invDetails.size() - 1; i++) {
@@ -999,69 +957,173 @@ public class PaymentMobileFragment extends Fragment {
 
     }
 
-    private void getAccount(String userName, String pass, List<Account> accounts) {
 
 
+    private void getInquiryAccount(String userName, String passWord, String mobile) {
+
+        customProgress.showProgress(getActivity(),"در حال دریافت موجودی باشگاه",false);
         try {
-            customProgress.showProgress(getActivity(),"منتظر بمانید.",false);
-           JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
-            jsonObjectAcc.Account = accounts;
-
-
-            Gson gson = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
-            }.getType();
-
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
-
+            Call<String> call = App.api.getInquiryAccount(userName, passWord, mobile, "", "", 1);
 
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-
                     Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
+                    Type typeIDs = new TypeToken<ModelAccount>() {
                     }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
-
-                    assert iDs != null;
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
-                    if (message == 1) {
-
-
-                        Account.deleteAll(Account.class);
-                        Account.saveInTx(accountsList);
-                        accountsList.clear();
+                    ModelAccount iDs;
+                    try {
+                        iDs = gson.fromJson(response.body(), typeIDs);
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
 
 
-                    } else {
-
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                        customProgress.hideProgress();
+                        return;
                     }
 
-                    customProgress.hideProgress();
+
+                 if (iDs!=null)
+                    if (iDs.getAccountList() == null) {
+                        Type typeIDs0 = new TypeToken<ModelLog>() {
+                        }.getType();
+                        ModelLog iDs0 = gson.fromJson(response.body(), typeIDs0);
+
+                        if (iDs0.getLogs() != null) {
+                            String description = iDs0.getLogs().get(0).getDescription();
+                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                 else {
+
+                        //user is register
+                        if (iDs.getAccountList().size() > 0) {
+                            Account.deleteAll(Account.class);
+                            Account.saveInTx(iDs.getAccountList());
+
+
+                            acc=Select.from(Account.class).first();
+
+
+                            if (acc != null && acc.ADR != null && !acc.ADR.equals(""))
+                                radioAddress1.setText(acc.ADR);
+                            else
+                                radioAddress1.setText("ناموجود");
+
+
+                            if (acc != null && acc.ADR1 != null && !acc.ADR1.equals(""))
+                                radioAddress2.setText(acc.ADR1);
+                            else
+                                radioAddress2.setText("ناموجود");
+
+
+
+
+
+
+                            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
+                                if (onceSee) {
+
+                                    double distance = getDistanceMeters(new LatLng(acc.LAT, acc.LNG), new LatLng(lat, lng));
+                                    double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+                                    if (price == -1.0) {
+                                        binding.tvError.setText("سفارش خارج از محدوده است.");
+                                        binding.tvError.setVisibility(View.VISIBLE);
+                                    } else {
+                                        binding.tvError.setText("");
+                                        binding.tvError.setVisibility(View.GONE);
+                                        sumTransport = price;
+                                        binding.tvTransport.setText(format.format(price) + "ریال");
+                                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                                    }
+
+                                    binding.tvTAddress.setText(acc.ADR);
+                                    typeAddress = 1;
+                                    address = acc.ADR;
+
+                                }
+                            } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+                                if (onceSee) {
+
+                                    double distance = getDistanceMeters(new LatLng(acc.LAT1, acc.LNG1), new LatLng(lat, lng));
+                                    double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+                                    if (price == -1.0) {
+                                        binding.tvError.setText("سفارش خارج از محدوده است.");
+                                        binding.tvError.setVisibility(View.VISIBLE);
+                                    } else {
+                                        binding.tvError.setText("");
+                                        binding.tvError.setVisibility(View.GONE);
+                                        sumTransport = price;
+                                        binding.tvTransport.setText(format.format(price) + "ریال");
+                                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                                    }
+
+
+                                    binding.tvTAddress.setText(acc.ADR1);
+                                    typeAddress = 2;
+                                    address = acc.ADR1;
+                                }
+
+                            } else {
+                                if (onceSee)
+                                    binding.tvTAddress.setText("ناموجود");
+                                typeAddress = 0;
+                                address = "ناموجود";
+                            }
+
+
+
+
+                            if (acc != null && acc.CRDT != null)
+                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), "خطا در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
+                        }
+
+                        customProgress.hideProgress();
+
+
+
+                    }
+
+                 customProgress.hideProgress();
 
                 }
 
-
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + t.toString(), Toast.LENGTH_SHORT).show();
-                    customProgress.hideProgress();
 
-
+                    Toast.makeText(getActivity(), "خطا در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
+                customProgress.hideProgress();
 
                 }
             });
 
 
         } catch (NetworkOnMainThreadException ex) {
-
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات " + ex.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "خطا در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
             customProgress.hideProgress();
+
         }
 
 
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        getFragmentManager().popBackStack();
+        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        if (frg != null) {
+            ft.detach(frg);
+            ft.attach(frg);
+            ft.commit();
+        }
     }
 }

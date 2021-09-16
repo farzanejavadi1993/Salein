@@ -148,7 +148,7 @@
                       android:layout_height="wrap_content">
                       <ImageView
                           android:id="@+id/marker1"
-                          android:src="@drawable/ic_location_marker"
+                          android:src="@drawable/ic_location"
                           android:layout_alignParentRight="true"
                           android:layout_width="25dp"
                           android:layout_height="25dp"/>
@@ -158,7 +158,7 @@
                           android:text="ویرایش آدرس 1"
                           android:layout_marginRight="12dp"
                           android:textStyle="bold"
-                          android:textColor="#474747"
+                          android:textColor="@color/purple_700"
                           android:textSize="12sp"
                           android:gravity="right"
                           android:layout_width="match_parent"
@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content">
                         <ImageView
                             android:id="@+id/marker2"
-                            android:src="@drawable/ic_location_marker"
+                            android:src="@drawable/ic_location"
                             android:layout_alignParentRight="true"
                             android:layout_width="25dp"
                             android:layout_height="25dp"/>
@@ -214,7 +214,7 @@
                             android:text="ویرایش آدرس 2"
                             android:layout_marginRight="12dp"
                             android:textStyle="bold"
-                            android:textColor="#474747"
+                            android:textColor="@color/purple_700"
                             android:textSize="12sp"
                             android:gravity="right"
                             android:layout_width="match_parent"

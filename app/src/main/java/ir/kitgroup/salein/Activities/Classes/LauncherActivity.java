@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -193,6 +193,7 @@ public class LauncherActivity extends AppCompatActivity {
           type=0;
             dialog.show();
         }
+
         else  if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")){
 
 

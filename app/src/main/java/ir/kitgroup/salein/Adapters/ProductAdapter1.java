@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +70,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final Context context;
 
-    private final CustomProgress customProgress;
 
     private final List<Product> productsList;
 
@@ -116,7 +116,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.productsList = productsList;
         this.maxSale = maxSale;
         this.Inv_GUID = Inv_GUID;
-        customProgress = CustomProgress.getInstance();
         df = new DecimalFormat();
 
 
@@ -307,7 +306,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ivMax.setOnClickListener(view -> {
 
 
-                doAction(
+                doAction(holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
                         holder.ivMinus,
@@ -327,7 +326,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v -> {
 
-                doAction(
+                doAction(holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
                         holder.ivMinus,
@@ -366,7 +365,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
                         }
 
-                        doAction(
+                        doAction(holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
                                 holder.ivMinus,
@@ -435,6 +434,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         private final ImageView ivMinus;
         private final ImageView ivMax;
+        private final ProgressBar progressBar;
         private TextWatcher textWatcher;
 
 
@@ -464,6 +464,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             ivMinus = itemView.findViewById(R.id.iv_minus);
             ivMax = itemView.findViewById(R.id.iv_max);
+            progressBar = itemView.findViewById(R.id.progress);
 
 
             if (LauncherActivity.screenInches >= 7 && productImage != null) {
@@ -499,8 +500,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    private void getMaxSales(TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
-        customProgress.showProgress(context, "در حال دریافت مانده کالا..", false);
+    private void getMaxSales(ProgressBar progressBar,TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+
+        progressBar.setVisibility(View.VISIBLE);
 
         try {
 
@@ -509,7 +511,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    customProgress.hideProgress();
+                    progressBar.setVisibility(View.GONE);
 
                     int remain = -1000000000;
                     try {
@@ -557,7 +559,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 }
                             }
                             Toast.makeText(context, "این کالا موجود نمی باشد", Toast.LENGTH_SHORT).show();
-                            customProgress.hideProgress();
+                            progressBar.setVisibility(View.GONE);
                             return;
                         }
 
@@ -608,8 +610,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                 }
 
-                                customProgress.hideProgress();
-
+                                progressBar.setVisibility(View.GONE);
 
                                 return;
                             }
@@ -696,10 +697,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void doAction(TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(ProgressBar progressBar,TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (maxSales.equals("1")) {
-            getMaxSales(textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(progressBar,textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
             CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
