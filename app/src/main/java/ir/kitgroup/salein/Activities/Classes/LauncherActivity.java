@@ -21,18 +21,9 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
-import com.orm.query.Select;
+import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 
-import java.util.Objects;
-
-import ir.kitgroup.salein.classes.App;
-import ir.kitgroup.salein.DataBase.Account;
-
-import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.MobileView.MainOrderMobileFragment;
-import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
-import ir.kitgroup.salein.Fragments.MobileView.LoginClientFragment;
-import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 
@@ -64,6 +55,9 @@ public class LauncherActivity extends AppCompatActivity {
         View viewRoot = binding.getRoot();
         setContentView(viewRoot);
 
+
+        FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
+        addFragment.commit();
 
         getSizeMobile();
 
@@ -122,40 +116,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
-        FragmentTransaction replaceFragment;
-        if (App.mode == 2) {
-            Bundle bundle=new Bundle();
-            bundle.putString("Ord_TYPE","");
-            bundle.putString("Tbl_GUID","");
-            bundle.putString("Inv_GUID","");
-            if (Select.from(Account.class).list().size() > 0) {
-                MainOrderMobileFragment mainOrderMobileFragment=new MainOrderMobileFragment();
-                mainOrderMobileFragment.setArguments(bundle);
-                replaceFragment = Objects.requireNonNull(getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment,"MainOrderMobileFragment"));
 
-            }
-            else {
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginClientFragment());
-
-            }
-
-        }
-
-
-
-
-        else {
-            if ( Select.from(User.class).list().get(0).CheckUser ) {
-
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(),"LauncherFragment");
-            } else {
-
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
-
-            }
-
-        }
-        replaceFragment.commit();
 
 
     }

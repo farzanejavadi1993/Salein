@@ -13,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0.20"
+        versionName "1.0.0.21"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -93,8 +93,8 @@ dependencies {
     implementation 'com.facebook.rebound:rebound:0.3.8'*/
 
 
-
-
+    implementation "com.airbnb.android:lottie:+"
+    implementation 'com.facebook.rebound:rebound:0.3.8'
 
 
 

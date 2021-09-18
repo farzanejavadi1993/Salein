@@ -220,7 +220,6 @@
                 app:cornerRadius="@dimen/box_radius"
                 tools:ignore="UnusedAttribute" />
 
-
         </RelativeLayout>
 
 

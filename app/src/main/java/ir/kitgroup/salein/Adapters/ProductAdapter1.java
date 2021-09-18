@@ -200,7 +200,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     switch (pInfo.packageName){
                         case "ir.kitgroup.salein":
                             holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.salein);
+                            holder.productImage1.setImageResource(R.drawable.logo1);
                             break;
 
                         case "ir.kitgroup.saleintop":
