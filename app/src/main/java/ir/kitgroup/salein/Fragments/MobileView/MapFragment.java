@@ -169,9 +169,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName){
+            switch (LauncherActivity.name){
                 case "ir.kitgroup.salein":
 
                     imgIconDialog=R.drawable.saleinicon128;
@@ -192,7 +192,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                     break;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

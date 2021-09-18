@@ -195,9 +195,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
             else {
                 try {
-                    PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                    //PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
-                    switch (pInfo.packageName){
+                    switch (LauncherActivity.name){
                         case "ir.kitgroup.salein":
                             holder.productImage.setImageResource(R.drawable.white);
                             holder.productImage1.setImageResource(R.drawable.logo1);
@@ -218,7 +218,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             holder.productImage1.setImageResource(R.drawable.meat_png);
                             break;
                     }
-                } catch (PackageManager.NameNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

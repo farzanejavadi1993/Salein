@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -38,6 +39,8 @@ public class LauncherActivity extends AppCompatActivity {
     private  TextView textExit;
     private ImageView ivIcon;
     private int imageIconDialog;
+    public static Typeface iranSansBold;
+    public static String name;
 
 
     private int type=0;
@@ -49,7 +52,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
-
+        iranSansBold = Typeface.createFromAsset(getAssets(), "iransans.ttf");
 
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         View viewRoot = binding.getRoot();
@@ -71,12 +74,14 @@ public class LauncherActivity extends AppCompatActivity {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog=R.drawable.saleinicon128;
+                    name="ir.kitgroup.salein";
 
                     break;
 
                 case "ir.kitgroup.saleintop":
 
                     imageIconDialog=R.drawable.top_png;
+                    name="ir.kitgroup.saleintop";
 
                     break;
 
@@ -84,6 +89,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case "ir.kitgroup.saleinmeat":
 
                     imageIconDialog=R.drawable.meat_png;
+                    name="ir.kitgroup.saleinmeat";
 
                     break;
             }

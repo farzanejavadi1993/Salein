@@ -162,9 +162,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+          //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName) {
+            switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog = R.drawable.saleinicon128;
@@ -185,7 +185,7 @@ public class PaymentMobileFragment extends Fragment {
 
                     break;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

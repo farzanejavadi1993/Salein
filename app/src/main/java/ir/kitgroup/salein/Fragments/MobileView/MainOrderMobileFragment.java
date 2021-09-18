@@ -231,9 +231,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName) {
+            switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
                     nameCompany = "سالین";
                     imageLogo = R.drawable.salein;
@@ -259,7 +259,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                     break;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

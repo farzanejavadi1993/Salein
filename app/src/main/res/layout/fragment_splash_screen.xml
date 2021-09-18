@@ -48,12 +48,12 @@
             app:lottie_loop="true" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:layout_below="@+id/animation_view"
+            android:layout_above="@+id/tvDevelop"
             android:id="@+id/animation_view1"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+           android:layout_marginBottom="@dimen/margin10"
             app:lottie_autoPlay="true"
             app:lottie_loop="true" />
 

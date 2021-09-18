@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
@@ -47,9 +48,9 @@ public class SplashScreenFragment extends Fragment {
 
 
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+          //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName) {
+            switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog = R.drawable.logo1;
@@ -71,7 +72,7 @@ public class SplashScreenFragment extends Fragment {
                     title = "گوشت دنیوی";
                     break;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -93,7 +94,7 @@ public class SplashScreenFragment extends Fragment {
 
                     if (title.equals("سالین")){
 
-
+                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(),"StoriesFragment");
                     }else {
                         if (Select.from(Account.class).list().size() > 0) {
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();

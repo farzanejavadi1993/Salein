@@ -74,9 +74,9 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName){
+            switch (LauncherActivity.name){
                 case "ir.kitgroup.salein":
                     imageLogo=R.drawable.salein;
                     break;
@@ -90,7 +90,7 @@ public class ConfirmCodeFragment extends Fragment {
                     imageLogo=R.drawable.goosht;
                     break;
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

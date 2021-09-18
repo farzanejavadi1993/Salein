@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -7,9 +8,9 @@
         android:focusable="true"
         android:clickable="true"
         android:background="#fff"
-        android:rotationY="180"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:rotationY="180">
 
         <LinearLayout
 
@@ -19,13 +20,13 @@
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
-
                 android:id="@+id/cardSalein"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="6dp"
+                android:visibility="gone"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="@dimen/margin4"
                 tools:ignore="UnusedAttribute">
@@ -38,8 +39,8 @@
                         android:id="@+id/circularImageViewSalein"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginEnd="@dimen/margin2"
                         android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/salein"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,10 +78,10 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvNameSalein" />
 
                     <CheckBox
-
                         android:id="@+id/checkBoxSalein"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -90,13 +91,13 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-
                 android:id="@+id/cardTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="6dp"
+                android:visibility="gone"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="@dimen/margin4"
                 tools:ignore="UnusedAttribute">
@@ -109,6 +110,7 @@
                         android:id="@+id/checkboxTop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -120,7 +122,7 @@
                         android:layout_height="60dp"
 
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="2dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/top_png"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -161,13 +163,13 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-
                 android:id="@+id/cardMeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="6dp"
+                android:visibility="gone"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="@dimen/margin4"
                 tools:ignore="UnusedAttribute">
@@ -180,6 +182,7 @@
                         android:id="@+id/checkboxMeat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -233,23 +236,7 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_register_company"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_height_size"
 
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/normal_left_right_margin"
-            android:layout_marginLeft="22dp"
-            android:layout_marginEnd="@dimen/normal_left_right_margin"
-            android:layout_marginRight="22dp"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/purple_700"
-            android:fontFamily="@font/iransans"
-            android:text="اننتخاب فروشگاه"
-            android:textColor="@color/white"
-            app:cornerRadius="@dimen/box_radius"
-            tools:ignore="UnusedAttribute" />
     </RelativeLayout>
 
 </layout>
