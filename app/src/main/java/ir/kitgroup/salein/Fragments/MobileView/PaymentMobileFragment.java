@@ -223,6 +223,7 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
+
         Account acc = Select.from(Account.class).first();
 
         //region Cast DialogAddress
@@ -805,9 +806,8 @@ public class PaymentMobileFragment extends Fragment {
             invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
             invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
 
-            ArrayList<Product> result = new ArrayList<>();
-            result.addAll(Util.AllProduct);
-            CollectionUtils.filter(result, r -> r.N.equals("توزیع"));
+            ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(result, r -> r.N.contains("توزیع"));
             if (result.size() > 0) {
                 invoiceDetailTransport.PRD_UID = result.get(0).I;
             } else {
