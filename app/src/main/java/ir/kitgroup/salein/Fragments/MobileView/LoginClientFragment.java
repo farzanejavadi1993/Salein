@@ -2,7 +2,6 @@ package ir.kitgroup.salein.Fragments.MobileView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 

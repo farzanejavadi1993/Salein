@@ -2,8 +2,6 @@ package ir.kitgroup.salein.Fragments.MobileView;
 
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import android.os.NetworkOnMainThreadException;
@@ -53,8 +51,8 @@ public class ConfirmCodeFragment extends Fragment {
     //region  Parameter
     private FragmentConfirmCodeBinding binding;
     private User user;
-    private int fontSize=0;
-    private String messageWelcome="";
+    private int fontSize = 0;
+    private String messageWelcome = "";
     private int imageLogo;
 
     //endregion Parameter
@@ -65,29 +63,28 @@ public class ConfirmCodeFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentConfirmCodeBinding.inflate(getLayoutInflater());
 
-        if (LauncherActivity.screenInches>=7) {
+        if (LauncherActivity.screenInches >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
-        }
-        else
-            fontSize=12;
+        } else
+            fontSize = 12;
 
 
         try {
-           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (LauncherActivity.name){
+            switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
-                    imageLogo=R.drawable.salein;
+                    imageLogo = R.drawable.salein;
                     break;
 
                 case "ir.kitgroup.saleintop":
-                    imageLogo=R.drawable.top;
+                    imageLogo = R.drawable.top;
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
-                    imageLogo=R.drawable.goosht;
+                    imageLogo = R.drawable.goosht;
                     break;
             }
         } catch (Exception e) {
@@ -111,7 +108,6 @@ public class ConfirmCodeFragment extends Fragment {
         int code = bundle.getInt("code");
 
 
-
         binding.tvEnterCode.setTextSize(fontSize);
         binding.btnLogin.setTextSize(fontSize);
 
@@ -124,7 +120,6 @@ public class ConfirmCodeFragment extends Fragment {
 
             binding.ivLogo.setImageResource(imageLogo);
         }
-
 
 
         binding.edtV1.addTextChangedListener(new TextWatcher() {
@@ -268,16 +263,16 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         binding.btnLogin.setOnClickListener(v -> {
-         String codeInput=
-                 binding.edtV1.getText().toString()+
-                 binding.edtV2.getText().toString()+
-                 binding.edtV3.getText().toString()+
-                 binding.edtV4.getText().toString()+
-                 binding.edtV5.getText().toString();
-         if (Integer.parseInt(codeInput)!=code){
-             Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-             //return;
-         }
+                    String codeInput =
+                            binding.edtV1.getText().toString() +
+                                    binding.edtV2.getText().toString() +
+                                    binding.edtV3.getText().toString() +
+                                    binding.edtV4.getText().toString() +
+                                    binding.edtV5.getText().toString();
+                    if (Integer.parseInt(codeInput) != code) {
+                        Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+                        //return;
+                    }
                     getInquiryAccount(user.userName, user.passWord, mobile);
                 }
         );
@@ -329,21 +324,23 @@ public class ConfirmCodeFragment extends Fragment {
                             Account.deleteAll(Account.class);
                             Account.saveInTx(iDs.getAccountList());
                             getFragmentManager().popBackStack();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("Ord_TYPE", "");
-                            bundle.putString("Tbl_GUID", "");
-                            bundle.putString("Inv_GUID", "");
-//                            if (LauncherActivity.screenInches>=7){
-//                                OrderFragment orderFragment = new OrderFragment();
-//                                orderFragment.setArguments(bundle);
-//                                FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, orderFragment, "MainOrderMobileFragment"));
-//                                replaceFragment.commit();
-//                            }else {
+
+
+                            if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
+                                FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                                replaceFragment.commit();
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Ord_TYPE", "");
+                                bundle.putString("Tbl_GUID", "");
+                                bundle.putString("Inv_GUID", "");
                                 MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                                 mainOrderMobileFragment.setArguments(bundle);
                                 FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
                                 replaceFragment.commit();
-                           // }
+                            }
+
+
 
 
                         }

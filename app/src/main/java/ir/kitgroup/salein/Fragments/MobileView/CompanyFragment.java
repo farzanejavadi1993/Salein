@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import org.jetbrains.annotations.NotNull;
 
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentCompanyBinding;
 
 public class CompanyFragment  extends Fragment {

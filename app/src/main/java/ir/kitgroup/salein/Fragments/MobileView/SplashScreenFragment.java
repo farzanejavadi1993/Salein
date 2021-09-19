@@ -1,7 +1,5 @@
 package ir.kitgroup.salein.Fragments.MobileView;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +46,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         try {
-          //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
             switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
@@ -80,40 +78,34 @@ public class SplashScreenFragment extends Fragment {
         binding.imgLogo.setImageResource(imageIconDialog);
         binding.tvTitle.setText(title);
 
-       Thread thread = new Thread(() -> {
+        Thread thread = new Thread(() -> {
             try {
 
                 Thread.sleep(3000);
 
-                FragmentTransaction replaceFragment = null;
+                FragmentTransaction replaceFragment;
                 if (App.mode == 2) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("Ord_TYPE", "");
-                    bundle.putString("Tbl_GUID", "");
-                    bundle.putString("Inv_GUID", "");
 
-                    if (title.equals("سالین")){
 
-                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(),"StoriesFragment");
-                    }else {
-                        if (Select.from(Account.class).list().size() > 0) {
+                    if (Select.from(Account.class).list().size() > 0) {
+                        if (LauncherActivity.name.equals("ir.kitgroup.salein"))
+                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                        else {
+                            bundle.putString("Ord_TYPE", "");
+                            bundle.putString("Tbl_GUID", "");
+                            bundle.putString("Inv_GUID", "");
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
                             replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
-
-                        } else {
-                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginClientFragment());
-
                         }
+
+
+                    } else {
+                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginClientFragment());
+
                     }
-                    replaceFragment.commit();
-
-
-                }
-
-
-
-                else {
+                } else {
                     if (Select.from(User.class).list().get(0).CheckUser) {
 
                         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
@@ -125,6 +117,7 @@ public class SplashScreenFragment extends Fragment {
 
                 }
 
+                replaceFragment.commit();
 
 
             } catch (InterruptedException e) {

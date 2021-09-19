@@ -183,16 +183,20 @@ public class RegisterFragment extends Fragment {
                         Account.deleteAll(Account.class);
                         Account.saveInTx(accountsList);
                         accountsList.clear();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("Ord_TYPE", "");
-                        bundle.putString("Tbl_GUID", "");
-                        bundle.putString("Inv_GUID", "");
-                        getFragmentManager().popBackStack();
-                        MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                        mainOrderMobileFragment.setArguments(bundle);
-                        FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-                        replaceFragment.commit();
 
+                        if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
+                            FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                            replaceFragment.commit();
+                        } else {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Ord_TYPE", "");
+                            bundle.putString("Tbl_GUID", "");
+                            bundle.putString("Inv_GUID", "");
+                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                            mainOrderMobileFragment.setArguments(bundle);
+                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
+                            replaceFragment.commit();
+                        }
 
                     } else {
 
