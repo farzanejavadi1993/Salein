@@ -52,7 +52,6 @@ public class RegisterFragment extends Fragment {
     private final List<Account> accountsList = new ArrayList<>();
     private User user;
     private int gender = 0;
-    private int fontSize = 0;
 
 
     //endregion Parameter
@@ -61,7 +60,18 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
+    }
 
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        user = Select.from(User.class).first();
+
+        //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
@@ -70,7 +80,13 @@ public class RegisterFragment extends Fragment {
         double latitude = bundle.getDouble("lat");
         double longitude = bundle.getDouble("lng");
 
+        binding.edtAddressCustomer.setText(address1);
+        binding.edtAddressCustomerComplete.setText(address2);
+        binding.edtNumberPhoneCustomer.setText(mobile);
+        //endregion Get Bundle And Set Data
 
+        //region Configuration Text Size
+        int fontSize;
         if (LauncherActivity.screenInches >= 7) {
 
             fontSize = 14;
@@ -92,13 +108,11 @@ public class RegisterFragment extends Fragment {
         binding.radioMan.setTextSize(fontSize);
         binding.radioWoman.setTextSize(fontSize);
         binding.btnRegisterInformation.setTextSize(fontSize);
+        //endregion Configuration Text Size
 
 
-        binding.edtAddressCustomer.setText(address1);
-        binding.edtAddressCustomerComplete.setText(address2);
-        binding.edtNumberPhoneCustomer.setText(mobile);
-        user = Select.from(User.class).first();
 
+        //region Action RadioButton
         binding.radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 gender = 0;
@@ -109,8 +123,11 @@ public class RegisterFragment extends Fragment {
                 gender = 1;
             }
         });
+        //endregion Action RadioButton
 
 
+
+        //region Action btnRegisterInformation
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
 
@@ -134,19 +151,18 @@ public class RegisterFragment extends Fragment {
             accountsList.add(account);
             addAccount(user.userName, user.passWord, accountsList);
 
-
-
         });
+        //endregion Action btnRegisterInformation
 
 
-        return binding.getRoot();
+
     }
 
 
+
+    //region Method
     private static class JsonObjectAccount {
-
         public List<Account> Account;
-
     }
 
     private void addAccount(String userName, String pass, List<Account> accounts) {
@@ -177,17 +193,23 @@ public class RegisterFragment extends Fragment {
                     assert iDs != null;
                     int message = iDs.getLogs().get(0).getMessage();
                     String description = iDs.getLogs().get(0).getDescription();
+                    Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                     if (message == 1) {
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
 
                         Account.deleteAll(Account.class);
                         Account.saveInTx(accountsList);
                         accountsList.clear();
 
+                        //region Show All Company
+
                         if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                             replaceFragment.commit();
-                        } else {
+                        }
+                        //endregion Show All Company
+
+                        //region Go To MainOrderFragment Because Account Is Register
+                        else {
                             Bundle bundle = new Bundle();
                             bundle.putString("Ord_TYPE", "");
                             bundle.putString("Tbl_GUID", "");
@@ -197,10 +219,8 @@ public class RegisterFragment extends Fragment {
                             FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
                             replaceFragment.commit();
                         }
+                        //endregion Go To MainOrderFragment Because Account Is Register
 
-                    } else {
-
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                     }
                     binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnRegisterInformation.setEnabled(true);
@@ -234,6 +254,8 @@ public class RegisterFragment extends Fragment {
 
 
     }
+    //endregion Method
+
 
 
 }

@@ -124,14 +124,14 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Integer Ord_TYPE = -1;
-    private String Sum_PURE_PRICE  =  "0";
+    private String Sum_PURE_PRICE = "0";
 
 
     private List<InvoiceDetail> invDetails;
 
 
     public static Boolean setADR1 = false;
-    public static Boolean onceSee = false;
+
 
 
     private String typePayment = "-1";
@@ -142,13 +142,11 @@ public class PaymentMobileFragment extends Fragment {
     private String link = "";
 
 
+    private Double latitude1 = 0.0;
+    private Double longitude1 = 0.0;
 
-
-    private Double latitude1 =0.0;
-    private Double longitude1 =0.0;
-
-    private Double latitude2=0.0;
-    private Double longitude2=0.0;
+    private Double latitude2 = 0.0;
+    private Double longitude2 = 0.0;
     //end region Parameter
 
 
@@ -162,7 +160,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-          //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
             switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
@@ -209,7 +207,7 @@ public class PaymentMobileFragment extends Fragment {
         String ord_type = bundle.getString("Ord_TYPE");
         if (ord_type != null && !ord_type.equals(""))
             Ord_TYPE = Integer.parseInt(ord_type);
-         Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
+        Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
         boolean edit = bundle.getBoolean("EDIT");
 
         int fontBigSize = 0;
@@ -221,7 +219,6 @@ public class PaymentMobileFragment extends Fragment {
             fontBigSize = 12;
             fontSize = 11;
         }
-
 
 
         Account acc = Select.from(Account.class).first();
@@ -242,12 +239,12 @@ public class PaymentMobileFragment extends Fragment {
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 try {
-                    latitude1=Double.parseDouble(acc.ADR.split("latitude")[1]);
-                    longitude1=Double.parseDouble(acc.ADR.split("longitude")[0]);
-                }catch (Exception e){
+                    latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
+                    longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
+                } catch (Exception e) {
 
                 }
-                if (latitude1==0.0 && longitude1==0.0) {
+                if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -275,9 +272,9 @@ public class PaymentMobileFragment extends Fragment {
             if (isChecked) {
 
                 try {
-                    latitude2=Double.parseDouble(acc.ADR1.split("latitude")[1]);
-                    longitude2=Double.parseDouble(acc.ADR1.split("longitude")[0]);
-                }catch (Exception e){
+                    latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
+                    longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
+                } catch (Exception e) {
 
                 }
                 if (latitude2 == 0.0 || longitude2 == 0.0) {
@@ -314,9 +311,6 @@ public class PaymentMobileFragment extends Fragment {
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
 
         });
-
-
-
 
 
         //endregion Cast DialogAddress
@@ -370,9 +364,7 @@ public class PaymentMobileFragment extends Fragment {
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
         for (int i = 0; i < invDetails.size(); i++) {
             if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-
                 invDetails.remove(invDetails.get(i));
-
             }
         }
 
@@ -474,36 +466,28 @@ public class PaymentMobileFragment extends Fragment {
         //endregion Cast DialogSendOrder
 
 
-
-
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("")){
-            String address="";
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
+            String address = "";
             try {
-               address= acc.ADR.replace(acc.ADR.split("latitude")[1],"").replace("latitude","").replace(acc.ADR.split("longitude")[0],"").replace("longitude","");
-            }catch (Exception e){
-                address=acc.ADR;
+                address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+            } catch (Exception e) {
+                address = acc.ADR;
             }
 
             radioAddress1.setText(address);
-
-        }
-
-        else
+        } else
             radioAddress1.setText("ناموجود");
 
-
-        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")){
-            String address="";
+        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+            String address = "";
             try {
-                address= acc.ADR1.replace(acc.ADR1.split("latitude")[1],"").replace("latitude","").replace(acc.ADR1.split("longitude")[0],"").replace("longitude","");
-            }catch (Exception e){
-                address=acc.ADR1;
+                address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
+            } catch (Exception e) {
+                address = acc.ADR1;
             }
 
             radioAddress2.setText(address);
-        }
-
-        else
+        } else
             radioAddress2.setText("ناموجود");
 
 
@@ -511,94 +495,97 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-        if ( acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1 ) {
-            if (onceSee) {
+
+
+
+
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
+
                 try {
-                    latitude1=Double.parseDouble(acc.ADR.split("latitude")[1]);
-                    longitude1=Double.parseDouble(acc.ADR.split("longitude")[0]);
-                }catch (Exception e){
+                    latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
+                    longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
+                } catch (Exception e) {
 
                 }
 
-                if (latitude1==0.0 && longitude1==0.0)
-                {
+                if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "دریافت طول و عرض جغرافیای با خطا مواجه شد", Toast.LENGTH_SHORT).show();
+                }else {
+                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(lat, lng));
+                    double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+                    if (price == -1.0) {
+                        binding.tvError.setText("سفارش خارج از محدوده است.");
+                        binding.tvError.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        binding.tvError.setText("");
+                        binding.tvError.setVisibility(View.GONE);
+                        sumTransport = price;
+                        binding.tvTransport.setText(format.format(price) + "ریال");
+                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                    }
+                    String address = "";
+                    try {
+                        address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+                    } catch (Exception e) {
+                        address = acc.ADR;
+                    }
+
+                    binding.tvTAddress.setText(address);
+                    typeAddress = 1;
+                    ValidAddress = acc.ADR;
                 }
 
-                double distance = getDistanceMeters(new LatLng(latitude1,longitude1 ), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    sumTransport = price;
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                }
-                String address="";
-                try {
-                    address= acc.ADR.replace(acc.ADR.split("latitude")[1],"").replace("latitude","").replace(acc.ADR.split("longitude")[0],"").replace("longitude","");
-                }catch (Exception e){
-                    address=acc.ADR;
-                }
 
-                binding.tvTAddress.setText(address);
-                typeAddress = 1;
-                ValidAddress = acc.ADR;
 
-            }
+
         }
 
 
         else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
-            if (onceSee) {
 
-
-                try {
-                    latitude2=Double.parseDouble(acc.ADR1.split("latitude")[1]);
-                    longitude2=Double.parseDouble(acc.ADR1.split("longitude")[0]);
-                }catch (Exception e){
+            try {
+                    latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
+                    longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
+                } catch (Exception e) {
 
                 }
 
-                if (latitude2==0.0 && longitude2==0.0)
-                {
+                if (latitude2 == 0.0 && longitude2 == 0.0) {
                     Toast.makeText(getActivity(), "دریافت طول و عرض جغرافیای با خطا مواجه شد", Toast.LENGTH_SHORT).show();
-                }
-                double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    sumTransport = price;
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                }else {
+                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
+                    double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+                    if (price == -1.0) {
+                        binding.tvError.setText("سفارش خارج از محدوده است.");
+                        binding.tvError.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.tvError.setText("");
+                        binding.tvError.setVisibility(View.GONE);
+                        sumTransport = price;
+                        binding.tvTransport.setText(format.format(price) + "ریال");
+                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                    }
+
+                    String address = "";
+                    try {
+                        address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
+                    } catch (Exception e) {
+                        address = acc.ADR1;
+                    }
+                    binding.tvTAddress.setText(address);
+                    typeAddress = 2;
+                    ValidAddress = acc.ADR1;
                 }
 
-                String address="";
-                try {
-                    address= acc.ADR1.replace(acc.ADR1.split("latitude")[1],"").replace("latitude","").replace(acc.ADR1.split("longitude")[0],"").replace("longitude","");
-                }catch (Exception e){
-                    address=acc.ADR1;
-                }
-                binding.tvTAddress.setText(address);
-                typeAddress = 2;
-                ValidAddress = acc.ADR1;
-            }
-
-        } else {
-            if (onceSee)
-                binding.tvTAddress.setText("ناموجود");
-            typeAddress = 0;
-            ValidAddress = "ناموجود";
         }
 
 
+        else {
+
+            typeAddress = 0;
+            ValidAddress = "ناموجود";
+        }
 
 
         if (acc != null && acc.CRDT != null)
@@ -608,10 +595,6 @@ public class PaymentMobileFragment extends Fragment {
 
         /*if (acc!=null && acc.M!=null)
         getInquiryAccount(userName,passWord,acc.M);*/
-
-
-
-
 
 
         binding.layoutAddress.setOnClickListener(v -> {
@@ -632,6 +615,7 @@ public class PaymentMobileFragment extends Fragment {
 
         binding.layoutPaymentPlace.setOnClickListener(v -> {
 
+            typePayment = "";
             binding.tvSuccessFullPayOnline.setText("");
 
             if (acc != null && acc.CRDT != null && acc.CRDT >= (Double.parseDouble(Sum_PURE_PRICE) + sumTransport)) {
@@ -686,11 +670,7 @@ public class PaymentMobileFragment extends Fragment {
                 Uri uri = Uri.parse(link);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-                startActivityForResult(intent,44);
-
-
-
-
+                startActivityForResult(intent, 44);
 
             } else {
                 Toast.makeText(getActivity(), "انتقال به باشگاه مشتریان ، در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
@@ -772,7 +752,8 @@ public class PaymentMobileFragment extends Fragment {
                 Toast.makeText(getActivity(), "نوع سفارش را انخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else if (typePayment.equals("-1")) {
-                tvMessage.setText("از ارسال سفارش اطمینان دارید ؟");
+                Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 tvMessage.setText("از ارسال سفارش اطمینان دارید ؟");
             }
@@ -806,10 +787,9 @@ public class PaymentMobileFragment extends Fragment {
             invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
             invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
 
-            ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
-            CollectionUtils.filter(result, r -> r.N.contains("توزیع"));
-            if (result.size() > 0) {
-                invoiceDetailTransport.PRD_UID = result.get(0).I;
+
+            if (!Util.TransportId.equals("")) {
+                invoiceDetailTransport.PRD_UID = Util.TransportId;
             } else {
                 Toast.makeText(getActivity(), "خطا در ارسال مبلغ توزیع", Toast.LENGTH_SHORT).show();
                 return;
@@ -907,9 +887,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
         binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
-
-
-        /*        clickItemPay(binding.layoutPaymentPlace, binding.ivOkPaymentPlace);*/
 
 
     }
@@ -1012,7 +989,7 @@ public class PaymentMobileFragment extends Fragment {
         super.onDestroy();
 
         setADR1 = false;
-        onceSee = false;
+
     }
 
 
@@ -1034,56 +1011,52 @@ public class PaymentMobileFragment extends Fragment {
     private double PriceTransport(double distance, double SumPurePrice) {
         double priceTransport = -1.0;
 
-        try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-            switch (pInfo.packageName) {
-                case "ir.kitgroup.saleinmeat":
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.saleinmeat":
 
-                    imageIconDialog = R.drawable.meat_png;
-                    if (SumPurePrice > 2000000) {
-                        priceTransport = 0.0;
-                    } else {
-                        priceTransport = 100000;
-                    }
+                imageIconDialog = R.drawable.meat_png;
+                if (SumPurePrice > 2000000) {
+                    priceTransport = 0.0;
+                } else {
+                    priceTransport = 100000;
+                }
 
 
-                    break;
+                break;
 
-                default:
-                    if (0 < distance && distance <= 1) {
-                        priceTransport = 50000;
-                    } else if (1 < distance && distance <= 1.5) {
-                        priceTransport = 70000;
-                    } else if (1.5 < distance && distance <= 2) {
-                        priceTransport = 100000;
-                    } else if (2 < distance && distance <= 2.5) {
-                        priceTransport = 120000;
-                    } else if (2.5 < distance && distance <= 3) {
-                        priceTransport = 150000;
-                    } else if (3 < distance && distance <= 3.5) {
-                        priceTransport = 170000;
-                    } else if (3.5 < distance && distance <= 4) {
-                        priceTransport = 200000;
-                    } else if (4 < distance && distance <= 5) {
-                        priceTransport = 220000;
-                    } else if (5 < distance && distance <= 6) {
-                        priceTransport = 240000;
-                    } else if (6 < distance && distance <= 7) {
-                        priceTransport = 270000;
-                    } else if (7 < distance && distance <= 8) {
-                        priceTransport = 300000;
-                    } else if (8 < distance && distance <= 9) {
-                        priceTransport = 320000;
-                    } else if (9 < distance && distance <= 11) {
-                        priceTransport = 350000;
-                    } else if (distance > 11) {
-                        priceTransport = 400000;
-                    }
-                    break;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            default:
+                if (0 < distance && distance <= 1) {
+                    priceTransport = 50000;
+                } else if (1 < distance && distance <= 1.5) {
+                    priceTransport = 70000;
+                } else if (1.5 < distance && distance <= 2) {
+                    priceTransport = 100000;
+                } else if (2 < distance && distance <= 2.5) {
+                    priceTransport = 120000;
+                } else if (2.5 < distance && distance <= 3) {
+                    priceTransport = 150000;
+                } else if (3 < distance && distance <= 3.5) {
+                    priceTransport = 170000;
+                } else if (3.5 < distance && distance <= 4) {
+                    priceTransport = 200000;
+                } else if (4 < distance && distance <= 5) {
+                    priceTransport = 220000;
+                } else if (5 < distance && distance <= 6) {
+                    priceTransport = 240000;
+                } else if (6 < distance && distance <= 7) {
+                    priceTransport = 270000;
+                } else if (7 < distance && distance <= 8) {
+                    priceTransport = 300000;
+                } else if (8 < distance && distance <= 9) {
+                    priceTransport = 320000;
+                } else if (9 < distance && distance <= 11) {
+                    priceTransport = 350000;
+                } else if (distance > 11) {
+                    priceTransport = 400000;
+                }
+                break;
+
         }
 
 
@@ -1092,15 +1065,14 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-    private static class JsonObjectAccount {
+    //    private static class JsonObjectAccount {
+//
+//        public List<Account> Account;
+//
+//    }
 
-        public List<Account> Account;
 
-    }
-
-
-
-//    private void getInquiryAccount(String userName, String passWord, String mobile) {
+    //    private void getInquiryAccount(String userName, String passWord, String mobile) {
 //
 //        customProgress.showProgress(getActivity(),"در حال دریافت موجودی باشگاه",false);
 //        try {
@@ -1255,16 +1227,8 @@ public class PaymentMobileFragment extends Fragment {
 //    }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        getFragmentManager().popBackStack();
-        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        if (frg != null) {
-            ft.detach(frg);
-            ft.attach(frg);
-            ft.commit();
-        }
+        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 }

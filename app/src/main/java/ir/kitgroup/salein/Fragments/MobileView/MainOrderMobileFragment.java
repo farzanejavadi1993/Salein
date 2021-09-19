@@ -217,70 +217,71 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         //Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
 
+        binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        customProgress = CustomProgress.getInstance();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        firstSync = sharedPreferences.getBoolean("firstSync", false);
+
+
+
+
+        //region Configuration Text Size
         int fontSize;
         if (LauncherActivity.screenInches >= 7)
             fontSize = 14;
         else
             fontSize = 12;
 
-        getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
-        try {
-           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-
-            switch (LauncherActivity.name) {
-                case "ir.kitgroup.salein":
-                    nameCompany = "سالین";
-                    imageLogo = R.drawable.salein;
-                    imgIconDialog = R.drawable.saleinicon128;
-
-
-                    break;
-
-                case "ir.kitgroup.saleintop":
-                    nameCompany = " تاپ کباب";
-                    imageLogo = R.drawable.top;
-                    imgBackground = R.drawable.top_pas;
-                    imgIconDialog = R.drawable.top_png;
-
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-                    nameCompany = " گوشت دنیوی";
-                    imageLogo = R.drawable.goosht;
-                    imgBackground = R.drawable.donyavi_pas;
-                    imgIconDialog = R.drawable.meat_png;
-
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        binding.ivIconCompany.setImageResource(imageLogo);
-        binding.tvCompany.setText(nameCompany);
-        if (imgBackground != 0)
-            binding.image.setImageResource(imgBackground);
-
 
         binding.edtSearchProduct.setTextSize(fontSize);
         binding.nameCustomer.setTextSize(fontSize);
         binding.orderListTvRegister.setTextSize(fontSize);
-        customProgress = CustomProgress.getInstance();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        firstSync = sharedPreferences.getBoolean("firstSync", false);
-        if (!firstSync)
-            time = "2";
-        else
-            time = "1";
+        //endregion Configuration Text Size
 
 
+
+
+
+        //region Set Icon And Title
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
+                nameCompany = "سالین";
+                imageLogo = R.drawable.salein;
+                imgIconDialog = R.drawable.saleinicon128;
+
+
+                break;
+
+            case "ir.kitgroup.saleintop":
+                nameCompany = " تاپ کباب";
+                imageLogo = R.drawable.top;
+                imgBackground = R.drawable.top_pas;
+                imgIconDialog = R.drawable.top_png;
+
+                break;
+
+
+            case "ir.kitgroup.saleinmeat":
+                nameCompany = " گوشت دنیوی";
+                imageLogo = R.drawable.goosht;
+                imgBackground = R.drawable.donyavi_pas;
+                imgIconDialog = R.drawable.meat_png;
+
+                break;
+        }
+        binding.ivIconCompany.setImageResource(imageLogo);
+        binding.tvCompany.setText(nameCompany);
+        if (imgBackground != 0)
+            binding.image.setImageResource(imgBackground);
+        //endregion Set Icon And Title
+
+
+
+
+        //region Delete Invoice And InvoiceDetail is Not Necessary
         for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
             Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
             if (tb == null || tb.SV == null || !tb.SV) {
@@ -290,9 +291,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     InvoiceDetail.deleteInTx(invoiceDetail);
                 }
             }
-
         }
+        //endregion Delete Invoice And InvoiceDetail is Not Necessary
 
+
+
+        //region Set Amount 0.0 For Products
         ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
         CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
         if (prdResult.size() > 0) {
@@ -300,12 +304,18 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
             }
         }
+        //endregion Set Amount 0.0 For Products
 
+
+
+
+        //region Configuration Organization Application
         if (App.mode == 1) {
             binding.defineCompany.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.VISIBLE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
             binding.bottomNavigationViewLinear.setVisibility(View.GONE);
+
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
             dialogAddAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -356,6 +366,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
             });
             //endregion Cast DialogAddAcc
+
             accList = new ArrayList<>();
             accAdapter = new AccountAdapter(getActivity(), accList);
             binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -413,48 +424,59 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
             binding.nameCustomer.addTextChangedListener(textWatcherAcc);
-        } else {
+        }
+        //endregion Configuration Organization Application
+
+
+
+        //region Configuration Client Application
+
+        else {
 
             binding.defineCompany.setVisibility(View.VISIBLE);
             binding.layoutAccount.setVisibility(View.GONE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
-
             binding.btnRegisterOrder.setVisibility(View.GONE);
+
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
 
-
             binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
-
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setBackgroundColor(getActivity().getResources().getColor(R.color.red_table));
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
-
-
             binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
 
-
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                //region Delete Item Transport For Show Counter
                 if (invDetails.size() > 0) {
                     for (int i = 0; i < invDetails.size(); i++) {
                         if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-
                             invDetails.remove(invDetails.get(i));
-
                         }
                     }
                     counter = invDetails.size();
                     binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                     if (App.mode == 1)
                         binding.btnRegisterOrder.setVisibility(View.VISIBLE);
-                } else
+                }
+                //endregion Delete Item Transport For Show Counter
 
+                else
                     binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+
+
+                //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
                 final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
                 if (Inv_GUID_ORG.equals("")) {
                     for (int i = 1; i <= size1; i++) {
                         getFragmentManager().popBackStack();
                     }
                 }
+                //endregion Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
+
+
+
+
                 switch (item.getItemId()) {
                     case R.id.homee:
                         if (!Inv_GUID_ORG.equals("")) {
@@ -462,6 +484,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         }
                         productAdapter.notifyDataSetChanged();
                         return true;
+
+
+
 
                     case R.id.orders:
                         Bundle bundle = new Bundle();
@@ -480,19 +505,27 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                         return true;
 
+
+
                     case R.id.profile:
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new SettingFragment()).addToBackStack("SettingF").commit();
                         return true;
                 }
+
+
+
                 return false;
             });
 
 
         }
 
+        //endregion Configuration Client Application
+
+
+
 
         //region First Value Parameter
-
         counter = 0;
         Inv_GUID = "";
         Inv_GUID_ORG = "";
@@ -553,8 +586,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion Get Bundle
 
 
+
+
         //region Create Order
 
+
+        //region Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
         List<Invoice> invoicese = Select.from(Invoice.class).list();
         CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT == null);
         if (invoicese.size() > 0) {
@@ -567,6 +604,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 Invoice.delete(invoicese.get(i));
             }
         }
+        //endregion Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
+
+
+
+
 
         if (Inv_GUID.equals("")) {
             Inv_GUID = UUID.randomUUID().toString();
@@ -576,12 +618,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             Invoice.save(order);
 
 
-        } else {
+        }
+        else {
             binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
         }
 
 
         //endregion Create Order
+
 
 
         //region Cast Variable Dialog
@@ -1198,9 +1242,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         productAdapter = null;
     }
 
-    //endregion Override Method
 
-    //region Method
+
+
+
+
 
 
     @SuppressLint("StaticFieldLeak")
@@ -1590,6 +1636,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                                 SaveImageToStorage(StringToImage(products1.get(i).IMG), products1.get(i).I, Objects.requireNonNull(getActivity()));
                             }
                         }
+                        ArrayList<Product> list = new ArrayList<>(products);
+                        CollectionUtils.filter(list,p->p.N.contains("توزیع"));
+                        if (list.size()>0)
+                            Util.TransportId=list.get(0).I;
+
+                        CollectionUtils.filter(products,p->!p.N.contains("توزیع"));
                         Util.AllProduct.addAll(products);
 
 

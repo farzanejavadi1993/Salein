@@ -1,11 +1,12 @@
 package ir.kitgroup.salein.Fragments.MobileView;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -49,8 +50,7 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Point;
+
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -61,9 +61,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import com.orm.query.Select;
 
@@ -95,38 +93,31 @@ import static android.os.Looper.getMainLooper;
 public class MapFragment extends Fragment implements PermissionsListener {
 
 
-    public Boolean setADR1 = false;
+    //region Parameter
     private FragmentMapBinding binding;
-
     private CustomProgress customProgress;
+
+
+    private Boolean setADR1 = false;// If setADR1  Is True Set Address1 In TvAddress(PaymentFragment)
+
 
     private Dialog dialogAddress;
     private int imgIconDialog;
 
 
     private String address = "";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 99;
-    private LocationManager locationManager;
-    private Boolean registerGps = false;
-    private MapboxMap mMapboxMap;
-    private PermissionsManager permissionsManager;
-    private static final String DROPPED_MARKER_LAYER_ID = "DROPPED_MARKER_LAYER_ID";
-
-
-    private static final String MARKERS_SOURCE = "markers-source";
-    private static final String MARKERS_LAYER = "markers-layer";
-    private static final String MARKER_ICON_ID = "marker-icon-id";
-
-
-    private LocationEngine locationEngine = null;
-    private MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
-
 
     private double longitude = 0.0;
     private double latitude = 0.0;
 
+    private final int LOCATION_PERMISSION_REQUEST_CODE = 99;
 
-    private int fontSize = 0;
+    private LocationManager locationManager;
+
+    private MapboxMap mMapboxMap;
+
+
+    private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
 
 
     private SearchViewAdapter mRecyclerAdapter;
@@ -144,68 +135,73 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private String userName = "";
     private String passWord = "";
 
+    //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 
         binding = FragmentMapBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         customProgress = CustomProgress.getInstance();
+        userName = Select.from(User.class).first().userName;
+        passWord = Select.from(User.class).first().passWord;
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
+        //region Configuration Text Size
+        int fontSize;
         if (LauncherActivity.screenInches >= 7) {
 
             fontSize = 14;
         } else
             fontSize = 12;
-
-
         binding.edtAddress.setTextSize(fontSize);
         binding.edtAddressComplete.setTextSize(fontSize);
         binding.btnRegisterInformation.setTextSize(fontSize);
 
+        //endregion Configuration Text Size
 
 
-        try {
-           // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        //region Set Icon And Title
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
 
-            switch (LauncherActivity.name){
-                case "ir.kitgroup.salein":
-
-                    imgIconDialog=R.drawable.saleinicon128;
+                imgIconDialog = R.drawable.saleinicon128;
 
 
-                    break;
+                break;
 
-                case "ir.kitgroup.saleintop":
+            case "ir.kitgroup.saleintop":
 
-                    imgIconDialog=R.drawable.top_png;
+                imgIconDialog = R.drawable.top_png;
 
-                    break;
+                break;
 
 
-                case "ir.kitgroup.saleinmeat":
+            case "ir.kitgroup.saleinmeat":
 
-                    imgIconDialog=R.drawable.meat_png;
+                imgIconDialog = R.drawable.meat_png;
 
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                break;
         }
+        //endregion Set Icon And Title
 
 
+        //region Get Bundle
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
         String type = bundle.getString("type");
-
         String edit_address = bundle.getString("edit_address");
-
-
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
+        //endregion Get Bundle
 
 
         //region Cast DialogAddress
@@ -221,8 +217,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         ivIcon.setImageResource(imgIconDialog);
 
         address1.setOnClickListener(v -> {
-
-
             Account accountORG = Select.from(Account.class).first();
             Account account = new Account();
             account.I = accountORG.I;
@@ -232,8 +226,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             setADR1 = false;
 
-            account.ADR = longitude+"longitude"+binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude"+latitude;
-
+            account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
             ArrayList<Account> list = new ArrayList<>();
             list.add(account);
             dialogAddress.dismiss();
@@ -251,7 +244,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.ADR = accountORG.ADR;
 
             setADR1 = true;
-            account.ADR1 =longitude+"longitude"+ binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude"+latitude;
+            account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
 
             ArrayList<Account> list = new ArrayList<>();
             list.add(account);
@@ -265,15 +258,15 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //endregion Cast DialogAddress
 
 
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
+        //region Action btnRegisterInformation
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
 
             Account accountORG = Select.from(Account.class).first();
 
-            //edit Address when going from PaymentFragment
+            //region Edit Address When Going From PaymentFragment
             if (edit_address != null && edit_address.equals("1")) {
                 Account account = new Account();
                 account.I = accountORG.I;
@@ -284,11 +277,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
                 if (account.ADR == null) {
-                    account.ADR = longitude+"longitude"+binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude"+latitude;
+                    setADR1 = false;
+                    account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
 
                 } else if (account.ADR1 == null) {
                     setADR1 = true;
-                    account.ADR1 =longitude+"longitude"+binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude"+latitude;
+                    account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
 
                 } else {
                     dialogAddress.show();
@@ -302,31 +296,30 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 return;
 
-            }
 
-            //edit Address when going from ProfileFragment
-            if (edit_address != null && edit_address.equals("2")) {
+
+            }
+            //endregion Edit Address When Going From PaymentFragment
+
+
+            //region Edit Address when Going From ProfileFragment
+            if (edit_address != null && edit_address.equals("2"))
+            {
 
                 Account account = new Account();
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
-               //account.LAT = accountORG.LAT;
-               //account.LNG = accountORG.LNG;
 
-               //account.LAT1 = accountORG.LAT1;
-               //account.LNG1 = accountORG.LNG1;
                 if (type.equals("1")) {
                     account.ADR1 = accountORG.ADR1;
-                    account.ADR = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                  //  account.LAT = latitude;
-                  //  account.LNG = longitude;
+                    account.ADR = longitude + "longitude"+binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+ "latitude" + latitude;
+
                 } else {
 
                     account.ADR = accountORG.ADR;
-                    account.ADR1 = binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString();
-                   // account.LAT1 = latitude;
-                   // account.LNG1 = longitude;
+                    account.ADR1 =longitude + "longitude"+ binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude" + latitude;
+
                 }
 
 
@@ -338,7 +331,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 return;
 
             }
+            //endregion Edit Address when Going From ProfileFragment
 
+
+
+            //region Region Gps Information And Go To RegisterFragment
             getFragmentManager().popBackStack();
             Bundle bundle1 = new Bundle();
             bundle1.putString("mobile", mobile);
@@ -350,13 +347,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
             registerFragment.setArguments(bundle1);
             FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
             addFragment.commit();
-        });
-        return binding.getRoot();
-    }
+            //endregion Region Gps Information And Go To RegisterFragment
 
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        });
+        //endregion Action btnRegisterInformation
+
+
 
 
         try {
@@ -395,6 +391,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                         }
                     });
 
+
             this.mMapboxMap.setMaxZoomPreference(18);
             this.mMapboxMap.setMinZoomPreference(6);
             this.mMapboxMap.setCameraPosition(
@@ -408,10 +405,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             mMapboxMap.addOnCameraIdleListener(() -> reverseGeocode(mMapboxMap.getCameraPosition()));
 
-
             binding.floating.setOnClickListener(v -> setupCurrentLocationButton());
 
         });
+
 
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(mLinearLayoutManager);
@@ -446,6 +443,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
             }
         });
+
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -595,7 +593,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             initializeLocationEngine();
         } else {
-            permissionsManager = new PermissionsManager(this);
+            PermissionsManager permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(getActivity());
         }
     }
@@ -605,7 +603,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             return;
         }
 
-        locationEngine = LocationEngineProvider.getBestLocationEngine(getActivity());
+        LocationEngine locationEngine = LocationEngineProvider.getBestLocationEngine(getActivity());
 
         long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
         long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
@@ -620,41 +618,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationEngine.getLastLocation(callback);
     }
 
-    private void addMarkerToMapViewAtPosition(LatLng coordinate) {
-        if (mMapboxMap != null && mMapboxMap.getStyle() != null) {
-            Style style = mMapboxMap.getStyle();
 
-            if (style.getImage(MARKER_ICON_ID) == null) {
-                style.addImage(MARKER_ICON_ID, BitmapFactory.decodeResource(getResources(), R.drawable.ic_location_marker));
-            }
-
-            GeoJsonSource geoJsonSource;
-            if (style.getSource(MARKERS_SOURCE) == null) {
-                geoJsonSource = new GeoJsonSource(MARKERS_SOURCE);
-                style.addSource(geoJsonSource);
-            } else {
-                geoJsonSource = (GeoJsonSource) style.getSource(MARKERS_SOURCE);
-            }
-            if (geoJsonSource == null) {
-                return;
-            }
-
-            Feature feature = Feature.fromGeometry(
-                    Point.fromLngLat(coordinate.getLongitude(), coordinate.getLatitude()));
-
-
-            geoJsonSource.setGeoJson(feature);
-
-            style.removeLayer(MARKERS_LAYER);
-
-            SymbolLayer symbolLayer = new SymbolLayer(MARKERS_LAYER, MARKERS_SOURCE);
-            symbolLayer.withProperties(
-                    PropertyFactory.iconImage(MARKER_ICON_ID),
-                    PropertyFactory.iconAllowOverlap(true)
-            );
-            style.addLayer(symbolLayer);
-        }
-    }
 
     private void setupCurrentLocationButton() {
         if (getView() == null) {
@@ -701,7 +665,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private static class MapFragmentLocationCallback implements LocationEngineCallback<LocationEngineResult> {
 
-        private WeakReference<MapFragment> fragmentWeakReference;
+        private final WeakReference<MapFragment> fragmentWeakReference;
 
         MapFragmentLocationCallback(MapFragment fragment) {
             fragmentWeakReference = new WeakReference<>(fragment);
@@ -727,10 +691,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         @Override
         public void onFailure(@NonNull Exception exception) {
-            String message = exception.getLocalizedMessage();
-            if (message != null) {
 
-            }
         }
     }
 
@@ -761,6 +722,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                         binding.edtAddress.setText(address);
                     }
 
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onFailure(@NonNull String errorMessage) {
                         binding.edtAddress.setVisibility(View.VISIBLE);
@@ -931,15 +893,15 @@ public class MapFragment extends Fragment implements PermissionsListener {
                         int message = iDs.getLogs().get(0).getMessage();
                         String description = iDs.getLogs().get(0).getDescription();
 
+                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                         if (message == 1) {
-                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                             Account.deleteAll(Account.class);
                             Account.saveInTx(accounts);
                             assert getFragmentManager() != null;
                             Bundle bundle1 = new Bundle();
                             bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
                             bundle1.putString("type", locationAddress);
-                            Fragment frg = null;
+                            Fragment frg;
                             if (flag == 0)
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
                             else
@@ -951,8 +913,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                     frg.setArguments(bundle1);
                                 if (flag == 1) {
                                     PaymentMobileFragment.setADR1 = setADR1;
-                                    PaymentMobileFragment.onceSee = true;
-
                                 }
 
                                 getFragmentManager().popBackStack();
@@ -962,11 +922,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             }
 
 
-                        } else {
-
-                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                         }
-                    } else {
+                    }
+                    else {
                         Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
                     }
 

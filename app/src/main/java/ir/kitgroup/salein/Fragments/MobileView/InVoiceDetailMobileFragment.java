@@ -63,7 +63,7 @@ import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.models.ModelDesc;
-import ir.kitgroup.salein.models.ModelInvoice;
+
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
@@ -103,9 +103,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     private List<InvoiceDetail> invDetails;
 
-    private int fontSize = 0;
-    private int fontLargeSize = 0;
-
     private String status;
     private double sumTransport = 0.0;
     //endregion Variable Dialog Description
@@ -117,13 +114,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentInvoiceDetailMobileBinding.inflate(getLayoutInflater());
-        if (LauncherActivity.screenInches >= 7) {
-            fontSize = 13;
-            fontLargeSize = 14;
-        } else {
-            fontSize = 11;
-            fontLargeSize = 12;
-        }
+
         return binding.getRoot();
     }
 
@@ -135,9 +126,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         customProgress = CustomProgress.getInstance();
-
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
+
+
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
             maxSales = setting.get(0).MAX_SALE;
@@ -145,7 +137,42 @@ public class InVoiceDetailMobileFragment extends Fragment {
         userName = Select.from(User.class).list().get(0).userName;
         passWord = Select.from(User.class).list().get(0).passWord;
 
+        //region Configuration Text Size
+        int fontSize;
+        int fontLargeSize;
+        if (LauncherActivity.screenInches >= 7) {
+            fontSize = 13;
+            fontLargeSize = 14;
+        } else {
+            fontSize = 11;
+            fontLargeSize = 12;
+        }
 
+
+        binding.tvNameCustomer.setTextSize(fontSize);
+        binding.txtDate.setTextSize(fontSize);
+        binding.txtTypeOrder.setTextSize(fontSize);
+        binding.txtTableNumber.setTextSize(fontSize);
+
+
+        binding.orderListPurePriceTv.setTextSize(fontSize);
+        binding.tvSumPurePrice.setTextSize(fontLargeSize);
+        binding.orderListSumPriceTv.setTextSize(fontLargeSize);
+        binding.tvSumPrice.setTextSize(fontLargeSize);
+        binding.orderListSumDiscountTv.setTextSize(fontLargeSize);
+        binding.tvSumDiscount.setTextSize(fontLargeSize);
+        binding.tvSumTransport.setTextSize(fontLargeSize);
+        binding.txtSumTransport.setTextSize(fontLargeSize);
+
+
+        binding.btnContinue.setTextSize(fontSize);
+        binding.btnDelete.setTextSize(fontSize);
+        binding.btnEdit.setTextSize(fontSize);
+        binding.btnResend.setTextSize(fontSize);
+        //endregion Configuration Text Size
+
+
+        //region Get Bundle
         Bundle bundle = getArguments();
         String type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
@@ -154,20 +181,32 @@ public class InVoiceDetailMobileFragment extends Fragment {
         String Acc_NAME = bundle.getString("Acc_NAME");
         String Acc_GUID = bundle.getString("Acc_GUID");
         boolean edit = bundle.getBoolean("EDIT");
+        //endregion Get Bundle
 
+
+        //region Configuration Client Application
         if (App.mode == 2) {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
         }
+        //endregion Configuration Client Application
+
+
+
+
+        //region Configuration Organization Application And Edit Mode For Save Order
         if (App.mode == 1 && type.equals("2")) {
             binding.layoutSave.setVisibility(View.VISIBLE);
+
             binding.layoutSave.setOnClickListener(v -> {
                 Date date = Calendar.getInstance().getTime();
 
                 double sumDiscount = 0.0;
                 double sumDiscountPercent = 0.0;
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+
                 for (int i = 0; i < invDetails.size(); i++) {
                     ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                     int finalI = i;
@@ -199,8 +238,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
                     InvoiceDetail.deleteInTx(invoicedetail);
                 }
-                InvoiceDetail.saveInTx(invDetails);
 
+
+
+                InvoiceDetail.saveInTx(invDetails);
                 Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
 
                 invoice.INV_UID = Inv_GUID;
@@ -245,37 +286,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             });
         }
+        //endregion Configuration Organization Application And Edit Mode For Save Order
 
-
-        binding.tvNameCustomer.setTextSize(fontSize);
-        binding.txtDate.setTextSize(fontSize);
-        binding.txtTypeOrder.setTextSize(fontSize);
-        binding.txtTableNumber.setTextSize(fontSize);
-
-
-        binding.orderListPurePriceTv.setTextSize(fontSize);
-        binding.tvSumPurePrice.setTextSize(fontLargeSize);
-        binding.orderListSumPriceTv.setTextSize(fontLargeSize);
-        binding.tvSumPrice.setTextSize(fontLargeSize);
-        binding.orderListSumDiscountTv.setTextSize(fontLargeSize);
-        binding.tvSumDiscount.setTextSize(fontLargeSize);
-        binding.tvSumTransport.setTextSize(fontLargeSize);
-        binding.txtSumTransport.setTextSize(fontLargeSize);
-
-
-        binding.btnContinue.setTextSize(fontSize);
-        binding.btnDelete.setTextSize(fontSize);
-        binding.btnEdit.setTextSize(fontSize);
-        binding.btnResend.setTextSize(fontSize);
-
-
-        sumPrice = 0;
-        sumPurePrice = 0;
-        sumDiscounts = 0;
-
-
-        invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
+        //region Action BtnResend
         binding.btnResend.setOnClickListener(v -> {
             if (invoiceDetailList.size() == 0) {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
@@ -297,6 +310,20 @@ public class InVoiceDetailMobileFragment extends Fragment {
             paymentFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
         });
+        //endregion Action BtnResend
+
+
+
+
+
+        sumPrice = 0;
+        sumPurePrice = 0;
+        sumDiscounts = 0;
+        invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+
+
+
 
 
         //region Cast DialogDescription
@@ -358,10 +385,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Cast DialogDescription
 
 
+
         //region Set Parameter Toolbar
         Utilities util = new Utilities();
         Locale loc = new Locale("en_US");
-        //seen
+
+        //region Seen Order After Send It
         if (type.equals("1")) {
 
             binding.layoutContinue.setVisibility(View.GONE);
@@ -422,9 +451,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
             }
 
         }
+        //endregion Seen Order After Send It
 
 
-        //edit
+
+        //region See Order During Work
         else {
             Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
             if (tbl1 != null)
@@ -447,13 +478,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 binding.tvNameCustomer.setText(Acc_NAME);
 
         }
+        //endregion See Order During Work
+
         //endregion Set Parameter Toolbar
+
+
 
 
         //region CONFIGURATION DATA INVOICE_DETAIL
 
-
         invoiceDetailList.clear();
+
+
         if (type.equals("1") || edit) {
             for (int i = 0; i < invDetails.size(); i++) {
                 if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
@@ -466,6 +502,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
             }
         }
+
+
         if (type.equals("2")){
             binding.tvSumTransport.setVisibility(View.GONE);
             binding.txtSumTransport.setVisibility(View.GONE);
@@ -473,9 +511,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         invoiceDetailList.addAll(invDetails);
-       /* if (type.equals("1")) {
-            getInVoice(userName, passWord, Inv_GUID);
-        }*/
+
 
         for (int i = 0; i < invDetails.size(); i++) {
 
@@ -501,6 +537,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
@@ -511,6 +548,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.recyclerDetailInvoice.setHasFixedSize(false);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
+
 
 
         invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
@@ -573,6 +611,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         });
+
 
 
         invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -669,6 +708,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
 
+
         invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
 
             edtDescriptionItem.setText(description);
@@ -676,6 +716,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
             GuidInv = GUIDInv;
             getDescription(userName, passWord, GUIDPrd);
         });
+
+
 
 
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
@@ -702,6 +744,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion CONFIGURATION DATA INVOICE_DETAIL
 
 
+        //region Action BtnDelete
         binding.btnDelete.setOnClickListener(v -> {
 
             Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
@@ -714,8 +757,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         });
+        //endregion Action BtnDelete
 
 
+
+        //region Action BtnEdit
         binding.btnEdit.setOnClickListener(v -> {
             if (invoiceDetailList.size() == 0) {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
@@ -729,8 +775,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
             FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileFX");
             replaceFragment.commit();
         });
+        //endregion Action BtnEdit
 
 
+
+        //region Action BtnContinue
         binding.btnContinue.setOnClickListener(v -> {
             if (invoiceDetailList.size() == 0) {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
@@ -750,15 +799,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             if (edit)
                 bundle1.putBoolean("EDIT", true);
+
             bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
         });
+        //endregion Action BtnContinue
 
-        /*if (App.mode == 1 && type.equals("1"))
-            getInVoice(userName, passWord, Inv_GUID);*/
+
+
+
 
     }
 
@@ -920,7 +972,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-    private void getInVoice(String userName, String pass, String Inv_GUID) {
+   /* private void getInVoice(String userName, String pass, String Inv_GUID) {
 
         customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
 
@@ -930,6 +982,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             Call<String> call = App.api.getInvoice(userName, pass, Inv_GUID);
 
             call.enqueue(new Callback<String>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
 
@@ -1032,7 +1085,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-    }
+    }*/
 
     private void getDeleteInvoice(String userName, String pass, String Inv_GUID) {
 
@@ -1074,7 +1127,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             ft.attach(frg);
                             ft.commit();
                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                        } else {
                         }
                     } else {
                         Toast.makeText(getActivity(), "خطایی در سرور رخ داد", Toast.LENGTH_SHORT).show();
