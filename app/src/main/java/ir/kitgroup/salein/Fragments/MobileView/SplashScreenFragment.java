@@ -28,10 +28,9 @@ import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
 
 public class SplashScreenFragment extends Fragment {
 
-    private FragmentSplashScreenBinding binding;
     private int imageIconDialog = 0;
     private String title = "";
-    private String nameProject = "";
+    private FragmentSplashScreenBinding binding;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -39,59 +38,69 @@ public class SplashScreenFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 
         binding = FragmentSplashScreenBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         // region Utilize Animation
-        Util.playLottieAnimation("buy.json", binding.animationView);
+        Util.playLottieAnimation("buygirl.json", binding.animationView);
         Util.playLottieAnimation("890-loading-animation.json", binding.animationView1);
         //endregion Utilize Animation
 
+        //region Set Icon And Title
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
+                imageIconDialog = R.drawable.salein;
+                title = "سالین";
+                break;
 
-        try {
-            //  PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            case "ir.kitgroup.saleintop":
 
-            switch (LauncherActivity.name) {
-                case "ir.kitgroup.salein":
+                imageIconDialog = R.drawable.top_png;
+                title = "تاپ کباب";
 
-                    imageIconDialog = R.drawable.logo1;
-                    title = "سالین";
-
-                    break;
-
-                case "ir.kitgroup.saleintop":
-
-                    imageIconDialog = R.drawable.top_png;
-                    title = "تاپ کباب";
-
-                    break;
+                break;
 
 
-                case "ir.kitgroup.saleinmeat":
+            case "ir.kitgroup.saleinmeat":
 
-                    imageIconDialog = R.drawable.meat_png;
-                    title = "گوشت دنیوی";
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                imageIconDialog = R.drawable.meat_png;
+                title = "گوشت دنیوی";
+                break;
         }
-
-
         binding.imgLogo.setImageResource(imageIconDialog);
         binding.tvTitle.setText(title);
+        //endregion Set Icon And Title
+
+        //region Thread
 
         Thread thread = new Thread(() -> {
             try {
 
-                Thread.sleep(3000);
+                Thread.sleep(5000);
 
                 FragmentTransaction replaceFragment;
+
+                //regionClient Application
                 if (App.mode == 2) {
-                    Bundle bundle = new Bundle();
 
-
+                    //region Account Is Login & Register
                     if (Select.from(Account.class).list().size() > 0) {
+
+                        //regionShow All Company
                         if (LauncherActivity.name.equals("ir.kitgroup.salein"))
-                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+
+
+                            //endregionShow All Company
+
+                        //region Go To MainOrderFragment Because Account Is Register
                         else {
+                            Bundle bundle = new Bundle();
                             bundle.putString("Ord_TYPE", "");
                             bundle.putString("Tbl_GUID", "");
                             bundle.putString("Inv_GUID", "");
@@ -99,23 +108,39 @@ public class SplashScreenFragment extends Fragment {
                             mainOrderMobileFragment.setArguments(bundle);
                             replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
                         }
+                        //endregion Go To MainOrderFragment Because Account Is Register
+
+                    }
+                    //endregion Account Is Login & Register
 
 
-                    } else {
+                    //region Account Is Not Login & Register
+                    else {
+
                         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginClientFragment());
 
                     }
-                } else {
-                    if (Select.from(User.class).list().get(0).CheckUser) {
+                    //endregion Account Is Not Login & Register
+                }
+                //endregionClient Application
 
+
+                //regionOrganization Application
+                else {
+                    //When User Is Login
+                    if (Select.from(User.class).list().get(0).CheckUser) {
                         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
-                    } else {
+                    }
+
+                    //When User Is Not Login
+                    else {
 
                         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
 
                     }
 
                 }
+                //endregionOrganization Application
 
                 replaceFragment.commit();
 
@@ -125,9 +150,6 @@ public class SplashScreenFragment extends Fragment {
             }
         });
         thread.start();
-
-        return binding.getRoot();
-
-
+        //endregion Thread
     }
 }

@@ -51,8 +51,6 @@ public class ConfirmCodeFragment extends Fragment {
     //region  Parameter
     private FragmentConfirmCodeBinding binding;
     private User user;
-    private int fontSize = 0;
-    private String messageWelcome = "";
     private int imageLogo;
 
     //endregion Parameter
@@ -62,35 +60,6 @@ public class ConfirmCodeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentConfirmCodeBinding.inflate(getLayoutInflater());
-
-        if (LauncherActivity.screenInches >= 7) {
-            binding.tvMessage.setTextSize(18);
-            fontSize = 14;
-        } else
-            fontSize = 12;
-
-
-        try {
-            // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-
-            switch (LauncherActivity.name) {
-                case "ir.kitgroup.salein":
-                    imageLogo = R.drawable.salein;
-                    break;
-
-                case "ir.kitgroup.saleintop":
-                    imageLogo = R.drawable.top;
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-                    imageLogo = R.drawable.goosht;
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return binding.getRoot();
 
     }
@@ -102,25 +71,53 @@ public class ConfirmCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        user = Select.from(User.class).first();
+
+        //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
         int code = bundle.getInt("code");
+        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
+        //endregion Get Bundle And Set Data
 
 
+        //region Configuration Text Size
+        int fontSize;
+        if (LauncherActivity.screenInches >= 7) {
+            binding.tvMessage.setTextSize(18);
+            fontSize = 14;
+        } else
+            fontSize = 12;
         binding.tvEnterCode.setTextSize(fontSize);
         binding.btnLogin.setTextSize(fontSize);
+        //endregion Configuration Text Size
 
-        user = Select.from(User.class).first();
+
+        //region Set Icon And Title
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
+                imageLogo = R.drawable.salein;
+                break;
+
+            case "ir.kitgroup.saleintop":
+                imageLogo = R.drawable.top;
+                break;
 
 
-        binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
-        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
+            case "ir.kitgroup.saleinmeat":
+                imageLogo = R.drawable.goosht;
+                break;
+        }
+
         if (App.mode == 2) {
-
             binding.ivLogo.setImageResource(imageLogo);
         }
 
+        //endregion Set Icon And Title
+
+
+        //region TextWatcher Code
 
         binding.edtV1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,6 +134,19 @@ public class ConfirmCodeFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV2.requestFocus();
+                }
+                String code = binding.edtV1.getText().toString() +
+                        binding.edtV2.getText().toString() +
+                        binding.edtV3.getText().toString() +
+                        binding.edtV4.getText().toString() +
+                        binding.edtV5.getText().toString();
+                if (code.length() == 5) {
+                    binding.btnLogin.setEnabled(true);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
+                } else {
+                    binding.btnLogin.setEnabled(false);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 }
 
             }
@@ -157,6 +167,19 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     binding.edtV3.requestFocus();
                 }
+                String code = binding.edtV1.getText().toString() +
+                        binding.edtV2.getText().toString() +
+                        binding.edtV3.getText().toString() +
+                        binding.edtV4.getText().toString() +
+                        binding.edtV5.getText().toString();
+                if (code.length() == 5) {
+                    binding.btnLogin.setEnabled(true);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
+                } else {
+                    binding.btnLogin.setEnabled(false);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                }
 
             }
         });
@@ -176,6 +199,19 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     binding.edtV4.requestFocus();
                 }
+                String code = binding.edtV1.getText().toString() +
+                        binding.edtV2.getText().toString() +
+                        binding.edtV3.getText().toString() +
+                        binding.edtV4.getText().toString() +
+                        binding.edtV5.getText().toString();
+                if (code.length() == 5) {
+                    binding.btnLogin.setEnabled(true);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
+                } else {
+                    binding.btnLogin.setEnabled(false);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                }
 
             }
         });
@@ -194,6 +230,19 @@ public class ConfirmCodeFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV5.requestFocus();
+                }
+                String code = binding.edtV1.getText().toString() +
+                        binding.edtV2.getText().toString() +
+                        binding.edtV3.getText().toString() +
+                        binding.edtV4.getText().toString() +
+                        binding.edtV5.getText().toString();
+                if (code.length() == 5) {
+                    binding.btnLogin.setEnabled(true);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
+                } else {
+                    binding.btnLogin.setEnabled(false);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 }
 
             }
@@ -215,10 +264,24 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     Util.hideKeyBoard(getActivity(), binding.edtV5);
                 }
+                String code = binding.edtV1.getText().toString() +
+                        binding.edtV2.getText().toString() +
+                        binding.edtV3.getText().toString() +
+                        binding.edtV4.getText().toString() +
+                        binding.edtV5.getText().toString();
+                if (code.length() == 5) {
+                    binding.btnLogin.setEnabled(true);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
+                } else {
+                    binding.btnLogin.setEnabled(false);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                }
 
 
             }
         });
+
         binding.edtV1.setOnFocusChangeListener((view1, b) -> {
             if (b) {
                 setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
@@ -250,37 +313,45 @@ public class ConfirmCodeFragment extends Fragment {
         binding.edtV5.setOnFocusChangeListener((view1, b) -> {
             if (b) {
                 setEditBackground(R.drawable.rounded_edittext_blue, (EditText) view1);
-                binding.btnLogin.setEnabled(true);
-                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+
             } else {
-                binding.btnLogin.setEnabled(false);
-                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+
                 setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
             }
 
 
         });
 
+        //endregion TextWatcher Code
 
+
+        //region Action BtnLogin
         binding.btnLogin.setOnClickListener(v -> {
-                    String codeInput =
-                            binding.edtV1.getText().toString() +
-                                    binding.edtV2.getText().toString() +
-                                    binding.edtV3.getText().toString() +
-                                    binding.edtV4.getText().toString() +
-                                    binding.edtV5.getText().toString();
-                    if (Integer.parseInt(codeInput) != code) {
-                        Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-                        //return;
-                    }
-                    getInquiryAccount(user.userName, user.passWord, mobile);
-                }
-        );
+            String codeInput =
+                    binding.edtV1.getText().toString() +
+                            binding.edtV2.getText().toString() +
+                            binding.edtV3.getText().toString() +
+                            binding.edtV4.getText().toString() +
+                            binding.edtV5.getText().toString();
+            if (Integer.parseInt(codeInput) != code) {
+                Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+                //return;
+            }
+            getInquiryAccount(user.userName, user.passWord, mobile);
+        });
+        //endregion Action BtnLogin
+
+
+        //region Action ivBackFragment
+        binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
+        //endregion Action ivBackFragment
 
 
     }
 
 
+
+    //region Method
     private void getInquiryAccount(String userName, String passWord, String mobile) {
 
         try {
@@ -319,17 +390,23 @@ public class ConfirmCodeFragment extends Fragment {
 
                     } else {
 
-                        //user is register
+                        //region Account Is Register
                         if (iDs.getAccountList().size() > 0) {
                             Account.deleteAll(Account.class);
                             Account.saveInTx(iDs.getAccountList());
                             getFragmentManager().popBackStack();
 
 
+                            //region Show All Company
                             if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
                                 FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                 replaceFragment.commit();
-                            } else {
+                            }
+                            //endregion Show All Company
+
+
+                            //region Go To MainOrderFragment Because Account Is Register
+                            else {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("Ord_TYPE", "");
                                 bundle.putString("Tbl_GUID", "");
@@ -339,13 +416,14 @@ public class ConfirmCodeFragment extends Fragment {
                                 FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
                                 replaceFragment.commit();
                             }
-
-
+                            //endregion Go To MainOrderFragment Because Account Is Register
 
 
                         }
+                        //endregion Account Is Register
 
-                        //user not register
+
+                        //region Account Is Not Register
                         else {
                             getFragmentManager().popBackStack();
                             Bundle bundle = new Bundle();
@@ -355,6 +433,8 @@ public class ConfirmCodeFragment extends Fragment {
                             FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment, "MapFragment");
                             addFragment.commit();
                         }
+                        //endregion Account Is Not Register
+
 
                         binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                         binding.btnLogin.setEnabled(true);
@@ -387,8 +467,11 @@ public class ConfirmCodeFragment extends Fragment {
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void setEditBackground(int drawable, EditText view) {
         view.setBackground(getResources().getDrawable(drawable));
     }
+    //endregion Method
+
 
 }
