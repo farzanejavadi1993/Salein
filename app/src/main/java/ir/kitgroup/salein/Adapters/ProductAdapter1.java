@@ -149,14 +149,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (LauncherActivity.screenInches >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
-                return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_tablet, parent,
-                        false));
+
             } else {
                 fontSize = 11;
                 fontLargeSize = 12;
-                return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
-                        false));
+
             }
+            return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
+                    false));
         } else if (viewType == Constant.VIEW_TYPE_LOADING) {
 
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_loading, parent, false);
@@ -464,7 +464,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             progressBar = itemView.findViewById(R.id.progress);
 
 
-            if (LauncherActivity.screenInches >= 7 && productImage != null) {
+            /*if (LauncherActivity.screenInches >= 7 && productImage != null) {
                 if (LauncherActivity.screenInches >= 7) {
                     productName.setTextSize(14);
                     int width;
@@ -474,24 +474,24 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         width = LauncherActivity.width;
 
 
-                    cardView.getLayoutParams().width = (int) (width / 3.22);
-                    cardView.getLayoutParams().height = (int) (width / 3.22);
-                  /*if (sizeGroup<= 1) {
+                    cardView.getLayoutParams().width = (int) (width / 3.12);
+                    cardView.getLayoutParams().height = (int) (width / 2.12);
+                  *//*if (sizeGroup<= 1) {
                         cardView.getLayoutParams().width = (int) (height / 2.7);
                     } else {
                         cardView.getLayoutParams().width = (int) (height / 2.95);
-                    }*/
+                    }*//*
 
                     // cardView.getLayoutParams().height = (int) (height / 2.95);
 
-                  /*  productImage.getLayoutParams().width = (int) (height / 3.5);
-                    productImage.getLayoutParams().height = (int) (height /3.5);*/
+                  *//*  productImage.getLayoutParams().width = (int) (height / 3.5);
+                    productImage.getLayoutParams().height = (int) (height /3.5);*//*
 
 
                 }
 
 
-            }
+            }*/
 
 
         }

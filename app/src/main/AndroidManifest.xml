@@ -20,7 +20,9 @@
         android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="false"
         android:theme="@style/Theme.Salein"
-        tools:replace="android:supportsRtl">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:supportsRtl"
+        tools:targetApi="m">
         <activity android:name="ir.kitgroup.salein.Activities.Classes.LauncherActivity"
             android:screenOrientation="portrait"
 

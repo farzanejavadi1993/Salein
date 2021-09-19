@@ -53,7 +53,7 @@ public class App extends Application {
 
 
                     User user = new User();
-                    user.ipLocal = "192.168.20.8;96";
+                    user.ipLocal = "192.168.20.8:96";
                     user.userName = "admin";
                     user.passWord = "123";
                     user.lat=36.326805522660464;

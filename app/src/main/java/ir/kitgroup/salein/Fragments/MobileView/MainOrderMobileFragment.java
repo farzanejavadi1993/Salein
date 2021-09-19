@@ -934,9 +934,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         };
 
 
-        if (LauncherActivity.screenInches >= 7)
+      /*  if (LauncherActivity.screenInches >= 7)
             binding.orderRecyclerViewProduct.setLayoutManager(gridLayoutManager);
-        else
+        else*/
             binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
 
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
