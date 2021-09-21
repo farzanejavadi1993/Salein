@@ -20,6 +20,7 @@
             android:id="@+id/layout_Image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/order_recycle_item_product_img"
                 android:layout_width="120dp"
@@ -32,12 +33,41 @@
 
             <ImageView
 
-                android:layout_centerInParent="true"
                 android:id="@+id/order_recycle_item_product_img1"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_margin="8dp"
-                />
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp" />
+
+            <RelativeLayout
+                android:id="@+id/layout_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="@dimen/margin10">
+
+                <ImageView
+
+                    android:id="@+id/iv_discount"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/ic_discount" />
+
+                <TextView
+                    android:id="@+id/order_recycle_item_product_discountPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="@dimen/margin10"
+                    android:gravity="right"
+
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
 
         </RelativeLayout>
 
@@ -54,83 +84,72 @@
             android:textColor="@color/medium_color"
             android:textSize="@dimen/text_normal_mobile_size" />
 
-        <TextView
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginLeft="5dp"
-            android:layout_toLeftOf="@+id/order_recycle_item_product_name"
-            android:id="@+id/order_recycle_item_product_discountPercent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:gravity="right"
-            android:layout_toRightOf="@+id/layout_Image"
-            android:textColor="@color/red_table"
-            android:textSize="12sp" />
 
         <RelativeLayout
+            android:id="@+id/l_Price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_recycle_item_product_name"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/l_Price"
-            android:layout_toRightOf="@+id/layout_Image"
-            android:layout_below="@+id/order_recycle_item_product_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_toRightOf="@+id/layout_Image">
+
             <TextView
                 android:id="@+id/order_recycle_item_product_old_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="250,000 ریال"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
+                android:text="250,000 ریال"
                 android:textColor="#A5A5A5"
                 android:textSize="@dimen/text_medium_mobile_size" />
+
             <TextView
                 android:id="@+id/order_recycle_item_product_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="------------------"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
+                android:text="------------------"
                 android:textColor="@color/black_l"
                 android:textSize="12sp" />
 
 
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/order_recycle_item_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="250,000 ریال"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
+                android:text="250,000 ریال"
                 android:textColor="@color/medium_color"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
 
 
         <RelativeLayout
-            android:layout_marginLeft="@dimen/margin10"
-            android:layout_marginRight="@dimen/margin10"
             android:id="@+id/card_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l_Price"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginRight="@dimen/margin10"
             android:layout_toRightOf="@+id/layout_Image">
 
 
-
             <TextView
-                android:layout_marginTop="5dp"
                 android:id="@+id/edt_description_temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="@dimen/margin10"
+                android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:enabled="false"
                 android:fontFamily="@font/iransans"
@@ -150,18 +169,18 @@
 
 
             <TextView
-               android:visibility="gone"
-                android:singleLine="true"
                 android:id="@+id/unit"
-                android:layout_marginRight="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_toLeftOf="@+id/iv_minus"
+                android:singleLine="true"
                 android:text="کیلو گرم"
                 android:textColor="@color/medium_color"
                 android:textSize="11sp"
-                android:layout_centerVertical="true"
-               android:layout_toLeftOf="@+id/iv_minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:visibility="gone" />
 
             <ImageView
 
@@ -176,24 +195,24 @@
                 android:src="@drawable/ic_minus_red" />
 
 
-                <ProgressBar
-                    android:visibility="gone"
-                    android:id="@+id/progress"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/unit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/unit"
+                android:visibility="gone" />
 
             <EditText
-                android:fontFamily="@font/iransans"
-                android:inputType="numberDecimal"
                 android:id="@+id/order_recycle_item_product_txt_amount"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/iv_max"
                 android:background="@drawable/background_edittext"
+                android:fontFamily="@font/iransans"
                 android:gravity="center"
+                android:inputType="numberDecimal"
                 android:text="0"
                 android:textColor="@color/medium_color"
                 android:textSize="11sp" />

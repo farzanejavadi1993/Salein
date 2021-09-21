@@ -12,11 +12,17 @@
         android:clickable="true"
         android:focusable="true">
 
-    <com.github.siyamed.shapeimageview.RoundedImageView
-             android:id="@+id/image"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             />
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:visibility="gone"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true" />
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -45,23 +51,23 @@
                     tools:ignore="UnusedAttribute">
 
                     <LinearLayout
-                        android:background="@drawable/background_edittext"
                         android:id="@+id/layout_search_customer"
-                        android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/background_edittext"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <RelativeLayout
-                            android:visibility="gone"
                             android:id="@+id/layout_account"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="2dp"
                             android:layout_weight="0.33"
                             android:background="@drawable/background_edittext"
-                            android:padding="5dp">
+                            android:padding="5dp"
+                            android:visibility="gone">
 
 
                             <ImageView
@@ -94,6 +100,7 @@
                                 android:textSize="@dimen/text_normal_mobile_size"
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/layout_search_product"
                             android:layout_width="0dp"
@@ -101,12 +108,13 @@
                             android:layout_marginStart="2dp"
                             android:layout_weight="0.33"
                             android:background="@drawable/background_edittext">
+
                             <ImageView
-                                android:layout_centerVertical="true"
                                 android:id="@+id/iv_search"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/margin8"
                                 android:layout_marginRight="@dimen/margin8"
                                 android:src="@drawable/ic_search"
@@ -114,12 +122,14 @@
 
 
                             <EditText
-                                android:background="@drawable/background_edittext"
+
                                 android:id="@+id/edt_search_product"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/iv_search"
+
+                                android:background="@drawable/background_edittext"
                                 android:backgroundTint="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right"
@@ -133,40 +143,39 @@
 
 
                         </RelativeLayout>
+
                         <RelativeLayout
 
-                            android:padding="@dimen/margin10"
                             android:id="@+id/define_company"
                             android:layout_width="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="0.33"
-                            android:layout_height="wrap_content">
+                            android:padding="@dimen/margin10">
 
 
                             <com.github.siyamed.shapeimageview.CircularImageView
-                                android:src="@drawable/salein"
-
                                 android:id="@+id/iv_icon_company"
+
                                 android:layout_width="50dp"
-                                app:siBorderColor="#EEEEF1"
                                 android:layout_height="50dp"
                                 android:layout_alignParentRight="true"
-                                android:layout_gravity="center_vertical|right" />
+                                android:layout_gravity="center_vertical|right"
+                                android:src="@drawable/salein"
+                                app:siBorderColor="#EEEEF1" />
 
                             <TextView
                                 android:id="@+id/tv_company"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:layout_marginRight="@dimen/margin8"
                                 android:layout_toLeftOf="@+id/iv_icon_company"
-                                android:layout_centerVertical="true"
-                                android:textStyle="bold"
                                 android:textColor="@color/purple_700"
                                 android:textSize="16sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:textStyle="bold" />
                         </RelativeLayout>
 
                     </LinearLayout>
-
-
 
 
                 </com.google.android.material.card.MaterialCardView>
@@ -182,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="9.5dp"/>
+                    android:layout_marginEnd="9.5dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_productLevel2"
@@ -270,9 +279,6 @@
             tools:targetApi="lollipop">
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
-
-
-
 
 
     </RelativeLayout>
