@@ -159,6 +159,7 @@ public class ProfileFragment extends Fragment {
                         Account accountORG = Select.from(Account.class).first();
                         Account account1 = new Account();
                         account1.I=accountORG.I;
+                        account1.CRDT=accountORG.CRDT;
                         account1.M = binding.tvMobile.getText().toString();
                         account1.N = binding.txtName.getText().toString();
                         if (!binding.txtAddress1.getText().toString().equals("ناموجود"))

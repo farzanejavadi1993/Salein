@@ -223,6 +223,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.N = accountORG.N;
             account.M = accountORG.M;
             account.ADR1 = accountORG.ADR1;
+            account.CRDT = accountORG.CRDT;
 
             setADR1 = false;
 
@@ -242,6 +243,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             account.N = accountORG.N;
             account.M = accountORG.M;
             account.ADR = accountORG.ADR;
+            account.CRDT = accountORG.CRDT;
 
             setADR1 = true;
             account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
@@ -274,6 +276,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
                 account.ADR1 = accountORG.ADR1;
+                account.CRDT = accountORG.CRDT;
 
 
                 if (account.ADR == null) {
@@ -310,6 +313,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
+                account.CRDT = accountORG.CRDT;
 
                 if (type.equals("1")) {
                     account.ADR1 = accountORG.ADR1;

@@ -145,6 +145,7 @@ public class RegisterFragment extends Fragment {
             account.I = UUID.randomUUID().toString();
             account.N = binding.edtFLNameCustomer.getText().toString();
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
+            account.PSW = binding.edtNumberPhoneCustomer.getText().toString();
             account.ADR = longitude+"longitude"+binding.edtAddressCustomer.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString()+"latitude"+latitude;
             account.S = String.valueOf(gender);
             accountsList.clear();

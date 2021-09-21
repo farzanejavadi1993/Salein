@@ -30,6 +30,11 @@ public class Account extends SugarRecord {
     public Double CRDT;
 
 
+    @SerializedName("PSW")
+    @Expose
+    public String PSW;
+
+
     @SerializedName("P1")
     @Expose
     private String P1;

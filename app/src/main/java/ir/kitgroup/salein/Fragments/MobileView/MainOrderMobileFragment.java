@@ -1464,9 +1464,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
-
+                if (customProgress.isShow){
+                    customProgress.hideProgress();
+                    customProgress.hideProgress();
+                }
 
                 customProgress.hideProgress();
+
+
 
 
                 super.onPostExecute(o);

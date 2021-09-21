@@ -53,7 +53,7 @@ public interface API {
 
 
     @GET("AccountSync")
-    Call<String> getInquiryAccount(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task);
+    Call<String> getInquiryAccount(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task,@Query("isShowPassWord") int isShowPassWord);
 
 
     @GET("SendSms")

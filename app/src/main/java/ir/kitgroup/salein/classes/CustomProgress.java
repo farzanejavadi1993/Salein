@@ -16,6 +16,8 @@ public class CustomProgress {
     private Dialog mDialog;
     private ProgressBar spinKitView;
 
+    public  Boolean isShow=false;
+
     public static CustomProgress getInstance() {
         if (customProgress == null) {
             customProgress = new CustomProgress();
@@ -37,13 +39,16 @@ public class CustomProgress {
         spinKitView.setIndeterminate(true);
         mDialog.setCancelable(cancelable);
         mDialog.setCanceledOnTouchOutside(cancelable);
+        isShow=true;
         mDialog.show();
     }
 
     public void hideProgress() {
         if (mDialog != null) {
+            isShow=false;
             mDialog.dismiss();
             mDialog = null;
+
         }
     }
 }

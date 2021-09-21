@@ -335,7 +335,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-                return;
+               // return;
             }
             getInquiryAccount(user.userName, user.passWord, mobile);
         });
@@ -355,7 +355,7 @@ public class ConfirmCodeFragment extends Fragment {
     private void getInquiryAccount(String userName, String passWord, String mobile) {
 
         try {
-            Call<String> call = App.api.getInquiryAccount(userName, passWord, mobile, "", "", 1);
+            Call<String> call = App.api.getInquiryAccount(userName, passWord, mobile, "", "", 1,1);
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
