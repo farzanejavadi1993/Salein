@@ -7,6 +7,7 @@
         android:background="@drawable/splash_background">
 
         <RelativeLayout
+            android:layout_above="@+id/animation_view1"
             android:id="@+id/splashlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -42,6 +43,7 @@
 
 
             <com.airbnb.lottie.LottieAnimationView
+
                 android:layout_below="@+id/tvDescription"
                 android:id="@+id/animation_view"
                 android:layout_width="360dp"
@@ -54,7 +56,7 @@
 
 
         <com.airbnb.lottie.LottieAnimationView
-            android:layout_above="@+id/tvDevelop"
+            android:layout_above="@+id/tvversion"
             android:id="@+id/animation_view1"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
@@ -62,6 +64,17 @@
            android:layout_marginBottom="@dimen/margin10"
             app:lottie_autoPlay="true"
             app:lottie_loop="true" />
+
+        <TextView
+            android:layout_above="@+id/tvDevelop"
+            android:id="@+id/tvversion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:text="نسخه 1.0.0.26"
+            android:textColor="#fff"
+            android:textSize="14sp" />
 
 
         <TextView

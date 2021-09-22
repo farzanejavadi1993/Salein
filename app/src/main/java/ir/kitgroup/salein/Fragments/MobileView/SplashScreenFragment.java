@@ -1,5 +1,7 @@
 package ir.kitgroup.salein.Fragments.MobileView;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +73,13 @@ public class SplashScreenFragment extends Fragment {
                 imageIconDialog = R.drawable.meat_png;
                 title = "گوشت دنیوی";
                 break;
+        }
+
+        try {
+            String appVersion = appVersion();
+            binding.tvversion.setText(" نسخه " + appVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         binding.imgLogo.setImageResource(imageIconDialog);
         binding.tvTitle.setText(title);
@@ -151,5 +160,10 @@ public class SplashScreenFragment extends Fragment {
         });
         thread.start();
         //endregion Thread
+    }
+
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        return pInfo.versionName;
     }
 }
