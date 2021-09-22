@@ -50,7 +50,7 @@ public class SplashScreenFragment extends Fragment {
 
         // region Utilize Animation
         Util.playLottieAnimation("buygirl.json", binding.animationView);
-        Util.playLottieAnimation("890-loading-animation.json", binding.animationView1);
+        //Util.playLottieAnimation("890-loading-animation.json", binding.animationView1);
         //endregion Utilize Animation
 
         //region Set Icon And Title

@@ -56,8 +56,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -208,7 +213,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private int imgBackground = 0;
     private String nameCompany;
 
-    private String time = "2";
+    private Integer time = 5;
 
     //endregion Parameter
 
@@ -624,7 +629,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
 
-            getProduct(time);
+            getProduct();
 
         });
 
@@ -1598,7 +1603,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void getProduct(String time) {
+    private void getProduct() {
         binding.progressbar.setVisibility(View.GONE);
         error = "";
         customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
@@ -2038,7 +2043,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             }
         }
 
-        getProduct(time);
+        getProduct();
 
 
     }
@@ -2078,7 +2083,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            getProduct(time);
+            getProduct();
 
 
         } else {
@@ -2107,16 +2112,31 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         super.onResume();
 
         if (showView) {
+            String dateOld = sharedPreferences.getString("timeOld", "");
+            Date oldDate;
+            Date dateNow = Calendar.getInstance().getTime();
+            if (!dateOld.equals("")) {
+                oldDate = stringToDate(dateOld, "dd/MM/yyyy HH:mm:ss");
+            } else {
+                oldDate = dateNow;
+            }
 
-            productList.clear();
-            productLevel1List.clear();
-            productLevel2List.clear();
-            productLevel1Adapter.notifyDataSetChanged();
-            productLevel2Adapter.notifyDataSetChanged();
-            productAdapter.notifyDataSetChanged();
-            binding.progressbar.setVisibility(View.VISIBLE);
 
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            long diff = dateNow.getTime() - oldDate.getTime();
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
+            if (time != 0 && minutes > time) {
+                customProgress.hideProgress();
+                productList.clear();
+                productLevel1List.clear();
+                productLevel2List.clear();
+                productLevel1Adapter.notifyDataSetChanged();
+                productLevel2Adapter.notifyDataSetChanged();
+                productAdapter.notifyDataSetChanged();
+                binding.progressbar.setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            }
+
         }
     }
 
@@ -2126,8 +2146,24 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         if (!showView) {
             showView = true;
-            customProgress.hideProgress();
+            Date dateOld = Calendar.getInstance().getTime();
+            @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
+                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            sharedPreferences.edit().putString("timeOld", dateFormats.format(dateOld)).apply();
+
+
 
         }
+    }
+
+
+    private Date stringToDate(String aDate, String aFormat) {
+
+        if (aDate == null) return null;
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
+        Date stringDate = simpledateformat.parse(aDate, pos);
+        return stringDate;
+
     }
 }
