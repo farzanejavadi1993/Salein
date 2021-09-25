@@ -128,15 +128,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_toLeftOf="@+id/iv_search"
-
                                 android:background="@drawable/background_edittext"
                                 android:backgroundTint="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right"
                                 android:hint="@string/search_product"
                                 android:inputType="text"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
                                 android:textColor="@color/medium_color"
                                 android:textSize="12sp"
                                 tools:targetApi="lollipop" />
@@ -149,7 +146,7 @@
                             android:id="@+id/define_company"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.33"
+                            android:layout_weight="0.4"
                             android:padding="@dimen/margin10">
 
 

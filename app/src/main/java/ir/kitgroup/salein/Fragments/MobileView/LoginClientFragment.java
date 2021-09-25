@@ -93,9 +93,9 @@ public class LoginClientFragment extends Fragment {
         //region Set Icon And Title
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
-                messageWelcome = "به سالین خوش آمدید";
+                messageWelcome = "به سالین دمو خوش آمدید";
                 imageLogo = R.drawable.salein;
-                messageCode = "کد تایید ورود به سالین";
+                messageCode = "کد تایید ورود به سالین دمو";
                 break;
 
             case "ir.kitgroup.saleintop":
@@ -109,6 +109,12 @@ public class LoginClientFragment extends Fragment {
                 messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                 imageLogo = R.drawable.goosht;
                 messageCode = "کد تایید ورود به گوشت دنیوی";
+                break;
+
+            case "ir.kitgroup.saleinnoon":
+                messageWelcome = "به کافه نون دنیوی خوش آمدید";
+                imageLogo = R.drawable.noon;
+                messageCode = "کد تایید ورود به گوشت کافه نون";
                 break;
         }
 

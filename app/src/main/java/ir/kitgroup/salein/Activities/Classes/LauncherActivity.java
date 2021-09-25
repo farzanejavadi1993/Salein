@@ -36,20 +36,19 @@ public class LauncherActivity extends AppCompatActivity {
     public static double screenInches = 0.0;
 
     private Dialog dialog;
-    private  TextView textExit;
+    private TextView textExit;
     private ImageView ivIcon;
     private int imageIconDialog;
     public static Typeface iranSansBold;
     public static String name;
 
 
-    private int type=0;
-        //endregion Parameter
+    private int type = 0;
+    //endregion Parameter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         iranSansBold = Typeface.createFromAsset(getAssets(), "iransans.ttf");
@@ -65,31 +64,36 @@ public class LauncherActivity extends AppCompatActivity {
         getSizeMobile();
 
 
-
-
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
-            switch (pInfo.packageName){
+            switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
 
-                    imageIconDialog=R.drawable.saleinicon128;
-                    name="ir.kitgroup.salein";
+                    imageIconDialog = R.drawable.saleinicon128;
+                    name = "ir.kitgroup.salein";
 
                     break;
 
                 case "ir.kitgroup.saleintop":
 
-                    imageIconDialog=R.drawable.top_png;
-                    name="ir.kitgroup.saleintop";
+                    imageIconDialog = R.drawable.top_png;
+                    name = "ir.kitgroup.saleintop";
 
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
 
-                    imageIconDialog=R.drawable.meat_png;
-                    name="ir.kitgroup.saleinmeat";
+                    imageIconDialog = R.drawable.meat_png;
+                    name = "ir.kitgroup.saleinmeat";
+
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+
+                    imageIconDialog = R.drawable.noon;
+                    name = "ir.kitgroup.saleinnoon";
 
                     break;
             }
@@ -103,13 +107,13 @@ public class LauncherActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
 
-         textExit = dialog.findViewById(R.id.tv_message);
-         ivIcon = dialog.findViewById(R.id.iv_icon);
-         ivIcon.setImageResource(imageIconDialog);
+        textExit = dialog.findViewById(R.id.tv_message);
+        ivIcon = dialog.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imageIconDialog);
 
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
-        btnNo.setOnClickListener(v ->{
+        btnNo.setOnClickListener(v -> {
             dialog.dismiss();
 
         });
@@ -119,10 +123,6 @@ public class LauncherActivity extends AppCompatActivity {
             finish();
 
         });
-
-
-
-
 
 
     }
@@ -144,23 +144,20 @@ public class LauncherActivity extends AppCompatActivity {
     public void onBackPressed() {
 
 
-
         final int size = getSupportFragmentManager().getBackStackEntryCount();
-        if (size==0){
+        if (size == 0) {
             textExit.setText("آیا از برنامه خارج می شوید؟");
-            type=0;
+            type = 0;
             dialog.show();
 
         }
-        else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+       else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             textExit.setText("آیا از برنامه خارج می شوید؟");
-          type=0;
+            type = 0;
             dialog.show();
-        }
-
-        else  if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")){
+        } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")) {
 
 
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
@@ -169,11 +166,9 @@ public class LauncherActivity extends AppCompatActivity {
                 fgf.setHomeBottomBar();
             }
         }
-
         else
             getSupportFragmentManager().popBackStack();
     }
-
 
 
     public String appVersion() throws PackageManager.NameNotFoundException {

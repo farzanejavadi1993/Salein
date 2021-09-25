@@ -215,6 +215,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             holder.productImage.setImageResource(R.drawable.white);
                             holder.productImage1.setImageResource(R.drawable.meat_png);
                             break;
+
+
+                        case "ir.kitgroup.saleinnoon":
+
+
+                            holder.productImage.setImageResource(R.drawable.white);
+                            holder.productImage1.setImageResource(R.drawable.noon);
+                            break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

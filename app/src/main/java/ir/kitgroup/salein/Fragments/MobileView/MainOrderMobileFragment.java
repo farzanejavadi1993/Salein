@@ -252,7 +252,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region Set Icon And Title
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
-                nameCompany = "سالین";
+                nameCompany = "سالین دمو";
                 imageLogo = R.drawable.salein;
                 imgIconDialog = R.drawable.saleinicon128;
 
@@ -273,6 +273,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 imageLogo = R.drawable.goosht;
                 imgBackground = R.drawable.donyavi_pas;
                 imgIconDialog = R.drawable.meat_png;
+
+                break;
+
+
+            case "ir.kitgroup.saleinnoon":
+                nameCompany = "کافه نون";
+                imageLogo = R.drawable.noon;
+                imgIconDialog = R.drawable.noon;
 
                 break;
         }
@@ -464,17 +472,23 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
-                final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                if (Inv_GUID_ORG.equals("")) {
-                    for (int i = 1; i <= size1; i++) {
-                        getFragmentManager().popBackStack();
+                 int size=getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                if (LauncherActivity.name.equals("ir.kitgroup.salein") && size>0)
+                 size =size-1;
+
+                    if (Inv_GUID_ORG.equals("")) {
+                        for (int i = 1; i <= size; i++) {
+                            getFragmentManager().popBackStack();
+                        }
                     }
-                }
+
                 //endregion Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
 
 
                 switch (item.getItemId()) {
                     case R.id.homee:
+
+
                         if (!Inv_GUID_ORG.equals("")) {
                             getFragmentManager().popBackStack();
                         }
@@ -501,6 +515,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                     case R.id.profile:
+
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new SettingFragment()).addToBackStack("SettingF").commit();
                         return true;
                 }
@@ -2166,4 +2181,5 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         return stringDate;
 
     }
+
 }

@@ -172,10 +172,14 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 s.indexOf("٫") == s.length() - 1) {
                             return;
                         }
+
                     }
                     double amount = 0.0;
                     if (!s.equals("")) {
-                        amount = Double.parseDouble(s);
+
+                            amount = Double.parseDouble(s);
+
+
                     }
                     double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
                    /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;

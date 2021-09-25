@@ -108,6 +108,10 @@ public class ConfirmCodeFragment extends Fragment {
             case "ir.kitgroup.saleinmeat":
                 imageLogo = R.drawable.goosht;
                 break;
+
+            case "ir.kitgroup.saleinnoon":
+                imageLogo = R.drawable.noon;
+                break;
         }
 
         if (App.mode == 2) {
@@ -335,7 +339,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-               // return;
+                //return;
             }
             getInquiryAccount(user.userName, user.passWord, mobile);
         });
@@ -399,7 +403,7 @@ public class ConfirmCodeFragment extends Fragment {
 
                             //region Show All Company
                             if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
-                                FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                                FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment").addToBackStack("StoriesF");
                                 replaceFragment.commit();
                             }
                             //endregion Show All Company

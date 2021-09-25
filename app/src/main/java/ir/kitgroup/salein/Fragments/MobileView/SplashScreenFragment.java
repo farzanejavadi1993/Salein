@@ -57,7 +57,7 @@ public class SplashScreenFragment extends Fragment {
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
                 imageIconDialog = R.drawable.salein;
-                title = "سالین";
+                title = "سالین دمو";
                 break;
 
             case "ir.kitgroup.saleintop":
@@ -72,6 +72,11 @@ public class SplashScreenFragment extends Fragment {
 
                 imageIconDialog = R.drawable.meat_png;
                 title = "گوشت دنیوی";
+                break;
+            case "ir.kitgroup.saleinnoon":
+
+                imageIconDialog = R.drawable.noon;
+                title = "کافه نون";
                 break;
         }
 
@@ -102,7 +107,7 @@ public class SplashScreenFragment extends Fragment {
 
                         //regionShow All Company
                         if (LauncherActivity.name.equals("ir.kitgroup.salein"))
-                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment").addToBackStack("StoriesF");
 
 
                             //endregionShow All Company

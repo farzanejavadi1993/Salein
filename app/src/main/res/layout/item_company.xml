@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+
+    android:id="@+id/cardSalein"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="@dimen/margin4"
+    tools:ignore="UnusedAttribute"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.github.siyamed.shapeimageview.CircularImageView
+            android:id="@+id/ivCompany"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="@dimen/margin2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            tools:src="@drawable/salein"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/checkBoxCompany"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4"
+            app:siBorderColor="#eee" />
+
+        <TextView
+            android:id="@+id/tvTitleCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="10dp"
+
+            android:textColor="@color/medium_color"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/ivCompany"
+            app:layout_constraintTop_toTopOf="@+id/ivCompany" />
+
+        <TextView
+            android:id="@+id/tvDescriptionCompany"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin10"
+            android:layout_marginEnd="10dp"
+            android:gravity="right"
+            tools:text="سالین دمو ، راهنمای استفاده از اپلیکیشن"
+            android:textColor="@color/medium_color"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivCompany"
+            app:layout_constraintEnd_toStartOf="@+id/ivCompany"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleCompany" />
+
+        <CheckBox
+
+            android:id="@+id/checkBoxCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

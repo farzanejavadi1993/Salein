@@ -103,6 +103,10 @@ public class ShowDetailFragment  extends Fragment {
                         case "ir.kitgroup.saleinmeat":
                             ivProduct.setImageResource(R.drawable.meat_png);
                             break;
+
+                        case "ir.kitgroup.saleinnoon":
+                            ivProduct.setImageResource(R.drawable.noon);
+                            break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

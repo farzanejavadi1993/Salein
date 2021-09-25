@@ -191,6 +191,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 imgIconDialog = R.drawable.meat_png;
 
                 break;
+
+            case "ir.kitgroup.saleinnoon":
+
+                imgIconDialog = R.drawable.noon;
+
+                break;
         }
         //endregion Set Icon And Title
 

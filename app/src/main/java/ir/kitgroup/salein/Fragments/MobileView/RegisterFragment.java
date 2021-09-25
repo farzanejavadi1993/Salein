@@ -204,7 +204,7 @@ public class RegisterFragment extends Fragment {
                         //region Show All Company
 
                         if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
-                            FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                            FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment").addToBackStack("StoriesF");
                             replaceFragment.commit();
                         }
                         //endregion Show All Company
