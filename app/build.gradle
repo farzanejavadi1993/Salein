@@ -9,11 +9,11 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.salein"
+        applicationId "ir.kitgroup.saleinmeat"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0.28"
+        versionName "1.0.0.30"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

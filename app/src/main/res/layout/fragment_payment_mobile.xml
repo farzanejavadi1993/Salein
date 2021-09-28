@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/address"
-                android:textColor="@color/medium_color"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -127,7 +127,7 @@
                 <TextView
 
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_alignParentLeft="true"
                     android:background="@drawable/order_item_recycle_group__card_background"
                     android:gravity="center"
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/layoutAdd"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp">
 
             <TextView
@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/type_pay"
-                android:textColor="@color/medium_color"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -351,7 +351,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layoutPayment"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp"
 
             >
@@ -363,11 +363,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/type_order"
-                android:textColor="@color/medium_color"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
+
+
                 android:id="@+id/recyclerViewOrderType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -384,7 +386,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/rl_type_order"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp">
 
             <TextView
@@ -393,50 +395,60 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="زمان ارسال سفارش"
-                android:textColor="@color/medium_color"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_add_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="انتخاب زمان ارسال"
+                android:textColor="@color/purple_700"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+
+                android:layout_below="@+id/edt_time"
+                android:layout_marginTop="@dimen/margin8"
+                android:id="@+id/btn_choose_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="10dp"
+                android:gravity="center|bottom">
+
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/order_item_recycle_group__card_background"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="انتخاب زمان ارسال"
+                    android:textColor="#fff"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/layout_time"
-                android:layout_below="@+id/edt_time"
+                android:id="@+id/timeLayout"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:text="زمان بندی ارسال سفارش"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/edt_time"
                 android:layout_marginTop="@dimen/margin8"
                 android:backgroundTint="@color/white"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="#ddd"
                 app:strokeWidth="1.5dp"
                 tools:targetApi="lollipop">
-
-                <RelativeLayout
-                    android:layout_marginTop="@dimen/margin8"
-                    android:layout_below="@+id/edt_address"
-                    android:id="@+id/btn_choose_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center|bottom">
-
-
-                    <TextView
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/order_item_recycle_group__card_background"
-                        android:gravity="center"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:text="انتخاب آدرس"
-                        android:textColor="#fff"
-                        android:textSize="12sp" />
-
-                </RelativeLayout>
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -472,7 +484,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/rl_type_order"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp"
 
             >
@@ -494,12 +506,10 @@
 
 
         <LinearLayout
-
             android:id="@+id/order_list_layout_sumPrice_detail_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-
             android:background="@drawable/order_sum_price_order_list_layout"
             android:elevation="@dimen/margin4"
             android:orientation="vertical"
@@ -590,32 +600,27 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/layout_continue"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_register_order"
                 android:layout_width="match_parent"
+                android:backgroundTint="@color/green_table"
+                android:fontFamily="@font/iransans"
+                app:cornerRadius="5dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
                 android:layout_marginLeft="8sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="8sp"
                 android:layout_marginBottom="10dp"
-                android:gravity="center|bottom">
+                android:text="ارسال سفارش"
+                android:textColor="#fff"
+                android:textSize="12sp"
+               >
 
 
-                <TextView
-                    android:id="@+id/btn_register_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/order_item_recycle_group__card_background"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="ارسال سفارش"
-                    android:textColor="#fff"
-                    android:textSize="12sp" />
 
-            </RelativeLayout>
+
+            </com.google.android.material.button.MaterialButton>
 
 
         </LinearLayout>

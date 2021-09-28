@@ -11,7 +11,7 @@
     <color name="purple_700">#1e88e5</color>
     <color name="teal_200">#fff</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#000</color>
     <color name="black_light">#2f2f2f</color>
     <color name="white">#FFFFFFFF</color>
     <color name="very_light">#AAEFE5E5</color>
