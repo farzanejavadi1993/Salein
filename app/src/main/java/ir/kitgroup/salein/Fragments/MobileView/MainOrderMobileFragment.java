@@ -578,8 +578,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         maxSales = "0";
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
-            //  maxSales = setting.get(0).MAX_SALE;
-            maxSales = "1";
+             maxSales = setting.get(0).MAX_SALE;
+
 
 
         userName = Select.from(User.class).first().userName;
@@ -1939,8 +1939,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.deleteAll(Setting.class);
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
                         Setting.saveInTx(settingsList);
-                        //   maxSales = settingsList.get(0).MAX_SALE;
-                        maxSales = "1";
+                         maxSales = settingsList.get(0).MAX_SALE;
+
 
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
 

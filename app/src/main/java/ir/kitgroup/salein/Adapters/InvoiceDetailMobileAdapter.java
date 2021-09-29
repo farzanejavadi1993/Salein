@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -176,10 +177,28 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                     }
                     double amount = 0.0;
                     if (!s.equals("")) {
+                         amount = Double.parseDouble(s);
+                        ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+      CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+                        double aPlus=1;
+                        if (resultPrd1.size()>0){
+                            aPlus = resultPrd1.get(0).COEF;
+                            if (aPlus == 0)
+                                aPlus = 1;
+                        }
 
-                            amount = Double.parseDouble(s);
+                        if (amount%aPlus!=0){
+                            Toast.makeText(contex,  " مقدار انتخاب شده باید ضریبی از" + aPlus + "باشد  ", Toast.LENGTH_SHORT).show();
+                            holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+                            holder.edtAmount.setText("0");
+                            holder.edtAmount.addTextChangedListener(holder.textWatcher);
+                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd1.get(0))).AMOUNT=0.0;
+                            double sumprice = (0 * holder.rst.get(0).getPRDPRICEPERUNIT1());
 
-
+                            holder.sumPrice.setText(format.format(sumprice));
+                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+                            return;
+                        }
                     }
                     double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
                    /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;

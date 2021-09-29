@@ -256,7 +256,7 @@ public class PaymentMobileFragment extends Fragment {
                  int hour;
                  try {
                         hour = Integer.parseInt(timesList.get(i).split("-")[0]);
-                if (hour < date.getHours()) {
+                if (hour <= date.getHours()) {
                timesList.remove(timesList.get(i));
 
                 }
