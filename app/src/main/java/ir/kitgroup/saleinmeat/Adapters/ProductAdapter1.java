@@ -3,10 +3,7 @@ package ir.kitgroup.saleinmeat.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
@@ -24,6 +21,8 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,9 +33,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
@@ -54,6 +50,7 @@ import ir.kitgroup.saleinmeat.DataBase.User;
 
 import ir.kitgroup.saleinmeat.Fragments.ShowDetailFragment;
 
+import ir.kitgroup.saleinmeat.models.Image;
 import ir.kitgroup.saleinmeat.models.ModelLog;
 import ir.kitgroup.saleinmeat.R;
 import retrofit2.Call;
@@ -173,7 +170,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
 
-            String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
+          /*  String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
             File file = new File(yourFilePath);
 
             if (file.exists()) {
@@ -228,8 +225,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     e.printStackTrace();
                 }
 
-            }
+            }*/
 
+
+         /*   boolean loaded=false;
+            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
+            CollectionUtils.filter(arrayList,a->a.I.equals(productsList.get(holder.getAdapterPosition()).I));
+            if (arrayList.size()>0)
+                loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
+
+     /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
+
+
+            Glide.with(context)
+                    .load(productsList.get(holder.getAdapterPosition()).Url)
+                    .into(holder.productImage);
 
             holder.productOldPrice.setTextSize(fontLargeSize);
             holder.productDiscountPercent.setTextSize(fontLargeSize);
@@ -421,10 +431,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    static class viewHolder extends RecyclerView.ViewHolder {
+     static class viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
-        private int sizeGroup = 0;
+        private final int sizeGroup = 0;
+
 
 
         private final TextView productName;
@@ -446,7 +457,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final ImageView ivMax;
         private final ProgressBar progressBar;
         private TextWatcher textWatcher;
-        private RelativeLayout layoutDiscount;
+        private final RelativeLayout layoutDiscount;
 
 
         public viewHolder(View itemView) {
@@ -512,14 +523,17 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    private void getMaxSales(int position,ProgressBar progressBar,TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
-        double aPlus= productsList.get(position).COEF;
+        double aPlus = productsList.get(position).COEF;
+        if (aPlus == 0)
+            aPlus = 1;
         try {
 
             Call<String> call = App.api.getMaxSales(userName, pass, Prd_GUID);
 
+            double finalAPlus = aPlus;
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -579,12 +593,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         if (resultProduct.size() > 0) {
                             double amount = 0;
                             if (MinOrPlus == 1)
-                                amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + aPlus;
+                                amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + finalAPlus;
 
 
                             else if (MinOrPlus == 2) {
-                                if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= aPlus)
-                                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - aPlus;
+                                if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= finalAPlus)
+                                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - finalAPlus;
                                 else
                                     return;
 
@@ -604,13 +618,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
                                 AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount((double) remain);
-                               // if (MinOrPlus != 3) {
-                                    ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                    ProductAmountTxt.setText(df.format(remain));
-                                    ProductAmountTxt.addTextChangedListener(textWatcher);
+                                // if (MinOrPlus != 3) {
+                                ProductAmountTxt.removeTextChangedListener(textWatcher);
+                                ProductAmountTxt.setText(df.format(remain));
+                                ProductAmountTxt.addTextChangedListener(textWatcher);
 
 
-                              // }
+                                // }
                                 if (resultInvoice.size() > 0) {
                                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
                                     if (invoiceDetail != null) {
@@ -659,7 +673,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                     ProductAmountTxt.setText(df.format(amount));
                                     ProductAmountTxt.addTextChangedListener(textWatcher);
-                               }
+                                }
 
                             }
                             //create row
@@ -709,23 +723,25 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void doAction(int position,ProgressBar progressBar,TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+
+
+    private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (maxSales.equals("1")) {
-            getMaxSales(position,progressBar,textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
-            double aPlus= productsList.get(position).COEF;
+            double aPlus = productsList.get(position).COEF;
+            if (aPlus == 0)
+                aPlus = 1;
             ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
             CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
 
             if (resultProduct.size() > 0) {
                 double amount = 0;
-                if (MinOrPlus == 1){
+                if (MinOrPlus == 1) {
 
                     amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + aPlus;
-                }
-
-                else if (MinOrPlus == 2) {
+                } else if (MinOrPlus == 2) {
                     if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= aPlus)
                         amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - aPlus;
 
@@ -735,9 +751,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 } else {
                     try {
                         amount = Float.parseFloat(s);
-                        if (amount%aPlus!=0){
-                            Toast.makeText(context,  " مقدار وارد شده باید ضریبی از "+aPlus+" باشد.", Toast.LENGTH_SHORT).show();
-                            amount=0;
+                        if (amount % aPlus != 0) {
+                            Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + aPlus + " باشد.", Toast.LENGTH_SHORT).show();
+                            amount = 0;
                             ProductAmountTxt.removeTextChangedListener(textWatcher);
                             ProductAmountTxt.setText("0");
                             ProductAmountTxt.addTextChangedListener(textWatcher);

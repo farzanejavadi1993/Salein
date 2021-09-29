@@ -28,6 +28,7 @@ public class Product extends SugarRecord {
     public String descItem;
     public Integer KEY;
     public Double COEF;
+    public String Url;
 
     public int MS;//MAX
 

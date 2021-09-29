@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ir.kitgroup.saleinmeat.R;

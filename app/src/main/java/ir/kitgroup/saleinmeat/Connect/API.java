@@ -82,4 +82,9 @@ public interface API {
                                @Query("virtualParam") String virtualParam);
 
 
+
+    @GET("GetImage")
+    Call<String> getImage(@Query("productId") String productId);
+
+
 }

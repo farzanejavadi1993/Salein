@@ -161,7 +161,7 @@ public class PaymentMobileFragment extends Fragment {
     private Dialog dialogTime;
     private RecyclerView recycleTime;
     private TimeAdapter timeAdapter;
-    private ArrayList<String> timesList;
+    private ArrayList<String> timesList = new ArrayList<>();
     private String dateOrder = "";
     //end region Parameter
 
@@ -194,6 +194,8 @@ public class PaymentMobileFragment extends Fragment {
             case "ir.kitgroup.saleinmeat":
                 binding.layoutPaymentOnline.setVisibility(View.GONE);
                 imageIconDialog = R.drawable.meat_png;
+                typePayment = "";
+                binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
 
                 break;
             case "ir.kitgroup.saleinnoon":
@@ -245,9 +247,11 @@ public class PaymentMobileFragment extends Fragment {
 
         //region Cast DialogTime
 
-        if (setting.size() > 0 && !setting.get(0).SERVICE_TIME.equals(""))
-            timesList = new ArrayList<>();
-        timesList.addAll(Arrays.asList(setting.get(0).SERVICE_TIME.split(",")));
+        try {
+            timesList.addAll(Arrays.asList(setting.get(0).SERVICE_TIME.split(",")));
+        } catch (Exception e) {
+        }
+
         dialogTime = new Dialog(getActivity());
         dialogTime.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -263,14 +267,14 @@ public class PaymentMobileFragment extends Fragment {
                     new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             try {
                 int hour;
-                hour=Integer.parseInt(Name.split("-")[0]);
-                if (hour<date.getHours()){
+                hour = Integer.parseInt(Name.split("-")[0]);
+                if (hour < date.getHours()) {
                     Toast.makeText(getActivity(), "در این بازه زمانی سفارش ارسال نمی شود.", Toast.LENGTH_SHORT).show();
 
                     return;
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -328,7 +332,11 @@ public class PaymentMobileFragment extends Fragment {
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
                 binding.tvTAddress.setText(ValidAddress);
+                binding.btnChooseAddress.setVisibility(View.GONE);
+                binding.tvAddAddress.setVisibility(View.VISIBLE);
+                binding.layoutAddress.setVisibility(View.VISIBLE);
                 dialogAddress.dismiss();
+
             }
         });
         radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -362,6 +370,9 @@ public class PaymentMobileFragment extends Fragment {
                 typeAddress = 2;
                 ValidAddress = radioAddress2.getText().toString();
                 binding.tvTAddress.setText(ValidAddress);
+                binding.btnChooseAddress.setVisibility(View.GONE);
+                binding.tvAddAddress.setVisibility(View.VISIBLE);
+                binding.layoutAddress.setVisibility(View.VISIBLE);
                 dialogAddress.dismiss();
             }
         });
@@ -537,9 +548,14 @@ public class PaymentMobileFragment extends Fragment {
         if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
             String address = "";
             try {
+
+                latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
+                longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
                 address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
             } catch (Exception e) {
                 address = acc.ADR;
+                latitude1 = 0.0;
+                longitude1 = 0.0;
             }
 
             radioAddress1.setText(address);
@@ -549,9 +565,13 @@ public class PaymentMobileFragment extends Fragment {
         if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
             String address = "";
             try {
+                latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
+                longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
                 address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
             } catch (Exception e) {
                 address = acc.ADR1;
+                latitude2 = 0.0;
+                longitude2 = 0.0;
             }
 
             radioAddress2.setText(address);
@@ -559,101 +579,81 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress2.setText("ناموجود");
 
 
-        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
-
-            try {
-                binding.btnChooseAddress.setVisibility(View.GONE);
-                binding.tvAddAddress.setVisibility(View.VISIBLE);
-                binding.layoutAddress.setVisibility(View.VISIBLE);
-
-                latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
-                longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
-            } catch (Exception e) {
-                binding.btnChooseAddress.setVisibility(View.VISIBLE);
-                binding.tvAddAddress.setVisibility(View.GONE);
-                binding.layoutAddress.setVisibility(View.GONE);
-            }
-
-            if (latitude2 == 0.0 && longitude2 == 0.0) {
-                Toast.makeText(getActivity(), "دریافت طول و عرض جغرافیای با خطا مواجه شد", Toast.LENGTH_SHORT).show();
-            } else {
-                double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    if (Ord_TYPE != OrderTypeApp) {
-                        sumTransport = price;
-                        sameSumTransport = price;
-                    }
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                }
-
-                String address = "";
-                try {
-                    address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
-                } catch (Exception e) {
-                    address = acc.ADR1;
-                }
-                binding.tvTAddress.setText(address);
-                typeAddress = 2;
-                ValidAddress = address;
-            }
-
-        }
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setADR1) {
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
             binding.btnChooseAddress.setVisibility(View.GONE);
             binding.tvAddAddress.setVisibility(View.VISIBLE);
             binding.layoutAddress.setVisibility(View.VISIBLE);
-            try {
-                latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-            } catch (Exception e) {
-                binding.btnChooseAddress.setVisibility(View.VISIBLE);
-                binding.tvAddAddress.setVisibility(View.GONE);
-                binding.layoutAddress.setVisibility(View.GONE);
+            latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
+            longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
 
-
-            }
-
-
-            if (latitude1 == 0.0 && longitude1 == 0.0) {
-                Toast.makeText(getActivity(), "دریافت طول و عرض جغرافیای با خطا مواجه شد", Toast.LENGTH_SHORT).show();
+            double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(lat, lng));
+            double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+            if (price == -1.0) {
+                binding.tvError.setText("سفارش خارج از محدوده است.");
+                binding.tvError.setVisibility(View.VISIBLE);
             } else {
-                double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(lat, lng));
-                double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
-                if (price == -1.0) {
-                    binding.tvError.setText("سفارش خارج از محدوده است.");
-                    binding.tvError.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvError.setText("");
-                    binding.tvError.setVisibility(View.GONE);
-                    if (Ord_TYPE != OrderTypeApp) {
-                        sumTransport = price;
-                        sameSumTransport = price;
-                    }
-
-                    binding.tvTransport.setText(format.format(price) + "ریال");
-                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                }
-                String address = "";
-                try {
-                    address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
-                } catch (Exception e) {
-                    address = acc.ADR;
+                binding.tvError.setText("");
+                binding.tvError.setVisibility(View.GONE);
+                if (Ord_TYPE != OrderTypeApp) {
+                    sumTransport = price;
+                    sameSumTransport = price;
                 }
 
-                binding.tvTAddress.setText(address);
-                typeAddress = 1;
-                ValidAddress = address;
+                binding.tvTransport.setText(format.format(price) + "ریال");
+                binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
             }
+            String address = "";
+            try {
+                address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+            } catch (Exception e) {
+                address = acc.ADR;
+            }
+
+            binding.tvTAddress.setText(address);
+            typeAddress = 1;
+            ValidAddress = address;
 
 
         }
+
+        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("") && latitude1 != 0.0 && longitude1 != 0.0) {
+
+            setADR1 = true;
+            binding.btnChooseAddress.setVisibility(View.GONE);
+            binding.tvAddAddress.setVisibility(View.VISIBLE);
+            binding.layoutAddress.setVisibility(View.VISIBLE);
+            latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
+            longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
+            double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
+            double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
+            if (price == -1.0) {
+                binding.tvError.setText("سفارش خارج از محدوده است.");
+                binding.tvError.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvError.setText("");
+                binding.tvError.setVisibility(View.GONE);
+                if (Ord_TYPE != OrderTypeApp) {
+                    sumTransport = price;
+                    sameSumTransport = price;
+                }
+                binding.tvTransport.setText(format.format(price) + "ریال");
+                binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+            }
+
+            String address = "";
+            try {
+                address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
+            } catch (Exception e) {
+                address = acc.ADR1;
+            }
+            binding.tvTAddress.setText(address);
+            typeAddress = 2;
+            ValidAddress = address;
+
+
+        }
+
+
         if (acc == null || (acc.ADR1 == null && acc.ADR == null)) {
             binding.btnChooseAddress.setVisibility(View.VISIBLE);
             binding.tvAddAddress.setVisibility(View.GONE);
@@ -739,7 +739,7 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
-        if (!OnceSee)
+        if (!OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
             getInquiryAccount(userName, passWord, acc.M);
         else
             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
@@ -952,16 +952,17 @@ public class PaymentMobileFragment extends Fragment {
             invoice.INV_TOTAL_COST = 0.0;
             invoice.INV_EXTENDED_AMOUNT = sumPurePrice + sumTransport;
             invoice.INV_DATE = date;
-            Date date1=date;
+            Date date1 = date;
 
-            int hour=date.getHours();
+            int hour = date.getHours();
             try {
-                hour=Integer.parseInt(dateOrder.split("-")[0]);
-            }catch (Exception e){}
+                hour = Integer.parseInt(dateOrder.split("-")[0]);
+            } catch (Exception e) {
+            }
 
 
             invoice.INV_DUE_DATE = date1;
-            invoice.INV_DUE_TIME = hour+":"+"00";
+            invoice.INV_DUE_TIME = hour + ":" + "00";
             invoice.INV_STATUS = true;
             invoice.ACC_CLB_UID = Acc_GUID;
             invoice.TBL_UID = Tbl_GUID;
@@ -1006,9 +1007,23 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-        binding.btnChooseTime.setOnClickListener(v -> dialogTime.show());
+        binding.btnChooseTime.setOnClickListener(v -> {
+            if (timesList.size() == 0) {
+                Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                dialogTime.show();
+            }
+        });
 
-        binding.tvAddTime.setOnClickListener(v -> dialogTime.show());
+        binding.tvAddTime.setOnClickListener(v -> {
+            if (timesList.size() == 0) {
+                Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                dialogTime.show();
+            }
+        });
 
 
         binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());

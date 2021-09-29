@@ -22,9 +22,7 @@ public class ModelProduct {
     @Expose
     private List<ir.kitgroup.saleinmeat.DataBase.Product> ProductList = null;
 
-    public List<Image> getImageList() {
-        return imageList;
-    }
+
 
     public void setImageList(List<Image> imageList) {
         this.imageList = imageList;

@@ -30,6 +30,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -856,8 +858,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 productListData.addAll(resultPrd_);
 
                 for (int i = 0; i < 18; i++) {
-                    if (resultPrd_.size() > i)
+                    if (resultPrd_.size() > i) {
                         productList.add(resultPrd_.get(i));
+                        getImage(productList.get(i).I,i);
+                    }
+
                 }
 
 
@@ -877,6 +882,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         }
 
                     }
+
 
 
                 productAdapter.notifyDataSetChanged();
@@ -974,8 +980,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             productListData.addAll(rstProduct);
 
             for (int i = 0; i < 18; i++) {
-                if (rstProduct.size() > i)
+                if (rstProduct.size() > i) {
                     productList.add(rstProduct.get(i));
+                    getImage(productList.get(i).I,i);
+                }
             }
 
 
@@ -1120,7 +1128,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-                sumPrice = 0;
+              sumPrice = 0;
                 sumPurePrice = 0;
 
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -1279,8 +1287,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
                 for (int i = 0; i < 18; i++) {
                     assert tempResult != null;
-                    if (tempResult.size() > i)
+                    if (tempResult.size() > i) {
                         productList.add(tempResult.get(i));
+                        getImage(productList.get(i).I,i);
+                    }
                 }
 
                 ArrayList<Product> listPrd = new ArrayList<>(productList);
@@ -1481,8 +1491,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     productListData.addAll(resultPrd);
                     productList.clear();
                     for (int i = 0; i < 18; i++) {
-                        if (resultPrd.size() > i)
+                        if (resultPrd.size() > i) {
                             productList.add(resultPrd.get(i));
+                            getImage(productList.get(i).I,i);
+                        }
                     }
 
                     ArrayList<Product> listPrd = new ArrayList<>(productList);
@@ -1624,6 +1636,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     items.addAll(productListData.subList(start, end));
                     if (currentPage != 1) productAdapter.removeLoadingView();
                     productList.addAll(items);
+
                     ArrayList<Product> listPrd = new ArrayList<>(productList);
                     CollectionUtils.filter(listPrd, l -> l.KEY != 0);
                     if (listPrd.size() > 0)
@@ -1809,12 +1822,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             AllProductLevel2.clear();
                         }
 
-                        List<Image> imagesList = iDs.getImageList();
-                        if ( iDs.getImageList().size() > 0) {
-                            for (int i = 0; i < imagesList.size(); i++) {
-                                SaveImageToStorage(StringToImage(imagesList.get(i).IMG), imagesList.get(i).I, Objects.requireNonNull(getActivity()));
-                            }
-                        }
+
 
 
                         /* for (int i = 0; i < products.size(); i++) {
@@ -2358,6 +2366,46 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
         Date stringDate = simpledateformat.parse(aDate, pos);
         return stringDate;
+
+    }
+
+
+    private void getImage(String Prd_GUID,int position) {
+
+        try {
+
+
+            Call<String> call = App.api.getImage(Prd_GUID);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+
+                   /*   ArrayList<Product> arrayList = new ArrayList<>(productList);
+                      CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
+                      if (arrayList.size()>0)*/
+                          productList.get(position).Url=response.body();
+                      productAdapter.notifyItemChanged(position);
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
+
+
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+            Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+
 
     }
 
