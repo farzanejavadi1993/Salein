@@ -132,7 +132,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
-            maxSales = setting.get(0).MAX_SALE;
+            //maxSales = setting.get(0).MAX_SALE;
+            maxSales ="1";
 
         userName = Select.from(User.class).list().get(0).userName;
         passWord = Select.from(User.class).list().get(0).passWord;

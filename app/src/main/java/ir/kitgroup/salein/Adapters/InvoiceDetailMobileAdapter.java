@@ -258,9 +258,16 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
         holder.ivMax.setOnClickListener(v -> {
-
+            ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+            double aPlus=1;
+            if (resultPrd1.size()>0){
+                aPlus = resultPrd1.get(0).COEF;
+                if (aPlus == 0)
+                    aPlus = 1;
+            }
             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
-            double amount = invoicedetail.INV_DET_QUANTITY + 1;
+            double amount = invoicedetail.INV_DET_QUANTITY + aPlus;
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
@@ -272,10 +279,20 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
         holder.ivMinus.setOnClickListener(v -> {
+            ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+            CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+            double aPlus=1;
+            if (resultPrd1.size()>0){
+                 aPlus = resultPrd1.get(0).COEF;
+                if (aPlus == 0)
+                    aPlus = 1;
+            }
+
+
             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
             double amount=0.0;
-            if (invoicedetail.INV_DET_QUANTITY>=1) {
-                 amount = invoicedetail.INV_DET_QUANTITY - 1;
+            if (invoicedetail.INV_DET_QUANTITY>=aPlus) {
+                 amount = invoicedetail.INV_DET_QUANTITY -aPlus;
             }
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);

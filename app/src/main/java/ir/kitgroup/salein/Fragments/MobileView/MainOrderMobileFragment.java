@@ -216,7 +216,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     private Integer time = 5;
     private String maxSales = "0";
 
-    private String task="2";
+    private String task = "2";
 
     //endregion Parameter
 
@@ -238,9 +238,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         firstSync = sharedPreferences.getBoolean("firstSync", false);
 
         if (firstSync)
-            task="1";
+            task = "1";
         else
-            task="2";
+            task = "2";
 
         //region Configuration Text Size
         int fontSize;
@@ -578,7 +578,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         maxSales = "0";
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
-            maxSales = setting.get(0).MAX_SALE;
+            //  maxSales = setting.get(0).MAX_SALE;
+            maxSales = "1";
 
 
         userName = Select.from(User.class).first().userName;
@@ -857,7 +858,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 for (int i = 0; i < 18; i++) {
                     if (resultPrd_.size() > i) {
                         productList.add(resultPrd_.get(i));
-                       // getImage(productList.get(i).I,i);
+                        // getImage(productList.get(i).I,i);
                     }
 
                 }
@@ -879,7 +880,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         }
 
                     }
-
 
 
                 productAdapter.notifyDataSetChanged();
@@ -1125,7 +1125,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-              sumPrice = 0;
+                sumPrice = 0;
                 sumPurePrice = 0;
 
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -1341,17 +1341,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             protected void onPostExecute(Object o) {
 
 
-
-
-
                 if (Util.AllProduct.size() == 0) {
                     Util.AllProduct.addAll(Select.from(Product.class).list());
                     ArrayList<Product> prdList = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(prdList,p->p.N.contains("توزیع"));
-                    if (prdList.size()>0)
-                        Util.TransportId=prdList.get(0).I;
+                    CollectionUtils.filter(prdList, p -> p.N.contains("توزیع"));
+                    if (prdList.size() > 0)
+                        Util.TransportId = prdList.get(0).I;
 
-                    CollectionUtils.filter(Util.AllProduct,p->!p.N.contains("توزیع"));
+                    CollectionUtils.filter(Util.AllProduct, p -> !p.N.contains("توزیع"));
                 }
 
                 if (AllProductLevel1.size() == 0) {
@@ -1490,7 +1487,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     for (int i = 0; i < 18; i++) {
                         if (resultPrd.size() > i) {
                             productList.add(resultPrd.get(i));
-                           // getImage(productList.get(i).I,i);
+                            // getImage(productList.get(i).I,i);
                         }
                     }
 
@@ -1779,7 +1776,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         List<Product> products = iDs.getProductList();
 
 
-
                         if (!firstSync)
                             Product.saveInTx(products);
                         else
@@ -1805,7 +1801,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         if (productGroupLevel2s.size() > 0) {
                             AllProductLevel2.clear();
                         }
-
 
 
                         if (!firstSync)
@@ -1944,7 +1939,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.deleteAll(Setting.class);
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
                         Setting.saveInTx(settingsList);
-                        maxSales = settingsList.get(0).MAX_SALE;
+                        //   maxSales = settingsList.get(0).MAX_SALE;
+                        maxSales = "1";
+
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
 
                         getProducts();
@@ -2367,7 +2364,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void getImage(String Prd_GUID,int position) {
+    private void getImage(String Prd_GUID, int position) {
 
         try {
 
@@ -2382,8 +2379,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                    /*   ArrayList<Product> arrayList = new ArrayList<>(productList);
                       CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
                       if (arrayList.size()>0)*/
-                          productList.get(position).Url=response.body();
-                      productAdapter.notifyItemChanged(position);
+                    productList.get(position).Url = response.body();
+                    productAdapter.notifyItemChanged(position);
                 }
 
                 @Override
@@ -2393,8 +2390,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 }
             });
-
-
 
 
         } catch (NetworkOnMainThreadException ex) {

@@ -566,12 +566,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             Call<String> call = App.api.getMaxSales(userName, pass, Prd_GUID);
 
             double finalAPlus = aPlus;
+
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     progressBar.setVisibility(View.GONE);
 
-                    int remain = -1000000000;
+                    double remain = -1000000000;
                     try {
                         assert response.body() != null;
                         remain = Integer.parseInt(response.body());
@@ -635,9 +636,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     return;
 
 
-                            } else {
+                            }
+                            else {
                                 try {
                                     amount = Float.parseFloat(s);
+                                    if (amount%finalAPlus!=0){
+                                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از "+finalAPlus+" باشد ", Toast.LENGTH_SHORT).show();
+                                        ProductAmountTxt.removeTextChangedListener(textWatcher);
+                                        ProductAmountTxt.setText("0");
+                                        ProductAmountTxt.addTextChangedListener(textWatcher);
+                                        ivMinus.setVisibility(View.GONE);
+                                        ProductAmountTxt.setVisibility(View.GONE);
+                                        AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(0.0);
+                                        return;
+                                    }
+
 
                                 } catch (Exception ignored) {
 
@@ -645,18 +658,30 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
 
 
+
                             AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
 
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
+
+                                if (remain%finalAPlus!=0){
+
+                                    remain=(int)(remain/finalAPlus)*finalAPlus;
+
+                                }
+
                                 AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount((double) remain);
+
+
+
+
+
                                 // if (MinOrPlus != 3) {
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText(df.format(remain));
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
-
-
                                 // }
+
                                 if (resultInvoice.size() > 0) {
                                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
                                     if (invoiceDetail != null) {
