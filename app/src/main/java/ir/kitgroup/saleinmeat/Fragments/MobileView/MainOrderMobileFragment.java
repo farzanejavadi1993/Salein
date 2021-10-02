@@ -578,8 +578,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         maxSales = "0";
         List<Setting> setting = Select.from(Setting.class).list();
         if (setting.size() > 0)
-             maxSales = setting.get(0).MAX_SALE;
-
+            maxSales = setting.get(0).MAX_SALE;
 
 
         userName = Select.from(User.class).first().userName;
@@ -853,33 +852,33 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 productList.clear();
                 productListData.clear();
+
+
+                ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                CollectionUtils.filter(listPrd, l -> l.KEY != 0);
+                if (listPrd.size() > 0)
+                    for (int i = 0; i < listPrd.size(); i++) {
+                        int position = listPrd.get(i).KEY - 1;//new position
+                        int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                        if (resultPrd_.size() > position) {
+                            Product itemProduct = resultPrd_.get(position);
+                            if (index != position) {
+                                resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                resultPrd_.set(index, itemProduct);
+
+                            }
+                        }
+                    }
+
                 productListData.addAll(resultPrd_);
 
                 for (int i = 0; i < 18; i++) {
                     if (resultPrd_.size() > i) {
                         productList.add(resultPrd_.get(i));
-                        // getImage(productList.get(i).I,i);
+
                     }
 
                 }
-
-
-                ArrayList<Product> listPrd = new ArrayList<>(productList);
-                CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                if (listPrd.size() > 0)
-                    for (int i = 0; i < listPrd.size(); i++) {
-                        int position = listPrd.get(i).KEY - 1;//new position
-                        int index = productList.indexOf(listPrd.get(i));//old position
-                        if (productList.size() > position) {
-                            Product itemProduct = productList.get(position);
-                            if (index != position) {
-                                productList.set(position, productList.get(productList.indexOf(listPrd.get(i))));
-                                productList.set(index, itemProduct);
-
-                            }
-                        }
-
-                    }
 
 
                 productAdapter.notifyDataSetChanged();
@@ -974,32 +973,34 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             productList.clear();
             productListData.clear();
 
-            productListData.addAll(rstProduct);
 
-            for (int i = 0; i < 18; i++) {
-                if (rstProduct.size() > i) {
-                    productList.add(rstProduct.get(i));
-                    //getImage(productList.get(i).I,i);
-                }
-            }
-
-
-            ArrayList<Product> listPrd = new ArrayList<>(productList);
+            ArrayList<Product> listPrd = new ArrayList<>(rstProduct);
             CollectionUtils.filter(listPrd, l -> l.KEY != 0);
             if (listPrd.size() > 0)
                 for (int i = 0; i < listPrd.size(); i++) {
                     int position = listPrd.get(i).KEY - 1;//new position
-                    int index = productList.indexOf(listPrd.get(i));//old position
-                    if (productList.size() > position) {
-                        Product itemProduct = productList.get(position);
+                    int index = rstProduct.indexOf(listPrd.get(i));//old position
+                    if (rstProduct.size() > position) {
+                        Product itemProduct = rstProduct.get(position);
                         if (index != position) {
-                            productList.set(position, productList.get(productList.indexOf(listPrd.get(i))));
-                            productList.set(index, itemProduct);
+                            rstProduct.set(position, rstProduct.get(rstProduct.indexOf(listPrd.get(i))));
+                            rstProduct.set(index, itemProduct);
 
                         }
                     }
+                }
+
+            productListData.addAll(rstProduct);
+
+
+            for (int i = 0; i < 18; i++) {
+                if (rstProduct.size() > i) {
+                    productList.add(rstProduct.get(i));
 
                 }
+            }
+
+
             productAdapter.notifyDataSetChanged();
             //endregion Full ProductList Because This Item ProductLevel1 Is True
         });
@@ -1280,32 +1281,34 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 if (tempResult != null) {
                     productListData.clear();
+                    ArrayList<Product> listPrd = new ArrayList<>(tempResult);
+                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
+                    if (listPrd.size() > 0)
+                        for (int i = 0; i < listPrd.size(); i++) {
+                            int position = listPrd.get(i).KEY - 1;//new position
+                            int index = tempResult.indexOf(listPrd.get(i));//old position
+                            if (tempResult.size() > position) {
+                                Product itemProduct = tempResult.get(position);
+                                if (index != position) {
+                                    tempResult.set(position, tempResult.get(tempResult.indexOf(listPrd.get(i))));
+                                    tempResult.set(index, itemProduct);
+
+                                }
+                            }
+                        }
+
+
                     productListData.addAll(tempResult);
                 }
                 for (int i = 0; i < 18; i++) {
                     assert tempResult != null;
                     if (tempResult.size() > i) {
                         productList.add(tempResult.get(i));
-                        //getImage(productList.get(i).I,i);
+
                     }
                 }
 
-                ArrayList<Product> listPrd = new ArrayList<>(productList);
-                CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                if (listPrd.size() > 0)
-                    for (int i = 0; i < listPrd.size(); i++) {
-                        int position = listPrd.get(i).KEY - 1;//new position
-                        int index = productList.indexOf(listPrd.get(i));//old position
-                        if (productList.size() > position) {
-                            Product itemProduct = productList.get(position);
-                            if (index != position) {
-                                productList.set(position, productList.get(productList.indexOf(listPrd.get(i))));
-                                productList.set(index, itemProduct);
 
-                            }
-                        }
-
-                    }
                 productAdapter.notifyDataSetChanged();
 
             }
@@ -1482,31 +1485,34 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     allProductActive.clear();
                     allProductActive.addAll(resultPrdAc);
                     productListData.clear();
-                    productListData.addAll(resultPrd);
-                    productList.clear();
-                    for (int i = 0; i < 18; i++) {
-                        if (resultPrd.size() > i) {
-                            productList.add(resultPrd.get(i));
-                            // getImage(productList.get(i).I,i);
-                        }
-                    }
 
-                    ArrayList<Product> listPrd = new ArrayList<>(productList);
+                    ArrayList<Product> listPrd = new ArrayList<>(resultPrd);
                     CollectionUtils.filter(listPrd, l -> l.KEY != 0);
                     if (listPrd.size() > 0)
                         for (int i = 0; i < listPrd.size(); i++) {
                             int position = listPrd.get(i).KEY - 1;//new position
-                            int index = productList.indexOf(listPrd.get(i));//old position
-                            if (productList.size() > position) {
-                                Product itemProduct = productList.get(position);
+                            int index = resultPrd.indexOf(listPrd.get(i));//old position
+                            if (resultPrd.size() > position) {
+                                Product itemProduct = resultPrd.get(position);
                                 if (index != position) {
-                                    productList.set(position, productList.get(productList.indexOf(listPrd.get(i))));
-                                    productList.set(index, itemProduct);
+                                    resultPrd.set(position, resultPrd.get(resultPrd.indexOf(listPrd.get(i))));
+                                    resultPrd.set(index, itemProduct);
 
                                 }
                             }
+                        }
+
+                    productListData.addAll(resultPrd);
+
+
+                    productList.clear();
+                    for (int i = 0; i < 18; i++) {
+                        if (resultPrd.size() > i) {
+                            productList.add(resultPrd.get(i));
 
                         }
+                    }
+
 
                     // productList.addAll(resultPrd);
 
@@ -1595,6 +1601,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 customProgress.hideProgress();
 
 
+
                 super.onPostExecute(o);
             }
 
@@ -1631,22 +1638,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     if (currentPage != 1) productAdapter.removeLoadingView();
                     productList.addAll(items);
 
-                    ArrayList<Product> listPrd = new ArrayList<>(productList);
-                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                    if (listPrd.size() > 0)
-                        for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).KEY - 1;//new position
-                            int index = productList.indexOf(listPrd.get(i));//old position
-                            if (productList.size() > position) {
-                                Product itemProduct = productList.get(position);
-                                if (index != position) {
-                                    productList.set(position, productList.get(productList.indexOf(listPrd.get(i))));
-                                    productList.set(index, itemProduct);
 
-                                }
-                            }
-
-                        }
                     productAdapter.notifyDataSetChanged();
 
                     // check weather is last page or not
@@ -1939,7 +1931,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.deleteAll(Setting.class);
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
                         Setting.saveInTx(settingsList);
-                         maxSales = settingsList.get(0).MAX_SALE;
+                        maxSales = settingsList.get(0).MAX_SALE;
 
 
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
@@ -2368,33 +2360,35 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         try {
 
+            if (productList.get(position).Url == null) {
+                Call<String> call = App.api.getImage(Prd_GUID);
 
-            Call<String> call = App.api.getImage(Prd_GUID);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
 
 
                    /*   ArrayList<Product> arrayList = new ArrayList<>(productList);
                       CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
                       if (arrayList.size()>0)*/
-                    productList.get(position).Url = response.body();
-                    productAdapter.notifyItemChanged(position);
-                }
+                        if (productList.size() > position)
+                            productList.get(position).Url = response.body();
+                        productAdapter.notifyDataSetChanged();
+                    }
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
 
 
-                }
-            });
+                    }
+                });
+            }
 
 
         } catch (NetworkOnMainThreadException ex) {
 
-            Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
 
         }
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -235,6 +236,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
+
+
                 switch (LauncherActivity.name){
                     case "ir.kitgroup.salein":
                         holder.productImage.setImageResource(R.drawable.white);
@@ -269,9 +272,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-/*            Glide.with(context)
-                    .load(productsList.get(holder.getAdapterPosition()).Url)
-                    .into(holder.productImage);*/
+
+
 
             holder.productOldPrice.setTextSize(fontLargeSize);
             holder.productDiscountPercent.setTextSize(fontLargeSize);
@@ -334,6 +336,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             CollectionUtils.filter(resultPrd, r -> r.I.equals(productsList.get(holder.getAdapterPosition()).I));
 
             if (resultPrd.size() > 0) {
+              /*  getImage(resultPrd.get(0).I,holder.getAdapterPosition());
+                if (resultPrd.get(0).Url!=null)
+                    Glide.with(context)
+                            .load(resultPrd.get(0).Url)
+                            .into(holder.productImage);
+*/
                 if (resultPrd.get(0).getAmount() > 0) {
                     holder.ivMinus.setVisibility(View.VISIBLE);
 
@@ -888,6 +896,59 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
+
+
+/*
+    private void getImage(String Prd_GUID, int position) {
+
+        try {
+
+            ArrayList<Product> arrayList=new ArrayList<>(AllProduct);
+            CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
+            if (arrayList.size()>0 && arrayList.get(0).Url==null){
+
+                    Call<String> call = App.api.getImage(Prd_GUID);
+
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+
+
+                   *//*   ArrayList<Product> arrayList = new ArrayList<>(productList);
+                      CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
+                      if (arrayList.size()>0)*//*
+
+                            CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
+                            if (arrayList.size()>0){
+                                AllProduct.get(AllProduct.indexOf(arrayList.get(0))).Url=response.body();
+                            }
+
+
+                            notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    });
+
+            }
+
+
+
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+          //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }*/
 }
 
 

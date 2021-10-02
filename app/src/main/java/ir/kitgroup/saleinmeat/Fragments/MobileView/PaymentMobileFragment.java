@@ -91,7 +91,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private FragmentPaymentMobileBinding binding;
-
     private CustomProgress customProgress;
 
     private String userName;
@@ -161,7 +160,9 @@ public class PaymentMobileFragment extends Fragment {
     private Dialog dialogTime;
     private RecyclerView recycleTime;
     private TimeAdapter timeAdapter;
-    private ArrayList<String> timesList = new ArrayList<>();
+    private final ArrayList<String> timesList = new ArrayList<>();
+    private final ArrayList<String> times = new ArrayList<>();
+
     private String dateOrder = "";
     //end region Parameter
 
@@ -248,18 +249,20 @@ public class PaymentMobileFragment extends Fragment {
         //region Cast DialogTime
 
         try {
-            timesList.addAll(Arrays.asList(setting.get(0).SERVICE_TIME.split(",")));
+            ArrayList<String> times = new ArrayList<>(Arrays.asList(setting.get(0).SERVICE_TIME.split(",")));
 
             Date date = Calendar.getInstance().getTime();
 
-            for (int i=0 ;i<timesList.size();i++){
+            for (int i=0 ;i<times.size();i++){
                  int hour;
-                 try {
-                        hour = Integer.parseInt(timesList.get(i).split("-")[0]);
-                if (hour <= date.getHours()) {
-               timesList.remove(timesList.get(i));
 
-                }
+                 try {
+                        hour = Integer.parseInt(times.get(i).split("-")[0]);
+
+                    if ((hour-date.getHours()==1) && date.getMinutes()<50 ||  hour > date.getHours())
+                    timesList.add(times.get(i));
+
+
                  }catch (Exception e){
 
                  }
@@ -269,11 +272,12 @@ public class PaymentMobileFragment extends Fragment {
         } catch (Exception e) {
         }
 
+        times.addAll(timesList);
         dialogTime = new Dialog(getActivity());
         dialogTime.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogTime.setContentView(R.layout.dialog_time);
-        timeAdapter = new TimeAdapter(getActivity(), timesList);
+        timeAdapter = new TimeAdapter(getActivity(), times);
         recycleTime = dialogTime.findViewById(R.id.recyclerTime);
         recycleTime.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleTime.setAdapter(timeAdapter);
@@ -972,16 +976,16 @@ public class PaymentMobileFragment extends Fragment {
             Date date1 = date;
 
             int hour = date.getHours();
-            int hour1 =0 ;
+
             try {
                 hour = Integer.parseInt(dateOrder.split("-")[0]);
-                hour1 = Integer.parseInt(dateOrder.split("-")[1]);
+
             } catch (Exception e) {
             }
 
 
             invoice.INV_DUE_DATE = date1;
-            invoice.INV_DUE_TIME = hour + ":" + "00" +"-"+ hour1+":"+"00" ;
+            invoice.INV_DUE_TIME = hour + ":" + "00"  ;
             invoice.INV_STATUS = true;
             invoice.ACC_CLB_UID = Acc_GUID;
             invoice.TBL_UID = Tbl_GUID;
@@ -1031,6 +1035,9 @@ public class PaymentMobileFragment extends Fragment {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
                 return;
             } else {
+                times.clear();
+                times.addAll(timesList);
+                timeAdapter.notifyDataSetChanged();
                 dialogTime.show();
             }
         });
@@ -1040,6 +1047,9 @@ public class PaymentMobileFragment extends Fragment {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
                 return;
             } else {
+                times.clear();
+                times.addAll(timesList);
+                timeAdapter.notifyDataSetChanged();
                 dialogTime.show();
             }
         });
