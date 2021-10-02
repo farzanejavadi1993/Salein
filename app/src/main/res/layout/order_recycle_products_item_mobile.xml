@@ -26,7 +26,9 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginBottom="@dimen/margin10"
                 app:siBorderColor="#AAA9A9"
                 app:siBorderWidth="0.5dp"
                 app:siRadius="10dp" />
@@ -55,15 +57,13 @@
                     android:layout_margin="4dp"
                     android:src="@drawable/ic_discount" />
 
-                <TextView
-                    android:id="@+id/order_recycle_item_product_discountPercent"
+                <TextView android:id="@+id/order_recycle_item_product_discountPercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="@dimen/margin10"
                     android:gravity="right"
-
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -72,14 +72,13 @@
         </RelativeLayout>
 
         <TextView
-
             android:id="@+id/order_recycle_item_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginStart="@dimen/margin10"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="@dimen/margin10"
-            android:layout_marginEnd="@dimen/margin10"
+            android:layout_marginEnd="12dp"
             android:gravity="right"
             android:textColor="@color/medium_color"
             android:textSize="@dimen/text_normal_mobile_size" />
@@ -90,8 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/order_recycle_item_product_name"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_toRightOf="@+id/layout_Image">
 
             <TextView
@@ -134,19 +133,21 @@
 
 
         <RelativeLayout
+            android:layout_below="@+id/order_recycle_item_product_bottom_card"
             android:id="@+id/card_edit"
+            android:layout_marginBottom="@dimen/margin10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/l_Price"
-            android:layout_marginLeft="@dimen/margin10"
-            android:layout_marginRight="@dimen/margin10"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_toRightOf="@+id/layout_Image">
 
 
             <TextView
                 android:id="@+id/edt_description_temp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="@dimen/margin10"
                 android:layout_marginTop="5dp"
@@ -159,28 +160,29 @@
                 android:textSize="@dimen/text_medium_mobile_size" />
         </RelativeLayout>
 
-
         <RelativeLayout
+            android:layout_marginTop="@dimen/margin10"
             android:id="@+id/order_recycle_item_product_bottom_card"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l_Price"
             android:layout_toRightOf="@+id/layout_Image">
 
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="2dp"
                 android:layout_toLeftOf="@+id/iv_minus"
                 android:singleLine="true"
                 android:text="کیلو گرم"
                 android:textColor="@color/medium_color"
                 android:textSize="11sp"
-                android:visibility="gone" />
+               />
 
             <ImageView
 

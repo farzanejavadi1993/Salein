@@ -174,33 +174,80 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
 
-          String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
-            File file = new File(yourFilePath);
+//          String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
+//            File file = new File(yourFilePath);
+//
+//            if (file.exists()) {
+//
+//
+//                Bitmap image = null;
+//
+//                try {
+//                    image = BitmapFactory.decodeStream(new FileInputStream(file));
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                holder.productImage.setImageBitmap(image);
+//                holder.productImage1.setImageBitmap(null);
+//
+//
+//
+//                    Glide.with(context)
+//                            .load(file)
+//                            .into(holder.productImage);
+//
+//
+//            }
+//            else {
+//                try {
+//                    //PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+//
+//                    switch (LauncherActivity.name){
+//                        case "ir.kitgroup.salein":
+//                            holder.productImage.setImageResource(R.drawable.white);
+//                            holder.productImage1.setImageResource(R.drawable.logo1);
+//                            break;
+//
+//                        case "ir.kitgroup.saleintop":
+//                            holder.productImage.setImageResource(R.drawable.white);
+//                            holder.productImage1.setImageResource(R.drawable.top_png);
+//
+//
+//                            break;
+//
+//
+//                        case "ir.kitgroup.saleinmeat":
+//
+//
+//                            holder.productImage.setImageResource(R.drawable.white);
+//                            holder.productImage1.setImageResource(R.drawable.meat_png);
+//                            break;
+//
+//
+//                        case "ir.kitgroup.saleinnoon":
+//
+//
+//                            holder.productImage.setImageResource(R.drawable.white);
+//                            holder.productImage1.setImageResource(R.drawable.noon);
+//                            break;
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
 
-            if (file.exists()) {
 
+         /*   boolean loaded=false;
+            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
+            CollectionUtils.filter(arrayList,a->a.I.equals(productsList.get(holder.getAdapterPosition()).I));
+            if (arrayList.size()>0)
+                loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
 
-                Bitmap image = null;
-
-                try {
-                    image = BitmapFactory.decodeStream(new FileInputStream(file));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                holder.productImage.setImageBitmap(image);
-                holder.productImage1.setImageBitmap(null);
+            /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
 
 
 
-                    Glide.with(context)
-                            .load(file)
-                            .into(holder.productImage);
-
-
-            }
-            else {
-                try {
-                    //PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
                     switch (LauncherActivity.name){
                         case "ir.kitgroup.salein":
@@ -231,21 +278,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             holder.productImage1.setImageResource(R.drawable.noon);
                             break;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-         /*   boolean loaded=false;
-            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(arrayList,a->a.I.equals(productsList.get(holder.getAdapterPosition()).I));
-            if (arrayList.size()>0)
-                loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
-
-            /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
-
 
 
 
