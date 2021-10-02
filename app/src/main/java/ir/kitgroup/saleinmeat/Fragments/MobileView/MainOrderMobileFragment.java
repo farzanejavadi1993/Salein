@@ -76,6 +76,7 @@ import ir.kitgroup.saleinmeat.Adapters.ProductAdapter1;
 import ir.kitgroup.saleinmeat.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.saleinmeat.Adapters.ProductLevel2Adapter;
 import ir.kitgroup.saleinmeat.DataBase.Tables;
+import ir.kitgroup.saleinmeat.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.classes.CustomProgress;
 import ir.kitgroup.saleinmeat.classes.PaginationScrollListener;
@@ -110,6 +111,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static ir.kitgroup.saleinmeat.Util.Util.AllProduct;
 import static java.lang.Math.min;
 
 public class MainOrderMobileFragment extends Fragment implements Filterable {
@@ -655,6 +657,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         });
 
+
+
+
         //endregion Cast Variable Dialog
 
 
@@ -1179,6 +1184,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion Action BtnRegister
 
 
+
+
         isAllPermissionGranted();
 
 
@@ -1601,7 +1608,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 customProgress.hideProgress();
 
 
-
                 super.onPostExecute(o);
             }
 
@@ -1726,6 +1732,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
     }
+
+
+
 
 
     private void getProduct(String task) {
@@ -2037,12 +2046,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     }
 
-    private void SaveImageToStorage(Bitmap bitmapImage, String ID, Context context) {
+    private void SaveImageToStorage(String bitmapImage, String ID, Context context) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+       // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
 
         File destination = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "SaleIn");
-        File file = new File(destination, ID.toUpperCase() + ".jpg");
+        File file = new File(destination, ID.toUpperCase());
 
         FileOutputStream fo = null;
         try {
@@ -2356,7 +2365,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void getImage(String Prd_GUID, int position) {
+/*    private void getImage(String Prd_GUID, int position) {
 
         try {
 
@@ -2368,9 +2377,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     public void onResponse(Call<String> call, Response<String> response) {
 
 
-                   /*   ArrayList<Product> arrayList = new ArrayList<>(productList);
+                   *//*   ArrayList<Product> arrayList = new ArrayList<>(productList);
                       CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
-                      if (arrayList.size()>0)*/
+                      if (arrayList.size()>0)*//*
                         if (productList.size() > position)
                             productList.get(position).Url = response.body();
                         productAdapter.notifyDataSetChanged();
@@ -2393,6 +2402,55 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
 
 
-    }
+    }*/
+
+    /*private void getImage(String Prd_GUID) {
+
+        try {
+
+            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
+            CollectionUtils.filter(arrayList, a -> a.I.equals(Prd_GUID));
+            if (arrayList.size() > 0 && arrayList.get(0).Url == null) {
+
+                Call<String> call = App.api.getImage(Prd_GUID);
+
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+
+                        CollectionUtils.filter(arrayList, a -> a.I.equals(Prd_GUID));
+                        if (arrayList.size() > 0)
+
+                            AllProduct.get(AllProduct.indexOf(arrayList.get(0))).Url = response.body();
+
+                         SaveImageToStorage(response.body(), arrayList.get(0).I, getActivity());
+
+                        productAdapter.notifyDataSetChanged();
+
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
+
+            }
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }*/
+
 
 }

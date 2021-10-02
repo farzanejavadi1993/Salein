@@ -3,7 +3,10 @@ package ir.kitgroup.saleinmeat.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
@@ -32,6 +35,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
@@ -168,7 +174,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
 
-          /*  String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
+          String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
             File file = new File(yourFilePath);
 
             if (file.exists()) {
@@ -183,6 +189,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 }
                 holder.productImage.setImageBitmap(image);
                 holder.productImage1.setImageBitmap(null);
+
+
+
+                    Glide.with(context)
+                            .load(file)
+                            .into(holder.productImage);
 
 
             }
@@ -223,7 +235,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     e.printStackTrace();
                 }
 
-            }*/
+            }
 
 
          /*   boolean loaded=false;
@@ -232,44 +244,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (arrayList.size()>0)
                 loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
 
-     /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
-
-
-
-
-
-                switch (LauncherActivity.name){
-                    case "ir.kitgroup.salein":
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.logo1);
-                        break;
-
-                    case "ir.kitgroup.saleintop":
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.top_png);
-
-
-                        break;
-
-
-                    case "ir.kitgroup.saleinmeat":
-
-
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.meat_png);
-                        break;
-
-
-                    case "ir.kitgroup.saleinnoon":
-
-
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.noon);
-                        break;
-                }
-
-
-
+            /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
 
 
 
@@ -336,12 +311,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             CollectionUtils.filter(resultPrd, r -> r.I.equals(productsList.get(holder.getAdapterPosition()).I));
 
             if (resultPrd.size() > 0) {
-              /*  getImage(resultPrd.get(0).I,holder.getAdapterPosition());
-                if (resultPrd.get(0).Url!=null)
-                    Glide.with(context)
-                            .load(resultPrd.get(0).Url)
-                            .into(holder.productImage);
-*/
+
+
                 if (resultPrd.get(0).getAmount() > 0) {
                     holder.ivMinus.setVisibility(View.VISIBLE);
 
@@ -471,11 +442,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-     static class viewHolder extends RecyclerView.ViewHolder {
+    static class viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
         private final int sizeGroup = 0;
-
 
 
         private final TextView productName;
@@ -644,12 +614,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     return;
 
 
-                            }
-                            else {
+                            } else {
                                 try {
                                     amount = Float.parseFloat(s);
-                                    if (amount%finalAPlus!=0){
-                                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از "+finalAPlus+" باشد ", Toast.LENGTH_SHORT).show();
+                                    if (amount % finalAPlus != 0) {
+                                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ", Toast.LENGTH_SHORT).show();
                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                         ProductAmountTxt.setText("0");
                                         ProductAmountTxt.addTextChangedListener(textWatcher);
@@ -666,22 +635,18 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
 
 
-
                             AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
 
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
 
-                                if (remain%finalAPlus!=0){
+                                if (remain % finalAPlus != 0) {
 
-                                    remain=(int)(remain/finalAPlus)*finalAPlus;
+                                    remain = (int) (remain / finalAPlus) * finalAPlus;
 
                                 }
 
                                 AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount((double) remain);
-
-
-
 
 
                                 // if (MinOrPlus != 3) {
@@ -786,8 +751,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
     }
-
-
 
 
     private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
@@ -898,57 +861,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-/*
-    private void getImage(String Prd_GUID, int position) {
-
-        try {
-
-            ArrayList<Product> arrayList=new ArrayList<>(AllProduct);
-            CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
-            if (arrayList.size()>0 && arrayList.get(0).Url==null){
-
-                    Call<String> call = App.api.getImage(Prd_GUID);
-
-                    call.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-
-
-                   *//*   ArrayList<Product> arrayList = new ArrayList<>(productList);
-                      CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
-                      if (arrayList.size()>0)*//*
-
-                            CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
-                            if (arrayList.size()>0){
-                                AllProduct.get(AllProduct.indexOf(arrayList.get(0))).Url=response.body();
-                            }
-
-
-                            notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
-
-
-                        }
-                    });
-
-            }
-
-
-
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-          //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }*/
 }
 
 
