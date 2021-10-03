@@ -4,6 +4,7 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import android.os.CountDownTimer;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.lang.reflect.Type;
-import java.util.Objects;
+import java.util.Random;
 
 
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
@@ -52,6 +53,11 @@ public class ConfirmCodeFragment extends Fragment {
     private FragmentConfirmCodeBinding binding;
     private User user;
     private int imageLogo;
+    private int code;
+    private CountDownTimer countDownTimer;
+    private long timeInLeftMillisSecond=120000;
+    boolean endTime=false;
+
 
     //endregion Parameter
 
@@ -77,7 +83,7 @@ public class ConfirmCodeFragment extends Fragment {
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
-        int code = bundle.getInt("code");
+         code = bundle.getInt("code");
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
         //endregion Get Bundle And Set Data
 
@@ -351,6 +357,12 @@ public class ConfirmCodeFragment extends Fragment {
         //endregion Action ivBackFragment
 
 
+
+        startTimer();
+        binding.resendCode.setOnClickListener(v -> {
+            code= new Random(System.nanoTime()).nextInt(89000) + 10000;
+            login(mobile, String.valueOf(code));
+        });
     }
 
 
@@ -417,7 +429,7 @@ public class ConfirmCodeFragment extends Fragment {
                                 bundle.putString("Inv_GUID", "");
                                 MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                                 mainOrderMobileFragment.setArguments(bundle);
-                                FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
+                                FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
                                 replaceFragment.commit();
                             }
                             //endregion Go To MainOrderFragment Because Account Is Register
@@ -434,7 +446,7 @@ public class ConfirmCodeFragment extends Fragment {
                             bundle.putString("mobile", mobile);
                             MapFragment mapFragment = new MapFragment();
                             mapFragment.setArguments(bundle);
-                            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment, "MapFragment");
+                            FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment, "MapFragment");
                             addFragment.commit();
                         }
                         //endregion Account Is Not Register
@@ -471,11 +483,103 @@ public class ConfirmCodeFragment extends Fragment {
 
     }
 
+
+
+
+
+
+    private void login(String mobile, String message) {
+
+
+        try {
+
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+            binding.btnLogin.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+
+
+            Call<String> call = App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                    binding.btnLogin.setEnabled(true);
+
+                }
+
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                    binding.btnLogin.setEnabled(true);
+                    binding.progressBar.setVisibility(View.GONE);
+
+
+                }
+            });
+
+
+        } catch (NetworkOnMainThreadException ex) {
+            Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            binding.progressBar.setVisibility(View.GONE);
+
+
+        }
+
+
+    }
+
+
+
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setEditBackground(int drawable, EditText view) {
         view.setBackground(getResources().getDrawable(drawable));
     }
+
+
+    private void startTimer(){
+        countDownTimer=new CountDownTimer(timeInLeftMillisSecond,1000) {
+            @Override
+            public void onTick(long l) {
+                timeInLeftMillisSecond=l;
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+
+    }
+
+
+    private void stopTimer(){
+        countDownTimer.cancel();
+    }
+
+    private void updateTime(){
+
+        int minute=(int) timeInLeftMillisSecond/6000;
+        int second=(int) timeInLeftMillisSecond%6000/1000;
+        String text=""+minute;
+        text +=":";
+        if (second<10)
+            text +="0";
+
+        text +=second;
+        binding.resendCode.setText(" ارسال مجدد کد تا "+text);
+    }
     //endregion Method
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopTimer();
+    }
 }

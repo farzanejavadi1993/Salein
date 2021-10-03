@@ -506,15 +506,20 @@ public class PaymentMobileFragment extends Fragment {
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 if (frg != null) {
-                    LauncherActivity mainActivity = (LauncherActivity) view.getContext();
-                    Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-                    if (fragment instanceof MainOrderMobileFragment) {
-                        MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
+                   // LauncherActivity mainActivity = (LauncherActivity) view.getContext();
+                   // Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+                    if (frg instanceof MainOrderMobileFragment) {
+                        MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
                         fgf.setHomeBottomBarAndClearBadge();
                     }
-                    ft.detach(frg);
-                    ft.attach(frg);
-                    ft.commit();
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("Ord_TYPE", "");
+                    bundle1.putString("Tbl_GUID", "");
+                    bundle1.putString("Inv_GUID", "");
+                    MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                    mainOrderMobileFragment.setArguments(bundle1);
+                    FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
+                    replaceFragment.commit();
                 }
 
             } else {
@@ -768,7 +773,7 @@ public class PaymentMobileFragment extends Fragment {
 
         if (!OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
             getInquiryAccount(userName, passWord, acc.M);
-        else
+        else if (OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
 
 

@@ -2,6 +2,7 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.DataBase.Account;
@@ -24,7 +24,6 @@ import ir.kitgroup.saleinmeat.DataBase.User;
 import ir.kitgroup.saleinmeat.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.saleinmeat.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.saleinmeat.R;
-import ir.kitgroup.saleinmeat.Util.Util;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.databinding.FragmentSplashScreenBinding;
 
@@ -50,7 +49,7 @@ public class SplashScreenFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // region Utilize Animation
-        Util.playLottieAnimation("buygirl.json", binding.animationView);
+      // Util.playLottieAnimation("buygirl.json", binding.animationView);
         //Util.playLottieAnimation("890-loading-animation.json", binding.animationView1);
         //endregion Utilize Animation
 
@@ -90,7 +89,8 @@ public class SplashScreenFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        binding.imgLogo.setImageResource(imageIconDialog);
+      // binding.imgLogo.setImageResource(imageIconDialog);
+        Glide.with(this).load(Uri.parse("file:///android_asset/loader1.gif")).into(binding.animationView);
         binding.tvTitle.setText(title);
         binding.tvDescription.setText(description);
         //endregion Set Icon And Title
@@ -100,7 +100,7 @@ public class SplashScreenFragment extends Fragment {
         Thread thread = new Thread(() -> {
             try {
 
-                Thread.sleep(5000);
+                Thread.sleep(2000);
 
                 FragmentTransaction replaceFragment;
 
@@ -125,7 +125,7 @@ public class SplashScreenFragment extends Fragment {
                             bundle.putString("Inv_GUID", "");
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
-                            replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
+                            replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
                         }
                         //endregion Go To MainOrderFragment Because Account Is Register
 

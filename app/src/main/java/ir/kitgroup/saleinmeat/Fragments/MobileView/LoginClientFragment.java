@@ -53,7 +53,7 @@ public class LoginClientFragment extends Fragment {
     //region PARAMETER
     private FragmentLoginMobileBinding binding;
     private User user;
-    private String messageCode = "";
+
     private String messageWelcome = "";
     private int imageLogo;
     //endregion PARAMETER
@@ -95,26 +95,26 @@ public class LoginClientFragment extends Fragment {
             case "ir.kitgroup.salein":
                 messageWelcome = "به سالین دمو خوش آمدید";
                 imageLogo = R.drawable.salein;
-                messageCode = "کد تایید ورود به سالین دمو";
+
                 break;
 
             case "ir.kitgroup.saleintop":
                 messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                 imageLogo = R.drawable.top;
-                messageCode = "کد تایید ورود به تاپ کباب";
+
                 break;
 
 
             case "ir.kitgroup.saleinmeat":
                 messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                 imageLogo = R.drawable.goosht;
-                messageCode = "کد تایید ورود به گوشت دنیوی";
+
                 break;
 
             case "ir.kitgroup.saleinnoon":
                 messageWelcome = "به کافه نون دنیوی خوش آمدید";
                 imageLogo = R.drawable.noon;
-                messageCode = "کد تایید ورود به گوشت کافه نون";
+
                 break;
         }
 
@@ -159,7 +159,7 @@ public class LoginClientFragment extends Fragment {
       //region Action btnLogin
         binding.btnLogin.setOnClickListener(v -> {
             int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-            messageCode = /*messageCode + "\n" + "code:"+*/String.valueOf(code) ;
+           String messageCode =String.valueOf(code) ;
             String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
             login(mobileNumber, code, messageCode);
 
@@ -196,7 +196,7 @@ public class LoginClientFragment extends Fragment {
                     bundle.putInt("code", code);
                     ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
                     confirmCodeFragment.setArguments(bundle);
-                    FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
+                    FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
                     addFragment.commit();
 
 
@@ -205,12 +205,11 @@ public class LoginClientFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
+
                     Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnLogin.setEnabled(true);
                     binding.progressBar.setVisibility(View.GONE);
-
-
                 }
             });
 

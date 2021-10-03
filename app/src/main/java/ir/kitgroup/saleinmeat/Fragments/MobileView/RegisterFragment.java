@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import java.util.Objects;
 import java.util.UUID;
 
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
@@ -217,7 +216,7 @@ public class RegisterFragment extends Fragment {
                             bundle.putString("Inv_GUID", "");
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
-                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment"));
+                            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
                             replaceFragment.commit();
                         }
                         //endregion Go To MainOrderFragment Because Account Is Register

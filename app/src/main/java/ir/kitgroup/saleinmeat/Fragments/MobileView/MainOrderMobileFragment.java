@@ -656,8 +656,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         });
 
 
-
-
         //endregion Cast Variable Dialog
 
 
@@ -912,7 +910,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region CONFIGURATION DATA PRODUCT_LEVEL_2
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
 
-
         LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
         manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager2.setReverseLayout(true);
@@ -932,11 +929,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             binding.edtSearchProduct.setText("");
             binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
-
             //region UnClick Old Item
             ArrayList<ProductGroupLevel2> resultProductGroupLevel2 = new ArrayList<>(AllProductLevel2);
             CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
+
             if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
+
                 productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
             }
             //endregion UnClick Old Item
@@ -945,14 +943,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             //region Click New Item
             ArrayList<ProductGroupLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
             CollectionUtils.filter(resProductGroupLevel2, r -> r.getPRDLVLUID().equals(GUID));
+
             if (resProductGroupLevel2.size() > 0) {
+
                 productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
             }
             //endregion Click New Item
 
-
             productLevel2Adapter.notifyDataSetChanged();
-
 
             //region Full ProductList Because This Item ProductLevel1 Is True
             ArrayList<Product> rstProduct = new ArrayList<>(Util.AllProduct);
@@ -969,40 +967,44 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
                 if (rstProductGroupLevel1s.size() > 0) {
                     binding.orderTxtError.setText("هیچ نوع از " + rstProductGroupLevel2s.get(0).getPRDLVLNAME() + " " + "در دسته " + rstProductGroupLevel1s.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
-
                 }
             }
 
             productList.clear();
             productListData.clear();
 
-
             ArrayList<Product> listPrd = new ArrayList<>(rstProduct);
             CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-            if (listPrd.size() > 0)
+
+            if (listPrd.size() > 0) {
+
                 for (int i = 0; i < listPrd.size(); i++) {
+
                     int position = listPrd.get(i).KEY - 1;//new position
                     int index = rstProduct.indexOf(listPrd.get(i));//old position
+
                     if (rstProduct.size() > position) {
+
                         Product itemProduct = rstProduct.get(position);
+
                         if (index != position) {
+
                             rstProduct.set(position, rstProduct.get(rstProduct.indexOf(listPrd.get(i))));
                             rstProduct.set(index, itemProduct);
-
                         }
                     }
                 }
+            }
 
             productListData.addAll(rstProduct);
 
-
             for (int i = 0; i < 18; i++) {
-                if (rstProduct.size() > i) {
-                    productList.add(rstProduct.get(i));
 
+                if (rstProduct.size() > i) {
+
+                    productList.add(rstProduct.get(i));
                 }
             }
-
 
             productAdapter.notifyDataSetChanged();
             //endregion Full ProductList Because This Item ProductLevel1 Is True
@@ -1019,26 +1021,25 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         textWatcherProduct = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 searchProduct(s.toString());
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         };
+
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
         productAdapter = new ProductAdapter1(getActivity(), productList, maxSales, Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3) {
             @Override
             protected boolean isLayoutRTL() {
@@ -1151,12 +1152,17 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         //region Action BtnRegister
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
+
             if (App.mode == 1 && Acc_GUID.equals("")) {
+
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
             if (invDetails.size() == 0) {
+
                 Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
             } else {
 
@@ -1182,14 +1188,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion Action BtnRegister
 
 
-
-
-        isAllPermissionGranted();
-
+        getProduct(task);
 
         return binding.getRoot();
-
-
     }
 
 
@@ -1732,15 +1733,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-
-
-
     private void getProduct(String task) {
         binding.progressbar.setVisibility(View.GONE);
         error = "";
         customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
 
-        String yourFilePath = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
+        String yourFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
         File file = new File(yourFilePath);
         deleteDirectory(file);
         try {
@@ -1891,7 +1889,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    error = error + "\n" + "خطای تایم اوت در دریافت کالاها";
+                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
                     showError(error);
 
                 }
@@ -2046,7 +2044,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private void SaveImageToStorage(String bitmapImage, String ID, Context context) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-       // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+        // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
 
         File destination = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "SaleIn");
         File file = new File(destination, ID.toUpperCase());
@@ -2277,7 +2275,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private void isAllPermissionGranted() {
 
-        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
             getProduct(task);

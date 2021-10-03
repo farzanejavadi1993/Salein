@@ -3,11 +3,14 @@ package ir.kitgroup.saleinmeat.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +24,6 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -115,6 +115,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
+    public void Clear() {
+        productsList.clear();
+    }
+
+    public void Add(ArrayList<Product> arrayList) {
+        productsList.addAll(arrayList);
+    }
 
     public void addLoadingView() {
         new Handler().post(() -> {
@@ -272,8 +279,54 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 //                   break;
 //           }
 
-            holder.productImage.setImageDrawable(null);
-         //   getImage(productsList.get(position).I, position, holder.productImage);
+
+            if (productsList.get(position).Url == null) {
+
+                holder.productImage.setImageDrawable(null);
+                getImage(productsList.get(position).I, position);
+            } else if (productsList.get(position).Url.equals("")) {
+
+
+
+                switch (LauncherActivity.name){
+                    case "ir.kitgroup.salein":
+                        holder.productImage.setImageResource(R.drawable.logo1);
+                        break;
+
+                    case "ir.kitgroup.saleintop":
+                        holder.productImage.setImageResource(R.drawable.top_png);
+
+
+                        break;
+
+
+                    case "ir.kitgroup.saleinmeat":
+
+                        holder.productImage.setImageResource(R.drawable.meat_png);
+                        break;
+
+
+                    case "ir.kitgroup.saleinnoon":
+
+
+                        holder.productImage.setImageResource(R.drawable.white);
+                        holder.productImage1.setImageResource(R.drawable.noon);
+                        break;
+                }
+
+
+
+
+
+            } else {
+
+                byte[] decodedString = Base64.decode(productsList.get(position).Url, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+                        decodedString.length);
+
+                holder.productImage.setImageBitmap(decodedByte);
+            }
+
 
 //            Glide.with(context).load(productsList.get(holder.getAdapterPosition()).Url)
 //                    .skipMemoryCache(false)
@@ -312,7 +365,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 }
 
             } else {
+
                 if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+
                     holder.productDiscountPercent.setVisibility(View.GONE);
                     holder.layoutDiscount.setVisibility(View.GONE);
                     holder.productOldPrice.setVisibility(View.GONE);
@@ -336,6 +391,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 }
 
             });
+
 
 
             ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
@@ -793,7 +849,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
-
     private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (maxSales.equals("1")) {
@@ -904,45 +959,46 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    private void getImage(String Prd_GUID, final int position, final ImageView imageView) {
+    public static Call<String> call;
+
+    private void getImage(final String Prd_GUID, final int position) {
 
         try {
 
-            if (imageView.getDrawable() == null) {
+            call = App.api.getImage(Prd_GUID);
 
-                Call<String> call = App.api.getImage(Prd_GUID);
+            call.enqueue(new Callback<String>() {
 
-                call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
 
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
+                    try {
 
-                        Glide.with(context).load(response.body())
-                                .skipMemoryCache(false)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .into(imageView);
-
-                        productsList.get(position).Url = response.body();
+                        productsList.get(position).Url = response.body()
+                                .replace("data:image/png;base64,", "");
+                        Product prd=Select.from(Product.class).where("I ='" + Prd_GUID + "'").first();
+                        if (prd!=null) {
+                            prd.Url = response.body()
+                                    .replace("data:image/png;base64,", "");
+                        }
+                        prd.save();
+                        notifyDataSetChanged();
+                    } catch (Exception ignored) {
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
 
-
+                    // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" +
+                    // t.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
         } catch (NetworkOnMainThreadException ex) {
-
-            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
-
+            //Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(),
+            // Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
 }
 
 

@@ -71,6 +71,8 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_cancel"
                         android:layout_width="100sp"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/iransans"
                         android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_margin="8sp"
@@ -85,6 +87,8 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_ok"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/iransans"
                         android:layout_width="100sp"
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
