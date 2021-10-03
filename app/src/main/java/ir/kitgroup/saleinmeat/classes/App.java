@@ -49,17 +49,14 @@ public class App extends Application {
                         User.deleteAll(User.class);
 
 
-
-
-
                     User user = new User();
-                  user.ipLocal = "192.168.20.8:96";
+                    user.ipLocal = "192.168.20.8:96";
                     user.userName = "admin";
                   /*  user.ipLocal = "185.201.49.204:9999";
                     user.userName = "administrator";*/
                     user.passWord = "123";
-                    user.lat=36.326805522660464;
-                    user.lng=59.56450551053102;
+                    user.lat = 36.326805522660464;
+                    user.lng = 59.56450551053102;
                     user.save();
 
                     break;
@@ -73,130 +70,124 @@ public class App extends Application {
                     user1.userName = "topkabab";
                     user1.passWord = "9929";
                     user1.lat = 36.318805483696735;
-                    user1.lng =  59.555196457006296;
+                    user1.lng = 59.555196457006296;
                     user1.save();
                     break;
 
 
-            case "ir.kitgroup.saleinmeat":
-                if (App.mode == 2)
-                    User.deleteAll(User.class);
+                case "ir.kitgroup.saleinmeat":
+                    if (App.mode == 2)
+                        User.deleteAll(User.class);
 
-                User user2 = new User();
-                user2.ipLocal = "109.125.133.149:9999";
-                user2.userName = "admin";
-                user2.passWord = "0123";
-                user2.lat=36.31947320471888;
-                user2.lng=59.605469293071884;
-                user2.save();
-                break;
+                    User user2 = new User();
+                    user2.ipLocal = "109.125.133.149:9999";
+                    user2.userName = "admin";
+                    user2.passWord = "0123";
+                    user2.lat = 36.31947320471888;
+                    user2.lng = 59.605469293071884;
+                    user2.save();
+                    break;
+            }
+        } catch (
+                PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
-    } catch(
-    PackageManager.NameNotFoundException e)
 
-    {
-        e.printStackTrace();
-    }
+        baseUrl = "http://" + Select.from(User.class).
 
-    baseUrl ="http://"+Select.from(User .class).
-
-    first().ipLocal +"/api/REST/";
+                first().ipLocal + "/api/REST/";
 
 
-    sharedPreferences =PreferenceManager.getDefaultSharedPreferences(
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
 
-    getApplicationContext());
-    editor =sharedPreferences.edit();
+                getApplicationContext());
+        editor = sharedPreferences.edit();
 
-    context =
+        context =
 
-    getApplicationContext();
-
-
-        if(mode ==1)
-
-    {
-        if (retrofit == null && Select.from(User.class).list().size() > 0) {
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build();
-
-            Gson gson = new GsonBuilder()
-                    .enableComplexMapKeySerialization()
-                    .serializeNulls()
-                    .setDateFormat(DateFormat.LONG)
-                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                    .setPrettyPrinting()
-                    .setVersion(1.0)
-                    .create();
+                getApplicationContext();
 
 
-            String baseUrl = "http://" + Select.from(User.class).first().ipLocal + "/api/REST/";
-            // String  baseUrl = "http://192.168.20.8:96/api/REST/";
-            // String  baseUrl = "http://109.125.133.149:9999/api/REST/";
+        if (mode == 1) {
+            if (retrofit == null && Select.from(User.class).list().size() > 0) {
+
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .writeTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(60, TimeUnit.SECONDS)
+                        .build();
+
+                Gson gson = new GsonBuilder()
+                        .enableComplexMapKeySerialization()
+                        .serializeNulls()
+                        .setDateFormat(DateFormat.LONG)
+                        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                        .setPrettyPrinting()
+                        .setVersion(1.0)
+                        .create();
 
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
-                    .build();
+                String baseUrl = "http://" + Select.from(User.class).first().ipLocal + "/api/REST/";
+                // String  baseUrl = "http://192.168.20.8:96/api/REST/";
+                // String  baseUrl = "http://109.125.133.149:9999/api/REST/";
 
-            api = retrofit.create(API.class);
+
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(baseUrl)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .client(client)
+                        .build();
+
+                api = retrofit.create(API.class);
+            }
+        } else {
+            if (retrofit == null) {
+
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .writeTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(60, TimeUnit.SECONDS)
+                        .build();
+
+                Gson gson = new GsonBuilder()
+                        .enableComplexMapKeySerialization()
+                        .serializeNulls()
+                        .setDateFormat(DateFormat.LONG)
+                        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                        .setPrettyPrinting()
+                        .setVersion(1.0)
+                        .create();
+
+
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(baseUrl)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .client(client)
+                        .build();
+
+                api = retrofit.create(API.class);
+            }
         }
-    } else
-
-    {
-        if (retrofit == null) {
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build();
-
-            Gson gson = new GsonBuilder()
-                    .enableComplexMapKeySerialization()
-                    .serializeNulls()
-                    .setDateFormat(DateFormat.LONG)
-                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                    .setPrettyPrinting()
-                    .setVersion(1.0)
-                    .create();
-
-
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
-                    .build();
-
-            api = retrofit.create(API.class);
-        }
-    }
 
 
         CedarMaps.getInstance()
                 .
 
-    setClientID("sportapp-6594917192157661130")
+                        setClientID("sportapp-6594917192157661130")
                 .
 
-    setClientSecret("b2uejHNwb3J0YXBw4V7hZnhRDiV3fQ8aqbTay-mjSd1IXllmWRN1EezGsss=")
+                        setClientSecret("b2uejHNwb3J0YXBw4V7hZnhRDiV3fQ8aqbTay-mjSd1IXllmWRN1EezGsss=")
                 .
 
-    setContext(this)
+                        setContext(this)
                 .
 
-    setMapID(MapID.MIX);
+                        setMapID(MapID.MIX);
 
 
-    // Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        // Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         super.
 
-    onCreate();
-}
+                onCreate();
+    }
 }

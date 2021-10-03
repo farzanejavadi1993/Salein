@@ -2,6 +2,8 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -93,6 +97,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
+
+    private Dialog dialog;
+    private TextView textExit;
+    private ImageView ivIcon;
+    private int imageIconDialog;
+
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
@@ -138,6 +148,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         userName = Select.from(User.class).list().get(0).userName;
         passWord = Select.from(User.class).list().get(0).passWord;
 
+
         //region Configuration Text Size
         int fontSize;
         int fontLargeSize;
@@ -171,6 +182,81 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.btnEdit.setTextSize(fontSize);
         binding.btnResend.setTextSize(fontSize);
         //endregion Configuration Text Size
+
+
+        //region Cast Dialog Delete
+
+
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
+
+                    imageIconDialog = R.drawable.saleinicon128;
+
+                    break;
+
+                case "ir.kitgroup.saleintop":
+
+                    imageIconDialog = R.drawable.top_png;
+
+
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+
+                    imageIconDialog = R.drawable.meat_png;
+
+
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+
+                    imageIconDialog = R.drawable.noon;
+
+
+                    break;
+            }
+
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(false);
+
+        textExit = dialog.findViewById(R.id.tv_message);
+        textExit.setText("آیا مایل به حذف کامل سبد خرید هستید؟");
+        ivIcon = dialog.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imageIconDialog);
+
+        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
+        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
+        btnNo.setOnClickListener(v -> {
+            dialog.dismiss();
+
+        });
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+            List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID+ "'").list();
+
+            for (int i=0;i<invoiceDetails.size();i++){
+
+                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
+
+                int finalI = i;
+                CollectionUtils.filter(resultPrd_, r -> r.getPRDUID().equals(invoiceDetails.get(finalI).PRD_UID));
+                if (resultPrd_.size() > 0) {
+                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
+                }
+                InvoiceDetail.delete(invoiceDetails.get(i));
+
+            }
+            invoiceDetailList.clear();
+            invoiceDetailAdapter.notifyDataSetChanged();
+
+
+
+        });
+        //endregion Cast Dialog Delete
 
 
         //region Get Bundle
@@ -497,8 +583,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     sumTransport = Double.parseDouble(invDetails.get(i).INV_DET_TOTAL_AMOUNT);
                     invDetails.remove(invDetails.get(i));
                     binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
-                    binding.tvSumTransport.setVisibility(View.VISIBLE);
-                    binding.txtSumTransport.setVisibility(View.VISIBLE);
+                    binding.layoutTransport.setVisibility(View.VISIBLE);
 
                 }
             }
@@ -506,8 +591,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         if (type.equals("2")){
-            binding.tvSumTransport.setVisibility(View.GONE);
-            binding.txtSumTransport.setVisibility(View.GONE);
+           binding.layoutTransport.setVisibility(View.GONE);
         }
 
 
@@ -811,6 +895,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
 
+        binding.txtDeleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (invoiceDetailList.size()>0)
+                dialog.show();
+            }
+        });
 
 
     }

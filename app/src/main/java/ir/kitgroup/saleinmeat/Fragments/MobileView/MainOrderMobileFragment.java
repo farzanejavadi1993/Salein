@@ -2365,44 +2365,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-/*    private void getImage(String Prd_GUID, int position) {
 
-        try {
-
-            if (productList.get(position).Url == null) {
-                Call<String> call = App.api.getImage(Prd_GUID);
-
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-
-                   *//*   ArrayList<Product> arrayList = new ArrayList<>(productList);
-                      CollectionUtils.filter(arrayList,a->a.I.equals(Prd_GUID));
-                      if (arrayList.size()>0)*//*
-                        if (productList.size() > position)
-                            productList.get(position).Url = response.body();
-                        productAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-            }
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }*/
 
     /*private void getImage(String Prd_GUID) {
 

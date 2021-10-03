@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -244,43 +246,46 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (arrayList.size()>0)
                 loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
 
-            /*       getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);*/
+            //getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);
 
+//           switch (LauncherActivity.name) {
+//               case "ir.kitgroup.salein":
+//                   holder.productImage.setImageResource(R.drawable.white);
+//                   holder.productImage1.setImageResource(R.drawable.logo1);
+//                   break;
+//
+//               case "ir.kitgroup.saleintop":
+//                   holder.productImage.setImageResource(R.drawable.white);
+//                   holder.productImage1.setImageResource(R.drawable.top_png);
+//
+//
+//                   break;
+//
+//
+//               case "ir.kitgroup.saleinmeat":
+//
+//
+//                   holder.productImage.setImageResource(R.drawable.white);
+//                   holder.productImage1.setImageResource(R.drawable.meat_png);
+//                   break;
+//
+//
+//               case "ir.kitgroup.saleinnoon":
+//
+//
+//                   holder.productImage.setImageResource(R.drawable.white);
+//                   holder.productImage1.setImageResource(R.drawable.noon);
+//                   break;
+//           }
 
+            holder.productImage.setImageDrawable(null);
+            getImage(productsList.get(position).I, position, holder.productImage);
 
-
-                    switch (LauncherActivity.name){
-                        case "ir.kitgroup.salein":
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.logo1);
-                            break;
-
-                        case "ir.kitgroup.saleintop":
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.top_png);
-
-
-                            break;
-
-
-                        case "ir.kitgroup.saleinmeat":
-
-
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.meat_png);
-                            break;
-
-
-                        case "ir.kitgroup.saleinnoon":
-
-
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.noon);
-                            break;
-                    }
-
-
-
+//            Glide.with(context).load(productsList.get(holder.getAdapterPosition()).Url)
+//                    .skipMemoryCache(false)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .transition(DrawableTransitionOptions.withCrossFade())
+//                    .into(holder.productImage);
 
             holder.productOldPrice.setTextSize(fontLargeSize);
             holder.productDiscountPercent.setTextSize(fontLargeSize);
@@ -288,7 +293,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.productPrice.setTextSize(fontLargeSize);
             holder.edtDesc.setTextSize(fontSize);
             holder.ProductAmountTxt.setTextSize(fontSize);
-            //  holder.unit.setTextSize(fontSize);
+            holder.unit.setTextSize(fontSize);
 
 
         /*    final int newColor = context.getResources().getColor(R.color.purple_500);
@@ -347,11 +352,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 if (resultPrd.get(0).getAmount() > 0) {
                     holder.ivMinus.setVisibility(View.VISIBLE);
-
                     holder.ProductAmountTxt.setVisibility(View.VISIBLE);
+                    holder.unit.setVisibility(View.VISIBLE);
+
+
                 } else {
                     holder.ivMinus.setVisibility(View.GONE);
                     holder.ProductAmountTxt.setVisibility(View.GONE);
+                    holder.unit.setVisibility(View.GONE);
+
                 }
             }
 
@@ -370,6 +379,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
+                        holder.unit,
                         holder.ivMinus,
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
@@ -391,6 +401,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
+                        holder.unit,
                         holder.ivMinus,
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
@@ -431,6 +442,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
+                                holder.unit,
                                 holder.ivMinus,
                                 Select.from(User.class).first().userName,
                                 Select.from(User.class).first().passWord,
@@ -455,6 +467,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
             if (resultPrd.size() > 0) {
                 holder.ProductAmountTxt.setText(df.format(resultPrd.get(0).getAmount()));
+
             }
 
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
@@ -478,8 +491,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         private int tab = 0;
         private final int sizeGroup = 0;
-
-
         private final TextView productName;
         private final TextView unit;
         private final TextView productPrice;
@@ -487,14 +498,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final TextView productDiscountPercent;
         private final TextView Line;
         private final EditText ProductAmountTxt;
-
         private final TextView edtDesc;
         private final RelativeLayout cardEdit;
-
         private final RoundedImageView productImage;
         private final ImageView productImage1;
-
-
         private final ImageView ivMinus;
         private final ImageView ivMax;
         private final ProgressBar progressBar;
@@ -565,7 +572,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).COEF;
@@ -616,6 +623,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             if (MinOrPlus != 3) {
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText("0");
+                                unit.setVisibility(View.GONE);
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
                                 ivMinus.setVisibility(View.GONE);
                                 ProductAmountTxt.setVisibility(View.GONE);
@@ -653,6 +661,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ", Toast.LENGTH_SHORT).show();
                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                         ProductAmountTxt.setText("0");
+                                        unit.setVisibility(View.GONE);
                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                         ivMinus.setVisibility(View.GONE);
                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -684,6 +693,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 // if (MinOrPlus != 3) {
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText(df.format(remain));
+                                unit.setVisibility(View.VISIBLE);
+
+
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
                                 // }
 
@@ -715,6 +727,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     if (MinOrPlus != 3) {
                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                         ProductAmountTxt.setText("0");
+                                        unit.setVisibility(View.GONE);
                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                         ivMinus.setVisibility(View.GONE);
                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -734,6 +747,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 if (MinOrPlus != 3) {
                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                     ProductAmountTxt.setText(df.format(amount));
+                                    unit.setVisibility(View.VISIBLE);
                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                 }
 
@@ -750,6 +764,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText(df.format(amount));
+                                unit.setVisibility(View.VISIBLE);
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
 
                             }
@@ -785,10 +800,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (maxSales.equals("1")) {
-            getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).COEF;
             if (aPlus == 0)
@@ -816,6 +831,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             amount = 0;
                             ProductAmountTxt.removeTextChangedListener(textWatcher);
                             ProductAmountTxt.setText("0");
+                            unit.setVisibility(View.GONE);
                             ProductAmountTxt.addTextChangedListener(textWatcher);
                             ivMinus.setVisibility(View.GONE);
                             ProductAmountTxt.setVisibility(View.GONE);
@@ -834,15 +850,20 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 //edit
                 if (result.size() > 0) {
+
                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+
                     if (amount == 0) {
+
                         if (invoiceDetail != null)
+
                             invoiceDetail.delete();
 
-
                         if (MinOrPlus != 3) {
+
                             ProductAmountTxt.removeTextChangedListener(textWatcher);
                             ProductAmountTxt.setText("0");
+                            unit.setVisibility(View.GONE);
                             ProductAmountTxt.addTextChangedListener(textWatcher);
                             ivMinus.setVisibility(View.GONE);
                             ProductAmountTxt.setVisibility(View.GONE);
@@ -853,45 +874,80 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     }
 
                     if (invoiceDetail != null) {
+
                         invoiceDetail.INV_DET_QUANTITY = amount;
                         invoiceDetail.update();
                     }
 
                     if (MinOrPlus != 3) {
+
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                         ProductAmountTxt.setText(df.format(amount));
+                        unit.setVisibility(View.VISIBLE);
                         ProductAmountTxt.addTextChangedListener(textWatcher);
                     }
-
-
                 }
+
                 //Create
                 else {
+
                     InvoiceDetail invoicedetail = new InvoiceDetail();
                     invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
                     invoicedetail.INV_UID = Inv_GUID;
                     invoicedetail.INV_DET_QUANTITY = amount;
                     invoicedetail.PRD_UID = Prd_GUID;
                     invoicedetail.save();
-
-
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                     ProductAmountTxt.setText(df.format(amount));
+                    unit.setVisibility(View.VISIBLE);
                     ProductAmountTxt.addTextChangedListener(textWatcher);
-
-
                     clickItem.onClick();
-
                 }
+
                 ivMinus.setVisibility(View.VISIBLE);
                 ProductAmountTxt.setVisibility(View.VISIBLE);
-
-
             }
         }
     }
 
+    private void getImage(String Prd_GUID, final int position, final ImageView imageView) {
 
+        try {
+
+            if (imageView.getDrawable() == null) {
+
+                Call<String> call = App.api.getImage(Prd_GUID);
+
+                call.enqueue(new Callback<String>() {
+
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        Glide.with(context).load(response.body())
+                                .skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(imageView);
+
+                        productsList.get(position).Url = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
 
 }
 

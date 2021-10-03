@@ -425,14 +425,14 @@ public class PaymentMobileFragment extends Fragment {
 
 
         binding.tvTitle.setTextSize(fontSize);
-        binding.tvAddAddress.setTextSize(fontBigSize);
+
         binding.edtAddress.setTextSize(fontBigSize);
         binding.tvTAddress.setTextSize(fontSize);
 
 
         binding.tvPayment.setTextSize(fontBigSize);
         binding.tvTitlePaymentPlace.setTextSize(fontSize);
-        binding.tvDescriptionPaymentPlace.setTextSize(fontSize);
+
         binding.tvTypePaymentPlace.setTextSize(fontSize);
 
 
