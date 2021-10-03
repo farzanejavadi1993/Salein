@@ -86,27 +86,30 @@
 
 
                     <TextView
+                        android:gravity="right"
                         android:id="@+id/tvTAddress"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin10"
                         android:layout_marginRight="@dimen/margin10"
                         android:background="@android:color/transparent"
                         android:paddingTop="@dimen/margin10"
                         android:paddingBottom="@dimen/margin10"
+
                         android:textColor="@color/medium_color"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_add_address"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:padding="@dimen/margin4"
                         android:id="@+id/tv_add_address"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="@dimen/margin10"
-                        android:src="@drawable/ic_plus_black"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/ic_plus_new"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -436,11 +439,13 @@
 
 
                     <ImageView
+                        android:padding="@dimen/margin4"
+
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
                         android:id="@+id/tv_add_time"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="@dimen/margin10"
-                        android:src="@drawable/ic_plus_black"
+                        android:src="@drawable/ic_plus_new"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
