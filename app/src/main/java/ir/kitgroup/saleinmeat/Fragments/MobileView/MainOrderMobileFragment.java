@@ -1454,7 +1454,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
 
-                    Util.SubGroupId = productLevel2List.get(0).getPRDLVLUID();
+
 
                     if (resultPrd.size() == 0) {
 
