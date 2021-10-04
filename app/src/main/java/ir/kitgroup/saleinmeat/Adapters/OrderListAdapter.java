@@ -89,8 +89,8 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
             holder.tvDateOrder.setText(new StringBuilder().append(invoice.INV_DUE_DATE.getHours()).append(":").append(invoice.INV_DUE_DATE.getMinutes()).append(" ").append(date).toString());
 
         }else {
-            if (invoice.INV_DUE_DATE1!=null)
-            holder.tvDateOrder.setText(invoice.INV_DUE_DATE1);
+            if (invoice.INV_DUE_DATE_PERSIAN!=null)
+            holder.tvDateOrder.setText(invoice.INV_DUE_DATE_PERSIAN);
         }
 
 

@@ -1593,14 +1593,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     customProgress.hideProgress();
                     customProgress.hideProgress();
                 }
-                Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
-                ArrayList<Product> resultProduct = new ArrayList<>();
+              //  Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
+              ArrayList<Product> resultProduct = new ArrayList<>();
                 resultProduct.addAll(Util.AllProduct);
                 CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
                 for (int i = 0; i < resultProduct.size(); i++) {
                     if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
                         getImage(resultProduct.get(i).I);
-                     /*   Call<String>    call = App.api.getImage(resultProduct.get(i).I);
+                      /*Call<String>    call = App.api.getImage(resultProduct.get(i).I);
                         Response<String> connect= null;
                         try {
                             connect = call.execute();
@@ -1618,7 +1618,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         } catch (Exception ignored) {
                         }*/
                     }
-                    //getImage(resultProduct.get(i).I);
+
 
                 }
                 super.onPostExecute(o);

@@ -345,7 +345,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="زمان ارسال سفارش"
+                android:text="زمان تحویل سفارش"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -373,7 +373,9 @@
 
 
                     <TextView
-                        android:hint="زمان ارسال سفارش را وارد کنید"
+
+                        android:gravity="right"
+                        android:hint="زمان تحویل سفارش را وارد کنید"
                         android:id="@+id/tvTime"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

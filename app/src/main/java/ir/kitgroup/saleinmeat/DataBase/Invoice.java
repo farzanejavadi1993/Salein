@@ -61,6 +61,7 @@ public class Invoice extends SugarRecord {
     @SerializedName("INV_DUE_DATE1")//تاریخ تحویل
     @Expose
     public String INV_DUE_DATE1;
+
     @SerializedName("INV_SYNC")//وضعیت
     @Expose
     public String INV_SYNC;
@@ -104,6 +105,22 @@ public class Invoice extends SugarRecord {
     @SerializedName("INV_DUE_TIME")//تاریخ تحویل
     @Expose
     public String INV_DUE_TIME;
+
+
+    @SerializedName("INV_DUE_DATE_PERSIAN")//  شمسی تاریخ تحویل
+    @Expose
+    public String INV_DUE_DATE_PERSIAN;
+
+
+
+    @SerializedName("INV_DATE_PERSIAN")
+    @Expose
+    public String INV_DATE_PERSIAN;
+
+
+
+
+
 
 
 

@@ -529,8 +529,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     binding.txtDate.setText(invoice.INV_DUE_DATE.getHours() + ":" + invoice.INV_DUE_DATE.getMinutes() + " " + (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year);
 
                 } else {
-                    if (invoice.INV_DUE_DATE1 != null)
-                        binding.txtDate.setText(invoice.INV_DUE_DATE1);
+                    if (invoice.INV_DUE_DATE_PERSIAN != null)
+                        binding.txtDate.setText(invoice.INV_DUE_DATE_PERSIAN);
                 }
 
             }

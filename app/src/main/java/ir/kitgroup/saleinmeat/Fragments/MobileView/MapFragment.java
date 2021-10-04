@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -266,8 +268,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //endregion Cast DialogAddress
 
 
-
-
         //region Action btnRegisterInformation
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
@@ -306,14 +306,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 return;
 
 
-
             }
             //endregion Edit Address When Going From PaymentFragment
 
 
             //region Edit Address when Going From ProfileFragment
-            if (edit_address != null && edit_address.equals("2"))
-            {
+            if (edit_address != null && edit_address.equals("2")) {
 
                 Account account = new Account();
                 account.I = accountORG.I;
@@ -323,12 +321,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (type.equals("1")) {
                     account.ADR1 = accountORG.ADR1;
-                    account.ADR = longitude + "longitude"+binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+ "latitude" + latitude;
+                    account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
 
                 } else {
 
                     account.ADR = accountORG.ADR;
-                    account.ADR1 =longitude + "longitude"+ binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString()+"latitude" + latitude;
+                    account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
 
                 }
 
@@ -344,7 +342,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
             //endregion Edit Address when Going From ProfileFragment
 
 
-
             //region Region Gps Information And Go To RegisterFragment
             getFragmentManager().popBackStack();
             Bundle bundle1 = new Bundle();
@@ -355,14 +352,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
             bundle1.putString("address2", binding.edtAddressComplete.getText().toString());
             RegisterFragment registerFragment = new RegisterFragment();
             registerFragment.setArguments(bundle1);
-            FragmentTransaction addFragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
+            FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
             addFragment.commit();
             //endregion Region Gps Information And Go To RegisterFragment
 
         });
         //endregion Action btnRegisterInformation
-
-
 
 
         try {
@@ -511,7 +506,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         } else {
 
             Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
-            Objects.requireNonNull(getActivity()).finish();
+            requireActivity().finish();
         }
     }
 
@@ -526,7 +521,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
 
-                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
 
@@ -541,7 +536,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 } catch (Exception ex) {
 
                     Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
-                    Objects.requireNonNull(getActivity()).finish();
+                    requireActivity().finish();
                 }
             }
         } catch (Exception ex) {
@@ -627,7 +622,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
     }
-
 
 
     private void setupCurrentLocationButton() {
@@ -908,33 +902,45 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             Account.deleteAll(Account.class);
                             Account.saveInTx(accounts);
                             assert getFragmentManager() != null;
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
-                            bundle1.putString("type", locationAddress);
-                            Fragment frg;
-                            if (flag == 0)
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
-                            else
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
 
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            if (frg != null) {
-                                if (flag == 0)
-                                    frg.setArguments(bundle1);
-                                if (flag == 1) {
-                                    PaymentMobileFragment.setADR1 = setADR1;
+                            Fragment frg;
+                            if (flag == 0) {
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
+                                bundle1.putString("type", locationAddress);
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
+                                frg.setArguments(bundle1);
+                            }
+                                else{
+
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
+                                if (frg instanceof PaymentMobileFragment) {
+                                    PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
+                                    Bundle bundle=fgf.reloadFragment(setADR1);
+                                    frg.setArguments(bundle);
                                 }
 
-                                getFragmentManager().popBackStack();
-                                ft.detach(frg);
-                                ft.attach(frg);
-                                ft.commit();
+
+
                             }
+;
 
+                            FragmentManager ft = getActivity().getSupportFragmentManager();
+                            if (frg != null) {
+                                getFragmentManager().popBackStack();
 
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                    ft.beginTransaction().detach(frg).commitNow();
+                                    ft.beginTransaction().attach(frg).commitNow();
+
+                                } else {
+
+                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                                }
+                            }
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
                     }
 
@@ -942,8 +948,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     binding.btnRegisterInformation.setEnabled(true);
                     customProgress.hideProgress();
-
-
                 }
 
 
