@@ -179,20 +179,22 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             Product product1 = Select.from(Product.class)
                     .where("I ='" + productsList.get(position).I + "'").first();
 
+
+
+
+
             if (product1.Url == null) {
 
-                holder.productImage.setImageDrawable(null);
-             //  getImage(product1.I, position);
-            } else if (product1.Url.equals("")) {
                 switch (LauncherActivity.name) {
                     case "ir.kitgroup.salein":
 
-                        holder.productImage.setImageResource(R.drawable.logo1);
+                        holder.productImage.setImageBitmap(null);
+                        holder.productImage1.setImageResource(R.drawable.logo1);
                         break;
 
                     case "ir.kitgroup.saleintop":
-
-                        holder.productImage.setImageResource(R.drawable.top_png);
+                        holder.productImage.setImageBitmap(null);
+                        holder.productImage1.setImageResource(R.drawable.top_png);
 
 
                         break;
@@ -200,8 +202,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     case "ir.kitgroup.saleinmeat":
 
-
-                        holder.productImage.setImageResource(R.drawable.meat_png);
+                        holder.productImage.setImageBitmap(null);
+                        holder.productImage1.setImageResource(R.drawable.meat_png);
                         break;
 
 
@@ -212,8 +214,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         holder.productImage.setImageResource(R.drawable.noon);
                         break;
                 }
-            } else {
 
+            } else if (!product1.Url.equals("") && product1.Url!=null){
+
+                holder.productImage1.setImageBitmap(null);
                 byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
                         decodedString.length);

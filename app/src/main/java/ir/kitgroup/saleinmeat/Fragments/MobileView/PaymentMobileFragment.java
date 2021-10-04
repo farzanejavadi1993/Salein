@@ -301,10 +301,8 @@ public class PaymentMobileFragment extends Fragment {
 
             dialogTime.dismiss();
             dateOrder = Name;
-            binding.btnChooseTime.setVisibility(View.GONE);
-            binding.timeLayout.setVisibility(View.VISIBLE);
+
             binding.tvTime.setText(Name);
-            binding.tvAddTime.setVisibility(View.VISIBLE);
         });
         //endregion Cast DialogTime
 
@@ -353,9 +351,7 @@ public class PaymentMobileFragment extends Fragment {
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
                 binding.tvTAddress.setText(ValidAddress);
-                binding.btnChooseAddress.setVisibility(View.GONE);
-                binding.tvAddAddress.setVisibility(View.VISIBLE);
-                binding.layoutAddress.setVisibility(View.VISIBLE);
+
                 dialogAddress.dismiss();
 
             }
@@ -391,9 +387,8 @@ public class PaymentMobileFragment extends Fragment {
                 typeAddress = 2;
                 ValidAddress = radioAddress2.getText().toString();
                 binding.tvTAddress.setText(ValidAddress);
-                binding.btnChooseAddress.setVisibility(View.GONE);
-                binding.tvAddAddress.setVisibility(View.VISIBLE);
-                binding.layoutAddress.setVisibility(View.VISIBLE);
+
+
                 dialogAddress.dismiss();
             }
         });
@@ -612,9 +607,8 @@ public class PaymentMobileFragment extends Fragment {
 
 
         if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
-            binding.btnChooseAddress.setVisibility(View.GONE);
-            binding.tvAddAddress.setVisibility(View.VISIBLE);
-            binding.layoutAddress.setVisibility(View.VISIBLE);
+
+
             latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
             longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
 
@@ -651,9 +645,7 @@ public class PaymentMobileFragment extends Fragment {
         if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("") && latitude2 != 0.0 && longitude2 != 0.0) {
 
             setADR1 = true;
-            binding.btnChooseAddress.setVisibility(View.GONE);
-            binding.tvAddAddress.setVisibility(View.VISIBLE);
-            binding.layoutAddress.setVisibility(View.VISIBLE);
+
             latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
             longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
             double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
@@ -687,18 +679,13 @@ public class PaymentMobileFragment extends Fragment {
 
 
         if (acc == null || (acc.ADR1 == null && acc.ADR == null)) {
-            binding.btnChooseAddress.setVisibility(View.VISIBLE);
-            binding.tvAddAddress.setVisibility(View.GONE);
-            binding.layoutAddress.setVisibility(View.GONE);
+
             typeAddress = 0;
             ValidAddress = "ناموجود";
         }
 
 
-        if (binding.tvTAddress.getText().toString().equals("")) {
-            binding.layoutAddress.setVisibility(View.GONE);
-            binding.btnChooseAddress.setVisibility(View.VISIBLE);
-        }
+
 
         binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
 
@@ -777,20 +764,7 @@ public class PaymentMobileFragment extends Fragment {
             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
 
 
-        binding.btnChooseAddress.setOnClickListener(v -> {
 
-
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
-                dialogAddress.show();
-                return;
-            }
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("edit_address", "1");
-            bundle1.putString("type", String.valueOf(typeAddress));
-            MapFragment mapFragment = new MapFragment();
-            mapFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
-        });
 
 
         binding.layoutAddress.setOnClickListener(v -> {
@@ -1041,17 +1015,6 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-        binding.btnChooseTime.setOnClickListener(v -> {
-            if (timesList.size() == 0) {
-                Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                times.clear();
-                times.addAll(timesList);
-                timeAdapter.notifyDataSetChanged();
-                dialogTime.show();
-            }
-        });
 
         binding.layoutTime.setOnClickListener(v -> {
             if (timesList.size() == 0) {

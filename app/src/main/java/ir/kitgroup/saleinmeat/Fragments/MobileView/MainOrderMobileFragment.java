@@ -1454,7 +1454,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
 
-                    Util.SubGroupId=productLevel2List.get(0).getPRDLVLUID();
+                    Util.SubGroupId = productLevel2List.get(0).getPRDLVLUID();
 
                     if (resultPrd.size() == 0) {
 
@@ -1593,12 +1593,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     customProgress.hideProgress();
                     customProgress.hideProgress();
                 }
-                Toast.makeText(getActivity(), count+"", Toast.LENGTH_LONG).show();
-                ArrayList<Product> resultProduct=new ArrayList<>();
+                Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
+                ArrayList<Product> resultProduct = new ArrayList<>();
                 resultProduct.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultProduct,r->!r.PID2.equals(Util.SubGroupId) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                for (int i=0;i<resultProduct.size();i++) {
-                    if (resultProduct.get(i).Url==null || resultProduct.get(i).Url.equals("")){
+                CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
+                for (int i = 0; i < resultProduct.size(); i++) {
+                    if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
                         getImage(resultProduct.get(i).I);
                      /*   Call<String>    call = App.api.getImage(resultProduct.get(i).I);
                         Response<String> connect= null;
@@ -2376,12 +2376,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-
     private void getImage(final String Prd_GUID) {
 
         try {
 
-            Call<String>  call = App.api.getImage(Prd_GUID);
+            Call<String> call = App.api.getImage(Prd_GUID);
 
             call.enqueue(new Callback<String>() {
 
@@ -2391,14 +2390,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     try {
 
 
-
-
                         Product product = Select.from(Product.class)
                                 .where(" I  = '" + Prd_GUID + "'").first();
                         product.Url = response.body()
                                 .replace("data:image/png;base64,", "");
                         Product.save(product);
-                       productAdapter. notifyDataSetChanged();
+                        productAdapter.notifyDataSetChanged();
                     } catch (Exception ignored) {
                     }
                 }

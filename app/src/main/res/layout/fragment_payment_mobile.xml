@@ -73,7 +73,6 @@
                 android:layout_below="@+id/edt_address"
                 android:layout_marginTop="@dimen/margin8"
                 android:backgroundTint="@color/white"
-                android:visibility="gone"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="#ddd"
                 app:strokeWidth="1.5dp"
@@ -86,6 +85,7 @@
 
 
                     <TextView
+                        android:hint="آدرس خود را وارد کنید"
                         android:gravity="right"
                         android:id="@+id/tvTAddress"
                         android:layout_width="0dp"
@@ -118,31 +118,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <RelativeLayout
-                android:id="@+id/btn_choose_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edt_address"
-                android:layout_gravity="center|bottom"
-                android:layout_marginTop="@dimen/margin8"
-                android:layout_marginBottom="10dp"
-                android:gravity="center|bottom">
 
-
-                <TextView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/order_item_recycle_group__card_background"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="انتخاب آدرس"
-                    android:textColor="#fff"
-                    android:textSize="12sp" />
-
-            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -375,32 +351,7 @@
                 android:textStyle="bold" />
 
 
-            <RelativeLayout
 
-                android:id="@+id/btn_choose_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edt_time"
-                android:layout_gravity="center|bottom"
-                android:layout_marginTop="@dimen/margin8"
-                android:layout_marginBottom="10dp"
-                android:gravity="center|bottom">
-
-
-                <TextView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/order_item_recycle_group__card_background"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:text="انتخاب زمان ارسال"
-                    android:textColor="#fff"
-                    android:textSize="12sp" />
-
-            </RelativeLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/timeLayout"
@@ -409,7 +360,7 @@
                 android:layout_below="@+id/edt_time"
                 android:layout_marginTop="@dimen/margin8"
                 android:backgroundTint="@color/white"
-                android:visibility="gone"
+
                 app:cardCornerRadius="12dp"
                 app:strokeColor="#ddd"
                 app:strokeWidth="1.5dp"
@@ -422,7 +373,7 @@
 
 
                     <TextView
-
+                        android:hint="زمان ارسال سفارش را وارد کنید"
                         android:id="@+id/tvTime"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
