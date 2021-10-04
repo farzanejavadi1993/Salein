@@ -219,6 +219,46 @@
             android:layout_marginRight="@dimen/normal_left_right_margin"
             android:background="#ccc" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:id="@+id/btn_support"
+            android:paddingBottom="5dp"
+            tools:ignore="UseCompoundDrawables">
+            <TextView
+                android:id="@+id/tv_supprt"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="پشتیبانی"
+                android:textColor="@color/medium_color"
+                android:textSize="@dimen/text_normal_mobile_size"
+                android:textStyle="bold" />
+            <ImageView
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_support"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                tools:ignore="ContentDescription" />
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="@dimen/normal_left_right_margin"
+            android:layout_marginRight="@dimen/normal_left_right_margin"
+            android:background="#ccc" />
+
+
     </LinearLayout>
 
 

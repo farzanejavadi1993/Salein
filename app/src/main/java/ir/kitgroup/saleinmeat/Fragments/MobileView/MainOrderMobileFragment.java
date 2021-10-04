@@ -1040,19 +1040,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         productAdapter = new ProductAdapter1(getActivity(), productList, maxSales, Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3) {
-            @Override
-            protected boolean isLayoutRTL() {
-                return true;
-            }
-        };
-
-
-      /*  if (LauncherActivity.screenInches >= 7)
-            binding.orderRecyclerViewProduct.setLayoutManager(gridLayoutManager);
-        else*/
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
-
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
         RecyclerViewLoadMoreScroll scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
         binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
@@ -1336,11 +1324,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     @SuppressLint("StaticFieldLeak")
     private void getProducts() {
+
         new AsyncTask() {
 
 
             @Override
             protected void onPreExecute() {
+
 
                 super.onPreExecute();
             }
@@ -1363,11 +1353,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 if (AllProductLevel1.size() == 0) {
                     AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
                 }
-
                 if (AllProductLevel2.size() == 0) {
                     AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
                 }
-
                 productLevel1List.clear();
                 for (int i = 0; i < AllProductLevel1.size(); i++) {
 
@@ -1465,7 +1453,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     productLevel2Adapter.notifyDataSetChanged();
                     ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                    //CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()));
+
+                    Util.SubGroupId=productLevel2List.get(0).getPRDLVLUID();
 
                     if (resultPrd.size() == 0) {
 
@@ -1599,14 +1588,39 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
 
                 //endregion full ProductLevel2List because First Item ProductLevel1 Is True
+
                 if (customProgress.isShow) {
                     customProgress.hideProgress();
                     customProgress.hideProgress();
                 }
+                Toast.makeText(getActivity(), count+"", Toast.LENGTH_LONG).show();
+                ArrayList<Product> resultProduct=new ArrayList<>();
+                resultProduct.addAll(Util.AllProduct);
+                CollectionUtils.filter(resultProduct,r->!r.PID2.equals(Util.SubGroupId) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
+                for (int i=0;i<resultProduct.size();i++) {
+                    if (resultProduct.get(i).Url==null || resultProduct.get(i).Url.equals("")){
+                        getImage(resultProduct.get(i).I);
+                     /*   Call<String>    call = App.api.getImage(resultProduct.get(i).I);
+                        Response<String> connect= null;
+                        try {
+                            connect = call.execute();
+                            // count+=connect.body().length();
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            Product product = Select.from(Product.class)
+                                    .where(" I  = '" + resultProduct.get(i).I + "'").first();
+                            product.Url = connect.body().replace("data:image/png;base64,", "");
+                            Product.save(product);
+                            productAdapter.notifyDataSetChanged();
+                        } catch (Exception ignored) {
+                        }*/
+                    }
+                    //getImage(resultProduct.get(i).I);
 
-                customProgress.hideProgress();
-
-
+                }
                 super.onPostExecute(o);
             }
 
@@ -1621,6 +1635,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     }
 
+    private int count;
 
     private void loadMore() {
 
@@ -2361,6 +2376,45 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
+
+    private void getImage(final String Prd_GUID) {
+
+        try {
+
+            Call<String>  call = App.api.getImage(Prd_GUID);
+
+            call.enqueue(new Callback<String>() {
+
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    try {
+
+
+
+
+                        Product product = Select.from(Product.class)
+                                .where(" I  = '" + Prd_GUID + "'").first();
+                        product.Url = response.body()
+                                .replace("data:image/png;base64,", "");
+                        Product.save(product);
+                       productAdapter. notifyDataSetChanged();
+                    } catch (Exception ignored) {
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" +
+                    // t.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NetworkOnMainThreadException ex) {
+            //Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(),
+            // Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     /*private void getImage(String Prd_GUID) {

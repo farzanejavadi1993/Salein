@@ -55,7 +55,7 @@ public class ConfirmCodeFragment extends Fragment {
     private int imageLogo;
     private int code;
     private CountDownTimer countDownTimer;
-    private long timeInLeftMillisSecond=120000;
+    private long timeInLeftMillisSecond=60000;
     boolean endTime=false;
 
 
@@ -358,7 +358,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
 
-        startTimer();
+        //startTimer();
         binding.resendCode.setOnClickListener(v -> {
             code= new Random(System.nanoTime()).nextInt(89000) + 10000;
             login(mobile, String.valueOf(code));
@@ -546,7 +546,9 @@ public class ConfirmCodeFragment extends Fragment {
         countDownTimer=new CountDownTimer(timeInLeftMillisSecond,1000) {
             @Override
             public void onTick(long l) {
+
                 timeInLeftMillisSecond=l;
+                updateTime();
             }
 
             @Override
@@ -580,6 +582,6 @@ public class ConfirmCodeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopTimer();
+      //  stopTimer();
     }
 }

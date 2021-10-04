@@ -176,124 +176,22 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
+            Product product1 = Select.from(Product.class)
+                    .where("I ='" + productsList.get(position).I + "'").first();
 
-//          String yourFilePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn" + "/" + productsList.get(holder.getAdapterPosition()).I.toUpperCase() + ".jpg";
-//            File file = new File(yourFilePath);
-//
-//            if (file.exists()) {
-//
-//
-//                Bitmap image = null;
-//
-//                try {
-//                    image = BitmapFactory.decodeStream(new FileInputStream(file));
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                holder.productImage.setImageBitmap(image);
-//                holder.productImage1.setImageBitmap(null);
-//
-//
-//
-//                    Glide.with(context)
-//                            .load(file)
-//                            .into(holder.productImage);
-//
-//
-//            }
-//            else {
-//                try {
-//                    //PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-//
-//                    switch (LauncherActivity.name){
-//                        case "ir.kitgroup.salein":
-//                            holder.productImage.setImageResource(R.drawable.white);
-//                            holder.productImage1.setImageResource(R.drawable.logo1);
-//                            break;
-//
-//                        case "ir.kitgroup.saleintop":
-//                            holder.productImage.setImageResource(R.drawable.white);
-//                            holder.productImage1.setImageResource(R.drawable.top_png);
-//
-//
-//                            break;
-//
-//
-//                        case "ir.kitgroup.saleinmeat":
-//
-//
-//                            holder.productImage.setImageResource(R.drawable.white);
-//                            holder.productImage1.setImageResource(R.drawable.meat_png);
-//                            break;
-//
-//
-//                        case "ir.kitgroup.saleinnoon":
-//
-//
-//                            holder.productImage.setImageResource(R.drawable.white);
-//                            holder.productImage1.setImageResource(R.drawable.noon);
-//                            break;
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-
-
-         /*   boolean loaded=false;
-            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(arrayList,a->a.I.equals(productsList.get(holder.getAdapterPosition()).I));
-            if (arrayList.size()>0)
-                loaded = AllProduct.get(AllProduct.indexOf(arrayList.get(0))).loadedImg != null;*/
-
-            //getImage(holder.progressBar, holder.productImage, holder.productImage1, loaded, productsList.get(holder.getAdapterPosition()).I);
-
-//           switch (LauncherActivity.name) {
-//               case "ir.kitgroup.salein":
-//                   holder.productImage.setImageResource(R.drawable.white);
-//                   holder.productImage1.setImageResource(R.drawable.logo1);
-//                   break;
-//
-//               case "ir.kitgroup.saleintop":
-//                   holder.productImage.setImageResource(R.drawable.white);
-//                   holder.productImage1.setImageResource(R.drawable.top_png);
-//
-//
-//                   break;
-//
-//
-//               case "ir.kitgroup.saleinmeat":
-//
-//
-//                   holder.productImage.setImageResource(R.drawable.white);
-//                   holder.productImage1.setImageResource(R.drawable.meat_png);
-//                   break;
-//
-//
-//               case "ir.kitgroup.saleinnoon":
-//
-//
-//                   holder.productImage.setImageResource(R.drawable.white);
-//                   holder.productImage1.setImageResource(R.drawable.noon);
-//                   break;
-//           }
-
-
-            if (productsList.get(position).Url == null) {
+            if (product1.Url == null) {
 
                 holder.productImage.setImageDrawable(null);
-                getImage(productsList.get(position).I, position);
-            } else if (productsList.get(position).Url.equals("")) {
-
-
-
-                switch (LauncherActivity.name){
+             //  getImage(product1.I, position);
+            } else if (product1.Url.equals("")) {
+                switch (LauncherActivity.name) {
                     case "ir.kitgroup.salein":
+
                         holder.productImage.setImageResource(R.drawable.logo1);
                         break;
 
                     case "ir.kitgroup.saleintop":
+
                         holder.productImage.setImageResource(R.drawable.top_png);
 
 
@@ -302,6 +200,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     case "ir.kitgroup.saleinmeat":
 
+
                         holder.productImage.setImageResource(R.drawable.meat_png);
                         break;
 
@@ -309,18 +208,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     case "ir.kitgroup.saleinnoon":
 
 
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.noon);
+
+                        holder.productImage.setImageResource(R.drawable.noon);
                         break;
                 }
-
-
-
-
-
             } else {
 
-                byte[] decodedString = Base64.decode(productsList.get(position).Url, Base64.DEFAULT);
+                byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
                         decodedString.length);
 
@@ -393,7 +287,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
 
-
             ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
             CollectionUtils.filter(resultPrd, r -> r.I.equals(productsList.get(holder.getAdapterPosition()).I));
 
@@ -434,7 +327,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
                         maxSale,
-                        productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                        productsList.get(position).getPRDUID(),
                         "",
                         1
 
@@ -456,7 +349,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
                         maxSale,
-                        productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                        productsList.get(position).getPRDUID(),
                         "",
                         2
 
@@ -497,7 +390,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 Select.from(User.class).first().userName,
                                 Select.from(User.class).first().passWord,
                                 maxSale,
-                                productsList.get(holder.getAdapterPosition()).getPRDUID(),
+                                productsList.get(position).getPRDUID(),
                                 s,
                                 3
 
@@ -959,13 +852,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    public static Call<String> call;
 
     private void getImage(final String Prd_GUID, final int position) {
 
         try {
 
-            call = App.api.getImage(Prd_GUID);
+            Call<String>  call = App.api.getImage(Prd_GUID);
 
             call.enqueue(new Callback<String>() {
 
@@ -976,12 +868,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         productsList.get(position).Url = response.body()
                                 .replace("data:image/png;base64,", "");
-                        Product prd=Select.from(Product.class).where("I ='" + Prd_GUID + "'").first();
-                        if (prd!=null) {
-                            prd.Url = response.body()
-                                    .replace("data:image/png;base64,", "");
-                        }
-                        prd.save();
+
+
+                        Product product = Select.from(Product.class)
+                                .where(" I  = '" + Prd_GUID + "'").first();
+                        product.Url = response.body()
+                                .replace("data:image/png;base64,", "");
+                        Product.save(product);
                         notifyDataSetChanged();
                     } catch (Exception ignored) {
                     }
