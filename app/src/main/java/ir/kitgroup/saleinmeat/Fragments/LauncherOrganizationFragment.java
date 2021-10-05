@@ -521,7 +521,7 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-    private void getProduct() {
+/*    private void getProduct() {
 
         error = "";
 
@@ -635,7 +635,7 @@ public class LauncherOrganizationFragment extends Fragment {
         }
 
 
-    }
+    }*/
 
     private void getSetting() {
 

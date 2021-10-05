@@ -171,7 +171,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public String appVersion() throws PackageManager.NameNotFoundException {
+    public   String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         return pInfo.versionName;
     }

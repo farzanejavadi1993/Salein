@@ -183,17 +183,17 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            if (product1.Url == null) {
+            if (product1.Url == null || product1.Url.equals("")) {
 
                 switch (LauncherActivity.name) {
                     case "ir.kitgroup.salein":
 
-                        holder.productImage.setImageBitmap(null);
+                        holder.productImage.setImageResource(R.drawable.white);
                         holder.productImage1.setImageResource(R.drawable.logo1);
                         break;
 
                     case "ir.kitgroup.saleintop":
-                        holder.productImage.setImageBitmap(null);
+                        holder.productImage.setImageResource(R.drawable.white);
                         holder.productImage1.setImageResource(R.drawable.top_png);
 
 
@@ -202,7 +202,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     case "ir.kitgroup.saleinmeat":
 
-                        holder.productImage.setImageBitmap(null);
+                        holder.productImage.setImageResource(R.drawable.white);
                         holder.productImage1.setImageResource(R.drawable.meat_png);
                         break;
 
@@ -486,34 +486,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             progressBar = itemView.findViewById(R.id.progress);
 
 
-            /*if (LauncherActivity.screenInches >= 7 && productImage != null) {
-                if (LauncherActivity.screenInches >= 7) {
-                    productName.setTextSize(14);
-                    int width;
-                    if (LauncherActivity.width > LauncherActivity.height)
-                        width = LauncherActivity.height;
-                    else
-                        width = LauncherActivity.width;
-
-
-                    cardView.getLayoutParams().width = (int) (width / 3.12);
-                    cardView.getLayoutParams().height = (int) (width / 2.12);
-                  *//*if (sizeGroup<= 1) {
-                        cardView.getLayoutParams().width = (int) (height / 2.7);
-                    } else {
-                        cardView.getLayoutParams().width = (int) (height / 2.95);
-                    }*//*
-
-                    // cardView.getLayoutParams().height = (int) (height / 2.95);
-
-                  *//*  productImage.getLayoutParams().width = (int) (height / 3.5);
-                    productImage.getLayoutParams().height = (int) (height /3.5);*//*
-
-
-                }
-
-
-            }*/
 
 
         }
@@ -859,45 +831,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void getImage(final String Prd_GUID, final int position) {
 
-        try {
-
-            Call<String>  call = App.api.getImage(Prd_GUID);
-
-            call.enqueue(new Callback<String>() {
-
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    try {
-
-                        productsList.get(position).Url = response.body()
-                                .replace("data:image/png;base64,", "");
-
-
-                        Product product = Select.from(Product.class)
-                                .where(" I  = '" + Prd_GUID + "'").first();
-                        product.Url = response.body()
-                                .replace("data:image/png;base64,", "");
-                        Product.save(product);
-                        notifyDataSetChanged();
-                    } catch (Exception ignored) {
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                    // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" +
-                    // t.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (NetworkOnMainThreadException ex) {
-            //Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(),
-            // Toast.LENGTH_SHORT).show();
-        }
-    }
 }
 
 

@@ -1,5 +1,7 @@
 package ir.kitgroup.saleinmeat.Connect;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -9,7 +11,7 @@ import retrofit2.http.Query;
 public interface API {
 
     @GET("productSync")
-    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password,@Query("task") String task);
+    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("task") String task, @Query("date") String  date);
 
 
     @GET("AccountSync")

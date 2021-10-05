@@ -242,6 +242,7 @@
                 android:textSize="@dimen/text_normal_mobile_size"
                 android:textStyle="bold" />
             <ImageView
+                android:id="@+id/iv_support"
                 android:padding="5dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_support"

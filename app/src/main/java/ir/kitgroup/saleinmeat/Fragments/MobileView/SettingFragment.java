@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -117,6 +118,9 @@ public class SettingFragment extends Fragment {
 
 
 
+
+
+
             getFragmentManager().popBackStack();
             getFragmentManager().popBackStack();
             LoginClientFragment userFragment = new LoginClientFragment();
@@ -124,6 +128,14 @@ public class SettingFragment extends Fragment {
 
 
         });
+
+
+        try {
+            binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
+        }catch (Exception e){}
+
+
+
 
 
         binding.lProfile.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit());

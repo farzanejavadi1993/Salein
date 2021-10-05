@@ -100,7 +100,7 @@ public class SplashScreenFragment extends Fragment {
         Thread thread = new Thread(() -> {
             try {
 
-                Thread.sleep(2000);
+                Thread.sleep(3000);
 
                 FragmentTransaction replaceFragment;
 

@@ -37,31 +37,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ScrollView
-                    android:id="@+id/scroll"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="12sp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="12sp"
-                    android:scrollbars="none">
+
 
                     <TextView
 
+                       android:layout_margin="@dimen/margin10"
                         android:id="@+id/tv_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="#2f2f2f"
                         android:textSize="12sp" />
-                </ScrollView>
+
 
 
                 <RelativeLayout
                     android:id="@+id/layoutButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/scroll"
+                    android:layout_below="@+id/tv_message"
                     android:layout_marginLeft="15sp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="15dp"

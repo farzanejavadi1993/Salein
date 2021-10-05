@@ -4,12 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -58,6 +61,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -218,6 +222,14 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private String task = "2";
 
+
+    private Dialog dialogUpdate;
+    private TextView textUpdate;
+    private MaterialButton btnNo;
+
+    private String link;
+
+
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -235,6 +247,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        if(!LauncherActivity.name.equals("ir.kitgroup.salein"))
         firstSync = sharedPreferences.getBoolean("firstSync", false);
 
         if (firstSync)
@@ -280,6 +294,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 imageLogo = R.drawable.goosht;
                 imgBackground = R.drawable.donyavi_pas;
                 imgIconDialog = R.drawable.meat_png;
+                link = "https://b2n.ir/b37054";
 
                 break;
 
@@ -1176,6 +1191,40 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion Action BtnRegister
 
 
+        //region Cast Dialog Update
+        dialogUpdate = new Dialog(getActivity());
+        dialogUpdate.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogUpdate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogUpdate.setContentView(R.layout.custom_dialog);
+
+
+        textUpdate = dialogUpdate.findViewById(R.id.tv_message);
+        ivIcon = dialogUpdate.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imgIconDialog);
+
+
+        MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
+        btnOk.setText("آپدیت");
+        btnNo = dialogUpdate.findViewById(R.id.btn_cancel);
+        btnNo.setText("بعدا");
+
+
+        btnNo.setOnClickListener(v -> {
+            dialogUpdate.dismiss();
+
+        });
+
+
+        btnOk.setOnClickListener(v -> {
+            dialogUpdate.dismiss();
+            Uri uri = Uri.parse(link);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+
+
+        });
+        //endregion Cast Dialog Update
+
         getProduct(task);
 
         return binding.getRoot();
@@ -1353,9 +1402,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 if (AllProductLevel1.size() == 0) {
                     AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
                 }
+
                 if (AllProductLevel2.size() == 0) {
                     AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
                 }
+
                 productLevel1List.clear();
                 for (int i = 0; i < AllProductLevel1.size(); i++) {
 
@@ -1453,7 +1504,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     productLevel2Adapter.notifyDataSetChanged();
                     ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
                     CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-
 
 
                     if (resultPrd.size() == 0) {
@@ -1593,14 +1643,19 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     customProgress.hideProgress();
                     customProgress.hideProgress();
                 }
-              //  Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
-              ArrayList<Product> resultProduct = new ArrayList<>();
-                resultProduct.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                for (int i = 0; i < resultProduct.size(); i++) {
-                    if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
-                        getImage(resultProduct.get(i).I);
-                      /*Call<String>    call = App.api.getImage(resultProduct.get(i).I);
+                //  Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
+
+               // for (int j = 0; j < productLevel2List.size(); j++) {
+
+                    ArrayList<Product> resultProduct = new ArrayList<>();
+                    resultProduct.addAll(Util.AllProduct);
+                   // int finalJ = j;
+                    CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
+                    for (int i = 0; i < resultProduct.size(); i++) {
+                        if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
+                            getImage(resultProduct.get(i).I);
+
+                        /*Call<String>    call = App.api.getImage(resultProduct.get(i).I);
                         Response<String> connect= null;
                         try {
                             connect = call.execute();
@@ -1617,10 +1672,11 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             productAdapter.notifyDataSetChanged();
                         } catch (Exception ignored) {
                         }*/
+                        }
                     }
 
+               // }
 
-                }
                 super.onPostExecute(o);
             }
 
@@ -1749,8 +1805,22 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
     private void getProduct(String task) {
+        String date=sharedPreferences.getString("date","");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date d;
+        try {
+             d = dateFormat.parse(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            d = Calendar.getInstance().getTime();
+            ;
+        }
+
+
+
         binding.progressbar.setVisibility(View.GONE);
-        error = "";
+        error ="";
         customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
 
         String yourFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
@@ -1758,7 +1828,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         deleteDirectory(file);
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, task);
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, task,dateFormat.format(d));
 
 
             call.enqueue(new Callback<String>() {
@@ -1784,6 +1854,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
                         showError(error);
                     } else {
+
+                        if (LauncherActivity.name.equals("ir.kitgroup.salein")){
+                            Product.deleteAll(Product.class);
+                            ProductGroupLevel1.deleteAll(ProductGroupLevel1.class);
+                            ProductGroupLevel2.deleteAll(ProductGroupLevel2.class);
+                        }
 
                         List<Product> products = iDs.getProductList();
 
@@ -1894,7 +1970,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                         sharedPreferences.edit().putBoolean("firstSync", true).apply();
 
-
                         getTypeOrder();
 
 
@@ -1953,9 +2028,33 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         Setting.saveInTx(settingsList);
                         maxSales = settingsList.get(0).MAX_SALE;
 
+                        String Update = settingsList.get(0).UPDATE_APP;
+                        String NewVersion = settingsList.get(0).VERSION_APP;
+                        String AppVersion = "";
+                        try {
+                            AppVersion = appVersion();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        if (Update.equals("3") && !AppVersion.equals(NewVersion)) {
+                            textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
+                            btnNo.setVisibility(View.GONE);
+                            dialogUpdate.setCancelable(false);
+                            dialogUpdate.show();
+                        } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
+                            textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
+                            btnNo.setVisibility(View.VISIBLE);
+                            dialogUpdate.setCancelable(true);
+                            dialogUpdate.show();
+                        }
+
 
                         sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
+                        Date date = Calendar.getInstance().getTime();
+                        @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
+                                new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+                        sharedPreferences.edit().putString("date",dateFormats.format(date)).apply();
                         getProducts();
 
                     }
@@ -2462,5 +2561,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     }*/
 
-
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        return pInfo.versionName;
+    }
 }

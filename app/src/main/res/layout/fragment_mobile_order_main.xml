@@ -102,6 +102,34 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/define_company"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/margin10">
+
+
+                            <com.github.siyamed.shapeimageview.CircularImageView
+                                android:id="@+id/iv_icon_company"
+                                android:layout_width="20dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_height="20dp"
+                                android:src="@drawable/salein"
+                                app:siBorderColor="#EEEEF1" />
+
+                            <TextView
+                               android:layout_centerHorizontal="true"
+                                android:layout_below="@+id/iv_icon_company"
+                                android:id="@+id/tv_company"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="@dimen/margin8"
+
+                                android:textColor="@color/purple_700"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+                        <RelativeLayout
                             android:id="@+id/layout_search_product"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -141,36 +169,7 @@
 
                         </RelativeLayout>
 
-                        <RelativeLayout
 
-                            android:id="@+id/define_company"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:padding="@dimen/margin10">
-
-
-                            <com.github.siyamed.shapeimageview.CircularImageView
-                                android:id="@+id/iv_icon_company"
-
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_gravity="center_vertical|right"
-                                android:src="@drawable/salein"
-                                app:siBorderColor="#EEEEF1" />
-
-                            <TextView
-                                android:id="@+id/tv_company"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="@dimen/margin8"
-                                android:layout_toLeftOf="@+id/iv_icon_company"
-                                android:textColor="@color/purple_700"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-                        </RelativeLayout>
 
                     </LinearLayout>
 

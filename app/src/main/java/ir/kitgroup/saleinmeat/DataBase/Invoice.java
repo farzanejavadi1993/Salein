@@ -128,9 +128,7 @@ public class Invoice extends SugarRecord {
     @Expose
     public Date INV_DATE;
 
-    @SerializedName("INV_DATE_PERSIAN")
-    @Expose
-    public String invDatePersian;
+
     @SerializedName("INV_DATE1")
     @Expose
     public String INV_DATE1;
@@ -171,12 +169,6 @@ public class Invoice extends SugarRecord {
     @SerializedName("INV_REFERENCE")
     @Expose
     public Object invReference;
-    @SerializedName("INV_DUE_DATE_PERSIAN")
-    @Expose
-    public String invDueDatePersian;
-
-
-
     @SerializedName("INV_STATUS_CONTROL")
     @Expose
     public Boolean invStatusControl;

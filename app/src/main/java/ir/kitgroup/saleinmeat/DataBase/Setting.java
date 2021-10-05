@@ -9,5 +9,6 @@ public class Setting extends SugarRecord {
     public String ORDER_TYPE_APP;
     public String SERVICE_TIME;
     public String UPDATE_APP;
+    public String VERSION_APP;
     public String SERVICE_DAY;
 }
