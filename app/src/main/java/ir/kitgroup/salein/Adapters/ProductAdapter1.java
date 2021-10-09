@@ -215,7 +215,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         break;
                 }
 
-            } else if (!product1.Url.equals("") && product1.Url!=null){
+            }
+            else if (!product1.Url.equals("") && product1.Url!=null){
 
                 holder.productImage1.setImageBitmap(null);
                 byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);

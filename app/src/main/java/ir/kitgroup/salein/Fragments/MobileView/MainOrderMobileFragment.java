@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -29,8 +28,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -80,17 +77,13 @@ import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
-import ir.kitgroup.salein.classes.PaginationScrollListener;
 import ir.kitgroup.salein.classes.RecyclerViewLoadMoreScroll;
 
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Invoice;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.OrderType;
 import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.DataBase.ProductGroupLevel1;
-import ir.kitgroup.salein.DataBase.ProductGroupLevel2;
 import ir.kitgroup.salein.DataBase.Setting;
 import ir.kitgroup.salein.DataBase.User;
 
@@ -118,7 +111,7 @@ import retrofit2.Response;
 
 import static java.lang.Math.min;
 
-public class MainOrderMobileFragment extends Fragment implements Filterable {
+public class MainOrderMobileFragment extends Fragment {
 
     //region Parameter
 
@@ -126,10 +119,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private SharedPreferences sharedPreferences;
 
-
     private String error;
 
     private CustomProgress customProgress;
+
     private String Ord_TYPE;
     private String Tbl_GUID;
     private String Inv_GUID;
@@ -140,31 +133,18 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
     private TextWatcher textWatcherProduct;
-    private final Object mLock = new Object();
-    private ArrayList<Product> mOriginalValues;
-    private ArrayList<Product> emptyListProduct;
-    private int emptyListProductFlag = 0;
 
 
-    private ArrayList<ProductGroupLevel1> AllProductLevel1;
     private ArrayList<ProductLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
 
 
-    private ArrayList<ProductGroupLevel2> AllProductLevel2;
     private ArrayList<ProductLevel2> productLevel2List;
     private ProductLevel2Adapter productLevel2Adapter;
 
 
     private ArrayList<Product> productList;
-    private ArrayList<Product> productListData;
-    private ArrayList<Product> allProductActive;
-
     private ProductAdapter1 productAdapter;
-    private boolean isLastPage;
-    private boolean isLoading;
-    private int currentPage;
-    private int totalPage;
 
 
     //region Variable Dialog Description
@@ -176,16 +156,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     //endregion Variable Dialog Description
 
 
-    //region Dialog
-    private Dialog dialog;
+    //region Dialog Sync
+    private Dialog dialogSync;
     private TextView textMessageDialog;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
-    //endregion Dialog
+    //endregion Dialog Sync
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
-
 
     private float sumPrice = 0;
     private float sumPurePrice = 0;
@@ -210,20 +189,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     private int counter;
 
-
-    private Boolean firstSync = false;
     private Boolean showView = false;
+
 
     private int imageLogo;
     private int imgIconDialog;
     private int imgBackground = 0;
     private String nameCompany;
 
-    private Integer time = 5;
     private String maxSales = "0";
-
-    private String task = "2";
-
 
     private Dialog dialogUpdate;
     private TextView textUpdate;
@@ -239,7 +213,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        //Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
 
         showView = false;
@@ -524,21 +497,17 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         Inv_GUID = "";
         Inv_GUID_ORG = "";
 
-        emptyListProduct = new ArrayList<>();
-        allProductActive = new ArrayList<>();
+
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
 
-        AllProductLevel1 = new ArrayList<>();
         productLevel1List = new ArrayList<>();
 
 
-        AllProductLevel2 = new ArrayList<>();
         productLevel2List = new ArrayList<>();
 
 
         productList = new ArrayList<>();
-        productListData = new ArrayList<>();
 
 
         if (productAdapter != null) {
@@ -547,9 +516,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             productLevel2Adapter.notifyDataSetChanged();
         }
 
-        isLastPage = false;
-        isLoading = false;
-        currentPage = 1;
 
         error = "";
 
@@ -583,14 +549,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region Create Order
 
         if (Inv_GUID.equals("")) {
-            sharedPreferences.edit().putString("Inv_GUID", UUID.randomUUID().toString()).apply();
-            // Inv_GUID = UUID.randomUUID().toString();
-            //  Invoice order = new Invoice();
-            // order.INV_UID = Inv_GUID;
-            // order.INV_SYNC = "@";
-            // Invoice.save(order);
-
-
+            Inv_GUID = UUID.randomUUID().toString();
+            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
         } else {
             binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
         }
@@ -600,27 +560,27 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         //region Cast Variable Dialog
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCancelable(false);
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
 
-        textMessageDialog = dialog.findViewById(R.id.tv_message);
-        ImageView ivIcon = dialog.findViewById(R.id.iv_icon);
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+        ImageView ivIcon = dialogSync.findViewById(R.id.iv_icon);
         ivIcon.setImageResource(imgIconDialog);
-        btnOkDialog = dialog.findViewById(R.id.btn_ok);
-        btnNoDialog = dialog.findViewById(R.id.btn_cancel);
-        btnNoDialog.setOnClickListener(v -> dialog.dismiss());
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            getActivity().finish();
+        });
 
 
         btnOkDialog.setOnClickListener(v -> {
-            dialog.dismiss();
-
-            //  getProduct(task);
+            dialogSync.dismiss();
 
         });
-
 
         //endregion Cast Variable Dialog
 
@@ -705,6 +665,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             }
         });
         //endregion Cast DialogDescription
+
 
         //region Action BtnRegister
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
@@ -794,13 +755,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-            isLastPage = false;
-            currentPage = 1;
             binding.orderTxtError.setText("");
             binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
             binding.edtSearchProduct.setText("");
             binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
-
 
 
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
@@ -808,11 +766,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
             if (resultPrdGrp1.size() > 0) {
                 productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
-            }
-            ArrayList<ProductGroupLevel2> resultPrdGrp2 = new ArrayList<>(AllProductLevel2);
-            CollectionUtils.filter(resultPrdGrp2, r -> r.Click);
-            if (resultPrdGrp2.size() > 0 && productLevel2List.size() > 0) {
-                productLevel2List.get(productLevel2List.indexOf(resultPrdGrp2.get(0))).Click = false;
             }
             //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
 
@@ -829,16 +782,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             productLevel1Adapter.notifyDataSetChanged();
 
 
-            getProductLevel2(GUID);
             //region Full ProductLevel2List Because This Item ProductLevel1 Is True
-
+            getProductLevel2(GUID);
             //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
         });
         //endregion Click Item ProductLevel1
 
-
         //endregion CONFIGURATION DATA PRODUCT_LEVEL1
-
 
         //region CONFIGURATION DATA PRODUCT_LEVEL_2
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
@@ -855,91 +805,36 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-            isLastPage = false;
-            currentPage = 1;
+
             binding.orderTxtError.setText("");
             binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
             binding.edtSearchProduct.setText("");
             binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
             //region UnClick Old Item
-            ArrayList<ProductGroupLevel2> resultProductGroupLevel2 = new ArrayList<>(AllProductLevel2);
+            ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
             CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
-
             if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
-
                 productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
             }
             //endregion UnClick Old Item
 
 
             //region Click New Item
-            ArrayList<ProductGroupLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
-            CollectionUtils.filter(resProductGroupLevel2, r -> r.getPRDLVLUID().equals(GUID));
+            ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
+            CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
 
             if (resProductGroupLevel2.size() > 0) {
-
                 productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
             }
             //endregion Click New Item
 
             productLevel2Adapter.notifyDataSetChanged();
 
+
             //region Full ProductList Because This Item ProductLevel1 Is True
-            ArrayList<Product> rstProduct = new ArrayList<>(Util.AllProduct);
-            CollectionUtils.filter(rstProduct, r -> r.getPRDLVLUID2().equals(GUID) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-            if (rstProduct.size() == 0) {
-                ArrayList<ProductGroupLevel1> rstProductGroupLevel1s = new ArrayList<>();
-                ArrayList<ProductGroupLevel2> rstProductGroupLevel2s = new ArrayList<>(AllProductLevel2);
-                CollectionUtils.filter(rstProductGroupLevel2s, r -> r.getPRDLVLUID().equals(GUID));
 
-                if (rstProductGroupLevel2s.size() > 0) {
-                    rstProductGroupLevel1s.addAll(AllProductLevel1);
-                    CollectionUtils.filter(rstProductGroupLevel1s, r -> r.getPRDLVLUID().equals(rstProductGroupLevel2s.get(0).getPRDLVLPARENTUID()));
-
-                }
-                if (rstProductGroupLevel1s.size() > 0) {
-                    binding.orderTxtError.setText("هیچ نوع از " + rstProductGroupLevel2s.get(0).getPRDLVLNAME() + " " + "در دسته " + rstProductGroupLevel1s.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
-                }
-            }
-
-            productList.clear();
-            productListData.clear();
-
-            ArrayList<Product> listPrd = new ArrayList<>(rstProduct);
-            CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-
-            if (listPrd.size() > 0) {
-
-                for (int i = 0; i < listPrd.size(); i++) {
-
-                    int position = listPrd.get(i).KEY - 1;//new position
-                    int index = rstProduct.indexOf(listPrd.get(i));//old position
-
-                    if (rstProduct.size() > position) {
-
-                        Product itemProduct = rstProduct.get(position);
-
-                        if (index != position) {
-
-                            rstProduct.set(position, rstProduct.get(rstProduct.indexOf(listPrd.get(i))));
-                            rstProduct.set(index, itemProduct);
-                        }
-                    }
-                }
-            }
-
-            productListData.addAll(rstProduct);
-
-            for (int i = 0; i < 18; i++) {
-
-                if (rstProduct.size() > i) {
-
-                    productList.add(rstProduct.get(i));
-                }
-            }
-
-            productAdapter.notifyDataSetChanged();
+            getSettingPrice(GUID);
             //endregion Full ProductList Because This Item ProductLevel1 Is True
         });
 
@@ -959,7 +854,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                searchProduct(s.toString());
+                // searchProduct(s.toString());
             }
 
             @Override
@@ -975,44 +870,20 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
-        RecyclerViewLoadMoreScroll scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
-        binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-
-            @Override
-            protected void loadMoreItems() {
-
-                currentPage++;
-                loadMore();
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-        });
-
-
-        binding.orderRecyclerViewProduct.addOnScrollListener(scrollListener);
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
+
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetails.size() > 0) {
-                //  binding.itemInvoiceDetail.setBadgeText(String.valueOf(invDetails.size()));
+
                 counter = invDetails.size();
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
                 if (App.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
-                // binding.itemInvoiceDetail.setBadgeText(null);
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
         });
-
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
@@ -1069,186 +940,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         });
 
         //endregion CONFIGURATION DATA PRODUCT
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* //region Delete Invoice And InvoiceDetail is Not Necessary
-        for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
-            Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
-            if (tb == null || tb.SV == null || !tb.SV) {
-                Invoice.deleteInTx(invoice);
-                for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
-
-                    InvoiceDetail.deleteInTx(invoiceDetail);
-                }
-            }
-        }
-        //endregion Delete Invoice And InvoiceDetail is Not Necessary
-        //region Set Amount 0.0 For Products
-        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-        CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
-        if (prdResult.size() > 0) {
-            for (int i = 0; i < prdResult.size(); i++) {
-                Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
-            }
-        }
-        //endregion Set Amount 0.0 For Products
-        //region Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
-        List<Invoice> invoicese = Select.from(Invoice.class).list();
-        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT == null);
-        if (invoicese.size() > 0) {
-            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
-            CollectionUtils.filter(invoiceDetails, i -> i.INV_UID.equals(invoicese.get(0).INV_UID));
-            for (int i = 0; i < invoiceDetails.size(); i++) {
-                InvoiceDetail.delete(invoiceDetails.get(i));
-            }
-            for (int i = 0; i < invoicese.size(); i++) {
-                Invoice.delete(invoicese.get(i));
-            }
-        }
-        //endregion Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder*/
-
-
         return binding.getRoot();
     }
 
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                if (emptyListProductFlag == 0) {
-                    emptyListProductFlag = 1;
-                    emptyListProduct.clear();
-                    emptyListProduct.addAll(productListData);
-                }
-
-                FilterResults filterResults = new FilterResults();
-                ArrayList<Product> tempList = new ArrayList<>();
-
-                if (mOriginalValues == null) {
-                    synchronized (mLock) {
-
-                        mOriginalValues = new ArrayList<>(allProductActive);
-                    }
-                }
-
-                if (!constraint.toString().isEmpty()) {
-
-                    String[] tempSearch = constraint.toString().trim().split("");
-
-
-                    int searchSize = tempSearch.length;
-                  /*  for (String searchItem : tempSearch) {
-                       ArrayList<Product> result = new ArrayList<>(mOriginalValues);
-                        CollectionUtils.filter(result, r -> r.N.contains(searchItem));
-                        if (result.size() > 0) {
-                            counter++;
-                        }
-
-                        if (counter == searchSize)
-                            tempList.clear();
-                        tempList.addAll(result);
-                    }*/
-
-                    for (Product item : mOriginalValues) {
-
-                        int counter = 0;
-                        for (String searchItem : tempSearch) {
-
-                            if (item.N.contains(searchItem)) {
-                                counter++;
-                            }
-                        }
-
-                        if (counter == searchSize)
-                            tempList.add(item);
-                    }
-
-                    filterResults.values = tempList;
-                    filterResults.count = tempList.size();
-
-
-                } else {
-                    synchronized (mLock) {
-                        emptyListProductFlag = 0;
-                        productList.clear();
-                        productListData.clear();
-                        productListData.addAll(emptyListProduct);
-                        emptyListProduct.clear();
-                        tempList = new ArrayList<>();
-                        isLastPage = false;
-                        currentPage = 1;
-                        for (int i = 0; i < productListData.size() - 1; i++) {
-
-                            tempList.add(productListData.get(i));
-
-                        }
-
-                    }
-
-                }
-                filterResults.values = tempList;
-                filterResults.count = tempList.size();
-
-                return filterResults;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence contraint, FilterResults results) {
-
-
-                ArrayList<Product> tempResult = (ArrayList<Product>) results.values;
-                productList.clear();
-
-                if (tempResult != null) {
-                    productListData.clear();
-                    ArrayList<Product> listPrd = new ArrayList<>(tempResult);
-                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                    if (listPrd.size() > 0)
-                        for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).KEY - 1;//new position
-                            int index = tempResult.indexOf(listPrd.get(i));//old position
-                            if (tempResult.size() > position) {
-                                Product itemProduct = tempResult.get(position);
-                                if (index != position) {
-                                    tempResult.set(position, tempResult.get(tempResult.indexOf(listPrd.get(i))));
-                                    tempResult.set(index, itemProduct);
-
-                                }
-                            }
-                        }
-
-
-                    productListData.addAll(tempResult);
-                }
-                for (int i = 0; i < 18; i++) {
-                    assert tempResult != null;
-                    if (tempResult.size() > i) {
-                        productList.add(tempResult.get(i));
-
-                    }
-                }
-
-
-                productAdapter.notifyDataSetChanged();
-
-            }
-        };
-    }
 
     @Override
     public void onDestroy() {
@@ -1257,384 +951,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         productList.clear();
         descriptionList.clear();
         productLevel1List.clear();
-        productListData.clear();
-
         productAdapter = null;
     }
 
-
-    @SuppressLint("StaticFieldLeak")
-    private void getProducts() {
-
-        new AsyncTask() {
-
-
-            @Override
-            protected void onPreExecute() {
-
-
-                super.onPreExecute();
-            }
-
-            @SuppressLint({"SetTextI18n", "StaticFieldLeak"})
-            @Override
-            protected void onPostExecute(Object o) {
-
-
-                if (Util.AllProduct.size() == 0) {
-                    Util.AllProduct.addAll(Select.from(Product.class).list());
-                    ArrayList<Product> prdList = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(prdList, p -> p.N.contains("توزیع"));
-                    if (prdList.size() > 0)
-                        Util.TransportId = prdList.get(0).I;
-
-                    CollectionUtils.filter(Util.AllProduct, p -> !p.N.contains("توزیع"));
-                }
-
-                if (AllProductLevel1.size() == 0) {
-                    AllProductLevel1.addAll(Select.from(ProductGroupLevel1.class).list());
-                }
-
-                if (AllProductLevel2.size() == 0) {
-                    AllProductLevel2.addAll(Select.from(ProductGroupLevel2.class).list());
-                }
-
-                productLevel1List.clear();
-                for (int i = 0; i < AllProductLevel1.size(); i++) {
-
-                    ArrayList<ProductGroupLevel2> resultPrdGrp2 = new ArrayList<>(AllProductLevel2);
-                    int finalI = i;
-                    CollectionUtils.filter(resultPrdGrp2, r -> r.getPRDLVLPARENTUID().equals(AllProductLevel1.get(finalI).getPRDLVLUID()));
-
-
-                    if (resultPrdGrp2.size() > 0) {
-
-                        ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
-
-
-                        for (int j = 0; j < resultPrdGrp2.size(); j++) {
-                            ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
-                            int finalJ = j;
-                            CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2.get(finalJ).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
-                            if (tempPrd.size() > 0)
-
-                                tempPrdLvl2.add(resultPrdGrp2.get(j));
-                        }
-
-
-                        if (tempPrdLvl2.size() > 0) {
-                           // productLevel1List.add(AllProductLevel1.get(i));
-                        }
-
-                    }
-
-
-                }
-                if (productLevel1List.size() <= 1) {
-                    binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE
-                    );
-                }
-                productLevel1Adapter.notifyDataSetChanged();
-                ArrayList<ProductLevel1> rst1 = new ArrayList<>(productLevel1List);
-                CollectionUtils.filter(rst1, r -> r.Click);
-                if (rst1.size() > 0) {
-                    for (int i = 0; i < rst1.size(); i++) {
-                        productLevel1List.get(productLevel1List.indexOf(rst1.get(i))).Click = false;
-                    }
-                }
-                if (productLevel1List.size() > 0)
-                    productLevel1List.get(0).Click = true;
-
-                //region full ProductLevel2List because First Item ProductLevel1 Is True
-
-
-                ArrayList<ProductGroupLevel2> resultPrdGrp2 = new ArrayList<>(AllProductLevel2);
-                if (productLevel1List.size() > 0)
-                    CollectionUtils.filter(resultPrdGrp2, r -> r.getPRDLVLPARENTUID().equals(productLevel1List.get(0).getI()));
-                productLevel2List.clear();
-
-
-                if (resultPrdGrp2.size() > 0) {
-                    for (int i = 0; i < resultPrdGrp2.size(); i++) {
-                        ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                        int finalI = i;
-
-                        CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(resultPrdGrp2.get(finalI).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                        if (resultPrd.size() > 0) {
-                            productLevel2List.add(resultPrdGrp2.get(i));
-                        }
-                    }
-
-
-                    ArrayList<ProductGroupLevel2> list = new ArrayList<>();
-                    list.addAll(productLevel2List);
-                    CollectionUtils.filter(list, l -> l.TKN != 0);
-                    if (list.size() > 0)
-                        for (int i = 0; i < list.size(); i++) {
-                            int position = list.get(i).TKN - 1;//new position
-                            int index = productLevel2List.indexOf(list.get(i));//old position
-                            if (productLevel2List.size() > position) {
-                                ProductGroupLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
-
-                                if (index != position) {
-                                    productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
-                                    productLevel2List.set(index, itemProductGroupLevel2);
-
-                                }
-                            }
-
-                        }
-                    ArrayList<ProductGroupLevel2> rst2 = new ArrayList<>(productLevel2List);
-                    CollectionUtils.filter(rst2, r -> r.Click);
-                    if (rst2.size() > 0) {
-                        for (int i = 0; i < rst2.size(); i++) {
-                            productLevel2List.get(productLevel2List.indexOf(rst2.get(i))).Click = false;
-                        }
-                    }
-                    if (productLevel2List.size() > 0)
-                        productLevel2List.get(0).Click = true;
-                    productLevel2Adapter.notifyDataSetChanged();
-                    ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(resultPrd, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-
-
-                    if (resultPrd.size() == 0) {
-
-                        ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                        if (productLevel2List.size() > 0)
-                            CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
-
-                        if (rst.size() > 0) {
-                            if (productLevel2List.size() > 0)
-                                binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
-
-                        }
-                    }
-
-
-                    //change by me
-                    // AllProductLevel2.clear();
-                    //AllProductLevel2.addAll(productLevel2List);
-
-
-                    ArrayList<Product> resultPrdAc = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(resultPrdAc, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                    allProductActive.clear();
-                    allProductActive.addAll(resultPrdAc);
-                    productListData.clear();
-
-                    ArrayList<Product> listPrd = new ArrayList<>(resultPrd);
-                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                    if (listPrd.size() > 0)
-                        for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).KEY - 1;//new position
-                            int index = resultPrd.indexOf(listPrd.get(i));//old position
-                            if (resultPrd.size() > position) {
-                                Product itemProduct = resultPrd.get(position);
-                                if (index != position) {
-                                    resultPrd.set(position, resultPrd.get(resultPrd.indexOf(listPrd.get(i))));
-                                    resultPrd.set(index, itemProduct);
-
-                                }
-                            }
-                        }
-
-                    productListData.addAll(resultPrd);
-
-
-                    productList.clear();
-                    for (int i = 0; i < 18; i++) {
-                        if (resultPrd.size() > i) {
-                            productList.add(resultPrd.get(i));
-
-                        }
-                    }
-
-
-                    // productList.addAll(resultPrd);
-
-                    //edit Order
-                    if (!Inv_GUID_ORG.equals("")) {
-                        ArrayList<Product> result = new ArrayList<>(Util.AllProduct);
-                        CollectionUtils.filter(result, R -> R.getAmount() > 0);
-
-                        if (result.size() > 0) {
-                            Util.AllProduct.get(Util.AllProduct.indexOf(result.get(0))).AMOUNT = 0.0;
-                        }
-
-
-                        Invoice ord = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-                        List<InvoiceDetail> invoicedetails = Select.from(InvoiceDetail.class).where("INVUID = '" + ord.INV_UID + "'").list();
-                        if (invoicedetails.size() > 0) {
-                            // binding.itemInvoiceDetail.setBadgeText(String.valueOf(invoicedetails.size()));
-
-                            for (int i = 0; i < invoicedetails.size(); i++) {
-                                if (invoicedetails.get(i).INV_DET_DESCRIBTION != null && invoicedetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-
-                                    invoicedetails.remove(invoicedetails.get(i));
-
-                                }
-                            }
-                            counter = invoicedetails.size();
-                            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-                        } else
-                            // binding.itemInvoiceDetail.setBadgeText(null);
-
-                            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
-
-
-                        for (int i = 0; i < invoicedetails.size(); i++) {
-
-                            ArrayList<Product> resultProducts = new ArrayList<>(Util.AllProduct);
-                            int finalI = i;
-
-                            //  List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                            CollectionUtils.filter(resultProducts, r -> r.getPRDUID().equals(invoicedetails.get(finalI).PRD_UID) && r.STS);
-                            if (resultProducts.size() > 0) {
-                                Double amount = (Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).getAmount() + invoicedetails.get(finalI).INV_DET_QUANTITY);
-                                Util.AllProduct.get(Util.AllProduct.indexOf(resultProducts.get(0))).setAmount(amount);
-                                // productAdapter.notifyItemChanged(productList.indexOf(resultProducts.get(0)));
-
-
-                                if (App.mode == 1)
-                                    binding.btnRegisterOrder.setVisibility(View.VISIBLE);
-
-
-                            }
-                        }
-
-
-                    }
-                    productAdapter.notifyDataSetChanged();
-
-
-                } else {
-
-                    ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                    CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel1List.get(0).getI()));
-
-                    if (rst.size() > 0) {
-                        binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
-
-                    }
-
-
-                    productList.clear();
-                    productAdapter.notifyDataSetChanged();
-                    productLevel2List.clear();
-                    productLevel2Adapter.notifyDataSetChanged();
-                }
-                if (productLevel1List.size() <= 1) {
-                    binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-                }
-
-                //endregion full ProductLevel2List because First Item ProductLevel1 Is True
-
-                if (customProgress.isShow) {
-                    customProgress.hideProgress();
-                    customProgress.hideProgress();
-                }
-                //  Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
-
-                // for (int j = 0; j < productLevel2List.size(); j++) {
-
-                ArrayList<Product> resultProduct = new ArrayList<>();
-                resultProduct.addAll(Util.AllProduct);
-                // int finalJ = j;
-                CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                for (int i = 0; i < resultProduct.size(); i++) {
-                    if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
-                        getImage(resultProduct.get(i).I);
-
-                        /*Call<String>    call = App.api.getImage(resultProduct.get(i).I);
-                        Response<String> connect= null;
-                        try {
-                            connect = call.execute();
-                            // count+=connect.body().length();
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            Product product = Select.from(Product.class)
-                                    .where(" I  = '" + resultProduct.get(i).I + "'").first();
-                            product.Url = connect.body().replace("data:image/png;base64,", "");
-                            Product.save(product);
-                            productAdapter.notifyDataSetChanged();
-                        } catch (Exception ignored) {
-                        }*/
-                    }
-                }
-
-                // }
-
-                super.onPostExecute(o);
-            }
-
-
-            @Override
-            protected Object doInBackground(Object[] params) {
-
-                return 0;
-            }
-        }.execute(0);
-
-
-    }
-
-    private int count;
-
-    private void loadMore() {
-
-
-        int pageSize = 18;
-        isLoading = true;
-//        if (productListData.size() != 0) ;
-        final ArrayList<Product> items = new ArrayList<>();
-        totalPage = (productListData.size() + pageSize - 1) / pageSize;
-
-        if (totalPage > 1) { ///////////////////
-
-            int start = ((currentPage * pageSize) - (pageSize - 1)) - 1;
-            int end = (min((start + 1) + pageSize - 1, productListData.size())) - 1;
-
-            new Handler().postDelayed(() -> {
-                try {
-
-                    items.addAll(productListData.subList(start, end));
-                    if (currentPage != 1) productAdapter.removeLoadingView();
-                    productList.addAll(items);
-
-
-                    productAdapter.notifyDataSetChanged();
-
-                    // check weather is last page or not
-                    if (currentPage < totalPage) {
-                        productAdapter.addLoadingView();
-                    } else {
-                        isLastPage = true;
-                    }
-
-                    isLoading = false;
-                } catch (Exception e) {
-
-                    Toast.makeText(getActivity(), "لطفا صبر کنید...", Toast.LENGTH_SHORT).show();
-                }
-
-            }, 500);
-        }
-    }
-
-
-    private void searchProduct(String search) {
-
-
-        if (binding.orderRecyclerViewProduct.getAdapter() != null) {
-            getFilter().filter(search);
-        }
-
-    }
 
     private void getDescription(String userName, String pass, String id) {
 
@@ -1711,7 +1030,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     ModelProductLevel1 iDs = gson.fromJson(response.body(), typeModelProductLevel1);
 
                     productLevel1List.addAll(iDs.getProductLevel1());
+                    if (productLevel1List.size() == 1)
+                        binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                     productLevel1Adapter.notifyDataSetChanged();
+
+
+                    if (productLevel1List.size() > 0) {
+                        productLevel1List.get(0).Click = true;
+                        getProductLevel2(productLevel1List.get(0).getI());
+                    }
 
 
                 }
@@ -1739,45 +1066,27 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
             call.enqueue(new Callback<String>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     Gson gson = new Gson();
-                    Type typeModelProduct2= new TypeToken<ModelProductLevel2>() {
+                    Type typeModelProduct2 = new TypeToken<ModelProductLevel2>() {
                     }.getType();
                     ModelProductLevel2 iDs = gson.fromJson(response.body(), typeModelProduct2);
 
+                    productLevel2List.clear();
                     productLevel2List.addAll(iDs.getProductLevel2());
-                    productLevel2Adapter.notifyDataSetChanged();
-
-                    ArrayList<ProductGroupLevel2> resultPrdGrp2_ = new ArrayList<>(AllProductLevel2);
-                    CollectionUtils.filter(resultPrdGrp2_, r -> r.getPRDLVLPARENTUID().equals(GuidPrdLvl1));
-                    if (resultPrdGrp2_.size() > 0) {
 
 
-                        ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
-
-
-                        for (int i = 0; i < resultPrdGrp2_.size(); i++) {
-                            int finalI = i;
-                            ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
-                            CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2_.get(finalI).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
-                            if (tempPrd.size() > 0)
-
-                                tempPrdLvl2.add(resultPrdGrp2_.get(i));
-                        }
-
-
-                        productLevel2List.clear();
-                        productLevel2List.addAll(tempPrdLvl2);
-
-                        ArrayList<ProductGroupLevel2> list = new ArrayList<>(productLevel2List);
-                        CollectionUtils.filter(list, l -> l.TKN != 0);
+                    if (productLevel2List.size() > 0) {
+                        ArrayList<ProductLevel2> list = new ArrayList<>(productLevel2List);
+                        CollectionUtils.filter(list, l -> l.getTkn() != 0);
                         if (list.size() > 0)
                             for (int i = 0; i < list.size(); i++) {
-                                int position = list.get(i).TKN - 1;//new position
+                                int position = list.get(i).getTkn() - 1;//new position
                                 int index = productLevel2List.indexOf(list.get(i));//old position
                                 if (productLevel2List.size() > position) {
-                                    ProductGroupLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
+                                    ProductLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
                                     if (index != position) {
                                         productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
                                         productLevel2List.set(index, itemProductGroupLevel2);
@@ -1787,71 +1096,23 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                             }
 
-
-                        if (tempPrdLvl2.size() > 0) {
+                        if (productLevel2List.size() > 0) {
                             productLevel2List.get(0).Click = true;
-
                         }
 
                         productLevel2Adapter.notifyDataSetChanged();
 
 
                         //region Full ProductList Because First Item ProductLevel2 Is True
-                        ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
-                        CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-
-                        if (resultPrd_.size() == 0) {
-                            ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                            CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
-
-                            if (rst.size() > 0) {
-                                binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
-
-                            }
-                        }
-
-                        productList.clear();
-                        productListData.clear();
-
-
-                        ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                        CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                        if (listPrd.size() > 0)
-                            for (int i = 0; i < listPrd.size(); i++) {
-                                int position = listPrd.get(i).KEY - 1;//new position
-                                int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                                if (resultPrd_.size() > position) {
-                                    Product itemProduct = resultPrd_.get(position);
-                                    if (index != position) {
-                                        resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                        resultPrd_.set(index, itemProduct);
-
-                                    }
-                                }
-                            }
-
-                        productListData.addAll(resultPrd_);
-
-                        for (int i = 0; i < 18; i++) {
-                            if (resultPrd_.size() > i) {
-                                productList.add(resultPrd_.get(i));
-
-                            }
-
-                        }
-
-
-                        productAdapter.notifyDataSetChanged();
+                        getSettingPrice(productLevel2List.get(0).getI());
                         //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-                    }
-                    else {
-                        ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                        CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(GuidPrdLvl1));
+                    } else {
+                        ArrayList<ProductLevel2> rst = new ArrayList<>(productLevel2List);
+                        CollectionUtils.filter(rst, r -> r.getI().equals(GuidPrdLvl1));
 
                         if (rst.size() > 0) {
-                            binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
-
+                            binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته" + rst.get(0).getN() + " وجود ندارد.");
                         }
 
                         productList.clear();
@@ -1860,6 +1121,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         productLevel2Adapter.notifyDataSetChanged();
                     }
 
+                    productLevel2Adapter.notifyDataSetChanged();
+
 
                 }
 
@@ -1879,19 +1142,52 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
     }
 
-
-    private void getProduct() {
+    private void getProduct(String GuidPrdLvl2) {
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2a75bb5b-7e7a-eb11-999b-000c29d9b371");
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, GuidPrdLvl2);
 
 
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelProduct>() {
+                    Type typeModelProduct = new TypeToken<ModelProduct>() {
                     }.getType();
+                    ModelProduct iDs = gson.fromJson(response.body(), typeModelProduct);
+                    Util.AllProduct.clear();
+                    Util.AllProduct.addAll(iDs.getProductList());
+                    ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
+                    /*CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals() && r.getPRDPRICEPERUNIT1() > 0 && r.STS);*/
+
+
+                    productList.clear();
+
+                    ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
+                    if (listPrd.size() > 0)
+                        for (int i = 0; i < listPrd.size(); i++) {
+                            int position = listPrd.get(i).KEY - 1;//new position
+                            int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                            if (resultPrd_.size() > position) {
+                                Product itemProduct = resultPrd_.get(position);
+                                if (index != position) {
+                                    resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                    resultPrd_.set(index, itemProduct);
+
+                                }
+                            }
+                        }
+
+
+                    productList.addAll(Util.AllProduct);
+
+                    productAdapter.notifyDataSetChanged();
+
+                    for (int i=0;i<productList.size();i++){
+                        getImage(productList.get(i).I);
+                    }
+
 
 
                 }
@@ -1912,196 +1208,48 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         }
     }
 
-//    private void getProduct(String productLevel2Uid) {
-//        String date=sharedPreferences.getString("date","");
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        Date d;
-//        try {
-//             d = dateFormat.parse(date);
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            d = Calendar.getInstance().getTime();;
-//        }
-//
-//
-//
-//        binding.progressbar.setVisibility(View.GONE);
-//        error ="";
-//        customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
-//
-//        String yourFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
-//        File file = new File(yourFilePath);
-//        deleteDirectory(file);
-//        try {
-//
-//            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, task,dateFormat.format(d));
-//
-//
-//            call.enqueue(new Callback<String>() {
-//                @Override
-//                public void onResponse(Call<String> call, Response<String> response) {
-//                    Gson gson = new Gson();
-//                    Type typeIDs = new TypeToken<ModelProduct>() {
-//                    }.getType();
-//
-//
-//                    ModelProduct iDs;
-//                    try {
-//                        iDs = gson.fromJson(response.body(), typeIDs);
-//                    } catch (Exception ignore) {
-//
-//                        error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
-//                        showError(error);
-//                        return;
-//                    }
-//
-//
-//                    if (iDs == null) {
-//                        error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
-//                        showError(error);
-//                    } else {
-//
-//                        if (LauncherActivity.name.equals("ir.kitgroup.salein")){
-//                            Product.deleteAll(Product.class);
-//                            ProductGroupLevel1.deleteAll(ProductGroupLevel1.class);
-//                            ProductGroupLevel2.deleteAll(ProductGroupLevel2.class);
-//                        }
-//
-//                        List<Product> products = iDs.getProductList();
-//
-//
-//                        if (!firstSync)
-//                            Product.saveInTx(products);
-//                        else
-//                            for (Product product : products) {
-//
-//                                product.update();
-//                            }
-//
-//                        if (products.size() > 0) {
-//                            Util.AllProduct.clear();
-//                        }
-//
-//
-//                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
-//
-//                        if (!firstSync)
-//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-//                        else
-//                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
-//                                productGroupLevel2.update();
-//                            }
-//
-//                        if (productGroupLevel2s.size() > 0) {
-//                            AllProductLevel2.clear();
-//                        }
-//
-//
-//                        if (!firstSync)
-//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-//                        else
-//                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
-//                                productGroupLevel2.update();
-//                            }
-//
-//                        if (productGroupLevel2s.size() > 0) {
-//                            AllProductLevel2.clear();
-//                        }
-//
-//
-//
-//
-//                        /* for (int i = 0; i < products.size(); i++) {
-//                            Product product = new Product();
-//                            product.I = products.get(i).I;
-//                            product.STS = products.get(i).STS;
-//                            product.PID2 = products.get(i).PID2;
-//                            product.PID1 = products.get(i).PID1;
-//                            product.N = products.get(i).N;
-//                            product.KEY = products.get(i).KEY;
-//                            product.DES = products.get(i).DES;
-//                            product.NIP = products.get(i).NIP;
-//                            product.PU1 = products.get(i).PU1;
-//                            product.PU2 = products.get(i).PU2;
-//                            product.PU3 = products.get(i).PU3;
-//                            product.PU4 = products.get(i).PU4;
-//                            product.PU5 = products.get(i).PU5;
-//                            product.PERC_DIS = products.get(i).PERC_DIS;
-//
-//                            if (!products.get(i).IMG.equals("0"))
-//                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, getActivity());
-//
-//                            if (firstSync) {
-//                                Product.saveInTx(products);
-//
-//                            }
-//                            else {
-//                                product.update();
-//                            }
-//
-//                        }*/
-//                        /*    CollectionUtils.filter(products1, p -> !p.IMG.equals("0"));
-//                        if (products1.size() > 0) {
-//                            for (int i = 0; i < products1.size(); i++) {
-//                                SaveImageToStorage(StringToImage(products1.get(i).IMG), products1.get(i).I, Objects.requireNonNull(getActivity()));
-//                            }
-//                        }
-//*/
-//                        /*   AllProductLevel1.clear();
-//                        if (iDs.getProductLevel1List() != null)
-//                            AllProductLevel1.addAll(iDs.getProductLevel1List());
-//
-//                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
-//
-//                        if (!firstSync)
-//                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
-//                        else
-//                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
-//                                PrdGroupLevel1.update();
-//                            }
-//
-//
-//                            if ()*/
-//                        /*            AllProductLevel2.clear();
-//                        if (iDs.getProductLevel2List() != null)
-//                            AllProductLevel2.addAll(iDs.getProductLevel2List());
-//                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
-//                        if (!firstSync)
-//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-//                        else
-//                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
-//                                prdGroupLevel2.update();
-//                            }*/
-//
-//
-//                        sharedPreferences.edit().putBoolean("firstSync", true).apply();
-//
-//                        getTypeOrder();
-//
-//
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<String> call, Throwable t) {
-//                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
-//                    showError(error);
-//
-//                }
-//            });
-//
-//
-//        } catch (NetworkOnMainThreadException ex) {
-//
-//            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
-//            showError(error);
-//        }
-//
-//
-//    }
 
+    private void getSettingPrice(String GUID) {
+
+
+        try {
+
+            Call<String> call = App.api.getSetting(userName, passWord);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Gson gson = new Gson();
+                    Type typeIDs = new TypeToken<ModelSetting>() {
+                    }.getType();
+                    ModelSetting iDs = gson.fromJson(response.body(), typeIDs);
+
+                    sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
+                    getProduct(GUID);
+
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
+                    showError(error);
+
+
+                }
+            });
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+
+            error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
+            showError(error);
+        }
+
+
+    }
 
     private void getSetting() {
 
@@ -2163,7 +1311,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                                 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
                         sharedPreferences.edit().putString("date", dateFormats.format(date)).apply();
-                        getProducts();
+
 
                     }
 
@@ -2248,53 +1396,17 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
     }
 
-    private Bitmap StringToImage(String image) {
-        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-    }
-
     private void showError(String error) {
 
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");
-        dialog.dismiss();
-        dialog.show();
+        dialogSync.dismiss();
+        dialogSync.show();
         customProgress.hideProgress();
 
     }
 
-    private void SaveImageToStorage(String bitmapImage, String ID, Context context) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
-
-        File destination = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "SaleIn");
-        File file = new File(destination, ID.toUpperCase());
-
-        FileOutputStream fo = null;
-        try {
-            if (!destination.exists()) {
-                destination.mkdirs();
-            }
-            if (file.exists()) {
-                file.delete();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-                fo = new FileOutputStream(file);
-                fo.write(bytes.toByteArray());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fo != null)
-                    fo.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private static class JsonObjectAccount {
 
@@ -2466,53 +1578,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void deleteDirectory(File file) {
-        if (file.isDirectory()) {
-
-
-            if (Objects.requireNonNull(file.list()).length == 0) {
-
-                file.delete();
-
-
-            } else {
-                String[] files = file.list();
-
-                assert files != null;
-                for (String temp : files) {
-                    File fileDelete = new File(file, temp);
-                    deleteDirectory(fileDelete);
-                }
-
-                if (Objects.requireNonNull(file.list()).length == 0) {
-                    file.delete();
-                }
-            }
-
-
-        } else {
-            file.delete();
-        }
-    }
-
-    private void isAllPermissionGranted() {
-
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED
-        ) {
-            //   getProduct(task);
-
-
-        } else {
-
-            requestPermissions(
-                    new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    }, 88);
-        }
-    }
-
-
     public void setHomeBottomBar() {
         binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
     }
@@ -2541,6 +1606,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             long diff = dateNow.getTime() - oldDate.getTime();
             long seconds = diff / 1000;
             long minutes = seconds / 60;
+            Integer time = 0;
             if (time != 0 && minutes > time) {
                 customProgress.hideProgress();
                 productList.clear();
@@ -2615,59 +1681,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
             });
         } catch (NetworkOnMainThreadException ex) {
-            //Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(),
-            // Toast.LENGTH_SHORT).show();
+
         }
     }
 
-
-    /*private void getImage(String Prd_GUID) {
-
-        try {
-
-            ArrayList<Product> arrayList = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(arrayList, a -> a.I.equals(Prd_GUID));
-            if (arrayList.size() > 0 && arrayList.get(0).Url == null) {
-
-                Call<String> call = App.api.getImage(Prd_GUID);
-
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-
-                        CollectionUtils.filter(arrayList, a -> a.I.equals(Prd_GUID));
-                        if (arrayList.size() > 0)
-
-                            AllProduct.get(AllProduct.indexOf(arrayList.get(0))).Url = response.body();
-
-                         SaveImageToStorage(response.body(), arrayList.get(0).I, getActivity());
-
-                        productAdapter.notifyDataSetChanged();
-
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + t.toString(), Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-
-            }
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            //  Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" + ex.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }*/
 
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
