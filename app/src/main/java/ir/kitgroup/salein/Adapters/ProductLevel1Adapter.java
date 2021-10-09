@@ -23,11 +23,12 @@ import ir.kitgroup.salein.DataBase.ProductGroupLevel1;
 
 
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.models.ProductLevel1;
 
 
 public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adapter.viewHolder> {
 
-    private final List<ProductGroupLevel1> productGroupLevel1s ;
+    private final List<ProductLevel1> productGroupLevel1s ;
     private final Context context;
     private  int fontSize=0;
 
@@ -42,7 +43,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     }
 
 
-    public ProductLevel1Adapter(Context context, List<ProductGroupLevel1> groupList) {
+    public ProductLevel1Adapter(Context context, List<ProductLevel1> groupList) {
         this.context = context;
         this.productGroupLevel1s = groupList;
 
@@ -71,9 +72,9 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
-        final ProductGroupLevel1 productGroupLevel1 = productGroupLevel1s.get(position);
+        final ProductLevel1 productGroupLevel1 = productGroupLevel1s.get(position);
 
-        holder.groupName.setText(productGroupLevel1.getPRDLVLNAME());
+        holder.groupName.setText(productGroupLevel1.getN());
 
 
 
@@ -91,7 +92,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
         }
 
 
-        holder.itemView.setOnClickListener(view -> clickItem.onRowClick(productGroupLevel1s.get(position).getPRDLVLUID()));
+        holder.itemView.setOnClickListener(view -> clickItem.onRowClick(productGroupLevel1s.get(position).getI()));
 
 
     }

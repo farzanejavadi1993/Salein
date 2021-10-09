@@ -61,7 +61,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,7 +78,6 @@ import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.PaginationScrollListener;
@@ -102,6 +100,9 @@ import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelDesc;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.models.ModelProduct;
+import ir.kitgroup.salein.models.ModelProductLevel1;
+import ir.kitgroup.salein.models.ModelProductLevel2;
+import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ModelSetting;
 import ir.kitgroup.salein.models.ModelTypeOrder;
 import ir.kitgroup.salein.R;
@@ -110,6 +111,7 @@ import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
+import ir.kitgroup.salein.models.ProductLevel2;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -145,12 +147,12 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
     private ArrayList<ProductGroupLevel1> AllProductLevel1;
-    private ArrayList<ProductGroupLevel1> productLevel1List;
+    private ArrayList<ProductLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
 
 
     private ArrayList<ProductGroupLevel2> AllProductLevel2;
-    private ArrayList<ProductGroupLevel2> productLevel2List;
+    private ArrayList<ProductLevel2> productLevel2List;
     private ProductLevel2Adapter productLevel2Adapter;
 
 
@@ -243,18 +245,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         showView = false;
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
-        getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         customProgress = CustomProgress.getInstance();
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        if(!LauncherActivity.name.equals("ir.kitgroup.salein"))
-        firstSync = sharedPreferences.getBoolean("firstSync", false);
-
-        if (firstSync)
-            task = "1";
-        else
-            task = "2";
 
         //region Configuration Text Size
         int fontSize;
@@ -265,7 +262,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
         binding.edtSearchProduct.setTextSize(fontSize);
-        binding.nameCustomer.setTextSize(fontSize);
+        binding.edtNameCustomer.setTextSize(fontSize);
         binding.orderListTvRegister.setTextSize(fontSize);
         //endregion Configuration Text Size
 
@@ -276,8 +273,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 nameCompany = "سالین دمو";
                 imageLogo = R.drawable.salein;
                 imgIconDialog = R.drawable.saleinicon128;
-
-
                 break;
 
             case "ir.kitgroup.saleintop":
@@ -285,7 +280,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 imageLogo = R.drawable.top;
                 imgBackground = R.drawable.top_pas;
                 imgIconDialog = R.drawable.top_png;
-
                 break;
 
 
@@ -295,7 +289,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 imgBackground = R.drawable.donyavi_pas;
                 imgIconDialog = R.drawable.meat_png;
                 link = "https://b2n.ir/b37054";
-
                 break;
 
 
@@ -303,7 +296,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 nameCompany = "کافه نون";
                 imageLogo = R.drawable.noon;
                 imgIconDialog = R.drawable.noon;
-
                 break;
         }
         binding.ivIconCompany.setImageResource(imageLogo);
@@ -311,31 +303,6 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (imgBackground != 0)
             binding.image.setImageResource(imgBackground);
         //endregion Set Icon And Title
-
-
-        //region Delete Invoice And InvoiceDetail is Not Necessary
-        for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
-            Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
-            if (tb == null || tb.SV == null || !tb.SV) {
-                Invoice.deleteInTx(invoice);
-                for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
-
-                    InvoiceDetail.deleteInTx(invoiceDetail);
-                }
-            }
-        }
-        //endregion Delete Invoice And InvoiceDetail is Not Necessary
-
-
-        //region Set Amount 0.0 For Products
-        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-        CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
-        if (prdResult.size() > 0) {
-            for (int i = 0; i < prdResult.size(); i++) {
-                Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
-            }
-        }
-        //endregion Set Amount 0.0 For Products
 
 
         //region Configuration Organization Application
@@ -414,7 +381,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                     if (s.toString().isEmpty()) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
-                        binding.nameCustomer.setHint("نام مشترک");
+                        binding.edtNameCustomer.setHint("نام مشترک");
                     } else {
 
                         getAccountSearch(s.toString());
@@ -437,10 +404,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 Account.saveInTx(account);
                 Acc_GUID = GUID;
                 Acc_NAME = name;
-                binding.nameCustomer.removeTextChangedListener(textWatcherAcc);
-                binding.nameCustomer.setText(name);
+                binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+                binding.edtNameCustomer.setText(name);
                 binding.accountRecyclerView.setVisibility(View.GONE);
-                binding.nameCustomer.addTextChangedListener(textWatcherAcc);
+                binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
             });
 
 
@@ -452,7 +419,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             });
 
 
-            binding.nameCustomer.addTextChangedListener(textWatcherAcc);
+            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
         }
         //endregion Configuration Organization Application
 
@@ -615,29 +582,13 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
         //region Create Order
 
-
-        //region Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
-        List<Invoice> invoicese = Select.from(Invoice.class).list();
-        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT == null);
-        if (invoicese.size() > 0) {
-            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
-            CollectionUtils.filter(invoiceDetails, i -> i.INV_UID.equals(invoicese.get(0).INV_UID));
-            for (int i = 0; i < invoiceDetails.size(); i++) {
-                InvoiceDetail.delete(invoiceDetails.get(i));
-            }
-            for (int i = 0; i < invoicese.size(); i++) {
-                Invoice.delete(invoicese.get(i));
-            }
-        }
-        //endregion Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
-
-
         if (Inv_GUID.equals("")) {
-            Inv_GUID = UUID.randomUUID().toString();
-            Invoice order = new Invoice();
-            order.INV_UID = Inv_GUID;
-            order.INV_SYNC = "@";
-            Invoice.save(order);
+            sharedPreferences.edit().putString("Inv_GUID", UUID.randomUUID().toString()).apply();
+            // Inv_GUID = UUID.randomUUID().toString();
+            //  Invoice order = new Invoice();
+            // order.INV_UID = Inv_GUID;
+            // order.INV_SYNC = "@";
+            // Invoice.save(order);
 
 
         } else {
@@ -666,7 +617,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
 
-            getProduct(task);
+            //  getProduct(task);
 
         });
 
@@ -755,10 +706,83 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         });
         //endregion Cast DialogDescription
 
+        //region Action BtnRegister
+        binding.btnRegisterOrder.setOnClickListener(view1 -> {
+
+            if (App.mode == 1 && Acc_GUID.equals("")) {
+
+                Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+            if (invDetails.size() == 0) {
+
+                Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
+                bundle.putString("Inv_GUID", Inv_GUID);
+                bundle.putString("Tbl_GUID", Tbl_GUID);
+                bundle.putString("Ord_TYPE", Ord_TYPE);
+                bundle.putString("Acc_Name", Acc_NAME);
+                bundle.putString("Acc_GUID", Acc_GUID);
+                if (!Inv_GUID_ORG.equals(""))
+                    bundle.putBoolean("EDIT", true);
+
+
+                InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                inVoiceDetailFragmentMobile.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
+
+
+            }
+
+        });
+        //endregion Action BtnRegister
+
+
+        //region Cast Dialog Update
+        dialogUpdate = new Dialog(getActivity());
+        dialogUpdate.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogUpdate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogUpdate.setContentView(R.layout.custom_dialog);
+
+
+        textUpdate = dialogUpdate.findViewById(R.id.tv_message);
+        ivIcon = dialogUpdate.findViewById(R.id.iv_icon);
+        ivIcon.setImageResource(imgIconDialog);
+
+
+        MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
+        btnOk.setText("آپدیت");
+        btnNo = dialogUpdate.findViewById(R.id.btn_cancel);
+        btnNo.setText("بعدا");
+
+
+        btnNo.setOnClickListener(v -> {
+            dialogUpdate.dismiss();
+
+        });
+
+
+        btnOk.setOnClickListener(v -> {
+            dialogUpdate.dismiss();
+            Uri uri = Uri.parse(link);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+
+
+        });
+        //endregion Cast Dialog Update
+
+
+        getProductLevel1();
 
         //region CONFIGURATION DATA PRODUCT_LEVEL1
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
-
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager.setReverseLayout(true);
@@ -778,8 +802,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
 
+
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
-            ArrayList<ProductGroupLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
+            ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
             CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
             if (resultPrdGrp1.size() > 0) {
                 productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
@@ -793,8 +818,8 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
             //region Click New Item ProductLevel1
-            ArrayList<ProductGroupLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
-            CollectionUtils.filter(resultPrdGroup1_, r -> r.getPRDLVLUID().equals(GUID));
+            ArrayList<ProductLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
+            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(GUID));
             if (resultPrdGroup1_.size() > 0) {
                 productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
             }
@@ -804,116 +829,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             productLevel1Adapter.notifyDataSetChanged();
 
 
+            getProductLevel2(GUID);
             //region Full ProductLevel2List Because This Item ProductLevel1 Is True
-            ArrayList<ProductGroupLevel2> resultPrdGrp2_ = new ArrayList<>(AllProductLevel2);
-            CollectionUtils.filter(resultPrdGrp2_, r -> r.getPRDLVLPARENTUID().equals(GUID));
-            if (resultPrdGrp2_.size() > 0) {
 
-
-                ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
-
-
-                for (int i = 0; i < resultPrdGrp2_.size(); i++) {
-                    int finalI = i;
-                    ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2_.get(finalI).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
-                    if (tempPrd.size() > 0)
-
-                        tempPrdLvl2.add(resultPrdGrp2_.get(i));
-                }
-
-
-                productLevel2List.clear();
-                productLevel2List.addAll(tempPrdLvl2);
-
-                ArrayList<ProductGroupLevel2> list = new ArrayList<>(productLevel2List);
-                CollectionUtils.filter(list, l -> l.TKN != 0);
-                if (list.size() > 0)
-                    for (int i = 0; i < list.size(); i++) {
-                        int position = list.get(i).TKN - 1;//new position
-                        int index = productLevel2List.indexOf(list.get(i));//old position
-                        if (productLevel2List.size() > position) {
-                            ProductGroupLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
-                            if (index != position) {
-                                productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
-                                productLevel2List.set(index, itemProductGroupLevel2);
-
-                            }
-                        }
-
-                    }
-
-
-                if (tempPrdLvl2.size() > 0) {
-                    productLevel2List.get(0).Click = true;
-
-                }
-
-                productLevel2Adapter.notifyDataSetChanged();
-
-
-                //region Full ProductList Because First Item ProductLevel2 Is True
-                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
-                CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-
-                if (resultPrd_.size() == 0) {
-                    ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                    CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
-
-                    if (rst.size() > 0) {
-                        binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
-
-                    }
-                }
-
-                productList.clear();
-                productListData.clear();
-
-
-                ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                CollectionUtils.filter(listPrd, l -> l.KEY != 0);
-                if (listPrd.size() > 0)
-                    for (int i = 0; i < listPrd.size(); i++) {
-                        int position = listPrd.get(i).KEY - 1;//new position
-                        int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                        if (resultPrd_.size() > position) {
-                            Product itemProduct = resultPrd_.get(position);
-                            if (index != position) {
-                                resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                resultPrd_.set(index, itemProduct);
-
-                            }
-                        }
-                    }
-
-                productListData.addAll(resultPrd_);
-
-                for (int i = 0; i < 18; i++) {
-                    if (resultPrd_.size() > i) {
-                        productList.add(resultPrd_.get(i));
-
-                    }
-
-                }
-
-
-                productAdapter.notifyDataSetChanged();
-                //endregion Full ProductList Because First Item ProductLevel2 Is True
-
-            } else {
-                ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(GUID));
-
-                if (rst.size() > 0) {
-                    binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
-
-                }
-
-                productList.clear();
-                productAdapter.notifyDataSetChanged();
-                productLevel2List.clear();
-                productLevel2Adapter.notifyDataSetChanged();
-            }
             //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
         });
         //endregion Click Item ProductLevel1
@@ -1153,79 +1071,53 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         //endregion CONFIGURATION DATA PRODUCT
 
 
-        //region Action BtnRegister
-        binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
-            if (App.mode == 1 && Acc_GUID.equals("")) {
 
-                Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
-                return;
+
+
+
+
+
+
+
+
+
+       /* //region Delete Invoice And InvoiceDetail is Not Necessary
+        for (Invoice invoice : Select.from(Invoice.class).where("INVTOTALAMOUNT ='" + null + "'").list()) {
+            Tables tb = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
+            if (tb == null || tb.SV == null || !tb.SV) {
+                Invoice.deleteInTx(invoice);
+                for (InvoiceDetail invoiceDetail : Select.from(InvoiceDetail.class).where("INVUID ='" + invoice.INV_UID + "'").list()) {
+
+                    InvoiceDetail.deleteInTx(invoiceDetail);
+                }
             }
-
-            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-            if (invDetails.size() == 0) {
-
-                Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
-            } else {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
-                bundle.putString("Inv_GUID", Inv_GUID);
-                bundle.putString("Tbl_GUID", Tbl_GUID);
-                bundle.putString("Ord_TYPE", Ord_TYPE);
-                bundle.putString("Acc_Name", Acc_NAME);
-                bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals(""))
-                    bundle.putBoolean("EDIT", true);
-
-
-                InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
-                inVoiceDetailFragmentMobile.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
-
-
+        }
+        //endregion Delete Invoice And InvoiceDetail is Not Necessary
+        //region Set Amount 0.0 For Products
+        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
+        CollectionUtils.filter(prdResult, p -> p.getAmount() > 0);
+        if (prdResult.size() > 0) {
+            for (int i = 0; i < prdResult.size(); i++) {
+                Util.AllProduct.get(Util.AllProduct.indexOf(prdResult.get(i))).AMOUNT = 0.0;
             }
+        }
+        //endregion Set Amount 0.0 For Products
+        //region Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder
+        List<Invoice> invoicese = Select.from(Invoice.class).list();
+        CollectionUtils.filter(invoicese, i -> i.INV_SYNC.equals("@") && i.INV_EXTENDED_AMOUNT == null);
+        if (invoicese.size() > 0) {
+            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
+            CollectionUtils.filter(invoiceDetails, i -> i.INV_UID.equals(invoicese.get(0).INV_UID));
+            for (int i = 0; i < invoiceDetails.size(); i++) {
+                InvoiceDetail.delete(invoiceDetails.get(i));
+            }
+            for (int i = 0; i < invoicese.size(); i++) {
+                Invoice.delete(invoicese.get(i));
+            }
+        }
+        //endregion Delete Invoice And Invoice Detail Not Necessary exception NotSuccessfulOrder*/
 
-        });
-        //endregion Action BtnRegister
-
-
-        //region Cast Dialog Update
-        dialogUpdate = new Dialog(getActivity());
-        dialogUpdate.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogUpdate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogUpdate.setContentView(R.layout.custom_dialog);
-
-
-        textUpdate = dialogUpdate.findViewById(R.id.tv_message);
-        ivIcon = dialogUpdate.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imgIconDialog);
-
-
-        MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
-        btnOk.setText("آپدیت");
-        btnNo = dialogUpdate.findViewById(R.id.btn_cancel);
-        btnNo.setText("بعدا");
-
-
-        btnNo.setOnClickListener(v -> {
-            dialogUpdate.dismiss();
-
-        });
-
-
-        btnOk.setOnClickListener(v -> {
-            dialogUpdate.dismiss();
-            Uri uri = Uri.parse(link);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-
-
-        });
-        //endregion Cast Dialog Update
-
-        getProduct(task);
 
         return binding.getRoot();
     }
@@ -1431,7 +1323,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
 
                         if (tempPrdLvl2.size() > 0) {
-                            productLevel1List.add(AllProductLevel1.get(i));
+                           // productLevel1List.add(AllProductLevel1.get(i));
                         }
 
                     }
@@ -1443,7 +1335,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                     );
                 }
                 productLevel1Adapter.notifyDataSetChanged();
-                ArrayList<ProductGroupLevel1> rst1 = new ArrayList<>(productLevel1List);
+                ArrayList<ProductLevel1> rst1 = new ArrayList<>(productLevel1List);
                 CollectionUtils.filter(rst1, r -> r.Click);
                 if (rst1.size() > 0) {
                     for (int i = 0; i < rst1.size(); i++) {
@@ -1458,7 +1350,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
 
                 ArrayList<ProductGroupLevel2> resultPrdGrp2 = new ArrayList<>(AllProductLevel2);
                 if (productLevel1List.size() > 0)
-                    CollectionUtils.filter(resultPrdGrp2, r -> r.getPRDLVLPARENTUID().equals(productLevel1List.get(0).getPRDLVLUID()));
+                    CollectionUtils.filter(resultPrdGrp2, r -> r.getPRDLVLPARENTUID().equals(productLevel1List.get(0).getI()));
                 productLevel2List.clear();
 
 
@@ -1620,7 +1512,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 } else {
 
                     ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
-                    CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel1List.get(0).getPRDLVLUID()));
+                    CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel1List.get(0).getI()));
 
                     if (rst.size() > 0) {
                         binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
@@ -1645,15 +1537,15 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                 }
                 //  Toast.makeText(getActivity(), count + "", Toast.LENGTH_LONG).show();
 
-               // for (int j = 0; j < productLevel2List.size(); j++) {
+                // for (int j = 0; j < productLevel2List.size(); j++) {
 
-                    ArrayList<Product> resultProduct = new ArrayList<>();
-                    resultProduct.addAll(Util.AllProduct);
-                   // int finalJ = j;
-                    CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
-                    for (int i = 0; i < resultProduct.size(); i++) {
-                        if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
-                            getImage(resultProduct.get(i).I);
+                ArrayList<Product> resultProduct = new ArrayList<>();
+                resultProduct.addAll(Util.AllProduct);
+                // int finalJ = j;
+                CollectionUtils.filter(resultProduct, r -> r.getPRDPRICEPERUNIT1() > 0 && r.STS);
+                for (int i = 0; i < resultProduct.size(); i++) {
+                    if (resultProduct.get(i).Url == null || resultProduct.get(i).Url.equals("")) {
+                        getImage(resultProduct.get(i).I);
 
                         /*Call<String>    call = App.api.getImage(resultProduct.get(i).I);
                         Response<String> connect= null;
@@ -1672,10 +1564,10 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                             productAdapter.notifyDataSetChanged();
                         } catch (Exception ignored) {
                         }*/
-                        }
                     }
+                }
 
-               // }
+                // }
 
                 super.onPostExecute(o);
             }
@@ -1804,176 +1696,23 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
     }
 
 
-    private void getProduct(String task) {
-        String date=sharedPreferences.getString("date","");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date d;
-        try {
-             d = dateFormat.parse(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            d = Calendar.getInstance().getTime();
-            ;
-        }
-
-
-
-        binding.progressbar.setVisibility(View.GONE);
-        error ="";
-        customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
-
-        String yourFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
-        File file = new File(yourFilePath);
-        deleteDirectory(file);
+    private void getProductLevel1() {
         try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, task,dateFormat.format(d));
+            Call<String> call = App.api.getProductLevel1("saleinkit_api", userName, passWord);
 
 
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelProduct>() {
+                    Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
                     }.getType();
+                    ModelProductLevel1 iDs = gson.fromJson(response.body(), typeModelProductLevel1);
 
+                    productLevel1List.addAll(iDs.getProductLevel1());
+                    productLevel1Adapter.notifyDataSetChanged();
 
-                    ModelProduct iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception ignore) {
-
-                        error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
-                        showError(error);
-                        return;
-                    }
-
-
-                    if (iDs == null) {
-                        error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
-                        showError(error);
-                    } else {
-
-                        if (LauncherActivity.name.equals("ir.kitgroup.salein")){
-                            Product.deleteAll(Product.class);
-                            ProductGroupLevel1.deleteAll(ProductGroupLevel1.class);
-                            ProductGroupLevel2.deleteAll(ProductGroupLevel2.class);
-                        }
-
-                        List<Product> products = iDs.getProductList();
-
-
-                        if (!firstSync)
-                            Product.saveInTx(products);
-                        else
-                            for (Product product : products) {
-
-                                product.update();
-                            }
-
-                        if (products.size() > 0) {
-                            Util.AllProduct.clear();
-                        }
-
-
-                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
-
-                        if (!firstSync)
-                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-                        else
-                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
-                                productGroupLevel2.update();
-                            }
-
-                        if (productGroupLevel2s.size() > 0) {
-                            AllProductLevel2.clear();
-                        }
-
-
-                        if (!firstSync)
-                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-                        else
-                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
-                                productGroupLevel2.update();
-                            }
-
-                        if (productGroupLevel2s.size() > 0) {
-                            AllProductLevel2.clear();
-                        }
-
-
-
-
-                        /* for (int i = 0; i < products.size(); i++) {
-                            Product product = new Product();
-                            product.I = products.get(i).I;
-                            product.STS = products.get(i).STS;
-                            product.PID2 = products.get(i).PID2;
-                            product.PID1 = products.get(i).PID1;
-                            product.N = products.get(i).N;
-                            product.KEY = products.get(i).KEY;
-                            product.DES = products.get(i).DES;
-                            product.NIP = products.get(i).NIP;
-                            product.PU1 = products.get(i).PU1;
-                            product.PU2 = products.get(i).PU2;
-                            product.PU3 = products.get(i).PU3;
-                            product.PU4 = products.get(i).PU4;
-                            product.PU5 = products.get(i).PU5;
-                            product.PERC_DIS = products.get(i).PERC_DIS;
-
-                            if (!products.get(i).IMG.equals("0"))
-                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, getActivity());
-
-                            if (firstSync) {
-                                Product.saveInTx(products);
-
-                            }
-                            else {
-                                product.update();
-                            }
-
-                        }*/
-                        /*    CollectionUtils.filter(products1, p -> !p.IMG.equals("0"));
-                        if (products1.size() > 0) {
-                            for (int i = 0; i < products1.size(); i++) {
-                                SaveImageToStorage(StringToImage(products1.get(i).IMG), products1.get(i).I, Objects.requireNonNull(getActivity()));
-                            }
-                        }
-*/
-                        /*   AllProductLevel1.clear();
-                        if (iDs.getProductLevel1List() != null)
-                            AllProductLevel1.addAll(iDs.getProductLevel1List());
-
-                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
-
-                        if (!firstSync)
-                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
-                        else
-                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
-                                PrdGroupLevel1.update();
-                            }
-
-
-                            if ()*/
-                        /*            AllProductLevel2.clear();
-                        if (iDs.getProductLevel2List() != null)
-                            AllProductLevel2.addAll(iDs.getProductLevel2List());
-                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
-                        if (!firstSync)
-                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-                        else
-                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
-                                prdGroupLevel2.update();
-                            }*/
-
-
-                        sharedPreferences.edit().putBoolean("firstSync", true).apply();
-
-                        getTypeOrder();
-
-
-                    }
 
                 }
 
@@ -1991,9 +1730,378 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
             showError(error);
         }
-
-
     }
+
+    private void getProductLevel2(String GuidPrdLvl1) {
+        try {
+
+            Call<String> call = App.api.getProductLevel2("saleinkit_api", userName, passWord, GuidPrdLvl1);
+
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Gson gson = new Gson();
+                    Type typeModelProduct2= new TypeToken<ModelProductLevel2>() {
+                    }.getType();
+                    ModelProductLevel2 iDs = gson.fromJson(response.body(), typeModelProduct2);
+
+                    productLevel2List.addAll(iDs.getProductLevel2());
+                    productLevel2Adapter.notifyDataSetChanged();
+
+                    ArrayList<ProductGroupLevel2> resultPrdGrp2_ = new ArrayList<>(AllProductLevel2);
+                    CollectionUtils.filter(resultPrdGrp2_, r -> r.getPRDLVLPARENTUID().equals(GuidPrdLvl1));
+                    if (resultPrdGrp2_.size() > 0) {
+
+
+                        ArrayList<ProductGroupLevel2> tempPrdLvl2 = new ArrayList<>();
+
+
+                        for (int i = 0; i < resultPrdGrp2_.size(); i++) {
+                            int finalI = i;
+                            ArrayList<Product> tempPrd = new ArrayList<>(Util.AllProduct);
+                            CollectionUtils.filter(tempPrd, tp -> tp.getPRDLVLUID2().equals(resultPrdGrp2_.get(finalI).getPRDLVLUID()) && tp.getPRDPRICEPERUNIT1() > 0 && tp.STS);
+                            if (tempPrd.size() > 0)
+
+                                tempPrdLvl2.add(resultPrdGrp2_.get(i));
+                        }
+
+
+                        productLevel2List.clear();
+                        productLevel2List.addAll(tempPrdLvl2);
+
+                        ArrayList<ProductGroupLevel2> list = new ArrayList<>(productLevel2List);
+                        CollectionUtils.filter(list, l -> l.TKN != 0);
+                        if (list.size() > 0)
+                            for (int i = 0; i < list.size(); i++) {
+                                int position = list.get(i).TKN - 1;//new position
+                                int index = productLevel2List.indexOf(list.get(i));//old position
+                                if (productLevel2List.size() > position) {
+                                    ProductGroupLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
+                                    if (index != position) {
+                                        productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
+                                        productLevel2List.set(index, itemProductGroupLevel2);
+
+                                    }
+                                }
+
+                            }
+
+
+                        if (tempPrdLvl2.size() > 0) {
+                            productLevel2List.get(0).Click = true;
+
+                        }
+
+                        productLevel2Adapter.notifyDataSetChanged();
+
+
+                        //region Full ProductList Because First Item ProductLevel2 Is True
+                        ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
+                        CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals(productLevel2List.get(0).getPRDLVLUID()) && r.getPRDPRICEPERUNIT1() > 0 && r.STS);
+
+                        if (resultPrd_.size() == 0) {
+                            ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
+                            CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(productLevel2List.get(0).getPRDLVLPARENTUID()));
+
+                            if (rst.size() > 0) {
+                                binding.orderTxtError.setText("هیچ نوع از " + productLevel2List.get(0).getPRDLVLNAME() + " " + "در دسته " + rst.get(0).getPRDLVLNAME() + " " + "موجود نمی باشد. ");
+
+                            }
+                        }
+
+                        productList.clear();
+                        productListData.clear();
+
+
+                        ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                        CollectionUtils.filter(listPrd, l -> l.KEY != 0);
+                        if (listPrd.size() > 0)
+                            for (int i = 0; i < listPrd.size(); i++) {
+                                int position = listPrd.get(i).KEY - 1;//new position
+                                int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                                if (resultPrd_.size() > position) {
+                                    Product itemProduct = resultPrd_.get(position);
+                                    if (index != position) {
+                                        resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                        resultPrd_.set(index, itemProduct);
+
+                                    }
+                                }
+                            }
+
+                        productListData.addAll(resultPrd_);
+
+                        for (int i = 0; i < 18; i++) {
+                            if (resultPrd_.size() > i) {
+                                productList.add(resultPrd_.get(i));
+
+                            }
+
+                        }
+
+
+                        productAdapter.notifyDataSetChanged();
+                        //endregion Full ProductList Because First Item ProductLevel2 Is True
+
+                    }
+                    else {
+                        ArrayList<ProductGroupLevel1> rst = new ArrayList<>(AllProductLevel1);
+                        CollectionUtils.filter(rst, r -> r.getPRDLVLUID().equals(GuidPrdLvl1));
+
+                        if (rst.size() > 0) {
+                            binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته " + rst.get(0).getPRDLVLNAME() + " وجود ندارد.");
+
+                        }
+
+                        productList.clear();
+                        productAdapter.notifyDataSetChanged();
+                        productLevel2List.clear();
+                        productLevel2Adapter.notifyDataSetChanged();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
+                    showError(error);
+
+                }
+            });
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
+            showError(error);
+        }
+    }
+
+
+    private void getProduct() {
+        try {
+
+            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2a75bb5b-7e7a-eb11-999b-000c29d9b371");
+
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Gson gson = new Gson();
+                    Type typeIDs = new TypeToken<ModelProduct>() {
+                    }.getType();
+
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
+                    showError(error);
+
+                }
+            });
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
+            showError(error);
+        }
+    }
+
+//    private void getProduct(String productLevel2Uid) {
+//        String date=sharedPreferences.getString("date","");
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        Date d;
+//        try {
+//             d = dateFormat.parse(date);
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            d = Calendar.getInstance().getTime();;
+//        }
+//
+//
+//
+//        binding.progressbar.setVisibility(View.GONE);
+//        error ="";
+//        customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات", false);
+//
+//        String yourFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
+//        File file = new File(yourFilePath);
+//        deleteDirectory(file);
+//        try {
+//
+//            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, task,dateFormat.format(d));
+//
+//
+//            call.enqueue(new Callback<String>() {
+//                @Override
+//                public void onResponse(Call<String> call, Response<String> response) {
+//                    Gson gson = new Gson();
+//                    Type typeIDs = new TypeToken<ModelProduct>() {
+//                    }.getType();
+//
+//
+//                    ModelProduct iDs;
+//                    try {
+//                        iDs = gson.fromJson(response.body(), typeIDs);
+//                    } catch (Exception ignore) {
+//
+//                        error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
+//                        showError(error);
+//                        return;
+//                    }
+//
+//
+//                    if (iDs == null) {
+//                        error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
+//                        showError(error);
+//                    } else {
+//
+//                        if (LauncherActivity.name.equals("ir.kitgroup.salein")){
+//                            Product.deleteAll(Product.class);
+//                            ProductGroupLevel1.deleteAll(ProductGroupLevel1.class);
+//                            ProductGroupLevel2.deleteAll(ProductGroupLevel2.class);
+//                        }
+//
+//                        List<Product> products = iDs.getProductList();
+//
+//
+//                        if (!firstSync)
+//                            Product.saveInTx(products);
+//                        else
+//                            for (Product product : products) {
+//
+//                                product.update();
+//                            }
+//
+//                        if (products.size() > 0) {
+//                            Util.AllProduct.clear();
+//                        }
+//
+//
+//                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
+//
+//                        if (!firstSync)
+//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
+//                        else
+//                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
+//                                productGroupLevel2.update();
+//                            }
+//
+//                        if (productGroupLevel2s.size() > 0) {
+//                            AllProductLevel2.clear();
+//                        }
+//
+//
+//                        if (!firstSync)
+//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
+//                        else
+//                            for (ProductGroupLevel2 productGroupLevel2 : productGroupLevel2s) {
+//                                productGroupLevel2.update();
+//                            }
+//
+//                        if (productGroupLevel2s.size() > 0) {
+//                            AllProductLevel2.clear();
+//                        }
+//
+//
+//
+//
+//                        /* for (int i = 0; i < products.size(); i++) {
+//                            Product product = new Product();
+//                            product.I = products.get(i).I;
+//                            product.STS = products.get(i).STS;
+//                            product.PID2 = products.get(i).PID2;
+//                            product.PID1 = products.get(i).PID1;
+//                            product.N = products.get(i).N;
+//                            product.KEY = products.get(i).KEY;
+//                            product.DES = products.get(i).DES;
+//                            product.NIP = products.get(i).NIP;
+//                            product.PU1 = products.get(i).PU1;
+//                            product.PU2 = products.get(i).PU2;
+//                            product.PU3 = products.get(i).PU3;
+//                            product.PU4 = products.get(i).PU4;
+//                            product.PU5 = products.get(i).PU5;
+//                            product.PERC_DIS = products.get(i).PERC_DIS;
+//
+//                            if (!products.get(i).IMG.equals("0"))
+//                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, getActivity());
+//
+//                            if (firstSync) {
+//                                Product.saveInTx(products);
+//
+//                            }
+//                            else {
+//                                product.update();
+//                            }
+//
+//                        }*/
+//                        /*    CollectionUtils.filter(products1, p -> !p.IMG.equals("0"));
+//                        if (products1.size() > 0) {
+//                            for (int i = 0; i < products1.size(); i++) {
+//                                SaveImageToStorage(StringToImage(products1.get(i).IMG), products1.get(i).I, Objects.requireNonNull(getActivity()));
+//                            }
+//                        }
+//*/
+//                        /*   AllProductLevel1.clear();
+//                        if (iDs.getProductLevel1List() != null)
+//                            AllProductLevel1.addAll(iDs.getProductLevel1List());
+//
+//                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
+//
+//                        if (!firstSync)
+//                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
+//                        else
+//                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
+//                                PrdGroupLevel1.update();
+//                            }
+//
+//
+//                            if ()*/
+//                        /*            AllProductLevel2.clear();
+//                        if (iDs.getProductLevel2List() != null)
+//                            AllProductLevel2.addAll(iDs.getProductLevel2List());
+//                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
+//                        if (!firstSync)
+//                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
+//                        else
+//                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
+//                                prdGroupLevel2.update();
+//                            }*/
+//
+//
+//                        sharedPreferences.edit().putBoolean("firstSync", true).apply();
+//
+//                        getTypeOrder();
+//
+//
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<String> call, Throwable t) {
+//                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
+//                    showError(error);
+//
+//                }
+//            });
+//
+//
+//        } catch (NetworkOnMainThreadException ex) {
+//
+//            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
+//            showError(error);
+//        }
+//
+//
+//    }
+
 
     private void getSetting() {
 
@@ -2054,7 +2162,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
                                 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-                        sharedPreferences.edit().putString("date",dateFormats.format(date)).apply();
+                        sharedPreferences.edit().putString("date", dateFormats.format(date)).apply();
                         getProducts();
 
                     }
@@ -2226,9 +2334,9 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
                         customProgress.hideProgress();
                         Acc_GUID = accountsList.get(0).I;
                         Acc_NAME = accountsList.get(0).N;
-                        binding.nameCustomer.removeTextChangedListener(textWatcherAcc);
-                        binding.nameCustomer.setText(accountsList.get(0).N);
-                        binding.nameCustomer.addTextChangedListener(textWatcherAcc);
+                        binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+                        binding.edtNameCustomer.setText(accountsList.get(0).N);
+                        binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
                         accountsList.clear();
 
 
@@ -2352,7 +2460,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
             }
         }
 
-        getProduct(task);
+        // getProduct(task);
 
 
     }
@@ -2392,7 +2500,7 @@ public class MainOrderMobileFragment extends Fragment implements Filterable {
         if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
         ) {
-            getProduct(task);
+            //   getProduct(task);
 
 
         } else {

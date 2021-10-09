@@ -9,7 +9,15 @@ import retrofit2.http.Query;
 public interface API {
 
     @GET("productSync")
-    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("task") String task, @Query("date") String  date);
+    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
+
+
+    @GET("ProductLevel2Sync")
+    Call<String> getProductLevel2(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel1Uid") String productLevel1Uid);
+
+
+    @GET("ProductLevel1Sync")
+    Call<String> getProductLevel1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password);
 
 
     @GET("AccountSync")

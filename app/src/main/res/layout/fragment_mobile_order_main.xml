@@ -81,7 +81,7 @@
 
 
                             <EditText
-                                android:id="@+id/name_customer"
+                                android:id="@+id/edt_name_customer"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"

@@ -22,11 +22,12 @@ import ir.kitgroup.salein.DataBase.ProductGroupLevel2;
 
 
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.models.ProductLevel2;
 
 
 public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adapter.viewHolder> {
 
-    private final List<ProductGroupLevel2> subGroupList ;
+    private final List<ProductLevel2> subGroupList ;
     private final Context context;
     private  int fontSize=0;
     public interface ClickItem {
@@ -41,7 +42,7 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
 
 
 
-    public ProductLevel2Adapter(Context context, List<ProductGroupLevel2> subGroupList) {
+    public ProductLevel2Adapter(Context context, List<ProductLevel2> subGroupList) {
         this.context = context;
         this.subGroupList = subGroupList;
 
@@ -70,9 +71,9 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
-        final ProductGroupLevel2 subGroup = subGroupList.get(position);
-        holder.GUID=subGroup.getPRDLVLUID();
-        holder.subGroupName.setText(subGroup.getPRDLVLNAME() );
+        final ProductLevel2 subGroup = subGroupList.get(position);
+        holder.GUID=subGroup.getI();
+        holder.subGroupName.setText(subGroup.getN() );
 
 
 
