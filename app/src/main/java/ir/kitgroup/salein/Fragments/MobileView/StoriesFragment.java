@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.Fragments.MobileView;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +107,16 @@ public class StoriesFragment extends Fragment {
     public void setMyCompany(){
         binding.viewPager.setCurrentItem(1);
         binding.tabLayout.getTabAt(1).select();
-        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("StoriesFragment");
+        FragmentManager ft = getActivity().getSupportFragmentManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            ft.beginTransaction().detach(frg).commitNow();
+            ft.beginTransaction().attach(frg).commitNow();
+
+        } else {
+
+            ft.beginTransaction().detach(frg).attach(frg).commit();
+        }
     }
 }
