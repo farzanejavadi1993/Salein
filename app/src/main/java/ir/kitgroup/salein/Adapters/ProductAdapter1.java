@@ -46,13 +46,14 @@ import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.Constant;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.DataBase.Product;
+
 import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.Fragments.ShowDetailFragment;
 
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -176,8 +177,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
-            Product product1 = Select.from(Product.class)
-                    .where("I ='" + productsList.get(position).I + "'").first();
+            ir.kitgroup.salein.DataBase.Product product1 = Select.from(ir.kitgroup.salein.DataBase.Product.class)
+                    .where("I ='" + productsList.get(position).getI() + "'").first();
 
 
 
@@ -246,32 +247,32 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ivEdit.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);*/
 
 
-            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getPRDNAME());
+            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
 
-            if (productsList.get(holder.getAdapterPosition()).PERC_DIS != 0.0) {
-                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
+                if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
 
-                    holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).PERC_DIS) + "%");
-                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()));
+                    holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
+                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()));
                     holder.Line.setText("------------");
-                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() * (productsList.get(holder.getAdapterPosition()).PERC_DIS / 100);
-                    double newPrice = productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() - discountPrice;
+                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (productsList.get(holder.getAdapterPosition()).getPercDis() / 100);
+                    double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
 
             } else {
 
-                if (productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1() > 0) {
+                if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
 
                     holder.productDiscountPercent.setVisibility(View.GONE);
                     holder.layoutDiscount.setVisibility(View.GONE);
                     holder.productOldPrice.setVisibility(View.GONE);
                     holder.Line.setVisibility(View.GONE);
-                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()) + " ریال ");
+                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()) + " ریال ");
                 }
 
             }
@@ -283,7 +284,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 if (holder.tab == 2) {
                     holder.tab = 0;
                     Bundle bundle = new Bundle();
-                    bundle.putString("Id", productsList.get(holder.getAdapterPosition()).I);
+                    bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
                     ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
@@ -293,7 +294,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(resultPrd, r -> r.I.equals(productsList.get(holder.getAdapterPosition()).I));
+            CollectionUtils.filter(resultPrd, r -> r.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
 
             if (resultPrd.size() > 0) {
 
@@ -313,15 +314,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
-            if (productsList.get(holder.getAdapterPosition()).descItem != null) {
+           /* if (productsList.get(holder.getAdapterPosition()).descItem != null) {
                 if (resultPrd.size() > 0)
                     holder.edtDesc.setText(resultPrd.get(0).descItem);
 
             } else
-                holder.edtDesc.setText("");
+                holder.edtDesc.setText("");*/
 
             holder.ivMax.setOnClickListener(view -> {
-
 
                 doAction(holder.getAdapterPosition(),
                         holder.progressBar,
@@ -332,7 +332,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
                         maxSale,
-                        productsList.get(position).getPRDUID(),
+                        productsList.get(position).getI(),
                         "",
                         1
 
@@ -354,7 +354,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         Select.from(User.class).first().userName,
                         Select.from(User.class).first().passWord,
                         maxSale,
-                        productsList.get(position).getPRDUID(),
+                        productsList.get(position).getI(),
                         "",
                         2
 
@@ -395,7 +395,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 Select.from(User.class).first().userName,
                                 Select.from(User.class).first().passWord,
                                 maxSale,
-                                productsList.get(position).getPRDUID(),
+                                productsList.get(position).getI(),
                                 s,
                                 3
 
@@ -422,8 +422,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.cardEdit.setOnClickListener(v -> {
-                if (productsList.get(holder.getAdapterPosition()).AMOUNT != null) {
-                    descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).I, productsList.get(holder.getAdapterPosition()).AMOUNT);
+                if (productsList.get(holder.getAdapterPosition()).getAmount() != null) {
+                    descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).getI(), productsList.get(holder.getAdapterPosition()).getAmount());
                 } else {
                     Toast.makeText(context, " برای کالا  مقداروارد کنید", Toast.LENGTH_SHORT).show();
                 }
@@ -495,7 +495,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
-        double aPlus = productsList.get(position).COEF;
+        double aPlus = productsList.get(position).getCoef();
         if (aPlus == 0)
             aPlus = 1;
         try {
@@ -536,7 +536,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
                         ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
-                        CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
+                        CollectionUtils.filter(resultProduct, r -> r.getI().equals(Prd_GUID));
 
                         if (remain <= 0) {
                             AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(0.0);
@@ -726,11 +726,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (maxSales.equals("1")) {
             getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
-            double aPlus = productsList.get(position).COEF;
+            double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)
                 aPlus = 1;
             ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(resultProduct, r -> r.getPRDUID().equals(Prd_GUID));
+            CollectionUtils.filter(resultProduct, r -> r.getI().equals(Prd_GUID));
 
             if (resultProduct.size() > 0) {
                 double amount = 0;

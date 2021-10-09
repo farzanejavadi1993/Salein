@@ -30,10 +30,11 @@ import java.util.List;
 
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.DataBase.Product;
+
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
+import ir.kitgroup.salein.models.Product;
 
 
 public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {
@@ -128,24 +129,24 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         holder.rst = new ArrayList<>();
         holder.rst.addAll(Util.AllProduct);
-        CollectionUtils.filter(holder.rst, r -> r.getPRDUID().equals(invoicedetail.PRD_UID));
+        CollectionUtils.filter(holder.rst, r -> r.getI().equals(invoicedetail.PRD_UID));
 
         if (holder.rst.size() > 0) {
 
 
-            if (holder.rst.get(0).PERC_DIS != 0.0) {
-                holder.discount.setText(format.format(holder.rst.get(0).PERC_DIS) + "%");
+            if (holder.rst.get(0).getPercDis() != 0.0) {
+                holder.discount.setText(format.format(holder.rst.get(0).getPercDis()) + "%");
 
             } else {
                 holder.discount.setText("");
             }
 
 
-            holder.name.setText(holder.rst.get(0).getPRDNAME());
-            holder.price.setText(format.format(holder.rst.get(0).getPRDPRICEPERUNIT1()));
+            holder.name.setText(holder.rst.get(0).getN());
+            holder.price.setText(format.format(holder.rst.get(0).getPrice()));
 
 
-            double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPrice());
            /* double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS / 100);
             double totalPrice = sumprice - discountPrice;*/
             holder.sumPrice.setText(format.format(sumprice));
@@ -179,10 +180,10 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                     if (!s.equals("")) {
                          amount = Double.parseDouble(s);
                         ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
-      CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+      CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                         double aPlus=1;
                         if (resultPrd1.size()>0){
-                            aPlus = resultPrd1.get(0).COEF;
+                            aPlus = resultPrd1.get(0).getCoef();
                             if (aPlus == 0)
                                 aPlus = 1;
                         }
@@ -192,19 +193,19 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                             holder.edtAmount.setText("0");
                             holder.edtAmount.addTextChangedListener(holder.textWatcher);
-                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd1.get(0))).AMOUNT=0.0;
-                            double sumprice = (0 * holder.rst.get(0).getPRDPRICEPERUNIT1());
+                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd1.get(0))).setAmount(0.0);
+                            double sumprice = (0 * holder.rst.get(0).getPrice());
 
                             holder.sumPrice.setText(format.format(sumprice));
-                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
                             return;
                         }
                     }
-                    double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+                    double sumprice = (amount * holder.rst.get(0).getPrice());
                    /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
                     Double totalPrice = sumprice - discountPrice;*/
                     holder.sumPrice.setText(format.format(sumprice));
-                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
 
 
                 }
@@ -246,7 +247,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             if (result.size() > 0) {
                 ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
 
-                CollectionUtils.filter(resultPrd_, r -> r.getPRDUID().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+                CollectionUtils.filter(resultPrd_, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                 if (resultPrd_.size() > 0) {
                     Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
 
@@ -257,14 +258,12 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
                 ArrayList<Product> allResultPr = new ArrayList<>(Util.AllProduct);
 
-                CollectionUtils.filter(allResultPr, r -> r.I.equals(result.get(0).PRD_UID));
-                if (allResultPr.size() > 0) {
+                CollectionUtils.filter(allResultPr, r -> r.getI().equals(result.get(0).PRD_UID));
+               /* if (allResultPr.size() > 0) {
                     if (allResultPr.get(0).descItem != null) {
                         Util.AllProduct.get(Util.AllProduct.indexOf(allResultPr.get(0))).descItem = "";
                     }
-
-
-                }
+                }*/
 
 
             }
@@ -278,10 +277,10 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         holder.ivMax.setOnClickListener(v -> {
             ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
-            CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
-                aPlus = resultPrd1.get(0).COEF;
+                aPlus = resultPrd1.get(0).getCoef();
                 if (aPlus == 0)
                     aPlus = 1;
             }
@@ -290,19 +289,19 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            double sumprice = (amount * holder.rst.get(0).getPrice());
             holder.sumPrice.setText(format.format(sumprice));
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
 
         });
 
 
         holder.ivMinus.setOnClickListener(v -> {
             ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
-            CollectionUtils.filter(resultPrd1, r -> r.I.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
-                 aPlus = resultPrd1.get(0).COEF;
+                 aPlus = resultPrd1.get(0).getCoef();
                 if (aPlus == 0)
                     aPlus = 1;
             }
@@ -316,9 +315,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * holder.rst.get(0).getPRDPRICEPERUNIT1());
+            double sumprice = (amount * holder.rst.get(0).getPrice());
             holder.sumPrice.setText(format.format(sumprice));
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPRDPRICEPERUNIT1(), holder.rst.get(0).PERC_DIS / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
         });
 
     }

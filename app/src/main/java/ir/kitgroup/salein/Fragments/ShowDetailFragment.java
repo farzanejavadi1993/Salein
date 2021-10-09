@@ -22,10 +22,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.DataBase.Product;
+
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
+import ir.kitgroup.salein.models.Product;
 
 public class ShowDetailFragment  extends Fragment {
 
@@ -59,7 +60,7 @@ public class ShowDetailFragment  extends Fragment {
 
         ArrayList<Product> arrayList=new ArrayList<>();
         arrayList.addAll(Util.AllProduct);
-        CollectionUtils.filter(arrayList, a->a.I.equals(Id));
+        CollectionUtils.filter(arrayList, a->a.getI().equals(Id));
 
 
         if (arrayList.size()>0) {
@@ -68,7 +69,7 @@ public class ShowDetailFragment  extends Fragment {
                     "/Images/",
                     prd.I.toUpperCase() + ".jpg");*/
 
-            String yourFilePath = getActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) +"/"+"SaleIn"+"/"+ arrayList.get(0).I.toUpperCase() + ".jpg";
+            String yourFilePath = getActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) +"/"+"SaleIn"+"/"+ arrayList.get(0).getI().toUpperCase() + ".jpg";
             File file = new File(yourFilePath);
 
             if (file.exists()) {
@@ -84,7 +85,7 @@ public class ShowDetailFragment  extends Fragment {
                 }
 
                 ivProduct.setImageBitmap(image);
-                tvDescriptionProduct.setText(arrayList.get(0).DES);
+                tvDescriptionProduct.setText(arrayList.get(0).getDes());
             }else {
                 try {
                    // PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);

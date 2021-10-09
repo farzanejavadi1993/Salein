@@ -64,7 +64,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Invoice;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.OrderType;
-import ir.kitgroup.salein.DataBase.Product;
+
 import ir.kitgroup.salein.DataBase.ProductGroupLevel1;
 import ir.kitgroup.salein.DataBase.ProductGroupLevel2;
 import ir.kitgroup.salein.DataBase.Setting;
@@ -127,11 +127,12 @@ public class LauncherOrganizationFragment extends Fragment {
 
         if (LauncherActivity.screenInches >= 7) {
 
-            Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
+        }
+        else {
 
-            Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
@@ -176,8 +177,8 @@ public class LauncherOrganizationFragment extends Fragment {
                 if (OrderType.count(OrderType.class) > 0)
                     OrderType.deleteAll(OrderType.class);
 
-                if (Product.count(Product.class) > 0)
-                    Product.deleteAll(Product.class);
+            /*    if (Product.count(Product.class) > 0)
+                    Product.deleteAll(Product.class);*/
 
 
                 if (Setting.count(Setting.class) > 0)
@@ -204,7 +205,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 assert getFragmentManager() != null;
                 getFragmentManager().popBackStack();
 
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment()).addToBackStack("UserF").commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment()).addToBackStack("UserF").commit();
                 dialog.dismiss();
             } else if (TypeClickButton.equals("error")) {
                 getSetting();
@@ -321,7 +322,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                 MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                 mainOrderMobileFragment.setArguments(bundle);
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
 
 
             }
@@ -370,7 +371,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
             mainOrderMobileFragment.setArguments(bundle);
-            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
 
 
         });
@@ -424,11 +425,11 @@ public class LauncherOrganizationFragment extends Fragment {
             } else {
 
                 Toast.makeText(getActivity(), "لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
-                Objects.requireNonNull(getActivity()).finish();
+                requireActivity().finish();
             }
         } else {
 
-            Objects.requireNonNull(getActivity()).finish();
+            requireActivity().finish();
         }
 
 
@@ -502,22 +503,7 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-    private void isAllPermissionGranted() {
 
-        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED
-        ) {
-            getSetting();
-
-
-        } else {
-
-            requestPermissions(
-                    new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    }, 88);
-        }
-    }
 
 
 /*    private void getProduct() {

@@ -50,6 +50,7 @@ import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.salein.DataBase.Account;
+
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.Util.Utilities;
@@ -57,7 +58,7 @@ import ir.kitgroup.salein.Util.Utilities;
 import ir.kitgroup.salein.DataBase.Invoice;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.OrderType;
-import ir.kitgroup.salein.DataBase.Product;
+
 import ir.kitgroup.salein.DataBase.Setting;
 import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.User;
@@ -70,6 +71,7 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentInvoiceDetailMobileBinding;
+import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -241,7 +243,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
 
                 int finalI = i;
-                CollectionUtils.filter(resultPrd_, r -> r.getPRDUID().equals(invoiceDetails.get(finalI).PRD_UID));
+                CollectionUtils.filter(resultPrd_, r -> r.getI().equals(invoiceDetails.get(finalI).PRD_UID));
                 if (resultPrd_.size() > 0) {
                     Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
                 }
@@ -295,10 +297,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 for (int i = 0; i < invDetails.size(); i++) {
                     ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                     int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
+                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
                     if (prdResult.size() > 0) {
-                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
-                        double discountPrice = sumTotalPrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
+                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());//جمع کل ردیف
+                        double discountPrice = sumTotalPrice * (prdResult.get(0).getPercDis() / 100);//جمع تخفیف ردیف
                         double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
@@ -308,11 +310,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                         invDetails.get(i).ROW_NUMBER = i + 1;
-                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
+                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).getPercDis();
                         invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
+                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPrice());
                         sumDiscount = sumDiscount + discountPrice;
-                        sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
+                        sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).getPercDis() / 100);
 
 
                     }
@@ -454,14 +456,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 invDetail.update();
                 /*    if (LauncherActivity.screenInches < 7) {*/
                 resultPrd.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultPrd, r -> r.I.equals(invDetail.PRD_UID));
+                CollectionUtils.filter(resultPrd, r -> r.getI().equals(invDetail.PRD_UID));
                 // }
 
             }
 
-            if (resultPrd.size() > 0) {
+            /*if (resultPrd.size() > 0) {
                 Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).descItem = edtDescriptionItem.getText().toString();
-            }
+            }*/
 
 
             invoiceDetailAdapter.notifyDataSetChanged();
@@ -600,14 +602,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
             int finalI = i;
-            CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
+            CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
 
             if (prdResult.size() > 0) {
-                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
-                double discountPrice = sumpriceE * (prdResult.get(0).PERC_DIS / 100);
+                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                double discountPrice = sumpriceE * (prdResult.get(0).getPercDis() / 100);
                 double totalPrice = sumpriceE - discountPrice;
 
-                sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
                 sumPurePrice = sumPurePrice + totalPrice;
                 sumDiscounts = sumDiscounts + discountPrice;
 
@@ -654,7 +656,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                     ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(Prd_GUID));
+                    CollectionUtils.filter(resultPrd, r -> r.getI().equals(Prd_GUID));
                     if (resultPrd.size() > 0) {
                         Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 
@@ -669,14 +671,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                         int finalI = i;
-                        CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetails.get(finalI).PRD_UID));
+                        CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetails.get(finalI).PRD_UID));
 
                         if (prdResult.size() > 0) {
-                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
-                            double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                            double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
                             double totalPrice = sumprice - discountPrice;
 
-                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
                             sumPurePrice = sumPurePrice + totalPrice;
                             sumDiscounts = sumDiscounts + discountPrice;
 
@@ -714,14 +716,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                     int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetail.get(finalI).PRD_UID));
+                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetail.get(finalI).PRD_UID));
 
                     if (prdResult.size() > 0) {
-                        double sumprice = (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
-                        double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        double sumprice = (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                        double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        sumPrice = sumPrice + (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -759,14 +761,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                     int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.I.equals(invoiceDetailList.get(finalI).PRD_UID));
+                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetailList.get(finalI).PRD_UID));
 
                     if (prdResult.size() > 0) {
-                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
-                        double discountPrice = sumprice * (prdResult.get(0).PERC_DIS / 100);
+                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                        double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());
+                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -855,7 +857,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle.putString("Inv_GUID", Inv_GUID);
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
             mainOrderMobileFragment.setArguments(bundle);
-            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileFX");
+            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileFX");
             replaceFragment.commit();
         });
         //endregion Action BtnEdit
@@ -998,7 +1000,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
 
                         CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-                        CollectionUtils.filter(resultPrd1, r -> r.I.equals(Prd_GUID));
+                        CollectionUtils.filter(resultPrd1, r -> r.getI().equals(Prd_GUID));
                         if (result.size() > 0) {
                             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
                             double amount = 0.0;
@@ -1011,7 +1013,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         invoiceDetail.INV_DET_QUANTITY = 0.0;
                                         invoiceDetail.update();
                                         if (resultPrd1.size() > 0) {
-                                            resultPrd1.get(0).AMOUNT = 0.0;
+                                            resultPrd1.get(0).setAmount(0.0);
                                         }
                                     }
 
@@ -1028,7 +1030,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             }
 
                             ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                            CollectionUtils.filter(resultPrd, r -> r.getPRDUID().equals(Prd_GUID));
+                            CollectionUtils.filter(resultPrd, r -> r.getI().equals(Prd_GUID));
                             if (resultPrd.size() > 0) {
                                 Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 

@@ -83,7 +83,7 @@ import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.OrderType;
-import ir.kitgroup.salein.DataBase.Product;
+
 import ir.kitgroup.salein.DataBase.Setting;
 import ir.kitgroup.salein.DataBase.User;
 
@@ -95,6 +95,7 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.models.ModelProduct;
 import ir.kitgroup.salein.models.ModelProductLevel1;
 import ir.kitgroup.salein.models.ModelProductLevel2;
+import ir.kitgroup.salein.models.Product;
 import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ModelSetting;
 import ir.kitgroup.salein.models.ModelTypeOrder;
@@ -631,16 +632,16 @@ public class MainOrderMobileFragment extends Fragment {
                 invDetail.update();
                 /*   if (LauncherActivity.screenInches < 7) {*/
                 resultPrd.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultPrd, r -> r.I.equals(invDetail.PRD_UID));
+                CollectionUtils.filter(resultPrd, r -> r.getI().equals(invDetail.PRD_UID));
                 //  }
 
             }
 
-            if (resultPrd.size() > 0) {
-
-                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).descItem = edtDescriptionItem.getText().toString();
-                productAdapter.notifyDataSetChanged();
-            }
+//            if (resultPrd.size() > 0) {
+//
+//                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).descItem = edtDescriptionItem.getText().toString();
+//                productAdapter.notifyDataSetChanged();
+//            }
 
             dialogDescription.dismiss();
         });
@@ -1164,10 +1165,10 @@ public class MainOrderMobileFragment extends Fragment {
                     productList.clear();
 
                     ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                    CollectionUtils.filter(listPrd, l -> l.KEY != 0);
+                    CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
                     if (listPrd.size() > 0)
                         for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).KEY - 1;//new position
+                            int position = listPrd.get(i).getKey() - 1;//new position
                             int index = resultPrd_.indexOf(listPrd.get(i));//old position
                             if (resultPrd_.size() > position) {
                                 Product itemProduct = resultPrd_.get(position);
@@ -1185,7 +1186,7 @@ public class MainOrderMobileFragment extends Fragment {
                     productAdapter.notifyDataSetChanged();
 
                     for (int i=0;i<productList.size();i++){
-                        getImage(productList.get(i).I);
+                        getImage(productList.get(i).getI());
                     }
 
 
@@ -1663,11 +1664,12 @@ public class MainOrderMobileFragment extends Fragment {
                     try {
 
 
-                        Product product = Select.from(Product.class)
+                        ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class)
                                 .where(" I  = '" + Prd_GUID + "'").first();
                         product.Url = response.body()
                                 .replace("data:image/png;base64,", "");
-                        Product.save(product);
+                        product.I=Prd_GUID;
+                        product.save();
                         productAdapter.notifyDataSetChanged();
                     } catch (Exception ignored) {
                     }

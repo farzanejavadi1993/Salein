@@ -54,6 +54,7 @@ import java.util.UUID;
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
+
 import ir.kitgroup.salein.DataBase.Setting;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
@@ -63,7 +64,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Invoice;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.OrderType;
-import ir.kitgroup.salein.DataBase.Product;
+
 import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.User;
 
@@ -74,6 +75,7 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.databinding.FragmentPaymentMobileBinding;
+import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -912,10 +914,10 @@ public class PaymentMobileFragment extends Fragment {
             for (int i = 0; i < invDetails.size() - 1; i++) {
                 ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
                 int finalI = i;
-                CollectionUtils.filter(prdResult, p -> p.I.equals(invDetails.get(finalI).PRD_UID));
+                CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
                 if (prdResult.size() > 0) {
-                    double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPRDPRICEPERUNIT1());//جمع کل ردیف
-                    double discountPrice = sumTotalPrice * (prdResult.get(0).PERC_DIS / 100);//جمع تخفیف ردیف
+                    double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());//جمع کل ردیف
+                    double discountPrice = sumTotalPrice * (prdResult.get(0).getPercDis() / 100);//جمع تخفیف ردیف
                     double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
@@ -923,11 +925,11 @@ public class PaymentMobileFragment extends Fragment {
                     sumPurePrice = sumPurePrice + totalPurePrice;//جمع خالص فاکتور
                     invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                     invDetails.get(i).ROW_NUMBER = i + 1;
-                    invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).PERC_DIS;
+                    invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).getPercDis();
                     invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                    invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPRDPRICEPERUNIT1());
+                    invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPrice());
                     sumDiscount = sumDiscount + discountPrice;
-                    sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).PERC_DIS / 100);
+                    sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).getPercDis() / 100);
 
 
                 }
