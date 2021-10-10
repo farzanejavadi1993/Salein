@@ -74,7 +74,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private  String maxSale;
 
-    private final String Inv_GUID;
+    private String Inv_GUID;
 
     private final DecimalFormat df;
 
@@ -110,18 +110,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Context context, List<Product> productsList, String Inv_GUID) {
+    public ProductAdapter1(Context context, List<Product> productsList) {
         this.context = context;
         this.productsList = productsList;
-        this.maxSale = maxSale;
-        this.Inv_GUID = Inv_GUID;
+
         df = new DecimalFormat();
+
 
 
     }
 
     public void setMaxSale(String MaxSale) {
         this.maxSale=MaxSale;
+    }
+    public void setInv_GUID(String inv_guid) {
+        this.Inv_GUID=inv_guid;
     }
 
     public void Add(ArrayList<Product> arrayList) {
@@ -346,9 +349,17 @@ else {
             ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
             CollectionUtils.filter(resultPrd, r -> r.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
 
+
+
+
             if (resultPrd.size() > 0) {
 
+               InvoiceDetail invoiceDetail= Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='"+ resultPrd.get(0).getI()+"'").first();
 
+                if (invoiceDetail!=null && invoiceDetail.INV_DET_QUANTITY!=null )
+                    resultPrd.get(0).setAmount(invoiceDetail.INV_DET_QUANTITY);
+                else
+                    resultPrd.get(0).setAmount(0.0);
                 if (resultPrd.get(0).getAmount() > 0) {
                     holder.ivMinus.setVisibility(View.VISIBLE);
                     holder.ProductAmountTxt.setVisibility(View.VISIBLE);
@@ -373,7 +384,7 @@ else {
 
             holder.ivMax.setOnClickListener(view -> {
 
-                doAction(holder.getAdapterPosition(),
+                doAction(productsList.get(holder.getAdapterPosition()).getN(),holder.getAdapterPosition(),
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
@@ -395,7 +406,7 @@ else {
 
             holder.ivMinus.setOnClickListener(v -> {
 
-                doAction(holder.getAdapterPosition(),
+                doAction(productsList.get(holder.getAdapterPosition()).getN(),holder.getAdapterPosition(),
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
@@ -436,7 +447,7 @@ else {
                             }
                         }
 
-                        doAction(holder.getAdapterPosition(),
+                        doAction(productsList.get(holder.getAdapterPosition()).getN(),holder.getAdapterPosition(),
                                 holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
@@ -540,7 +551,7 @@ else {
         }
     }
 
-    private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(String name,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -726,6 +737,7 @@ else {
                                 invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
                                 invoicedetail.INV_UID = Inv_GUID;
                                 invoicedetail.INV_DET_QUANTITY = amount;
+                                invoicedetail.Name =name ;
                                 invoicedetail.PRD_UID = Prd_GUID;
                                 invoicedetail.save();
 
@@ -767,12 +779,12 @@ else {
 
     }
 
-    private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(String name,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(name,position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)

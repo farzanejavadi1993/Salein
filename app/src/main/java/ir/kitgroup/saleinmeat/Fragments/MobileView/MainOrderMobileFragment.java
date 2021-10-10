@@ -886,7 +886,8 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList);
+        productAdapter.setInv_GUID(Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -1147,11 +1148,11 @@ public class MainOrderMobileFragment extends Fragment {
 
                             productList.clear();
 
-                           /* ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
-                            CollectionUtils.filter(list1, r -> r.getN().equals("توزیع"));
-
-                            if (list1.size()>0)
-                                sharedPreferences.edit().putString("transportId",list1.get(0).getI()).apply();*/
+//                          ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
+//                            CollectionUtils.filter(list1, r -> r.getN().equals("توزیع"));
+//
+//                            if (list1.size()>0)
+//                                sharedPreferences.edit().putString("transportId",list1.get(0).getI()).apply();
 
 
                             CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع")&&r.getPrice()>0 &&  r.getSts());
@@ -1163,6 +1164,8 @@ public class MainOrderMobileFragment extends Fragment {
                                 CollectionUtils.filter(list, l -> l.getI().equals(iDs.getProductList().get(0).getI()));
                             if (list.size()==0)
                                 Util.AllProduct.addAll(iDs.getProductList());
+
+
 
 
 

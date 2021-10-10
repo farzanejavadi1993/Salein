@@ -91,67 +91,36 @@ public class PaymentMobileFragment extends Fragment {
 
 
     //region Parameter
-    private String error = "";
+    private FragmentPaymentMobileBinding binding;
+
     private SharedPreferences sharedPreferences;
 
-
-    private FragmentPaymentMobileBinding binding;
     private CustomProgress customProgress;
+
 
     private String userName;
     private String passWord;
     private double lat = 0.0;
     private double lng = 0.0;
     private String numberPos = "";
-    private Dialog dialog;
-    private TextView tvMessage;
-    private ImageView ivIcon;
-    private String Inv_GUID;
-    private String Acc_NAME = "";
-    private String Acc_GUID = "";
-    private String ord_type = "";
-    private Boolean edit;
+
+    private String error = "";
+
+
+    private Dialog dialogSendOrder;
     private RelativeLayout rlButtons;
     private MaterialButton btnReturned;
-    private MaterialButton btnOk;
-    private MaterialButton btnNo;
+    private TextView tvMessage;
 
 
-    private Dialog dialogAddress;
-    private RadioButton radioAddress1;
-    private RadioButton radioAddress2;
-
-    private MaterialButton btnNewAddress;
-
-
-    private int typeAddress = 0;
-    private String ValidAddress = "ناموجود";
-
-
-    private int fontSize = 0;
-    private int imageIconDialog;
-
-    private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
-
-
-    private Integer Ord_TYPE = -1;
-    private String Sum_PURE_PRICE = "0";
-
-
-    private List<InvoiceDetail> invDetails;
 
 
     public static Boolean setADR1 = false;
-
-
-    private String typePayment = "-1";
-    private String Tbl_GUID;
-    private double credit = 0.0;
-
-    private double sumTransport = 0.0;
-    private double sameSumTransport = 0.0;
-    private String link = "";
-
+    private Dialog dialogAddress;
+    private RadioButton radioAddress1;
+    private RadioButton radioAddress2;
+    private int typeAddress = 0;
+    private String ValidAddress = "ناموجود";
 
     private Double latitude1 = 0.0;
     private Double longitude1 = 0.0;
@@ -159,25 +128,54 @@ public class PaymentMobileFragment extends Fragment {
     private Double latitude2 = 0.0;
     private Double longitude2 = 0.0;
 
+    private int imageIconDialog;
+
+    private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
+
+
+
+    private String Sum_PURE_PRICE = "0";
+
+
+    private List<InvoiceDetail> invDetails;
+    private String typePayment = "-1";
+    private Integer Ord_TYPE = -1;
+    private String Tbl_GUID;
+    private String Inv_GUID;
+    private String Acc_NAME = "";
+    private String Acc_GUID = "";
+    private String ord_type = "";
+    private Boolean edit;
+    private Integer OrderTypeApp = 0;
+    private String dateOrder = "";
+
+
+    private double sumTransport = 0.0;
+    private double sameSumTransport = 0.0;
+    private String link = "";
+
+
     private Account acc;
 
-    private Boolean OnceSee = false;
 
-    private Integer OrderTypeApp = 0;
 
 
     private Dialog dialogTime;
-    private RecyclerView recycleTime;
     private TimeAdapter timeAdapter;
     private final ArrayList<String> timesList = new ArrayList<>();
     private final ArrayList<String> times = new ArrayList<>();
-    private ArrayList<String> arrayTime;
+    private ArrayList<String> arrayTime=new ArrayList<>();
 
-    private String dateOrder = "";
+
 
     private OrderTypePaymentAdapter orderTypePaymentAdapter;
-    private List<OrderType> OrdTList=new ArrayList<>();
-    private Invoice inv1;
+    private final List<OrderType> OrdTList=new ArrayList<>();
+
+    private Invoice invEdit;
+
+
+
+    private Boolean OnceSee = false;
     //end region Parameter
 
 
@@ -296,7 +294,7 @@ public class PaymentMobileFragment extends Fragment {
         dialogTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogTime.setContentView(R.layout.dialog_time);
         timeAdapter = new TimeAdapter(getActivity(), times);
-        recycleTime = dialogTime.findViewById(R.id.recyclerTime);
+        RecyclerView recycleTime = dialogTime.findViewById(R.id.recyclerTime);
         recycleTime.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleTime.setAdapter(timeAdapter);
 
@@ -337,7 +335,7 @@ public class PaymentMobileFragment extends Fragment {
         radioAddress1 = dialogAddress.findViewById(R.id.radioAddress1);
         radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
         radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
-        btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
+        MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
 
 
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -433,9 +431,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //region Edit View
-        inv1 = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
-        if (edit && inv1 != null && inv1.INV_DESCRIBTION != null) {
-            binding.edtDescription.setText(inv1.INV_DESCRIBTION);
+        invEdit = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
+        if (edit && invEdit != null && invEdit.INV_DESCRIBTION != null) {
+            binding.edtDescription.setText(invEdit.INV_DESCRIBTION);
         }
 
 
@@ -454,24 +452,24 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //region Cast DialogSendOrder
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCancelable(false);
-        tvMessage = dialog.findViewById(R.id.tv_message);
-        ivIcon = dialog.findViewById(R.id.iv_icon);
+        dialogSendOrder = new Dialog(getActivity());
+        dialogSendOrder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSendOrder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSendOrder.setContentView(R.layout.custom_dialog);
+        dialogSendOrder.setCancelable(false);
+        tvMessage = dialogSendOrder.findViewById(R.id.tv_message);
+        ImageView ivIcon = dialogSendOrder.findViewById(R.id.iv_icon);
 
         ivIcon.setImageResource(imageIconDialog);
-        rlButtons = dialog.findViewById(R.id.layoutButtons);
-        btnReturned = dialog.findViewById(R.id.btn_returned);
-        btnOk = dialog.findViewById(R.id.btn_ok);
-        btnNo = dialog.findViewById(R.id.btn_cancel);
+        rlButtons = dialogSendOrder.findViewById(R.id.layoutButtons);
+        btnReturned = dialogSendOrder.findViewById(R.id.btn_returned);
+        MaterialButton btnOk = dialogSendOrder.findViewById(R.id.btn_ok);
+        MaterialButton btnNo = dialogSendOrder.findViewById(R.id.btn_cancel);
 
 
         btnReturned.setOnClickListener(v -> {
 
-            dialog.dismiss();
+            dialogSendOrder.dismiss();
             if (App.mode == 2) {
 
                 if (edit) {
@@ -505,7 +503,14 @@ public class PaymentMobileFragment extends Fragment {
                     replaceFragment.commit();
                 }
 
-            } else {
+            }
+
+
+
+
+
+
+            else {
                 Account.deleteAll(Account.class);
                 if (Tbl_GUID.equals("")) {
                     Tables tables = new Tables();
@@ -791,16 +796,16 @@ public class PaymentMobileFragment extends Fragment {
             rlButtons.setVisibility(View.VISIBLE);
             btnReturned.setVisibility(View.GONE);
 
-            dialog.show();
+            dialogSendOrder.show();
 
         });
 
 
-        btnNo.setOnClickListener(v -> dialog.dismiss());
+        btnNo.setOnClickListener(v -> dialogSendOrder.dismiss());
 
 
         btnOk.setOnClickListener(v -> {
-            dialog.dismiss();
+            dialogSendOrder.dismiss();
             Date date = Calendar.getInstance().getTime();
             @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
                     new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -906,11 +911,11 @@ public class PaymentMobileFragment extends Fragment {
 
             invoice.Acc_name = Acc_NAME;
             invoice.save();
-            // LauncherFragment.factorGuid = GID;
+
 
 
             List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").list();
-            // List<InvoiceDetail> invoiceDetailList = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
 
             List<InvoiceDetail> invoiceDetailList = invDetails;
 
@@ -1007,24 +1012,46 @@ public class PaymentMobileFragment extends Fragment {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
                     int message = 0;
-                    String description = "";
+
                     if (iDs != null) {
                         message = iDs.getLogs().get(0).getMessage();
-                        description = iDs.getLogs().get(0).getDescription();
+
                     }
 
 
                     rlButtons.setVisibility(View.GONE);
                     btnReturned.setVisibility(View.VISIBLE);
+
+
+
+
+
+                    ArrayList<Product> arrayList = new ArrayList<>(Util.AllProduct);
+                    CollectionUtils.filter(arrayList,a->a.getAmount()>0);
+                    for (int i=0;i<arrayList.size();i++){
+                        Util.AllProduct.get(Util.AllProduct.indexOf(arrayList.get(i))).setAmount(0.0);
+                    }
+                    sharedPreferences.edit().putString("Inv_GUID","").apply();
+
+
+
+
+
                     if (message == 1) {
                         List<Invoice> invoices=Select.from(Invoice.class).list();
                       CollectionUtils.filter(invoices,i->!i.INV_SYNC.equals("#"));
+
+
+
                       for (int i=0;i<invoices.size();i++){
                          Invoice.delete(invoices.get(i));
                           List<InvoiceDetail> invoiceDetails= Select.from(InvoiceDetail.class).where("INVUID ='" +
                                   invoices.get(i).INV_UID+ "'").list();
                           InvoiceDetail.delete(invoiceDetails);
                       }
+
+
+
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
 
                         Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
@@ -1032,15 +1059,16 @@ public class PaymentMobileFragment extends Fragment {
                             tb.SV = false;
                             tb.save();
                         }
-                        dialog.show();
+                        dialogSendOrder.show();
                     } else {
                         Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
                         if (invoice!=null) {
                             invoice.INV_SYNC = "#";
                             invoice.save();
                         }
+
                         tvMessage.setText("خطا در ارسال ،" + "این سفارش ذخیره می شود با مراجعه به پروفایل خود سفارش را مجددارسال کنید");
-                        dialog.show();
+                        dialogSendOrder.show();
 
                     }
 
@@ -1401,12 +1429,12 @@ public class PaymentMobileFragment extends Fragment {
                             Ord_TYPE = OrdTList.get(0).getC();
                             binding.rlTypeOrder.setVisibility(View.GONE);
                         }
-                        if (inv1 != null && inv1.INV_TYPE_ORDER != null) {
+                        if (invEdit != null && invEdit.INV_TYPE_ORDER != null) {
                             ArrayList<OrderType> list2 = new ArrayList<>(OrdTList);
-                            CollectionUtils.filter(list2, r -> r.getC().equals(inv1.INV_TYPE_ORDER));
+                            CollectionUtils.filter(list2, r -> r.getC().equals(invEdit.INV_TYPE_ORDER));
                             if (list2.size() > 0) {
                                 OrdTList.get(OrdTList.indexOf(list2.get(0))).Click = true;
-                                Ord_TYPE = inv1.INV_TYPE_ORDER;
+                                Ord_TYPE = invEdit.INV_TYPE_ORDER;
                             }
                             orderTypePaymentAdapter.notifyDataSetChanged();
                         }
