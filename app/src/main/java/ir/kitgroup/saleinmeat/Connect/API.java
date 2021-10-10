@@ -1,8 +1,15 @@
 package ir.kitgroup.saleinmeat.Connect;
 
+import com.google.gson.JsonElement;
+
+import io.reactivex.Observable;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -93,6 +100,16 @@ public interface API {
 
     @GET("GetImage")
     Call<String> getImage(@Query("productId") String productId);
+
+
+    @GET("GetImage")
+    Observable<String> getImage1(@Query("productId") String productId);
+
+
+
+    @GET("productSync")
+    Observable<String> getProduct1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
+
 
 
 }

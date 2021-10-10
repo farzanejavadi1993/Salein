@@ -13,6 +13,7 @@ import com.cedarstudios.cedarmapssdk.model.MapID;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.orm.SugarContext;
 import com.orm.query.Select;
 
@@ -50,7 +51,7 @@ public class App extends Application {
 
 
                     User user = new User();
-                   user.ipLocal = "192.168.20.8:96";
+                    user.ipLocal = "192.168.20.8:96";
                     user.userName = "admin";
                 /*   user.ipLocal = "185.201.49.204:9999";
                     user.userName = "administrator";*/
@@ -120,6 +121,7 @@ public class App extends Application {
                 Gson gson = new GsonBuilder()
                         .enableComplexMapKeySerialization()
                         .serializeNulls()
+
                         .setDateFormat(DateFormat.LONG)
                         .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
                         .setPrettyPrinting()
@@ -135,6 +137,7 @@ public class App extends Application {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(baseUrl)
                         .addConverterFactory(GsonConverterFactory.create(gson))
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .client(client)
                         .build();
 
@@ -162,6 +165,7 @@ public class App extends Application {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(baseUrl)
                         .addConverterFactory(GsonConverterFactory.create(gson))
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .client(client)
                         .build();
 

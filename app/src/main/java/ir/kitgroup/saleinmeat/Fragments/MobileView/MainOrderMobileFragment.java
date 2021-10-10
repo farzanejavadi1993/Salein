@@ -15,10 +15,12 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.NetworkOnMainThreadException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,10 @@ import java.util.List;
 
 import java.util.UUID;
 
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.saleinmeat.Adapters.AccountAdapter;
@@ -105,10 +111,13 @@ import retrofit2.Response;
 public class MainOrderMobileFragment extends Fragment {
 
     //region Parameter
+   // private final CompositeDisposable disposables = new CompositeDisposable();
 
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMobileOrderMainBinding binding;
 
     private SharedPreferences sharedPreferences;
+
 
     private String error;
 
@@ -135,6 +144,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
     private ArrayList<Product> productList;
+    private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
 
 
@@ -499,6 +509,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         productList = new ArrayList<>();
+        productListData = new ArrayList<>();
 
 
         if (productAdapter != null) {
@@ -792,6 +803,9 @@ public class MainOrderMobileFragment extends Fragment {
         //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
+
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
 
             binding.orderTxtError.setText("");
@@ -1081,7 +1095,7 @@ public class MainOrderMobileFragment extends Fragment {
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    /*CollectionUtils.filter(resultPrd_, r -> r.getPRDLVLUID2().equals() && r.getPRDPRICEPERUNIT1() > 0 && r.STS);*/
+
 
                     Gson gson = new Gson();
                     Type typeModelProduct = new TypeToken<ModelProduct>() {
@@ -1090,7 +1104,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                     productList.clear();
 
-
+                   CollectionUtils.filter(iDs.getProductList(), r -> r.getPrice()>0 &&  r.getSts());
 
                     ArrayList<Product> list=new ArrayList<>(Util.AllProduct);
                     if (iDs.getProductList().size()>0)
@@ -1117,18 +1131,32 @@ public class MainOrderMobileFragment extends Fragment {
                             }
                         }
 
+                    productListData.clear();
+                    productListData.addAll(resultPrd_);
+                        for (int i=0;i<18;i++){
+                            if (productListData.size()>i)
+                            productList.add(resultPrd_.get(i));
+                        }
 
-                    productList.addAll(resultPrd_);
+
 
                     productAdapter.notifyDataSetChanged();
 
-                    for (int i=0;i<productList.size();i++){
-/*
+                for (int i=0;i<productList.size();i++){
 
-                        ir.kitgroup.salein.DataBase.Product product =Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + productList.get(i).getI() + "'").first();
-                        if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))*/
-                            getImage(productList.get(i).getI());
+
+                        ir.kitgroup.saleinmeat.DataBase.Product product =Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + productList.get(i).getI() + "'").first();
+                        if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))
+
+                            try {
+                             //  getImage1(productList.get(i).getI());
+                            }catch (Exception e){
+
+                                int p=0;
+                            }
+
                     }
+
 
 
 
@@ -1150,46 +1178,83 @@ public class MainOrderMobileFragment extends Fragment {
         }
     }
 
-    private void getImage(final String Prd_GUID) {
 
-        try {
+    private void getProduct1(String GuidPrdLvl2) {
+        compositeDisposable.add(
+                App.api.getProduct1("saleinkit_api", userName, passWord, GuidPrdLvl2)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+                            Gson gson = new Gson();
+                            Type typeModelProduct = new TypeToken<ModelProduct>() {
+                            }.getType();
+                            ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
 
-            Call<String> call = App.api.getImage(Prd_GUID);
+                            productList.clear();
 
-            call.enqueue(new Callback<String>() {
+                            CollectionUtils.filter(iDs.getProductList(), r -> r.getPrice()>0 &&  r.getSts());
 
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                            ArrayList<Product> list=new ArrayList<>(Util.AllProduct);
+                            if (iDs.getProductList().size()>0)
+                                CollectionUtils.filter(list, l -> l.getI().equals(iDs.getProductList().get(0).getI()));
+                            if (list.size()==0)
+                                Util.AllProduct.addAll(iDs.getProductList());
 
-                    try {
+
+
+                            ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
+                            ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                            CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
+                            if (listPrd.size() > 0)
+                                for (int i = 0; i < listPrd.size(); i++) {
+                                    int position = listPrd.get(i).getKey() - 1;//new position
+                                    int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                                    if (resultPrd_.size() > position) {
+                                        Product itemProduct = resultPrd_.get(position);
+                                        if (index != position) {
+                                            resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                            resultPrd_.set(index, itemProduct);
+
+                                        }
+                                    }
+                                }
+
+                            productListData.clear();
+                            productListData.addAll(resultPrd_);
+                            for (int i=0;i<10;i++){
+                                if (productListData.size()>i)
+                                    productList.add(resultPrd_.get(i));
+                            }
 
 
 
-                        ir.kitgroup.saleinmeat.DataBase.Product product ;
-                        product=Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + Prd_GUID + "'").first();
+                            productAdapter.notifyDataSetChanged();
 
-                        if (product==null)
-                            product= new ir.kitgroup.saleinmeat.DataBase.Product();
+//                            for (int i=0;i<productList.size();i++){
+//                                ir.kitgroup.saleinmeat.DataBase.Product product =Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + productList.get(i).getI() + "'").first();
+//                                if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))
+//
+//                                    try {
+//
+//                                        int count=0;
+//                                        getImage1(productList.get(i).getI(),count);
+//                                    }catch (Exception e){
+//
+//                                        int p=0;
+//                                    }
+//                            }
 
-                        product.Url = response.body().replace("data:image/png;base64,", "");
-                        product.I=Prd_GUID;
-                        product.save();
-                        productAdapter.notifyDataSetChanged();
-                    } catch (Exception ignored) {
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
 
-                    // Toast.makeText(getActivity(), "خطا در دریافت تصویر کالا" +
-                    // t.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (NetworkOnMainThreadException ex) {
-
-        }
+                        }, throwable -> {
+                            int t=0;
+                        })
+        );
     }
+
+
 
     private void getSettingPrice(String GUID) {
 
@@ -1207,7 +1272,7 @@ public class MainOrderMobileFragment extends Fragment {
                     ModelSetting iDs = gson.fromJson(response.body(), typeIDs);
 
                     sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
-                    getProduct(GUID);
+                    getProduct1(GUID);
 
 
                 }
@@ -1538,4 +1603,42 @@ public class MainOrderMobileFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
+
+
+    public void getImage1(String prd_uid,int count){
+
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(
+                App.api.getImage1(prd_uid)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+
+                            ir.kitgroup.saleinmeat.DataBase.Product product ;
+                            product=Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
+
+                            if (product==null)
+                                product= new ir.kitgroup.saleinmeat.DataBase.Product();
+
+                            product.Url = jsonElement.replace("data:image/png;base64,", "");
+                            product.I=prd_uid;
+                            product.save();
+                          //  productAdapter.notifyDataSetChanged();
+
+
+                        }, throwable -> {
+                            int t=0;
+                        })
+        );
+    }
+
+
+
+
+
+
 }

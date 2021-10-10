@@ -40,6 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.Util.Util;
 import ir.kitgroup.saleinmeat.classes.App;
@@ -58,6 +61,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static ir.kitgroup.saleinmeat.Util.Util.AllProduct;
+import static ir.kitgroup.saleinmeat.Util.Util.getPrice;
 
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
@@ -205,6 +209,52 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 }
 
             }
+else {
+                switch (LauncherActivity.name) {
+                    case "ir.kitgroup.salein":
+
+                        holder.productImage.setImageResource(R.drawable.white);
+                        holder.productImage1.setImageResource(R.drawable.logo1);
+                        break;
+
+                    case "ir.kitgroup.saleintop":
+                        holder.productImage.setImageResource(R.drawable.white);
+                        holder.productImage1.setImageResource(R.drawable.top_png);
+
+
+                        break;
+
+
+                    case "ir.kitgroup.saleinmeat":
+
+                        holder.productImage.setImageResource(R.drawable.white);
+                        holder.productImage1.setImageResource(R.drawable.meat_png);
+                        break;
+
+
+                    case "ir.kitgroup.saleinnoon":
+
+
+                        holder.productImage.setImageResource(R.drawable.noon);
+                        break;
+                }
+            }
+
+
+
+
+
+                ir.kitgroup.saleinmeat.DataBase.Product product =Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + productsList.get(position).getI() + "'").first();
+                if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))
+
+                    try {
+
+                        int count=0;
+                       getImage1(productsList.get(position).getI(),count);
+                    }catch (Exception e){
+
+                        int p=0;
+                    }
 
 
 
@@ -808,6 +858,38 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
         }
     }
+
+    public void getImage1(String prd_uid,int count){
+
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(
+                App.api.getImage1(prd_uid)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+
+                            ir.kitgroup.saleinmeat.DataBase.Product product ;
+                            product=Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
+
+                            if (product==null)
+                                product= new ir.kitgroup.saleinmeat.DataBase.Product();
+
+                            product.Url = jsonElement.replace("data:image/png;base64,", "");
+                            product.I=prd_uid;
+                            product.save();
+                            //  productAdapter.notifyDataSetChanged();
+
+
+                        }, throwable -> {
+                            int t=0;
+                        })
+        );
+    }
+
 
 
 }
