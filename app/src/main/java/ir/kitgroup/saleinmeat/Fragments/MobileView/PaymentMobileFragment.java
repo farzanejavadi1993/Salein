@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -1392,6 +1393,11 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
+
+
+
+
+
     private void getSetting() {
 
 
@@ -1410,14 +1416,14 @@ public class PaymentMobileFragment extends Fragment {
                     try {
                         iDs = gson.fromJson(response.body(), typeIDs);
                     } catch (Exception e) {
-                      /*  error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
-                        showError(error);*/
+                       // error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
+                       // showError(error);
                         return;
                     }
 
                     if (iDs == null) {
-                      /*  error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
-                        showError(error);*/
+                       // error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
+                       // showError(error);
                     } else {
 
                         Setting.deleteAll(Setting.class);
@@ -1428,17 +1434,21 @@ public class PaymentMobileFragment extends Fragment {
                         String Update = settingsList.get(0).UPDATE_APP;
                         String NewVersion = settingsList.get(0).VERSION_APP;
                         String AppVersion = "";
-                        //AppVersion = appVersion();
+                     /*   try {
+                           // AppVersion = appVersion();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }*/
                         if (Update.equals("3") && !AppVersion.equals(NewVersion)) {
-                           // textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
+                          //  textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
                             btnNo.setVisibility(View.GONE);
                           //  dialogUpdate.setCancelable(false);
-                          //  dialogUpdate.show();
+                           // dialogUpdate.show();
                         } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
-                          //  textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
+                           // textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
                             btnNo.setVisibility(View.VISIBLE);
-                          //  //dialogUpdate.setCancelable(true);
-                          //  dialogUpdate.show();
+                          //  dialogUpdate.setCancelable(true);
+                           // dialogUpdate.show();
                         }
 
 
@@ -1459,7 +1469,7 @@ public class PaymentMobileFragment extends Fragment {
                 public void onFailure(Call<String> call, Throwable t) {
 
                    // error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
-                  //  showError(error);
+                   // showError(error);
 
 
                 }
@@ -1468,12 +1478,10 @@ public class PaymentMobileFragment extends Fragment {
 
         } catch (NetworkOnMainThreadException ex) {
 
-/*
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
-            showError(error);*/
+
+            //error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
+           // showError(error);
         }
-
-
     }
 
 }

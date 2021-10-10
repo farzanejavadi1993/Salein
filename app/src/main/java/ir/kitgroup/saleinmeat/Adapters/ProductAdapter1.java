@@ -72,7 +72,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final List<Product> productsList;
 
-    private final String maxSale;
+    private  String maxSale;
 
     private final String Inv_GUID;
 
@@ -110,7 +110,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Context context, List<Product> productsList, String maxSale, String Inv_GUID) {
+    public ProductAdapter1(Context context, List<Product> productsList, String Inv_GUID) {
         this.context = context;
         this.productsList = productsList;
         this.maxSale = maxSale;
@@ -120,8 +120,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
-    public void Clear() {
-        productsList.clear();
+    public void setMaxSale(String MaxSale) {
+        this.maxSale=MaxSale;
     }
 
     public void Add(ArrayList<Product> arrayList) {

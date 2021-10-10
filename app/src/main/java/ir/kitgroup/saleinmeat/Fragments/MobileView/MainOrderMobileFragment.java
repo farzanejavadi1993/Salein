@@ -536,12 +536,6 @@ public class MainOrderMobileFragment extends Fragment {
         Tbl_GUID = "";
 
 
-        maxSales = "0";
-        List<Setting> setting = Select.from(Setting.class).list();
-        if (setting.size() > 0)
-            maxSales = setting.get(0).MAX_SALE;
-
-
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
 
@@ -887,7 +881,7 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, maxSales, Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, Inv_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -1186,6 +1180,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
 
+                            productAdapter.setMaxSale(maxSales);
                             productAdapter.notifyDataSetChanged();
 
 
@@ -1218,6 +1213,7 @@ public class MainOrderMobileFragment extends Fragment {
                     ModelSetting iDs = gson.fromJson(response.body(), typeIDs);
 
                     sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
+                    maxSales=iDs.getSettings().get(0).MAX_SALE;
                     getProduct1(GUID);
 
 

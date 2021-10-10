@@ -142,7 +142,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             }
 
 
-            holder.name.setText(holder.rst.get(0).getN());
+            holder.name.setText(holder.getAdapterPosition()+1+"_"+holder.rst.get(0).getN());
             holder.price.setText(format.format(holder.rst.get(0).getPrice()));
 
 
