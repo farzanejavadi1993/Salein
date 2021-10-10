@@ -14,6 +14,7 @@ import android.net.Uri;
 
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -84,6 +85,8 @@ import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinmeat.DataBase.Setting;
 import ir.kitgroup.saleinmeat.DataBase.User;
 
+import ir.kitgroup.saleinmeat.classes.PaginationScrollListener;
+import ir.kitgroup.saleinmeat.classes.RecyclerViewLoadMoreScroll;
 import ir.kitgroup.saleinmeat.models.Description;
 
 import ir.kitgroup.saleinmeat.models.ModelAccount;
@@ -106,6 +109,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.Math.min;
 
 
 public class MainOrderMobileFragment extends Fragment {
@@ -146,6 +150,10 @@ public class MainOrderMobileFragment extends Fragment {
     private ArrayList<Product> productList;
     private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
+    private boolean isLastPage;
+    private boolean isLoading;
+    private int currentPage;
+    private int totalPage;
 
 
     //region Variable Dialog Description
@@ -260,7 +268,7 @@ public class MainOrderMobileFragment extends Fragment {
             case "ir.kitgroup.saleinmeat":
                 nameCompany = " گوشت دنیوی";
                 imageLogo = R.drawable.goosht;
-                imgBackground = R.drawable.donyavi_pas;
+                //imgBackground = R.drawable.donyavi_pas;
                 imgIconDialog = R.drawable.meat_png;
                 link = "https://b2n.ir/b37054";
                 break;
@@ -518,6 +526,9 @@ public class MainOrderMobileFragment extends Fragment {
             productLevel2Adapter.notifyDataSetChanged();
         }
 
+        isLastPage = false;
+        isLoading = false;
+        currentPage = 1;
 
         error = "";
 
@@ -556,6 +567,12 @@ public class MainOrderMobileFragment extends Fragment {
                 Inv_GUID = UUID.randomUUID().toString();
                 sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
             }
+            counter= Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID+ "'").list().size();
+
+            if (counter==0)
+                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+            else
+                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
         } else {
             binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
         }
@@ -753,7 +770,10 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
+            binding.progressbar.setVisibility(View.VISIBLE);
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            isLastPage = false;
+            currentPage = 1;
             binding.orderTxtError.setText("");
             binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
             binding.edtSearchProduct.setText("");
@@ -803,11 +823,12 @@ public class MainOrderMobileFragment extends Fragment {
         //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
-
+            binding.progressbar.setVisibility(View.VISIBLE);
             productList.clear();
             productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-
+            isLastPage = false;
+            currentPage = 1;
             binding.orderTxtError.setText("");
             binding.edtSearchProduct.removeTextChangedListener(textWatcherProduct);
             binding.edtSearchProduct.setText("");
@@ -871,6 +892,29 @@ public class MainOrderMobileFragment extends Fragment {
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
+        RecyclerViewLoadMoreScroll scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
+        binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+
+            @Override
+            protected void loadMoreItems() {
+
+                currentPage++;
+                loadMore();
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+
+
+        binding.orderRecyclerViewProduct.addOnScrollListener(scrollListener);
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
         productAdapter.setOnClickListener(() -> {
@@ -1086,97 +1130,7 @@ public class MainOrderMobileFragment extends Fragment {
         }
     }
 
-    private void getProduct(String GuidPrdLvl2) {
-        try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, GuidPrdLvl2);
-
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-
-                    Gson gson = new Gson();
-                    Type typeModelProduct = new TypeToken<ModelProduct>() {
-                    }.getType();
-                    ModelProduct iDs = gson.fromJson(response.body(), typeModelProduct);
-
-                    productList.clear();
-
-                   CollectionUtils.filter(iDs.getProductList(), r -> r.getPrice()>0 &&  r.getSts());
-
-                    ArrayList<Product> list=new ArrayList<>(Util.AllProduct);
-                    if (iDs.getProductList().size()>0)
-                    CollectionUtils.filter(list, l -> l.getI().equals(iDs.getProductList().get(0).getI()));
-                    if (list.size()==0)
-                    Util.AllProduct.addAll(iDs.getProductList());
-
-
-
-                    ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
-                    ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                    CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
-                    if (listPrd.size() > 0)
-                        for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).getKey() - 1;//new position
-                            int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                            if (resultPrd_.size() > position) {
-                                Product itemProduct = resultPrd_.get(position);
-                                if (index != position) {
-                                    resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                    resultPrd_.set(index, itemProduct);
-
-                                }
-                            }
-                        }
-
-                    productListData.clear();
-                    productListData.addAll(resultPrd_);
-                        for (int i=0;i<18;i++){
-                            if (productListData.size()>i)
-                            productList.add(resultPrd_.get(i));
-                        }
-
-
-
-                    productAdapter.notifyDataSetChanged();
-
-                for (int i=0;i<productList.size();i++){
-
-
-                        ir.kitgroup.saleinmeat.DataBase.Product product =Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + productList.get(i).getI() + "'").first();
-                        if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))
-
-                            try {
-                             //  getImage1(productList.get(i).getI());
-                            }catch (Exception e){
-
-                                int p=0;
-                            }
-
-                    }
-
-
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
-                    showError(error);
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
-            showError(error);
-        }
-    }
 
 
     private void getProduct1(String GuidPrdLvl2) {
@@ -1194,7 +1148,8 @@ public class MainOrderMobileFragment extends Fragment {
 
                             productList.clear();
 
-                            CollectionUtils.filter(iDs.getProductList(), r -> r.getPrice()>0 &&  r.getSts());
+                            CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع")&&r.getPrice()>0 &&  r.getSts());
+
 
                             ArrayList<Product> list=new ArrayList<>(Util.AllProduct);
                             if (iDs.getProductList().size()>0)
@@ -1214,16 +1169,17 @@ public class MainOrderMobileFragment extends Fragment {
                                     if (resultPrd_.size() > position) {
                                         Product itemProduct = resultPrd_.get(position);
                                         if (index != position) {
-                                            resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                             resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
                                             resultPrd_.set(index, itemProduct);
 
                                         }
                                     }
                                 }
 
+
                             productListData.clear();
                             productListData.addAll(resultPrd_);
-                            for (int i=0;i<10;i++){
+                            for (int i=0;i<18;i++){
                                 if (productListData.size()>i)
                                     productList.add(resultPrd_.get(i));
                             }
@@ -1232,24 +1188,14 @@ public class MainOrderMobileFragment extends Fragment {
 
                             productAdapter.notifyDataSetChanged();
 
-//                            for (int i=0;i<productList.size();i++){
-//                                ir.kitgroup.saleinmeat.DataBase.Product product =Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + productList.get(i).getI() + "'").first();
-//                                if (product==null ||(product!=null && (product.Url.equals("") || product.Url==null)))
-//
-//                                    try {
-//
-//                                        int count=0;
-//                                        getImage1(productList.get(i).getI(),count);
-//                                    }catch (Exception e){
-//
-//                                        int p=0;
-//                                    }
-//                            }
+
+                            binding.progressbar.setVisibility(View.GONE);
 
 
 
                         }, throwable -> {
-                            int t=0;
+
+
                         })
         );
     }
@@ -1381,13 +1327,96 @@ public class MainOrderMobileFragment extends Fragment {
 
 
 
+    private void loadMore() {
 
 
+        int pageSize = 18;
+        isLoading = true;
+
+        final ArrayList<Product> items = new ArrayList<>();
+        totalPage = (productListData.size() + pageSize - 1) / pageSize;
+
+        if (totalPage > 1) {
+
+            int start = ((currentPage * pageSize) - (pageSize - 1)) - 1;
+            int end = (min((start + 1) + pageSize - 1, productListData.size())) - 1;
+
+            new Handler().postDelayed(() -> {
+                try {
+
+                    items.addAll(productListData.subList(start, end));
+                    if (currentPage != 1) productAdapter.removeLoadingView();
+                    productList.addAll(items);
 
 
+                    productAdapter.notifyDataSetChanged();
 
 
+                    if (currentPage < totalPage) {
+                        productAdapter.addLoadingView();
+                    } else {
+                        isLastPage = true;
+                    }
 
+                    isLoading = false;
+                } catch (Exception e) {
+
+                    Toast.makeText(getActivity(), "لطفا صبر کنید...", Toast.LENGTH_SHORT).show();
+                }
+
+            }, 500);
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        /*if (showView) {
+            String dateOld = sharedPreferences.getString("timeOld", "");
+            Date oldDate;
+            Date dateNow = Calendar.getInstance().getTime();
+            if (!dateOld.equals("")) {
+                oldDate = stringToDate(dateOld, "dd/MM/yyyy HH:mm:ss");
+            } else {
+                oldDate = dateNow;
+            }
+
+
+            long diff = dateNow.getTime() - oldDate.getTime();
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
+            Integer time = 0;
+            if (time != 0 && minutes > time) {
+                customProgress.hideProgress();
+                productList.clear();
+                productLevel1List.clear();
+                productLevel2List.clear();
+                productLevel1Adapter.notifyDataSetChanged();
+                productLevel2Adapter.notifyDataSetChanged();
+                productAdapter.notifyDataSetChanged();
+                binding.progressbar.setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            }
+
+        }*/
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        /*if (!showView) {
+            showView = true;
+            Date dateOld = Calendar.getInstance().getTime();
+            @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
+                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            sharedPreferences.edit().putString("timeOld", dateFormats.format(dateOld)).apply();
+
+
+        }*/
+    }
 
     private static class JsonObjectAccount {
 
@@ -1465,7 +1494,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
 
-            // customProgress.showProgress(getContext(),"در حال پیدا کردن مشتری",false);
+
             Call<String> call = App.api.getAccountSearch("saleinkit_api", userName, passWord, word);
 
             call.enqueue(new Callback<String>() {
@@ -1537,58 +1566,6 @@ public class MainOrderMobileFragment extends Fragment {
 
 
 
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        /*if (showView) {
-            String dateOld = sharedPreferences.getString("timeOld", "");
-            Date oldDate;
-            Date dateNow = Calendar.getInstance().getTime();
-            if (!dateOld.equals("")) {
-                oldDate = stringToDate(dateOld, "dd/MM/yyyy HH:mm:ss");
-            } else {
-                oldDate = dateNow;
-            }
-
-
-            long diff = dateNow.getTime() - oldDate.getTime();
-            long seconds = diff / 1000;
-            long minutes = seconds / 60;
-            Integer time = 0;
-            if (time != 0 && minutes > time) {
-                customProgress.hideProgress();
-                productList.clear();
-                productLevel1List.clear();
-                productLevel2List.clear();
-                productLevel1Adapter.notifyDataSetChanged();
-                productLevel2Adapter.notifyDataSetChanged();
-                productAdapter.notifyDataSetChanged();
-                binding.progressbar.setVisibility(View.VISIBLE);
-                getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-            }
-
-        }*/
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        /*if (!showView) {
-            showView = true;
-            Date dateOld = Calendar.getInstance().getTime();
-            @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
-                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            sharedPreferences.edit().putString("timeOld", dateFormats.format(dateOld)).apply();
-
-
-        }*/
-    }
-
-
     private Date stringToDate(String aDate, String aFormat) {
 
         if (aDate == null) return null;
@@ -1603,41 +1580,6 @@ public class MainOrderMobileFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
-
-
-    public void getImage1(String prd_uid,int count){
-
-
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(
-                App.api.getImage1(prd_uid)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(jsonElement -> {
-
-
-                            ir.kitgroup.saleinmeat.DataBase.Product product ;
-                            product=Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
-
-                            if (product==null)
-                                product= new ir.kitgroup.saleinmeat.DataBase.Product();
-
-                            product.Url = jsonElement.replace("data:image/png;base64,", "");
-                            product.I=prd_uid;
-                            product.save();
-                          //  productAdapter.notifyDataSetChanged();
-
-
-                        }, throwable -> {
-                            int t=0;
-                        })
-        );
-    }
-
-
-
 
 
 

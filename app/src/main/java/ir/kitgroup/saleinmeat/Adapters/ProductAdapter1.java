@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -119,6 +120,25 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
+    public void Clear() {
+        productsList.clear();
+    }
+
+    public void Add(ArrayList<Product> arrayList) {
+        productsList.addAll(arrayList);
+    }
+
+    public void addLoadingView() {
+        new Handler().post(() -> {
+            productsList.add(null);
+            notifyItemInserted(productsList.size() - 1);
+        });
+    }
+
+    public void removeLoadingView() {
+        productsList.remove(productsList.size() - 1);
+        notifyItemRemoved(productsList.size());
+    }
 
     @Override
     public int getItemCount() {
