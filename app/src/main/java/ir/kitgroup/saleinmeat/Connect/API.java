@@ -111,5 +111,7 @@ public interface API {
     Observable<String> getProduct1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
 
 
+    @GET("SettingSync")
+    Observable<String> getSetting1(@Query("userName") String userName, @Query("password") String password);
 
 }

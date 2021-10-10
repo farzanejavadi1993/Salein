@@ -53,10 +53,12 @@ import org.apache.commons.collections4.CollectionUtils;
 
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +76,7 @@ import ir.kitgroup.saleinmeat.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinmeat.Adapters.ProductAdapter1;
 import ir.kitgroup.saleinmeat.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.saleinmeat.Adapters.ProductLevel2Adapter;
+import ir.kitgroup.saleinmeat.DataBase.OrderType;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.classes.CustomProgress;
 
@@ -95,6 +98,7 @@ import ir.kitgroup.saleinmeat.models.ModelLog;
 import ir.kitgroup.saleinmeat.models.ModelProduct;
 import ir.kitgroup.saleinmeat.models.ModelProductLevel1;
 import ir.kitgroup.saleinmeat.models.ModelProductLevel2;
+import ir.kitgroup.saleinmeat.models.ModelTypeOrder;
 import ir.kitgroup.saleinmeat.models.Product;
 import ir.kitgroup.saleinmeat.models.ProductLevel1;
 import ir.kitgroup.saleinmeat.models.ModelSetting;
@@ -751,6 +755,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         getProductLevel1();
+        getSetting();
 
         //region CONFIGURATION DATA PRODUCT_LEVEL1
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
@@ -1142,7 +1147,15 @@ public class MainOrderMobileFragment extends Fragment {
 
                             productList.clear();
 
+                           /* ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
+                            CollectionUtils.filter(list1, r -> r.getN().equals("توزیع"));
+
+                            if (list1.size()>0)
+                                sharedPreferences.edit().putString("transportId",list1.get(0).getI()).apply();*/
+
+
                             CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع")&&r.getPrice()>0 &&  r.getSts());
+
 
 
                             ArrayList<Product> list=new ArrayList<>(Util.AllProduct);
@@ -1214,6 +1227,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                     sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
                     maxSales=iDs.getSettings().get(0).MAX_SALE;
+                    sharedPreferences.edit().putString("maxSale", maxSales).apply();
                     getProduct1(GUID);
 
 
@@ -1576,6 +1590,82 @@ public class MainOrderMobileFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
+
+
+
+    private void getSetting() {
+
+
+        try {
+
+            Call<String> call = App.api.getSetting(userName, passWord);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Gson gson = new Gson();
+                    Type typeIDs = new TypeToken<ModelSetting>() {
+                    }.getType();
+
+                    ModelSetting iDs;
+                    try {
+                        iDs = gson.fromJson(response.body(), typeIDs);
+                    } catch (Exception e) {
+                         error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
+                         showError(error);
+                        return;
+                    }
+
+                    if (iDs == null) {
+                         error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
+                         showError(error);
+                    } else {
+
+
+                        List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
+                        String Update = settingsList.get(0).UPDATE_APP;
+                        String NewVersion = settingsList.get(0).VERSION_APP;
+                        String AppVersion = "";
+                   try {
+                           AppVersion = appVersion();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        if (Update.equals("3") && !AppVersion.equals(NewVersion)) {
+                             textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
+                            btnNo.setVisibility(View.GONE);
+                             dialogUpdate.setCancelable(false);
+                             dialogUpdate.show();
+                        } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
+                             textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
+                            btnNo.setVisibility(View.VISIBLE);
+                             dialogUpdate.setCancelable(true);
+                             dialogUpdate.show();
+                        }
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
+                     showError(error);
+
+
+                }
+            });
+
+
+        } catch (NetworkOnMainThreadException ex) {
+
+
+            //error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
+            // showError(error);
+        }
+    }
+
 
 
 

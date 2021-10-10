@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 public class InvoiceDetail extends SugarRecord {
 
     @Unique
@@ -89,6 +91,5 @@ public class InvoiceDetail extends SugarRecord {
     @Expose
     public String INV_DET_DESCRIBTION;
 
-    
 
 }

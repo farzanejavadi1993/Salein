@@ -2,10 +2,12 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -79,7 +81,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Parameter
     private FragmentInvoiceDetailMobileBinding binding;
-    private String maxSales;
+    private String maxSales="0";
     private String userName;
     private String passWord;
     private String Inv_GUID;
@@ -114,6 +116,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     private String status;
     private double sumTransport = 0.0;
+
+    private SharedPreferences sharedPreferences;
     //endregion Variable Dialog Description
 
 
@@ -134,15 +138,15 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
         customProgress = CustomProgress.getInstance();
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
 
 
-        List<Setting> setting = Select.from(Setting.class).list();
-        if (setting.size() > 0)
-            //maxSales = setting.get(0).MAX_SALE;
-            maxSales ="1";
+       maxSales= sharedPreferences.getString("maxSale","0");
+
+
 
         userName = Select.from(User.class).list().get(0).userName;
         passWord = Select.from(User.class).list().get(0).passWord;
