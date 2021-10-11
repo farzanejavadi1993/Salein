@@ -97,7 +97,9 @@
                 android:layout_below="@+id/relativeLayout"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="220dp"
-                android:layout_marginEnd="22dp"
+
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="26dp"
                 android:gravity="right"
                 android:text="@string/enter_code"
                 android:textColor="@color/medium_color"
