@@ -191,7 +191,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            if (product1==null || product1.Url == null || product1.Url.equals("")) {
+          /*  if (product1==null || product1.Url == null || product1.Url.equals("")) {
 
                     switch (LauncherActivity.name) {
                         case "ir.kitgroup.salein":
@@ -231,7 +231,30 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             decodedString.length);
 
                     holder.productImage.setImageBitmap(decodedByte);
-                }
+                }*/
+
+            if (product1 == null || product1.Url == null || product1.Url.equals("")) {
+
+                String ip = Select.from(User.class).first().ipLocal;
+
+                Picasso.get()
+                        .load("http://" + ip + "/GetImage?productId=" + productsList
+                                .get(holder.getAdapterPosition()).getI())
+                        .resize(50, 50)
+                        .centerCrop()
+                        .into(holder.productImage);
+            } else {
+
+                holder.productImage1.setImageBitmap(null);
+                byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+                        decodedString.length);
+
+                holder.productImage.setImageBitmap(decodedByte);
+            }
+
+
+
 
 
 
@@ -283,11 +306,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         break;
                 }
             }*/
-           //Glide.with(context).load(productsList.get(holder.getAdapterPosition()).Url)
-          //        .skipMemoryCache(false)
-          //        .diskCacheStrategy(DiskCacheStrategy.ALL)
-          //        .transition(DrawableTransitionOptions.withCrossFade())
-          //        .into(holder.productImage);
+            //Glide.with(context).load(productsList.get(holder.getAdapterPosition()).Url)
+            //        .skipMemoryCache(false)
+            //        .diskCacheStrategy(DiskCacheStrategy.ALL)
+            //        .transition(DrawableTransitionOptions.withCrossFade())
+            //        .into(holder.productImage);
 
             holder.productOldPrice.setTextSize(fontLargeSize);
             holder.productDiscountPercent.setTextSize(fontLargeSize);

@@ -110,7 +110,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static ir.kitgroup.salein.Util.Util.URLS;
+
 import static java.lang.Math.min;
 
 
@@ -236,23 +236,6 @@ public class MainOrderMobileFragment extends Fragment {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-
-        URLS.clear();
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956639/QYZp6mIk.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956638/QYj9PcCc.webp");
-        URLS.add("https://s101.divarcdn.com/static/thumbnails/1633956638/QYj9vVQv.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956638/QYj1PSzC.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956636/QYj1vX-h.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956635/QYj1fEFO.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956636/QYj9fbb1.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956632/QYj1vYd3.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956631/QYj1PXTH.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956632/QYjpf6_S.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956627/QYiFg_W3.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956627/QYjxv1Ya.webp");
-        URLS.add("https://s100.divarcdn.com/static/thumbnails/1633956624/QYj9_OiS.webp");
-        URLS.add("https://s101.divarcdn.com/static/thumbnails/1633956619/QYj9fNv5.webp");
-        URLS.add("https://s101.divarcdn.com/static/thumbnails/1633956618/QYjx__L7.webp");
 
         //region Configuration Text Size
         int fontSize;
@@ -1297,10 +1280,13 @@ public class MainOrderMobileFragment extends Fragment {
                                 for (int i = 0; i < productListData.size(); i++) {
                                     ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + productListData.get(i).getI() + "'").first();
                                     if (product == null || (product != null && product.Url == null))
-                                        getImage1(productListData.get(i).getI());
+                                        try {
+                                            //getImage1(productListData.get(i).getI());
+
+                                        } catch (Exception ignore) {
+                                        }
+
                                 }
-
-
 
 
                             }, throwable -> {
@@ -1780,16 +1766,19 @@ public class MainOrderMobileFragment extends Fragment {
                         })
                         .subscribe(jsonElement -> {
 
+                            try {
+                                ir.kitgroup.salein.DataBase.Product product;
+                                product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
 
-                            ir.kitgroup.salein.DataBase.Product product;
-                            product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
+                                if (product == null)
+                                    product = new ir.kitgroup.salein.DataBase.Product();
 
-                            if (product == null)
-                                product = new ir.kitgroup.salein.DataBase.Product();
+                                product.Url = jsonElement.replace("data:image/png;base64,", "");
+                                product.I = prd_uid;
+                                product.save();
 
-                            product.Url = jsonElement.replace("data:image/png;base64,", "");
-                            product.I = prd_uid;
-                            product.save();
+                            } catch (Exception ignore) {
+                            }
 
 
                     /*        productImage1.setImageBitmap(null);

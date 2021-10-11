@@ -405,8 +405,8 @@ public class MyCompanyFragment extends Fragment {
         company_SaleIn.DESC = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
         company_SaleIn.PACKAGEName = "ir.kitgroup.salein";
         company_SaleIn.Check = false;
-     company_SaleIn.IP = "192.168.20.59:3333";
-      company_SaleIn.USER = "administrator";
+     company_SaleIn.IP = "192.168.20.8:96";
+      company_SaleIn.USER = "admin";
 /*     company_SaleIn.IP = "185.201.49.204:9999";
        company_SaleIn.USER = "administrator";*/
         company_SaleIn.PASS = "123";
