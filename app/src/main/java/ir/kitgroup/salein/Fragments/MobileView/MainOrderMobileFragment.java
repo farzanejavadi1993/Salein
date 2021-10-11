@@ -639,15 +639,12 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         btnRegisterDescription.setOnClickListener(v -> {
-            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
+
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
             if (invDetail != null) {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
                 invDetail.update();
-                /*   if (LauncherActivity.screenInches < 7) {*/
-                resultPrd.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultPrd, r -> r.getI().equals(invDetail.PRD_UID));
-                //  }
+
 
             }
 
@@ -1128,90 +1125,7 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
 
-    private void getProduct(String GuidPrdLvl2) {
-        try {
 
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, GuidPrdLvl2);
-
-
-            call.enqueue(new Callback<String>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeModelProduct = new TypeToken<ModelProduct>() {
-                    }.getType();
-                    ModelProduct iDs = gson.fromJson(response.body(), typeModelProduct);
-
-                    productList.clear();
-
-                    ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
-                    CollectionUtils.filter(list1, r -> r.getN().equals("توزیع"));
-
-                    if (list1.size() > 0)
-                        sharedPreferences.edit().putString("transportId", list1.get(0).getI()).apply();
-
-
-                    CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع") && r.getPrice() > 0 && r.getSts());
-
-
-                    ArrayList<Product> list = new ArrayList<>(Util.AllProduct);
-                    if (iDs.getProductList().size() > 0)
-                        CollectionUtils.filter(list, l -> l.getI().equals(iDs.getProductList().get(0).getI()));
-                    if (list.size() == 0)
-                        Util.AllProduct.addAll(iDs.getProductList());
-
-
-                    ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
-                    ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                    CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
-                    if (listPrd.size() > 0)
-                        for (int i = 0; i < listPrd.size(); i++) {
-                            int position = listPrd.get(i).getKey() - 1;//new position
-                            int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                            if (resultPrd_.size() > position) {
-                                Product itemProduct = resultPrd_.get(position);
-                                if (index != position) {
-                                    resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                    resultPrd_.set(index, itemProduct);
-
-                                }
-                            }
-                        }
-
-
-                    productListData.clear();
-                    productListData.addAll(resultPrd_);
-                    for (int i = 0; i < 18; i++) {
-                        if (productListData.size() > i)
-                            productList.add(resultPrd_.get(i));
-                    }
-
-
-                    productAdapter.setMaxSale(maxSales);
-                    productAdapter.notifyDataSetChanged();
-
-
-                    binding.progressbar.setVisibility(View.GONE);
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    error = error + "\n" + "فروشگاه تعطیل می باشد...لطفا در زمان دیگری مراجعه کنید.";
-                    showError(error);
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
-            showError(error);
-        }
-    }
 
 
     private void getProduct1(String GuidPrdLvl2) {
@@ -1240,11 +1154,7 @@ public class MainOrderMobileFragment extends Fragment {
                                 CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع") && r.getPrice() > 0 && r.getSts());
 
 
-                                ArrayList<Product> list = new ArrayList<>(Util.AllProduct);
-                                if (iDs.getProductList().size() > 0)
-                                    CollectionUtils.filter(list, l -> l.getI().equals(iDs.getProductList().get(0).getI()));
-                                if (list.size() == 0)
-                                    Util.AllProduct.addAll(iDs.getProductList());
+
 
 
                                 ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
@@ -1276,17 +1186,34 @@ public class MainOrderMobileFragment extends Fragment {
                                 productAdapter.setMaxSale(maxSales);
                                 productAdapter.notifyDataSetChanged();
 
+
                                 binding.progressbar.setVisibility(View.GONE);
-                                for (int i = 0; i < productListData.size(); i++) {
-                                    ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + productListData.get(i).getI() + "'").first();
-                                    if (product == null || (product != null && product.Url == null))
-                                        try {
-                                            //getImage1(productListData.get(i).getI());
 
-                                        } catch (Exception ignore) {
-                                        }
 
-                                }
+
+                            }, throwable -> {
+
+
+                            })
+            );
+        } catch (Exception e) {
+            int p = 0;
+        }
+
+    }
+
+
+    private void getProduct(String Guid) {
+        try {
+            compositeDisposable.add(
+                    App.api.getProduct(userName, passWord, Guid)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                int p=0;
 
 
                             }, throwable -> {
@@ -1320,6 +1247,8 @@ public class MainOrderMobileFragment extends Fragment {
                     maxSales = iDs.getSettings().get(0).MAX_SALE;
                     sharedPreferences.edit().putString("maxSale", maxSales).apply();
                     getProduct1(GUID);
+
+
 
 
                 }
@@ -1748,53 +1677,11 @@ public class MainOrderMobileFragment extends Fragment {
         } catch (NetworkOnMainThreadException ex) {
 
 
-            //error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
-            // showError(error);
         }
     }
 
 
-    public void getImage1(String prd_uid) {
 
-
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(
-                App.api.getImage1(prd_uid)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(jsonElement -> {
-
-                            try {
-                                ir.kitgroup.salein.DataBase.Product product;
-                                product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
-
-                                if (product == null)
-                                    product = new ir.kitgroup.salein.DataBase.Product();
-
-                                product.Url = jsonElement.replace("data:image/png;base64,", "");
-                                product.I = prd_uid;
-                                product.save();
-
-                            } catch (Exception ignore) {
-                            }
-
-
-                    /*        productImage1.setImageBitmap(null);
-                            byte[] decodedString = Base64.decode(jsonElement.replace("data:image/png;base64,", ""), Base64.DEFAULT);
-                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-                                    decodedString.length);
-
-                            productImage.setImageBitmap(decodedByte);*/
-
-
-                        }, throwable -> {
-
-                            int p = 0;
-                        })
-        );
-    }
 
 
 }

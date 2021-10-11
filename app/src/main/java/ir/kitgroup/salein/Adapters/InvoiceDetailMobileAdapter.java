@@ -127,33 +127,33 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.layoutAmount.setBackground(contex.getResources().getDrawable(R.drawable.background_edittext));
         }
 
-        holder.rst = new ArrayList<>();
-        holder.rst.addAll(Util.AllProduct);
-        CollectionUtils.filter(holder.rst, r -> r.getI().equals(invoicedetail.PRD_UID));
 
-        if (holder.rst.size() > 0) {
+       List< Product >prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(position).PRD_UID+"'").list();
 
 
-            if (holder.rst.get(0).getPercDis() != 0.0) {
-                holder.discount.setText(format.format(holder.rst.get(0).getPercDis()) + "%");
+        if (prd1!=null ) {
+            if (prd1.get(0).getPercDis() != 0.0)
+                holder.discount.setText(format.format(prd1.get(0).getPercDis()) + "%");
+
+            holder.name.setText(holder.getAdapterPosition()+1+"_"+prd1.get(0).getN());
+            holder.price.setText(format.format(prd1.get(0).getPrice()));
+
+
+            double sumprice = (invoicedetail.INV_DET_QUANTITY * prd1.get(0).getPrice());
+            holder.sumPrice.setText(format.format(sumprice));
 
             } else {
-                holder.discount.setText("");
+             holder.discount.setText("");
+            holder.name.setText("");
+            holder.price.setText("");
+            holder.sumPrice.setText("");
             }
 
 
 
-            holder.name.setText(holder.getAdapterPosition()+1+"_"+holder.rst.get(0).getN());
-            holder.price.setText(format.format(holder.rst.get(0).getPrice()));
 
 
-            double sumprice = (invoicedetail.INV_DET_QUANTITY * holder.rst.get(0).getPrice());
-           /* double discountPrice = sumprice * (holder.rst.get(0).PERC_DIS / 100);
-            double totalPrice = sumprice - discountPrice;*/
-            holder.sumPrice.setText(format.format(sumprice));
 
-
-        }
         if (holder.textWatcher == null) {
             holder.textWatcher = new TextWatcher() {
                 @Override
@@ -163,7 +163,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                 /*   List<Product> prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(position).PRD_UID+"'").list();*/
                     String s = Util.toEnglishNumber(charSequence.toString());
                     s = s.contains("٫") ? s.replace("٫", ".") : s;
 
@@ -180,8 +180,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                     double amount = 0.0;
                     if (!s.equals("")) {
                          amount = Double.parseDouble(s);
-                        ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
-      CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+
+                        ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
+                      CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                         double aPlus=1;
                         if (resultPrd1.size()>0){
                             aPlus = resultPrd1.get(0).getCoef();
@@ -194,19 +195,17 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                             holder.edtAmount.setText("0");
                             holder.edtAmount.addTextChangedListener(holder.textWatcher);
-                            Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd1.get(0))).setAmount(0.0);
-                            double sumprice = (0 * holder.rst.get(0).getPrice());
+                            double sumprice = (0 * prd1.get(0).getPrice());
 
                             holder.sumPrice.setText(format.format(sumprice));
-                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
+                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", prd1.get(0).getPrice(), prd1.get(0).getPercDis() / 100);
                             return;
                         }
                     }
-                    double sumprice = (amount * holder.rst.get(0).getPrice());
-                   /* Double discountPrice = sumprice * holder.rst.get(0).PERC_DIS / 100;
-                    Double totalPrice = sumprice - discountPrice;*/
+                    double sumprice = (amount * prd1.get(0).getPrice());
+
                     holder.sumPrice.setText(format.format(sumprice));
-                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, prd1.get(0).getPrice(), prd1.get(0).getPercDis() / 100);
 
 
                 }
@@ -246,38 +245,27 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             ArrayList<InvoiceDetail> result = new ArrayList<>(orderDetailList);
             CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             if (result.size() > 0) {
-                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
 
-                CollectionUtils.filter(resultPrd_, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
-                if (resultPrd_.size() > 0) {
-                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
-
-                }
 
                 notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
 
 
-                ArrayList<Product> allResultPr = new ArrayList<>(Util.AllProduct);
+                ArrayList<Product> allResultPr = new ArrayList<>(prd1);
 
                 CollectionUtils.filter(allResultPr, r -> r.getI().equals(result.get(0).PRD_UID));
-               /* if (allResultPr.size() > 0) {
-                    if (allResultPr.get(0).descItem != null) {
-                        Util.AllProduct.get(Util.AllProduct.indexOf(allResultPr.get(0))).descItem = "";
-                    }
-                }*/
+
 
 
             }
 
             holder.imgDelete.setEnabled(true);
             holder.imgDelete.setVisibility(View.VISIBLE);
-     /*       if (LauncherActivity.screenInches >= 7)
-                deleteItem.onDelete(holder.rst.get(0).I);*/
+
         });
 
 
         holder.ivMax.setOnClickListener(v -> {
-            ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+            ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
             CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
@@ -290,15 +278,15 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * holder.rst.get(0).getPrice());
+            double sumprice = (amount * prd1.get(0).getPrice());
             holder.sumPrice.setText(format.format(sumprice));
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(), prd1.get(0).getPercDis() / 100);
 
         });
 
 
         holder.ivMinus.setOnClickListener(v -> {
-            ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+            ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
             CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
@@ -316,9 +304,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * holder.rst.get(0).getPrice());
+            double sumprice = (amount * prd1.get(0).getPrice());
             holder.sumPrice.setText(format.format(sumprice));
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), holder.rst.get(0).getPrice(), holder.rst.get(0).getPercDis() / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(), prd1.get(0).getPercDis() / 100);
         });
 
     }
@@ -330,7 +318,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
     static class viewHolder extends RecyclerView.ViewHolder {
 
-        private ArrayList<Product> rst;
+
 
         private final TextView edtDescription;
 

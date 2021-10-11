@@ -10,8 +10,7 @@ import retrofit2.http.Query;
 
 public interface API {
 
-    @GET("productSync")
-    Call<String> getProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
+
 
 
     @GET("ProductLevel2Sync")
@@ -103,7 +102,14 @@ public interface API {
 
 
     @GET("productSync")
+    Observable<String> getProduct( @Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
+
+
+
+
+    @GET("productSync")
     Observable<String> getProduct1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
+
 
 
     @GET("SettingSync")

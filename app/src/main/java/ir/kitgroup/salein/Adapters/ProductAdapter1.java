@@ -64,8 +64,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static ir.kitgroup.salein.Util.Util.AllProduct;
-
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
 
@@ -82,6 +80,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private int fontSize = 0;
     private int fontLargeSize = 0;
+
+    private int placeHolderImage;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -118,6 +118,33 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         df = new DecimalFormat();
 
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
+
+
+                break;
+
+            case "ir.kitgroup.saleintop":
+                placeHolderImage = R.drawable.top_png;
+
+
+                break;
+
+
+            case "ir.kitgroup.saleinmeat":
+
+                placeHolderImage = R.drawable.meat_png;
+
+                break;
+
+
+            case "ir.kitgroup.saleinnoon":
+
+
+                placeHolderImage = R.drawable.noon;
+                ;
+                break;
+        }
 
     }
 
@@ -190,58 +217,16 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     .where("I ='" + productsList.get(position).getI() + "'").first();
 
 
-
-          /*  if (product1==null || product1.Url == null || product1.Url.equals("")) {
-
-                    switch (LauncherActivity.name) {
-                        case "ir.kitgroup.salein":
-
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.logo1);
-                            break;
-
-                        case "ir.kitgroup.saleintop":
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.top_png);
-
-
-                            break;
-
-
-                        case "ir.kitgroup.saleinmeat":
-
-                            holder.productImage.setImageResource(R.drawable.white);
-                            holder.productImage1.setImageResource(R.drawable.meat_png);
-                            break;
-
-
-                        case "ir.kitgroup.saleinnoon":
-
-
-                            holder.productImage.setImageResource(R.drawable.noon);
-                            break;
-                    }
-
-                }
-            else if (product1!=null &&!product1.Url.equals("") && product1.Url != null) {
-
-                    holder.productImage1.setImageBitmap(null);
-                    byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-                            decodedString.length);
-
-                    holder.productImage.setImageBitmap(decodedByte);
-                }*/
-
             if (product1 == null || product1.Url == null || product1.Url.equals("")) {
+
 
                 String ip = Select.from(User.class).first().ipLocal;
 
                 Picasso.get()
                         .load("http://" + ip + "/GetImage?productId=" + productsList
                                 .get(holder.getAdapterPosition()).getI())
-                        .resize(50, 50)
-                        .centerCrop()
+                        .error(placeHolderImage)
+                        .placeholder(R.drawable.loading)
                         .into(holder.productImage);
             } else {
 
@@ -254,64 +239,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
-
-
-
-
-
-           /* ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + productsList.get(position).getI() + "'").first();
-            if (product == null || (product != null && product.Url == null))
-                try {
-
-                    getImage1(productsList.get(position).getI(), holder.productImage, holder.productImage1, holder.getAdapterPosition());
-                }
-                 catch (Exception e) {
-
-                    int p = 0;
-
-                }*/
-           /*  if (Util.URLS.size()>position){
-                Picasso.get()
-                        .load(Util.URLS.get(position))
-                        .resize(50, 50)
-                        .centerCrop()
-                        .into(holder.productImage);
-            }else {
-                switch (LauncherActivity.name) {
-                    case "ir.kitgroup.salein":
-
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.logo1);
-                        break;
-
-                    case "ir.kitgroup.saleintop":
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.top_png);
-
-
-                        break;
-
-
-                    case "ir.kitgroup.saleinmeat":
-
-                        holder.productImage.setImageResource(R.drawable.white);
-                        holder.productImage1.setImageResource(R.drawable.meat_png);
-                        break;
-
-
-                    case "ir.kitgroup.saleinnoon":
-
-
-                        holder.productImage.setImageResource(R.drawable.noon);
-                        break;
-                }
-            }*/
-            //Glide.with(context).load(productsList.get(holder.getAdapterPosition()).Url)
-            //        .skipMemoryCache(false)
-            //        .diskCacheStrategy(DiskCacheStrategy.ALL)
-            //        .transition(DrawableTransitionOptions.withCrossFade())
-            //        .into(holder.productImage);
-
             holder.productOldPrice.setTextSize(fontLargeSize);
             holder.productDiscountPercent.setTextSize(fontLargeSize);
             holder.Line.setTextSize(fontSize);
@@ -319,10 +246,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.edtDesc.setTextSize(fontSize);
             holder.ProductAmountTxt.setTextSize(fontSize);
             holder.unit.setTextSize(fontSize);
-
-
-        /*    final int newColor = context.getResources().getColor(R.color.purple_500);
-            holder.ivEdit.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);*/
 
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
@@ -371,43 +294,34 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
 
-            ArrayList<Product> resultPrd = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(resultPrd, r -> r.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
+            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
+            double amount = 0.0;
+
+            if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null)
+                amount = invoiceDetail.INV_DET_QUANTITY;
+            else
+                amount = 0.0;
 
 
-            if (resultPrd.size() > 0) {
+            productsList.get(position).setAmount(amount);
 
-                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + resultPrd.get(0).getI() + "'").first();
-
-                if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null)
-                    resultPrd.get(0).setAmount(invoiceDetail.INV_DET_QUANTITY);
-                else
-                    resultPrd.get(0).setAmount(0.0);
-                if (resultPrd.get(0).getAmount() > 0) {
-                    holder.ivMinus.setVisibility(View.VISIBLE);
-                    holder.ProductAmountTxt.setVisibility(View.VISIBLE);
-                    holder.unit.setVisibility(View.VISIBLE);
-
-
-                } else {
-                    holder.ivMinus.setVisibility(View.GONE);
-                    holder.ProductAmountTxt.setVisibility(View.GONE);
-                    holder.unit.setVisibility(View.GONE);
-
-                }
+            if (amount> 0) {
+                holder.ivMinus.setVisibility(View.VISIBLE);
+                holder.ProductAmountTxt.setVisibility(View.VISIBLE);
+                holder.unit.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.ivMinus.setVisibility(View.GONE);
+                holder.ProductAmountTxt.setVisibility(View.GONE);
+                holder.unit.setVisibility(View.GONE);
             }
 
 
-           /* if (productsList.get(holder.getAdapterPosition()).descItem != null) {
-                if (resultPrd.size() > 0)
-                    holder.edtDesc.setText(resultPrd.get(0).descItem);
 
-            } else
-                holder.edtDesc.setText("");*/
 
             holder.ivMax.setOnClickListener(view -> {
-
-                doAction(holder.getAdapterPosition(),
+                doAction(productsList.get(position).getAmount(),
+                        holder.getAdapterPosition(),
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
@@ -419,17 +333,19 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         productsList.get(position).getI(),
                         "",
                         1
-
-
                 );
-                //clickItem.onClick();
+
 
 
             });
 
+
+
+
             holder.ivMinus.setOnClickListener(v -> {
 
-                doAction(holder.getAdapterPosition(),
+                doAction(productsList.get(position).getAmount(),
+                        holder.getAdapterPosition(),
                         holder.progressBar,
                         holder.textWatcher,
                         holder.ProductAmountTxt,
@@ -443,7 +359,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         2
 
                 );
-                //clickItem.onClick(productsList.get(holder.getAdapterPosition()).getPRDUID(), String.valueOf(productsList.get(holder.getAdapterPosition()).getPRDPRICEPERUNIT1()), productsList.get(holder.getAdapterPosition()).PERC_DIS / 100,"", 2);
+
 
             });
 
@@ -470,7 +386,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
                         }
 
-                        doAction(holder.getAdapterPosition(),
+                        doAction(productsList.get(position).getAmount(),
+                                holder.getAdapterPosition(),
                                 holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
@@ -497,10 +414,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
-            if (resultPrd.size() > 0) {
-                holder.ProductAmountTxt.setText(df.format(resultPrd.get(0).getAmount()));
+            holder.ProductAmountTxt.setText(df.format(amount));
 
-            }
+
 
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
 
@@ -522,7 +438,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     static class viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
-        private final int sizeGroup = 0;
+
         private final TextView productName;
         private final TextView unit;
         private final TextView productPrice;
@@ -574,7 +490,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         }
     }
 
-    private void getMaxSales(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(double amount1,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -617,11 +533,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
 
 
-                        ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
-                        CollectionUtils.filter(resultProduct, r -> r.getI().equals(Prd_GUID));
+
 
                         if (remain <= 0) {
-                            AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(0.0);
+                          productsList.get(position).setAmount(0.0);
                             if (MinOrPlus != 3) {
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText("0");
@@ -643,15 +558,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         }
 
 
-                        if (resultProduct.size() > 0) {
+
                             double amount = 0;
                             if (MinOrPlus == 1)
-                                amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + finalAPlus;
+                                amount = amount1 + finalAPlus;
 
 
                             else if (MinOrPlus == 2) {
-                                if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= finalAPlus)
-                                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - finalAPlus;
+                                if (amount1 >= finalAPlus)
+                                    amount =amount1- finalAPlus;
                                 else
                                     return;
 
@@ -667,7 +582,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                         ivMinus.setVisibility(View.GONE);
                                         ProductAmountTxt.setVisibility(View.GONE);
-                                        AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(0.0);
+                                        productsList.get(position).setAmount(0.0);
                                         return;
                                     }
 
@@ -678,7 +593,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
 
 
-                            AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
+
+                            productsList.get(position).setAmount(amount);
 
                             if (Integer.parseInt(response.body()) - amount < 0) {
                                 Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + response.body(), Toast.LENGTH_SHORT).show();
@@ -689,17 +605,17 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                 }
 
-                                AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount((double) remain);
+                                productsList.get(position).setAmount((double)remain);
 
 
-                                // if (MinOrPlus != 3) {
+
                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                 ProductAmountTxt.setText(df.format(remain));
                                 unit.setVisibility(View.VISIBLE);
 
 
                                 ProductAmountTxt.addTextChangedListener(textWatcher);
-                                // }
+
 
                                 if (resultInvoice.size() > 0) {
                                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
@@ -775,7 +691,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
                             clickItem.onClick();
-                        }
+
 
 
                     }
@@ -801,27 +717,25 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
-    private void doAction(int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(double amount1,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(amount1,position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)
                 aPlus = 1;
-            ArrayList<Product> resultProduct = new ArrayList<>(AllProduct);
-            CollectionUtils.filter(resultProduct, r -> r.getI().equals(Prd_GUID));
 
-            if (resultProduct.size() > 0) {
-                double amount = 0;
+
+            double amount = 0;
                 if (MinOrPlus == 1) {
 
-                    amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() + aPlus;
+                    amount = amount1+ aPlus;
                 } else if (MinOrPlus == 2) {
-                    if (AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() >= aPlus)
-                        amount = AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).getAmount() - aPlus;
+                    if (amount1>= aPlus)
+                        amount = amount1 - aPlus;
 
                     else
                         return;
@@ -844,9 +758,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     }
                 }
 
-
-                AllProduct.get(AllProduct.indexOf(resultProduct.get(0))).setAmount(amount);
-
+                productsList.get(position).setAmount(amount);
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
                 ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
@@ -910,49 +822,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 ivMinus.setVisibility(View.VISIBLE);
                 ProductAmountTxt.setVisibility(View.VISIBLE);
-            }
+
         }
     }
 
-    public void getImage1(String prd_uid, ImageView productImage, ImageView productImage1, int count) {
-
-
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(
-                App.api.getImage1(prd_uid)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(jsonElement -> {
-
-
-                            ir.kitgroup.salein.DataBase.Product product;
-                            product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where(" I  = '" + prd_uid + "'").first();
-
-                            if (product == null)
-                                product = new ir.kitgroup.salein.DataBase.Product();
-
-                            product.Url = jsonElement.replace("data:image/png;base64,", "");
-                            product.I = prd_uid;
-                            product.save();
-
-                            if (productsList.get(count).getI().equals(prd_uid)) {
-                                productImage1.setImageBitmap(null);
-                                byte[] decodedString = Base64.decode(jsonElement.replace("data:image/png;base64,", ""), Base64.DEFAULT);
-                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-                                        decodedString.length);
-
-                                productImage.setImageBitmap(decodedByte);
-                            }
-
-
-                        }, throwable -> {
-
-                            int p = 0;
-                        })
-        );
-    }
 
 
 }

@@ -80,7 +80,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Parameter
     private FragmentInvoiceDetailMobileBinding binding;
-    private String maxSales="0";
+    private String maxSales = "0";
     private String userName;
     private String passWord;
     private String Inv_GUID;
@@ -117,6 +117,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumTransport = 0.0;
 
     private SharedPreferences sharedPreferences;
+
+    private ArrayList<Product> allProduct = new ArrayList<>();
     //endregion Variable Dialog Description
 
 
@@ -136,15 +138,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+        allProduct.addAll(Select.from(Product.class).list());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         customProgress = CustomProgress.getInstance();
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
 
 
-       maxSales= sharedPreferences.getString("maxSale","0");
-
+        maxSales = sharedPreferences.getString("maxSale", "0");
 
 
         userName = Select.from(User.class).list().get(0).userName;
@@ -189,35 +190,35 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Cast Dialog Delete
 
 
-            switch (LauncherActivity.name) {
-                case "ir.kitgroup.salein":
+        switch (LauncherActivity.name) {
+            case "ir.kitgroup.salein":
 
-                    imageIconDialog = R.drawable.saleinicon128;
+                imageIconDialog = R.drawable.saleinicon128;
 
-                    break;
+                break;
 
-                case "ir.kitgroup.saleintop":
+            case "ir.kitgroup.saleintop":
 
-                    imageIconDialog = R.drawable.top_png;
-
-
-                    break;
+                imageIconDialog = R.drawable.top_png;
 
 
-                case "ir.kitgroup.saleinmeat":
-
-                    imageIconDialog = R.drawable.meat_png;
+                break;
 
 
-                    break;
+            case "ir.kitgroup.saleinmeat":
 
-                case "ir.kitgroup.saleinnoon":
-
-                    imageIconDialog = R.drawable.noon;
+                imageIconDialog = R.drawable.meat_png;
 
 
-                    break;
-            }
+                break;
+
+            case "ir.kitgroup.saleinnoon":
+
+                imageIconDialog = R.drawable.noon;
+
+
+                break;
+        }
 
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -238,23 +239,19 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
-            List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID+ "'").list();
+            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-            for (int i=0;i<invoiceDetails.size();i++){
-
-                ArrayList<Product> resultPrd_ = new ArrayList<>(Util.AllProduct);
-
-                int finalI = i;
-                CollectionUtils.filter(resultPrd_, r -> r.getI().equals(invoiceDetails.get(finalI).PRD_UID));
-                if (resultPrd_.size() > 0) {
-                    Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd_.get(0))).setAmount(0.0);
+            for (int i = 0; i < invoiceDetails.size(); i++) {
+                ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
+                if (product != null) {
+                    product.setAmount(0.0);
+                    product.save();
                 }
                 InvoiceDetail.delete(invoiceDetails.get(i));
 
             }
             invoiceDetailList.clear();
             invoiceDetailAdapter.notifyDataSetChanged();
-
 
 
         });
@@ -282,8 +279,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Configuration Client Application
 
 
-
-
         //region Configuration Organization Application And Edit Mode For Save Order
         if (App.mode == 1 && type.equals("2")) {
             binding.layoutSave.setVisibility(View.VISIBLE);
@@ -297,12 +292,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                 for (int i = 0; i < invDetails.size(); i++) {
-                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                    int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
-                    if (prdResult.size() > 0) {
-                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());//جمع کل ردیف
-                        double discountPrice = sumTotalPrice * (prdResult.get(0).getPercDis() / 100);//جمع تخفیف ردیف
+
+                    ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
+
+                    if (product!=null) {
+                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());//جمع کل ردیف
+                        double discountPrice = sumTotalPrice * product.getPercDis() / 100;//جمع تخفیف ردیف
                         double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
@@ -312,11 +307,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                         invDetails.get(i).ROW_NUMBER = i + 1;
-                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).getPercDis();
+                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT =product.getPercDis();
                         invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPrice());
+                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice());
                         sumDiscount = sumDiscount + discountPrice;
-                        sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).getPercDis() / 100);
+                        sumDiscountPercent = sumDiscountPercent + (product.getPercDis() / 100);
 
 
                     }
@@ -327,7 +322,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
                     InvoiceDetail.deleteInTx(invoicedetail);
                 }
-
 
 
                 InvoiceDetail.saveInTx(invDetails);
@@ -402,17 +396,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnResend
 
 
-
-
-
         sumPrice = 0;
         sumPurePrice = 0;
         sumDiscounts = 0;
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-
-
-
 
 
         //region Cast DialogDescription
@@ -450,29 +437,23 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         btnRegisterDescription.setOnClickListener(v -> {
-            ArrayList<Product> resultPrd = new ArrayList<>();
+
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
 
             if (invDetail != null) {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
                 invDetail.update();
-                /*    if (LauncherActivity.screenInches < 7) {*/
-                resultPrd.addAll(Util.AllProduct);
-                CollectionUtils.filter(resultPrd, r -> r.getI().equals(invDetail.PRD_UID));
-                // }
+
+
 
             }
 
-            /*if (resultPrd.size() > 0) {
-                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).descItem = edtDescriptionItem.getText().toString();
-            }*/
 
 
             invoiceDetailAdapter.notifyDataSetChanged();
             dialogDescription.dismiss();
         });
         //endregion Cast DialogDescription
-
 
 
         //region Set Parameter Toolbar
@@ -543,7 +524,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Seen Order After Send It
 
 
-
         //region See Order During Work
         else {
             Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
@@ -572,8 +552,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Set Parameter Toolbar
 
 
-
-
         //region CONFIGURATION DATA INVOICE_DETAIL
 
         invoiceDetailList.clear();
@@ -592,8 +570,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-        if (type.equals("2")){
-           binding.layoutTransport.setVisibility(View.GONE);
+        if (type.equals("2")) {
+            binding.layoutTransport.setVisibility(View.GONE);
         }
 
 
@@ -602,16 +580,17 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         for (int i = 0; i < invDetails.size(); i++) {
 
-            ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-            int finalI = i;
-            CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
 
-            if (prdResult.size() > 0) {
-                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
-                double discountPrice = sumpriceE * (prdResult.get(0).getPercDis() / 100);
+
+
+            ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID+ "'").first();
+
+            if (product!=null) {
+                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());
+                double discountPrice = sumpriceE * (product.getPercDis() / 100);
                 double totalPrice = sumpriceE - discountPrice;
 
-                sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());
                 sumPurePrice = sumPurePrice + totalPrice;
                 sumDiscounts = sumDiscounts + discountPrice;
 
@@ -621,7 +600,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         if (type.equals("1"))
-        binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+            binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
@@ -635,7 +614,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.recyclerDetailInvoice.setHasFixedSize(false);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
-
 
 
         invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
@@ -657,11 +635,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     }
 
 
-                    ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(resultPrd, r -> r.getI().equals(Prd_GUID));
-                    if (resultPrd.size() > 0) {
-                        Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
 
+                    ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID+ "'").first();
+
+                    if (product!=null) {
+                        product.setAmount(amount);
+                        product.save();
                     }
                     sumPrice = 0;
                     sumPurePrice = 0;
@@ -671,16 +650,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                     for (int i = 0; i < invoiceDetails.size(); i++) {
 
-                        ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                        int finalI = i;
-                        CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetails.get(finalI).PRD_UID));
-
-                        if (prdResult.size() > 0) {
-                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
-                            double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
+                        ir.kitgroup.salein.DataBase.Product product1 = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID+ "'").first();
+                        if (product1!=null) {
+                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product1.getPrice());
+                            double discountPrice = sumprice * (product1.getPercDis() / 100);
                             double totalPrice = sumprice - discountPrice;
 
-                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product1.getPrice());
                             sumPurePrice = sumPurePrice + totalPrice;
                             sumDiscounts = sumDiscounts + discountPrice;
 
@@ -700,7 +676,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
 
-
         invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -715,17 +690,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                 for (int i = 0; i < invoiceDetail.size(); i++) {
-
-                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                    int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetail.get(finalI).PRD_UID));
-
-                    if (prdResult.size() > 0) {
-                        double sumprice = (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
-                        double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
+                    ir.kitgroup.salein.DataBase.Product product= Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetail.get(i).PRD_UID+ "'").first();
+                    if (product!=null) {
+                        double sumprice = (invoiceDetail.get(i).INV_DET_QUANTITY * product.getPrice());
+                        double discountPrice = sumprice * (product.getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetail.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                        sumPrice = sumPrice + (invoiceDetail.get(i).INV_DET_QUANTITY *product.getPrice());
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -761,16 +732,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                 for (int i = 0; i < invoiceDetailList.size(); i++) {
 
-                    ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                    int finalI = i;
-                    CollectionUtils.filter(prdResult, p -> p.getI().equals(invoiceDetailList.get(finalI).PRD_UID));
 
-                    if (prdResult.size() > 0) {
-                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
-                        double discountPrice = sumprice * (prdResult.get(0).getPercDis() / 100);
+
+
+                    ir.kitgroup.salein.DataBase.Product product= Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetailList.get(i).PRD_UID+ "'").first();
+                    if (product!=null) {
+                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice());
+                        double discountPrice = sumprice * (product.getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());
+                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice());
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -795,7 +766,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
 
-
         invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
 
             edtDescriptionItem.setText(description);
@@ -803,8 +773,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
             GuidInv = GUIDInv;
             getDescription(userName, passWord, GUIDPrd);
         });
-
-
 
 
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
@@ -847,7 +815,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnDelete
 
 
-
         //region Action BtnEdit
         binding.btnEdit.setOnClickListener(v -> {
             if (invoiceDetailList.size() == 0) {
@@ -863,7 +830,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
             replaceFragment.commit();
         });
         //endregion Action BtnEdit
-
 
 
         //region Action BtnContinue
@@ -896,12 +862,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnContinue
 
 
-
         binding.txtDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (invoiceDetailList.size()>0)
-                dialog.show();
+                if (invoiceDetailList.size() > 0)
+                    dialog.show();
             }
         });
 
@@ -999,10 +964,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
                         ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                        ArrayList<Product> resultPrd1 = new ArrayList<>(Util.AllProduct);
+
+                        ir.kitgroup.salein.DataBase.Product product= Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID+ "'").first();
 
                         CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-                        CollectionUtils.filter(resultPrd1, r -> r.getI().equals(Prd_GUID));
+
                         if (result.size() > 0) {
                             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
                             double amount = 0.0;
@@ -1014,8 +980,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     if (invoiceDetail != null) {
                                         invoiceDetail.INV_DET_QUANTITY = 0.0;
                                         invoiceDetail.update();
-                                        if (resultPrd1.size() > 0) {
-                                            resultPrd1.get(0).setAmount(0.0);
+                                        if (product!=null) {
+                                            product.setAmount(0.0);
+                                            product.save();
                                         }
                                     }
 
@@ -1031,10 +998,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                             }
 
-                            ArrayList<Product> resultPrd = new ArrayList<>(Util.AllProduct);
-                            CollectionUtils.filter(resultPrd, r -> r.getI().equals(Prd_GUID));
-                            if (resultPrd.size() > 0) {
-                                Util.AllProduct.get(Util.AllProduct.indexOf(resultPrd.get(0))).setAmount(amount);
+                            ir.kitgroup.salein.DataBase.Product product1= Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID+ "'").first();
+                            if (product1!=null) {
+                                product1.setAmount(amount);
+                                product1.update();
+
 
                             }
 
