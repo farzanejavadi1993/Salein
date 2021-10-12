@@ -41,6 +41,7 @@ public class LauncherActivity extends AppCompatActivity {
     private int imageIconDialog;
     public static Typeface iranSansBold;
     public static String name;
+    private   String namePackage;
 
 
     private int type = 0;
@@ -72,6 +73,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     imageIconDialog = R.drawable.saleinicon128;
                     name = "ir.kitgroup.salein";
+                    namePackage = "ir.kitgroup.salein";
 
                     break;
 
@@ -79,6 +81,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     imageIconDialog = R.drawable.top_png;
                     name = "ir.kitgroup.saleintop";
+                    namePackage = "ir.kitgroup.saleintop";
 
                     break;
 
@@ -87,6 +90,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     imageIconDialog = R.drawable.meat_png;
                     name = "ir.kitgroup.saleinmeat";
+                    namePackage = "ir.kitgroup.saleinmeat";
 
                     break;
 
@@ -94,6 +98,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     imageIconDialog = R.drawable.noon;
                     name = "ir.kitgroup.saleinnoon";
+                    namePackage = "ir.kitgroup.saleinnoon";
 
                     break;
             }
@@ -158,13 +163,18 @@ public class LauncherActivity extends AppCompatActivity {
             type = 0;
             dialog.show();
         } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")) {
+            if (namePackage.equals("ir.kitgroup.salein")) {
+                getSupportFragmentManager().popBackStack();
 
-
+            }
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
             if (fragment instanceof MainOrderMobileFragment) {
                 MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
                 fgf.setHomeBottomBar();
             }
+
+
+
         }
         else
             getSupportFragmentManager().popBackStack();

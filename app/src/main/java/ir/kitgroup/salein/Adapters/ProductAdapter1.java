@@ -213,11 +213,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
-            ir.kitgroup.salein.DataBase.Product product1 = Select.from(ir.kitgroup.salein.DataBase.Product.class)
-                    .where("I ='" + productsList.get(position).getI() + "'").first();
 
 
-            if (product1 == null || product1.Url == null || product1.Url.equals("")) {
+
+
 
 
                 String ip = Select.from(User.class).first().ipLocal;
@@ -228,15 +227,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         .error(placeHolderImage)
                         .placeholder(R.drawable.loading)
                         .into(holder.productImage);
-            } else {
 
-                holder.productImage1.setImageBitmap(null);
-                byte[] decodedString = Base64.decode(product1.Url, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
-                        decodedString.length);
-
-                holder.productImage.setImageBitmap(decodedByte);
-            }
 
 
             holder.productOldPrice.setTextSize(fontLargeSize);

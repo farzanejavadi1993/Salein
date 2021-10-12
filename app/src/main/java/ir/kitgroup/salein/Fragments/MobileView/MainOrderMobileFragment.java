@@ -119,7 +119,7 @@ public class MainOrderMobileFragment extends Fragment {
     //region Parameter
     // private final CompositeDisposable disposables = new CompositeDisposable();
 
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMobileOrderMainBinding binding;
 
     private SharedPreferences sharedPreferences;
@@ -1203,29 +1203,7 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
 
-    private void getProduct(String Guid) {
-        try {
-            compositeDisposable.add(
-                    App.api.getProduct(userName, passWord, Guid)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
 
-                                int p=0;
-
-
-                            }, throwable -> {
-
-
-                            })
-            );
-        } catch (Exception e) {
-            int p = 0;
-        }
-
-    }
 
 
     private void getSettingPrice(String GUID) {

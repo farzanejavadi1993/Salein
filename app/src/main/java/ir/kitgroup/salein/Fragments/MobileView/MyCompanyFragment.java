@@ -250,7 +250,7 @@ public class MyCompanyFragment extends Fragment {
 
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
-                            FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileF");
+                            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                             replaceFragment.commit();
 
                             if (customProgress.isShow) {
@@ -347,7 +347,7 @@ public class MyCompanyFragment extends Fragment {
                         bundle.putString("Inv_GUID", "");
                         MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                         mainOrderMobileFragment.setArguments(bundle);
-                        FragmentTransaction replaceFragment = Objects.requireNonNull(getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment")).addToBackStack("MainOrderMobileF");
+                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                         replaceFragment.commit();
 
                         if (customProgress.isShow) {

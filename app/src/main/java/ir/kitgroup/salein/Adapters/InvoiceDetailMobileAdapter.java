@@ -131,7 +131,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
        List< Product >prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(position).PRD_UID+"'").list();
 
 
-        if (prd1!=null ) {
+        if (prd1.size()>0) {
             if (prd1.get(0).getPercDis() != 0.0)
                 holder.discount.setText(format.format(prd1.get(0).getPercDis()) + "%");
 

@@ -1,16 +1,12 @@
-package ir.kitgroup.salein.DataBase;
+package ir.kitgroup.salein.models;
 
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.orm.SugarRecord;
-import com.orm.dsl.Unique;
 
 import ir.kitgroup.salein.Util.Util;
 
-public class Product  extends SugarRecord {
-
-    @Unique
+public class Product {
 
     @SerializedName("I")
     @Expose
