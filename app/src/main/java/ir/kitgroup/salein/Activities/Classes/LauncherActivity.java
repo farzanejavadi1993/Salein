@@ -163,10 +163,7 @@ public class LauncherActivity extends AppCompatActivity {
             type = 0;
             dialog.show();
         } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")) {
-            if (namePackage.equals("ir.kitgroup.salein")) {
-                getSupportFragmentManager().popBackStack();
 
-            }
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
             if (fragment instanceof MainOrderMobileFragment) {
                 MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;

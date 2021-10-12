@@ -3,14 +3,13 @@ package ir.kitgroup.salein.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoProvider;
+
 
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,12 +40,10 @@ import java.text.DecimalFormat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 import java.util.UUID;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
@@ -121,7 +118,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
 
-
+                placeHolderImage = R.drawable.salein;
                 break;
 
             case "ir.kitgroup.saleintop":
@@ -142,7 +139,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
                 placeHolderImage = R.drawable.noon;
-                ;
+
                 break;
         }
 
@@ -286,7 +283,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
-            double amount = 0.0;
+            double amount ;
 
             if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null)
                 amount = invoiceDetail.INV_DET_QUANTITY;
@@ -310,49 +307,39 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            holder.ivMax.setOnClickListener(view -> {
-                doAction(productsList.get(position).getAmount(),
-                        holder.getAdapterPosition(),
-                        holder.progressBar,
-                        holder.textWatcher,
-                        holder.ProductAmountTxt,
-                        holder.unit,
-                        holder.ivMinus,
-                        Select.from(User.class).first().userName,
-                        Select.from(User.class).first().passWord,
-                        maxSale,
-                        productsList.get(position).getI(),
-                        "",
-                        1
-                );
-
-
-
-            });
+            holder.ivMax.setOnClickListener(view -> doAction(productsList.get(position).getAmount(),
+                    holder.getAdapterPosition(),
+                    holder.progressBar,
+                    holder.textWatcher,
+                    holder.ProductAmountTxt,
+                    holder.unit,
+                    holder.ivMinus,
+                    Select.from(User.class).first().userName,
+                    Select.from(User.class).first().passWord,
+                    maxSale,
+                    productsList.get(position).getI(),
+                    "",
+                    1
+            ));
 
 
 
 
-            holder.ivMinus.setOnClickListener(v -> {
+            holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(position).getAmount(),
+                    holder.getAdapterPosition(),
+                    holder.progressBar,
+                    holder.textWatcher,
+                    holder.ProductAmountTxt,
+                    holder.unit,
+                    holder.ivMinus,
+                    Select.from(User.class).first().userName,
+                    Select.from(User.class).first().passWord,
+                    maxSale,
+                    productsList.get(position).getI(),
+                    "",
+                    2
 
-                doAction(productsList.get(position).getAmount(),
-                        holder.getAdapterPosition(),
-                        holder.progressBar,
-                        holder.textWatcher,
-                        holder.ProductAmountTxt,
-                        holder.unit,
-                        holder.ivMinus,
-                        Select.from(User.class).first().userName,
-                        Select.from(User.class).first().passWord,
-                        maxSale,
-                        productsList.get(position).getI(),
-                        "",
-                        2
-
-                );
-
-
-            });
+            ));
 
 
             if (holder.textWatcher == null) {
@@ -440,7 +427,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final TextView edtDesc;
         private final RelativeLayout cardEdit;
         private final RoundedImageView productImage;
-        private final ImageView productImage1;
+
         private final ImageView ivMinus;
         private final ImageView ivMax;
         private final ProgressBar progressBar;
@@ -451,7 +438,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         public viewHolder(View itemView) {
             super(itemView);
 
-            RelativeLayout cardView = itemView.findViewById(R.id.order_recycle_item_product_layout);
+
             cardEdit = itemView.findViewById(R.id.card_edit);
 
             edtDesc = itemView.findViewById(R.id.edt_description_temp);
@@ -469,7 +456,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             productImage = itemView.findViewById(R.id.order_recycle_item_product_img);
-            productImage1 = itemView.findViewById(R.id.order_recycle_item_product_img1);
             ProductAmountTxt = itemView.findViewById(R.id.order_recycle_item_product_txt_amount);
 
 
@@ -596,7 +582,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                 }
 
-                                productsList.get(position).setAmount((double)remain);
+                                productsList.get(position).setAmount(remain);
 
 
 
@@ -611,7 +597,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 if (resultInvoice.size() > 0) {
                                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
                                     if (invoiceDetail != null) {
-                                        invoiceDetail.INV_DET_QUANTITY = (double) remain;
+                                        invoiceDetail.INV_DET_QUANTITY = remain;
                                         invoiceDetail.update();
                                         clickItem.onClick();
                                     }

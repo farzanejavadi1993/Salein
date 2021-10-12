@@ -8,8 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -22,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +98,6 @@ import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ModelSetting;
 import ir.kitgroup.salein.R;
 
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
@@ -117,29 +113,24 @@ import static java.lang.Math.min;
 public class MainOrderMobileFragment extends Fragment {
 
     //region Parameter
-    // private final CompositeDisposable disposables = new CompositeDisposable();
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMobileOrderMainBinding binding;
 
     private SharedPreferences sharedPreferences;
-
-
-    private String error;
-
     private CustomProgress customProgress;
 
     private String Ord_TYPE;
     private String Tbl_GUID;
     private String Inv_GUID;
     private String Inv_GUID_ORG;
+    private String Acc_GUID = "";
+    private String Acc_NAME = "";
+
 
     private String userName;
     private String passWord;
 
 
     private TextWatcher textWatcherProduct;
-
 
     private ArrayList<ProductLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
@@ -158,6 +149,13 @@ public class MainOrderMobileFragment extends Fragment {
     private int totalPage;
 
 
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private String error;
+
+    private int counter;
+
+
+
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
@@ -173,6 +171,7 @@ public class MainOrderMobileFragment extends Fragment {
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
+
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
@@ -195,26 +194,22 @@ public class MainOrderMobileFragment extends Fragment {
     private int gender;
     //endregion Variable DialogAddAccount
 
-    private String Acc_GUID = "";
-    private String Acc_NAME = "";
-
-    private int counter;
-
-    private Boolean showView = false;
-
 
     private int imageLogo;
     private int imgIconDialog;
     private int imgBackground = 0;
     private String nameCompany;
 
-    private String maxSales = "0";
 
+    //region Variable DialogUpdate
     private Dialog dialogUpdate;
     private TextView textUpdate;
     private MaterialButton btnNo;
+    private String linkUpdate;
+    //endregion Variable DialogUpdate
 
-    private String link;
+    private String maxSales = "0";
+    private Boolean showView = false;
 
 
     //endregion Parameter
@@ -235,6 +230,7 @@ public class MainOrderMobileFragment extends Fragment {
         customProgress = CustomProgress.getInstance();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 
 
         //region Configuration Text Size
@@ -272,7 +268,7 @@ public class MainOrderMobileFragment extends Fragment {
                 imageLogo = R.drawable.goosht;
                 //imgBackground = R.drawable.donyavi_pas;
                 imgIconDialog = R.drawable.meat_png;
-                link = "https://b2n.ir/b37054";
+                linkUpdate = "https://b2n.ir/b37054";
                 break;
 
 
@@ -426,22 +422,25 @@ public class MainOrderMobileFragment extends Fragment {
             binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
 
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
                 //region Delete Item Transport For Show Counter
                 if (invDetails.size() > 0) {
+
                     for (int i = 0; i < invDetails.size(); i++) {
                         if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
                             invDetails.remove(invDetails.get(i));
                         }
                     }
+
                     counter = invDetails.size();
                     binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-                    if (App.mode == 1)
-                        binding.btnRegisterOrder.setVisibility(View.VISIBLE);
+
+
                 }
                 //endregion Delete Item Transport For Show Counter
-
                 else
                     binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+
 
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
@@ -458,9 +457,9 @@ public class MainOrderMobileFragment extends Fragment {
                 //endregion Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
 
 
+
                 switch (item.getItemId()) {
                     case R.id.homee:
-
 
                         if (!Inv_GUID_ORG.equals("")) {
                             getFragmentManager().popBackStack();
@@ -563,7 +562,19 @@ public class MainOrderMobileFragment extends Fragment {
                 Inv_GUID = UUID.randomUUID().toString();
                 sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
             }
-            counter = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list().size();
+
+
+
+
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+            if (invDetails.size() > 0) {
+                for (int i = 0; i < invDetails.size(); i++) {
+                    if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+                        invDetails.remove(invDetails.get(i));
+                    } }
+                counter = invDetails.size();
+            }
+
 
             if (counter == 0)
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
@@ -577,7 +588,8 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Create Order
 
 
-        //region Cast Variable Dialog
+
+        //region Cast Variable Dialog Sync
         dialogSync = new Dialog(getActivity());
         dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -595,9 +607,13 @@ public class MainOrderMobileFragment extends Fragment {
         });
 
 
-        btnOkDialog.setOnClickListener(v -> dialogSync.dismiss());
+        btnOkDialog.setOnClickListener(v ->{
+            dialogSync.dismiss();
+            getSetting();
+        });
 
-        //endregion Cast Variable Dialog
+        //endregion Cast Variable Dialog Sync
+
 
 
         //region Cast DialogDescription
@@ -683,7 +699,6 @@ public class MainOrderMobileFragment extends Fragment {
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
             if (App.mode == 1 && Acc_GUID.equals("")) {
-
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -691,8 +706,8 @@ public class MainOrderMobileFragment extends Fragment {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             if (invDetails.size() == 0) {
-
                 Toast.makeText(getActivity(), "هیچ سفارشی ندارید", Toast.LENGTH_SHORT).show();
+
             } else {
 
                 Bundle bundle = new Bundle();
@@ -709,8 +724,6 @@ public class MainOrderMobileFragment extends Fragment {
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
-
-
             }
 
         });
@@ -740,7 +753,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         btnOk.setOnClickListener(v -> {
             dialogUpdate.dismiss();
-            Uri uri = Uri.parse(link);
+            Uri uri = Uri.parse(linkUpdate);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
 
@@ -988,12 +1001,8 @@ public class MainOrderMobileFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
-        productList.clear();
-        descriptionList.clear();
-        productLevel1List.clear();
-        productAdapter = null;
+
     }
 
 
@@ -1009,8 +1018,24 @@ public class MainOrderMobileFragment extends Fragment {
                     Gson gson = new Gson();
                     Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
                     }.getType();
-                    ModelProductLevel1 iDs = gson.fromJson(response.body(), typeModelProductLevel1);
+                    ModelProductLevel1 iDs ;
 
+                    try {
+                        iDs = gson.fromJson(response.body(), typeModelProductLevel1);
+                    }
+                    catch (Exception e) {
+                        error = error + "\n" + "مدل دریافت شده از  گروه کالاها نا معتبر است";
+                        showError(error);
+                        binding.progressbar.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    if (iDs == null) {
+                        error = error + "\n" + "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
+                        showError(error);
+                        binding.progressbar.setVisibility(View.GONE);
+                        return;
+                    }
                     productLevel1List.addAll(iDs.getProductLevel1());
                     if (productLevel1List.size() == 1)
                         binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
@@ -1054,7 +1079,25 @@ public class MainOrderMobileFragment extends Fragment {
                     Gson gson = new Gson();
                     Type typeModelProduct2 = new TypeToken<ModelProductLevel2>() {
                     }.getType();
-                    ModelProductLevel2 iDs = gson.fromJson(response.body(), typeModelProduct2);
+                    ModelProductLevel2 iDs;
+
+
+                    try {
+                        iDs = gson.fromJson(response.body(), typeModelProduct2);
+                    }
+                    catch (Exception e) {
+                        error = error + "\n" + "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
+                        showError(error);
+                        binding.progressbar.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    if (iDs == null) {
+                        error = error + "\n" + "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد";
+                        showError(error);
+                        binding.progressbar.setVisibility(View.GONE);
+                        return;
+                    }
 
                     productLevel2List.clear();
                     productLevel2List.addAll(iDs.getProductLevel2());
@@ -1124,10 +1167,6 @@ public class MainOrderMobileFragment extends Fragment {
         }
     }
 
-
-
-
-
     private void getProduct1(String GuidPrdLvl2) {
         try {
             compositeDisposable.add(
@@ -1140,7 +1179,24 @@ public class MainOrderMobileFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Type typeModelProduct = new TypeToken<ModelProduct>() {
                                 }.getType();
-                                ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                ModelProduct iDs ;
+
+                                try {
+                                    iDs =  gson.fromJson(jsonElement, typeModelProduct);
+                                }
+                                catch (Exception e) {
+                                    error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
+                                    showError(error);
+                                    binding.progressbar.setVisibility(View.GONE);
+                                    return;
+                                }
+
+                                if (iDs == null) {
+                                    error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
+                                    showError(error);
+                                    binding.progressbar.setVisibility(View.GONE);
+                                    return;
+                                }
 
                                 productList.clear();
 
@@ -1192,19 +1248,18 @@ public class MainOrderMobileFragment extends Fragment {
 
 
                             }, throwable -> {
-
+                                error = error + "\n" + "خطا در ارتباط با سرور";
+                                showError(error);
+                                binding.progressbar.setVisibility(View.GONE);
 
                             })
             );
         } catch (Exception e) {
-            int p = 0;
+            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
+            showError(error);
         }
 
     }
-
-
-
-
 
     private void getSettingPrice(String GUID) {
 
@@ -1219,11 +1274,20 @@ public class MainOrderMobileFragment extends Fragment {
                     Gson gson = new Gson();
                     Type typeIDs = new TypeToken<ModelSetting>() {
                     }.getType();
-                    ModelSetting iDs = gson.fromJson(response.body(), typeIDs);
+                    ModelSetting iDs = null;
 
-                    sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
-                    maxSales = iDs.getSettings().get(0).MAX_SALE;
-                    sharedPreferences.edit().putString("maxSale", maxSales).apply();
+
+                    try {
+                        iDs = gson.fromJson(response.body(), typeIDs);
+                    }catch (Exception ignore){}
+
+
+                    if (iDs != null) {
+                        sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
+                        maxSales = iDs.getSettings().get(0).MAX_SALE;
+                        sharedPreferences.edit().putString("maxSale", maxSales).apply();
+
+                    }
                     getProduct1(GUID);
 
 
@@ -1425,9 +1489,7 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private static class JsonObjectAccount {
-
         public List<Account> Account;
-
     }
 
     private void addAccount(String userName, String pass, List<Account> accounts) {
@@ -1496,13 +1558,8 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private void getAccountSearch(String word) {
-
-
         try {
-
-
             Call<String> call = App.api.getAccountSearch("saleinkit_api", userName, passWord, word);
-
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -1570,7 +1627,6 @@ public class MainOrderMobileFragment extends Fragment {
 
     }
 
-
     private Date stringToDate(String aDate, String aFormat) {
 
         if (aDate == null) return null;
@@ -1613,7 +1669,8 @@ public class MainOrderMobileFragment extends Fragment {
                     if (iDs == null) {
                         error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
                         showError(error);
-                    } else {
+                    }
+                    else {
 
 
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
