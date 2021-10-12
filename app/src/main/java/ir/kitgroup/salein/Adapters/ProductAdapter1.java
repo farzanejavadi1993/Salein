@@ -57,6 +57,7 @@ import ir.kitgroup.salein.Fragments.ShowDetailFragment;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,6 +112,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     public ProductAdapter1(Context context, List<Product> productsList) {
         this.context = context;
+
         this.productsList = productsList;
 
         df = new DecimalFormat();

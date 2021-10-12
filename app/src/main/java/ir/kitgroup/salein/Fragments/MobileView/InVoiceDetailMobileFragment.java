@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.preference.PreferenceManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,7 +74,7 @@ import ir.kitgroup.salein.models.ModelDesc;
 
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.Util.Util;
+
 import ir.kitgroup.salein.databinding.FragmentInvoiceDetailMobileBinding;
 import ir.kitgroup.salein.models.ModelProduct;
 import ir.kitgroup.salein.models.Product;
@@ -84,7 +86,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Parameter
     private FragmentInvoiceDetailMobileBinding binding;
-    private String maxSales = "0";
+    private CustomProgress customProgress;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+
     private String userName;
     private String passWord;
     private String Inv_GUID;
@@ -97,34 +102,29 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private List<InvoiceDetail> invoiceDetailList;
     private InvoiceDetailMobileAdapter invoiceDetailAdapter;
 
-    private CustomProgress customProgress;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
-    private Dialog dialog;
-    private TextView textExit;
-    private ImageView ivIcon;
+    //region Variable Dialog
+    private Dialog dialogDelete;
     private int imageIconDialog;
+    //endregion Variable Dialog
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
-
     private DescriptionAdapter descriptionAdapter;
     private ArrayList<Description> descriptionList;
     private String GuidInv;
+    //endregion Variable Dialog Description
 
-    private List<InvoiceDetail> invDetails = new ArrayList<>();
 
     private String status;
     private double sumTransport = 0.0;
-
-    private SharedPreferences sharedPreferences;
-
-    private String type;
-    //endregion Variable Dialog Description
+    private String maxSales = "0";
+    private List<InvoiceDetail> invDetails = new ArrayList<>();
 
 
     //endregion Parameter
@@ -133,7 +133,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentInvoiceDetailMobileBinding.inflate(getLayoutInflater());
-
         return binding.getRoot();
     }
 
@@ -144,12 +143,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         customProgress = CustomProgress.getInstance();
+
+
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
-
-
         maxSales = sharedPreferences.getString("maxSale", "0");
 
 
@@ -189,11 +188,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.btnDelete.setTextSize(fontSize);
         binding.btnEdit.setTextSize(fontSize);
         binding.btnResend.setTextSize(fontSize);
+        binding.txtDeleteAll.setTextSize(fontSize);
         //endregion Configuration Text Size
 
 
         //region Cast Dialog Delete
-
 
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
@@ -225,32 +224,31 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 break;
         }
 
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCancelable(false);
+        dialogDelete = new Dialog(getActivity());
+        dialogDelete.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogDelete.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogDelete.setContentView(R.layout.custom_dialog);
+        dialogDelete.setCancelable(false);
 
-        textExit = dialog.findViewById(R.id.tv_message);
+        TextView textExit = dialogDelete.findViewById(R.id.tv_message);
         textExit.setText("آیا مایل به حذف کامل سبد خرید هستید؟");
-        ivIcon = dialog.findViewById(R.id.iv_icon);
+        ImageView ivIcon = dialogDelete.findViewById(R.id.iv_icon);
         ivIcon.setImageResource(imageIconDialog);
 
-        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
-        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
+        MaterialButton btnOk = dialogDelete.findViewById(R.id.btn_ok);
+        MaterialButton btnNo = dialogDelete.findViewById(R.id.btn_cancel);
         btnNo.setOnClickListener(v -> {
-            dialog.dismiss();
+            dialogDelete.dismiss();
 
         });
         btnOk.setOnClickListener(v -> {
-            dialog.dismiss();
+            dialogDelete.dismiss();
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             for (int i = 0; i < invoiceDetails.size(); i++) {
                 ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
                 if (product != null) {
-                    product.setAmount(0.0);
-                    product.save();
+                    product.delete();
                 }
                 InvoiceDetail.delete(invoiceDetails.get(i));
 
@@ -265,7 +263,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         //region Get Bundle
         Bundle bundle = getArguments();
-        type = bundle.getString("type");  //1 seen   //2 Edit
+        String type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
         String Ord_TYPE = bundle.getString("Ord_TYPE");
@@ -275,6 +273,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Get Bundle
 
 
+
+
+
         //region Configuration Client Application
         if (App.mode == 2) {
             binding.tvNameCustomer.setVisibility(View.GONE);
@@ -282,6 +283,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtTypeOrder.setVisibility(View.GONE);
         }
         //endregion Configuration Client Application
+
+
 
 
         //region Configuration Organization Application And Edit Mode For Save Order
@@ -376,6 +379,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
         //endregion Configuration Organization Application And Edit Mode For Save Order
 
+
+
+
         //region Action BtnResend
         binding.btnResend.setOnClickListener(v -> {
             if (invoiceDetailList.size() == 0) {
@@ -404,7 +410,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         sumPrice = 0;
         sumPurePrice = 0;
         sumDiscounts = 0;
-
 
 
         //region Cast DialogDescription
@@ -459,6 +464,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Cast DialogDescription
 
 
+
         //region Set Parameter Toolbar
         Utilities util = new Utilities();
         Locale loc = new Locale("en_US");
@@ -495,28 +501,32 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
 
+
                 Tables tbl1 = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
 
                 if (tbl1 != null)
                     binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
 
 
-                OrderType orderType = Select.from(OrderType.class).where("c ='" + invoice.INV_TYPE_ORDER + "'").first();
-                if (orderType != null) {
-                    binding.txtTypeOrder.setText(orderType.getN());
-                }
-
                 if (App.mode == 1) {
+                    OrderType orderType = Select.from(OrderType.class).where("c ='" + invoice.INV_TYPE_ORDER + "'").first();
+                    if (orderType != null) {
+                        binding.txtTypeOrder.setText(orderType.getN());
+                    }
+
                     Account ac = Select.from(Account.class).first();
                     if (ac != null)
                         binding.tvNameCustomer.setText(ac.N);
                 }
 
+
+
                 if (invoice.INV_DUE_DATE != null) {
                     Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
                     binding.txtDate.setText(invoice.INV_DUE_DATE.getHours() + ":" + invoice.INV_DUE_DATE.getMinutes() + " " + (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year);
 
-                } else {
+                }
+                else {
                     if (invoice.INV_DUE_DATE_PERSIAN != null)
                         binding.txtDate.setText(invoice.INV_DUE_DATE_PERSIAN);
                 }
@@ -529,10 +539,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         //region See Order During Work
         else {
-            Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-            if (tbl1 != null)
-                binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
-
 
             Calendar calendar = Calendar.getInstance();
             Utilities.SolarCalendar sc = util.new SolarCalendar(calendar.getTime());
@@ -540,14 +546,22 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtDate.setText(text2);
 
 
-            OrderType ordTY = Select.from(OrderType.class).where("c ='" + Ord_TYPE + "'").first();
-
-            if (ordTY != null)
-                binding.txtTypeOrder.setText(ordTY.getN());
 
 
-            if (App.mode == 1)
+
+            if (App.mode == 1){
+                OrderType ordTY = Select.from(OrderType.class).where("c ='" + Ord_TYPE + "'").first();
+
+                if (ordTY != null)
+                    binding.txtTypeOrder.setText(ordTY.getN());
+
                 binding.tvNameCustomer.setText(Acc_NAME);
+                Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                if (tbl1 != null)
+                    binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
+
+            }
+
 
         }
         //endregion See Order During Work
@@ -578,10 +592,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-        invoiceDetailList.addAll(invDetails);
-
-
-        for (int i = 0; i < invDetails.size(); i++) {
+        //invoiceDetailList.addAll(invDetails);
+        /*for (int i = 0; i < invDetails.size(); i++) {
 
 
             ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
@@ -597,13 +609,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             }
 
-        }
+        }*/
 
 
         if (type.equals("1"))
             binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+
 
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
@@ -616,7 +629,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setHasFixedSize(false);
         binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
-
 
 
         invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
@@ -637,13 +649,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         invoiceDetail.update();
                     }
 
-
-                    ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID + "'").first();
-
-                    if (product != null) {
-                        product.setAmount(amount);
-                        product.save();
-                    }
                     sumPrice = 0;
                     sumPurePrice = 0;
                     sumDiscounts = 0;
@@ -862,12 +867,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnContinue
 
 
-        binding.txtDeleteAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (invoiceDetailList.size() > 0)
-                    dialog.show();
-            }
+        binding.txtDeleteAll.setOnClickListener(v -> {
+            if (invoiceDetailList.size() > 0)
+                dialogDelete.show();
         });
 
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -971,7 +973,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
 
-                        ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID + "'").first();
 
                         CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
 
@@ -986,10 +987,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     if (invoiceDetail != null) {
                                         invoiceDetail.INV_DET_QUANTITY = 0.0;
                                         invoiceDetail.update();
-                                        if (product != null) {
-                                            product.setAmount(0.0);
-                                            product.save();
-                                        }
+
                                     }
 
                                     invoiceDetailAdapter.notifyDataSetChanged();
@@ -1003,16 +1001,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                 invoiceDetail.update();
 
                             }
-
-                            ir.kitgroup.salein.DataBase.Product product1 = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + Prd_GUID + "'").first();
-                            if (product1 != null) {
-                                product1.setAmount(amount);
-                                product1.update();
-
-
-                            }
-
-
                             invoiceDetailAdapter.notifyDataSetChanged();
 
                         }
@@ -1040,120 +1028,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-   /* private void getInVoice(String userName, String pass, String Inv_GUID) {
-
-        customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
-
-        try {
-
-
-            Call<String> call = App.api.getInvoice(userName, pass, Inv_GUID);
-
-            call.enqueue(new Callback<String>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelInvoice>() {
-                    }.getType();
-                    ModelInvoice iDs = null;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception ignored) {
-                    }
-
-                    if (iDs != null) {
-                        Invoice inv = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
-                        if (inv != null) {
-                            inv.delete();
-                            Invoice.saveInTx(iDs.getInvoice());
-
-
-                            status = iDs.getInvoice().get(0).INV_SYNC;
-
-                            if (App.mode == 2) {
-                                if (status != null && status.equals("*")) {
-                                    binding.btnResend.setVisibility(View.GONE);
-                                    binding.btnDelete.setVisibility(View.GONE);
-                                    binding.btnEdit.setVisibility(View.GONE);
-                                } else if (status != null && status.equals("-")) {
-                                    binding.btnResend.setVisibility(View.GONE);
-                                    binding.btnDelete.setVisibility(View.VISIBLE);
-                                    binding.btnEdit.setVisibility(View.VISIBLE);
-                                } else {
-                                    binding.btnResend.setVisibility(View.VISIBLE);
-                                    binding.btnDelete.setVisibility(View.VISIBLE);
-                                    binding.btnEdit.setVisibility(View.VISIBLE);
-                                }
-                            } else {
-                                binding.btnDelete.setVisibility(View.VISIBLE);
-                                binding.btnEdit.setVisibility(View.VISIBLE);
-                                binding.btnResend.setVisibility(View.GONE);
-                            }
-
-
-                            Tables tbl1 = Select.from(Tables.class).where("I ='" + iDs.getInvoice().get(0).TBL_UID + "'").first();
-
-                            if (tbl1 != null)
-                                binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
-
-
-                            OrderType orderType = Select.from(OrderType.class).where("c ='" + iDs.getInvoice().get(0).INV_TYPE_ORDER + "'").first();
-                            if (orderType != null) {
-                                binding.txtTypeOrder.setText(orderType.getN());
-                            }
-
-                            if (App.mode == 1) {
-                                Account ac = Select.from(Account.class).first();
-                                if (ac != null)
-                                    binding.tvNameCustomer.setText(ac.N);
-                            }
-
-
-                            if (iDs.getInvoice().get(0).INV_DUE_DATE1 != null)
-                                binding.txtDate.setText(iDs.getInvoice().get(0).INV_DUE_DATE1);
-
-
-                        }
-                        List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                        for (int i = 0; i < invoiceDetail.size(); i++) {
-                            InvoiceDetail.deleteInTx(invoiceDetail.get(i));
-                        }
-
-
-                        InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
-
-
-                        invoiceDetailList.clear();
-                        invoiceDetailList.addAll(iDs.getInvoiceDetail());
-                        invoiceDetailAdapter.notifyDataSetChanged();
-
-                    } else {
-                        Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
-                    }
-                    customProgress.hideProgress();
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    customProgress.hideProgress();
-                    Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + t.toString(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-            customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + ex.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }*/
 
     private void getProduct(String Guid, int i) {
         try {
@@ -1222,18 +1096,26 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                 inv.delete();
                             List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                             for (int i = 0; i < invoiceDetail.size(); i++) {
+                                ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invoiceDetail.get(i).PRD_UID + "'").first();
+                                if (product != null) {
+                                    product.delete();
+                                }
                                 InvoiceDetail.deleteInTx(invoiceDetail.get(i));
                             }
 
-                            assert getFragmentManager() != null;
-                            getFragmentManager().popBackStack();
+
+
                             Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            assert frg != null;
-                            ft.detach(frg);
-                            ft.attach(frg);
-                            ft.commit();
-                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                            FragmentManager ft = getActivity().getSupportFragmentManager();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                ft.beginTransaction().detach(frg).commitNow();
+                                ft.beginTransaction().attach(frg).commitNow();
+
+                            } else {
+
+                                ft.beginTransaction().detach(frg).attach(frg).commit();
+                            }
                         }
                     } else {
                         Toast.makeText(getActivity(), "خطایی در سرور رخ داد", Toast.LENGTH_SHORT).show();

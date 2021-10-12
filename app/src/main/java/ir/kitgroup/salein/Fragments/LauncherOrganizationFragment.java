@@ -403,7 +403,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        Util.AllProduct.clear();
 
 
         super.onDestroy();

@@ -1587,13 +1587,10 @@ public class MainOrderMobileFragment extends Fragment {
 
                             String description = iDs0.getLogs().get(0).getDescription();
                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                            customProgress.hideProgress();
-                            return;
 
                         } else {
                             Toast.makeText(getActivity(), "لیست دریافت شده از مشتریان نا معتبر می باشد", Toast.LENGTH_SHORT).show();
-                            customProgress.hideProgress();
-                            return;
+
                         }
 
                     } else {
@@ -1602,10 +1599,10 @@ public class MainOrderMobileFragment extends Fragment {
                         accList.addAll(iDs.getAccountList());
                         accAdapter.notifyDataSetChanged();
                         binding.accountRecyclerView.setVisibility(View.VISIBLE);
-                        customProgress.hideProgress();
 
 
                     }
+                    customProgress.hideProgress();
 
 
                 }
@@ -1631,9 +1628,8 @@ public class MainOrderMobileFragment extends Fragment {
 
         if (aDate == null) return null;
         ParsePosition pos = new ParsePosition(0);
-        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
-        Date stringDate = simpledateformat.parse(aDate, pos);
-        return stringDate;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
+        return simpledateformat.parse(aDate, pos);
 
     }
 
@@ -1709,9 +1705,7 @@ public class MainOrderMobileFragment extends Fragment {
             });
 
 
-        } catch (NetworkOnMainThreadException ex) {
-
-
+        } catch (NetworkOnMainThreadException ignored) {
         }
     }
 

@@ -55,6 +55,7 @@ import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
 
+import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Setting;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelSetting;
@@ -77,7 +78,6 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.databinding.FragmentPaymentMobileBinding;
-import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,8 +113,6 @@ public class PaymentMobileFragment extends Fragment {
     private TextView tvMessage;
 
 
-
-
     public static Boolean setADR1 = false;
     private Dialog dialogAddress;
     private RadioButton radioAddress1;
@@ -131,7 +129,6 @@ public class PaymentMobileFragment extends Fragment {
     private int imageIconDialog;
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
-
 
 
     private String Sum_PURE_PRICE = "0";
@@ -158,21 +155,17 @@ public class PaymentMobileFragment extends Fragment {
     private Account acc;
 
 
-
-
     private Dialog dialogTime;
     private TimeAdapter timeAdapter;
     private final ArrayList<String> timesList = new ArrayList<>();
     private final ArrayList<String> times = new ArrayList<>();
-    private ArrayList<String> arrayTime=new ArrayList<>();
-
+    private ArrayList<String> arrayTime = new ArrayList<>();
 
 
     private OrderTypePaymentAdapter orderTypePaymentAdapter;
-    private final List<OrderType> OrdTList=new ArrayList<>();
+    private final List<OrderType> OrdTList = new ArrayList<>();
 
     private Invoice invEdit;
-
 
 
     private Boolean OnceSee = false;
@@ -187,8 +180,7 @@ public class PaymentMobileFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-
-        customProgress=CustomProgress.getInstance();
+        customProgress = CustomProgress.getInstance();
         switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
                 imageIconDialog = R.drawable.saleinicon128;
@@ -274,7 +266,6 @@ public class PaymentMobileFragment extends Fragment {
         binding.orderListTransportTv.setTextSize(fontBigSize);
         binding.tvTransport.setTextSize(fontBigSize);
         //endregion Configuration Size
-
 
 
         customProgress = CustomProgress.getInstance();
@@ -503,14 +494,7 @@ public class PaymentMobileFragment extends Fragment {
                     replaceFragment.commit();
                 }
 
-            }
-
-
-
-
-
-
-            else {
+            } else {
                 Account.deleteAll(Account.class);
                 if (Tbl_GUID.equals("")) {
                     Tables tables = new Tables();
@@ -716,9 +700,6 @@ public class PaymentMobileFragment extends Fragment {
         //endregion Configuration RecyclerViewOrderType
 
 
-
-
-
         binding.layoutAddress.setOnClickListener(v -> {
 
 
@@ -825,7 +806,7 @@ public class PaymentMobileFragment extends Fragment {
             invoiceDetailTransport.INV_DET_DISCOUNT = "0.0";
             invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
 
-            String TransportId=sharedPreferences.getString("transportId","");
+            String TransportId = sharedPreferences.getString("transportId", "");
             if (!TransportId.equals("")) {
                 invoiceDetailTransport.PRD_UID = Util.TransportId;
             } else {
@@ -837,38 +818,34 @@ public class PaymentMobileFragment extends Fragment {
             invDetails.add(invoiceDetailTransport);
 
             for (int i = 0; i < invDetails.size() - 1; i++) {
-                ArrayList<Product> prdResult = new ArrayList<>(Util.AllProduct);
-                int finalI = i;
-                CollectionUtils.filter(prdResult, p -> p.getI().equals(invDetails.get(finalI).PRD_UID));
-                if (prdResult.size() > 0) {
-                    double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * prdResult.get(0).getPrice());//جمع کل ردیف
-                    double discountPrice = sumTotalPrice * (prdResult.get(0).getPercDis() / 100);//جمع تخفیف ردیف
+
+                ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
+
+                InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
+
+                if (product != null) {
+                    double sumTotalPrice = (invoiceDtl.INV_DET_QUANTITY * product.getPrice());//جمع کل ردیف
+                    double discountPrice = sumTotalPrice * (product.getPercDis() / 100);//جمع تخفیف ردیف
                     double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
                     sumPrice = sumPrice + sumTotalPrice;//جمع کل فاکتور
                     sumPurePrice = sumPurePrice + totalPurePrice;//جمع خالص فاکتور
-                    invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
-                    invDetails.get(i).ROW_NUMBER = i + 1;
-                    invDetails.get(i).INV_DET_PERCENT_DISCOUNT = prdResult.get(0).getPercDis();
-                    invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                    invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(prdResult.get(0).getPrice());
+                    invoiceDtl.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
+                    invoiceDtl.ROW_NUMBER = i + 1;
+                    invoiceDtl.INV_DET_PERCENT_DISCOUNT = product.getPercDis();
+                    invoiceDtl.INV_DET_DISCOUNT = String.valueOf(discountPrice);
+                    invoiceDtl.INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice());
                     sumDiscount = sumDiscount + discountPrice;
-                    sumDiscountPercent = sumDiscountPercent + (prdResult.get(0).getPercDis() / 100);
+                    sumDiscountPercent = sumDiscountPercent + (product.getPercDis() / 100);
 
+
+                    invoiceDtl.update();
 
                 }
 
             }
-
-            for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
-                InvoiceDetail.deleteInTx(invoicedetail);
-            }
-
-            InvoiceDetail.saveInTx(invDetails);
-
-
-            Invoice invoice=new Invoice();
+            Invoice invoice = new Invoice();
             invoice.INV_UID = Inv_GUID;
             invoice.INV_TOTAL_AMOUNT = sumPrice + sumTransport;//جمع فاکنور
             invoice.INV_TOTAL_DISCOUNT = 0.0;
@@ -911,7 +888,6 @@ public class PaymentMobileFragment extends Fragment {
 
             invoice.Acc_name = Acc_NAME;
             invoice.save();
-
 
 
             List<Invoice> listInvoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -1023,33 +999,20 @@ public class PaymentMobileFragment extends Fragment {
                     btnReturned.setVisibility(View.VISIBLE);
 
 
-
-
-
-                    ArrayList<Product> arrayList = new ArrayList<>(Util.AllProduct);
-                    CollectionUtils.filter(arrayList,a->a.getAmount()>0);
-                    for (int i=0;i<arrayList.size();i++){
-                        Util.AllProduct.get(Util.AllProduct.indexOf(arrayList.get(i))).setAmount(0.0);
-                    }
-                    sharedPreferences.edit().putString("Inv_GUID","").apply();
-
-
-
+                    sharedPreferences.edit().putString("Inv_GUID", "").apply();
 
 
                     if (message == 1) {
-                        List<Invoice> invoices=Select.from(Invoice.class).list();
-                      CollectionUtils.filter(invoices,i->!i.INV_SYNC.equals("#"));
+                        List<Invoice> invoices = Select.from(Invoice.class).list();
+                        CollectionUtils.filter(invoices, i -> !i.INV_SYNC.equals("#"));
 
 
-
-                      for (int i=0;i<invoices.size();i++){
-                         Invoice.delete(invoices.get(i));
-                          List<InvoiceDetail> invoiceDetails= Select.from(InvoiceDetail.class).where("INVUID ='" +
-                                  invoices.get(i).INV_UID+ "'").list();
-                          InvoiceDetail.delete(invoiceDetails);
-                      }
-
+                        for (int i = 0; i < invoices.size(); i++) {
+                            Invoice.delete(invoices.get(i));
+                            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
+                                    invoices.get(i).INV_UID + "'").list();
+                            InvoiceDetail.delete(invoiceDetails);
+                        }
 
 
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
@@ -1062,11 +1025,12 @@ public class PaymentMobileFragment extends Fragment {
                         dialogSendOrder.show();
                     } else {
                         Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-                        if (invoice!=null) {
+                        if (invoice != null) {
                             invoice.INV_SYNC = "#";
                             invoice.save();
                         }
 
+                        Product.deleteAll(Product.class);
                         tvMessage.setText("خطا در ارسال ،" + "این سفارش ذخیره می شود با مراجعه به پروفایل خود سفارش را مجددارسال کنید");
                         dialogSendOrder.show();
 
@@ -1331,12 +1295,11 @@ public class PaymentMobileFragment extends Fragment {
                         List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
 
                         if (!settingsList.get(0).ORDER_TYPE_APP.equals(""))
-                        OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                            OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
 
-                       // sharedPreferences.edit().putString("transportId",settingsList.get(0).Transport_id).apply();
+                        // sharedPreferences.edit().putString("transportId",settingsList.get(0).Transport_id).apply();
                         try {
                             arrayTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
-
 
 
                         } catch (Exception e) {
@@ -1419,7 +1382,7 @@ public class PaymentMobileFragment extends Fragment {
                     } else {
 
                         CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
-                        if (iDs.getOrderTypes().size()>0)
+                        if (iDs.getOrderTypes().size() > 0)
                             OrdTList.addAll(iDs.getOrderTypes());
 
 
@@ -1464,8 +1427,6 @@ public class PaymentMobileFragment extends Fragment {
                     else if (OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
                         binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                     //endregion Get Credit Club*/
-
-
 
 
                 }
