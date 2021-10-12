@@ -41,7 +41,7 @@ public class LauncherActivity extends AppCompatActivity {
     private int imageIconDialog;
     public static Typeface iranSansBold;
     public static String name;
-    private   String namePackage;
+    public  static    String namePackage;
 
 
     private int type = 0;

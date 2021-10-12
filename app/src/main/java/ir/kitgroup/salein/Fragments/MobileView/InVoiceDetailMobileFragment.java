@@ -77,6 +77,7 @@ import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.databinding.FragmentInvoiceDetailMobileBinding;
 import ir.kitgroup.salein.models.ModelProduct;
+import ir.kitgroup.salein.models.ModelSetting;
 import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -1042,19 +1043,37 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Type typeModelProduct = new TypeToken<ModelProduct>() {
                                 }.getType();
-                                ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
-                                ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + iDs.getProductList().get(0).getI() + "'").first();
 
-                                if (product != null)
-                                    product.update();
-                                else
-                                    ir.kitgroup.salein.DataBase.Product.saveInTx(list1.get(0));
-                                if (i == invDetails.size() - 1) {
-                                    invoiceDetailList.clear();
-                                    invoiceDetailList.addAll(invDetails);
-                                    invoiceDetailAdapter.notifyDataSetChanged();
 
+                                ModelProduct iDs = null;
+
+
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                }catch (Exception ignore){
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
+                                }
+
+
+                                if (iDs != null) {
+
+                                    ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
+                                    ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + iDs.getProductList().get(0).getI() + "'").first();
+
+                                    if (product != null)
+                                        product.update();
+                                    else
+                                        ir.kitgroup.salein.DataBase.Product.saveInTx(list1.get(0));
+                                    if (i == invDetails.size() - 1) {
+                                        invoiceDetailList.clear();
+                                        invoiceDetailList.addAll(invDetails);
+                                        invoiceDetailAdapter.notifyDataSetChanged();
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    }
+                                }else {
+                                    Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
                                 }
 
                             }, throwable -> {
@@ -1063,7 +1082,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             })
             );
         } catch (Exception e) {
-            int p = 0;
+            Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+            binding.progressBar.setVisibility(View.GONE);
         }
 
     }

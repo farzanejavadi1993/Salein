@@ -445,7 +445,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
                 int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                if (LauncherActivity.name.equals("ir.kitgroup.salein") && size > 0)
+                if (LauncherActivity.namePackage.equals("ir.kitgroup.salein") && size > 0)
                     size = size - 1;
 
                 if (Inv_GUID_ORG.equals("")) {
@@ -1233,10 +1233,20 @@ public class MainOrderMobileFragment extends Fragment {
 
                                 productListData.clear();
                                 productListData.addAll(resultPrd_);
+                                if (resultPrd_ .size()> 0)
                                 for (int i = 0; i < 18; i++) {
-                                    if (productListData.size() > i)
+                                    if (resultPrd_.size() > i)
                                         productList.add(resultPrd_.get(i));
                                 }
+
+
+                                if (productList.size()==0) {
+                                    binding.orderTxtError.setVisibility(View.VISIBLE);
+                                    binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                }
+                               
+
+
 
 
                                 productAdapter.setMaxSale(maxSales);
