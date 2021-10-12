@@ -13,6 +13,11 @@
     android:gravity="center"
     android:orientation="horizontal">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_centerInParent="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
     <TextView
         android:visibility="gone"
         android:id="@+id/txtError"
