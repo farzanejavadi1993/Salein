@@ -21,6 +21,7 @@ import java.util.List;
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 
 
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.models.ProductLevel1;
 
@@ -51,7 +52,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-        if (LauncherActivity.screenInches>=7)
+        if (SplashScreenFragment.screenInches>=7)
             fontSize=13;
         else
             fontSize=11;

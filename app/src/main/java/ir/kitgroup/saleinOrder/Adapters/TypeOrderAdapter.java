@@ -22,6 +22,7 @@ import java.util.List;
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinOrder.DataBase.OrderType;
 
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.R;
 
 
@@ -161,9 +162,9 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
 
 
 
-            if (LauncherActivity.screenInches <7) {
-                cardOrder.getLayoutParams().width = (int) (LauncherActivity.width / 5);
-                cardOrder.getLayoutParams().height = (int) (LauncherActivity.width /5);
+            if (SplashScreenFragment.screenInches <7) {
+                cardOrder.getLayoutParams().width = (int) (SplashScreenFragment.width / 5);
+                cardOrder.getLayoutParams().height = (int) (SplashScreenFragment.width /5);
             }
 
 

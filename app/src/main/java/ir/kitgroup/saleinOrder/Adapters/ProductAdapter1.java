@@ -45,6 +45,7 @@ import java.util.UUID;
 
 
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.Util.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.Constant;
@@ -79,7 +80,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private int fontSize = 0;
     private int fontLargeSize = 0;
 
-    private int placeHolderImage;
+    private int placeHolderImage=R.drawable.salein;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -117,33 +118,36 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         df = new DecimalFormat();
 
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
 
-                placeHolderImage = R.drawable.salein;
-                break;
+                    placeHolderImage = R.drawable.salein;
+                    break;
 
-            case "ir.kitgroup.saleintop":
-                placeHolderImage = R.drawable.top_png;
-
-
-                break;
+                case "ir.kitgroup.saleintop":
+                    placeHolderImage = R.drawable.top_png;
 
 
-            case "ir.kitgroup.saleinmeat":
-
-                placeHolderImage = R.drawable.meat_png;
-
-                break;
+                    break;
 
 
-            case "ir.kitgroup.saleinnoon":
+                case "ir.kitgroup.saleinmeat":
+
+                    placeHolderImage = R.drawable.meat_png;
+
+                    break;
 
 
-                placeHolderImage = R.drawable.noon;
+                case "ir.kitgroup.saleinnoon":
 
-                break;
-        }
+
+                    placeHolderImage = R.drawable.noon;
+
+                    break;
+            }
+        }catch (Exception ignore){}
+
 
     }
 
@@ -186,7 +190,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Constant.VIEW_TYPE_ITEM) {
-            if (LauncherActivity.screenInches >= 7) {
+            if (SplashScreenFragment.screenInches >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
 

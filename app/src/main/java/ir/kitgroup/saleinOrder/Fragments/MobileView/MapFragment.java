@@ -160,7 +160,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         //region Configuration Text Size
         int fontSize;
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
 
             fontSize = 14;
         } else

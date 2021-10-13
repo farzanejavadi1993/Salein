@@ -32,6 +32,7 @@ import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.Util.Util;
 import ir.kitgroup.saleinOrder.models.Product;
@@ -93,7 +94,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {

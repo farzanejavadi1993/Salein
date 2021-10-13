@@ -57,6 +57,7 @@ import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinOrder.Adapters.TableAdapter;
 import ir.kitgroup.saleinOrder.Adapters.TypeOrderAdapter;
 import ir.kitgroup.saleinOrder.Fragments.MobileView.InVoiceDetailMobileFragment;
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.Invoice;
@@ -122,7 +123,7 @@ public class LauncherOrganizationFragment extends Fragment {
         // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
 
             requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

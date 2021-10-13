@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,11 @@ import ir.kitgroup.saleinOrder.databinding.FragmentSplashScreenBinding;
 
 public class SplashScreenFragment extends Fragment {
 
-    private int imageIconDialog = 0;
-    private String title = "";
-    private String description = "";
+    public static int width = 0;
+    public static int height = 0;
+    public static double screenInches = 0.0;
+    private String title = "SaleIn Order";
+    private String description = "اپلیکیشن سفارش گیر مشتریان سالین";
     private FragmentSplashScreenBinding binding;
 
     @Nullable
@@ -48,40 +51,39 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // region Utilize Animation
-      // Util.playLottieAnimation("buygirl.json", binding.animationView);
-        //Util.playLottieAnimation("890-loading-animation.json", binding.animationView1);
-        //endregion Utilize Animation
 
+        getSizeMobile();
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
-                imageIconDialog = R.drawable.salein;
-                title = "سالین دمو";
-                description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
-                break;
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
 
-            case "ir.kitgroup.saleintop":
+                    title = "سالین دمو";
+                    description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
+                    break;
 
-                imageIconDialog = R.drawable.top_png;
-                title = "تاپ کباب";
-                description="عرضه کننده بهترین غذاها";
+                case "ir.kitgroup.saleintop":
 
-                break;
+                    title = "تاپ کباب";
+                    description="عرضه کننده بهترین غذاها";
+
+                    break;
 
 
-            case "ir.kitgroup.saleinmeat":
+                case "ir.kitgroup.saleinmeat":
 
-                imageIconDialog = R.drawable.meat_png;
-                title = "گوشت دنیوی";
-                description="عرضه کننده انواع گوشت";
-                break;
-            case "ir.kitgroup.saleinnoon":
+                    title = "گوشت دنیوی";
+                    description="عرضه کننده انواع گوشت";
+                    break;
+                case "ir.kitgroup.saleinnoon":
 
-                imageIconDialog = R.drawable.noon;
-                title = "کافه نون";
-                break;
+                    title = "کافه نون";
+                    break;
+            }
+        }catch (Exception ignore){
+
         }
+
 
         try {
             String appVersion = appVersion();
@@ -89,7 +91,7 @@ public class SplashScreenFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-      // binding.imgLogo.setImageResource(imageIconDialog);
+
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
         binding.tvTitle.setText(title);
         binding.tvDescription.setText(description);
@@ -147,7 +149,8 @@ public class SplashScreenFragment extends Fragment {
                 //regionOrganization Application
                 else {
                     //When User Is Login
-                    if (Select.from(User.class).list().get(0).CheckUser) {
+
+                    if (Select.from(User.class).list().size()>0 && Select.from(User.class).list().get(0).CheckUser) {
                         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
                     }
 
@@ -175,5 +178,16 @@ public class SplashScreenFragment extends Fragment {
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
+    }
+    public void getSizeMobile() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        width = dm.widthPixels;
+        height = dm.heightPixels;
+        double x = Math.pow(width / dm.xdpi, 2);
+        double y = Math.pow(height / dm.ydpi, 2);
+        screenInches = Math.sqrt(x + y);
+
+
     }
 }

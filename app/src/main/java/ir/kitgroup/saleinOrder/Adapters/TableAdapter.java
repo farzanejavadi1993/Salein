@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.Util.Utilities;
 import ir.kitgroup.saleinOrder.DataBase.Invoice;
@@ -186,12 +187,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
             if (App.mode == 1) {
-                if (LauncherActivity.screenInches >= 7) {
+                if (SplashScreenFragment.screenInches >= 7) {
                     int height;
-                    if (LauncherActivity.width > LauncherActivity.height)
-                        height = LauncherActivity.width / 2;
+                    if (SplashScreenFragment.width > SplashScreenFragment.height)
+                        height = SplashScreenFragment.width / 2;
                     else
-                        height = LauncherActivity.height / 2;
+                        height = SplashScreenFragment.height / 2;
                     rlTable.getLayoutParams().width = (int) (height / 3.3);
                     rlTable.getLayoutParams().height = (int) (height / 4.2);
 
@@ -199,10 +200,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
                 } else {
 
                     int width;
-                    if (LauncherActivity.width > LauncherActivity.height)
-                        width = LauncherActivity.height / 2;
+                    if (SplashScreenFragment.width > SplashScreenFragment.height)
+                        width = SplashScreenFragment.height / 2;
                     else
-                        width = LauncherActivity.width / 2;
+                        width = SplashScreenFragment.width / 2;
 
                     rlTable.getLayoutParams().width = (int) (width / 1.3);
                     rlTable.getLayoutParams().height = (int) (width / 1.8);

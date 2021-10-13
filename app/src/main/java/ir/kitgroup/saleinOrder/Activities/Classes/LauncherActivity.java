@@ -31,9 +31,7 @@ import ir.kitgroup.saleinOrder.databinding.ActivityLauncherBinding;
 public class LauncherActivity extends AppCompatActivity {
 
     //region Parameter
-    public static int width = 0;
-    public static int height = 0;
-    public static double screenInches = 0.0;
+
 
     private Dialog dialog;
     private TextView textExit;
@@ -62,7 +60,7 @@ public class LauncherActivity extends AppCompatActivity {
         FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
         addFragment.commit();
 
-        getSizeMobile();
+
 
 
         try {
@@ -132,17 +130,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-    public void getSizeMobile() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        width = dm.widthPixels;
-        height = dm.heightPixels;
-        double x = Math.pow(width / dm.xdpi, 2);
-        double y = Math.pow(height / dm.ydpi, 2);
-        screenInches = Math.sqrt(x + y);
 
-
-    }
 
 
     @Override

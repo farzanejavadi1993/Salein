@@ -197,10 +197,10 @@ public class MainOrderMobileFragment extends Fragment {
     //endregion Variable DialogAddAccount
 
 
-    private int imageLogo;
-    private int imgIconDialog;
+    private int imageLogo=R.drawable.salein;
+    private int imgIconDialog=R.drawable.saleinicon128;
     private int imgBackground = 0;
-    private String nameCompany;
+    private String nameCompany="Salein Order";
 
 
     //region Variable DialogUpdate
@@ -236,7 +236,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize;
-        if (LauncherActivity.screenInches >= 7)
+        if (SplashScreenFragment.screenInches >= 7)
             fontSize = 14;
         else
             fontSize = 12;
@@ -249,7 +249,8 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
+        try {
+              switch (LauncherActivity.name) {
             case "ir.kitgroup.salein":
                 nameCompany = "سالین دمو";
                 imageLogo = R.drawable.salein;
@@ -279,6 +280,10 @@ public class MainOrderMobileFragment extends Fragment {
                 imgIconDialog = R.drawable.noon;
                 break;
         }
+        }catch (Exception ignore){
+
+        }
+
         binding.ivIconCompany.setImageResource(imageLogo);
         binding.tvCompany.setText(nameCompany);
         if (imgBackground != 0)
@@ -556,12 +561,19 @@ public class MainOrderMobileFragment extends Fragment {
         //region Create Order
 
         if (Inv_GUID.equals("")) {
-            String name = LauncherActivity.name.split("ir.kitgroup.")[1];
-            Inv_GUID = sharedPreferences.getString(name, "");
-            if (Inv_GUID.equals("")) {
+            String name;
+            try {
+                name = LauncherActivity.name.split("ir.kitgroup.")[1];
+                Inv_GUID = sharedPreferences.getString(name, "");
+                if (Inv_GUID.equals("")) {
+                    Inv_GUID = UUID.randomUUID().toString();
+                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
+                }
+            }catch (Exception ignore){
                 Inv_GUID = UUID.randomUUID().toString();
-                sharedPreferences.edit().putString(name, Inv_GUID).apply();
             }
+
+
 
 
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -1145,13 +1157,12 @@ public class MainOrderMobileFragment extends Fragment {
                         //endregion Full ProductList Because First Item ProductLevel2 Is True
 
                     } else {
-                        ArrayList<ProductLevel2> rst = new ArrayList<>(productLevel2List);
-                        CollectionUtils.filter(rst, r -> r.getI().equals(GuidPrdLvl1));
 
-                        if (rst.size() > 0) {
-                            binding.orderTxtError.setText("هیچ زیر دسته ای برای دسته" + rst.get(0).getN() + " وجود ندارد.");
-                        }
 
+
+                        binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
+                        binding.orderTxtError.setVisibility(View.VISIBLE);
+                        binding.progressbar.setVisibility(View.GONE);
                         productList.clear();
                         productAdapter.notifyDataSetChanged();
                         productLevel2List.clear();

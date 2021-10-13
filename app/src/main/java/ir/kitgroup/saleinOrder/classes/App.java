@@ -30,13 +30,13 @@ public class App extends Application {
 
     public static API api;
     public static Context context;
-    private String baseUrl = "";
+    private String baseUrl = "http://192.168.20.8:96/api/REST/";
     public static Retrofit retrofit;
-    public static int mode = 2;//1  ordOrganization  //2  OrdClient
+    public static int mode = 1;//1  ordOrganization  //2  OrdClient
 
 
-    private static SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+
+
 
     @Override
     public void onCreate() {
@@ -95,15 +95,12 @@ public class App extends Application {
             e.printStackTrace();
         }
 
+        if (Select.from(User.class).list().size()>0)
         baseUrl = "http://" + Select.from(User.class).
-
                 first().ipLocal + "/api/REST/";
 
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
 
-                getApplicationContext());
-        editor = sharedPreferences.edit();
 
         context =
 

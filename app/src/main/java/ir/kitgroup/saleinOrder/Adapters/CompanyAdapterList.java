@@ -22,6 +22,7 @@ import java.util.List;
 
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.models.ModelCompany;
 
@@ -53,7 +54,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;

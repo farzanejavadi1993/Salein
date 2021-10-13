@@ -110,7 +110,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Variable Dialog
     private Dialog dialogDelete;
-    private int imageIconDialog;
+    private int imageIconDialog=R.drawable.saleinicon128;
     //endregion Variable Dialog
 
 
@@ -161,7 +161,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Configuration Text Size
         int fontSize;
         int fontLargeSize;
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {
@@ -196,35 +196,40 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         //region Cast Dialog Delete
 
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
+        try {
 
-                imageIconDialog = R.drawable.saleinicon128;
+        }catch (Exception ignore){
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
 
-                break;
+                    imageIconDialog = R.drawable.saleinicon128;
 
-            case "ir.kitgroup.saleintop":
+                    break;
 
-                imageIconDialog = R.drawable.top_png;
+                case "ir.kitgroup.saleintop":
 
-
-                break;
-
-
-            case "ir.kitgroup.saleinmeat":
-
-                imageIconDialog = R.drawable.meat_png;
+                    imageIconDialog = R.drawable.top_png;
 
 
-                break;
-
-            case "ir.kitgroup.saleinnoon":
-
-                imageIconDialog = R.drawable.noon;
+                    break;
 
 
-                break;
+                case "ir.kitgroup.saleinmeat":
+
+                    imageIconDialog = R.drawable.meat_png;
+
+
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+
+                    imageIconDialog = R.drawable.noon;
+
+
+                    break;
+            }
         }
+
 
         dialogDelete = new Dialog(getActivity());
         dialogDelete.requestWindowFeature(Window.FEATURE_NO_TITLE);

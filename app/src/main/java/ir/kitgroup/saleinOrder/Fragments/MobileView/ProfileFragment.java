@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
 
-        if (LauncherActivity.screenInches>=7)
+        if (SplashScreenFragment.screenInches>=7)
             fontSize=14;
         else
             fontSize=12;

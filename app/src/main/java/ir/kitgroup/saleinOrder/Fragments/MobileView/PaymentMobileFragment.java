@@ -125,7 +125,7 @@ public class PaymentMobileFragment extends Fragment {
     private Double latitude2 = 0.0;
     private Double longitude2 = 0.0;
 
-    private int imageIconDialog;
+    private int imageIconDialog=R.drawable.saleinicon128;
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -183,34 +183,39 @@ public class PaymentMobileFragment extends Fragment {
 
 
         customProgress = CustomProgress.getInstance();
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
-                imageIconDialog = R.drawable.saleinicon128;
-                link = "http://185.201.49.204:4008/";
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
+                    imageIconDialog = R.drawable.saleinicon128;
+                    link = "http://185.201.49.204:4008/";
 
-                break;
+                    break;
 
-            case "ir.kitgroup.saleintop":
+                case "ir.kitgroup.saleintop":
 
-                binding.layoutPaymentPlace.setVisibility(View.GONE);
-                imageIconDialog = R.drawable.top_png;
+                    binding.layoutPaymentPlace.setVisibility(View.GONE);
+                    imageIconDialog = R.drawable.top_png;
 
-                break;
+                    break;
 
 
-            case "ir.kitgroup.saleinmeat":
-                binding.layoutPaymentOnline.setVisibility(View.GONE);
-                imageIconDialog = R.drawable.meat_png;
-                typePayment = "";
-                binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
+                case "ir.kitgroup.saleinmeat":
+                    binding.layoutPaymentOnline.setVisibility(View.GONE);
+                    imageIconDialog = R.drawable.meat_png;
+                    typePayment = "";
+                    binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
 
-                break;
-            case "ir.kitgroup.saleinnoon":
+                    break;
+                case "ir.kitgroup.saleinnoon":
 
-                imageIconDialog = R.drawable.noon;
+                    imageIconDialog = R.drawable.noon;
 
-                break;
+                    break;
+            }
+        }catch (Exception e){
+
         }
+
 
 
         return binding.getRoot();
@@ -245,7 +250,7 @@ public class PaymentMobileFragment extends Fragment {
         //region Configuration Size
         int fontBigSize;
         int fontSize;
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
             fontBigSize = 14;
             fontSize = 13;
         } else {
@@ -1042,8 +1047,15 @@ public class PaymentMobileFragment extends Fragment {
                     rlButtons.setVisibility(View.GONE);
                     btnReturned.setVisibility(View.VISIBLE);
 
-                    String name=LauncherActivity.name.split("ir.kitgroup.")[1];
-                    sharedPreferences.edit().putString(name, "").apply();
+
+                    String name;
+                    try {
+                        name = LauncherActivity.name.split("ir.kitgroup.")[1];
+                        sharedPreferences.edit().putString(name, "").apply();
+                    }catch (Exception ignore){
+
+                    }
+
 
 
                     if (message == 1) {
@@ -1478,10 +1490,16 @@ public class PaymentMobileFragment extends Fragment {
 
 
                  //region Get Credit Club
-                    if (!OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
-                        getInquiryAccount(userName, passWord, acc.M);
-                    else if (OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
-                        binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                    String name;
+                    try {
+                        if (!OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
+                            getInquiryAccount(userName, passWord, acc.M);
+                        else if (OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
+                            binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                    }catch (Exception ignore){
+
+                    }
+
                     //endregion Get Credit Club
 
 

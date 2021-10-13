@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinOrder.Connect.API;
+import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.Util.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
@@ -69,11 +71,11 @@ public class LoginOrganizationFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (LauncherActivity.screenInches >= 7) {
-            Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (SplashScreenFragment.screenInches >= 7) {
+            requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
-            Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         binding = FragmentOrganizationLoginBinding.inflate(getLayoutInflater());
         return binding.getRoot();
@@ -144,6 +146,7 @@ public class LoginOrganizationFragment extends Fragment {
             App.retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
                     .build();
 
@@ -174,7 +177,7 @@ public class LoginOrganizationFragment extends Fragment {
                         customProgress.hideProgress();
                         assert getFragmentManager() != null;
                         getFragmentManager().popBackStack();
-                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
 
                     } else {
 

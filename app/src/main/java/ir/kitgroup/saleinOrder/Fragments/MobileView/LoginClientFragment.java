@@ -76,7 +76,7 @@ public class LoginClientFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize ;
-        if (LauncherActivity.screenInches >= 7) {
+        if (SplashScreenFragment.screenInches >= 7) {
             binding.tvWelcome.setTextSize(18);
             fontSize = 14;
         } else
