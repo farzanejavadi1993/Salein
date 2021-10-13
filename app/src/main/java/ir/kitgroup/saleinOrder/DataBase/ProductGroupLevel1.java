@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
-public class ProductGroupLevel1 extends SugarRecord {
+public class ProductGroupLevel1 {
 
     @Unique
     @SerializedName("I")

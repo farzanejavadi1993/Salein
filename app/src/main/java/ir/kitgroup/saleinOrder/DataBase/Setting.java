@@ -3,7 +3,7 @@ package ir.kitgroup.saleinOrder.DataBase;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
-public class Setting extends SugarRecord {
+public class Setting  {
     @Unique
     public String DEFAULT_PRICE_INVOICE;
     public String MAX_SALE;

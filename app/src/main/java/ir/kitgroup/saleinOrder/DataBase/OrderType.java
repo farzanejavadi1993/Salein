@@ -3,7 +3,7 @@ package ir.kitgroup.saleinOrder.DataBase;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
-public class OrderType extends  SugarRecord {
+public class OrderType {
 
     @SerializedName("I")
     @Expose

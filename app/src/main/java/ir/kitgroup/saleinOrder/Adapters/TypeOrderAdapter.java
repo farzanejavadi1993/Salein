@@ -163,8 +163,8 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
 
 
             if (SplashScreenFragment.screenInches <7) {
-                cardOrder.getLayoutParams().width = (int) (SplashScreenFragment.width / 5);
-                cardOrder.getLayoutParams().height = (int) (SplashScreenFragment.width /5);
+                cardOrder.getLayoutParams().width = (SplashScreenFragment.width / 5);
+                cardOrder.getLayoutParams().height = (SplashScreenFragment.width /7);
             }
 
 

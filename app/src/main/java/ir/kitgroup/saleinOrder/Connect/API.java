@@ -95,14 +95,8 @@ public interface API {
 
 
 
-
     @GET("productSync")
     Observable<String> getProduct( @Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
-
-
-
-
-
 
 
 
@@ -131,6 +125,13 @@ public interface API {
 
     @GET("GetAllInvoice")
     Observable<String> getAllInvoice1(@Query("userName") String userName, @Query("passWord") String passWord,@Query("customerId") String customerId,@Query("date") String date);
+
+
+    @GET("tableSync")
+    Observable<String> getTable1(@Query("userName") String userName, @Query("password") String password);
+
+    @GET("OrderTypeSync")
+    Observable<String>  getOrderType1(@Query("userName") String userName, @Query("password") String password);
 
 
     @GET("DescriptionSync")

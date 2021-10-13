@@ -53,9 +53,13 @@ import java.util.List;
 import java.util.Objects;
 
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinOrder.Adapters.TableAdapter;
 import ir.kitgroup.saleinOrder.Adapters.TypeOrderAdapter;
+import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.Fragments.MobileView.InVoiceDetailMobileFragment;
 import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.classes.App;
@@ -72,6 +76,7 @@ import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.Fragments.MobileView.MainOrderMobileFragment;
 
 
+import ir.kitgroup.saleinOrder.models.ModelProduct;
 import ir.kitgroup.saleinOrder.models.ModelSetting;
 import ir.kitgroup.saleinOrder.models.ModelTable;
 import ir.kitgroup.saleinOrder.models.ModelTypeOrder;
@@ -88,16 +93,12 @@ public class LauncherOrganizationFragment extends Fragment {
     //region Parameter
     private FragmentLauncherOrganizationBinding binding;
 
-
-    private SharedPreferences.Editor editor;
-    private Boolean firstSync = false;
-
-    private String userName;
-    private String passWord;
-
+    private String userName = "";
+    private String passWord = "";
 
     private TableAdapter tableAdapter;
     private ArrayList<Tables> tablesList;
+    private ArrayList<Tables> AllTable;
 
     private TypeOrderAdapter getOutOrderAdapter;
     private final ArrayList<OrderType> getOutOrderList = new ArrayList<>();
@@ -105,6 +106,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
     private String error = "";
     private String TypeClickButton = "";
+
     //region Dialog
     private Dialog dialog;
     private TextView textMessageDialog;
@@ -112,7 +114,7 @@ public class LauncherOrganizationFragment extends Fragment {
     private MaterialButton btnNoDialog;
     //endregion Dialog
 
-
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //endregion Parameter
 
 
@@ -120,27 +122,12 @@ public class LauncherOrganizationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
-        if (SplashScreenFragment.screenInches >= 7) {
-
-            requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else {
-
-            requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
 
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
 
         tablesList = new ArrayList<>();
-
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = sharedPreferences.edit();
-        firstSync = sharedPreferences.getBoolean("firstSync", false);
+        AllTable = new ArrayList<>();
 
 
         userName = Select.from(User.class).first().userName;
@@ -163,6 +150,7 @@ public class LauncherOrganizationFragment extends Fragment {
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
             if (TypeClickButton.equals("logOut")) {
+
                 if (Account.count(Account.class) > 0)
                     Account.deleteAll(Account.class);
 
@@ -172,21 +160,9 @@ public class LauncherOrganizationFragment extends Fragment {
                 if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
 
-                if (OrderType.count(OrderType.class) > 0)
-                    OrderType.deleteAll(OrderType.class);
 
-            /*    if (Product.count(Product.class) > 0)
-                    Product.deleteAll(Product.class);*/
-
-
-                if (Setting.count(Setting.class) > 0)
-                    Setting.deleteAll(Setting.class);
-
-                if (ProductGroupLevel1.count(ProductGroupLevel1.class) > 0)
-                    ProductGroupLevel1.deleteAll(ProductGroupLevel1.class);
-
-                if (ProductGroupLevel2.count(ProductGroupLevel2.class) > 0)
-                    ProductGroupLevel2.deleteAll(ProductGroupLevel2.class);
+                if (Product.count(Product.class) > 0)
+                    Product.deleteAll(Product.class);
 
 
                 if (Tables.count(Tables.class) > 0)
@@ -197,16 +173,18 @@ public class LauncherOrganizationFragment extends Fragment {
                     User.deleteAll(User.class);
 
 
-                editor.putBoolean("firstSync", false).apply();
 
-
-                assert getFragmentManager() != null;
                 getFragmentManager().popBackStack();
 
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment()).addToBackStack("UserF").commit();
                 dialog.dismiss();
-            } else if (TypeClickButton.equals("error")) {
-                getSetting();
+
+            }
+
+
+            else if (TypeClickButton.equals("error")) {
+             getTypeOrder();
+             getTable1();
             }
 
 
@@ -215,18 +193,15 @@ public class LauncherOrganizationFragment extends Fragment {
         //endregion Cast Variable Dialog
 
 
-        for (Invoice invoice : Select.from(Invoice.class).where("TBLUID is null ").list()) {
-            Invoice.deleteInTx(invoice);
-        }
+
 
 
         binding.busyTable.setOnClickListener(v -> {
-
             filter("busy");
             tablesList.clear();
-            List<Tables> tables = Select.from(Tables.class).list();
-            CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null && t.ACT);
-            tablesList.addAll(tables);
+            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && t.ACT);
+            tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
 
@@ -234,39 +209,41 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.reserveTable.setOnClickListener(v -> {
             filter("reserve");
             tablesList.clear();
-            List<Tables> tables = Select.from(Tables.class).list();
-            CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null && t.RSV);
-            tablesList.addAll(tables);
+            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && t.RSV);
+            tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
 
         binding.vacantTable.setOnClickListener(v -> {
             filter("vacant");
             tablesList.clear();
-            List<Tables> tables = Select.from(Tables.class).list();
-            CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null && !t.ACT && !t.RSV);
-            LauncherOrganizationFragment.this.tablesList.addAll(tables);
+            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && !t.ACT && !t.RSV);
+            LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
 
         binding.wholeTable.setOnClickListener(v -> {
             filter("whole");
             tablesList.clear();
-            List<Tables> tables = Select.from(Tables.class).list();
-            CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null);
-            LauncherOrganizationFragment.this.tablesList.addAll(tables);
+            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null);
+            LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
 
 
         binding.getOutOrder.setOnClickListener(v -> {
+            tablesList.clear();
             filter("getOrder");
             tablesList.clear();
-            List<Tables> tables = Select.from(Tables.class).list();
-            CollectionUtils.filter(tables, t -> t.N.equals("بیرون بر") && t.C != null);
-            LauncherOrganizationFragment.this.tablesList.addAll(tables);
+            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            CollectionUtils.filter(arrayList, t -> t.N.equals("بیرون بر") && t.C != null);
+            LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
+
 
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
@@ -274,7 +251,6 @@ public class LauncherOrganizationFragment extends Fragment {
         flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
         flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
         flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
-
 
         tableAdapter = new TableAdapter(getContext(), tablesList);
         binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
@@ -326,12 +302,13 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
+
+
         FlexboxLayoutManager flexboxLayoutManager1 = new FlexboxLayoutManager(getActivity());
         flexboxLayoutManager1.setFlexWrap(FlexWrap.WRAP);
         flexboxLayoutManager1.setFlexDirection(FlexDirection.ROW);
         flexboxLayoutManager1.setJustifyContent(JustifyContent.CENTER);
         flexboxLayoutManager1.setAlignItems(AlignItems.BASELINE);
-
         List<OrderType> list = Select.from(OrderType.class).list();
         CollectionUtils.filter(list, l -> l.getTy() == 2);
         getOutOrderList.clear();
@@ -341,6 +318,7 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.recycleGetOutOrder.setLayoutManager(flexboxLayoutManager1);
         binding.recycleGetOutOrder.setAdapter(getOutOrderAdapter);
         binding.recycleGetOutOrder.setHasFixedSize(false);
+
         getOutOrderAdapter.setOnClickItemListener((code, ty) -> {
 
             if (code == 0 && ty == 0) {
@@ -374,6 +352,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
+
         binding.btnLogout.setOnClickListener(v -> {
             TypeClickButton = "logOut";
             btnNoDialog.setText("خیر");
@@ -384,8 +363,9 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-        getSetting();
-        /*isAllPermissionGranted();*/
+        getTypeOrder();
+        getTable1();
+
 
         return binding.getRoot();
 
@@ -409,437 +389,68 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 88) {
 
-            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED
-            )
-            ) {
-
-                getSetting();
-            } else {
-
-                Toast.makeText(getActivity(), "لطفا دسترسی ها را کامل بدهید", Toast.LENGTH_LONG).show();
-                requireActivity().finish();
-            }
-        } else {
-
-            requireActivity().finish();
-        }
-
-
-    }
-
-
-    static public void SaveImageToStorage(Bitmap bitmapImage, String ID, Context context) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
-
-        File destination = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "SaleIn");
-        File file = new File(destination, ID.toUpperCase() + ".jpg");
-
-        FileOutputStream fo = null;
-        try {
-            if (!destination.exists()) {
-                destination.mkdirs();
-            }
-            if (file.exists()) {
-                file.delete();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-                fo = new FileOutputStream(file);
-                fo.write(bytes.toByteArray());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fo != null)
-                    fo.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    static public Bitmap StringToImage(String image) {
-        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-    }
-
-    public static void deleteDirectory(File file) {
-        if (file.isDirectory()) {
-
-
-            if (Objects.requireNonNull(file.list()).length == 0) {
-
-                file.delete();
-
-
-            } else {
-                String[] files = file.list();
-
-                assert files != null;
-                for (String temp : files) {
-                    File fileDelete = new File(file, temp);
-                    deleteDirectory(fileDelete);
-                }
-
-                if (Objects.requireNonNull(file.list()).length == 0) {
-                    file.delete();
-                }
-            }
-
-
-        } else {
-            file.delete();
-        }
-    }
-
-
-
-
-
-/*    private void getProduct() {
-
-        error = "";
-
-        binding.progressbar.setVisibility(View.VISIBLE);
-        String yourFilePath = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) + "/" + "SaleIn";
-        File file = new File(yourFilePath);
-        deleteDirectory(file);
-        try {
-
-            Call<String> call = App.api.getProduct("saleinkit_api", userName, passWord, "2");
-
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelProduct>() {
-                    }.getType();
-
-
-                    ModelProduct iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception ignore) {
-
-                        error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
-                        showError(error);
-                        return;
-                    }
-
-
-                    if (iDs == null) {
-                        error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
-                        showError(error);
-                    } else {
-
-                        List<ir.kitgroup.saleinmeat.DataBase.Product> products = iDs.getProductList();
-
-                        Util.AllProduct.clear();
-                        for (int i = 0; i < products.size(); i++) {
-                            Product product = new Product();
-                            product.I = products.get(i).I;
-                            product.STS = products.get(i).STS;
-                            product.PID2 = products.get(i).PID2;
-                            product.PID1 = products.get(i).PID1;
-                            product.N = products.get(i).N;
-                            product.DES = products.get(i).DES;
-                            product.NIP = products.get(i).NIP;
-                            product.PU1 = products.get(i).PU1;
-                            product.PU2 = products.get(i).PU2;
-                            product.PU3 = products.get(i).PU3;
-                            product.PU4 = products.get(i).PU4;
-                            product.PU5 = products.get(i).PU5;
-                            product.PERC_DIS = products.get(i).PERC_DIS;
-                            product.PID1 = products.get(i).PID1;
-                            Util.AllProduct.add(product);
-                            if (!firstSync)
-                                product.save();
-                            else
-                                product.update();
-
-                            if (!products.get(i).IMG.equals("0"))
-                                SaveImageToStorage(StringToImage(products.get(i).IMG), products.get(i).I, getActivity());
-
-                        }
-
-
-                        List<ProductGroupLevel1> productGroupLevel1s = iDs.getProductLevel1List();
-
-                        if (!firstSync)
-                            ProductGroupLevel1.saveInTx(productGroupLevel1s);
-                        else
-                            for (ProductGroupLevel1 PrdGroupLevel1 : productGroupLevel1s) {
-                                PrdGroupLevel1.update();
-                            }
-
-
-                        List<ProductGroupLevel2> productGroupLevel2s = iDs.getProductLevel2List();
-
-                        if (!firstSync)
-                            ProductGroupLevel2.saveInTx(productGroupLevel2s);
-                        else
-                            for (ProductGroupLevel2 prdGroupLevel2 : productGroupLevel2s) {
-                                prdGroupLevel2.update();
-                            }
-
-
-                        editor.putBoolean("firstSync", true);
-                        editor.apply();
-
-                        getSetting();
-
-
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    error = error + "\n" + "خطای تایم اوت در دریافت کالاها";
-                    showError(error);
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
-            showError(error);
-        }
-
-
-    }*/
-
-    private void getSetting() {
-
-
-        try {
-
-            Call<String> call = App.api.getSetting(userName, passWord);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelSetting>() {
-                    }.getType();
-
-                    ModelSetting iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception e) {
-                        error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
-                        showError(error);
-                        return;
-                    }
-
-                    if (iDs == null) {
-                        error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
-                        showError(error);
-                    } else {
-
-                        Setting.deleteAll(Setting.class);
-                        List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
-                        Setting.saveInTx(settingsList);
-                        editor.putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE);
-                        editor.apply();
-
-                        getTypeOrder();
-
-
-                    }
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                    error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
-                    showError(error);
-
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
-            showError(error);
-        }
-
-
-    }
 
     private void getTypeOrder() {
 
 
-        try {
 
-            Call<String> call = App.api.getOrderType(userName, passWord);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelTypeOrder>() {
-                    }.getType();
-
-                    ModelTypeOrder iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception e) {
-
-
-                        error = error + "\n" + "مدل دریافت شده از نوع سفارش نا معتبر است";
-                        showError(error);
-                        return;
-                    }
-
-                    if (iDs == null) {
-
-                        error = error + "\n" + "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
-                        showError(error);
-                    } else {
-
-                        List<OrderType> orderTypeList1 = iDs.getOrderTypes();
-                        OrderType.deleteAll(OrderType.class);
-                        OrderType.saveInTx(orderTypeList1);
-                        getOutOrderList.clear();
-                        CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
-                        getOutOrderList.addAll(iDs.getOrderTypes());
-                        getOutOrderAdapter.notifyDataSetChanged();
-
-                        getTable();
-
-
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                    error = error + "\n" + "خطای تایم اوت در دریافت نوع سفارش";
-                    showError(error);
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت نوع سفارش";
-            showError(error);
-        }
-
-
-    }
-
-
-    private void getTable() {
-
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         try {
+            compositeDisposable.add(
+                    App.api.getOrderType1( userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelTypeOrder>() {
+                                }.getType();
 
-            Call<String> call = App.api.getTable(userName, passWord);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelTable>() {
-                    }.getType();
-
-
-                    ModelTable iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception e) {
-
-                        error = error + "\n" + "مدل دریافت شده از میزها نا معتبر است";
-                        showError(error);
-                        return;
-                    }
-                    if (iDs != null) {
-
-                        List<Tables> tbl = Select.from(Tables.class).list();//کل میزها
-
-                        ArrayList<Tables> tblList = new ArrayList<>(tbl);
-                        CollectionUtils.filter(tblList, t -> t.SV != null && t.SV);//میزهایی که سفارش آنها ذخیره شده است
+                                ModelTypeOrder iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
 
 
-                        //حذف کردن تمام میزهایی که بیرون بر نیستند
-                        CollectionUtils.filter(tbl, t -> !t.N.equals("بیرون بر") && t.C == null);
-                        for (int i = 0; i < tbl.size(); i++) {
-                            Tables t = Select.from(Tables.class).where("I ='" + tbl.get(i).I + "'").first();
-                            if (t != null)
-                                t.delete();
-                        }
-
-                        //ذخیره تمام میزها
-                        CollectionUtils.filter(iDs.getTables(), t -> t.ST);
-                        Tables.saveInTx(iDs.getTables());
-
-
-                        //وضعیت زرد یا ذخیره برای میزها ست شود
-                        if (tblList.size() > 0) {
-                            for (int i = 0; i < tblList.size(); i++) {
-                                Tables tb = Select.from(Tables.class).where("I ='" + tblList.get(i).I + "'").first();
-                                if (tb != null) {
-                                    tb.SV = true;
-                                    tb.save();
+                                    error = error + "\n" + "مدل دریافت شده از نوع سفارش نا معتبر است";
+                                    showError(error);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    return;
                                 }
-                            }
-                        }
+
+                                if (iDs == null) {
+
+                                    error = error + "\n" + "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
+                                    showError(error);
+                                } else {
+                                    getOutOrderList.clear();
+                                    CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
+                                    getOutOrderList.addAll(iDs.getOrderTypes());
+                                    getOutOrderAdapter.notifyDataSetChanged();
+
+                                }
+
+                                binding.progressBar.setVisibility(View.GONE);
 
 
-                        //فقط میزهایی که بیرون بر نیستن نمایش داده شود
-                        List<Tables> tables = Select.from(Tables.class).list();
-                        CollectionUtils.filter(tables, t -> !t.N.equals("بیرون بر") && t.C == null);
-                        tablesList.clear();
-                        tablesList.addAll(tables);
-                        tableAdapter.notifyDataSetChanged();
-                        binding.progressbar.setVisibility(View.GONE);
+                            }, throwable -> {
+                                error = error + "\n" + "خطا در ارتباط با سرور";
+                                showError(error);
+                                binding.progressbar.setVisibility(View.GONE);
 
-
-                    } else {
-
-                        error = error + "\n" + "لیست دریافت شده از میزها نا معتبر می باشد";
-                        showError(error);
-                    }
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-
-                    error = error + "\n" + "خطای تایم اوت در دریافت میزها";
-                    showError(error);
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت میزها";
+                            })
+            );
+        } catch (Exception e) {
+            error = error + "\n" + "خطا در اتصال به سرور";
             showError(error);
+            binding.progressBar.setVisibility(View.GONE);
         }
 
-
     }
+
 
 
     private void filter(String viewName) {
@@ -879,6 +490,63 @@ public class LauncherOrganizationFragment extends Fragment {
         dialog.show();
         binding.progressbar.setVisibility(View.GONE);
     }
+
+
+    private void getTable1() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        try {
+            compositeDisposable.add(
+                    App.api.getTable1( userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelTable>() {
+                                }.getType();
+                                ModelTable iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+
+                                    error = error + "\n" + "مدل دریافت شده از میزها نا معتبر است";
+                                    showError(error);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    return;
+                                }
+                                if (iDs != null) {
+                                    tablesList.clear();
+                                    tablesList.addAll(iDs.getTables());
+                                    AllTable.addAll(iDs.getTables());
+                                    tableAdapter.notifyDataSetChanged();
+                                    binding.progressbar.setVisibility(View.GONE);
+
+
+                                } else {
+
+                                    error = error + "\n" + "لیست دریافت شده از میزها نا معتبر می باشد";
+                                    showError(error);
+                                }
+
+                                binding.progressBar.setVisibility(View.GONE);
+
+
+                            }, throwable -> {
+                                error = error + "\n" + "خطا در ارتباط با سرور";
+                                showError(error);
+                                binding.progressbar.setVisibility(View.GONE);
+
+                            })
+            );
+        } catch (Exception e) {
+            error = error + "\n" + "خطا در اتصال به سرور";
+            showError(error);
+            binding.progressBar.setVisibility(View.GONE);
+        }
+
+    }
+
 
 
 }
