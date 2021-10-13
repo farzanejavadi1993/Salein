@@ -672,7 +672,7 @@ public class PaymentMobileFragment extends Fragment {
 
         if (App.mode == 1) {
             binding.rlTypeOrder.setVisibility(View.GONE);
-            binding.layoutAddress.setVisibility(View.GONE);
+            binding.layoutAdd.setVisibility(View.GONE);
         }
 
 
