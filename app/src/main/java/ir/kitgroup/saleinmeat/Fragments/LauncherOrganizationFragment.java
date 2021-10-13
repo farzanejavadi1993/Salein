@@ -277,7 +277,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
         tableAdapter = new TableAdapter(getContext(), tablesList);
         binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
-        binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
         binding.recyclerTable.setAdapter(tableAdapter);
 
 

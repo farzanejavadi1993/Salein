@@ -61,35 +61,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:layout_marginLeft="22dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginRight="22dp"
                         android:layout_marginBottom="@dimen/margin8"
                         android:backgroundTint="#eee"
                         app:cardCornerRadius="12dp">
 
                         <EditText
+                            android:inputType="textShortMessage|textMultiLine"
                             android:padding="10dp"
                             android:id="@+id/edt_description"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="top|right"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
+
                             android:background="@android:color/transparent"
                             android:drawingCacheQuality="low"
                             android:fontFamily="@font/iransans"
                             android:hint="توضیحات"
-                            android:inputType="text"
+
                             android:textColor="#474747"
                             android:textSize="12sp" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <RelativeLayout
                         android:id="@+id/layoutButtons"
-                        android:layout_marginRight="15sp"
-                        android:layout_marginLeft="15sp"
-                        android:layout_marginBottom="10sp"
-                        android:layout_marginTop="10sp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_message"
@@ -105,10 +105,8 @@
                             android:text="ثبت"
                             android:textColor="@color/colorGreenLight"
                             app:strokeColor="@color/colorGreenLight"
-                            android:layout_margin="8sp"
                             android:layout_width="100sp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="30dp">
+                            android:layout_height="wrap_content">
                         </com.google.android.material.button.MaterialButton>
 
                     </RelativeLayout>

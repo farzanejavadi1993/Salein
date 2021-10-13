@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout
-    android:layout_margin="7dp"
+    android:layout_margin="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="93dp"
-    android:padding="@dimen/launcher_recycle_table_card_padding"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/margin10"
     android:id="@+id/launcher_recycle_table_card"
     android:elevation="@dimen/launcher_recycle_table_card_elevation"
     android:layout_marginRight="2dp"
     android:layout_marginLeft="2dp"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/launcher_item_recycle_table_card_background">
 
 

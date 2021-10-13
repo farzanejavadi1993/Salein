@@ -67,7 +67,8 @@ public class AboutUsFragment extends Fragment {
                 imageLogo = R.drawable.top_png;
                 title="تاپ کباب";
                 description="عرضه کننده بهترین غذاها";
-                phoneNumber="05137335985";
+                phoneNumber="05137638311";
+
                 break;
 
 
@@ -75,7 +76,7 @@ public class AboutUsFragment extends Fragment {
                 imageLogo = R.drawable.meat_png;
                 title="گوشت دنیوی";
                 description="عرضه کننده انواع گوشت";
-                phoneNumber="05137638311";
+                phoneNumber="05137335985";
                 break;
 
             case "ir.kitgroup.saleinnoon":

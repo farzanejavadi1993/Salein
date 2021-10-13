@@ -21,7 +21,7 @@ import ir.kitgroup.saleinmeat.databinding.ActivityDetailBinding;
 public class ShowDetailFragment  extends Fragment {
 
 
-    private View view;
+
 
     private int placeHolderImage;
     private ActivityDetailBinding binding;
@@ -30,6 +30,7 @@ public class ShowDetailFragment  extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        binding=ActivityDetailBinding.inflate(getLayoutInflater());
         Bundle bundle = getArguments();
         String Id = bundle.getString("Id");
 
@@ -71,10 +72,12 @@ public class ShowDetailFragment  extends Fragment {
                 .load("http://" + ip + "/GetImage?productId=" + Id
                         )
                 .error(placeHolderImage)
+                .resize(300,300)
+                .centerCrop()
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
 
-        return view;
+        return binding.getRoot();
 
     }
 }

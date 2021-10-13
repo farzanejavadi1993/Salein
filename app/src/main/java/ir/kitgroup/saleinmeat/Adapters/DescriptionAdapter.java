@@ -123,12 +123,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
             tableName = itemView.findViewById(R.id.launcher_recycle_table_txt_name);
             cardView = itemView.findViewById(R.id.launcher_recycle_table_card);
             tableName.setTextSize(fontSize);
-            if (LauncherActivity.screenInches >= 7) {
 
-
-            } else {
-
-            }
 
 
         }

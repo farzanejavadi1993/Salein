@@ -286,6 +286,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
             double amount ;
+            String description ;
 
             if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null)
                 amount = invoiceDetail.INV_DET_QUANTITY;
@@ -293,6 +294,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 amount = 0.0;
 
 
+            if (invoiceDetail != null && invoiceDetail.INV_DET_DESCRIBTION != null)
+                description = invoiceDetail.INV_DET_DESCRIBTION;
+            else
+                description = "";
+
+
+
+            holder.edtDesc.setText(description);
             productsList.get(position).setAmount(amount);
 
             if (amount> 0) {

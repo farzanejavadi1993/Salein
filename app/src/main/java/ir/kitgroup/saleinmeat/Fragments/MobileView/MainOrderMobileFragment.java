@@ -42,6 +42,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -557,10 +562,10 @@ public class MainOrderMobileFragment extends Fragment {
         //region Create Order
 
         if (Inv_GUID.equals("")) {
-            Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+            Inv_GUID = sharedPreferences.getString(LauncherActivity.name, "");
             if (Inv_GUID.equals("")) {
                 Inv_GUID = UUID.randomUUID().toString();
-                sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
+                sharedPreferences.edit().putString(LauncherActivity.name, Inv_GUID).apply();
             }
 
 
@@ -581,6 +586,15 @@ public class MainOrderMobileFragment extends Fragment {
             else
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
         } else {
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+            if (invDetails.size() > 0) {
+                for (int i = 0; i < invDetails.size(); i++) {
+                    if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+                        invDetails.remove(invDetails.get(i));
+                    } }
+                counter = invDetails.size();
+            }
+            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
             binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
         }
 
@@ -626,13 +640,19 @@ public class MainOrderMobileFragment extends Fragment {
         edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
         MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
         RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
-        GridLayoutManager gridLayoutManager1 = new GridLayoutManager(getActivity(), 3) {
+       /* GridLayoutManager gridLayoutManager1 = new GridLayoutManager(getActivity(), 3) {
             @Override
             protected boolean isLayoutRTL() {
                 return true;
             }
-        };
-        recyclerDescription.setLayoutManager(gridLayoutManager1);
+        };*/
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
+        flexboxLayoutManager.setFlexWrap(FlexWrap.NOWRAP);
+        flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        recyclerDescription.setLayoutManager(flexboxLayoutManager);
+
         descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
         recyclerDescription.setAdapter(descriptionAdapter);
 
@@ -1100,6 +1120,7 @@ public class MainOrderMobileFragment extends Fragment {
                     }
 
                     productLevel2List.clear();
+                    CollectionUtils.filter(iDs.getProductLevel2(),i->i.getSts());
                     productLevel2List.addAll(iDs.getProductLevel2());
 
 
