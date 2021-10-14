@@ -76,6 +76,7 @@ import ir.kitgroup.saleinOrder.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinOrder.Adapters.ProductAdapter1;
 import ir.kitgroup.saleinOrder.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.saleinOrder.Adapters.ProductLevel2Adapter;
+import ir.kitgroup.saleinOrder.DataBase.Invoice;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 
@@ -234,6 +235,30 @@ public class MainOrderMobileFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
+//        //region Delete Invoice
+//        List<Invoice> invoices=Select.from(Invoice.class).list();
+//        //@ save order in Organization
+//        //# unSuccessful order   in Client
+//        CollectionUtils.filter(invoices,i->i.INV_SYNC!=null &&i.INV_SYNC.equals("#") && i.INV_SYNC.equals("@"));
+//        if (invoices.size()>0){
+//            for (int i=0;i<invoices.size();i++){
+//                Invoice.delete(invoices.get(i));
+//                List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).where("INVUID ='" + invoices.get(i).INV_UID + "'").list();
+//                for (int j=0;j<invoiceDetails.size();j++){
+//                    InvoiceDetail.delete(invoiceDetails.get(j));
+//                }
+//            }
+//        }
+//
+//
+//        List<InvoiceDetail> invoiceDetails1=Select.from(InvoiceDetail.class).where("INVDETTOTALAMOUNT IS NULL").list();
+//        for (int j=0;j<invoiceDetails1.size();j++){
+//            InvoiceDetail.delete(invoiceDetails1.get(j));
+//        }
+//        //endregion Delete Invoice
+
+
+
         //region Configuration Text Size
         int fontSize;
         if (SplashScreenFragment.screenInches >= 7)
@@ -246,6 +271,9 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtNameCustomer.setTextSize(fontSize);
         binding.orderListTvRegister.setTextSize(fontSize);
         //endregion Configuration Text Size
+
+
+
 
 
         //region Set Icon And Title

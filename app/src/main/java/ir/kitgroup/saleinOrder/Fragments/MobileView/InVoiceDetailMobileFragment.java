@@ -285,6 +285,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
+        }else {
+            binding.layoutDetail.setVisibility(View.GONE);
         }
         //endregion Configuration Client Application
 
