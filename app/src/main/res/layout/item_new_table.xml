@@ -62,16 +62,7 @@
             android:textSize="12sp" />
 
 
-        <ImageView
-            android:id="@+id/iv_table"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/tv_status_table"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin8"
-            android:src="@drawable/ic_bys"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
+
 
 
     </RelativeLayout>

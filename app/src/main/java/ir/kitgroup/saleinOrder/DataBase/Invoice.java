@@ -7,7 +7,7 @@ import com.orm.dsl.Unique;
 
 import java.util.Date;
 
-public class Invoice extends SugarRecord {
+public class Invoice  {
 
 
     @Unique

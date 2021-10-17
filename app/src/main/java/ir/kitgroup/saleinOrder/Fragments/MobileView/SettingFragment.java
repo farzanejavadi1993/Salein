@@ -77,8 +77,6 @@ public class SettingFragment extends Fragment {
             if (Account.count(Account.class) > 0)
                 Account.deleteAll(Account.class);
 
-            if (Invoice.count(Invoice.class) > 0)
-                Invoice.deleteAll(Invoice.class);
 
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                 InvoiceDetail.deleteAll(InvoiceDetail.class);

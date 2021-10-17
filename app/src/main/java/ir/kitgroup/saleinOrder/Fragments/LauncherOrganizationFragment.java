@@ -101,6 +101,7 @@ public class LauncherOrganizationFragment extends Fragment {
     private ArrayList<Tables> AllTable;
 
     private TypeOrderAdapter getOutOrderAdapter;
+    private final ArrayList<OrderType> orderTypes = new ArrayList<>();
     private final ArrayList<OrderType> getOutOrderList = new ArrayList<>();
 
 
@@ -154,8 +155,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 if (Account.count(Account.class) > 0)
                     Account.deleteAll(Account.class);
 
-                if (Invoice.count(Invoice.class) > 0)
-                    Invoice.deleteAll(Invoice.class);
+
 
                 if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
@@ -260,37 +260,35 @@ public class LauncherOrganizationFragment extends Fragment {
         tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID) -> {
 
             if (Reserve) {
-                Invoice invoice = Select.from(Invoice.class).where("TBLUID ='" + T_GUID + "'").first();
-
-                if (invoice != null) {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
-                    bundle.putString("Inv_GUID", invoice.INV_UID);
-                    bundle.putString("Ord_TYPE", String.valueOf(invoice.INV_TYPE_ORDER));
-                    bundle.putString("Acc_NAME", invoice.Acc_name);
-                    bundle.putString("Acc_GUID", invoice.ACC_CLB_UID);
-                    bundle.putString("Tbl_GUID", invoice.TBL_UID);
+                    bundle.putString("Inv_GUID", T_GUID);
+                    bundle.putString("Ord_TYPE","");
+                    bundle.putString("Tbl_GUID",T_GUID);
 
 
                     InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                     inVoiceDetailFragmentMobile.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
 
-                } else {
-                    Toast.makeText(getActivity(), "فاکتور این سفارش در تبلت موجود نمی باشد.", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+            else {
+
+                List<OrderType> orderType =new ArrayList<>(orderTypes);
+                CollectionUtils.filter(orderType, o -> o.getTy() == 1);
+                int OrderType=0;
+                if (orderType.size()>0) {
+                     OrderType = orderType.get(0).getC();
                 }
 
-            } else {
-                List<OrderType> orderType = Select.from(OrderType.class).list();
-                CollectionUtils.filter(orderType, o -> o.getTy() == 1);
-
                 Bundle bundle = new Bundle();
-
-
                 bundle.putString("Tbl_GUID", T_GUID);
-                bundle.putString("Ord_TYPE", String.valueOf(orderType.get(0).getC()));
-                bundle.putString("Inv_GUID", "");
+                bundle.putString("Ord_TYPE", String.valueOf(OrderType));
+                bundle.putString("Inv_GUID", T_GUID);
 
 
                 MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -309,15 +307,27 @@ public class LauncherOrganizationFragment extends Fragment {
         flexboxLayoutManager1.setFlexDirection(FlexDirection.ROW);
         flexboxLayoutManager1.setJustifyContent(JustifyContent.CENTER);
         flexboxLayoutManager1.setAlignItems(AlignItems.BASELINE);
-        List<OrderType> list = Select.from(OrderType.class).list();
-        CollectionUtils.filter(list, l -> l.getTy() == 2);
-        getOutOrderList.clear();
-        getOutOrderList.addAll(list);
-
         getOutOrderAdapter = new TypeOrderAdapter(getContext(), getOutOrderList);
         binding.recycleGetOutOrder.setLayoutManager(flexboxLayoutManager1);
         binding.recycleGetOutOrder.setAdapter(getOutOrderAdapter);
         binding.recycleGetOutOrder.setHasFixedSize(false);
+
+
+
+
+        binding.btnLogout.setOnClickListener(v -> {
+            TypeClickButton = "logOut";
+            btnNoDialog.setText("خیر");
+            btnOkDialog.setText("بله");
+            textMessageDialog.setText("آیا مایل به خروج از برنامه هستید؟");
+            dialog.show();
+
+        });
+
+
+        getTypeOrder();
+        getTable1();
+
 
         getOutOrderAdapter.setOnClickItemListener((code, ty) -> {
 
@@ -350,23 +360,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         });
-
-
-
-        binding.btnLogout.setOnClickListener(v -> {
-            TypeClickButton = "logOut";
-            btnNoDialog.setText("خیر");
-            btnOkDialog.setText("بله");
-            textMessageDialog.setText("آیا مایل به خروج از برنامه هستید؟");
-            dialog.show();
-
-        });
-
-
-        getTypeOrder();
-        getTable1();
-
-
         return binding.getRoot();
 
 
@@ -427,6 +420,8 @@ public class LauncherOrganizationFragment extends Fragment {
                                     showError(error);
                                 } else {
                                     getOutOrderList.clear();
+                                    orderTypes.clear();
+                                    orderTypes.addAll(iDs.getOrderTypes());
                                     CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
                                     getOutOrderList.addAll(iDs.getOrderTypes());
                                     getOutOrderAdapter.notifyDataSetChanged();
@@ -549,4 +544,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
 
+    public void refreshAdapter(){
+        tableAdapter.notifyDataSetChanged();
+    }
 }

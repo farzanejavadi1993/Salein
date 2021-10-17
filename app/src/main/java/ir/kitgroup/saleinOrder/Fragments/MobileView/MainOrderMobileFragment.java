@@ -235,27 +235,6 @@ public class MainOrderMobileFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-//        //region Delete Invoice
-//        List<Invoice> invoices=Select.from(Invoice.class).list();
-//        //@ save order in Organization
-//        //# unSuccessful order   in Client
-//        CollectionUtils.filter(invoices,i->i.INV_SYNC!=null &&i.INV_SYNC.equals("#") && i.INV_SYNC.equals("@"));
-//        if (invoices.size()>0){
-//            for (int i=0;i<invoices.size();i++){
-//                Invoice.delete(invoices.get(i));
-//                List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).where("INVUID ='" + invoices.get(i).INV_UID + "'").list();
-//                for (int j=0;j<invoiceDetails.size();j++){
-//                    InvoiceDetail.delete(invoiceDetails.get(j));
-//                }
-//            }
-//        }
-//
-//
-//        List<InvoiceDetail> invoiceDetails1=Select.from(InvoiceDetail.class).where("INVDETTOTALAMOUNT IS NULL").list();
-//        for (int j=0;j<invoiceDetails1.size();j++){
-//            InvoiceDetail.delete(invoiceDetails1.get(j));
-//        }
-//        //endregion Delete Invoice
 
 
 
@@ -1752,6 +1731,8 @@ public class MainOrderMobileFragment extends Fragment {
         } catch (NetworkOnMainThreadException ignored) {
         }
     }
+
+
 
 
 }

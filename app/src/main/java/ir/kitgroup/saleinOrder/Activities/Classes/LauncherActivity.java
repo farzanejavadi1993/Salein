@@ -22,10 +22,12 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
+import ir.kitgroup.saleinOrder.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.saleinOrder.Fragments.MobileView.SplashScreenFragment;
 
 import ir.kitgroup.saleinOrder.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.databinding.ActivityLauncherBinding;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -160,7 +162,15 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
+        }else if (App.mode==1 &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")){
+            Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
+            if (fragment instanceof LauncherOrganizationFragment) {
+                LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) fragment;
+                fgf.refreshAdapter();
+            }
+            getSupportFragmentManager().popBackStack();
         }
+
         else
             getSupportFragmentManager().popBackStack();
     }

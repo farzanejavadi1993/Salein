@@ -6,6 +6,7 @@ import com.orm.dsl.Unique;
 public class Tables extends SugarRecord {
     @Unique
     public  String I;//SYS_UID
+    public  String GO;//GET OUT ORDER NAME CUSTOMER
     public  String N;//SYS_NUMBER
     public  Integer CC;//SYS_CHAIR_COUNT
     public  Boolean ST;//SYS_STATUS

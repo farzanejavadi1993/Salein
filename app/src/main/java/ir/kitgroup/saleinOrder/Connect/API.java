@@ -134,6 +134,10 @@ public interface API {
     Observable<String>  getOrderType1(@Query("userName") String userName, @Query("password") String password);
 
 
+    @GET("GetInvoice")
+    Observable<String>  getInvoice1(@Query("userName") String userName, @Query("passWord") String passWord,@Query("InvoiceId") String InvoiceId);
+
+
     @GET("DescriptionSync")
     Observable<String> getDescription1(@Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
 

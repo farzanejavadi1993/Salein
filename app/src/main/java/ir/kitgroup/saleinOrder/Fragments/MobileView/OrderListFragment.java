@@ -294,24 +294,24 @@ public class OrderListFragment extends Fragment {
 
 
 
-                                    List<Invoice> lists=Select.from(Invoice.class).list();
+                                   /* List<Invoice> lists=Select.from(Invoice.class).list();
                                     CollectionUtils.filter(lists,l->l.INV_SYNC ==null);
                                     if (lists.size()>0){
                                         for (int i=0;i<lists.size();i++){
                                             Invoice.delete(lists.get(i));
                                         }
-                                    }
+                                    }*/
 
                                     List<Invoice> lists1=Select.from(Invoice.class).list();
                                     CollectionUtils.filter(lists1,l-> !l.INV_SYNC.equals("#") && !l.INV_SYNC.equals("@"));
                                     if (lists1.size()>0){
                                         for (int i=0;i<lists1.size();i++){
-                                            Invoice.delete(lists1.get(i));
+                                          //  Invoice.delete(lists1.get(i));
                                         }
                                     }
 
 
-                                    Invoice.saveInTx(iDs.getInvoice());
+                                    //Invoice.saveInTx(iDs.getInvoice());
                                     InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
 
 

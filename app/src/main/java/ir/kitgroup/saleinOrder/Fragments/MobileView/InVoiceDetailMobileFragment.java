@@ -72,6 +72,7 @@ import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.models.Description;
 import ir.kitgroup.saleinOrder.models.ModelDesc;
 
+import ir.kitgroup.saleinOrder.models.ModelInvoice;
 import ir.kitgroup.saleinOrder.models.ModelLog;
 import ir.kitgroup.saleinOrder.R;
 
@@ -110,7 +111,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Variable Dialog
     private Dialog dialogDelete;
-    private int imageIconDialog=R.drawable.saleinicon128;
+    private int imageIconDialog = R.drawable.saleinicon128;
     //endregion Variable Dialog
 
 
@@ -127,6 +128,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumTransport = 0.0;
     private String maxSales = "0";
     private List<InvoiceDetail> invDetails = new ArrayList<>();
+
+
+    private String Acc_NAME;
+    private String Acc_GUID;
 
 
     //endregion Parameter
@@ -189,7 +194,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.btnContinue.setTextSize(fontSize);
         binding.btnDelete.setTextSize(fontSize);
         binding.btnEdit.setTextSize(fontSize);
-        binding.btnResend.setTextSize(fontSize);
         binding.txtDeleteAll.setTextSize(fontSize);
         //endregion Configuration Text Size
 
@@ -197,8 +201,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Cast Dialog Delete
 
         try {
-
-        }catch (Exception ignore){
             switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
 
@@ -228,7 +230,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     break;
             }
+        } catch (Exception ignore) {
+
         }
+
 
 
         dialogDelete = new Dialog(getActivity());
@@ -253,16 +258,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             for (int i = 0; i < invoiceDetails.size(); i++) {
-                ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
-                if (product != null) {
-                    product.delete();
-                }
                 InvoiceDetail.delete(invoiceDetails.get(i));
-
             }
             invoiceDetailList.clear();
             invoiceDetailAdapter.notifyDataSetChanged();
-
 
         });
         //endregion Cast Dialog Delete
@@ -274,10 +273,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
         String Ord_TYPE = bundle.getString("Ord_TYPE");
-        String Acc_NAME = bundle.getString("Acc_NAME");
-        String Acc_GUID = bundle.getString("Acc_GUID");
         edit = bundle.getBoolean("EDIT");
         //endregion Get Bundle
+
 
 
         //region Configuration Client Application
@@ -285,128 +283,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.layoutDetail.setVisibility(View.GONE);
         }
         //endregion Configuration Client Application
 
-
-        //region Configuration Organization Application And Edit Mode For Save Order
-        if (App.mode == 1 && type.equals("2")) {
-            binding.layoutSave.setVisibility(View.VISIBLE);
-
-            binding.layoutSave.setOnClickListener(v -> {
-                Date date = Calendar.getInstance().getTime();
-
-                double sumDiscount = 0.0;
-                double sumDiscountPercent = 0.0;
-                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-
-                for (int i = 0; i < invDetails.size(); i++) {
-
-                    ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
-
-                    if (product != null) {
-                        double sumTotalPrice = (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());//جمع کل ردیف
-                        double discountPrice = sumTotalPrice * product.getPercDis() / 100;//جمع تخفیف ردیف
-                        double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
-
-
-                        sumPurePrice = sumPurePrice + totalPurePrice; //جمع خالص فاکتور
-                        sumPrice = sumPrice + sumTotalPrice; // جمع کل فاکتور
-
-
-                        invDetails.get(i).INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
-                        invDetails.get(i).ROW_NUMBER = i + 1;
-                        invDetails.get(i).INV_DET_PERCENT_DISCOUNT = product.getPercDis();
-                        invDetails.get(i).INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                        invDetails.get(i).INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice());
-                        sumDiscount = sumDiscount + discountPrice;
-                        sumDiscountPercent = sumDiscountPercent + (product.getPercDis() / 100);
-
-
-                    }
-
-                }
-
-
-                for (InvoiceDetail invoicedetail : Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list()) {
-                    InvoiceDetail.deleteInTx(invoicedetail);
-                }
-
-
-                InvoiceDetail.saveInTx(invDetails);
-                Invoice invoice = Select.from(Invoice.class).where("INVUID = '" + Inv_GUID + "'").first();
-
-                invoice.INV_UID = Inv_GUID;
-                invoice.INV_TOTAL_AMOUNT = sumPurePrice;//جمع فاکنور
-                invoice.INV_TOTAL_DISCOUNT = 0.0;
-                invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent;
-                invoice.INV_DET_TOTAL_DISCOUNT = sumDiscount;
-                invoice.INV_DESCRIBTION = "";
-                invoice.INV_TOTAL_TAX = 0.0;
-                invoice.INV_TOTAL_COST = 0.0;
-                invoice.INV_EXTENDED_AMOUNT = sumPrice;
-                invoice.INV_DATE = date;
-                invoice.INV_DUE_DATE = date;
-                invoice.INV_STATUS = true;
-                invoice.ACC_CLB_UID = Acc_GUID;
-                invoice.TBL_UID = Tbl_GUID;
-                invoice.INV_TYPE_ORDER = Integer.parseInt(Ord_TYPE);
-                invoice.Acc_name = Acc_NAME;
-                invoice.save();
-
-                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                if (tb != null) {
-                    tb.SV = true;
-                    tb.save();
-                }
-                assert getFragmentManager() != null;
-
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                if (frg != null) {
-                    final int size1 = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-
-                    for (int i = 1; i <= size1; i++) {
-                        getFragmentManager().popBackStack();
-                    }
-
-                    ft.detach(frg);
-                    ft.attach(frg);
-                    ft.commit();
-                }
-
-
-            });
-        }
-        //endregion Configuration Organization Application And Edit Mode For Save Order
-
-
-        //region Action BtnResend
-        binding.btnResend.setOnClickListener(v -> {
-            if (invoiceDetailList.size() == 0) {
-                Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("Inv_GUID", Inv_GUID);
-            bundle1.putString("Tbl_GUID", "");
-            bundle1.putString("Acc_NAME", Acc_NAME);
-            bundle1.putString("Acc_GUID", Acc_GUID);
-            bundle1.putString("Ord_TYPE", "");
-            if (edit)
-                bundle1.putBoolean("EDIT", true);
-
-            bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
-            bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
-
-            PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
-            paymentFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
-        });
-        //endregion Action BtnResend
 
 
         sumPrice = 0;
@@ -466,6 +347,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Cast DialogDescription
 
 
+
         //region Set Parameter Toolbar
         Utilities util = new Utilities();
         Locale loc = new Locale("en_US");
@@ -476,62 +358,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtDeleteAll.setVisibility(View.GONE);
             binding.layoutContinue.setVisibility(View.GONE);
             binding.layoutEditDelete.setVisibility(View.VISIBLE);
-
-            Invoice invoice = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
-            if (invoice != null) {
-
-                status = invoice.INV_SYNC;
-
-                if (App.mode == 2) {
-                    if (status != null && status.equals("*")) {
-                        binding.btnResend.setVisibility(View.GONE);
-                        binding.btnDelete.setVisibility(View.GONE);
-                        binding.btnEdit.setVisibility(View.GONE);
-                    } else if (status != null && status.equals("-")) {
-                        binding.btnResend.setVisibility(View.GONE);
-                        binding.btnDelete.setVisibility(View.VISIBLE);
-                        binding.btnEdit.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.btnResend.setVisibility(View.VISIBLE);
-                        binding.btnDelete.setVisibility(View.VISIBLE);
-                        binding.btnEdit.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    binding.btnResend.setVisibility(View.GONE);
-                    binding.btnDelete.setVisibility(View.VISIBLE);
-                    binding.btnEdit.setVisibility(View.VISIBLE);
-                }
-
-
-                Tables tbl1 = Select.from(Tables.class).where("I ='" + invoice.TBL_UID + "'").first();
-
-                if (tbl1 != null)
-                    binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
-
-
-                if (App.mode == 1) {
-                    OrderType orderType = Select.from(OrderType.class).where("c ='" + invoice.INV_TYPE_ORDER + "'").first();
-                    if (orderType != null) {
-                        binding.txtTypeOrder.setText(orderType.getN());
-                    }
-
-                    Account ac = Select.from(Account.class).first();
-                    if (ac != null)
-                        binding.tvNameCustomer.setText(ac.N);
-                }
-
-
-                if (invoice.INV_DUE_DATE != null) {
-                    Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
-                    binding.txtDate.setText(invoice.INV_DUE_DATE.getHours() + ":" + invoice.INV_DUE_DATE.getMinutes() + " " + (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year);
-
-                } else {
-                    if (invoice.INV_DUE_DATE_PERSIAN != null)
-                        binding.txtDate.setText(invoice.INV_DUE_DATE_PERSIAN);
-                }
-
-            }
-
         }
         //endregion Seen Order After Send It
 
@@ -546,23 +372,17 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
             if (App.mode == 1) {
-                OrderType ordTY = Select.from(OrderType.class).where("c ='" + Ord_TYPE + "'").first();
-
-                if (ordTY != null)
-                    binding.txtTypeOrder.setText(ordTY.getN());
-
-                binding.tvNameCustomer.setText(Acc_NAME);
-                Tables tbl1 = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                if (tbl1 != null)
-                    binding.txtTableNumber.setText("شماره میز : " + tbl1.N);
-
+                Account acc=Select.from(Account.class).first();
+                binding.tvNameCustomer.setText(acc!=null ?acc.N:"");
             }
 
 
         }
         //endregion See Order During Work
 
+
         //endregion Set Parameter Toolbar
+
 
 
         //region CONFIGURATION DATA INVOICE_DETAIL
@@ -571,36 +391,15 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
 
-
-
-        //invoiceDetailList.addAll(invDetails);
-        /*for (int i = 0; i < invDetails.size(); i++) {
-
-
-            ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
-
-            if (product != null) {
-                double sumpriceE = (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());
-                double discountPrice = sumpriceE * (product.getPercDis() / 100);
-                double totalPrice = sumpriceE - discountPrice;
-
-                sumPrice = sumPrice + (invDetails.get(i).INV_DET_QUANTITY * product.getPrice());
-                sumPurePrice = sumPurePrice + totalPrice;
-                sumDiscounts = sumDiscounts + discountPrice;
-
-            }
-
-        }*/
-
-
         if (type.equals("1"))
             binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
 
-
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
+
+
 
 
         invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type);
@@ -663,6 +462,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
 
+
         invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -688,7 +488,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
 
-                binding.tvSumPurePrice.setText(format.format(sumPurePrice+sumTransport) + " ریال ");
+                binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
                 binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
                 binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
@@ -780,19 +580,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion CONFIGURATION DATA INVOICE_DETAIL
 
 
+
         //region Action BtnDelete
         binding.btnDelete.setOnClickListener(v -> {
 
-            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-            if (tb != null) {
-                tb.SV = false;
-                tb.save();
-            }
             if (status.equals("-"))
                 getDeleteInvoice(userName, passWord, Inv_GUID);
-
-
         });
+
         //endregion Action BtnDelete
 
 
@@ -843,12 +638,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnContinue
 
 
+
         binding.txtDeleteAll.setOnClickListener(v -> {
             if (invoiceDetailList.size() > 0)
                 dialogDelete.show();
         });
 
-        invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+
+        if (type.equals("1"))
+            getInvoice();
+        else
+            invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
         if (invDetails.size() == 0)
             binding.progressBar.setVisibility(View.GONE);
         else
@@ -1008,6 +809,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getProduct(String Guid, int i) {
+        binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
                     App.api.getProduct(userName, passWord, Guid)
@@ -1086,6 +888,86 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
+
+    @SuppressLint("SetTextI18n")
+    private void getInvoice() {
+        try {
+            compositeDisposable.add(
+                    App.api.getInvoice1(userName, passWord, Inv_GUID)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelInvoice>() {
+                                }.getType();
+                                ModelInvoice iDs = null;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception ignored) {
+                                    Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
+                                }
+
+                                if (iDs != null) {
+
+                                    InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
+
+                                    if (iDs.getInvoice().size() == 0) {
+                                        invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                                    } else {
+
+                                        status = iDs.getInvoice().get(0).INV_SYNC;
+
+                                        if (status != null && status.equals("*")) {
+                                            binding.btnDelete.setVisibility(View.GONE);
+                                            binding.btnEdit.setVisibility(View.GONE);
+                                        } else if (status != null && status.equals("-")) {
+                                            binding.btnDelete.setVisibility(View.VISIBLE);
+                                            binding.btnEdit.setVisibility(View.VISIBLE);
+                                        }
+
+
+                                        if (iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN != null)
+                                            binding.txtDate.setText(iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
+
+
+                                        invDetails.addAll(iDs.getInvoiceDetail());
+
+
+                                    }
+
+
+                                    if (invDetails.size() == 0)
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    else
+                                        for (int i = 0; i < invDetails.size(); i++) {
+                                            getProduct(invDetails.get(i).PRD_UID, i);
+                                        }
+
+
+                                } else {
+                                    Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
+
+
+                                }
+                                binding.progressBar.setVisibility(View.GONE);
+
+                            }, throwable -> {
+                                Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                binding.progressBar.setVisibility(View.GONE);
+
+                            })
+            );
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+            binding.progressBar.setVisibility(View.GONE);
+        }
+
+    }
+
     private void getDeleteInvoice(String userName, String pass, String Inv_GUID) {
 
         customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
@@ -1105,13 +987,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     if (iDs != null) {
                         int message = iDs.getLogs().get(0).getMessage();
-                        String description = iDs.getLogs().get(0).getDescription();
                         if (message == 4) {
-
-
-                            Invoice inv = Select.from(Invoice.class).where("INVUID ='" + Inv_GUID + "'").first();
-                            if (inv != null)
-                                inv.delete();
                             List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                             for (int i = 0; i < invoiceDetail.size(); i++) {
                                 ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invoiceDetail.get(i).PRD_UID + "'").first();
