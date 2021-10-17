@@ -30,6 +30,8 @@
 
             >
 
+
+
             <LinearLayout
 
                 android:id="@+id/mainLayout"
@@ -59,14 +61,15 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:visibility="gone"
                             android:id="@+id/layout_account"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="2dp"
-                            android:layout_weight="0.33"
+                            android:layout_weight="0.5"
                             android:background="@drawable/background_edittext"
                             android:padding="5dp"
-                            android:visibility="gone">
+                            >
 
 
                             <ImageView
@@ -89,18 +92,16 @@
                                 android:background="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right|center_vertical"
-                                android:hint="جستجوی نام مشترک"
+                                android:hint="جستجوی نام مشتری"
                                 android:inputType="text"
-                                android:paddingStart="16dp"
                                 android:paddingTop="6dp"
-                                android:paddingEnd="16dp"
                                 android:paddingBottom="6dp"
                                 android:textColor="@color/medium_color"
                                 android:textSize="@dimen/text_normal_mobile_size"
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
-
                         <RelativeLayout
+
                             android:id="@+id/define_company"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
@@ -128,12 +129,18 @@
                                 android:textSize="8sp"
                                 android:textStyle="bold" />
                         </RelativeLayout>
+                        <View
+                            android:background="#ccc"
+                            android:layout_marginBottom="@dimen/margin4"
+                           android:layout_marginTop="@dimen/margin4"
+                            android:layout_width="0.5dp"
+                            android:layout_height="match_parent"/>
                         <RelativeLayout
                             android:id="@+id/layout_search_product"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
-                            android:layout_weight="0.33"
+                            android:layout_weight="0.5"
                             android:background="@drawable/background_edittext">
 
                             <ImageView
@@ -175,11 +182,7 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/accountRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_recyclerView_productLevel1"
@@ -233,7 +236,14 @@
 
 
             </com.google.android.material.card.MaterialCardView>
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:background="#fff"
+                android:visibility="gone"
+                android:layout_marginTop="56dp"
+                android:id="@+id/accountRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
 
             <TextView
                 android:id="@+id/order_txt_error"

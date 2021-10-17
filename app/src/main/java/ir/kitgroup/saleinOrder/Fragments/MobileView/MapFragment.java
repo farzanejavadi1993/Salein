@@ -104,7 +104,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     private Dialog dialogAddress;
-    private int imgIconDialog;
+    private int imgIconDialog=R.drawable.saleinicon128;
 
 
     private String address = "";
@@ -173,33 +173,38 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
+        try {
 
-                imgIconDialog = R.drawable.saleinicon128;
+        }catch (Exception ignore){
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
 
-
-                break;
-
-            case "ir.kitgroup.saleintop":
-
-                imgIconDialog = R.drawable.top_png;
-
-                break;
+                    imgIconDialog = R.drawable.saleinicon128;
 
 
-            case "ir.kitgroup.saleinmeat":
+                    break;
 
-                imgIconDialog = R.drawable.meat_png;
+                case "ir.kitgroup.saleintop":
 
-                break;
+                    imgIconDialog = R.drawable.top_png;
 
-            case "ir.kitgroup.saleinnoon":
+                    break;
 
-                imgIconDialog = R.drawable.noon;
 
-                break;
+                case "ir.kitgroup.saleinmeat":
+
+                    imgIconDialog = R.drawable.meat_png;
+
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+
+                    imgIconDialog = R.drawable.noon;
+
+                    break;
+            }
         }
+
         //endregion Set Icon And Title
 
 

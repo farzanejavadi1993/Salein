@@ -11,12 +11,7 @@
         android:orientation="horizontal">
 
 
-        <ProgressBar
 
-            android:layout_centerInParent="true"
-            android:id="@+id/progressBar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
         <TextView
             android:visibility="gone"
             android:id="@+id/txtError"
@@ -26,13 +21,7 @@
             android:textColor="@color/red_table"
             android:textSize="@dimen/text_normal_mobile_size" />
 
-        <ProgressBar
-            android:visibility="gone"
-            android:id="@+id/progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-           />
+
 
         <RelativeLayout
             android:id="@+id/toolbar"
@@ -151,6 +140,16 @@
             android:layout_marginEnd="@dimen/normal_left_right_margin"
             android:rotationY="180" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:background="@drawable/ic_circle"
+                android:layout_centerInParent="true"
+                android:id="@+id/progressbar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

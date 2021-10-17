@@ -99,318 +99,325 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eee"
+        android:clickable="true"
+        android:focusable="true">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:id="@+id/bottom_sheet"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#eee"
-                    android:clickable="true"
-                    android:focusable="true">
-                    <ProgressBar
-                        android:layout_margin="@dimen/margin4"
-                        android:id="@+id/progressBar"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
 
-                    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/order_list_layout_sumPrice_detail_order"
+            android:layout_below="@+id/order_list_date_layout"
+            android:layout_marginBottom="@dimen/margin10"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/recycler_detail_invoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+
+            android:id="@+id/order_list_layout_sumPrice_detail_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:elevation="@dimen/margin4"
+            android:orientation="vertical"
+            tools:targetApi="lollipop">
+
+            <TextView
+                android:layout_marginTop="@dimen/margin10"
+                android:textSize="14dp"
+                android:textColor="#000"
+                android:text="جزییات فاکتور"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="8sp">
+
+                <TextView
+
+                    android:id="@+id/order_list_sumPrice_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/sum_price"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/tvSumPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
+
+
+
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp">
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/order_list_sumDiscount_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="جمع تخفیف"
+                    android:textColor="@color/green_table"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/tvSumDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/green_table"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/layout_transport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp">
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/txtSumTransport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_toRightOf="@+id/tv_sumTransport"
+                    android:text="هزینه ارسال"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:id="@+id/tv_sumTransport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin8"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="@dimen/margin10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8sp">
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/order_list_purePrice_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_toRightOf="@+id/tv_sumPurePrice"
+                    android:text="قابل پرداخت"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    tools:ignore="RelativeOverlap" />
+                <TextView
+                    android:id="@+id/tv_sumPurePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin8"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/rial_0"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+
+                android:background="#eee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <RelativeLayout
+
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:id="@+id/layout_continue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center|bottom">
+
+
+                    <TextView
+
+                        android:id="@+id/btn_continue"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/order_list_layout_sumPrice_detail_order"
-                        android:layout_below="@+id/order_list_date_layout"
-                        android:layout_marginBottom="@dimen/margin10"
-                        android:orientation="vertical">
+                        android:layout_height="45dp"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/order_item_recycle_group__card_background"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="ادامه سفارش"
+                        android:textColor="#fff"
+                        android:textSize="11sp" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_detail_invoice"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutDirection="rtl" />
+                </RelativeLayout>
 
-                    </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/layout_save"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center|bottom"
+                    android:visibility="gone">
 
 
-
-                    <LinearLayout
-
-                        android:id="@+id/order_list_layout_sumPrice_detail_order"
+                    <TextView
+                        android:id="@+id/btn_save"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/white"
-                        android:elevation="@dimen/margin4"
-                        android:orientation="vertical"
-                        tools:targetApi="lollipop">
+                        android:layout_height="45dp"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/save_background"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:text="ذخیره"
+                        android:textColor="#fff"
+                        android:textSize="11sp" />
 
-                        <TextView
-                            android:layout_marginTop="@dimen/margin10"
-                            android:textSize="14dp"
-                            android:textColor="#000"
-                            android:text="جزییات فاکتور"
-                            android:textStyle="bold"
-                            android:gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8sp"
-                            android:layout_marginTop="@dimen/margin10"
-                            android:layout_marginRight="8sp">
+                </RelativeLayout>
+            </LinearLayout>
 
-                            <TextView
 
-                                android:id="@+id/order_list_sumPrice_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="8dp"
-                                android:text="@string/sum_price"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                tools:ignore="RelativeOverlap" />
-
-                            <TextView
-                                android:layout_alignParentLeft="true"
-                                android:id="@+id/tvSumPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="8dp"
-                                android:layout_marginRight="8dp"
-                                android:text="@string/rial_0"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/layout_edit_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginLeft="8sp"
+                android:layout_marginTop="@dimen/margin4"
+                android:layout_marginRight="8sp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center|bottom"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
 
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0.33"
+                    android:backgroundTint="@color/red_table"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="حذف"
+                    android:textColor="#fff"
+                    android:textSize="11sp"
 
 
-                        </RelativeLayout>
+                    app:cornerRadius="@dimen/margin4"
+                    tools:ignore="HardcodedText" />
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8sp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginRight="8sp">
-                            <TextView
-                                android:layout_alignParentRight="true"
-                                android:id="@+id/order_list_sumDiscount_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:text="جمع تخفیف"
-                                android:textColor="@color/green_table"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                tools:ignore="RelativeOverlap" />
-
-                            <TextView
-                                android:layout_alignParentLeft="true"
-                                android:id="@+id/tvSumDiscount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="8dp"
-                                android:layout_marginRight="8dp"
-                                android:text="@string/rial_0"
-                                android:textColor="@color/green_table"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                android:textStyle="bold" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:visibility="gone"
-                            android:id="@+id/layout_transport"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8sp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginRight="8sp">
-                            <TextView
-                                android:layout_alignParentRight="true"
-                                android:id="@+id/txtSumTransport"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:layout_toRightOf="@+id/tv_sumTransport"
-                                android:text="هزینه ارسال"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                tools:ignore="RelativeOverlap" />
-
-                            <TextView
-                                android:id="@+id/tv_sumTransport"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_marginLeft="@dimen/margin8"
-                                android:layout_marginRight="8dp"
-                                android:text="@string/rial_0"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                android:textStyle="bold" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_marginBottom="@dimen/margin10"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8sp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginRight="8sp">
-                            <TextView
-                                android:layout_alignParentRight="true"
-                                android:id="@+id/order_list_purePrice_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:layout_toRightOf="@+id/tv_sumPurePrice"
-                                android:text="قابل پرداخت"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                tools:ignore="RelativeOverlap" />
-                            <TextView
-                                android:id="@+id/tv_sumPurePrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_marginLeft="@dimen/margin8"
-                                android:layout_marginRight="8dp"
-                                android:text="@string/rial_0"
-                                android:textColor="@color/medium_color"
-                                android:textSize="@dimen/text_medium_mobile_size"
-                                android:textStyle="bold" />
-
-                        </RelativeLayout>
-
-                        <LinearLayout
-
-                            android:background="#eee"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-
-                                android:layout_marginLeft="22dp"
-                                android:layout_marginRight="22dp"
-                                android:id="@+id/layout_continue"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="18dp"
-                                android:layout_marginBottom="10dp"
-                                android:layout_weight="0.5"
-                                android:gravity="center|bottom">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="@dimen/margin2"
+                    android:layout_weight="0.33"
+                    android:backgroundTint="@color/green_table"
+                    android:fontFamily="@font/iransans"
+                    android:gravity="center"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="ویرایش"
+                    android:textColor="#fff"
+                    android:textSize="11sp"
+                    app:cornerRadius="@dimen/margin4"
+                    tools:ignore="HardcodedText" />
 
 
-                                <TextView
+            </LinearLayout>
+        </LinearLayout>
 
-                                    android:id="@+id/btn_continue"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_alignParentLeft="true"
-                                    android:background="@drawable/order_item_recycle_group__card_background"
-                                    android:gravity="center"
-                                    android:paddingTop="7dp"
-                                    android:paddingBottom="7dp"
-                                    android:text="ادامه سفارش"
-                                    android:textColor="#fff"
-                                    android:textSize="11sp" />
+    </LinearLayout>
+    <ProgressBar
+        android:layout_margin="@dimen/margin4"
+        android:id="@+id/progressBar"
+        android:background="@drawable/ic_circle"
+        android:layout_centerHorizontal="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+</RelativeLayout>
 
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:id="@+id/layout_save"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="18dp"
-                                android:layout_marginRight="22dp"
-                                android:layout_marginBottom="10dp"
-                                android:layout_weight="0.5"
-                                android:gravity="center|bottom"
-                                android:visibility="gone">
-
-
-                                <TextView
-                                    android:id="@+id/btn_save"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_alignParentLeft="true"
-                                    android:background="@drawable/save_background"
-                                    android:gravity="center"
-                                    android:paddingTop="7dp"
-                                    android:paddingBottom="7dp"
-                                    android:text="ذخیره"
-                                    android:textColor="#fff"
-                                    android:textSize="11sp" />
-
-                            </RelativeLayout>
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:id="@+id/layout_edit_delete"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center|bottom"
-                            android:layout_marginLeft="8sp"
-                            android:layout_marginTop="@dimen/margin4"
-                            android:layout_marginRight="8sp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center|bottom"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_delete"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="4dp"
-                                android:layout_weight="0.33"
-                                android:backgroundTint="@color/red_table"
-                                android:fontFamily="@font/iransans"
-                                android:gravity="center"
-                                android:paddingTop="7dp"
-                                android:paddingBottom="7dp"
-                                android:text="حذف"
-                                android:textColor="#fff"
-                                android:textSize="11sp"
-
-
-                                app:cornerRadius="@dimen/margin4"
-                                tools:ignore="HardcodedText" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="@dimen/margin2"
-                                android:layout_weight="0.33"
-                                android:backgroundTint="@color/green_table"
-                                android:fontFamily="@font/iransans"
-                                android:gravity="center"
-                                android:paddingTop="7dp"
-                                android:paddingBottom="7dp"
-                                android:text="ویرایش"
-                                android:textColor="#fff"
-                                android:textSize="11sp"
-                                app:cornerRadius="@dimen/margin4"
-                                tools:ignore="HardcodedText" />
-
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
 
 
         </androidx.core.widget.NestedScrollView>

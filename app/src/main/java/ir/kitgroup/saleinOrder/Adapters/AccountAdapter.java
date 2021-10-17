@@ -34,7 +34,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHold
 
 
     public interface ClickItem {
-        void onRowClick(String GUID, String name);
+        void onRowClick(Account account);
     }
 
     private ClickItem clickItem;
@@ -62,7 +62,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHold
             @Override
             public void onClick(View view) {
 
-                clickItem.onRowClick(account.getACCCLBUID(), account.getACCCLBNAME());
+                clickItem.onRowClick(account);
 
 
             }

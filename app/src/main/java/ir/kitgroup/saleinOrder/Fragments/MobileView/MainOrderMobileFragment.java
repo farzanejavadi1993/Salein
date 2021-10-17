@@ -364,6 +364,7 @@ public class MainOrderMobileFragment extends Fragment {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                    int p=0;
                 }
 
                 @Override
@@ -389,16 +390,13 @@ public class MainOrderMobileFragment extends Fragment {
                 }
             };
 
-            accAdapter.setOnClickItemListener((GUID, name) -> {
+            accAdapter.setOnClickItemListener((account) -> {
                 Account.deleteAll(Account.class);
-                Account account = new Account();
-                account.I = GUID;
-                account.N = name;
                 Account.saveInTx(account);
-                Acc_GUID = GUID;
-                Acc_NAME = name;
+                Acc_GUID = account.I;
+                Acc_NAME =account.N;
                 binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-                binding.edtNameCustomer.setText(name);
+                binding.edtNameCustomer.setText(account.N);
                 binding.accountRecyclerView.setVisibility(View.GONE);
                 binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
             });
@@ -487,8 +485,12 @@ public class MainOrderMobileFragment extends Fragment {
                         bundle.putString("Ord_TYPE", Ord_TYPE);
                         bundle.putString("Acc_Name", Acc_NAME);
                         bundle.putString("Acc_GUID", Acc_GUID);
-                        if (!Inv_GUID_ORG.equals(""))
+                        if (!Inv_GUID_ORG.equals("") && App.mode==2)
                             bundle.putBoolean("EDIT", true);
+                        else if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID))
+                            bundle.putBoolean("EDIT", true);
+                        else
+                            bundle.putBoolean("EDIT", false);
 
                         InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                         inVoiceDetailFragmentMobile.setArguments(bundle);
@@ -570,6 +572,7 @@ public class MainOrderMobileFragment extends Fragment {
         if (Inv_GUID.equals("")) {
             String name;
             try {
+                //Client
                 name = LauncherActivity.name.split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
                 if (Inv_GUID.equals("")) {
@@ -745,8 +748,12 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals(""))
+                if (!Inv_GUID_ORG.equals("") && App.mode==2)
                     bundle.putBoolean("EDIT", true);
+                else if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID))
+                    bundle.putBoolean("EDIT", true);
+                else
+                    bundle.putBoolean("EDIT", false);
 
 
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();

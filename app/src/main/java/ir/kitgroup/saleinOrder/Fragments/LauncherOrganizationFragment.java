@@ -261,12 +261,12 @@ public class LauncherOrganizationFragment extends Fragment {
 
             if (Reserve) {
 
-
                 Bundle bundle = new Bundle();
                     bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
                     bundle.putString("Inv_GUID", T_GUID);
                     bundle.putString("Ord_TYPE","");
                     bundle.putString("Tbl_GUID",T_GUID);
+                    bundle.putBoolean("EDIT",true);
 
 
                     InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
@@ -290,6 +290,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Tbl_GUID", T_GUID);
                 bundle.putString("Ord_TYPE", String.valueOf(OrderType));
                 bundle.putString("Inv_GUID", T_GUID);
+                bundle.putBoolean("EDIT",false);
 
 
                 MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -389,7 +390,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressbar.setVisibility(View.VISIBLE);
 
         try {
             compositeDisposable.add(
@@ -411,7 +412,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                     error = error + "\n" + "مدل دریافت شده از نوع سفارش نا معتبر است";
                                     showError(error);
-                                    binding.progressBar.setVisibility(View.GONE);
+                                    binding.progressbar.setVisibility(View.GONE);
                                     return;
                                 }
 
@@ -429,7 +430,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                 }
 
-                                binding.progressBar.setVisibility(View.GONE);
+                                binding.progressbar.setVisibility(View.GONE);
 
 
                             }, throwable -> {
@@ -442,7 +443,7 @@ public class LauncherOrganizationFragment extends Fragment {
         } catch (Exception e) {
             error = error + "\n" + "خطا در اتصال به سرور";
             showError(error);
-            binding.progressBar.setVisibility(View.GONE);
+            binding.progressbar.setVisibility(View.GONE);
         }
 
     }
@@ -489,7 +490,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     private void getTable1() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
                     App.api.getTable1( userName, passWord)
@@ -508,12 +509,13 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                     error = error + "\n" + "مدل دریافت شده از میزها نا معتبر است";
                                     showError(error);
-                                    binding.progressBar.setVisibility(View.GONE);
+                                    binding.progressbar.setVisibility(View.GONE);
                                     return;
                                 }
                                 if (iDs != null) {
                                     tablesList.clear();
                                     tablesList.addAll(iDs.getTables());
+                                    AllTable.clear();
                                     AllTable.addAll(iDs.getTables());
                                     tableAdapter.notifyDataSetChanged();
                                     binding.progressbar.setVisibility(View.GONE);
@@ -525,7 +527,7 @@ public class LauncherOrganizationFragment extends Fragment {
                                     showError(error);
                                 }
 
-                                binding.progressBar.setVisibility(View.GONE);
+                                binding.progressbar.setVisibility(View.GONE);
 
 
                             }, throwable -> {
@@ -538,7 +540,7 @@ public class LauncherOrganizationFragment extends Fragment {
         } catch (Exception e) {
             error = error + "\n" + "خطا در اتصال به سرور";
             showError(error);
-            binding.progressBar.setVisibility(View.GONE);
+            binding.progressbar.setVisibility(View.GONE);
         }
 
     }
@@ -546,6 +548,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     public void refreshAdapter(){
-        tableAdapter.notifyDataSetChanged();
+
+      getTable1();
     }
 }

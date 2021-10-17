@@ -136,7 +136,7 @@
                 android:textStyle="bold" />
 
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/layout_payment_place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -274,7 +274,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
 
         </RelativeLayout>

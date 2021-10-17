@@ -137,12 +137,13 @@ public class PaymentMobileFragment extends Fragment {
     private String typePayment = "-1";
     private Integer Ord_TYPE = -1;
     private String Tbl_GUID;
+    private String new_Tbl_GUID;
     private String new_Inv_GUID;
     private String Inv_GUID;
     private String Acc_NAME = "";
     private String Acc_GUID = "";
     private String ord_type = "";
-    private Boolean edit;
+    private Boolean edit = false;
     private Integer OrderTypeApp = 0;
     private String dateOrder = "";
 
@@ -166,8 +167,6 @@ public class PaymentMobileFragment extends Fragment {
     private List<OrderType> OrdTList;
 
 
-
-
     private Boolean OnceSee = false;
     //end region Parameter
 
@@ -179,8 +178,11 @@ public class PaymentMobileFragment extends Fragment {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        if (App.mode == 2 || (App.mode == 1 && edit))
+            new_Inv_GUID = Inv_GUID;
+        else if (App.mode == 1)
+            new_Inv_GUID = UUID.randomUUID().toString();
 
-        new_Inv_GUID = UUID.randomUUID().toString();
 
         customProgress = CustomProgress.getInstance();
         try {
@@ -231,6 +233,8 @@ public class PaymentMobileFragment extends Fragment {
         Bundle bundle = getArguments();
         Inv_GUID = bundle.getString("Inv_GUID");
         Tbl_GUID = bundle.getString("Tbl_GUID");
+        if (Tbl_GUID.equals(""))
+           new_Tbl_GUID= UUID.randomUUID().toString();
         Acc_NAME = bundle.getString("Acc_NAME");
         Acc_GUID = bundle.getString("Acc_GUID");
         ord_type = bundle.getString("Ord_TYPE");
@@ -274,7 +278,6 @@ public class PaymentMobileFragment extends Fragment {
         //endregion Configuration Size
 
 
-
         customProgress = CustomProgress.getInstance();
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
@@ -283,7 +286,6 @@ public class PaymentMobileFragment extends Fragment {
         numberPos = Select.from(User.class).first().numberPos;
         if (numberPos != null && numberPos.equals(""))
             numberPos = "0";
-
 
 
         //region Cast DialogTime
@@ -348,6 +350,7 @@ public class PaymentMobileFragment extends Fragment {
                 }
                 if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
+                   if (App.mode==2)
                     binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 }
@@ -356,6 +359,7 @@ public class PaymentMobileFragment extends Fragment {
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
                     dialogAddress.dismiss();
+                    if (App.mode==2)
                     binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 } else {
@@ -363,6 +367,7 @@ public class PaymentMobileFragment extends Fragment {
                     calculateTransport = price;
 
                 }
+                if (App.mode==2)
                 binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
@@ -384,6 +389,7 @@ public class PaymentMobileFragment extends Fragment {
                 }
                 if (latitude2 == 0.0 || longitude2 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
+                    if (App.mode==2)
                     binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 }
@@ -425,7 +431,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //region Edit View
-
 
 
         if (edit) {
@@ -506,7 +511,7 @@ public class PaymentMobileFragment extends Fragment {
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";
                     tables.RSV = false;
-                    tables.I = UUID.randomUUID().toString();
+                    tables.I = new_Tbl_GUID;
                     tables.save();
 
 
@@ -526,6 +531,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //endregion Cast DialogSendOrder
+
 
 
         //region SetAddress
@@ -584,6 +590,7 @@ public class PaymentMobileFragment extends Fragment {
             } catch (Exception e) {
                 address = acc.ADR;
             }
+            if (App.mode==2)
             binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
             binding.tvTAddress.setText(address);
             typeAddress = 1;
@@ -608,6 +615,7 @@ public class PaymentMobileFragment extends Fragment {
                 address = acc.ADR1;
 
             }
+            if (App.mode==2)
             binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
             binding.tvTAddress.setText(address);
             typeAddress = 2;
@@ -629,7 +637,7 @@ public class PaymentMobileFragment extends Fragment {
 
         if (App.mode == 1) {
             binding.rlTypeOrder.setVisibility(View.GONE);
-            binding.layoutAddress.setVisibility(View.GONE);
+
         }
 
 
@@ -698,6 +706,9 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
+        if (App.mode==1)
+            binding.tvTitlePaymentPlace.setText("پرداخت در صندوق");
+
         binding.layoutPaymentPlace.setOnClickListener(v -> {
 
             typePayment = "";
@@ -733,7 +744,6 @@ public class PaymentMobileFragment extends Fragment {
             }
 
 
-
         });
 
 
@@ -748,7 +758,7 @@ public class PaymentMobileFragment extends Fragment {
             } else if (typePayment.equals("-1")) {
                 Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (App.mode==2 &&dateOrder.equals("")) {
+            } else if (App.mode == 2 && dateOrder.equals("")) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -800,8 +810,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
                 InvoiceDetail.save(invoiceDetailTransport);
-            }
-            else {
+            } else {
                 invoiceDetailTransport.INV_UID = new_Inv_GUID;
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(sumTransport);
@@ -840,7 +849,7 @@ public class PaymentMobileFragment extends Fragment {
 
             }
 
-            Invoice  invoice = new Invoice();
+            Invoice invoice = new Invoice();
             invoice.INV_UID = new_Inv_GUID;
             invoice.INV_TOTAL_AMOUNT = sumPrice + sumTransport;//جمع فاکنور
             invoice.INV_TOTAL_DISCOUNT = 0.0;
@@ -882,7 +891,6 @@ public class PaymentMobileFragment extends Fragment {
             }
 
             invoice.Acc_name = Acc_NAME;
-
 
 
             List<Invoice> listInvoice = new ArrayList<>();
@@ -1009,16 +1017,19 @@ public class PaymentMobileFragment extends Fragment {
 
                         List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                                 new_Inv_GUID + "'").list();
-                        for (int i=0;i<invoiceDetails.size();i++){
+                        for (int i = 0; i < invoiceDetails.size(); i++) {
                             InvoiceDetail.delete(invoiceDetails.get(i));
                         }
 
 
-                        Tables tb=Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                        if (tb==null)
-                         tb=new Tables();
-                        tb.I=Tbl_GUID;
-                        tb.INVID=new_Inv_GUID;
+                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                        if (tb == null)
+                            tb = new Tables();
+                        if (!Tbl_GUID.equals(""))
+                        tb.I = Tbl_GUID;
+                        else
+                            tb.I=new_Tbl_GUID;
+                        tb.INVID = new_Inv_GUID;
                         tb.save();
 
 
@@ -1026,12 +1037,15 @@ public class PaymentMobileFragment extends Fragment {
 
                         dialogSendOrder.show();
                     } else {
-                       List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
-                        for (int i = 0; i < invDetails.size(); i++) {
-                            InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
-                            invoiceDtl.INV_UID = Inv_GUID;
-                            invoiceDtl.update();
+                        if (App.mode == 1) {
+                            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
+                            for (int i = 0; i < invDetails.size(); i++) {
+                                InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
+                                invoiceDtl.INV_UID = Inv_GUID;
+                                invoiceDtl.update();
+                            }
                         }
+
                         Product.deleteAll(Product.class);
                         tvMessage.setText("خطا در ارسال ،" + "این سفارش ذخیره می شود با مراجعه به پروفایل خود سفارش را مجددارسال کنید");
                         dialogSendOrder.show();
@@ -1085,23 +1099,62 @@ public class PaymentMobileFragment extends Fragment {
         double priceTransport = -1.0;
 
 
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.saleinmeat":
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.saleinmeat":
 
-                imageIconDialog = R.drawable.meat_png;
-                if (SumPurePrice > 2000000) {
-                    priceTransport = 0.0;
-                } else {
-                    priceTransport = 100000;
-                }
-                break;
+                    imageIconDialog = R.drawable.meat_png;
+                    if (SumPurePrice > 2000000) {
+                        priceTransport = 0.0;
+                    } else {
+                        priceTransport = 100000;
+                    }
+                    break;
 
-            default:
+                default:
+                    if (0 < distance && distance <= 1) {
+                        priceTransport = 50000;
+                    }
+                    else if (1 < distance && distance <= 1.5) {
+                        priceTransport = 70000;
+                    }
+                    else if (1.5 < distance && distance <= 2) {
+                        priceTransport = 100000;
+                    } else if (2 < distance && distance <= 2.5) {
+                        priceTransport = 120000;
+                    } else if (2.5 < distance && distance <= 3) {
+                        priceTransport = 150000;
+                    } else if (3 < distance && distance <= 3.5) {
+                        priceTransport = 170000;
+                    } else if (3.5 < distance && distance <= 4) {
+                        priceTransport = 200000;
+                    } else if (4 < distance && distance <= 5) {
+                        priceTransport = 220000;
+                    } else if (5 < distance && distance <= 6) {
+                        priceTransport = 240000;
+                    } else if (6 < distance && distance <= 7) {
+                        priceTransport = 270000;
+                    } else if (7 < distance && distance <= 8) {
+                        priceTransport = 300000;
+                    } else if (8 < distance && distance <= 9) {
+                        priceTransport = 320000;
+                    } else if (9 < distance && distance <= 11) {
+                        priceTransport = 350000;
+                    } else if (distance > 11) {
+                        priceTransport = 400000;
+                    }
+                    break;
+
+            }
+        }catch (Exception ignore){
+
                 if (0 < distance && distance <= 1) {
                     priceTransport = 50000;
-                } else if (1 < distance && distance <= 1.5) {
+                }
+                else if (1 < distance && distance <= 1.5) {
                     priceTransport = 70000;
-                } else if (1.5 < distance && distance <= 2) {
+                }
+                else if (1.5 < distance && distance <= 2) {
                     priceTransport = 100000;
                 } else if (2 < distance && distance <= 2.5) {
                     priceTransport = 120000;
@@ -1126,9 +1179,9 @@ public class PaymentMobileFragment extends Fragment {
                 } else if (distance > 11) {
                     priceTransport = 400000;
                 }
-                break;
 
         }
+
 
 
         return priceTransport;
@@ -1296,6 +1349,17 @@ public class PaymentMobileFragment extends Fragment {
 
                         if (!settingsList.get(0).ORDER_TYPE_APP.equals(""))
                             OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                        if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode==1)
+                        {
+                            binding.layoutAdd.setVisibility(View.VISIBLE);
+                            binding.layoutTime.setVisibility(View.VISIBLE);
+
+                        }else if (App.mode==1){
+                            binding.layoutAdd.setVisibility(View.GONE);
+                            binding.layoutTime.setVisibility(View.GONE);
+                        }
+
+
 
                         sharedPreferences.edit().putString("transportId", settingsList.get(0).PEYK).apply();
                         try {
@@ -1386,8 +1450,17 @@ public class PaymentMobileFragment extends Fragment {
                             OrdTList.addAll(iDs.getOrderTypes());
 
 
+
+
+
+
+
                         if (OrdTList.size() > 1) {
                             orderTypePaymentAdapter.notifyDataSetChanged();
+
+
+
+
                         } else if (OrdTList.size() == 1) {
                             Ord_TYPE = OrdTList.get(0).getC();
                             binding.rlTypeOrder.setVisibility(View.GONE);
@@ -1400,7 +1473,7 @@ public class PaymentMobileFragment extends Fragment {
                             binding.tvTransport.setText("0 ریال");
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                         } else {
-                            if (OrdTList.size() == 1) {
+                            if ((OrdTList.size() == 1 && App.mode==2 )||(App.mode==1)) {
                                 sumTransport = calculateTransport;
                                 binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
@@ -1457,9 +1530,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
     }
-
-
-
 
 
 }

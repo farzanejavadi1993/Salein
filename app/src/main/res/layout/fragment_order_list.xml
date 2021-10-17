@@ -14,6 +14,7 @@
     android:orientation="horizontal">
 
     <ProgressBar
+        android:background="@drawable/ic_circle"
         android:id="@+id/progressBar"
         android:layout_centerInParent="true"
         android:layout_width="30dp"
