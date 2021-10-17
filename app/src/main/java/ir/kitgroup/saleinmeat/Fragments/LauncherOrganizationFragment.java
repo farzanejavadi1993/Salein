@@ -299,7 +299,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-        getTypeOrder();
+       // getTypeOrder();
         getTable1();
 
 

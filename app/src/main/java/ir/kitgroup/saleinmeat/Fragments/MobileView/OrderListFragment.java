@@ -281,49 +281,9 @@ public class OrderListFragment extends Fragment {
 
                                 if (iDs != null) {
 
-                                    List<Invoice> invoicese=Select.from(Invoice.class).list();
-                                    CollectionUtils.filter(invoicese,i-> i.INV_SYNC!=null && i.INV_SYNC.equals("#"));
-                                    if (invoicese.size()>0){
-                                        List<InvoiceDetail> invoiceDetails= Select.from(InvoiceDetail.class).list();
-                                        CollectionUtils.filter(invoiceDetails,i->!i.INV_UID.equals(invoicese.get(0).INV_UID));
-                                        for (int i=0;i<invoiceDetails.size();i++){
-                                            InvoiceDetail.delete(invoiceDetails.get(i));
-                                        } }
-
-
-
-
-
-                                   /* List<Invoice> lists=Select.from(Invoice.class).list();
-                                    CollectionUtils.filter(lists,l->l.INV_SYNC ==null);
-                                    if (lists.size()>0){
-                                        for (int i=0;i<lists.size();i++){
-                                            Invoice.delete(lists.get(i));
-                                        }
-                                    }*/
-
-                                    List<Invoice> lists1=Select.from(Invoice.class).list();
-                                    CollectionUtils.filter(lists1,l-> !l.INV_SYNC.equals("#") && !l.INV_SYNC.equals("@"));
-                                    if (lists1.size()>0){
-                                        for (int i=0;i<lists1.size();i++){
-                                          //  Invoice.delete(lists1.get(i));
-                                        }
-                                    }
-
-
-                                    //Invoice.saveInTx(iDs.getInvoice());
-                                    InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
-
-
-
-
-
-
-
                                     list.clear();
-                                    List<Invoice> invoices=Select.from(Invoice.class).list();
-                                    CollectionUtils.filter(invoices,i->!i.INV_SYNC.equals("@"));
-                                    list.addAll(invoices);
+
+                                    list.addAll(iDs.getInvoice());
                                     if (list.size()==0){
                                         binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
                                         binding.txtError.setVisibility(View.VISIBLE);
