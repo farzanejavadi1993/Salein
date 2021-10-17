@@ -1,39 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<RelativeLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnOrderType"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin4"
-    android:id="@+id/cardOrder"
-    app:cardCornerRadius="15dp"
-    android:background="@drawable/ic_circle"
-    android:rotationY="180"
-  >
+    android:rotationY="180">
 
-    <RelativeLayout
-        android:id="@+id/btnOrderType"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:padding="15dp"
+        android:id="@+id/tv_order_type"
+        style="@style/launcher_toolbar_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center|center_vertical"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="@string/launcher_toolbar_in_Organization">
 
-        <TextView
-
-            android:id="@+id/tv_order_type"
-            style="@style/launcher_toolbar_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="@string/launcher_toolbar_in_Organization">
-
-        </TextView>
-    </RelativeLayout>
+    </TextView>
 
 
-</com.google.android.material.card.MaterialCardView>
+</RelativeLayout>
 
 
 

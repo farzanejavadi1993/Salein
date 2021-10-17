@@ -71,12 +71,7 @@ public class LoginOrganizationFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (SplashScreenFragment.screenInches >= 7) {
-            requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+
         binding = FragmentOrganizationLoginBinding.inflate(getLayoutInflater());
         return binding.getRoot();
 

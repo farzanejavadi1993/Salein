@@ -261,7 +261,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
             if (Reserve) {
 
-                    Bundle bundle = new Bundle();
+
+                Bundle bundle = new Bundle();
                     bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
                     bundle.putString("Inv_GUID", T_GUID);
                     bundle.putString("Ord_TYPE","");

@@ -1036,4 +1036,24 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
     }
+
+
+    @Override
+    public void onDestroy() {
+        if (type.equals("1")){
+            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
+                    Inv_GUID + "'").list();
+            for (int i=0;i<invoiceDetails.size();i++){
+                InvoiceDetail.delete(invoiceDetails.get(i));
+            }
+        }
+
+
+        super.onDestroy();
+    }
+
+    public List<InvoiceDetail> getInvoiceDetail(){
+        return invDetails;
+    }
+
 }

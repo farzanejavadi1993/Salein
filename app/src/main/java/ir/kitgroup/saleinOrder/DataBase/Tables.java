@@ -14,6 +14,7 @@ public class Tables extends SugarRecord {
     public  Boolean RSV;//true blue
     public  Boolean SV;//true YELLOW    SAVE ORDER
     public  Integer C;//get out order
+    public  String INVID;//Invoice Id
 
 
     public Tables(){}

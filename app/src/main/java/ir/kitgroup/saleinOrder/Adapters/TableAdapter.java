@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -158,17 +159,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
         holder.itemView.setOnClickListener(view -> {
-            if (table.SV != null && table.SV) {
-                clickItem.onRowClick(table.N, true, table.I);
-
-            } else if (!table.ACT && !table.RSV) {
+          if (!table.ACT && !table.RSV) {
                 //vacant
                 clickItem.onRowClick(table.N, false, table.I);
 
             } else if (table.RSV) {
-                clickItem.onRowClick("میز رزرو شده است", true, table.I);
+              Toast.makeText(context, "میز رزرو شده است", Toast.LENGTH_SHORT).show();
             } else {
-                clickItem.onRowClick("میز مشغول است.", true, table.I);
+              Tables tb=Select.from(Tables.class).where("I ='"+table.I+"'").first();
+              if (tb==null){
+                  Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
+
+                  return;
+              }else {
+                  clickItem.onRowClick("میز مشغول است.", true, tb.INVID);
+              }
+
             }
 
         });

@@ -149,7 +149,6 @@ public class PaymentMobileFragment extends Fragment {
 
     private double calculateTransport = 0.0;
     private double sumTransport = 0.0;
-    private double sameSumTransport = 0.0;
     private String link = "";
 
 
@@ -852,7 +851,6 @@ public class PaymentMobileFragment extends Fragment {
             invoice.INV_TOTAL_COST = 0.0;
             invoice.INV_EXTENDED_AMOUNT = sumPurePrice + sumTransport;
             invoice.INV_DATE = date;
-            Date date1 = date;
 
             int hour = date.getHours();
 
@@ -863,7 +861,7 @@ public class PaymentMobileFragment extends Fragment {
             }
 
 
-            invoice.INV_DUE_DATE = date1;
+            invoice.INV_DUE_DATE = date;
             invoice.INV_DUE_TIME = hour + ":" + "00";
             invoice.INV_STATUS = true;
 
@@ -1009,13 +1007,19 @@ public class PaymentMobileFragment extends Fragment {
 
                     if (message == 1) {
 
-
-
-
-
                         List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                                 new_Inv_GUID + "'").list();
-                        InvoiceDetail.delete(invoiceDetails);
+                        for (int i=0;i<invoiceDetails.size();i++){
+                            InvoiceDetail.delete(invoiceDetails.get(i));
+                        }
+
+
+                        Tables tb=Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                        if (tb==null)
+                         tb=new Tables();
+                        tb.I=Tbl_GUID;
+                        tb.INVID=new_Inv_GUID;
+                        tb.save();
 
 
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
@@ -1453,6 +1457,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
     }
+
+
+
 
 
 }

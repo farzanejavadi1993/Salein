@@ -154,18 +154,6 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
 
             cardOrderType = itemView.findViewById(R.id.btnOrderType);
             tvOrderType = itemView.findViewById(R.id.tv_order_type);
-            MaterialCardView cardOrder = itemView.findViewById(R.id.cardOrder);
-
-
-
-
-
-
-
-            if (SplashScreenFragment.screenInches <7) {
-                cardOrder.getLayoutParams().width = (SplashScreenFragment.width / 5);
-                cardOrder.getLayoutParams().height = (SplashScreenFragment.width /7);
-            }
 
 
         }
