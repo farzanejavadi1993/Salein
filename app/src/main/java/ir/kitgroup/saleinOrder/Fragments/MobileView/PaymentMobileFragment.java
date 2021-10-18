@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
@@ -56,6 +58,7 @@ import ir.kitgroup.saleinOrder.Adapters.OrderTypePaymentAdapter;
 import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 
 import ir.kitgroup.saleinOrder.DataBase.Product;
+import ir.kitgroup.saleinOrder.Util.Utilities;
 import ir.kitgroup.saleinOrder.models.Setting;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
 import ir.kitgroup.saleinOrder.models.ModelSetting;
@@ -162,6 +165,7 @@ public class PaymentMobileFragment extends Fragment {
     private final ArrayList<String> timesList = new ArrayList<>();
     private final ArrayList<String> times = new ArrayList<>();
     private ArrayList<String> arrayTime = new ArrayList<>();
+    private LinearLayout dateView;
 
 
     private OrderTypePaymentAdapter orderTypePaymentAdapter;
@@ -169,6 +173,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Boolean OnceSee = false;
+    private LinearLayout bottomRow;
+
+
     //end region Parameter
 
 
@@ -178,8 +185,6 @@ public class PaymentMobileFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-
 
 
         customProgress = CustomProgress.getInstance();
@@ -232,7 +237,7 @@ public class PaymentMobileFragment extends Fragment {
         Inv_GUID = bundle.getString("Inv_GUID");
         Tbl_GUID = bundle.getString("Tbl_GUID");
         if (Tbl_GUID.equals(""))
-           new_Tbl_GUID= UUID.randomUUID().toString();
+            new_Tbl_GUID = UUID.randomUUID().toString();
         Acc_NAME = bundle.getString("Acc_NAME");
         Acc_GUID = bundle.getString("Acc_GUID");
         ord_type = bundle.getString("Ord_TYPE");
@@ -244,7 +249,6 @@ public class PaymentMobileFragment extends Fragment {
             setADR1 = bundle.getBoolean("setADR1");
         } catch (Exception e) {
         }
-
 
 
         if (App.mode == 2 || (App.mode == 1 && edit))
@@ -299,7 +303,9 @@ public class PaymentMobileFragment extends Fragment {
         dialogTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogTime.setContentView(R.layout.dialog_time);
         timeAdapter = new TimeAdapter(getActivity(), times);
+        dateView = dialogTime.findViewById(R.id.dateView);
         RecyclerView recycleTime = dialogTime.findViewById(R.id.recyclerTime);
+
         recycleTime.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleTime.setAdapter(timeAdapter);
 
@@ -354,8 +360,8 @@ public class PaymentMobileFragment extends Fragment {
                 }
                 if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
-                   if (App.mode==2)
-                    binding.recyclerViewOrderType.setVisibility(View.GONE);
+                    if (App.mode == 2)
+                        binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 }
                 double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(lat, lng));
@@ -363,16 +369,16 @@ public class PaymentMobileFragment extends Fragment {
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
                     dialogAddress.dismiss();
-                    if (App.mode==2)
-                    binding.recyclerViewOrderType.setVisibility(View.GONE);
+                    if (App.mode == 2)
+                        binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 } else {
 
                     calculateTransport = price;
 
                 }
-                if (App.mode==2)
-                binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
+                if (App.mode == 2)
+                    binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
                 binding.tvTAddress.setText(ValidAddress);
@@ -393,8 +399,8 @@ public class PaymentMobileFragment extends Fragment {
                 }
                 if (latitude2 == 0.0 || longitude2 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
-                    if (App.mode==2)
-                    binding.recyclerViewOrderType.setVisibility(View.GONE);
+                    if (App.mode == 2)
+                        binding.recyclerViewOrderType.setVisibility(View.GONE);
                     return;
                 }
                 double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
@@ -506,8 +512,7 @@ public class PaymentMobileFragment extends Fragment {
                     replaceFragment.commit();
                 }
 
-            }
-            else {
+            } else {
 
                 if (Tbl_GUID.equals("")) {
                     Tables tables = new Tables();
@@ -522,7 +527,6 @@ public class PaymentMobileFragment extends Fragment {
                             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     tables.DATE = dateFormats.format(date);
                     tables.save();
-
 
 
                 }
@@ -541,7 +545,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //endregion Cast DialogSendOrder
-
 
 
         //region SetAddress
@@ -600,8 +603,8 @@ public class PaymentMobileFragment extends Fragment {
             } catch (Exception e) {
                 address = acc.ADR;
             }
-            if (App.mode==2)
-            binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
+            if (App.mode == 2)
+                binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
             binding.tvTAddress.setText(address);
             typeAddress = 1;
             ValidAddress = address;
@@ -625,8 +628,8 @@ public class PaymentMobileFragment extends Fragment {
                 address = acc.ADR1;
 
             }
-            if (App.mode==2)
-            binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
+            if (App.mode == 2)
+                binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
             binding.tvTAddress.setText(address);
             typeAddress = 2;
             ValidAddress = address;
@@ -716,7 +719,7 @@ public class PaymentMobileFragment extends Fragment {
         });
 
 
-        if (App.mode==1)
+        if (App.mode == 1)
             binding.tvTitlePaymentPlace.setText("پرداخت در صندوق");
 
         binding.layoutPaymentPlace.setOnClickListener(v -> {
@@ -930,10 +933,7 @@ public class PaymentMobileFragment extends Fragment {
             timesList.clear();
             if (arrayTime.size() == 0) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
-            }
-
-
-            else {
+            } else {
 
                 Date date = Calendar.getInstance().getTime();
 
@@ -1039,9 +1039,9 @@ public class PaymentMobileFragment extends Fragment {
                         if (tb == null)
                             tb = new Tables();
                         if (!Tbl_GUID.equals(""))
-                        tb.I = Tbl_GUID;
+                            tb.I = Tbl_GUID;
                         else
-                            tb.I=new_Tbl_GUID;
+                            tb.I = new_Tbl_GUID;
                         tb.INVID = new_Inv_GUID;
                         tb.save();
 
@@ -1127,11 +1127,9 @@ public class PaymentMobileFragment extends Fragment {
                 default:
                     if (0 < distance && distance <= 1) {
                         priceTransport = 50000;
-                    }
-                    else if (1 < distance && distance <= 1.5) {
+                    } else if (1 < distance && distance <= 1.5) {
                         priceTransport = 70000;
-                    }
-                    else if (1.5 < distance && distance <= 2) {
+                    } else if (1.5 < distance && distance <= 2) {
                         priceTransport = 100000;
                     } else if (2 < distance && distance <= 2.5) {
                         priceTransport = 120000;
@@ -1159,42 +1157,39 @@ public class PaymentMobileFragment extends Fragment {
                     break;
 
             }
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
 
-                if (0 < distance && distance <= 1) {
-                    priceTransport = 50000;
-                }
-                else if (1 < distance && distance <= 1.5) {
-                    priceTransport = 70000;
-                }
-                else if (1.5 < distance && distance <= 2) {
-                    priceTransport = 100000;
-                } else if (2 < distance && distance <= 2.5) {
-                    priceTransport = 120000;
-                } else if (2.5 < distance && distance <= 3) {
-                    priceTransport = 150000;
-                } else if (3 < distance && distance <= 3.5) {
-                    priceTransport = 170000;
-                } else if (3.5 < distance && distance <= 4) {
-                    priceTransport = 200000;
-                } else if (4 < distance && distance <= 5) {
-                    priceTransport = 220000;
-                } else if (5 < distance && distance <= 6) {
-                    priceTransport = 240000;
-                } else if (6 < distance && distance <= 7) {
-                    priceTransport = 270000;
-                } else if (7 < distance && distance <= 8) {
-                    priceTransport = 300000;
-                } else if (8 < distance && distance <= 9) {
-                    priceTransport = 320000;
-                } else if (9 < distance && distance <= 11) {
-                    priceTransport = 350000;
-                } else if (distance > 11) {
-                    priceTransport = 400000;
-                }
+            if (0 < distance && distance <= 1) {
+                priceTransport = 50000;
+            } else if (1 < distance && distance <= 1.5) {
+                priceTransport = 70000;
+            } else if (1.5 < distance && distance <= 2) {
+                priceTransport = 100000;
+            } else if (2 < distance && distance <= 2.5) {
+                priceTransport = 120000;
+            } else if (2.5 < distance && distance <= 3) {
+                priceTransport = 150000;
+            } else if (3 < distance && distance <= 3.5) {
+                priceTransport = 170000;
+            } else if (3.5 < distance && distance <= 4) {
+                priceTransport = 200000;
+            } else if (4 < distance && distance <= 5) {
+                priceTransport = 220000;
+            } else if (5 < distance && distance <= 6) {
+                priceTransport = 240000;
+            } else if (6 < distance && distance <= 7) {
+                priceTransport = 270000;
+            } else if (7 < distance && distance <= 8) {
+                priceTransport = 300000;
+            } else if (8 < distance && distance <= 9) {
+                priceTransport = 320000;
+            } else if (9 < distance && distance <= 11) {
+                priceTransport = 350000;
+            } else if (distance > 11) {
+                priceTransport = 400000;
+            }
 
         }
-
 
 
         return priceTransport;
@@ -1362,17 +1357,44 @@ public class PaymentMobileFragment extends Fragment {
 
                         if (!settingsList.get(0).ORDER_TYPE_APP.equals(""))
                             OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                        SERVICE_DAY=Integer.parseInt(settingsList.get(0).SERVICE_DAY);
-                        if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode==1)
-                        {
-                            binding.layoutAdd.setVisibility(View.VISIBLE);
+                        SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
+                        Date dateNow = Calendar.getInstance().getTime();
+                        for (int i = 0; i < SERVICE_DAY; i++) {
+                            dateNow.setDate(dateNow.getDate() + i);
+                            Utilities util = new Utilities();
+                            Locale loc = new Locale("en_US");
+                            Utilities.SolarCalendar sc;
+                            sc = util.new SolarCalendar(dateNow);
+                            String date = sc.strWeekDay + "\t" + String.format(loc, "%02d", sc.date) + "\t" + sc.strMonth + "\t" + (sc.year);
+
+
+
+                            bottomRow = new LinearLayout(getActivity());
+                            bottomRow.setLayoutParams(
+                                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            bottomRow.setPadding((int) (SplashScreenFragment.height * .02), (int) (SplashScreenFragment.width * .01),
+                                    (int) (SplashScreenFragment.height * .02), (int) (SplashScreenFragment.width * .01));
+                            bottomRow.setOrientation(LinearLayout.HORIZONTAL);
+
+
+                            TextView pageId = new TextView(getActivity());
+                            pageId.setText(  new StringBuilder().append(date).toString());
+
+                               pageId .setBackground(getActivity().getResources().getDrawable(R.drawable.background_edittext));
+                            bottomRow.addView(pageId);
+                            dateView.addView(bottomRow);
+
+
+
+                        }
+                        if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode == 1) {
+                            binding.layoutAddress.setVisibility(View.VISIBLE);
                             binding.layoutTime.setVisibility(View.VISIBLE);
 
-                        }else if (App.mode==1){
-                            binding.layoutAdd.setVisibility(View.GONE);
+                        } else if (App.mode == 1) {
+                            binding.layoutAddress.setVisibility(View.GONE);
                             binding.layoutTime.setVisibility(View.GONE);
                         }
-
 
 
                         sharedPreferences.edit().putString("transportId", settingsList.get(0).PEYK).apply();
@@ -1464,15 +1486,8 @@ public class PaymentMobileFragment extends Fragment {
                             OrdTList.addAll(iDs.getOrderTypes());
 
 
-
-
-
-
-
                         if (OrdTList.size() > 1) {
                             orderTypePaymentAdapter.notifyDataSetChanged();
-
-
 
 
                         } else if (OrdTList.size() == 1) {
@@ -1487,7 +1502,7 @@ public class PaymentMobileFragment extends Fragment {
                             binding.tvTransport.setText("0 ریال");
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                         } else {
-                            if ((OrdTList.size() == 1 && App.mode==2 )||(App.mode==1)) {
+                            if ((OrdTList.size() == 1 && App.mode == 2) || (App.mode == 1)) {
                                 sumTransport = calculateTransport;
                                 binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");

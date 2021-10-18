@@ -9,15 +9,17 @@
         android:background="@color/purple_700"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-        <TextView
-            android:text="انتخاب زمان ارسال سفارش"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textColor="#fff"
-            android:textSize="12sp"
-            android:layout_margin="@dimen/margin8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:gravity="center"
+                android:id="@+id/dateView"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </HorizontalScrollView>
+
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTime"

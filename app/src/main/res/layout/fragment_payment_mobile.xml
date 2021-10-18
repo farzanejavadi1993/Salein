@@ -14,6 +14,7 @@
 
 
         <RelativeLayout
+            android:elevation="@dimen/margin4"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
@@ -33,27 +34,27 @@
                 android:src="@drawable/ic_back"
                 tools:ignore="ContentDescription" />
 
+
             <TextView
                 android:id="@+id/tvTitle"
-                style="@style/launcher_toolbar_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:lineSpacingExtra="16dp"
                 android:text="@string/confirm_pay"
-                android:textSize="12sp"
-                tools:ignore="RelativeOverlap" />
+                android:textColor="@color/medium_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/layoutAdd"
+            android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="22dp"
-
-            >
+            android:layout_marginRight="22dp">
 
             <TextView
                 android:id="@+id/edt_address"
@@ -80,7 +81,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:padding="15dp"
+                    android:padding="12dp"
                     android:layout_height="match_parent">
 
 
@@ -120,9 +121,9 @@
             android:id="@+id/layoutPayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutAdd"
+            android:layout_below="@+id/layoutAddress"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp">
 
             <TextView
@@ -136,27 +137,21 @@
                 android:textStyle="bold" />
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/layout_payment_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_payment"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@color/white"
-                app:cardCornerRadius="12dp"
-                app:strokeColor="#ddd"
-                app:strokeWidth="1.5dp"
-                tools:targetApi="lollipop">
+
+
 
                 <LinearLayout
-
+                    android:background="@drawable/background_payment"
+                    android:id="@+id/layout_payment_place"
+                    android:layout_below="@+id/tv_payment"
+                    android:layout_marginTop="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
 
-                        android:padding="15dp"
+                        android:padding="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
@@ -218,7 +213,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/layout_payment_online"
-                        android:padding="15dp"
+                        android:padding="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
@@ -274,7 +269,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+
 
 
         </RelativeLayout>
@@ -286,7 +281,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layoutPayment"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp">
 
             <TextView
@@ -317,7 +312,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="15dp">
+                    android:padding="12dp">
 
 
                     <TextView
@@ -356,7 +351,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layoutTime"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="22dp"
 
             >
@@ -473,7 +468,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/margin8"
                     android:layout_marginRight="8dp"
-                    android:text="قابل پرداخت"
+                    android:text="مبلغ قابل پرداخت"
                     android:textColor="@color/black_l"
                     android:textSize="12sp"
                     tools:ignore="RelativeOverlap" />
