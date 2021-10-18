@@ -75,8 +75,6 @@ public interface API {
 
 
 
-    @GET("GetAllInvoice")
-    Call<String> getAllInvoice(@Query("userName") String userName, @Query("passWord") String passWord,@Query("customerId") String customerId,@Query("date") String date);
 
 
 
@@ -100,7 +98,8 @@ public interface API {
 
 
 
-
+    @GET("AccountSync")
+    Observable<String> getInquiryAccount1(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task,@Query("isShowPassWord") int isShowPassWord);
 
 
 
@@ -108,8 +107,6 @@ public interface API {
     Call<String> getImage(@Query("productId") String productId);
 
 
-    @GET("GetImage")
-    Observable<String> getImage1(@Query("productId") String productId);
 
 
 

@@ -13,11 +13,18 @@
         android:orientation="vertical">
 
 
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:id="@+id/progressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_circle" />
+
         <RelativeLayout
-            android:elevation="@dimen/margin4"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="@dimen/margin4">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -39,12 +46,12 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:lineSpacingExtra="16dp"
                 android:text="@string/confirm_pay"
                 android:textColor="@color/medium_color"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_centerInParent="true" />
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -57,7 +64,7 @@
             android:layout_marginRight="22dp">
 
             <TextView
-                android:id="@+id/edt_address"
+                android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -71,7 +78,7 @@
                 android:id="@+id/layout_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/edt_address"
+                android:layout_below="@+id/tv_address"
                 android:layout_marginTop="4dp"
                 android:backgroundTint="@color/white"
                 app:cardCornerRadius="12dp"
@@ -81,17 +88,17 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:padding="12dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:padding="12dp">
 
 
                     <TextView
-                        android:hint="آدرس خود را وارد کنید"
-                        android:gravity="right"
-                        android:id="@+id/tvTAddress"
+                        android:id="@+id/edt_address"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:gravity="right"
+                        android:hint="آدرس خود را وارد کنید"
                         android:textColor="@color/black_l"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -114,14 +121,118 @@
             </com.google.android.material.card.MaterialCardView>
 
 
+        </RelativeLayout>
+
+        <RelativeLayout
+
+            android:id="@+id/layoutTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutAddress"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="22dp">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="زمان تحویل سفارش"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/timeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_time"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="#ddd"
+                app:strokeWidth="1.5dp"
+                tools:targetApi="lollipop">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp">
+
+
+                    <TextView
+                        android:id="@+id/edt_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:gravity="right"
+                        android:hint="زمان تحویل سفارش را وارد کنید"
+                        android:textColor="#6C6C6C"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <ImageView
+                        android:id="@+id/tv_add_time"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/ic_plus_new"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
 
         </RelativeLayout>
 
         <RelativeLayout
+
+            android:id="@+id/layout_type_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutTime"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="22dp"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_type_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/type_order"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/recyclerViewOrderType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_type_order"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/layoutPayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutAddress"
+            android:layout_below="@+id/layout_type_order"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="22dp">
@@ -137,254 +248,134 @@
                 android:textStyle="bold" />
 
 
-
-
-
-                <LinearLayout
-                    android:background="@drawable/background_payment"
-                    android:id="@+id/layout_payment_place"
-                    android:layout_below="@+id/tv_payment"
-                    android:layout_marginTop="4dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-
-                        android:padding="12dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/iv_payment_place"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_payment_place"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/tvTitlePaymentPlace"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/margin10"
-                            android:text="@string/pay_place"
-                            android:textColor="@color/black_l"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                            app:layout_constraintTop_toTopOf="@+id/iv_payment_place" />
-
-
-                        <ImageView
-                            android:id="@+id/iv_ok_payment_place"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone"
-                            android:src="@drawable/ic_tik"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/tv_type_payment_place"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:textColor="@color/green_table"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentPlace"
-                            app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentPlace"
-                            app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentPlace" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#eee" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/layout_payment_online"
-                        android:padding="12dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/iv_payment_online"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/club"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/tvTitlePaymentOnline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/margin10"
-                            android:text="استفاده از اعتبار باشگاه"
-                            android:textColor="@color/black_l"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
-                            app:layout_constraintTop_toTopOf="@+id/iv_payment_online" />
-
-                        <TextView
-                            android:id="@+id/tvCredit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="موجودی : 0 ریال"
-                            android:textColor="#6E6E6E"
-                            android:textSize="11sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentOnline"
-                            app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentOnline"
-                            app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentOnline" />
-
-                        <ImageView
-                            android:id="@+id/iv_ok_payment_online"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone"
-                            android:src="@drawable/ic_tik"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
-
-
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-
-            android:id="@+id/layoutTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/layoutPayment"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="22dp">
-
-            <TextView
-                android:id="@+id/edt_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="زمان تحویل سفارش"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-
-
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/timeLayout"
+            <LinearLayout
+                android:id="@+id/btn_payment_place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/edt_time"
+                android:layout_below="@+id/tv_payment"
                 android:layout_marginTop="4dp"
-                android:backgroundTint="@color/white"
-                app:cardCornerRadius="12dp"
-                app:strokeColor="#ddd"
-                app:strokeWidth="1.5dp"
-                tools:targetApi="lollipop">
+                android:background="@drawable/background_payment"
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp">
 
-
-                    <TextView
-                        android:gravity="right"
-                        android:hint="زمان تحویل سفارش را وارد کنید"
-                        android:id="@+id/tvTime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:textColor="#6C6C6C"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
+                    <ImageView
+                        android:id="@+id/iv_payment_place"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_payment_place"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitlePaymentPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="@string/pay_place"
+                        android:textColor="@color/black_l"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
+                        app:layout_constraintTop_toTopOf="@+id/iv_payment_place" />
 
 
                     <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginLeft="4dp"
-                        android:id="@+id/tv_add_time"
-                        android:src="@drawable/ic_plus_new"
+                        android:id="@+id/iv_ok_payment_place"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_tik"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.85dp"
+                    android:background="#eee" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_payment_online"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/iv_payment_online"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/club"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tvTitlePaymentOnline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:text="استفاده از اعتبار باشگاه"
+                        android:textColor="@color/black_l"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
+                        app:layout_constraintTop_toTopOf="@+id/iv_payment_online" />
+
+                    <TextView
+                        android:id="@+id/tvCredit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="موجودی : 0 ریال"
+                        android:textColor="#6E6E6E"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentOnline"
+                        app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentOnline"
+                        app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentOnline" />
+
+                    <ImageView
+                        android:id="@+id/iv_ok_payment_online"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_tik"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
 
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/rl_type_order"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/layoutTime"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="22dp"
-
-            >
-
-            <TextView
-
-                android:id="@+id/tv_type_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/type_order"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-
-                android:visibility="gone"
-                android:id="@+id/recyclerViewOrderType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_type_order"
-                android:layout_marginTop="4dp" />
-
-
-        </RelativeLayout>
-
 
         <LinearLayout
             android:id="@+id/rl_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_type_order"
+            android:layout_below="@id/layout_type_order"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="22dp"
@@ -393,7 +384,6 @@
             >
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tv_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -402,7 +392,8 @@
                 android:text="اصلاح سفارش"
                 android:textColor="@color/red_table"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_successFull_pay_online"
@@ -415,7 +406,6 @@
 
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/order_list_layout_sumPrice_detail_order"
@@ -436,7 +426,6 @@
                 android:layout_marginRight="8sp">
 
                 <TextView
-
                     android:id="@+id/order_list_transport_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -529,7 +518,7 @@
                 android:text="ارسال سفارش"
                 android:textColor="#fff"
                 android:textSize="12sp"
-                app:cornerRadius="5dp">
+                app:cornerRadius="12dp">
 
 
             </com.google.android.material.button.MaterialButton>
