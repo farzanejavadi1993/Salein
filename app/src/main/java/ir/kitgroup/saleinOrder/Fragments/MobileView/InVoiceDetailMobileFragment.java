@@ -90,6 +90,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private String userName;
     private String passWord;
     private String Inv_GUID;
+    private String Ord_TYPE;
     private boolean edit = false;
     private String type;
 
@@ -268,7 +269,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
-        String Ord_TYPE = bundle.getString("Ord_TYPE");
+         Ord_TYPE = bundle.getString("Ord_TYPE");
         edit = bundle.getBoolean("EDIT");
         //endregion Get Bundle
 
@@ -602,6 +603,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle.putString("Ord_TYPE", Ord_TYPE);
             bundle.putString("Tbl_GUID", Tbl_GUID);
             bundle.putString("Inv_GUID", Inv_GUID);
+
+
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
             mainOrderMobileFragment.setArguments(bundle);
             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileFX");
@@ -922,6 +925,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     } else {
 
                                         status = iDs.getInvoice().get(0).INV_SYNC;
+                                        Ord_TYPE=String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
 
                                         if (status != null && status.equals("*")) {
                                             binding.btnDelete.setVisibility(View.GONE);

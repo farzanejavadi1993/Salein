@@ -86,7 +86,7 @@ public class LauncherOrganizationFragment extends Fragment {
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     private String TableGUID;
-    private int position;
+    private int position1;
     //endregion Dialog
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -167,7 +167,10 @@ public class LauncherOrganizationFragment extends Fragment {
                 Tables tb=  Select.from(Tables.class).where("I ='" +TableGUID+ "'").first();
                     if (tb!=null)
                         Tables.delete(tb);
-                    tablesList.remove(tb);
+                    try {
+                        tablesList.remove(position1);
+                    }catch (Exception ignore){}
+
                     tableAdapter.notifyDataSetChanged();
 
             }
@@ -252,19 +255,17 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.recyclerTable.setAdapter(tableAdapter);
 
 
-        tableAdapter.OnclickShowDialog(new TableAdapter.ShowDialog() {
-            @Override
-            public void onShow(String Inv_GUID, int position,boolean type) {
-                textMessageDialog.setText("آیا مایل به حذف سفارش می باشید؟");
+        tableAdapter.OnclickShowDialog((Inv_GUID, position, type) -> {
+            textMessageDialog.setText("آیا مایل به حذف سفارش می باشید؟");
 
 
-                TableGUID=Inv_GUID;
-                if (type)
-                    TypeClickButton="deleteTable";
-                else
-                    TypeClickButton="deleteInvoice";
-                dialog.show();
-            }
+            position1=position;
+            TableGUID=Inv_GUID;
+            if (type)
+                TypeClickButton="deleteTable";
+            else
+                TypeClickButton="deleteInvoice";
+            dialog.show();
         });
 
         tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID) -> {

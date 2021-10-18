@@ -495,8 +495,6 @@ public class MainOrderMobileFragment extends Fragment {
                         bundle.putString("Acc_GUID", Acc_GUID);
                         if (!Inv_GUID_ORG.equals("") && App.mode==2)
                             bundle.putBoolean("EDIT", true);
-                        else if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID))
-                            bundle.putBoolean("EDIT", true);
                         else
                             bundle.putBoolean("EDIT", false);
 
@@ -758,7 +756,7 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Acc_GUID", Acc_GUID);
                 if (!Inv_GUID_ORG.equals("") && App.mode==2)
                     bundle.putBoolean("EDIT", true);
-                else if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID))
+                else if ((App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)) )
                     bundle.putBoolean("EDIT", true);
                 else
                     bundle.putBoolean("EDIT", false);

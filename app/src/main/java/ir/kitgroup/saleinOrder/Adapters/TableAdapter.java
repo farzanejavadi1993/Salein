@@ -137,19 +137,26 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
         holder.itemView.setOnClickListener(view -> {
-          if (!table.ACT && !table.RSV) {
+            if (table.GO!=null ) {
+                //getOut
+                clickItem.onRowClick(table.N, true, table.INVID);
+
+            }
+            else if (!table.ACT && !table.RSV) {
                 //vacant
                 clickItem.onRowClick(table.N, false, table.I);
 
-            } else if (table.RSV) {
+            }
+
+          else if (table.RSV) {
               Toast.makeText(context, "میز رزرو شده است", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+
+          else {
               Tables tb=Select.from(Tables.class).where("I ='"+table.I+"'").first();
               if (tb==null){
                   Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
-                  return;
-              }else {
-                  clickItem.onRowClick("میز مشغول است.", true, tb.INVID);
+
               }
 
             }

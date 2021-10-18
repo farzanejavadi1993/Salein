@@ -273,6 +273,11 @@ public class PaymentMobileFragment extends Fragment {
             Ord_TYPE = Integer.parseInt(ord_type);
 
 
+        if (Tbl_GUID.equals(""))
+            new_Tbl_GUID=UUID.randomUUID().toString();
+        else
+            new_Tbl_GUID=Tbl_GUID;
+
         if (App.mode == 2 || (App.mode == 1 && edit) || (App.mode == 1 && Tbl_GUID.equals("")))
             new_Inv_GUID = Inv_GUID;
 
@@ -589,8 +594,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
                         if (hour > date.getHours())
-                            if ((hour - date.getHours() == 1) && date.getMinutes() > 45)
-                                return;
+                            if ((hour - date.getHours() == 1) && date.getMinutes() > 45){}
                             else
                                 timesList.add(allTime.get(i));
 
@@ -745,14 +749,15 @@ public class PaymentMobileFragment extends Fragment {
 
         binding.btnRegisterOrder.setOnClickListener(v -> {
 
-            if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals(""))))) {
+            if (typePayment.equals("-1")) {
+                Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+           else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals(""))))) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (typePayment.equals("-1")) {
-                Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                 return;
             } else if (dateOrder.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("")))) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
@@ -957,18 +962,22 @@ public class PaymentMobileFragment extends Fragment {
             } else {
 
                 if (Tbl_GUID.equals("")) {
-                    Tables tables = new Tables();
+
+                        Tables tables = new Tables();
+
                     tables.N = "بیرون بر";
                     tables.ACT = false;
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";
                     tables.RSV = false;
                     tables.I = new_Tbl_GUID;
+                    tables.INVID=new_Inv_GUID;
                     Date date = Calendar.getInstance().getTime();
                     @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
                             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     tables.DATE = dateFormats.format(date);
                     tables.save();
+
 
 
                 }
@@ -1063,18 +1072,6 @@ public class PaymentMobileFragment extends Fragment {
                         for (int i = 0; i < invoiceDetails.size(); i++) {
                             InvoiceDetail.delete(invoiceDetails.get(i));
                         }
-
-
-                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                        if (tb == null)
-                            tb = new Tables();
-                        if (!Tbl_GUID.equals(""))
-                            tb.I = Tbl_GUID;
-                        else
-                            tb.I = new_Tbl_GUID;
-                        tb.INVID = new_Inv_GUID;
-                        tb.save();
-
 
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
 
@@ -1391,6 +1388,7 @@ public class PaymentMobileFragment extends Fragment {
                                     } else if (App.mode == 1) {
                                         binding.layoutAddress.setVisibility(View.GONE);
                                         binding.layoutTime.setVisibility(View.GONE);
+                                        binding.layoutPayment.setVisibility(View.VISIBLE);
                                     }
 
 
@@ -1456,13 +1454,12 @@ public class PaymentMobileFragment extends Fragment {
                                 }
 
                                 if (iDs == null) {
-
                                     error = error + "\n" + "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
                                     Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
                                     binding.progressBar.setVisibility(View.GONE);
                                     return;
-                                } else {
-
+                                }
+                                else {
                                     CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
                                     if (iDs.getOrderTypes().size() > 0)
                                         OrdTList.addAll(iDs.getOrderTypes());
@@ -1474,8 +1471,8 @@ public class PaymentMobileFragment extends Fragment {
 
                                         if (typeAddress != 0)
                                             binding.layoutPayment.setVisibility(View.VISIBLE);
-
                                     }
+
                                     if (App.mode == 1 && typeAddress != 0)
                                         binding.layoutPayment.setVisibility(View.VISIBLE);
                                     orderTypePaymentAdapter.notifyDataSetChanged();
@@ -1492,7 +1489,6 @@ public class PaymentMobileFragment extends Fragment {
                                             binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
                                         }
-
 
                                     }
 
