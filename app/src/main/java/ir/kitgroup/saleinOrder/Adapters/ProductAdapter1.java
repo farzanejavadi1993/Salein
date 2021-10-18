@@ -74,6 +74,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private String maxSale;
 
     private String Inv_GUID;
+    private String Tbl_GUID;
 
     private final DecimalFormat df;
 
@@ -158,6 +159,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public void setInv_GUID(String inv_guid) {
         this.Inv_GUID = inv_guid;
     }
+    public void setTbl_GUID(String Tbl_GUID) {
+        this.Tbl_GUID = Tbl_GUID;
+    }
 
     public void Add(ArrayList<Product> arrayList) {
         productsList.addAll(arrayList);
@@ -216,13 +220,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
-
-
-
-
-
-
-                String ip = Select.from(User.class).first().ipLocal;
+            String ip = Select.from(User.class).first().ipLocal;
 
                 Picasso.get()
                         .load("http://" + ip + "/GetImage?productId=" + productsList
@@ -669,6 +667,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 invoicedetail.INV_UID = Inv_GUID;
                                 invoicedetail.INV_DET_QUANTITY = amount;
                                 invoicedetail.PRD_UID = Prd_GUID;
+                                if (App.mode==1)
+                                invoicedetail.TBL = Tbl_GUID;
                                 invoicedetail.save();
 
 

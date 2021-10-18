@@ -235,6 +235,15 @@ public class MainOrderMobileFragment extends Fragment {
 
 
 
+        //region Delete InvoiceDetail UnNecessary
+        if (App.mode==1){
+           List<InvoiceDetail> invDetail= Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
+           for (int i=0;i<invDetail.size();i++){
+               InvoiceDetail.delete(invDetail.get(i));
+           }
+        }
+
+        //region Delete InvoiceDetail UnNecessary
 
 
         //region Configuration Text Size
@@ -930,6 +939,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         productAdapter = new ProductAdapter1(getActivity(), productList);
         productAdapter.setInv_GUID(Inv_GUID);
+        productAdapter.setTbl_GUID(Tbl_GUID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);

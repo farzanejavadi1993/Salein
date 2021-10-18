@@ -37,33 +37,38 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
 
-                placeHolderImage = R.drawable.salein;
-                break;
+                    placeHolderImage = R.drawable.salein;
+                    break;
 
-            case "ir.kitgroup.saleintop":
-                placeHolderImage = R.drawable.top_png;
-
-
-                break;
+                case "ir.kitgroup.saleintop":
+                    placeHolderImage = R.drawable.top_png;
 
 
-            case "ir.kitgroup.saleinmeat":
-
-                placeHolderImage = R.drawable.meat_png;
-
-                break;
+                    break;
 
 
-            case "ir.kitgroup.saleinnoon":
+                case "ir.kitgroup.saleinmeat":
+
+                    placeHolderImage = R.drawable.meat_png;
+
+                    break;
 
 
-                placeHolderImage = R.drawable.noon;
+                case "ir.kitgroup.saleinnoon":
 
-                break;
+
+                    placeHolderImage = R.drawable.noon;
+
+                    break;
+            }
+        }catch (Exception e){
+
         }
+
 
 
         String ip = Select.from(User.class).first().ipLocal;

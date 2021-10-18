@@ -40,7 +40,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -143,6 +145,7 @@ public class PaymentMobileFragment extends Fragment {
     private String ord_type = "";
     private Boolean edit = false;
     private Integer OrderTypeApp = 0;
+    private Integer SERVICE_DAY = 0;
     private String dateOrder = "";
 
 
@@ -503,17 +506,23 @@ public class PaymentMobileFragment extends Fragment {
                     replaceFragment.commit();
                 }
 
-            } else {
+            }
+            else {
 
                 if (Tbl_GUID.equals("")) {
                     Tables tables = new Tables();
                     tables.N = "بیرون بر";
-                    tables.ACT = true;
+                    tables.ACT = false;
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";
                     tables.RSV = false;
                     tables.I = new_Tbl_GUID;
+                    Date date = Calendar.getInstance().getTime();
+                    @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
+                            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    tables.DATE = dateFormats.format(date);
                     tables.save();
+
 
 
                 }
@@ -921,7 +930,10 @@ public class PaymentMobileFragment extends Fragment {
             timesList.clear();
             if (arrayTime.size() == 0) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+
+
+            else {
 
                 Date date = Calendar.getInstance().getTime();
 
@@ -1350,6 +1362,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         if (!settingsList.get(0).ORDER_TYPE_APP.equals(""))
                             OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                        SERVICE_DAY=Integer.parseInt(settingsList.get(0).SERVICE_DAY);
                         if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode==1)
                         {
                             binding.layoutAdd.setVisibility(View.VISIBLE);

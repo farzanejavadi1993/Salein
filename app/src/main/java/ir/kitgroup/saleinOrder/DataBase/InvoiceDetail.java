@@ -90,7 +90,7 @@ public class InvoiceDetail extends SugarRecord {
     public String INV_DET_DESCRIBTION;
 
 
-    public String Name;
+    public String TBL;
 
 
 }

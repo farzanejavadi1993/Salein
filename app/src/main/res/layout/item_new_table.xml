@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="7dp"
+  android:layout_marginTop="7dp"
+    android:layout_marginBottom="7dp"
     android:rotationY="180"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
@@ -21,6 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <ImageView
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/ivDelete"
+            android:layout_marginRight="@dimen/margin10"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_delete"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
 
         <TextView
             android:id="@+id/tv_number_table"

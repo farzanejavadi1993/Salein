@@ -2,11 +2,16 @@ package ir.kitgroup.saleinOrder.Adapters;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +41,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
     private final Context context;
 
 
+
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
@@ -44,6 +51,19 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
     }
 
     private ClickItem clickItem;
+
+
+
+
+    private ShowDialog showDialog;
+
+    public interface ShowDialog {
+        void onShow(String Inv_GUID,int position,boolean type);
+    }
+
+    public void OnclickShowDialog(ShowDialog showDialog) {
+        this.showDialog = showDialog;
+    }
 
 
     public TableAdapter(Context context, List<Tables> tableList) {
@@ -64,93 +84,56 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         Tables table = tableList.get(position);
 
 
+
         holder.tableName.setText("میز شماره : " + table.N);
         holder.tvCapacity.setText("تعداد صندلی میز : " + table.CC);
         if (Select.from(InvoiceDetail.class).where("INVUID ='" + tableList.get(position).I + "'").list().size() > 0) {
             holder.tvStatus.setText("سفارش ذخیره شده");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.yellow_table));
+            holder.ivDelete.setVisibility(View.VISIBLE);
+            holder.ivDelete.setImageResource(R.drawable.ic_delete);
 
         } else if (table.RSV) {
             holder.tvStatus.setText("میز رزرو شده است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.blue_table));
+            holder.ivDelete.setVisibility(View.GONE);
         }
         else if (table.ACT) {
             holder.tvStatus.setText("میز مشغول است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.red_table));
+            holder.ivDelete.setVisibility(View.GONE);
 
-        } else if (!table.ACT && !table.RSV) {
+        } else if (!table.ACT && !table.RSV && table.GO==null) {
 
+           Tables tb= Select.from(Tables.class).where("I ='" + table.I+ "'").first();
+           if (tb!=null)
+             Tables.delete(tb);
             holder.tvStatus.setText("میز خالی است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.green_table));
+            holder.ivDelete.setVisibility(View.GONE);
+
 
         }else {
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
-            holder.tvCapacity.setText("سفارش بیرون بر");
+            holder.tableName.setText("سفارش بیرون بر");
+            holder.tvCapacity.setText(table.GO);
+            holder.tvStatus.setText(table.DATE!=null?table.DATE:"");
+            holder.ivDelete.setVisibility(View.VISIBLE);
+            holder.ivDelete.setImageResource(R.drawable.ic_close);
         }
 
 
-      /*  if (!table.N.equals("بیرون بر") && table.SV!=null && table.SV ) {
-            holder.iv_bicycle.setVisibility(View.GONE);
-            holder.tvStatus.setText("میز مشغول است"+"\n"+"سفارش ذخیره شده");
-            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.yellow_table));
-        }*/
-      /*  else if (!table.N.equals("بیرون بر") && !table.ACT && !table.RSV) {
-            holder.iv_bicycle.setVisibility(View.GONE);
-            holder.tvStatus.setText("میز خالی است.");
-            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.green_table));
 
-            try {
-                Invoice ord3 = Select.from(Invoice.class).where("TBLUID ='" + table.I + "'").first();
-                String guid = ord3.INV_UID;
-                ord3.delete();
-                for (InvoiceDetail ordDetail : Select.from(InvoiceDetail.class).where("INVUID = '" + guid + "'").list()) {
-                    InvoiceDetail.deleteInTx(ordDetail);
-                }
-            } catch (Exception ignored) {
+        holder.ivDelete.setOnClickListener(v -> {
 
-            }
+            if (holder.tableName.getText().toString().equals("سفارش بیرون بر"))
+        showDialog.onShow(tableList.get(position).I,position,true);
+            else
+                showDialog.onShow(tableList.get(position).I,position,false);
+
+        });
 
 
-        }*/
-     /*   else if (!table.N.equals("بیرون بر") && table.RSV) {
-            holder.iv_bicycle.setVisibility(View.GONE);
-            holder.tvStatus.setText("میز رزرو شده است.");
-            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.blue_table));
-
-
-        }*/
-      /*  else if (!table.N.equals("بیرون بر")) {
-            holder.iv_bicycle.setVisibility(View.GONE);
-            holder.tvStatus.setText("میز مشغول است.");
-            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.red_table));
-        }*/
-        //        if (table.N.equals("بیرون بر")) {
-//            holder.iv_bicycle.setVisibility(View.VISIBLE);
-//            holder.iv_bicycle.setImageResource(R.drawable.ic_bys);
-//            Invoice invoice = Select.from(Invoice.class).where("TBLUID ='" + table.I + "'").first();
-//            if (invoice != null) {
-//                Utilities util = new Utilities();
-//                Locale loc = new Locale("en_US");
-//                Utilities.SolarCalendar sc = util.new SolarCalendar(invoice.INV_DUE_DATE);
-//                String date = (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year;
-//                holder.tvStatus.setText(date);
-//
-//
-//                holder.tableName.setText(invoice.Acc_name);
-//                holder.tvCapacity.setText("سفارش بیرون بر");
-//            }
-//
-//            holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
-//
-//        }
-//        else {
-//            holder.iv_bicycle.setVisibility(View.GONE);
-//            holder.tableName.setVisibility(View.VISIBLE);
-//            holder.tableName.setText("میز شماره : " + table.N);
-//            holder.tvCapacity.setText("تعداد صندلی میز : " + table.CC);
-//
-//
-//        }
 
 
         holder.itemView.setOnClickListener(view -> {
@@ -164,7 +147,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
               Tables tb=Select.from(Tables.class).where("I ='"+table.I+"'").first();
               if (tb==null){
                   Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
-
                   return;
               }else {
                   clickItem.onRowClick("میز مشغول است.", true, tb.INVID);
@@ -190,12 +172,23 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         private final TextView tableName;
         private final TextView tvCapacity;
         private final TextView tvStatus;
+        private final ImageView ivDelete;
+
 
 
         public viewHolder(View itemView) {
             super(itemView);
 
+
+
+
+
+
+
+
+
             rlTable = itemView.findViewById(R.id.rl_table);
+            ivDelete= itemView.findViewById(R.id.ivDelete);
 
             tableName = itemView.findViewById(R.id.tv_number_table);
             tvCapacity = itemView.findViewById(R.id.tv_capacity_table);
@@ -221,8 +214,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
                     else
                         width = SplashScreenFragment.width / 2;
 
-                    rlTable.getLayoutParams().width = (int) (width / 1.3);
-                    rlTable.getLayoutParams().height = (int) (width / 1.8);
+                    rlTable.getLayoutParams().width = (int) (width /1.2);
+                    rlTable.getLayoutParams().height = (int) (width/1.7);
 
                 }
             }

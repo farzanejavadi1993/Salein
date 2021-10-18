@@ -48,6 +48,7 @@
                 android:layout_toRightOf="@+id/btn_logout">
 
                 <ImageView
+
                     android:id="@+id/get_out_order"
                     android:layout_width="@dimen/filter_view_size"
                     android:layout_height="@dimen/filter_view_size"
@@ -90,6 +91,7 @@
                     tools:ignore="ContentDescription" />
 
                 <ImageView
+                    android:src="@drawable/ic_tik_black"
                     android:id="@+id/whole_table"
                     android:layout_width="@dimen/filter_view_size"
                     android:layout_height="@dimen/filter_view_size"
@@ -126,8 +128,6 @@
             android:id="@+id/recycler_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/normal_left_right_margin"
-            android:layout_marginEnd="@dimen/normal_left_right_margin"
             android:rotationY="180" />
 
         <androidx.recyclerview.widget.RecyclerView

@@ -85,6 +85,8 @@ public class LauncherOrganizationFragment extends Fragment {
     private TextView textMessageDialog;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
+    private String TableGUID;
+    private int position;
     //endregion Dialog
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -118,6 +120,8 @@ public class LauncherOrganizationFragment extends Fragment {
         btnOkDialog = dialog.findViewById(R.id.btn_ok);
         btnNoDialog = dialog.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> dialog.dismiss());
+
+
 
 
         btnOkDialog.setOnClickListener(v -> {
@@ -157,6 +161,25 @@ public class LauncherOrganizationFragment extends Fragment {
             else if (TypeClickButton.equals("error")) {
              getTypeOrder();
              getTable1();
+            }
+            else if (TypeClickButton.equals("deleteTable")) {
+
+                Tables tb=  Select.from(Tables.class).where("I ='" +TableGUID+ "'").first();
+                    if (tb!=null)
+                        Tables.delete(tb);
+                    tablesList.remove(tb);
+                    tableAdapter.notifyDataSetChanged();
+
+            }
+
+            else if (TypeClickButton.equals("deleteInvoice")) {
+
+                    List<InvoiceDetail> invoiceDetails=   Select.from(InvoiceDetail.class).where("INVUID ='"+TableGUID+"'").list();
+
+                    for (int i=0;i<invoiceDetails.size();i++){
+                        InvoiceDetail.delete(invoiceDetails.get(i));
+                    }
+                tableAdapter.notifyDataSetChanged();
             }
 
 
@@ -208,10 +231,10 @@ public class LauncherOrganizationFragment extends Fragment {
 
         binding.getOutOrder.setOnClickListener(v -> {
             tablesList.clear();
-            filter("getOrder");
+            filter("getOut");
             tablesList.clear();
-            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
-            CollectionUtils.filter(arrayList, t -> t.N.equals("بیرون بر") && t.C != null);
+            List<Tables> arrayList=Select.from(Tables.class).list();
+            CollectionUtils.filter(arrayList, t -> t.N!=null && t.N.equals("بیرون بر") && t.GO != null);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
             tableAdapter.notifyDataSetChanged();
         });
@@ -224,10 +247,25 @@ public class LauncherOrganizationFragment extends Fragment {
         flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
         flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
 
-        tableAdapter = new TableAdapter(getContext(), tablesList);
+        tableAdapter = new TableAdapter(getActivity(), tablesList);
         binding.recyclerTable.setLayoutManager(flexboxLayoutManager);
         binding.recyclerTable.setAdapter(tableAdapter);
 
+
+        tableAdapter.OnclickShowDialog(new TableAdapter.ShowDialog() {
+            @Override
+            public void onShow(String Inv_GUID, int position,boolean type) {
+                textMessageDialog.setText("آیا مایل به حذف سفارش می باشید؟");
+
+
+                TableGUID=Inv_GUID;
+                if (type)
+                    TypeClickButton="deleteTable";
+                else
+                    TypeClickButton="deleteInvoice";
+                dialog.show();
+            }
+        });
 
         tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID) -> {
 
@@ -299,7 +337,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-       // getTypeOrder();
+       getTypeOrder();
         getTable1();
 
 
@@ -439,7 +477,7 @@ public class LauncherOrganizationFragment extends Fragment {
             case "vacant":
                 binding.vacantTable.setImageResource(R.drawable.ic_tik_black);
                 break;
-            case "getout":
+            case "getOut":
                 binding.getOutOrder.setImageResource(R.drawable.ic_tik_black);
                 break;
             case "whole":
@@ -520,7 +558,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     public void refreshAdapter(){
-
+        filter("whole");
       getTable1();
     }
 }
