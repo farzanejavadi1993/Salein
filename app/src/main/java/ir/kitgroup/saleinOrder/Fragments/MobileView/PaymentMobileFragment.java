@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.List;
 
 import java.util.Locale;
@@ -64,7 +63,7 @@ import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 
 import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.Util.Utilities;
-import ir.kitgroup.saleinOrder.models.ModelTable;
+import ir.kitgroup.saleinOrder.models.ModelDate;
 import ir.kitgroup.saleinOrder.models.Setting;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
 import ir.kitgroup.saleinOrder.models.ModelSetting;
@@ -172,7 +171,7 @@ public class PaymentMobileFragment extends Fragment {
     private Boolean edit = false;
     private Integer OrderTypeApp = 0;
     private Integer SERVICE_DAY = 0;
-    private String dateOrder = "";
+    private String timeChoose = "";
 
 
     private double sumTransport = 0.0;
@@ -185,8 +184,9 @@ public class PaymentMobileFragment extends Fragment {
     private ArrayList<String> timesList;
     private ArrayList<String> times;
     private ArrayList<String> allTime;
-    private ArrayList<Date> allDate;
-    private ArrayList<Date> dateList;
+    private ArrayList<ModelDate> allDate;
+    private ArrayList<ModelDate> dateList;
+    private Date dateChoose;
 
 
     private OrderTypePaymentAdapter orderTypePaymentAdapter;
@@ -267,6 +267,15 @@ public class PaymentMobileFragment extends Fragment {
         allTime = new ArrayList<>();
         allDate = new ArrayList<>();
         dateList = new ArrayList<>();
+
+
+        Date dateNow = Calendar.getInstance().getTime();
+        dateChoose = dateNow;
+
+        if (App.mode == 2) {
+            binding.layoutAddress.setVisibility(View.VISIBLE);
+            binding.layoutTime.setVisibility(View.VISIBLE);
+        }
 
         //region get Bundle
         Bundle bundle = getArguments();
@@ -578,7 +587,37 @@ public class PaymentMobileFragment extends Fragment {
         recycleDate.setAdapter(dateAdapter);
 
 
+        dateAdapter.setOnClickItemListener((date, position) -> {
+            dateChoose = date;
+            timesList.clear();
+            if (position == 0) {
+                Date date1 = Calendar.getInstance().getTime();
+                for (int i = 0; i < allTime.size(); i++) {
+                    int hour;
+                    try {
+                        hour = Integer.parseInt(allTime.get(i).split("-")[0]);
 
+
+                        if (hour > date1.getHours())
+                            if ((hour - date1.getHours() == 1) && date1.getMinutes() > 45) {
+                            } else
+                                timesList.add(allTime.get(i));
+
+
+                    } catch (Exception ignore) {
+                    }
+
+                }
+
+            } else {
+                timesList.addAll(allTime);
+            }
+            times.clear();
+            times.addAll(timesList);
+            timeAdapter.notifyDataSetChanged();
+
+
+        });
         timeAdapter.setOnClickItemListener(time -> {
 
             Date date = Calendar.getInstance().getTime();
@@ -586,7 +625,13 @@ public class PaymentMobileFragment extends Fragment {
             try {
                 int hour;//server time
                 hour = Integer.parseInt(time.split("-")[0]);
-                if (hour < date.getHours()) {
+
+                if (hour < date.getHours() &&
+                        date.getDate() == dateChoose.getDate() &&
+                        date.getDay() == dateChoose.getDay() &&
+                        date.getMonth() == dateChoose.getMonth() &&
+                        date.getYear() == dateChoose.getYear()
+                ) {
                     Toast.makeText(getActivity(), "در این بازه زمانی سفارش ارسال نمی شود.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -595,14 +640,32 @@ public class PaymentMobileFragment extends Fragment {
             }
 
             dialogTime.dismiss();
-            dateOrder = time;
-            binding.edtTime.setText(time);
+            timeChoose = time;
+
+
+            Utilities util = new Utilities();
+            Locale loc = new Locale("en_US");
+            Utilities.SolarCalendar sc;
+            sc = util.new SolarCalendar(dateChoose);
+            String datePersian = sc.strWeekDay + String.format(loc, "%02d", sc.date) + "\t" + sc.strMonth + "\t" + (sc.year);
+
+
+            binding.edtTime.setText(time + "   " + datePersian);
         });
 
 
         binding.layoutTime.setOnClickListener(v -> {
 
+            dateChoose = dateNow;
             dateList.clear();
+            ArrayList<ModelDate> arrayList = new ArrayList<>(allDate);
+            CollectionUtils.filter(arrayList, a -> a.Click);
+            if (arrayList.size() > 0)
+                allDate.get(allDate.indexOf(arrayList.get(0))).Click = false;
+
+            if (allDate.size() > 0)
+                allDate.get(0).Click = true;
+
             dateList.addAll(allDate);
             dateAdapter.notifyDataSetChanged();
             timesList.clear();
@@ -782,7 +845,7 @@ public class PaymentMobileFragment extends Fragment {
             } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (dateOrder.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
+            } else if (timeChoose.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -889,13 +952,13 @@ public class PaymentMobileFragment extends Fragment {
             int hour = date.getHours();
 
             try {
-                hour = Integer.parseInt(dateOrder.split("-")[0]);
+                hour = Integer.parseInt(timeChoose.split("-")[0]);
 
             } catch (Exception e) {
             }
 
 
-            invoice.INV_DUE_DATE = date;
+            invoice.INV_DUE_DATE = dateChoose;
             invoice.INV_DUE_TIME = hour + ":" + "00";
             invoice.INV_STATUS = true;
 
@@ -1406,17 +1469,27 @@ public class PaymentMobileFragment extends Fragment {
                                         SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
 
 
-
                                     allDate.clear();
                                     Date dateNow = Calendar.getInstance().getTime();
 
-                                    if (SERVICE_DAY==0)
-                                        allDate.add(dateNow);
+                                    if (SERVICE_DAY == 0) {
+                                        ModelDate modelDate = new ModelDate();
+                                        modelDate.date = dateNow;
+                                        modelDate.Click = true;
+                                        allDate.add(modelDate);
 
+                                    }
                                     for (int i = 0; i < SERVICE_DAY; i++) {
                                         Date date = Calendar.getInstance().getTime();
                                         date.setDate(date.getDate() + i);
-                                        allDate.add(date);
+                                        ModelDate modelDate = new ModelDate();
+                                        modelDate.date = date;
+                                        if (i == 0)
+                                            modelDate.Click = true;
+                                        else
+                                            modelDate.Click = false;
+                                        allDate.add(modelDate);
+
                                     }
 
 

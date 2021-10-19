@@ -110,19 +110,8 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
             for(int i=0 ; i< list.size() ;i++){
                 list.get(i).Click=false;
             }
-
             list.get(position).Click=true;
             holder.longClick++;
-
-
-
-
-
-
-
-
-
-
 
             return false;
         });

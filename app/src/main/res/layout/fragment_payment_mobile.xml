@@ -55,6 +55,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +125,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-
+            android:visibility="gone"
             android:id="@+id/layoutTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -194,7 +195,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-
+            android:visibility="gone"
             android:id="@+id/layout_type_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
