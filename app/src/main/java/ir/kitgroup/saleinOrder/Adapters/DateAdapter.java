@@ -1,9 +1,5 @@
-/*
-package ir.kitgroup.saleinOrder.Adapters;
 
 package ir.kitgroup.saleinOrder.Adapters;
-
-
 
 
 import android.annotation.SuppressLint;
@@ -20,14 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.Util.Utilities;
 
 
-public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
+public class DateAdapter extends RecyclerView.Adapter<DateAdapter.viewHolder> {
 
-    private final List<String> list;
+    private final List<Date> list;
     private final Context context;
 
 
@@ -36,20 +36,20 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
     }
 
     public interface ClickItem {
-        void onRowClick(String Name);
+        void onRowClick(Date date);
     }
 
     private ClickItem clickItem;
 
 
-    public TimeAdapter(Context context, List<String> list) {
+    public DateAdapter(Context context, List<Date> list) {
         this.context = context;
         this.list = list;
     }
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_time, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_date, parent, false);
         return new viewHolder(view);
     }
 
@@ -57,13 +57,17 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
     @Override
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
 
-        String time = list.get(position);
+        Date date = list.get(position);
+        Utilities util = new Utilities();
+        Locale loc = new Locale("en_US");
+        Utilities.SolarCalendar sc;
 
-        holder.tvTime.setText(time);
+        sc = util.new SolarCalendar(date);
+        holder.tvDay.setText(sc.strWeekDay);
+        holder.tvDate.setText(String.format(loc, "%02d", sc.date) + "\t" + sc.strMonth + "\t" + (sc.year));
 
         holder.itemView.setOnClickListener(view -> {
-            clickItem.onRowClick(time);
-
+            clickItem.onRowClick(date);
         });
 
 
@@ -78,18 +82,15 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
 
     static class viewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView tvTime;
+        private final TextView tvDay;
+        private final TextView tvDate;
 
 
         public viewHolder(View itemView) {
             super(itemView);
 
-            tvTime = itemView.findViewById(R.id.tv_time);
-
-
-
-
-
+            tvDay = itemView.findViewById(R.id.txt_day);
+            tvDate = itemView.findViewById(R.id.txt_date);
         }
     }
 
@@ -102,4 +103,4 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
 
 
 
-*/
+

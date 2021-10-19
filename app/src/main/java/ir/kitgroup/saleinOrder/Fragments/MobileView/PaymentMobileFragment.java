@@ -58,6 +58,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinOrder.Adapters.DateAdapter;
 import ir.kitgroup.saleinOrder.Adapters.OrderTypePaymentAdapter;
 import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 
@@ -180,10 +181,12 @@ public class PaymentMobileFragment extends Fragment {
 
     private Dialog dialogTime;
     private TimeAdapter timeAdapter;
-    private final ArrayList<String> timesList = new ArrayList<>();
-    private final ArrayList<String> times = new ArrayList<>();
-    private ArrayList<String> allTime = new ArrayList<>();
-    private LinearLayout dateView;
+    private DateAdapter dateAdapter;
+    private ArrayList<String> timesList;
+    private ArrayList<String> times;
+    private ArrayList<String> allTime;
+    private ArrayList<Date> allDate;
+    private ArrayList<Date> dateList;
 
 
     private OrderTypePaymentAdapter orderTypePaymentAdapter;
@@ -259,6 +262,12 @@ public class PaymentMobileFragment extends Fragment {
             numberPos = "0";
 
 
+        timesList = new ArrayList<>();
+        times = new ArrayList<>();
+        allTime = new ArrayList<>();
+        allDate = new ArrayList<>();
+        dateList = new ArrayList<>();
+
         //region get Bundle
         Bundle bundle = getArguments();
         Inv_GUID = bundle.getString("Inv_GUID");
@@ -274,9 +283,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
         if (Tbl_GUID.equals(""))
-            new_Tbl_GUID=UUID.randomUUID().toString();
+            new_Tbl_GUID = UUID.randomUUID().toString();
         else
-            new_Tbl_GUID=Tbl_GUID;
+            new_Tbl_GUID = Tbl_GUID;
 
         if (App.mode == 2 || (App.mode == 1 && edit) || (App.mode == 1 && Tbl_GUID.equals("")))
             new_Inv_GUID = Inv_GUID;
@@ -554,13 +563,24 @@ public class PaymentMobileFragment extends Fragment {
         dialogTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogTime.setContentView(R.layout.dialog_time);
         timeAdapter = new TimeAdapter(getActivity(), times);
-        dateView = dialogTime.findViewById(R.id.dateView);
+        dateAdapter = new DateAdapter(getActivity(), dateList);
+
 
         RecyclerView recycleTime = dialogTime.findViewById(R.id.recyclerTime);
         recycleTime.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleTime.setAdapter(timeAdapter);
 
+        RecyclerView recycleDate = dialogTime.findViewById(R.id.recyclerDate);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        manager.setReverseLayout(true);
+        recycleDate.setLayoutManager(manager);
+        recycleDate.setAdapter(dateAdapter);
+
+
+
         timeAdapter.setOnClickItemListener(time -> {
+
             Date date = Calendar.getInstance().getTime();
 
             try {
@@ -582,7 +602,11 @@ public class PaymentMobileFragment extends Fragment {
 
         binding.layoutTime.setOnClickListener(v -> {
 
+            dateList.clear();
+            dateList.addAll(allDate);
+            dateAdapter.notifyDataSetChanged();
             timesList.clear();
+
             if (allTime.size() == 0) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
             } else {
@@ -594,8 +618,8 @@ public class PaymentMobileFragment extends Fragment {
 
 
                         if (hour > date.getHours())
-                            if ((hour - date.getHours() == 1) && date.getMinutes() > 45){}
-                            else
+                            if ((hour - date.getHours() == 1) && date.getMinutes() > 45) {
+                            } else
                                 timesList.add(allTime.get(i));
 
 
@@ -619,10 +643,10 @@ public class PaymentMobileFragment extends Fragment {
         OrdTList = new ArrayList<>();
 
         orderTypePaymentAdapter = new OrderTypePaymentAdapter(getActivity(), OrdTList);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        manager.setReverseLayout(true);
-        binding.recyclerViewOrderType.setLayoutManager(manager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setReverseLayout(true);
+        binding.recyclerViewOrderType.setLayoutManager(layoutManager);
         binding.recyclerViewOrderType.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.recyclerViewOrderType.setAdapter(orderTypePaymentAdapter);
 
@@ -752,14 +776,13 @@ public class PaymentMobileFragment extends Fragment {
             if (typePayment.equals("-1")) {
                 Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                 return;
-            }
-           else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals(""))))) {
+            } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (dateOrder.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("")))) {
+            } else if (dateOrder.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -963,21 +986,20 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (Tbl_GUID.equals("")) {
 
-                        Tables tables = new Tables();
+                    Tables tables = new Tables();
 
                     tables.N = "بیرون بر";
                     tables.ACT = false;
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";
                     tables.RSV = false;
-                    tables.I = new_Tbl_GUID;
-                    tables.INVID=new_Inv_GUID;
+                    tables.I = new_Inv_GUID;
+                    tables.INVID = new_Inv_GUID;
                     Date date = Calendar.getInstance().getTime();
                     @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
                             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     tables.DATE = dateFormats.format(date);
                     tables.save();
-
 
 
                 }
@@ -1072,6 +1094,20 @@ public class PaymentMobileFragment extends Fragment {
                         for (int i = 0; i < invoiceDetails.size(); i++) {
                             InvoiceDetail.delete(invoiceDetails.get(i));
                         }
+
+
+                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                        if (tb == null) {
+                            tb = new Tables();
+                            tb.I = new_Tbl_GUID;
+                        } else {
+                            tb.I = Tbl_GUID;
+                        }
+
+
+                        tb.INVID = new_Inv_GUID;
+                        tb.save();
+
 
                         tvMessage.setText("سفارش با موفقیت ارسال شد");
 
@@ -1232,9 +1268,6 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-
-
-
     public Bundle reloadFragment(Boolean setAddress) {
 
         Bundle bundle = getArguments();
@@ -1252,15 +1285,12 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-
-
-
     @SuppressLint("SetTextI18n")
     private void getInquiryAccount1(String userName, String passWord, String mobile) {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    App.api.getInquiryAccount1(userName, passWord,mobile,"","",1,1)
+                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1290,8 +1320,7 @@ public class PaymentMobileFragment extends Fragment {
                                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                         }
 
-                                    }
-                                else {
+                                    } else {
 
                                         //user is register
                                         if (iDs.getAccountList().size() > 0) {
@@ -1306,8 +1335,7 @@ public class PaymentMobileFragment extends Fragment {
                                             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
 
 
-                                        }
-                                        else {
+                                        } else {
 
                                             binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
                                             binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
@@ -1316,16 +1344,14 @@ public class PaymentMobileFragment extends Fragment {
                                         OnceSee = true;
 
 
-
                                     }
                                 binding.progressBar.setVisibility(View.GONE);
-
 
 
                             }, throwable -> {
 
                                 Toast.makeText(getActivity(), "خطا در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
-                              binding.progressBar.setVisibility(View.GONE);
+                                binding.progressBar.setVisibility(View.GONE);
 
                             })
             );
@@ -1335,7 +1361,6 @@ public class PaymentMobileFragment extends Fragment {
         }
 
     }
-
 
 
     private void getSetting1() {
@@ -1379,6 +1404,20 @@ public class PaymentMobileFragment extends Fragment {
 
                                     if (!settingsList.get(0).SERVICE_DAY.equals(""))
                                         SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
+
+
+
+                                    allDate.clear();
+                                    Date dateNow = Calendar.getInstance().getTime();
+
+                                    if (SERVICE_DAY==0)
+                                        allDate.add(dateNow);
+
+                                    for (int i = 0; i < SERVICE_DAY; i++) {
+                                        Date date = Calendar.getInstance().getTime();
+                                        date.setDate(date.getDate() + i);
+                                        allDate.add(date);
+                                    }
 
 
                                     if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode == 1) {
@@ -1458,8 +1497,7 @@ public class PaymentMobileFragment extends Fragment {
                                     Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
                                     binding.progressBar.setVisibility(View.GONE);
                                     return;
-                                }
-                                else {
+                                } else {
                                     CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
                                     if (iDs.getOrderTypes().size() > 0)
                                         OrdTList.addAll(iDs.getOrderTypes());

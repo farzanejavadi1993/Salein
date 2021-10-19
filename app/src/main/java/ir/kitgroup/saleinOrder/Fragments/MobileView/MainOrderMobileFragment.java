@@ -84,6 +84,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
+import ir.kitgroup.saleinOrder.models.ModelInvoice;
 import ir.kitgroup.saleinOrder.models.Setting;
 import ir.kitgroup.saleinOrder.DataBase.User;
 
@@ -924,7 +925,7 @@ public class MainOrderMobileFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                // searchProduct(s.toString());
+            getSearchProduct(s.toString());
             }
 
             @Override
@@ -1747,6 +1748,27 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
 
+    @SuppressLint("SetTextI18n")
+    private void getSearchProduct(String s) {
+        try {
+            compositeDisposable.add(
+                    App.api.getSearchProduct("saleinkit_api",userName, passWord, s)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                              int t=0;
 
+                            }, throwable -> {
+                                int t=0;
+
+                            })
+            );
+        } catch (Exception e) {
+            int t=0;
+        }
+
+    }
 
 }

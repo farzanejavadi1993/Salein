@@ -156,11 +156,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
               Tables tb=Select.from(Tables.class).where("I ='"+table.I+"'").first();
               if (tb==null){
                   Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
-
+              }else {
+                  clickItem.onRowClick(table.N, true, tb.INVID);
               }
-
-            }
-
+          }
         });
 
 

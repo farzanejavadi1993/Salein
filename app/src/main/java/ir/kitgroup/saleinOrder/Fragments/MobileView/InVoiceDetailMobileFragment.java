@@ -56,6 +56,7 @@ import ir.kitgroup.saleinOrder.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinOrder.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 
+import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 import ir.kitgroup.saleinOrder.Util.Utilities;
@@ -232,7 +233,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-
         dialogDelete = new Dialog(getActivity());
         dialogDelete.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogDelete.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -269,10 +269,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
-         Ord_TYPE = bundle.getString("Ord_TYPE");
+        Ord_TYPE = bundle.getString("Ord_TYPE");
         edit = bundle.getBoolean("EDIT");
         //endregion Get Bundle
-
 
 
         //region Configuration Client Application
@@ -284,7 +283,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.layoutDetail.setVisibility(View.GONE);
         }
         //endregion Configuration Client Application
-
 
 
         sumPrice = 0;
@@ -344,7 +342,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Cast DialogDescription
 
 
-
         //region Set Parameter Toolbar
         Utilities util = new Utilities();
         Locale loc = new Locale("en_US");
@@ -369,8 +366,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
             if (App.mode == 1) {
-                Account acc=Select.from(Account.class).first();
-                binding.tvNameCustomer.setText(acc!=null ?acc.N:"");
+                Account acc = Select.from(Account.class).first();
+                binding.tvNameCustomer.setText(acc != null ? acc.N : "");
             }
 
 
@@ -381,11 +378,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Set Parameter Toolbar
 
 
-
         //region CONFIGURATION DATA INVOICE_DETAIL
 
         invoiceDetailList.clear();
-
 
 
         if (type.equals("1"))
@@ -395,8 +390,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
-
-
 
 
         invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type);
@@ -459,7 +452,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
 
-
         invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -469,12 +461,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 sumPurePrice = 0;
                 sumDiscounts = 0;
 
-               List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-              for (int i=0;i<invoiceDetails.size();i++){
-                  if (invoiceDetails.get(i).INV_DET_DESCRIBTION!=null && invoiceDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")){
-                      invoiceDetails.remove(invoiceDetails.get(i));
-                  }
-              }
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+                    if (invoiceDetails.get(i).INV_DET_DESCRIBTION != null && invoiceDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
+                        invoiceDetails.remove(invoiceDetails.get(i));
+                    }
+                }
                 for (int i = 0; i < invoiceDetails.size(); i++) {
                     ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
                     if (product != null) {
@@ -583,7 +575,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion CONFIGURATION DATA INVOICE_DETAIL
 
 
-
         //region Action BtnDelete
         binding.btnDelete.setOnClickListener(v -> {
 
@@ -601,7 +592,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 return;
             }
             bundle.putString("Ord_TYPE", Ord_TYPE);
-            bundle.putString("Tbl_GUID", Tbl_GUID);
+            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+            if (tb != null && tb.INVID != null && tb.I.equals(tb.I))
+                bundle.putString("Tbl_GUID", "");
+            else
+                bundle.putString("Tbl_GUID", Tbl_GUID);
+
             bundle.putString("Inv_GUID", Inv_GUID);
 
 
@@ -636,7 +632,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
-            bundle1.putBoolean("setADR1",false);
+            bundle1.putBoolean("setADR1", false);
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
@@ -644,12 +640,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //endregion Action BtnContinue
 
 
-
         binding.txtDeleteAll.setOnClickListener(v -> {
             if (invoiceDetailList.size() > 0)
                 dialogDelete.show();
         });
-
 
 
         if (type.equals("1"))
@@ -925,7 +919,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     } else {
 
                                         status = iDs.getInvoice().get(0).INV_SYNC;
-                                        Ord_TYPE=String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
+                                        Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
 
                                         if (status != null && status.equals("*")) {
                                             binding.btnDelete.setVisibility(View.GONE);
@@ -1047,10 +1041,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (type.equals("1")){
+        if (type.equals("1")) {
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                     Inv_GUID + "'").list();
-            for (int i=0;i<invoiceDetails.size();i++){
+            for (int i = 0; i < invoiceDetails.size(); i++) {
                 InvoiceDetail.delete(invoiceDetails.get(i));
             }
         }
@@ -1059,7 +1053,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onDestroy();
     }
 
-    public List<InvoiceDetail> getInvoiceDetail(){
+    public List<InvoiceDetail> getInvoiceDetail() {
         return invDetails;
     }
 

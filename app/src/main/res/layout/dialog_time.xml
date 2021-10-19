@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+
+    android:focusable="true"
+    android:clickable="true"
     android:background="@color/white"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
-        android:background="@color/purple_700"
+       android:elevation="@dimen/margin4"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-        <HorizontalScrollView
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerDate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:gravity="center"
-                android:id="@+id/dateView"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </HorizontalScrollView>
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
