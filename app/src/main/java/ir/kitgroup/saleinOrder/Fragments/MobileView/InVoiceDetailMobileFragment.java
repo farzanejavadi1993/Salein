@@ -92,6 +92,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private String passWord;
     private String Inv_GUID;
     private String Ord_TYPE;
+    private String  Tbl_GUID="";
     private boolean edit = false;
     private String type;
 
@@ -130,6 +131,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     private String Acc_NAME;
     private String Acc_GUID;
+    private int counter=0;
+
+
 
 
     //endregion Parameter
@@ -268,7 +272,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Bundle bundle = getArguments();
         type = bundle.getString("type");  //1 seen   //2 Edit
         Inv_GUID = bundle.getString("Inv_GUID");
-        String Tbl_GUID = bundle.getString("Tbl_GUID");
+        Tbl_GUID = bundle.getString("Tbl_GUID");
         Ord_TYPE = bundle.getString("Ord_TYPE");
         try {
             Acc_NAME = bundle.getString("Acc_NAME");
@@ -603,13 +607,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
             }
             bundle.putString("Ord_TYPE", Ord_TYPE);
             Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-            if (tb != null && tb.INVID != null && tb.I.equals(tb.I))
+            if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
                 bundle.putString("Tbl_GUID", "");
             else
                 bundle.putString("Tbl_GUID", Tbl_GUID);
 
             bundle.putString("Inv_GUID", Inv_GUID);
             bundle.putString("Acc_NAME", Acc_NAME);
+            bundle.putString("Acc_GUID", Acc_GUID);
 
 
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -659,14 +664,19 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         if (type.equals("1"))
             getInvoice();
-        else
+        else {
             invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-        if (invDetails.size() == 0)
-            binding.progressBar.setVisibility(View.GONE);
-        else
-            for (int i = 0; i < invDetails.size(); i++) {
-                getProduct(invDetails.get(i).PRD_UID, i);
+            if (invDetails.size() == 0)
+                binding.progressBar.setVisibility(View.GONE);
+
+            else {
+                counter = 0;
+                for (int i = 0; i < invDetails.size(); i++) {
+                    getProduct(invDetails.get(i).PRD_UID, i);
+                }
             }
+        }
+
 
     }
 
@@ -820,8 +830,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getProduct(String Guid, int i) {
+
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
+
             compositeDisposable.add(
                     App.api.getProduct(userName, passWord, Guid)
                             .subscribeOn(Schedulers.io())
@@ -830,6 +842,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             })
                             .subscribe(jsonElement -> {
 
+                                counter=counter+1;
                                 Gson gson = new Gson();
                                 Type typeModelProduct = new TypeToken<ModelProduct>() {
                                 }.getType();
@@ -859,7 +872,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                             ir.kitgroup.saleinOrder.DataBase.Product.saveInTx(list1.get(0));
                                     }
 
-                                    if (i == invDetails.size() - 1) {
+                                    if (counter== invDetails.size()) {
                                         invoiceDetailList.clear();
 
 
@@ -881,6 +894,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         invoiceDetailList.addAll(invDetails);
                                         invoiceDetailAdapter.notifyDataSetChanged();
                                         binding.progressBar.setVisibility(View.GONE);
+                                        counter=0;
                                     }
                                 } else {
                                     Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
@@ -902,6 +916,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getInvoice() {
+        binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
                     App.api.getInvoice1(userName, passWord, Inv_GUID)
@@ -932,7 +947,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
-                                        Acc_NAME=iDs.getInvoice().get(0).accClbName;
+
+                                        if (App.mode==1){
+                                            Acc_NAME=iDs.getInvoice().get(0).accClbName;
+                                            Acc_GUID=iDs.getInvoice().get(0).ACC_CLB_UID;
+                                        }
+
                                         binding.tvNameCustomer.setText(Acc_NAME);
 
                                         if (status != null && status.equals("*")) {
@@ -1013,17 +1033,36 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             }
 
 
-                            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
-                            FragmentManager ft = getActivity().getSupportFragmentManager();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if (App.mode==2){
+                                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
+                                FragmentManager ft = getActivity().getSupportFragmentManager();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                                ft.beginTransaction().detach(frg).commitNow();
-                                ft.beginTransaction().attach(frg).commitNow();
+                                    ft.beginTransaction().detach(frg).commitNow();
+                                    ft.beginTransaction().attach(frg).commitNow();
 
-                            } else {
+                                } else {
 
-                                ft.beginTransaction().detach(frg).attach(frg).commit();
+                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                                }
+                            }else {
+                                Tables tb=Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                                if (tb!=null && tb.GO!=null)
+                                    Tables.delete(tb);
+
+                                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
+                                FragmentManager ft = getActivity().getSupportFragmentManager();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                    ft.beginTransaction().detach(frg).commitNow();
+                                    ft.beginTransaction().attach(frg).commitNow();
+
+                                } else {
+
+                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                                }
                             }
+
                         }
                     } else {
                         Toast.makeText(getActivity(), "خطایی در سرور رخ داد", Toast.LENGTH_SHORT).show();

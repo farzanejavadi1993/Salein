@@ -387,7 +387,7 @@ public class MainOrderMobileFragment extends Fragment {
                         binding.edtNameCustomer.setHint("نام مشترک");
                     } else {
 
-                        getAccountSearch(s.toString());
+                        getAccountSearch1(s.toString(),0);
                     }
 
 
@@ -398,6 +398,8 @@ public class MainOrderMobileFragment extends Fragment {
 
                 }
             };
+
+
 
             accAdapter.setOnClickItemListener((account) -> {
                 Account.deleteAll(Account.class);
@@ -420,8 +422,16 @@ public class MainOrderMobileFragment extends Fragment {
 
 
             binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
+
+
+
+
         }
         //endregion Configuration Organization Application
+
+
+
+
 
 
         //region Configuration Client Application
@@ -571,7 +581,24 @@ public class MainOrderMobileFragment extends Fragment {
         Tbl_GUID = bnd.getString("Tbl_GUID");
         Inv_GUID = bnd.getString("Inv_GUID");
         Inv_GUID_ORG = bnd.getString("Inv_GUID");
+        try {
+            Acc_NAME = bnd.getString("Acc_NAME");
+            Acc_GUID = bnd.getString("Acc_GUID");
+        }catch (Exception ignore){ }
+
         //endregion Get Bundle
+
+
+        if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)){
+            binding.edtNameCustomer.setEnabled(false);
+            binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+            binding.edtNameCustomer.setText(Acc_NAME);
+            binding.accountRecyclerView.setVisibility(View.GONE);
+            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
+            getAccountSearch1(Acc_NAME,1);
+        }
+
+
 
 
         //region Create Order
@@ -628,10 +655,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
 
-        if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)){
-            binding.edtNameCustomer.setEnabled(false);
-            binding.edtNameCustomer.setText(Acc_NAME);
-        }
+
 
 
 
@@ -1253,7 +1277,7 @@ public class MainOrderMobileFragment extends Fragment {
                                 }
 
                                 productList.clear();
-                                CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().equals("توزیع") && r.getPrice() > 0 && r.getSts());
+                                CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
 
 
                                 ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
@@ -1606,81 +1630,84 @@ public class MainOrderMobileFragment extends Fragment {
 
     }
 
-    private void getAccountSearch(String word) {
+
+
+
+
+
+    private void getAccountSearch1(String word,int type){
         try {
-            Call<String> call = App.api.getAccountSearch("saleinkit_api", userName, passWord, word);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
+            compositeDisposable.add(
+                    App.api.getAccountSearch1("saleinkit_api",userName, passWord,word )
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
 
-                    Type typeIDs = new TypeToken<ModelAccount>() {
-                    }.getType();
-                    ModelAccount iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception e) {
-                        Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است", Toast.LENGTH_SHORT).show();
-                        customProgress.hideProgress();
-                        return;
+                                Type typeIDs = new TypeToken<ModelAccount>() {
+                                }.getType();
+                                ModelAccount iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است", Toast.LENGTH_SHORT).show();
+                                    customProgress.hideProgress();
+                                    return;
 
-                    }
+                                }
 
-                    assert iDs != null;
-                    if (iDs.getAccountList() == null) {
-                        Type typeIDs0 = new TypeToken<ModelLog>() {
-                        }.getType();
-                        ModelLog iDs0 = gson.fromJson(response.body(), typeIDs0);
+                                assert iDs != null;
+                                if (iDs.getAccountList() == null) {
+                                    Type typeIDs0 = new TypeToken<ModelLog>() {
+                                    }.getType();
+                                    ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
-                        if (iDs0.getLogs() != null) {
+                                    if (iDs0.getLogs() != null) {
 
-                            String description = iDs0.getLogs().get(0).getDescription();
-                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                        String description = iDs0.getLogs().get(0).getDescription();
+                                       // Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            Toast.makeText(getActivity(), "لیست دریافت شده از مشتریان نا معتبر می باشد", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getActivity(), "لیست دریافت شده از مشتریان نا معتبر می باشد", Toast.LENGTH_SHORT).show();
 
-                        }
+                                    }
 
-                    } else {
+                                } else {
 
-                        accList.clear();
-                        accList.addAll(iDs.getAccountList());
-                        accAdapter.notifyDataSetChanged();
-                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
-
-
-                    }
-                    customProgress.hideProgress();
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getActivity(), "خطای تایم اوت در دریافت مشتریان", Toast.LENGTH_SHORT).show();
-
-                    customProgress.hideProgress();
-                }
-            });
+                                    if (type==0){
+                                        accList.clear();
+                                        accList.addAll(iDs.getAccountList());
+                                        accAdapter.notifyDataSetChanged();
+                                        binding.accountRecyclerView.setVisibility(View.VISIBLE);
+                                    }else {
+                                        Account.deleteAll(Account.class);
+                                        accList.addAll(iDs.getAccountList());
+                                        CollectionUtils.filter(accList,a->a.I.equals(Acc_GUID));
+                                        if (accList.size()>0)
+                                            Account.saveInTx(accList.get(0));
+                                    }
 
 
-        } catch (NetworkOnMainThreadException ignored) {
+
+                                }
+                                customProgress.hideProgress();
+
+                            }, throwable -> {
+                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت مشتریان", Toast.LENGTH_SHORT).show();
+
+
+                            })
+            );
+        } catch (Exception e) {
             Toast.makeText(getActivity(), "خطا در اتصال به سرور برای دریافت مشتریان", Toast.LENGTH_SHORT).show();
             customProgress.hideProgress();
         }
-
-
     }
 
-    private Date stringToDate(String aDate, String aFormat) {
 
-        if (aDate == null) return null;
-        ParsePosition pos = new ParsePosition(0);
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
-        return simpledateformat.parse(aDate, pos);
 
-    }
 
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);

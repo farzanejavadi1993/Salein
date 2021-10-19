@@ -55,8 +55,7 @@ public interface API {
     Call<String> getTable(@Query("userName") String userName, @Query("password") String password);
 
 
-    @GET("AccountSearch")
-    Call<String> getAccountSearch(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("word") String word);
+
 
 
     @GET("AccountSync")
@@ -112,6 +111,10 @@ public interface API {
 
     @GET("GetInvoice")
     Observable<String> getInvoice1(@Query("userName") String userName, @Query("passWord") String passWord, @Query("InvoiceId") String InvoiceId);
+
+
+    @GET("AccountSearch")
+    Observable<String>  getAccountSearch1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("word") String word);
 
 
     @GET("DescriptionSync")

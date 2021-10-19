@@ -47,7 +47,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
     }
 
     public interface ClickItem {
-        void onRowClick(String Name, boolean Reserve, String Guid);
+        void onRowClick(String Name, boolean Reserve, String Tbl_Guid,String Inv_Guid);
     }
 
     private ClickItem clickItem;
@@ -87,7 +87,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
         holder.tableName.setText("میز شماره : " + table.N);
         holder.tvCapacity.setText("تعداد صندلی میز : " + table.CC);
-        if (Select.from(InvoiceDetail.class).where("INVUID ='" + tableList.get(position).I + "'").list().size() > 0) {
+        if (Select.from(InvoiceDetail.class).where("INVUID ='" + tableList.get(position).I + "'").list().size() > 0
+                && table.GO==null
+        ) {
             holder.tvStatus.setText("سفارش ذخیره شده");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.yellow_table));
             holder.ivDelete.setVisibility(View.VISIBLE);
@@ -139,12 +141,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         holder.itemView.setOnClickListener(view -> {
             if (table.GO!=null ) {
                 //getOut
-                clickItem.onRowClick(table.N, true, table.INVID);
+                clickItem.onRowClick(table.N, true, table.I,table.INVID);
 
             }
             else if (!table.ACT && !table.RSV) {
                 //vacant
-                clickItem.onRowClick(table.N, false, table.I);
+                clickItem.onRowClick(table.N, false, table.I,table.I);
 
             }
 
@@ -157,7 +159,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
               if (tb==null){
                   Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
               }else {
-                  clickItem.onRowClick(table.N, true, tb.INVID);
+                  clickItem.onRowClick(table.N, true,table.I, tb.INVID);
               }
           }
         });

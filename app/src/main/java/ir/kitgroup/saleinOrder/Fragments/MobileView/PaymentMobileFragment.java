@@ -903,10 +903,11 @@ public class PaymentMobileFragment extends Fragment {
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(sumTransport);
                 invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
-                invoiceDetailTransport.update();
+                invoiceDetailTransport.save();
             }
 
 
+            CollectionUtils.filter(invDetails,i->(i.INV_DET_DESCRIBTION!=null && !i.INV_DET_DESCRIBTION.equals("توزیع")||i.INV_DET_DESCRIBTION==null));
             for (int i = 0; i < invDetails.size(); i++) {
 
                 ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();

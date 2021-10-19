@@ -268,13 +268,13 @@ public class LauncherOrganizationFragment extends Fragment {
             dialog.show();
         });
 
-        tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID) -> {
+        tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID,I_GUID) -> {
 
             if (Reserve) {
 
                 Bundle bundle = new Bundle();
                     bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
-                    bundle.putString("Inv_GUID", T_GUID);
+                    bundle.putString("Inv_GUID", I_GUID);
                     bundle.putString("Ord_TYPE","");
                     bundle.putString("Tbl_GUID",T_GUID);
                     bundle.putBoolean("EDIT",true);
