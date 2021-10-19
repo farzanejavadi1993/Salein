@@ -270,8 +270,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Inv_GUID = bundle.getString("Inv_GUID");
         String Tbl_GUID = bundle.getString("Tbl_GUID");
         Ord_TYPE = bundle.getString("Ord_TYPE");
+        try {
+            Acc_NAME = bundle.getString("Acc_NAME");
+            binding.tvNameCustomer.setText(Acc_NAME);
+
+        }catch (Exception ignore){}
+
         edit = bundle.getBoolean("EDIT");
         //endregion Get Bundle
+
+
 
 
         //region Configuration Client Application
@@ -279,10 +287,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
             binding.txtTypeOrder.setVisibility(View.GONE);
-        } else {
-            binding.layoutDetail.setVisibility(View.GONE);
         }
         //endregion Configuration Client Application
+
+
+
+
 
 
         sumPrice = 0;
@@ -599,6 +609,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 bundle.putString("Tbl_GUID", Tbl_GUID);
 
             bundle.putString("Inv_GUID", Inv_GUID);
+            bundle.putString("Acc_NAME", Acc_NAME);
 
 
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -918,8 +929,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                                     } else {
 
+
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
+                                        Acc_NAME=iDs.getInvoice().get(0).accClbName;
+                                        binding.tvNameCustomer.setText(Acc_NAME);
 
                                         if (status != null && status.equals("*")) {
                                             binding.btnDelete.setVisibility(View.GONE);

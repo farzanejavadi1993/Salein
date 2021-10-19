@@ -223,7 +223,7 @@ public class Invoice  {
     public Object accName;
     @SerializedName("ACC_CLB_NAME")
     @Expose
-    public Object accClbName;
+    public String accClbName;
     @SerializedName("INV_PAYMENT_STATUS")
     @Expose
     public Integer invPaymentStatus;

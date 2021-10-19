@@ -626,6 +626,16 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Create Order
 
 
+
+
+        if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)){
+            binding.edtNameCustomer.setEnabled(false);
+            binding.edtNameCustomer.setText(Acc_NAME);
+        }
+
+
+
+
         //region Cast Variable Dialog Sync
         dialogSync = new Dialog(getActivity());
         dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);

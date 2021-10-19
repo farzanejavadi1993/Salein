@@ -561,5 +561,6 @@ public class LauncherOrganizationFragment extends Fragment {
     public void refreshAdapter(){
         filter("whole");
       getTable1();
+        getTypeOrder();
     }
 }
