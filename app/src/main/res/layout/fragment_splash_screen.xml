@@ -80,7 +80,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="12dp"
-            android:text="تهیه و تولید توسط کیت گروپ"
+            android:text="@string/link_KitGroup"
             android:textColor="@color/purple_700"
             android:textSize="12sp" />
     </RelativeLayout>
