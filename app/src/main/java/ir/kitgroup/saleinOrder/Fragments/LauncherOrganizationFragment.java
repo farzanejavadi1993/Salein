@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ import ir.kitgroup.saleinOrder.Fragments.MobileView.InVoiceDetailMobileFragment;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
+import ir.kitgroup.saleinOrder.models.Image;
 import ir.kitgroup.saleinOrder.models.OrderType;
 
 import ir.kitgroup.saleinOrder.DataBase.Tables;
@@ -117,6 +119,9 @@ public class LauncherOrganizationFragment extends Fragment {
         dialog.setCancelable(false);
 
         textMessageDialog = dialog.findViewById(R.id.tv_message);
+        ImageView ivIconDialog = dialog.findViewById(R.id.iv_icon);
+        ivIconDialog.setImageResource(R.drawable.saleinorder_png);
+
         btnOkDialog = dialog.findViewById(R.id.btn_ok);
         btnNoDialog = dialog.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> dialog.dismiss());
@@ -195,50 +200,65 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         binding.busyTable.setOnClickListener(v -> {
+            binding.txtError.setText("");
             filter("busy");
             tablesList.clear();
             ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && t.ACT);
             tablesList.addAll(arrayList);
+            if (tablesList.size()==0)
+                binding.txtError.setText("هیچ میز مشغولی موجود نمی باشد. ");
             tableAdapter.notifyDataSetChanged();
         });
 
 
         binding.reserveTable.setOnClickListener(v -> {
+            binding.txtError.setText("");
             filter("reserve");
             tablesList.clear();
             ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && t.RSV);
             tablesList.addAll(arrayList);
+            if (tablesList.size()==0)
+                binding.txtError.setText("هیچ میز رزرو شده ای موجود نمی باشد. ");
             tableAdapter.notifyDataSetChanged();
         });
 
         binding.vacantTable.setOnClickListener(v -> {
+            binding.txtError.setText("");
             filter("vacant");
             tablesList.clear();
             ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null && !t.ACT && !t.RSV);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
+            if (tablesList.size()==0)
+                binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
 
         binding.wholeTable.setOnClickListener(v -> {
+            binding.txtError.setText("");
             filter("whole");
             tablesList.clear();
             ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> !t.N.equals("بیرون بر") && t.C == null);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
+            if (tablesList.size()==0)
+                binding.txtError.setText("هیچ میزی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
 
 
         binding.getOutOrder.setOnClickListener(v -> {
+            binding.txtError.setText("");
             tablesList.clear();
             filter("getOut");
             tablesList.clear();
             List<Tables> arrayList=Select.from(Tables.class).list();
             CollectionUtils.filter(arrayList, t -> t.N!=null && t.N.equals("بیرون بر") && t.GO != null);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
+            if (tablesList.size()==0)
+                binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
 
@@ -256,6 +276,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         tableAdapter.OnclickShowDialog((Inv_GUID, position, type) -> {
+
             textMessageDialog.setText("آیا مایل به حذف سفارش می باشید؟");
 
 
@@ -269,7 +290,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
         tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID,I_GUID) -> {
-
+            binding.txtError.setText("");
             if (Reserve) {
 
                 Bundle bundle = new Bundle();
@@ -345,10 +366,10 @@ public class LauncherOrganizationFragment extends Fragment {
         getOutOrderAdapter.setOnClickItemListener((code, ty) -> {
 
             if (code == 0 && ty == 0) {
-                List<Tables> tables = Select.from(Tables.class).list();
-                CollectionUtils.filter(tables, t -> t.C == null && !t.N.equals("بیرون بر"));
+
+                filter("whole");
                 tablesList.clear();
-                tablesList.addAll(tables);
+                tablesList.addAll(AllTable);
                 tableAdapter.notifyDataSetChanged();
                 return;
             } else if (ty == 100) {

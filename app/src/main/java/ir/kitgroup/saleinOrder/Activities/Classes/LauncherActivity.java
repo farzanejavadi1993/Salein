@@ -37,10 +37,10 @@ public class LauncherActivity extends AppCompatActivity {
     private Dialog dialog;
     private TextView textExit;
     private ImageView ivIcon;
-    private int imageIconDialog;
+    private int imageIconDialog=R.drawable.saleinorder_png;
     public static Typeface iranSansBold;
     public static String name;
-    public  static    String namePackage;
+    public  static  String namePackage;
 
 
     private int type = 0;

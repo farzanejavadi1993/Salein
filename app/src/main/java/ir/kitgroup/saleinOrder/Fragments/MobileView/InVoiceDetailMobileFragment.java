@@ -110,7 +110,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Variable Dialog
     private Dialog dialogDelete;
-    private int imageIconDialog = R.drawable.saleinicon128;
+    private int imageIconDialog = R.drawable.saleinorder_png;
     //endregion Variable Dialog
 
 

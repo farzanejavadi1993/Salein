@@ -119,7 +119,7 @@ public class PaymentMobileFragment extends Fragment {
     private Double longitude2 = 0.0;
 
     public static Boolean setADR1 = false;
-    private int imageIconDialog = R.drawable.saleinicon128;
+    private int imageIconDialog = R.drawable.saleinorder_png;
 
 
     private double lat = 0.0;
@@ -1053,6 +1053,7 @@ public class PaymentMobileFragment extends Fragment {
                     Tables tables = new Tables();
 
                     tables.N = "بیرون بر";
+                    tables.C=Ord_TYPE;
                     tables.ACT = false;
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";

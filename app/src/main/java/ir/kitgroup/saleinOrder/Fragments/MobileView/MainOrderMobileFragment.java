@@ -199,7 +199,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
     private int imageLogo=R.drawable.salein;
-    private int imgIconDialog=R.drawable.saleinicon128;
+    private int imgIconDialog=R.drawable.saleinorder_png;
     private int imgBackground = 0;
     private String nameCompany="Salein Order";
 

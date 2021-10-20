@@ -8,20 +8,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <ImageView
             android:id="@+id/iv_icon"
             android:layout_width="100dp"
-            android:layout_height="87sp"
+            android:layout_height="92dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/saleinicon128"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="300sp"
-        android:layout_margin="10sp">
+        android:layout_marginBottom="@dimen/margin10"
+        android:layout_marginLeft="@dimen/margin10"
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

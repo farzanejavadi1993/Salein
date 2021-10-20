@@ -25,7 +25,7 @@
             android:layout_height="@dimen/logo_size"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin10"
-            android:src="@drawable/application_logo1"
+            android:src="@drawable/saleinorder_png"
             tools:ignore="ContentDescription" />
 
         <TextView

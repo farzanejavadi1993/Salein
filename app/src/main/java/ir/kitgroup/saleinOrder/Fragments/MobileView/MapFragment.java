@@ -104,7 +104,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     private Dialog dialogAddress;
-    private int imgIconDialog=R.drawable.saleinicon128;
+    private int imgIconDialog=R.drawable.saleinorder_png;
 
 
     private String address = "";

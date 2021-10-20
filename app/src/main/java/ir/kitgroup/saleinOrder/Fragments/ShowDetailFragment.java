@@ -23,7 +23,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-    private int placeHolderImage;
+    private int placeHolderImage=R.drawable.saleinorder_icon;
     private ActivityDetailBinding binding;
     @Nullable
     @Override

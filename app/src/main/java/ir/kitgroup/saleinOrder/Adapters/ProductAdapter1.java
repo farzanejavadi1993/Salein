@@ -81,7 +81,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private int fontSize = 0;
     private int fontLargeSize = 0;
 
-    private int placeHolderImage=R.drawable.salein;
+    private int placeHolderImage=R.drawable.saleinorder_icon;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 

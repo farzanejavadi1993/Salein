@@ -12,8 +12,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,61 +61,56 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
         holder.tvOrderType.setText(orderType.getN());
 
 
-
-        if (!list.get(position).Click){
+        if (!list.get(position).Click) {
             holder.cardOrderType.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
 
-        }else {
+        } else {
             holder.cardOrderType.setBackgroundColor(context.getResources().getColor(R.color.orange_dark));
         }
 
 
-        list.get(position).Click=false;
+        list.get(position).Click = false;
 
+
+        holder.cardOrderType.setLongClickable(true);
+
+        holder.cardOrderType.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.longClick++;
+                ArrayList<OrderType> arrayList = new ArrayList<>(list);
+                CollectionUtils.filter(arrayList, a -> a.Click);
+                if (arrayList.size() > 0)
+                    list.get(list.indexOf(arrayList.get(0))).Click = false;
+                list.get(position).Click = true;
+                notifyDataSetChanged();
+                clickItem.onRowClick(list.get(position).getC(), 100);
+
+                return false;
+            }
+        });
         holder.cardOrderType.setOnClickListener(view -> {
 
-            if (!list.get(position).Click){
 
+            if (holder.longClick == 0) {
+
+                ArrayList<OrderType> arrayList = new ArrayList<>(list);
+                CollectionUtils.filter(arrayList, a -> a.Click);
+                if (arrayList.size() > 0)
+                    list.get(list.indexOf(arrayList.get(0))).Click = false;
                 notifyDataSetChanged();
-
-
-                if (holder.longClick>=1) {
-                    holder.longClick=0;
-                    holder.cardOrderType.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
-                    clickItem.onRowClick(0, 0);
-                } else {
-
-                    //go to order fragment
-                    clickItem.onRowClick(list.get(position).getC(), list.get(position).getTy());
-
-                }
-            }
-
-
-            else {
-                //get order
-                clickItem.onRowClick(list.get(position).getC(), 100);
+                clickItem.onRowClick(list.get(position).getC(), list.get(position).getTy());
+            } else {
+                ArrayList<OrderType> arrayList = new ArrayList<>(list);
+                CollectionUtils.filter(arrayList, a -> a.Click);
+                if (arrayList.size() > 0)
+                    list.get(list.indexOf(arrayList.get(0))).Click = false;
                 notifyDataSetChanged();
-
-
+                holder.longClick=0;
+                clickItem.onRowClick(0, 0);
             }
 
 
-
-
-
-
-
-        });
-
-        holder.cardOrderType.setOnLongClickListener(v -> {
-            for(int i=0 ; i< list.size() ;i++){
-                list.get(i).Click=false;
-            }
-            list.get(position).Click=true;
-            holder.longClick++;
-
-            return false;
         });
 
 
@@ -130,7 +127,6 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
         private final RelativeLayout cardOrderType;
         private final TextView tvOrderType;
         private int longClick = 0;
-
 
 
         public viewHolder(View itemView) {
