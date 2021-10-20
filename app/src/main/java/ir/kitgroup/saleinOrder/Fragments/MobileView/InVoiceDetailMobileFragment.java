@@ -177,9 +177,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
         }
 
 
-        binding.tvNameCustomer.setTextSize(fontSize);
+      binding.tvNameCustomer.setTextSize(fontSize);
         binding.txtDate.setTextSize(fontSize);
-        binding.txtTypeOrder.setTextSize(fontSize);
         binding.txtTableNumber.setTextSize(fontSize);
 
 
@@ -290,7 +289,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         if (App.mode == 2) {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
-            binding.txtTypeOrder.setVisibility(View.GONE);
+
         }
         //endregion Configuration Client Application
 
@@ -879,7 +878,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         for (int j = 0; j < invDetails.size(); j++) {
                                             if (invDetails.get(j).INV_DET_DESCRIBTION != null && invDetails.get(j).INV_DET_DESCRIBTION.equals("توزیع")) {
 
-                                                if (type.equals("1") || edit) {
+                                                if (type.equals("1")) {
                                                     sumTransport = Double.parseDouble(invDetails.get(j).INV_DET_TOTAL_AMOUNT);
                                                     binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
                                                     binding.layoutTransport.setVisibility(View.VISIBLE);

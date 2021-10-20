@@ -64,6 +64,7 @@ import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.Util.Utilities;
 import ir.kitgroup.saleinOrder.models.ModelDate;
+import ir.kitgroup.saleinOrder.models.ModelTable;
 import ir.kitgroup.saleinOrder.models.Setting;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
 import ir.kitgroup.saleinOrder.models.ModelSetting;
@@ -854,7 +855,10 @@ public class PaymentMobileFragment extends Fragment {
             rlButtons.setVisibility(View.VISIBLE);
             btnReturned.setVisibility(View.GONE);
 
-            dialogSendOrder.show();
+            if (App.mode == 2)
+                dialogSendOrder.show();
+            else
+                getTable1();
 
         });
 
@@ -907,7 +911,7 @@ public class PaymentMobileFragment extends Fragment {
             }
 
 
-            CollectionUtils.filter(invDetails,i->(i.INV_DET_DESCRIBTION!=null && !i.INV_DET_DESCRIBTION.equals("توزیع")||i.INV_DET_DESCRIBTION==null));
+            CollectionUtils.filter(invDetails, i -> (i.INV_DET_DESCRIBTION != null && !i.INV_DET_DESCRIBTION.equals("توزیع") || i.INV_DET_DESCRIBTION == null));
             for (int i = 0; i < invDetails.size(); i++) {
 
                 ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
@@ -1053,7 +1057,7 @@ public class PaymentMobileFragment extends Fragment {
                     Tables tables = new Tables();
 
                     tables.N = "بیرون بر";
-                    tables.C=Ord_TYPE;
+                    tables.C = Ord_TYPE;
                     tables.ACT = false;
                     Account account = Select.from(Account.class).first();
                     tables.GO = account != null ? account.N : "";
@@ -1639,5 +1643,50 @@ public class PaymentMobileFragment extends Fragment {
 
     }
 
+    private void getTable1() {
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+        try {
+            compositeDisposable.add(
+                    App.api.getTable1(userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelTable>() {
+                                }.getType();
+                                ModelTable iDs = null;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception ignore) {
+                                }
+                                if (iDs != null) {
+                                    ArrayList<Tables> Tables = new ArrayList<>(iDs.getTables());
+                                    CollectionUtils.filter(Tables, t -> t.I.equals(Tbl_GUID));
+                                    if (Tables.size() > 0 && Tables.get(0).RSV) {
+                                        Toast.makeText(getActivity(), "این میز رزرو شده", Toast.LENGTH_SHORT).show();
+                                        binding.progressBar.setVisibility(View.GONE);
+                                        return;
+                                    }
+
+                                }
+
+                                binding.progressBar.setVisibility(View.GONE);
+                                dialogSendOrder.show();
+
+                            }, throwable -> {
+                                binding.progressBar.setVisibility(View.GONE);
+                                dialogSendOrder.show();
+
+                            })
+            );
+        } catch (Exception e) {
+            binding.progressBar.setVisibility(View.GONE);
+            dialogSendOrder.show();
+        }
+
+    }
 
 }

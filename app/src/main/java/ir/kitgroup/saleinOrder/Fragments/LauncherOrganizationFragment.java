@@ -322,6 +322,8 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Tbl_GUID", T_GUID);
                 bundle.putString("Ord_TYPE", String.valueOf(OrderType));
                 bundle.putString("Inv_GUID", T_GUID);
+                bundle.putString("Acc_NAME", "");
+                bundle.putString("Acc_GUID", "");
                 bundle.putBoolean("EDIT",false);
 
 
@@ -370,6 +372,8 @@ public class LauncherOrganizationFragment extends Fragment {
                 filter("whole");
                 tablesList.clear();
                 tablesList.addAll(AllTable);
+                if (tablesList.size()==0)
+                    binding.txtError.setText("هیچ میزی موجود نمی باشد.");
                 tableAdapter.notifyDataSetChanged();
                 return;
             } else if (ty == 100) {
@@ -377,6 +381,8 @@ public class LauncherOrganizationFragment extends Fragment {
                 List<Tables> tbls = Select.from(Tables.class).list();
                 CollectionUtils.filter(tbls, t -> t.C != null && t.C.equals(code));
                 tablesList.addAll(tbls);
+                if (tablesList.size()==0)
+                    binding.txtError.setText("هیچ میزی موجود نمی باشد.");
                 tableAdapter.notifyDataSetChanged();
                 return;
             }
@@ -386,6 +392,8 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putString("Tbl_GUID", "");
             bundle.putString("Ord_TYPE", String.valueOf(code));
             bundle.putString("Inv_GUID", "");
+            bundle.putString("Acc_GUID", "");
+            bundle.putString("Acc_NAME", "");
 
 
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -420,10 +428,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
     private void getTypeOrder() {
 
-
-
-        binding.progressbar.setVisibility(View.VISIBLE);
-
         try {
             compositeDisposable.add(
                     App.api.getOrderType1( userName, passWord)
@@ -444,12 +448,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                     error = error + "\n" + "مدل دریافت شده از نوع سفارش نا معتبر است";
                                     showError(error);
-                                    binding.progressbar.setVisibility(View.GONE);
+
                                     return;
                                 }
 
                                 if (iDs == null) {
-
                                     error = error + "\n" + "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
                                     showError(error);
                                 } else {
@@ -462,20 +465,20 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                 }
 
-                                binding.progressbar.setVisibility(View.GONE);
+
 
 
                             }, throwable -> {
                                 error = error + "\n" + "خطا در ارتباط با سرور";
                                 showError(error);
-                                binding.progressbar.setVisibility(View.GONE);
+
 
                             })
             );
         } catch (Exception e) {
             error = error + "\n" + "خطا در اتصال به سرور";
             showError(error);
-            binding.progressbar.setVisibility(View.GONE);
+
         }
 
     }
@@ -550,6 +553,8 @@ public class LauncherOrganizationFragment extends Fragment {
                                     AllTable.clear();
                                     AllTable.addAll(iDs.getTables());
                                     tableAdapter.notifyDataSetChanged();
+                                    if (tablesList.size()==0)
+                                        binding.txtError.setText("هیچ میزی موجود نمی باشد.");
                                     binding.progressbar.setVisibility(View.GONE);
 
 

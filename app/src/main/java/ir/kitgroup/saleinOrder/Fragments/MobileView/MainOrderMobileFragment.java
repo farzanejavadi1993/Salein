@@ -56,10 +56,9 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 import java.util.UUID;
@@ -84,7 +83,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
-import ir.kitgroup.saleinOrder.models.ModelInvoice;
+
 import ir.kitgroup.saleinOrder.models.Setting;
 import ir.kitgroup.saleinOrder.DataBase.User;
 
@@ -143,6 +142,7 @@ public class MainOrderMobileFragment extends Fragment {
 
     private ArrayList<ProductLevel2> productLevel2List;
     private ProductLevel2Adapter productLevel2Adapter;
+
 
 
     private ArrayList<Product> productList;
@@ -550,7 +550,6 @@ public class MainOrderMobileFragment extends Fragment {
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
 
-
         if (productAdapter != null) {
             productAdapter.notifyDataSetChanged();
             productLevel1Adapter.notifyDataSetChanged();
@@ -908,6 +907,7 @@ public class MainOrderMobileFragment extends Fragment {
 
             binding.progressbar.setVisibility(View.VISIBLE);
             productList.clear();
+
             productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
@@ -959,7 +959,20 @@ public class MainOrderMobileFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            getSearchProduct(s.toString());
+                if (s.toString().isEmpty()){
+                    productList.clear();
+
+                    if (productListData.size() > 0)
+                        for (int i = 0; i < 18; i++) {
+                            if (productListData.size() > i)
+                                productList.add(productListData.get(i));
+                        }
+                    productAdapter.setMaxSale(maxSales);
+                    productAdapter.notifyDataSetChanged();
+                }else {
+                    getSearchProduct(s.toString());
+                }
+
             }
 
             @Override
@@ -1313,6 +1326,7 @@ public class MainOrderMobileFragment extends Fragment {
                                 }
 
 
+
                                 productAdapter.setMaxSale(maxSales);
                                 productAdapter.notifyDataSetChanged();
 
@@ -1320,7 +1334,8 @@ public class MainOrderMobileFragment extends Fragment {
                                 binding.progressbar.setVisibility(View.GONE);
 
 
-                            }, throwable -> {
+                            }
+                            , throwable -> {
                                 error = error + "\n" + "خطا در ارتباط با سرور";
                                 showError(error);
                                 binding.progressbar.setVisibility(View.GONE);
@@ -1492,6 +1507,7 @@ public class MainOrderMobileFragment extends Fragment {
                     productList.addAll(items);
 
 
+
                     productAdapter.notifyDataSetChanged();
 
 
@@ -1652,8 +1668,6 @@ public class MainOrderMobileFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است", Toast.LENGTH_SHORT).show();
-                                    customProgress.hideProgress();
                                     return;
 
                                 }
@@ -1664,17 +1678,10 @@ public class MainOrderMobileFragment extends Fragment {
                                     }.getType();
                                     ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
-                                    if (iDs0.getLogs() != null) {
 
-                                        String description = iDs0.getLogs().get(0).getDescription();
-                                       // Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
 
-                                    } else {
-                                        Toast.makeText(getActivity(), "لیست دریافت شده از مشتریان نا معتبر می باشد", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                } else {
+                                }
+                                else {
 
                                     if (type==0){
                                         accList.clear();
@@ -1695,14 +1702,13 @@ public class MainOrderMobileFragment extends Fragment {
                                 customProgress.hideProgress();
 
                             }, throwable -> {
-                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت مشتریان", Toast.LENGTH_SHORT).show();
+
 
 
                             })
             );
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "خطا در اتصال به سرور برای دریافت مشتریان", Toast.LENGTH_SHORT).show();
-            customProgress.hideProgress();
+
         }
     }
 
@@ -1795,15 +1801,39 @@ public class MainOrderMobileFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                              int t=0;
+                                        Gson gson = new Gson();
+                                        Type typeModelProduct = new TypeToken<ModelProduct>() {
+                                        }.getType();
+                                        ModelProduct iDs;
 
-                            }, throwable -> {
-                                int t=0;
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                        } catch (Exception e) {
+                                            return;
+                                         }
 
+                                        if (iDs == null) {
+                                            return;
+                                        }
+
+                                        productList.clear();
+                                        CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
+                                        if (iDs.getProductList().size() > 0)
+                                            for (int i = 0; i < 18; i++) {
+                                                if (iDs.getProductList().size() > i)
+                                                    productList.add(iDs.getProductList().get(i));
+                                            }
+                                        productAdapter.setMaxSale(maxSales);
+                                        productAdapter.notifyDataSetChanged();
+
+
+
+
+                                    }
+                                    , throwable -> {
                             })
             );
         } catch (Exception e) {
-            int t=0;
         }
 
     }

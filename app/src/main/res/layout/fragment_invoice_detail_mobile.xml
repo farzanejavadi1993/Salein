@@ -28,11 +28,11 @@
                 android:id="@+id/txt_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="@dimen/margin10"
                 android:layout_marginBottom="8dp"
+                android:textStyle="bold"
                 android:textColor="@color/medium_color"
                 android:textSize="@dimen/text_medium_mobile_size" />
             <TextView
@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin10"
                 android:fontFamily="@font/iransans"
-                android:hint="@string/name_customer"
                 android:textColor="@color/medium_color"
+                android:textStyle="bold"
                 android:textSize="11sp" />
             <TextView
 
@@ -56,19 +56,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin10"
                 android:layout_marginRight="@dimen/margin10"
+                android:lineSpacingExtra="16dp"
                 android:textColor="@color/medium_color"
+                android:textStyle="bold"
                 android:textSize="@dimen/text_medium_mobile_size" />
-            <TextView
 
-                android:layout_toLeftOf="@+id/txt_table_number"
-                android:layout_centerVertical="true"
-                android:id="@+id/txt_type_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/margin10"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_medium_mobile_size" />
 
 
             <TextView
@@ -78,7 +70,6 @@
                 android:id="@+id/txt_deleteAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="@dimen/margin10"
                 android:layout_marginBottom="8dp"
