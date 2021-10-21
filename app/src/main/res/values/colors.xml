@@ -57,6 +57,7 @@
     <color name="white_light">#fafafa</color>
     <color name="orange_light">#F39E83</color>
     <color name="orange_dark">#A17061</color>
+    <color name="orange">#FA835F</color>
 
 
 </resources>

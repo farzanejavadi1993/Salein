@@ -1,286 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout >
+<layout>
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
-    android:clickable="true"
-    android:focusable="true"
-    tools:ignore="RedundantNamespace">
-
-    <TextView
-        android:id="@+id/txtError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="@color/red_table"
-        android:textSize="12sp" />
-
-    <LinearLayout
-        android:id="@+id/viewLauncher"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        tools:ignore="RedundantNamespace">
 
+        <TextView
+            android:id="@+id/txtError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/red_table"
+            android:textSize="12sp" />
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/viewLauncher"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:elevation="4sp"
-            tools:targetApi="lollipop">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txt_title_toolbar"
-                style="@style/launcher_toolbar_TextView"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                android:elevation="4sp"
+                tools:targetApi="lollipop">
+
+                <TextView
+                    android:id="@+id/txt_title_toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:gravity="center"
+                    android:lineSpacingExtra="16dp"
+                    android:text="@string/setting"
+                    android:textColor="@color/medium_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+
+                    />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/l_profile"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="22dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tv_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@+id/iv_profile"
+                    android:text="@string/info_account"
+                    android:textColor="#474747"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_profile"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    tools:ignore="ContentDescription" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="#ccc" />
+
+            <LinearLayout
+                android:id="@+id/btnCredit"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="22dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tvCredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/add_credit"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_normal_mobile_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/club"
+                    tools:ignore="ContentDescription" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="#ccc" />
+
+            <LinearLayout
+                android:id="@+id/btnComment"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="22dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tvComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/my_comment"
+                    android:textColor="#474747"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_comment"
+                    tools:ignore="ContentDescription" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="#ccc" />
+
+
+            <LinearLayout
+                android:id="@+id/btn_order_list"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin10"
                 android:layout_marginRight="@dimen/normal_left_right_margin"
-                android:gravity="center"
-                android:text="@string/setting"
-                android:textStyle="bold"
-                />
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tv_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/my_order"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_normal_mobile_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_buylist"
+                    tools:ignore="ContentDescription" />
 
 
-        </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="@dimen/normal_left_right_margin"
+                android:layout_marginRight="@dimen/normal_left_right_margin"
+                android:background="#ccc" />
+
+            <LinearLayout
+                android:id="@+id/btn_support"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="@dimen/normal_left_right_margin"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="@dimen/normal_left_right_margin"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tv_supprt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:text="پشتیبانی"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_normal_mobile_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_support"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_support"
+                    tools:ignore="ContentDescription" />
 
 
+            </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/l_profile"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:id="@+id/tv_profile"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/iv_profile"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/info_account"
-                android:textColor="#474747"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-            <ImageView
-                android:layout_centerVertical="true"
-                android:id="@+id/iv_profile"
-                android:layout_alignParentRight="true"
-                android:padding="5dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_profile"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:padding="8dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_fi_rr_angle_small_left"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
-            android:background="#ccc" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:id="@+id/tvCredit"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_credit"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_normal_mobile_size"
-                android:textStyle="bold" />
-            <ImageView
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/club"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="@dimen/normal_left_right_margin"
+                android:layout_marginRight="@dimen/normal_left_right_margin"
+                android:background="#ccc" />
 
 
         </LinearLayout>
-        <View
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogOut"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
-            android:background="#ccc" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="22dp"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:id="@+id/tvComment"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_comment"
-                android:textColor="#474747"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-            <ImageView
-                android:padding="5dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_comment"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
-
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
-            android:background="#ccc" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginLeft="@dimen/normal_left_right_margin"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="@dimen/normal_left_right_margin"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:id="@+id/btn_order_list"
-            android:paddingBottom="5dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:id="@+id/tv_order"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_order"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_normal_mobile_size"
-                android:textStyle="bold" />
-            <ImageView
-                android:padding="5dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_buylist"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
-
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="@dimen/normal_left_right_margin"
-            android:layout_marginRight="@dimen/normal_left_right_margin"
-            android:background="#ccc" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginLeft="@dimen/normal_left_right_margin"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_marginRight="@dimen/normal_left_right_margin"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:id="@+id/btn_support"
-            android:paddingBottom="5dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:id="@+id/tv_supprt"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="پشتیبانی"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_normal_mobile_size"
-                android:textStyle="bold" />
-            <ImageView
-                android:id="@+id/iv_support"
-                android:padding="5dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_support"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                tools:ignore="ContentDescription" />
-
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="@dimen/normal_left_right_margin"
-            android:layout_marginRight="@dimen/normal_left_right_margin"
-            android:background="#ccc" />
-
-
-    </LinearLayout>
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogOut"
-        android:fontFamily="@font/iransans"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="22dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginRight="22dp"
-        android:backgroundTint="@color/red_table"
-        android:text="@string/logout"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_xx_large_mobile_size"
-        app:strokeColor="@color/red_table"
-        app:strokeWidth="1dp"
-        tools:targetApi="lollipop" />
-</RelativeLayout>
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/red_table"
+            android:fontFamily="@font/iransans"
+            android:text="@string/logout"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_xx_large_mobile_size"
+            app:strokeColor="@color/red_table"
+            app:strokeWidth="1dp"
+            tools:targetApi="lollipop" />
+    </RelativeLayout>
 
 </layout>
 
