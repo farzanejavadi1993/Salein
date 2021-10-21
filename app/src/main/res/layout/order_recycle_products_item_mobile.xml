@@ -43,23 +43,21 @@
                 android:layout_margin="@dimen/margin10">
 
                 <ImageView
-
                     android:id="@+id/iv_discount"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_margin="4dp"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:rotationY="180"
                     android:src="@drawable/ic_discount" />
 
-                <TextView android:id="@+id/order_recycle_item_product_discountPercent"
+                <TextView
+
+                    android:text="20%"
+                    android:id="@+id/order_recycle_item_product_discountPercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="@dimen/margin10"
-                    android:gravity="right"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
             </RelativeLayout>
 
 
