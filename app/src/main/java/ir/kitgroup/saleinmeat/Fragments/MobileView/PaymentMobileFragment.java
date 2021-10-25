@@ -1151,17 +1151,18 @@ public class PaymentMobileFragment extends Fragment {
                     btnReturned.setVisibility(View.VISIBLE);
 
 
-                    String name;
-                    try {
-                        name = LauncherActivity.name.split("ir.kitgroup.")[1];
-                        sharedPreferences.edit().putString(name, "").apply();
-                    } catch (Exception ignore) {
 
-                    }
 
 
                     if (message == 1) {
 
+                        String name;
+                        try {
+                            name = LauncherActivity.name.split("ir.kitgroup.")[1];
+                            sharedPreferences.edit().putString(name, "").apply();
+                        } catch (Exception ignore) {
+
+                        }
                         List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                                 new_Inv_GUID + "'").list();
                         for (int i = 0; i < invoiceDetails.size(); i++) {

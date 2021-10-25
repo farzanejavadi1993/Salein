@@ -321,9 +321,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
             @Override
             public void onClick(View v) {
                 Account accountORG = Select.from(Account.class).first();
-                if (edit_address.equals("1")) {
+                if (edit_address!=null &&edit_address.equals("1")) {
 
-                    if (accountORG.ADR != null && accountORG.ADR2 == null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
+                    if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
                         linearButtons.setVisibility(View.VISIBLE);
                     }
 

@@ -30,7 +30,7 @@ public class App extends Application {
     public static Context context;
     private String baseUrl = "http://192.168.20.8:96/api/REST/";
     public static Retrofit retrofit;
-    public static int mode = 1;//1  ordOrganization  //2  OrdClient
+    public static int mode = 2;//1  ordOrganization  //2  OrdClient
 
 
 

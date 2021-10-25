@@ -91,32 +91,37 @@ public class LoginClientFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
-                messageWelcome = "به سالین دمو خوش آمدید";
-                imageLogo = R.drawable.salein;
+        try {
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
+                    messageWelcome = "به سالین دمو خوش آمدید";
+                    imageLogo = R.drawable.salein;
 
-                break;
+                    break;
 
-            case "ir.kitgroup.saleintop":
-                messageWelcome = "به رستوران تاپ کباب خوش آمدید";
-                imageLogo = R.drawable.top;
+                case "ir.kitgroup.saleintop":
+                    messageWelcome = "به رستوران تاپ کباب خوش آمدید";
+                    imageLogo = R.drawable.top;
 
-                break;
+                    break;
 
 
-            case "ir.kitgroup.saleinmeat":
-                messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
-                imageLogo = R.drawable.goosht;
+                case "ir.kitgroup.saleinmeat":
+                    messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
+                    imageLogo = R.drawable.goosht;
 
-                break;
+                    break;
 
-            case "ir.kitgroup.saleinnoon":
-                messageWelcome = "به کافه نون دنیوی خوش آمدید";
-                imageLogo = R.drawable.noon;
+                case "ir.kitgroup.saleinnoon":
+                    messageWelcome = "به کافه نون دنیوی خوش آمدید";
+                    imageLogo = R.drawable.noon;
 
-                break;
+                    break;
+            }
+        }catch (Exception ignore){
+
         }
+
 
 
         if (App.mode == 2) {
