@@ -117,7 +117,7 @@
                                 app:siBorderColor="#EEEEF1" />
 
                             <TextView
-                               android:layout_centerHorizontal="true"
+                                android:layout_centerHorizontal="true"
                                 android:layout_below="@+id/iv_icon_company"
                                 android:id="@+id/tv_company"
                                 android:layout_width="wrap_content"
@@ -132,7 +132,7 @@
                         <View
                             android:background="#ccc"
                             android:layout_marginBottom="@dimen/margin4"
-                           android:layout_marginTop="@dimen/margin4"
+                            android:layout_marginTop="@dimen/margin4"
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"/>
                         <RelativeLayout
@@ -237,9 +237,8 @@
 
             </com.google.android.material.card.MaterialCardView>
             <androidx.recyclerview.widget.RecyclerView
-                android:background="#fff"
                 android:visibility="gone"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="64dp"
                 android:id="@+id/accountRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

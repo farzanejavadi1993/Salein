@@ -168,7 +168,7 @@ public class LauncherActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().popBackStack();
         }
-        else if (LauncherActivity.namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        else if (LauncherActivity.namePackage!=null && LauncherActivity.namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             for (int i=0;i<size;i++){

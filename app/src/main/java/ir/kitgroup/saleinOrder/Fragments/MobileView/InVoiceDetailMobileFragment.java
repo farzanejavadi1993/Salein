@@ -274,7 +274,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Ord_TYPE = bundle.getString("Ord_TYPE");
         try {
             Acc_NAME = bundle.getString("Acc_NAME");
-            binding.tvNameCustomer.setText(Acc_NAME);
+
+                binding.tvNameCustomer.setText(Acc_NAME);
+
 
         } catch (Exception ignore) {
         }
@@ -373,7 +375,9 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             if (App.mode == 1) {
                 Account acc = Select.from(Account.class).first();
-                binding.tvNameCustomer.setText(acc != null ? acc.N : "");
+
+
+                    binding.tvNameCustomer.setText(acc != null ? acc.N :"");
             }
 
 
@@ -934,7 +938,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                             Acc_GUID = iDs.getInvoice().get(0).ACC_CLB_UID;
                                         }
 
-                                        binding.tvNameCustomer.setText(Acc_NAME);
+
+                                            binding.tvNameCustomer.setText(Acc_NAME);
 
                                         if (status != null && (status.equals("*") || invFinal)) {
                                             binding.layoutEditDelete.setVisibility(View.GONE);

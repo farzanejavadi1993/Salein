@@ -237,10 +237,10 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Delete InvoiceDetail UnNecessary
         if (App.mode==1){
-           List<InvoiceDetail> invDetail= Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
-           for (int i=0;i<invDetail.size();i++){
-               InvoiceDetail.delete(invDetail.get(i));
-           }
+            List<InvoiceDetail> invDetail= Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
+            for (int i=0;i<invDetail.size();i++){
+                InvoiceDetail.delete(invDetail.get(i));
+            }
         }
 
         //region Delete InvoiceDetail UnNecessary
@@ -265,36 +265,36 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-              switch (LauncherActivity.name) {
-            case "ir.kitgroup.salein":
-                nameCompany = "سالین دمو";
-                imageLogo = R.drawable.salein;
-                imgIconDialog = R.drawable.saleinicon128;
-                break;
+            switch (LauncherActivity.name) {
+                case "ir.kitgroup.salein":
+                    nameCompany = "سالین دمو";
+                    imageLogo = R.drawable.salein;
+                    imgIconDialog = R.drawable.saleinicon128;
+                    break;
 
-            case "ir.kitgroup.saleintop":
-                nameCompany = " تاپ کباب";
-                imageLogo = R.drawable.top;
-              //  imgBackground = R.drawable.top_pas;
-                imgIconDialog = R.drawable.top_png;
-                break;
-
-
-            case "ir.kitgroup.saleinmeat":
-                nameCompany = " گوشت دنیوی";
-                imageLogo = R.drawable.goosht;
-                //imgBackground = R.drawable.donyavi_pas;
-                imgIconDialog = R.drawable.meat_png;
-                linkUpdate = "https://b2n.ir/b37054";
-                break;
+                case "ir.kitgroup.saleintop":
+                    nameCompany = " تاپ کباب";
+                    imageLogo = R.drawable.top;
+                    //  imgBackground = R.drawable.top_pas;
+                    imgIconDialog = R.drawable.top_png;
+                    break;
 
 
-            case "ir.kitgroup.saleinnoon":
-                nameCompany = "کافه نون";
-                imageLogo = R.drawable.noon;
-                imgIconDialog = R.drawable.noon;
-                break;
-        }
+                case "ir.kitgroup.saleinmeat":
+                    nameCompany = " گوشت دنیوی";
+                    imageLogo = R.drawable.goosht;
+                    //imgBackground = R.drawable.donyavi_pas;
+                    imgIconDialog = R.drawable.meat_png;
+                    linkUpdate = "https://b2n.ir/b37054";
+                    break;
+
+
+                case "ir.kitgroup.saleinnoon":
+                    nameCompany = "کافه نون";
+                    imageLogo = R.drawable.noon;
+                    imgIconDialog = R.drawable.noon;
+                    break;
+            }
         }catch (Exception ignore){
 
         }
@@ -384,7 +384,7 @@ public class MainOrderMobileFragment extends Fragment {
                     if (s.toString().isEmpty()) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
                         binding.edtNameCustomer.setHint("نام مشترک");
-                    } else {
+                    } else if (s.toString().length()>5){
 
                         getAccountSearch1(s.toString(),0);
                     }
@@ -394,7 +394,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-
+                    int p=0;
                 }
             };
 
@@ -674,8 +674,8 @@ public class MainOrderMobileFragment extends Fragment {
             dialogSync.dismiss();
             if (LauncherActivity.namePackage.equals("ir.kitgroup.salein"))
                 getFragmentManager().popBackStack();
-                else
-                    getActivity().finish();
+            else
+                getActivity().finish();
 
 
 
@@ -1145,7 +1145,7 @@ public class MainOrderMobileFragment extends Fragment {
                                             binding.orderTxtError.setVisibility(View.VISIBLE);
                                         }
 
-                                        }
+                                    }
                                     , throwable -> {
                                         error =  "فروشگاه تعطیل می باشد.";
                                         showError(error);
@@ -1273,79 +1273,79 @@ public class MainOrderMobileFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeModelProduct = new TypeToken<ModelProduct>() {
-                                }.getType();
-                                ModelProduct iDs;
+                                        Gson gson = new Gson();
+                                        Type typeModelProduct = new TypeToken<ModelProduct>() {
+                                        }.getType();
+                                        ModelProduct iDs;
 
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                } catch (Exception e) {
-                                    error = "مدل دریافت شده از کالاها نا معتبر است";
-                                    showError(error);
-                                    binding.progressbar.setVisibility(View.GONE);
-                                    return;
-                                }
-
-                                if (iDs == null) {
-                                    error = "لیست دریافت شده از کالاها نا معتبر می باشد";
-                                    showError(error);
-                                    binding.progressbar.setVisibility(View.GONE);
-                                    return;
-                                }
-
-                                productList.clear();
-                                CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
-
-
-                                ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
-                                ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                                CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
-                                if (listPrd.size() > 0)
-                                    for (int i = 0; i < listPrd.size(); i++) {
-                                        int position = listPrd.get(i).getKey() - 1;//new position
-                                        int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                                        if (resultPrd_.size() > position) {
-                                            Product itemProduct = resultPrd_.get(position);
-                                            if (index != position) {
-                                                resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                                resultPrd_.set(index, itemProduct);
-
-                                            }
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                        } catch (Exception e) {
+                                            error = "مدل دریافت شده از کالاها نا معتبر است";
+                                            showError(error);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
                                         }
+
+                                        if (iDs == null) {
+                                            error = "لیست دریافت شده از کالاها نا معتبر می باشد";
+                                            showError(error);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        productList.clear();
+                                        CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
+
+
+                                        ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
+                                        ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                                        CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
+                                        if (listPrd.size() > 0)
+                                            for (int i = 0; i < listPrd.size(); i++) {
+                                                int position = listPrd.get(i).getKey() - 1;//new position
+                                                int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                                                if (resultPrd_.size() > position) {
+                                                    Product itemProduct = resultPrd_.get(position);
+                                                    if (index != position) {
+                                                        resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                                        resultPrd_.set(index, itemProduct);
+
+                                                    }
+                                                }
+                                            }
+
+
+                                        productListData.clear();
+                                        productListData.addAll(resultPrd_);
+                                        if (resultPrd_.size() > 0)
+                                            for (int i = 0; i < 18; i++) {
+                                                if (resultPrd_.size() > i)
+                                                    productList.add(resultPrd_.get(i));
+                                            }
+
+
+                                        if (productList.size() == 0) {
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                        }
+
+
+
+                                        productAdapter.setMaxSale(maxSales);
+                                        productAdapter.notifyDataSetChanged();
+
+
+                                        binding.progressbar.setVisibility(View.GONE);
+
+
                                     }
+                                    , throwable -> {
+                                        error = "فروشگاه تعطیل می باشد.";
+                                        showError(error);
+                                        binding.progressbar.setVisibility(View.GONE);
 
-
-                                productListData.clear();
-                                productListData.addAll(resultPrd_);
-                                if (resultPrd_.size() > 0)
-                                    for (int i = 0; i < 18; i++) {
-                                        if (resultPrd_.size() > i)
-                                            productList.add(resultPrd_.get(i));
-                                    }
-
-
-                                if (productList.size() == 0) {
-                                    binding.orderTxtError.setVisibility(View.VISIBLE);
-                                    binding.orderTxtError.setText("هیچ کالایی موجود نیست");
-                                }
-
-
-
-                                productAdapter.setMaxSale(maxSales);
-                                productAdapter.notifyDataSetChanged();
-
-
-                                binding.progressbar.setVisibility(View.GONE);
-
-
-                            }
-                            , throwable -> {
-                                error = "فروشگاه تعطیل می باشد.";
-                                showError(error);
-                                binding.progressbar.setVisibility(View.GONE);
-
-                            })
+                                    })
             );
         } catch (Exception e) {
             error ="خطا در اتصال به سرور برای دریافت کالاها";
@@ -1356,42 +1356,42 @@ public class MainOrderMobileFragment extends Fragment {
 
     private void getSettingPrice(String GUID) {
         try {
-                compositeDisposable.add(
-                        App.api.getSetting1(userName, passWord)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .doOnSubscribe(disposable -> {
-                                })
-                                .subscribe(jsonElement -> {
-                                    Gson gson = new Gson();
-                                    Type typeIDs = new TypeToken<ModelSetting>() {
-                                    }.getType();
-                                    ModelSetting iDs = null;
+            compositeDisposable.add(
+                    App.api.getSetting1(userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelSetting>() {
+                                }.getType();
+                                ModelSetting iDs = null;
 
 
-                                    try {
-                                        iDs = gson.fromJson(jsonElement, typeIDs);
-                                    } catch (Exception ignore) {
-                                    }
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception ignore) {
+                                }
 
 
-                                    if (iDs != null) {
-                                        sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
-                                        maxSales = iDs.getSettings().get(0).MAX_SALE;
-                                        sharedPreferences.edit().putString("maxSale", maxSales).apply();
+                                if (iDs != null) {
+                                    sharedPreferences.edit().putString("priceProduct", iDs.getSettings().get(0).DEFAULT_PRICE_INVOICE).apply();
+                                    maxSales = iDs.getSettings().get(0).MAX_SALE;
+                                    sharedPreferences.edit().putString("maxSale", maxSales).apply();
 
-                                    }
-                                    getProduct1(GUID);
+                                }
+                                getProduct1(GUID);
 
 
-                                }, throwable -> {
+                            }, throwable -> {
 
-                                })
-                );
-            } catch (Exception e) {
-                error = "خطا در اتصال به سرور برای دریافت تنطیمات";
-                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-            }
+                            })
+            );
+        } catch (Exception e) {
+            error = "خطا در اتصال به سرور برای دریافت تنطیمات";
+            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -1745,7 +1745,7 @@ public class MainOrderMobileFragment extends Fragment {
                                             iDs = gson.fromJson(jsonElement, typeModelProduct);
                                         } catch (Exception e) {
                                             return;
-                                         }
+                                        }
 
                                         if (iDs == null) {
                                             return;
@@ -1766,7 +1766,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                                     }
                                     , throwable -> {
-                            })
+                                    })
             );
         } catch (Exception e) {
         }

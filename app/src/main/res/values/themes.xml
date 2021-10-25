@@ -39,6 +39,8 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+
+
     <style name="launcher_toolbar_TextView_portrate" >
         <item name="android:textColor">@color/black_light</item>
         <item name="android:textSize">11sp</item>
