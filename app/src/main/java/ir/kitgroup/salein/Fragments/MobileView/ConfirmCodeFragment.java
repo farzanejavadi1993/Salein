@@ -177,6 +177,11 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     binding.edtV3.requestFocus();
                 }
+                else {
+
+                    binding.edtV1.requestFocus();
+
+                }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +
                         binding.edtV3.getText().toString() +
@@ -208,6 +213,11 @@ public class ConfirmCodeFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV4.requestFocus();
+                }
+                else {
+
+                    binding.edtV2.requestFocus();
+
                 }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +
@@ -241,6 +251,11 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     binding.edtV5.requestFocus();
                 }
+                else {
+
+                    binding.edtV3.requestFocus();
+
+                }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +
                         binding.edtV3.getText().toString() +
@@ -261,10 +276,12 @@ public class ConfirmCodeFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
 
             }
 
@@ -273,6 +290,10 @@ public class ConfirmCodeFragment extends Fragment {
 
                 if (editable.length() == 1) {
                     Util.hideKeyBoard(getActivity(), binding.edtV5);
+                }else {
+
+                    binding.edtV4.requestFocus();
+
                 }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +
@@ -345,7 +366,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-              return;
+            //  return;
             }
             getInquiryAccount(user.userName, user.passWord, mobile);
         });

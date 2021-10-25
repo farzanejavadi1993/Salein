@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -20,7 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -75,7 +77,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.SearchViewAdapter;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
@@ -100,17 +101,18 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private CustomProgress customProgress;
 
 
-    private Boolean setADR1 = false;// If setADR1  Is True Set Address1 In TvAddress(PaymentFragment)
+    private Boolean setADR2 = false;// If setADR1  Is True Set Address1 In TvAddress(PaymentFragment)
+    private Boolean ChooseAddress = false;
 
 
-    private Dialog dialogAddress;
-    private int imgIconDialog=R.drawable.saleinorder_png;
+    private Dialog dialogEditAddress;
 
 
     private String address = "";
 
     private double longitude = 0.0;
     private double latitude = 0.0;
+    private String ADDRESS = "";
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 99;
 
@@ -166,46 +168,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
         } else
             fontSize = 12;
         binding.edtAddress.setTextSize(fontSize);
-        binding.edtAddressComplete.setTextSize(fontSize);
+
         binding.btnRegisterInformation.setTextSize(fontSize);
 
         //endregion Configuration Text Size
-
-
-        //region Set Icon And Title
-        try {
-            switch (LauncherActivity.name) {
-                case "ir.kitgroup.salein":
-
-                    imgIconDialog = R.drawable.saleinicon128;
-
-
-                    break;
-
-                case "ir.kitgroup.saleintop":
-
-                    imgIconDialog = R.drawable.top_png;
-
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-
-                    imgIconDialog = R.drawable.meat_png;
-
-                    break;
-
-                case "ir.kitgroup.saleinnoon":
-
-                    imgIconDialog = R.drawable.noon;
-
-                    break;
-            }
-        }catch (Exception ignore){
-
-        }
-
-        //endregion Set Icon And Title
 
 
         //region Get Bundle
@@ -217,67 +183,61 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //endregion Get Bundle
 
 
-        //region Cast DialogAddress
-        dialogAddress = new Dialog(getActivity());
-        dialogAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogAddress.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogAddress.setContentView(R.layout.dialog_change_address);
-        dialogAddress.setCancelable(true);
+        //region Cast DialogSetADR
+        dialogEditAddress = new Dialog(getActivity());
+        dialogEditAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogEditAddress.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogEditAddress.setContentView(R.layout.dialog_register_address);
+        dialogEditAddress.setCancelable(true);
 
-        MaterialButton address1 = dialogAddress.findViewById(R.id.btn_1);
-        MaterialButton address2 = dialogAddress.findViewById(R.id.btn_2);
-        ImageView ivIcon = dialogAddress.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imgIconDialog);
-
+        MaterialButton btnRegisterAddress = dialogEditAddress.findViewById(R.id.btn_register_addressMap);
+        LinearLayout linearButtons = dialogEditAddress.findViewById(R.id.linearButtons);
+        MaterialButton address1 = dialogEditAddress.findViewById(R.id.btn_1);
+        MaterialButton address2 = dialogEditAddress.findViewById(R.id.btn_2);
+        EditText edtAddress = dialogEditAddress.findViewById(R.id.edt_address);
+        EditText edtUnit = dialogEditAddress.findViewById(R.id.edt_unit);
+        EditText edtPlaque = dialogEditAddress.findViewById(R.id.edt_plaque);
         address1.setOnClickListener(v -> {
-            Account accountORG = Select.from(Account.class).first();
-            Account account = new Account();
-            account.I = accountORG.I;
-            account.N = accountORG.N;
-            account.M = accountORG.M;
-            account.ADR1 = accountORG.ADR1;
-            account.CRDT = accountORG.CRDT;
+            ChooseAddress = true;
+            setADR2 = false;
+            address1.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.green_table)));
+            address1.setTextColor(getActivity().getResources().getColor(R.color.green_table));
+            address2.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.purple_700)));
+            address2.setTextColor(getActivity().getResources().getColor(R.color.purple_700));
 
-            setADR1 = false;
-
-            account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
-            ArrayList<Account> list = new ArrayList<>();
-            list.add(account);
-            dialogAddress.dismiss();
-            UpdateAccount(userName, passWord, list, 1, "");
         });
-
-
         address2.setOnClickListener(v -> {
-
-            Account accountORG = Select.from(Account.class).first();
-            Account account = new Account();
-            account.I = accountORG.I;
-            account.N = accountORG.N;
-            account.M = accountORG.M;
-            account.ADR = accountORG.ADR;
-            account.CRDT = accountORG.CRDT;
-
-            setADR1 = true;
-            account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
-
-            ArrayList<Account> list = new ArrayList<>();
-            list.add(account);
-            dialogAddress.dismiss();
-            UpdateAccount(userName, passWord, list, 1, "");
-
-
+            ChooseAddress = true;
+            setADR2 = true;
+            address2.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.green_table)));
+            address2.setTextColor(getActivity().getResources().getColor(R.color.green_table));
+            address1.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.purple_700)));
+            address1.setTextColor(getActivity().getResources().getColor(R.color.purple_700));
         });
 
 
-        //endregion Cast DialogAddress
-
-
-        //region Action btnRegisterInformation
-        binding.btnRegisterInformation.setOnClickListener(v -> {
-
-
+        btnRegisterAddress.setOnClickListener(v -> {
             Account accountORG = Select.from(Account.class).first();
+
+
+
+            if (edtAddress.getText().toString().equals("") ||
+                    edtUnit.getText().toString().equals("") ||
+                    edtPlaque.getText().toString().equals("")) {
+                Toast.makeText(getActivity(), "تمام فبلد ها را پر کنید.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            else if (edit_address.equals("1") && accountORG != null && accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("") && !ChooseAddress) {
+                Toast.makeText(getActivity(), "لطفا مشخص کنید، کدام آدرس را ویرایش میکنید؟", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            dialogEditAddress.dismiss();
+            ADDRESS = edtAddress.getText().toString() + " واحد " + edtUnit.getText().toString() + " پلاک  " + edtPlaque.getText().toString();
+
 
             //region Edit Address When Going From PaymentFragment
             if (edit_address != null && edit_address.equals("1")) {
@@ -286,22 +246,26 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.N = accountORG.N;
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
-                account.ADR1 = accountORG.ADR1;
+                account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
 
 
                 if (account.ADR == null) {
-                    setADR1 = false;
-                    account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
+                    setADR2 = false;
+                    account.ADR = longitude + "longitude" + " " + ADDRESS + "latitude" + latitude;
 
-                } else if (account.ADR1 == null) {
-                    setADR1 = true;
-                    account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
+                } else if (account.ADR2 == null) {
+                    setADR2 = true;
+                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                 } else {
-                    dialogAddress.show();
-                    return;
+                    if (setADR2)
+                        account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+
+                    else
+                        account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
                 }
+
 
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
@@ -315,9 +279,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
             //endregion Edit Address When Going From PaymentFragment
 
 
-            //region Edit Address when Going From ProfileFragment
-            if (edit_address != null && edit_address.equals("2")) {
+            //region Edit Address When Going From ProfileFragment
 
+            else if (edit_address != null && edit_address.equals("2")) {
                 Account account = new Account();
                 account.I = accountORG.I;
                 account.N = accountORG.N;
@@ -325,13 +289,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.CRDT = accountORG.CRDT;
 
                 if (type.equals("1")) {
-                    account.ADR1 = accountORG.ADR1;
-                    account.ADR = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
+                    account.ADR2 = accountORG.ADR2;
+                    account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                 } else {
 
                     account.ADR = accountORG.ADR;
-                    account.ADR1 = longitude + "longitude" + binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString() + "latitude" + latitude;
+                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                 }
 
@@ -339,28 +303,57 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
                 UpdateAccount(userName, passWord, list, 0, type);
-
-
-                return;
-
             }
-            //endregion Edit Address when Going From ProfileFragment
 
 
-            //region Region Gps Information And Go To RegisterFragment
-            getFragmentManager().popBackStack();
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("mobile", mobile);
-            bundle1.putString("address1", address);
-            bundle1.putDouble("lat", latitude);
-            bundle1.putDouble("lng", longitude);
-            bundle1.putString("address2", binding.edtAddressComplete.getText().toString());
-            RegisterFragment registerFragment = new RegisterFragment();
-            registerFragment.setArguments(bundle1);
-            FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
-            addFragment.commit();
-            //endregion Region Gps Information And Go To RegisterFragment
+            //endregion Edit Address When Going From ProfileFragment
 
+
+        });
+
+        //endregion Cast DialogSetADR
+
+
+        //region Action btnRegisterInformation
+
+
+        binding.btnRegisterInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Account accountORG = Select.from(Account.class).first();
+                if (edit_address.equals("1")) {
+
+                    if (accountORG.ADR != null && accountORG.ADR2 == null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
+                        linearButtons.setVisibility(View.VISIBLE);
+                    }
+
+                    dialogEditAddress.show();
+                    return;
+                }
+
+                //region Edit Address when Going From ProfileFragment
+                else if (edit_address != null && edit_address.equals("2")) {
+                    linearButtons.setVisibility(View.GONE);
+                    dialogEditAddress.show();
+                    return;
+
+                }
+                //endregion Edit Address when Going From ProfileFragment
+
+                //region Region Gps Information And Go To RegisterFragment
+                getFragmentManager().popBackStack();
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("mobile", mobile);
+                bundle1.putString("address1", address);
+                bundle1.putDouble("lat", latitude);
+                bundle1.putDouble("lng", longitude);
+                bundle1.putString("address2", ADDRESS);
+                RegisterFragment registerFragment = new RegisterFragment();
+                registerFragment.setArguments(bundle1);
+                FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
+                addFragment.commit();
+                //endregion Region Gps Information And Go To RegisterFragment
+            }
         });
         //endregion Action btnRegisterInformation
 
@@ -706,7 +699,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private void reverseGeocode(CameraPosition position) {
 
-        if (TextUtils.isEmpty(binding.edtAddress.getText())) {
+        if (TextUtils.isEmpty(binding.edtAddress.getText().toString())) {
             binding.edtAddress.setVisibility(View.GONE);
         } else {
             binding.edtAddress.setVisibility(View.VISIBLE);
@@ -893,7 +886,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
 
-                    Gson gson = new Gson();Type typeIDs = new TypeToken<ModelLog>() {
+                    Gson gson = new Gson();
+                    Type typeIDs = new TypeToken<ModelLog>() {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
 
@@ -913,21 +907,18 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             Fragment frg;
                             if (flag == 0) {
                                 Bundle bundle1 = new Bundle();
-                                bundle1.putString("address", binding.edtAddress.getText().toString() + " " + binding.edtAddressComplete.getText().toString());
+                                bundle1.putString("address", ADDRESS);
                                 bundle1.putString("type", locationAddress);
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
                                 frg.setArguments(bundle1);
-                            }
-                                else{
+                            } else {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
                                 if (frg instanceof PaymentMobileFragment) {
                                     PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
-                                    Bundle bundle=fgf.reloadFragment(setADR1);
+                                    Bundle bundle = fgf.reloadFragment(setADR2);
                                     frg.setArguments(bundle);
                                 }
-
-
 
 
                             }

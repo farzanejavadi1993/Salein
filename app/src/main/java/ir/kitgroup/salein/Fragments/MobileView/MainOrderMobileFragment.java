@@ -323,12 +323,12 @@ public class MainOrderMobileFragment extends Fragment {
 
 
             ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
-            edtNameUser = dialogAddAccount.findViewById(R.id.edt_name_account);
-            edtMobileUser = dialogAddAccount.findViewById(R.id.edt_mobile_account);
-            edtAddressUser = dialogAddAccount.findViewById(R.id.edt_address_account);
+            edtNameUser = dialogAddAccount.findViewById(R.id.edt_address);
+            edtMobileUser = dialogAddAccount.findViewById(R.id.edt_unit);
+            edtAddressUser = dialogAddAccount.findViewById(R.id.edt_pelaque);
             RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
             RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
-            MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_account);
+            MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_address);
             radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     gender = 0;
@@ -672,6 +672,12 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
+            if (LauncherActivity.namePackage.equals("ir.kitgroup.salein"))
+                getFragmentManager().popBackStack();
+                else
+                    getActivity().finish();
+
+
 
         });
 
@@ -1112,14 +1118,14 @@ public class MainOrderMobileFragment extends Fragment {
                                         try {
                                             iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
                                         } catch (Exception e) {
-                                            error = error + "\n" + "مدل دریافت شده از  گروه کالاها نا معتبر است";
+                                            error =  "مدل دریافت شده از  گروه کالاها نا معتبر است";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
                                         }
 
                                         if (iDs == null) {
-                                            error = error + "\n" + "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
+                                            error =  "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
@@ -1141,7 +1147,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                                         }
                                     , throwable -> {
-                                        error = error + "\n" + "خطا در دریافت گروه کالاها";
+                                        error =  "فروشگاه تعطیل می باشد.";
                                         showError(error);
                                         binding.progressbar.setVisibility(View.GONE);
 
@@ -1149,7 +1155,7 @@ public class MainOrderMobileFragment extends Fragment {
                                     })
             );
         } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت گروه کالاها";
+            error = "خطا در اتصال به سرور برای دریافت گروه کالاها";
             showError(error);
             binding.progressbar.setVisibility(View.GONE);
         }
@@ -1173,14 +1179,14 @@ public class MainOrderMobileFragment extends Fragment {
                                         try {
                                             iDs = gson.fromJson(jsonElement, typeModelProduct2);
                                         } catch (Exception e) {
-                                            error = error + "\n" + "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
+                                            error =  "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
                                         }
 
                                         if (iDs == null) {
-                                            error = error + "\n" + "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد";
+                                            error = "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
@@ -1237,7 +1243,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                                     }
                                     , throwable -> {
-                                        error = error + "\n" + "خطا در دریافت زیر گروه کالاها.";
+                                        error = "فروشگاه تعطیل می باشد.";
                                         showError(error);
                                         binding.progressbar.setVisibility(View.GONE);
 
@@ -1245,7 +1251,7 @@ public class MainOrderMobileFragment extends Fragment {
                                     })
             );
         } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت زیر گروه کالاها.";
+            error = "خطا در اتصال به سرور برای دریافت زیر گروه کالاها.";
             showError(error);
             binding.progressbar.setVisibility(View.GONE);
         }
@@ -1275,14 +1281,14 @@ public class MainOrderMobileFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeModelProduct);
                                 } catch (Exception e) {
-                                    error = error + "\n" + "مدل دریافت شده از کالاها نا معتبر است";
+                                    error = "مدل دریافت شده از کالاها نا معتبر است";
                                     showError(error);
                                     binding.progressbar.setVisibility(View.GONE);
                                     return;
                                 }
 
                                 if (iDs == null) {
-                                    error = error + "\n" + "لیست دریافت شده از کالاها نا معتبر می باشد";
+                                    error = "لیست دریافت شده از کالاها نا معتبر می باشد";
                                     showError(error);
                                     binding.progressbar.setVisibility(View.GONE);
                                     return;
@@ -1335,14 +1341,14 @@ public class MainOrderMobileFragment extends Fragment {
 
                             }
                             , throwable -> {
-                                error = error + "\n" + "خطا در ارتباط با سرور";
+                                error = "فروشگاه تعطیل می باشد.";
                                 showError(error);
                                 binding.progressbar.setVisibility(View.GONE);
 
                             })
             );
         } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت کالاها";
+            error ="خطا در اتصال به سرور برای دریافت کالاها";
             showError(error);
         }
 
@@ -1379,12 +1385,11 @@ public class MainOrderMobileFragment extends Fragment {
 
 
                                 }, throwable -> {
-                                    error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
 
                                 })
                 );
             } catch (Exception e) {
-                error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
+                error = "خطا در اتصال به سرور برای دریافت تنطیمات";
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             }
 
@@ -1671,13 +1676,13 @@ public class MainOrderMobileFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
+                                    error =  "مدل دریافت شده از تنظیمات نا معتبر است";
                                     showError(error);
                                     return;
                                 }
 
                                 if (iDs == null) {
-                                    error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
+                                    error =  "لیست دریافت شده از تنظیمات نا معتبر می باشد";
                                     showError(error);
                                 } else {
 
@@ -1706,13 +1711,13 @@ public class MainOrderMobileFragment extends Fragment {
 
 
                             }, throwable -> {
-                                error = error + "\n" + "خطای تایم اوت در دریافت تنظیمات";
+                                error = "خطای تایم اوت در دریافت تنظیمات";
                                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
 
                             })
             );
         } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
+            error ="خطا در اتصال به سرور برای دریافت تنطیمات";
             Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
 
         }

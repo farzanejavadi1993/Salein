@@ -106,14 +106,14 @@ public class ProfileFragment extends Fragment {
             }
 
 
-            if (account.ADR1 != null && !account.ADR1.equals("")) {
+            if (account.ADR2 != null && !account.ADR2.equals("")) {
 
 
                 String address="";
                 try {
-                    address= account.ADR1.replace(account.ADR1.split("latitude")[1],"").replace("latitude","").replace(account.ADR1.split("longitude")[0],"").replace("longitude","");
+                    address= account.ADR2.replace(account.ADR2.split("latitude")[1],"").replace("latitude","").replace(account.ADR2.split("longitude")[0],"").replace("longitude","");
                 }catch (Exception e){
-                    address=account.ADR1;
+                    address=account.ADR2;
                 }
 
                 binding.txtAddress2.setText(address);
@@ -153,25 +153,7 @@ public class ProfileFragment extends Fragment {
 
             binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
 
-            binding.btnRegisterInformation.setOnClickListener(
-                    v -> {
-                        Account accountORG = Select.from(Account.class).first();
-                        Account account1 = new Account();
-                        account1.I=accountORG.I;
-                        account1.CRDT=accountORG.CRDT;
-                        account1.M = binding.tvMobile.getText().toString();
-                        account1.N = binding.txtName.getText().toString();
-                        if (!binding.txtAddress1.getText().toString().equals("ناموجود"))
-                            account1.ADR = binding.txtAddress1.getText().toString();
-                        if (!binding.txtAddress2.getText().toString().equals("ناموجود"))
-                            account1.ADR1 = binding.txtAddress2.getText().toString();
 
-                        List<Account> list = new ArrayList<>();
-                        list.add(account1);
-                        UpdateAccount(userName, passWord, list);
-
-
-                    });
 
         }
 
@@ -179,85 +161,8 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private static class JsonObjectAccount {
-
-        public List<Account> Account;
-
-    }
-
-    private void UpdateAccount(String userName, String pass, List<Account> accounts) {
 
 
-        try {
-            customProgress.showProgress(getContext(), "در حال ویرایش اطلاعات", false);
-            JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
-            jsonObjectAcc.Account = accounts;
 
-
-            Gson gson = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
-            }.getType();
-
-            Call<String> call = App.api.UpdateAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnRegisterInformation.setEnabled(false);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
-
-                    assert iDs != null;
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
-
-                    if (message == 1) {
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-
-                        Account.deleteAll(Account.class);
-                        Account.saveInTx(accounts);
-
-                        Toast.makeText(getActivity(), "ویرایش با موفقیت انجام شد", Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                    }
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    customProgress.hideProgress();
-
-
-                }
-
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" + t.toString(), Toast.LENGTH_SHORT).show();
-
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    customProgress.hideProgress();
-
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" + ex.toString(), Toast.LENGTH_SHORT).show();
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnRegisterInformation.setEnabled(true);
-            customProgress.hideProgress();
-
-        }
-
-
-    }
 
 }

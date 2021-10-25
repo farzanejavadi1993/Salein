@@ -104,9 +104,9 @@ public class Account extends SugarRecord {
     @Expose
     public String ADR;
 
-    @SerializedName("ADR1")
+    @SerializedName("ADR2")
     @Expose
-    public String ADR1;
+    public String ADR2;
 
 
     @SerializedName("S")

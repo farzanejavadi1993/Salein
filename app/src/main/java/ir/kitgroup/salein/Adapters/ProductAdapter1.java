@@ -80,6 +80,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private int fontSize = 0;
     private int fontLargeSize = 0;
+    private  Boolean ShowUnit=false;
 
     private int placeHolderImage=R.drawable.saleinorder_icon;
 
@@ -122,29 +123,23 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         try {
             switch (LauncherActivity.name) {
                 case "ir.kitgroup.salein":
-
                     placeHolderImage = R.drawable.salein;
                     break;
 
                 case "ir.kitgroup.saleintop":
                     placeHolderImage = R.drawable.top_icon;
-
-
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
-
                     placeHolderImage = R.drawable.meat_icon;
-
+                    ShowUnit=true;
                     break;
 
 
                 case "ir.kitgroup.saleinnoon":
 
-
                     placeHolderImage = R.drawable.noon;
-
                     break;
             }
         }catch (Exception ignore){}
@@ -231,7 +226,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            holder.productOldPrice.setTextSize(fontLargeSize);
+            holder.productOldPrice.setTextSize(13);
             holder.productDiscountPercent.setTextSize(fontLargeSize);
             holder.Line.setTextSize(fontSize);
             holder.productPrice.setTextSize(fontLargeSize);
@@ -309,11 +304,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (amount> 0) {
                 holder.ivMinus.setVisibility(View.VISIBLE);
                 holder.ProductAmountTxt.setVisibility(View.VISIBLE);
+                if (ShowUnit)
                 holder.unit.setVisibility(View.VISIBLE);
             }
             else {
                 holder.ivMinus.setVisibility(View.GONE);
                 holder.ProductAmountTxt.setVisibility(View.GONE);
+                if (ShowUnit)
                 holder.unit.setVisibility(View.GONE);
             }
 
@@ -534,6 +531,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText("0");
+                                                    if (ShowUnit)
                                                     unit.setVisibility(View.GONE);
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                     ivMinus.setVisibility(View.GONE);
@@ -572,6 +570,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                         Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ", Toast.LENGTH_SHORT).show();
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
+                                                        if (ShowUnit)
                                                         unit.setVisibility(View.GONE);
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
@@ -605,6 +604,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(remain));
+                                                if (ShowUnit)
                                                 unit.setVisibility(View.VISIBLE);
 
 
@@ -639,6 +639,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                     if (MinOrPlus != 3) {
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
+                                                        if (ShowUnit)
                                                         unit.setVisibility(View.GONE);
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
@@ -659,6 +660,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText(df.format(amount));
+                                                    if (ShowUnit)
                                                     unit.setVisibility(View.VISIBLE);
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                 }
@@ -678,6 +680,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(amount));
+                                                if (ShowUnit)
                                                 unit.setVisibility(View.VISIBLE);
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
 
@@ -743,6 +746,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             amount = 0;
                             ProductAmountTxt.removeTextChangedListener(textWatcher);
                             ProductAmountTxt.setText("0");
+                            if (ShowUnit)
                             unit.setVisibility(View.GONE);
                             ProductAmountTxt.addTextChangedListener(textWatcher);
                             ivMinus.setVisibility(View.GONE);
@@ -773,6 +777,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                             ProductAmountTxt.removeTextChangedListener(textWatcher);
                             ProductAmountTxt.setText("0");
+                            if (ShowUnit)
                             unit.setVisibility(View.GONE);
                             ProductAmountTxt.addTextChangedListener(textWatcher);
                             ivMinus.setVisibility(View.GONE);
@@ -793,6 +798,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                         ProductAmountTxt.setText(df.format(amount));
+                        if (ShowUnit)
                         unit.setVisibility(View.VISIBLE);
                         ProductAmountTxt.addTextChangedListener(textWatcher);
                     }
@@ -810,6 +816,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     invoicedetail.save();
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                     ProductAmountTxt.setText(df.format(amount));
+                    if (ShowUnit)
                     unit.setVisibility(View.VISIBLE);
                     ProductAmountTxt.addTextChangedListener(textWatcher);
                     clickItem.onClick();

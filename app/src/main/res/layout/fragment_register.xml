@@ -7,8 +7,6 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/login_background_color"
@@ -171,26 +169,7 @@
                 android:background="@drawable/background_edittext"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edt_address_customer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin8"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:fontFamily="@font/iransans"
-                    android:gravity="right|top|center"
-                    android:inputType="textShortMessage|textMultiLine"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingRight="16dp"
 
-                    android:singleLine="false"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-
-                    />
 
                 <TextView
                     android:id="@+id/greentv"
@@ -199,7 +178,7 @@
                     android:gravity="right"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="آدرس دقیق تر خود را وارد کنید."
+                    android:text="آدرس  خود را به صورت دقیق وارد کنید."
                     android:textColor="@color/green_table"
                     android:textSize="12dp" />
 
@@ -211,7 +190,7 @@
                     android:background="@drawable/background_edittext"
                     android:fontFamily="@font/iransans"
                     android:gravity="right|top|center"
-                    android:hint="توضیحات تکمیلی..."
+                    android:hint="آدرس..."
                     android:inputType="textShortMessage|textMultiLine"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"

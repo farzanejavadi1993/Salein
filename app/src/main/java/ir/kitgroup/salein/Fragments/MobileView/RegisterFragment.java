@@ -79,7 +79,7 @@ public class RegisterFragment extends Fragment {
         double latitude = bundle.getDouble("lat");
         double longitude = bundle.getDouble("lng");
 
-        binding.edtAddressCustomer.setText(address1);
+
         binding.edtAddressCustomerComplete.setText(address2);
         binding.edtNumberPhoneCustomer.setText(mobile);
         //endregion Get Bundle And Set Data
@@ -99,7 +99,7 @@ public class RegisterFragment extends Fragment {
         binding.tvPhoneNumberCustomer.setTextSize(fontSize);
         binding.edtNumberPhoneCustomer.setTextSize(fontSize);
         binding.tvAddressCustomer.setTextSize(fontSize);
-        binding.edtAddressCustomer.setTextSize(fontSize);
+
         binding.greentv.setTextSize(fontSize);
         binding.edtAddressCustomerComplete.setTextSize(fontSize);
         binding.tvPlaqueCustomer.setTextSize(fontSize);
@@ -133,7 +133,7 @@ public class RegisterFragment extends Fragment {
             if (
                     binding.edtFLNameCustomer.getText().toString().isEmpty() ||
                             binding.edtNumberPhoneCustomer.getText().toString().isEmpty() ||
-                            binding.edtAddressCustomer.getText().toString().isEmpty() ||
+                            binding.edtAddressCustomerComplete.getText().toString().isEmpty() ||
                             binding.edtPlaqueCustomer.getText().toString().isEmpty()
             ) {
                 Toast.makeText(getActivity(), "لطفا تمام فیلد ها را پر کنید", Toast.LENGTH_SHORT).show();
@@ -145,7 +145,7 @@ public class RegisterFragment extends Fragment {
             account.N = binding.edtFLNameCustomer.getText().toString();
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
             account.PSW = binding.edtNumberPhoneCustomer.getText().toString();
-            account.ADR = longitude+"longitude"+binding.edtAddressCustomer.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString()+"latitude"+latitude;
+            account.ADR = longitude+"longitude"+binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString()+"latitude"+latitude;
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);

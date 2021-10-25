@@ -29,12 +29,11 @@
             tools:targetApi="lollipop">
 
 
-
             <androidx.appcompat.widget.SearchView
-                android:backgroundTint="@android:color/transparent"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent" />
         </RelativeLayout>
 
 
@@ -67,34 +66,33 @@
 
 
             <LinearLayout
+                android:id="@+id/search_results_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-                android:id="@+id/search_results_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@android:color/white"
 
                 >
 
                 <ProgressBar
-                    android:visibility="gone"
                     android:id="@+id/search_progress_bar"
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:layout_gravity="center"
                     android:padding="8dp"
-                    />
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:visibility="gone"
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="vertical"
+                    android:visibility="gone"
 
                     />
 
@@ -103,13 +101,13 @@
         </FrameLayout>
 
         <RelativeLayout
-            android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginStart="22dp"
             android:id="@+id/rl_floating"
             android:layout_width="360dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginRight="22dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
@@ -133,12 +131,12 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+
                         android:id="@+id/edt_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_margin="16dp"
                         android:background="@android:color/transparent"
                         android:enabled="false"
                         android:fontFamily="@font/iransans"
@@ -150,26 +148,6 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:layout_marginBottom="@dimen/margin10"
-                        android:layout_marginTop="5dp"
-                        android:id="@+id/edt_address_complete"
-                        android:layout_width="360dp"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/edt_address"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@android:color/transparent"
-                        android:enabled="true"
-                        android:fontFamily="@font/iransans"
-                        android:gravity="right"
-                        android:hint="توضیحات تکمیلی..."
-                        android:inputType="textShortMessage|textMultiLine"
-                        android:padding="5dp"
-                        android:textColor="#000"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
 
                     <ProgressBar
                         android:id="@+id/pro"
@@ -184,11 +162,11 @@
 
 
         <ImageView
-            android:layout_marginLeft="22dp"
             android:id="@+id/floating"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="22dp"
             android:padding="@dimen/margin10"
             android:src="@drawable/ic_cross"
             app:elevation="6dp"
@@ -201,10 +179,10 @@
             android:id="@+id/btn_register_information"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_height_size"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
             android:layout_marginStart="@dimen/normal_left_right_margin"
+            android:layout_marginLeft="22dp"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
+            android:layout_marginRight="22dp"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/purple_700"
             android:fontFamily="@font/iransans"
@@ -215,8 +193,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="UnusedAttribute" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

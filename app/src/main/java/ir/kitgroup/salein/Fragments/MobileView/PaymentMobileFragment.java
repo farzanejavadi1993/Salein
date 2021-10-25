@@ -277,10 +277,6 @@ public class PaymentMobileFragment extends Fragment {
         Date dateNow = Calendar.getInstance().getTime();
         dateChoose = dateNow;
 
-        if (App.mode == 2) {
-            binding.layoutAddress.setVisibility(View.VISIBLE);
-            binding.layoutTime.setVisibility(View.VISIBLE);
-        }
 
         //region get Bundle
         Bundle bundle = getArguments();
@@ -311,6 +307,13 @@ public class PaymentMobileFragment extends Fragment {
         //endregion get Bundle
 
 
+
+        if (App.mode==1) {
+            binding.layoutTypeOrder.setVisibility(View.GONE);
+            binding.layoutAddress.setVisibility(View.GONE);
+            binding.layoutTime.setVisibility(View.GONE);
+            binding.layoutPayment.setVisibility(View.VISIBLE);
+        }
         //region Configuration Size
         int fontBigSize;
         int fontSize;
@@ -381,17 +384,12 @@ public class PaymentMobileFragment extends Fragment {
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
                     dialogAddress.dismiss();
-                    if (App.mode == 2 && OrdTList.size()>1) {
-                        binding.tvTypeOrder.setVisibility(View.VISIBLE);
-                        binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
-                    }
                     return;
                 } else {
                     calculateTransport = price;
                 }
 
-                if (App.mode == 2)
-                    binding.tvTypeOrder.setVisibility(View.VISIBLE);
+
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
                 binding.edtAddress.setText(ValidAddress);
@@ -404,8 +402,8 @@ public class PaymentMobileFragment extends Fragment {
             if (isChecked) {
 
                 try {
-                    latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
-                    longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
+                    latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
+                    longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
                 } catch (Exception e) {
                     latitude2 = 0.0;
                     longitude2 = 0.0;
@@ -426,10 +424,7 @@ public class PaymentMobileFragment extends Fragment {
                 } else {
                     calculateTransport = price;
                 }
-                if (App.mode == 2 && OrdTList.size()>1) {
-                    binding.tvTypeOrder.setVisibility(View.VISIBLE);
-                    binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
-                }
+
 
                 typeAddress = 2;
                 ValidAddress = radioAddress2.getText().toString();
@@ -478,15 +473,15 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress1.setText("ناموجود");
 
 
-        if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("")) {
+        if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
             String address = "";
             try {
-                latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
-                longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
-                address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
+                latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
+                longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
+                address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
 
             } catch (Exception e) {
-                address = acc.ADR1 + "( نامعتبر )";
+                address = acc.ADR2 + "( نامعتبر )";
                 latitude2 = 0.0;
                 longitude2 = 0.0;
             }
@@ -515,19 +510,16 @@ public class PaymentMobileFragment extends Fragment {
             } catch (Exception e) {
                 address = acc.ADR;
             }
-            if (App.mode == 2 && OrdTList.size()>1) {
-                binding.tvTypeOrder.setVisibility(View.VISIBLE);
-                binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
-            }
+
 
             binding.edtAddress.setText(address);
             typeAddress = 1;
             ValidAddress = address;
 
-        } else if (acc != null && acc.ADR1 != null && !acc.ADR1.equals("") && latitude2 != 0.0 && longitude2 != 0.0) {
+        } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") && latitude2 != 0.0 && longitude2 != 0.0) {
 
-            latitude2 = Double.parseDouble(acc.ADR1.split("latitude")[1]);
-            longitude2 = Double.parseDouble(acc.ADR1.split("longitude")[0]);
+            latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
+            longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
             double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(lat, lng));
             double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
             if (price != -1.0) {
@@ -538,15 +530,12 @@ public class PaymentMobileFragment extends Fragment {
 
             String address = "";
             try {
-                address = acc.ADR1.replace(acc.ADR1.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR1.split("longitude")[0], "").replace("longitude", "");
+                address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
             } catch (Exception e) {
-                address = acc.ADR1;
+                address = acc.ADR2;
 
             }
-            if (App.mode == 2 && OrdTList.size()>1) {
-                binding.tvTypeOrder.setVisibility(View.VISIBLE);
-                binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
-            }
+
 
 
             binding.edtAddress.setText(address);
@@ -564,7 +553,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.layoutAddress.setOnClickListener(v -> {
 
 
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR1 != null && !acc.ADR1.equals("")) {
+            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR2 != null && !acc.ADR2.equals("")) {
                 dialogAddress.show();
                 return;
             }
@@ -764,8 +753,7 @@ public class PaymentMobileFragment extends Fragment {
                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
             }
 
-            if (typeAddress != 0)
-                binding.layoutPayment.setVisibility(View.VISIBLE);
+
 
 
         });
@@ -1494,8 +1482,11 @@ public class PaymentMobileFragment extends Fragment {
 
                                     List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
 
-                                    if (!settingsList.get(0).ORDER_TYPE_APP.equals(""))
+                                    if (!settingsList.get(0).ORDER_TYPE_APP.equals("")){
+                                        sharedPreferences.edit().putString("OrderTypeApp",settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                                    }
+
 
 
                                     if (!settingsList.get(0).SERVICE_DAY.equals(""))
@@ -1531,6 +1522,7 @@ public class PaymentMobileFragment extends Fragment {
                                         binding.layoutTime.setVisibility(View.VISIBLE);
 
                                     } else if (App.mode == 1) {
+                                        binding.layoutTypeOrder.setVisibility(View.GONE);
                                         binding.layoutAddress.setVisibility(View.GONE);
                                         binding.layoutTime.setVisibility(View.GONE);
                                         binding.layoutPayment.setVisibility(View.VISIBLE);
@@ -1614,21 +1606,10 @@ public class PaymentMobileFragment extends Fragment {
                                                 binding.tvTypeOrder.setVisibility(View.GONE);
                                                 binding.recyclerViewOrderType.setVisibility(View.GONE);
 
-                                                if (typeAddress != 0)
-                                                    binding.layoutPayment.setVisibility(View.VISIBLE);
-
-                                            }else if (OrdTList.size()>0 && typeAddress != 0){
-                                                 binding.tvTypeOrder.setVisibility(View.VISIBLE);
-                                                 binding.recyclerViewOrderType.setVisibility(View.VISIBLE);
-
-                                             }else {
-                                                 binding.tvTypeOrder.setVisibility(View.GONE);
-                                                 binding.recyclerViewOrderType.setVisibility(View.GONE);
                                              }
                                             orderTypePaymentAdapter.notifyDataSetChanged();
 
-                                            if (App.mode == 1 && typeAddress != 0)
-                                                binding.layoutPayment.setVisibility(View.VISIBLE);
+
 
 
 

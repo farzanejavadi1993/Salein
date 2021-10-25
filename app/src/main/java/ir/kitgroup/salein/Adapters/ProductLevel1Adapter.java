@@ -79,11 +79,11 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
 
 
         if (productGroupLevel1.Click) {
-            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.order_item_recycle_group__card_background));
+            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.group_background));
             holder.groupName.setTextColor(context.getResources().getColor(R.color.white));
 
         } else {
-            holder.cardView.setBackground(null);
+            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_subgroup_mobile));
             holder.groupName.setTextColor(context.getResources().getColor(R.color.black_l));
 
         }

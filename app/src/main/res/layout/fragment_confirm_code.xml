@@ -107,7 +107,12 @@
                 android:textStyle="bold" />
 
 
+
+
+
+
             <LinearLayout
+
                 android:id="@+id/linearLayout"
                 android:layout_width="360dp"
                 android:layout_height="45dp"
@@ -209,11 +214,11 @@
                 android:id="@+id/btn_login"
                 android:layout_width="360dp"
                 android:layout_height="@dimen/bottom_height_size"
-                android:layout_below="@+id/linearLayout"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="@dimen/normal_left_right_margin"
                 android:layout_marginEnd="@dimen/normal_left_right_margin"
                 android:layout_marginBottom="12dp"
+                android:layout_below="@+id/linearLayout"
                 android:backgroundTint="@color/bottom_background_inActive_color"
                 android:enabled="false"
                 android:fontFamily="@font/iransans"

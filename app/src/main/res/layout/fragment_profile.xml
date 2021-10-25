@@ -79,6 +79,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:enabled="false"
                         android:id="@+id/txt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -118,7 +119,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-
+                        android:enabled="false"
                         android:id="@+id/tvMobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -266,24 +267,7 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_register_information"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_height_size"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/normal_left_right_margin"
-            android:layout_marginEnd="@dimen/normal_left_right_margin"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/purple_700"
-            android:fontFamily="@font/iransans"
-            android:text="ویرایش اطلاعات کاربری"
-            android:textColor="@color/white"
-            app:cornerRadius="@dimen/box_radius"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="UnusedAttribute" />
+
 
 
     </RelativeLayout>

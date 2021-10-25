@@ -121,7 +121,7 @@ public class MyCompanyFragment extends Fragment {
 
 
                     String nameSave = sharedPreferences.getString("CN", "");
-                    if (nameSave.equals(company.PACKAGEName)) {
+                    if (nameSave.equals(company.NameCompany)) {
                         Bundle bundle = new Bundle();
                         bundle.putString("Ord_TYPE", "");
                         bundle.putString("Tbl_GUID", "");
@@ -286,7 +286,7 @@ public class MyCompanyFragment extends Fragment {
 
                             }, throwable -> {
 
-                                Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "فروشگاه تعطیل می باشد." , Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
 
                             })
