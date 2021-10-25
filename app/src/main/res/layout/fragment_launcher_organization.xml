@@ -123,38 +123,46 @@
         </RelativeLayout>
 
 
-        <com.dinuscxj.refresh.RecyclerRefreshLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_below="@+id/toolbar"
-                android:layout_above="@+id/recycle_get_out_order"
-                android:id="@+id/recycler_table"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:rotationY="180" />
+       <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+           android:layout_width="match_parent"
+           android:layout_below="@+id/toolbar"
+           android:id="@+id/refreshLayout"
+           android:layout_height="match_parent">
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+               <androidx.recyclerview.widget.RecyclerView
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_get_out_order"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="@dimen/normal_left_right_margin"
-                android:layout_marginTop="@dimen/margin10"
-                android:layout_marginEnd="@dimen/normal_left_right_margin"
-                android:rotationY="180" />
+                   android:id="@+id/recycler_table"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:rotationY="180" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ProgressBar
-                    android:background="@drawable/ic_circle"
-                    android:layout_centerInParent="true"
-                    android:id="@+id/progressbar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"/>
-            </RelativeLayout>
-        </com.dinuscxj.refresh.RecyclerRefreshLayout>
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/recycle_get_out_order"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_alignParentBottom="true"
+                   android:layout_marginStart="@dimen/normal_left_right_margin"
+                   android:layout_marginTop="@dimen/margin10"
+                   android:layout_marginEnd="@dimen/normal_left_right_margin"
+                   android:rotationY="180" />
+
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+                   <ProgressBar
+                       android:background="@drawable/ic_circle"
+                       android:layout_centerInParent="true"
+                       android:id="@+id/progressbar"
+                       android:layout_width="30dp"
+                       android:layout_height="30dp"/>
+               </RelativeLayout>
+           </RelativeLayout>
+
+       </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 
 
