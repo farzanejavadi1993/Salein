@@ -2,11 +2,21 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
@@ -53,6 +64,15 @@ public class OrderListFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //region Parameter
     private FragmentOrderListBinding binding;
+
+    //region Dialog Sync
+    private Dialog dialogSync;
+    private TextView textMessageDialog;
+    private ImageView ivIconSync;
+    private MaterialButton btnOkDialog;
+    private MaterialButton btnNoDialog;
+    //endregion Dialog Sync
+
 
     //endregion Parameter
 
@@ -99,6 +119,31 @@ public class OrderListFragment extends Fragment {
         //endregion Calculate Date Always Product
 
 
+        //region Cast Variable Dialog Sync
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
+
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+        });
+
+
+        btnOkDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            getAllInvoice1(userName, passWord, accGUID,datVip);
+
+        });
+
+        //endregion Cast Variable Dialog Sync
+
 
 
 
@@ -140,6 +185,11 @@ public class OrderListFragment extends Fragment {
 
 
     private void getAllInvoice1(String userName, String pass, String AccGuid, String date) {
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
+
         try {
             compositeDisposable.add(
                     App.api.getAllInvoice1(userName, pass,AccGuid,date )
@@ -214,6 +264,23 @@ public class OrderListFragment extends Fragment {
 
     }
 
+    public  boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
+    private void ShowErrorConnection(String error) {
+        binding.progressBar.setVisibility(View.GONE);
+        textMessageDialog.setText(error);
+        ivIconSync.setImageResource(R.drawable.ic_wifi);
+        btnNoDialog.setText("بستن");
+        btnOkDialog.setText("سینک مجدد");
+        dialogSync.dismiss();
+        dialogSync.show();
+
+
+    }
 
 }

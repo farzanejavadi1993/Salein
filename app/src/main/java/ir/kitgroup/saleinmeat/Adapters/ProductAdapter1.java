@@ -301,6 +301,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.edtDesc.setText(description);
             productsList.get(position).setAmount(amount);
 
+            holder.error.setText("");
             if (amount> 0) {
                 holder.ivMinus.setVisibility(View.VISIBLE);
                 holder.ProductAmountTxt.setVisibility(View.VISIBLE);
@@ -317,8 +318,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            holder.ivMax.setOnClickListener(view -> doAction(productsList.get(position).getAmount(),
+            holder.ivMax.setOnClickListener(view -> doAction(
+                    productsList.get(position).getAmount(),
                     holder.getAdapterPosition(),
+                    holder.error,
                     holder.progressBar,
                     holder.textWatcher,
                     holder.ProductAmountTxt,
@@ -337,6 +340,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(position).getAmount(),
                     holder.getAdapterPosition(),
+                    holder.error,
                     holder.progressBar,
                     holder.textWatcher,
                     holder.ProductAmountTxt,
@@ -376,6 +380,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         doAction(productsList.get(position).getAmount(),
                                 holder.getAdapterPosition(),
+                                holder.error,
                                 holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
@@ -429,6 +434,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         private final TextView productName;
         private final TextView unit;
+        private final TextView error;
         private final TextView productPrice;
         private final TextView productOldPrice;
         private final TextView productDiscountPercent;
@@ -457,6 +463,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             productName = itemView.findViewById(R.id.order_recycle_item_product_name);
             unit = itemView.findViewById(R.id.unit);
+            error = itemView.findViewById(R.id.error);
 
 
             productPrice = itemView.findViewById(R.id.order_recycle_item_product_price);
@@ -480,7 +487,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-    private void getMaxSales(double amount1,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(double amount1,int position,TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -544,7 +551,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                         clickItem.onClick();
                                                     }
                                                 }
-                                                Toast.makeText(context, "این کالا موجود نمی باشد", Toast.LENGTH_SHORT).show();
+
+                                                error.setText("این کالا موجود نمی باشد");
                                                 progressBar.setVisibility(View.GONE);
                                                 return;
                                             }
@@ -715,12 +723,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
-    private void doAction(double amount1,int position, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(double amount1,int position,TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
+        error.setText("");
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(amount1,position, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(amount1,position,error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)

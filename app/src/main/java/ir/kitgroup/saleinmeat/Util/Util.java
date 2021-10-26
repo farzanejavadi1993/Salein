@@ -1,8 +1,11 @@
 package ir.kitgroup.saleinmeat.Util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -96,7 +99,6 @@ public class Util {
     }
 
 
-    public  static String TransportId="";
 
 
 

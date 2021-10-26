@@ -1,11 +1,15 @@
 package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -103,6 +107,20 @@ public class PaymentMobileFragment extends Fragment {
     //region Parameter
     private FragmentPaymentMobileBinding binding;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+
+
+    //region Dialog Sync
+    private Dialog dialogSync;
+    private TextView textMessageDialog;
+    private  ImageView ivIconSync;
+    private MaterialButton btnOkDialog;
+    private MaterialButton btnNoDialog;
+    //endregion Dialog Sync
+
+
+
+
 
 
     //region Dialog Address
@@ -349,6 +367,38 @@ public class PaymentMobileFragment extends Fragment {
         binding.btnRegisterOrder.setTextSize(fontSize);
 
         //endregion Configuration Size
+
+
+
+
+        //region Cast Variable Dialog Sync
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
+
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+        });
+
+
+        btnOkDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            getSetting1();
+
+        });
+
+        //endregion Cast Variable Dialog Sync
+
+
+
+
 
 
         //region Cast DialogAddress
@@ -1108,6 +1158,11 @@ public class PaymentMobileFragment extends Fragment {
 
 
     void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         try {
 
             customProgress.showProgress(getActivity(), "در حال ارسال سفارش", false);
@@ -1372,6 +1427,11 @@ public class PaymentMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getInquiryAccount1(String userName, String passWord, String mobile) {
+
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -1449,6 +1509,12 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private void getSetting1() {
+
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
+
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -1562,7 +1628,10 @@ public class PaymentMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getTypeOrder1() {
-
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -1668,7 +1737,10 @@ public class PaymentMobileFragment extends Fragment {
     }
 
     private void getTable1() {
-
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -1712,5 +1784,28 @@ public class PaymentMobileFragment extends Fragment {
         }
 
     }
+
+    public  boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void ShowErrorConnection(String error) {
+        binding.progressBar.setVisibility(View.GONE);
+        textMessageDialog.setText(error);
+        ivIconSync.setImageResource(R.drawable.ic_wifi);
+        btnNoDialog.setText("بستن");
+        btnOkDialog.setText("سینک مجدد");
+        dialogSync.dismiss();
+        dialogSync.show();
+        customProgress.hideProgress();
+
+    }
+
+
+
+
 
 }

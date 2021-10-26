@@ -1,10 +1,14 @@
 package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -106,6 +110,17 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
+
+
+    //region Dialog Sync
+    private Dialog dialogSync;
+    private TextView textMessageDialog;
+    private  ImageView ivIconSync;
+    private MaterialButton btnOkDialog;
+    private MaterialButton btnNoDialog;
+    //endregion Dialog Sync
+
+
 
 
     //region Variable Dialog
@@ -299,6 +314,46 @@ public class InVoiceDetailMobileFragment extends Fragment {
         sumDiscounts = 0;
 
 
+        //region Cast Variable Dialog Sync
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
+
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+        });
+
+
+        btnOkDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            if (type.equals("1"))
+                getInvoice();
+            else {
+                invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                if (invDetails.size() == 0)
+                    binding.progressBar.setVisibility(View.GONE);
+
+                else {
+                    counter = 0;
+                    for (int i = 0; i < invDetails.size(); i++) {
+                        getProduct(invDetails.get(i).PRD_UID, i);
+                    }
+                }
+            }
+
+        });
+
+        //endregion Cast Variable Dialog Sync
+
+
+
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
         dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -428,31 +483,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                         invoiceDetail.update();
                     }
 
-                  /*  sumPrice = 0;
-                    sumPurePrice = 0;
-                    sumDiscounts = 0;
 
-
-                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    for (int i = 0; i < invoiceDetails.size(); i++) {
-
-                        ir.kitgroup.saleinmeat.DataBase.Product product1 = Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
-                        if (product1 != null) {
-                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product1.getPrice());
-                            double discountPrice = sumprice * (product1.getPercDis() / 100);
-                            double totalPrice = sumprice - discountPrice;
-
-                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product1.getPrice());
-                            sumPurePrice = sumPurePrice + totalPrice;
-                            sumDiscounts = sumDiscounts + discountPrice;
-
-                        }
-
-                    }
-
-                    binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
-                    binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
-                    binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");*/
                     invoiceDetailAdapter.notifyDataSetChanged();
 
                 }
@@ -678,8 +709,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     private void getDescription(String userName, String pass, String id) {
 
-        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", false);
-
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
+        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", true);
         try {
             compositeDisposable.add(
                     App.api.getDescription1(userName, pass, id)
@@ -733,6 +767,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private void getMaxSales(String userName, String pass, String Prd_GUID, String s) {
 
 
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         try {
             compositeDisposable.add(
                     App.api.getMaxSales(userName, pass, Prd_GUID)
@@ -815,6 +853,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getProduct(String Guid, int i) {
 
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
 
@@ -900,6 +942,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void getInvoice() {
+
+        if (!isNetworkAvailable(getActivity())){
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
+
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -1095,5 +1143,23 @@ public class InVoiceDetailMobileFragment extends Fragment {
     public List<InvoiceDetail> getInvoiceDetail() {
         return invDetails;
     }
+    public  boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
+    private void ShowErrorConnection(String error) {
+        binding.progressBar.setVisibility(View.GONE);
+        textMessageDialog.setText(error);
+        ivIconSync.setImageResource(R.drawable.ic_wifi);
+        btnNoDialog.setText("بستن");
+        btnOkDialog.setText("سینک مجدد");
+        dialogSync.dismiss();
+        dialogSync.show();
+        customProgress.hideProgress();
+
+    }
 }
+
