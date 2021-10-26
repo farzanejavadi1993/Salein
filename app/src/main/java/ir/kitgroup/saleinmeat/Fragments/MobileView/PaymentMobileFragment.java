@@ -108,6 +108,7 @@ public class PaymentMobileFragment extends Fragment {
     private FragmentPaymentMobileBinding binding;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private Boolean Seen=false;
 
 
     //region Dialog Sync
@@ -303,8 +304,7 @@ public class PaymentMobileFragment extends Fragment {
         Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
         edit = bundle.getBoolean("EDIT");
         setADR1 = bundle.getBoolean("setADR1");
-
-
+        Seen = bundle.getBoolean("Seen");
         String ord_type = bundle.getString("Ord_TYPE");
         if (ord_type != null && !ord_type.equals(""))
             Ord_TYPE = Integer.parseInt(ord_type);
@@ -955,12 +955,19 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (sumTransport!=0)
                 InvoiceDetail.save(invoiceDetailTransport);
+
             } else {
+
                 invoiceDetailTransport.INV_UID = new_Inv_GUID;
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(sumTransport);
                 invoiceDetailTransport.INV_DET_TOTAL_AMOUNT = String.valueOf(sumTransport);
-                invoiceDetailTransport.save();
+
+                if (sumTransport!=0)
+                    invoiceDetailTransport.save();
+                else
+                    InvoiceDetail.delete(invoiceDetailTransport);
+
             }
 
 
@@ -973,7 +980,12 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (product != null) {
                     double sumTotalPrice = (invoiceDtl.INV_DET_QUANTITY * product.getPrice());//جمع کل ردیف
-                    double discountPrice = sumTotalPrice * (product.getPercDis() / 100);//جمع تخفیف ردیف
+                    double discountPrice = 0.0;//جمع تخفیف ردیف
+
+                    if (Seen)
+                        discountPrice=sumTotalPrice * (invoiceDtl.INV_DET_PERCENT_DISCOUNT / 100);
+                        else
+                    discountPrice=sumTotalPrice * (product.getPercDis() / 100);
                     double totalPurePrice = sumTotalPrice - discountPrice;//جمع خالص ردیف
 
 
@@ -982,7 +994,12 @@ public class PaymentMobileFragment extends Fragment {
                     invoiceDtl.INV_DET_TOTAL_AMOUNT = String.valueOf(totalPurePrice);
                     invoiceDtl.ROW_NUMBER = i + 1;
                     invoiceDtl.INV_UID = new_Inv_GUID;
-                    invoiceDtl.INV_DET_PERCENT_DISCOUNT = product.getPercDis();
+
+                    if (Seen)
+                        invoiceDtl.INV_DET_PERCENT_DISCOUNT =invoiceDtl.INV_DET_PERCENT_DISCOUNT;
+                    else
+                        invoiceDtl.INV_DET_PERCENT_DISCOUNT = product.getPercDis();
+
                     invoiceDtl.INV_DET_DISCOUNT = String.valueOf(discountPrice);
                     invoiceDtl.INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice());
                     sumDiscount = sumDiscount + discountPrice;
@@ -1413,6 +1430,7 @@ public class PaymentMobileFragment extends Fragment {
         Bundle bundle = getArguments();
         bundle.putString("Inv_GUID", Inv_GUID);
         bundle.putString("Tbl_GUID", Tbl_GUID);
+        bundle.putBoolean("Seen", Seen);
 
         bundle.putString("Tbl_GUID", Tbl_GUID);
         bundle.putString("Ord_TYPE", String.valueOf(Ord_TYPE));

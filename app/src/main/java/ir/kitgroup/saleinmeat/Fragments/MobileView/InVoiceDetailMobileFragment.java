@@ -104,7 +104,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private double sumPrice;
     private double sumPurePrice;
     private double sumDiscounts;
-    private double sumDiscountsInvoiceRial;
+    private double sumDiscountsInvoiceRial=0.0;
 
 
     private List<InvoiceDetail> invoiceDetailList;
@@ -685,7 +685,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
-            bundle1.putBoolean("setADR1", false);
+            bundle1.putBoolean("Seen", Seen);
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
@@ -990,6 +990,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         invFinal = iDs.getInvoice().get(0).invFinalStatusControl;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
+                                        sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
+
 
                                         if (App.mode == 1) {
                                             Acc_NAME = iDs.getInvoice().get(0).accClbName;

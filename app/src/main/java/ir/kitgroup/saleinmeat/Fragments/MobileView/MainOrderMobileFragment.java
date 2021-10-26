@@ -484,7 +484,7 @@ public class MainOrderMobileFragment extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.homee:
 
-                        if (!Inv_GUID_ORG.equals("")) {
+                        if (!Inv_GUID_ORG.equals("") && !Seen) {
                             getFragmentManager().popBackStack();
                         }
                         productAdapter.notifyDataSetChanged();
@@ -982,6 +982,7 @@ public class MainOrderMobileFragment extends Fragment {
         productAdapter = new ProductAdapter1(getActivity(), productList);
         productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
+        productAdapter.setType(Seen);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);

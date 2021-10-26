@@ -72,7 +72,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private final List<Product> productsList;
 
     private String maxSale;
-    private String Seen;
+    private Boolean Seen=false;
 
     private String Inv_GUID;
     private String Tbl_GUID;
@@ -152,7 +152,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.maxSale = MaxSale;
     }
 
-    public void setType(String type) {
+    public void setType(Boolean Seen) {
         this.Seen = Seen;
     }
 
@@ -220,6 +220,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
+            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
+
             String ip = Select.from(User.class).first().ipLocal;
 
                 Picasso.get()
@@ -240,9 +242,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.unit.setTextSize(fontSize);
 
 
-            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
 
-            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
+            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
+            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0 ) {
                 if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
@@ -256,9 +258,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
-
-            } else {
-
+            }
+            else {
                 if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
 
                     holder.productDiscountPercent.setVisibility(View.GONE);
@@ -267,7 +268,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     holder.Line.setVisibility(View.GONE);
                     holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()) + " ریال ");
                 }
-
             }
 
 
@@ -286,12 +286,41 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
 
-            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
+
             double amount ;
             String description ;
 
-            if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null)
+            if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null) {
                 amount = invoiceDetail.INV_DET_QUANTITY;
+
+                if (amount>0 && Seen){
+                    if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0 ) {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+                            holder.layoutDiscount.setVisibility(View.VISIBLE);
+                            holder.productDiscountPercent.setVisibility(View.VISIBLE);
+                            holder.productOldPrice.setVisibility(View.VISIBLE);
+                            holder.Line.setVisibility(View.VISIBLE);
+
+                            holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
+                            holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()));
+                            holder.Line.setText("------------");
+                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (invoiceDetail.INV_DET_PERCENT_DISCOUNT/ 100);
+                            double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
+                            holder.productPrice.setText(format.format(newPrice) + " ریال ");
+                        }
+                    }
+                    else {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+
+                            holder.productDiscountPercent.setVisibility(View.GONE);
+                            holder.layoutDiscount.setVisibility(View.GONE);
+                            holder.productOldPrice.setVisibility(View.GONE);
+                            holder.Line.setVisibility(View.GONE);
+                            holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()) + " ریال ");
+                        }
+                    }
+                }
+            }
             else
                 amount = 0.0;
 
