@@ -132,6 +132,7 @@ public class MainOrderMobileFragment extends Fragment {
     private String Inv_GUID;
     private String Inv_GUID_ORG;
     private String Acc_GUID = "";
+    private Boolean Seen = false;
     private String Acc_NAME = "";
 
 
@@ -149,8 +150,7 @@ public class MainOrderMobileFragment extends Fragment {
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-
-    private Boolean emptySearch=false;
+    private Boolean emptySearch = false;
     private ArrayList<Product> productList;
     private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
@@ -178,7 +178,7 @@ public class MainOrderMobileFragment extends Fragment {
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-    private  ImageView ivIconSync;
+    private ImageView ivIconSync;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
@@ -205,11 +205,11 @@ public class MainOrderMobileFragment extends Fragment {
     //endregion Variable DialogAddAccount
 
 
-    private int imageLogoCopy=R.drawable.salein;
-    private int imageLogo=R.drawable.salein;
-    private int imgIconDialog=R.drawable.saleinorder_png;
+    private int imageLogoCopy = R.drawable.salein;
+    private int imageLogo = R.drawable.salein;
+    private int imgIconDialog = R.drawable.saleinorder_png;
     private int imgBackground = 0;
-    private String nameCompany="Salein Order";
+    private String nameCompany = "Salein Order";
 
 
     //region Variable DialogUpdate
@@ -222,7 +222,6 @@ public class MainOrderMobileFragment extends Fragment {
     private String maxSales = "0";
 
 
-
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -230,7 +229,6 @@ public class MainOrderMobileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
@@ -242,11 +240,10 @@ public class MainOrderMobileFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-
         //region Delete InvoiceDetail UnNecessary
-        if (App.mode==1){
-            List<InvoiceDetail> invDetail= Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
-            for (int i=0;i<invDetail.size();i++){
+        if (App.mode == 1) {
+            List<InvoiceDetail> invDetail = Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
+            for (int i = 0; i < invDetail.size(); i++) {
                 InvoiceDetail.delete(invDetail.get(i));
             }
         }
@@ -266,9 +263,6 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtNameCustomer.setTextSize(fontSize);
         binding.orderListTvRegister.setTextSize(fontSize);
         //endregion Configuration Text Size
-
-
-
 
 
         //region Set Icon And Title
@@ -303,7 +297,7 @@ public class MainOrderMobileFragment extends Fragment {
                     imgIconDialog = R.drawable.noon;
                     break;
             }
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
 
         }
 
@@ -393,9 +387,9 @@ public class MainOrderMobileFragment extends Fragment {
                     if (s.toString().isEmpty()) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
                         binding.edtNameCustomer.setHint("نام مشترک");
-                    } else if (s.toString().length()>5){
+                    } else if (s.toString().length() > 5) {
 
-                        getAccountSearch1(s.toString(),0);
+                        getAccountSearch1(s.toString(), 0);
                     }
 
 
@@ -403,17 +397,16 @@ public class MainOrderMobileFragment extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    int p=0;
+                    int p = 0;
                 }
             };
-
 
 
             accAdapter.setOnClickItemListener((account) -> {
                 Account.deleteAll(Account.class);
                 Account.saveInTx(account);
                 Acc_GUID = account.I;
-                Acc_NAME =account.N;
+                Acc_NAME = account.N;
                 binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
                 binding.edtNameCustomer.setText(account.N);
                 binding.accountRecyclerView.setVisibility(View.GONE);
@@ -432,14 +425,8 @@ public class MainOrderMobileFragment extends Fragment {
             binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
 
 
-
-
         }
         //endregion Configuration Organization Application
-
-
-
-
 
 
         //region Configuration Client Application
@@ -508,11 +495,12 @@ public class MainOrderMobileFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
                         bundle.putString("Inv_GUID", Inv_GUID);
+                        bundle.putBoolean("Seen", Seen);
                         bundle.putString("Tbl_GUID", Tbl_GUID);
                         bundle.putString("Ord_TYPE", Ord_TYPE);
                         bundle.putString("Acc_Name", Acc_NAME);
                         bundle.putString("Acc_GUID", Acc_GUID);
-                        if (!Inv_GUID_ORG.equals("") && App.mode==2)
+                        if (!Inv_GUID_ORG.equals("") && App.mode == 2)
                             bundle.putBoolean("EDIT", true);
                         else
                             bundle.putBoolean("EDIT", false);
@@ -591,21 +579,21 @@ public class MainOrderMobileFragment extends Fragment {
         try {
             Acc_NAME = bnd.getString("Acc_NAME");
             Acc_GUID = bnd.getString("Acc_GUID");
-        }catch (Exception ignore){ }
+            Seen = bnd.getBoolean("Seen");
+        } catch (Exception ignore) {
+        }
 
         //endregion Get Bundle
 
 
-        if (App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)){
+        if (App.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
             binding.edtNameCustomer.setEnabled(false);
             binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
             binding.edtNameCustomer.setText(Acc_NAME);
             binding.accountRecyclerView.setVisibility(View.GONE);
             binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-            getAccountSearch1(Acc_NAME,1);
+            getAccountSearch1(Acc_NAME, 1);
         }
-
-
 
 
         //region Create Order
@@ -620,11 +608,9 @@ public class MainOrderMobileFragment extends Fragment {
                     Inv_GUID = UUID.randomUUID().toString();
                     sharedPreferences.edit().putString(name, Inv_GUID).apply();
                 }
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
                 Inv_GUID = UUID.randomUUID().toString();
             }
-
-
 
 
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -660,13 +646,6 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Create Order
 
 
-
-
-
-
-
-
-
         //region Cast Variable Dialog Sync
         dialogSync = new Dialog(getActivity());
         dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -685,7 +664,6 @@ public class MainOrderMobileFragment extends Fragment {
                 getFragmentManager().popBackStack();
             else
                 getActivity().finish();
-
 
 
         });
@@ -797,14 +775,15 @@ public class MainOrderMobileFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
+                bundle.putBoolean("Seen", Seen);
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Tbl_GUID", Tbl_GUID);
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals("") && App.mode==2)
+                if (!Inv_GUID_ORG.equals("") && App.mode == 2)
                     bundle.putBoolean("EDIT", true);
-                else if ((App.mode==1 && !Inv_GUID_ORG.equals(Tbl_GUID)) )
+                else if ((App.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
                     bundle.putBoolean("EDIT", true);
                 else
                     bundle.putBoolean("EDIT", false);
@@ -973,8 +952,8 @@ public class MainOrderMobileFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (s.toString().isEmpty()){
-                    emptySearch=true;
+                if (s.toString().isEmpty()) {
+                    emptySearch = true;
                     productList.clear();
                     productAdapter.notifyDataSetChanged();
 
@@ -985,8 +964,8 @@ public class MainOrderMobileFragment extends Fragment {
                         }
                     productAdapter.setMaxSale(maxSales);
                     productAdapter.notifyDataSetChanged();
-                }else {
-                    emptySearch=false;
+                } else {
+                    emptySearch = false;
                     getSearchProduct(s.toString());
                 }
 
@@ -1115,74 +1094,74 @@ public class MainOrderMobileFragment extends Fragment {
 
     private void getProductLevel1() {
 
-      if (!isNetworkAvailable(getActivity())){
-          ShowErrorConnection("خطا در اتصال به اینترنت");
-        return;
+        if (!isNetworkAvailable(getActivity())) {
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
         }
 
-            try {
-                compositeDisposable.add(
-                        App.api.getProductLevel1("saleinkit_api", userName, passWord)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .doOnSubscribe(disposable -> {
-                                })
-                                .subscribe(jsonElement -> {
-                                            Gson gson = new Gson();
-                                            Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
-                                            }.getType();
-                                            ModelProductLevel1 iDs;
+        try {
+            compositeDisposable.add(
+                    App.api.getProductLevel1("saleinkit_api", userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                        Gson gson = new Gson();
+                                        Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
+                                        }.getType();
+                                        ModelProductLevel1 iDs;
 
-                                            try {
-                                                iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
-                                            } catch (Exception e) {
-                                                error =  "مدل دریافت شده از  گروه کالاها نا معتبر است";
-                                                showError(error);
-                                                binding.progressbar.setVisibility(View.GONE);
-                                                return;
-                                            }
-
-                                            if (iDs == null) {
-                                                error =  "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
-                                                showError(error);
-                                                binding.progressbar.setVisibility(View.GONE);
-                                                return;
-                                            }
-                                            productLevel1List.addAll(iDs.getProductLevel1());
-                                            if (productLevel1List.size() == 1)
-                                                binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-                                            productLevel1Adapter.notifyDataSetChanged();
-
-
-                                            if (productLevel1List.size() > 0) {
-                                                productLevel1List.get(0).Click = true;
-                                                getProductLevel2(productLevel1List.get(0).getI());
-                                            } else {
-                                                binding.progressbar.setVisibility(View.GONE);
-                                                binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
-                                                binding.orderTxtError.setVisibility(View.VISIBLE);
-                                            }
-
-                                        }
-                                        , throwable -> {
-                                            error =  "فروشگاه تعطیل می باشد.";
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
+                                        } catch (Exception e) {
+                                            error = "مدل دریافت شده از  گروه کالاها نا معتبر است";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        if (iDs == null) {
+                                            error = "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
+                                            showError(error);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+                                        productLevel1List.addAll(iDs.getProductLevel1());
+                                        if (productLevel1List.size() == 1)
+                                            binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                                        productLevel1Adapter.notifyDataSetChanged();
 
 
-                                        })
-                );
-            } catch (Exception e) {
-                error = "خطا در اتصال به سرور برای دریافت گروه کالاها";
-                showError(error);
-                binding.progressbar.setVisibility(View.GONE);
-            }
+                                        if (productLevel1List.size() > 0) {
+                                            productLevel1List.get(0).Click = true;
+                                            getProductLevel2(productLevel1List.get(0).getI());
+                                        } else {
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                        }
+
+                                    }
+                                    , throwable -> {
+                                        error = "فروشگاه تعطیل می باشد.";
+                                        showError(error);
+                                        binding.progressbar.setVisibility(View.GONE);
+
+
+                                    })
+            );
+        } catch (Exception e) {
+            error = "خطا در اتصال به سرور برای دریافت گروه کالاها";
+            showError(error);
+            binding.progressbar.setVisibility(View.GONE);
+        }
 
 
     }
 
     private void getProductLevel2(String GuidPrdLvl1) {
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
         }
@@ -1203,7 +1182,7 @@ public class MainOrderMobileFragment extends Fragment {
                                         try {
                                             iDs = gson.fromJson(jsonElement, typeModelProduct2);
                                         } catch (Exception e) {
-                                            error =  "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
+                                            error = "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
                                             showError(error);
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
@@ -1253,7 +1232,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         } else {
 
 
-
                                             binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
                                             binding.orderTxtError.setVisibility(View.VISIBLE);
                                             binding.progressbar.setVisibility(View.GONE);
@@ -1281,15 +1259,10 @@ public class MainOrderMobileFragment extends Fragment {
         }
 
 
-
-
-
-
-
     }
 
     private void getProduct1(String GuidPrdLvl2) {
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
         }
@@ -1359,7 +1332,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         }
 
 
-
                                         productAdapter.setMaxSale(maxSales);
                                         productAdapter.notifyDataSetChanged();
 
@@ -1376,7 +1348,7 @@ public class MainOrderMobileFragment extends Fragment {
                                     })
             );
         } catch (Exception e) {
-            error ="خطا در اتصال به سرور برای دریافت کالاها";
+            error = "خطا در اتصال به سرور برای دریافت کالاها";
             showError(error);
         }
 
@@ -1425,7 +1397,7 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private void getDescription(String userName, String pass, String id) {
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
         }
@@ -1470,25 +1442,21 @@ public class MainOrderMobileFragment extends Fragment {
 
                             }, throwable -> {
                                 customProgress.hideProgress();
-                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت توضیحات" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت توضیحات", Toast.LENGTH_SHORT).show();
 
                             })
             );
         } catch (Exception e) {
             customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در دریافت توضیحات" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "خطا در دریافت توضیحات", Toast.LENGTH_SHORT).show();
         }
-
-
-
-
 
 
     }
 
 
     private void showError(String error) {
-        imageLogoCopy=imgIconDialog;
+        imageLogoCopy = imgIconDialog;
         ivIconSync.setImageResource(imageLogoCopy);
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
@@ -1542,7 +1510,6 @@ public class MainOrderMobileFragment extends Fragment {
                     items.addAll(productListData.subList(start, end));
                     if (currentPage != 1) productAdapter.removeLoadingView();
                     productList.addAll(items);
-
 
 
                     productAdapter.notifyDataSetChanged();
@@ -1634,10 +1601,10 @@ public class MainOrderMobileFragment extends Fragment {
 
     }
 
-    private void getAccountSearch1(String word,int type){
+    private void getAccountSearch1(String word, int type) {
         try {
             compositeDisposable.add(
-                    App.api.getAccountSearch1("saleinkit_api",userName, passWord,word )
+                    App.api.getAccountSearch1("saleinkit_api", userName, passWord, word)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1662,30 +1629,26 @@ public class MainOrderMobileFragment extends Fragment {
                                     ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
 
+                                } else {
 
-                                }
-                                else {
-
-                                    if (type==0){
+                                    if (type == 0) {
                                         accList.clear();
                                         accList.addAll(iDs.getAccountList());
                                         accAdapter.notifyDataSetChanged();
                                         binding.accountRecyclerView.setVisibility(View.VISIBLE);
-                                    }else {
+                                    } else {
                                         Account.deleteAll(Account.class);
                                         accList.addAll(iDs.getAccountList());
-                                        CollectionUtils.filter(accList,a->a.I.equals(Acc_GUID));
-                                        if (accList.size()>0)
+                                        CollectionUtils.filter(accList, a -> a.I.equals(Acc_GUID));
+                                        if (accList.size() > 0)
                                             Account.saveInTx(accList.get(0));
                                     }
-
 
 
                                 }
                                 customProgress.hideProgress();
 
                             }, throwable -> {
-
 
 
                             })
@@ -1720,13 +1683,13 @@ public class MainOrderMobileFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    error =  "مدل دریافت شده از تنظیمات نا معتبر است";
+                                    error = "مدل دریافت شده از تنظیمات نا معتبر است";
                                     showError(error);
                                     return;
                                 }
 
                                 if (iDs == null) {
-                                    error =  "لیست دریافت شده از تنظیمات نا معتبر می باشد";
+                                    error = "لیست دریافت شده از تنظیمات نا معتبر می باشد";
                                     showError(error);
                                 } else {
 
@@ -1761,7 +1724,7 @@ public class MainOrderMobileFragment extends Fragment {
                             })
             );
         } catch (Exception e) {
-            error ="خطا در اتصال به سرور برای دریافت تنطیمات";
+            error = "خطا در اتصال به سرور برای دریافت تنطیمات";
             Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
 
         }
@@ -1773,7 +1736,7 @@ public class MainOrderMobileFragment extends Fragment {
     private void getSearchProduct(String s) {
         try {
             compositeDisposable.add(
-                    App.api.getSearchProduct("saleinkit_api",userName, passWord, s)
+                    App.api.getSearchProduct("saleinkit_api", userName, passWord, s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1794,7 +1757,7 @@ public class MainOrderMobileFragment extends Fragment {
                                             return;
                                         }
 
-                                        if (!emptySearch){
+                                        if (!emptySearch) {
                                             productList.clear();
 
                                             CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
@@ -1808,9 +1771,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         }
 
 
-
-
-
                                     }
                                     , throwable -> {
                                     })
@@ -1819,9 +1779,10 @@ public class MainOrderMobileFragment extends Fragment {
         }
 
     }
-    public  boolean isNetworkAvailable(Activity activity) {
+
+    public boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

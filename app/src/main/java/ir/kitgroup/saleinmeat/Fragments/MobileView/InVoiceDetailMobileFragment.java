@@ -97,12 +97,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private String Inv_GUID;
     private String Ord_TYPE;
     private String Tbl_GUID = "";
+    private Boolean Seen =false;
     private boolean edit = false;
     private String type;
 
     private double sumPrice;
     private double sumPurePrice;
     private double sumDiscounts;
+    private double sumDiscountsInvoiceRial;
 
 
     private List<InvoiceDetail> invoiceDetailList;
@@ -289,6 +291,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Ord_TYPE = bundle.getString("Ord_TYPE");
         try {
             Acc_NAME = bundle.getString("Acc_NAME");
+            Seen = bundle.getBoolean("Seen");
 
                 binding.tvNameCustomer.setText(Acc_NAME);
 
@@ -448,7 +451,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         invoiceDetailList.clear();
 
 
-        if (type.equals("1"))
+        if (type.equals("1") )
             binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
@@ -457,7 +460,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
 
-        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type);
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type,Seen);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -512,7 +515,13 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     ir.kitgroup.saleinmeat.DataBase.Product product = Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
                     if (product != null) {
                         double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice());
-                        double discountPrice = sumprice * (product.getPercDis() / 100);
+
+                        double discountPrice=0.0;
+                        if (type.equals("1") || Seen)
+                            discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT/ 100);
+
+                        else
+                            discountPrice = sumprice * (product.getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
                         sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice());
@@ -640,6 +649,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 bundle.putString("Tbl_GUID", Tbl_GUID);
 
             bundle.putString("Inv_GUID", Inv_GUID);
+            bundle.putBoolean("Seen", true);
             bundle.putString("Acc_NAME", Acc_NAME);
             bundle.putString("Acc_GUID", Acc_GUID);
 
@@ -896,11 +906,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                             product.update();
                                         else
                                             ir.kitgroup.saleinmeat.DataBase.Product.saveInTx(list1.get(0));
+
                                     }
 
                                     if (counter == invDetails.size()) {
                                         invoiceDetailList.clear();
-
 
                                         for (int j = 0; j < invDetails.size(); j++) {
                                             if (invDetails.get(j).INV_DET_DESCRIBTION != null && invDetails.get(j).INV_DET_DESCRIBTION.equals("توزیع")) {

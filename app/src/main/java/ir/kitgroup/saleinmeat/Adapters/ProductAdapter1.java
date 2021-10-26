@@ -72,6 +72,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private final List<Product> productsList;
 
     private String maxSale;
+    private String Seen;
 
     private String Inv_GUID;
     private String Tbl_GUID;
@@ -149,6 +150,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     public void setMaxSale(String MaxSale) {
         this.maxSale = MaxSale;
+    }
+
+    public void setType(String type) {
+        this.Seen = Seen;
     }
 
     public void setInv_GUID(String inv_guid) {
