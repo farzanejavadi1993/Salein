@@ -14,13 +14,14 @@
 
 
         <TextView
+
             android:textColor="@color/white"
             android:layout_margin="3dp"
-            android:layout_alignParentRight="true"
             android:id="@+id/launcher_recycle_table_txt_timer"
             style="@style/launcher_recycle_table_TextView"
             />
         <TextView
+
             android:id="@+id/launcher_recycle_table_txt_name"
             style="@style/launcher_recycle_table_TextView"
             android:layout_centerInParent="true"
