@@ -513,7 +513,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                     case R.id.profile:
 
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new SettingFragment()).addToBackStack("SettingF").commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new SettingFragment(),"SettingFragment").addToBackStack("SettingF").commit();
                         return true;
                 }
 
