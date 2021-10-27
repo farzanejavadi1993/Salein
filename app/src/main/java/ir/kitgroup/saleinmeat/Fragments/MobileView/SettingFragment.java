@@ -1,9 +1,13 @@
 package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,13 +23,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.DataBase.Account;
 import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
@@ -37,6 +46,8 @@ import ir.kitgroup.saleinmeat.R;
 
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.databinding.FragmentSettingBinding;
+import ir.kitgroup.saleinmeat.models.ModelAccount;
+import ir.kitgroup.saleinmeat.models.ModelLog;
 
 public class SettingFragment extends Fragment {
 
@@ -105,10 +116,16 @@ public class SettingFragment extends Fragment {
 
 
         binding.btnCredit.setOnClickListener(v -> {
-            Uri uri = Uri.parse(link);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-            startActivityForResult(intent, 44);
+            if (!link.equals(""))
+            {
+                Uri uri = Uri.parse(link);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                startActivityForResult(intent, 44);
+            }else {
+                Toast.makeText(getActivity(), "دسترسی به باشگاه امکان پذیر نمی باشد", Toast.LENGTH_SHORT).show();
+            }
+
         });
         binding.btnLogOut.setOnClickListener(v -> {
             if (Account.count(Account.class) > 0)
@@ -174,19 +191,105 @@ public class SettingFragment extends Fragment {
 
         binding.btnOrderList.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListFMobile").commit());
 
-        Account acc = Select.from(Account.class).first();
-        if (acc != null && acc.CRDT != null)
-            binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-
-            binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-
-
 
 
     }
 
+
+    @SuppressLint("SetTextI18n")
+    private void getInquiryAccount1(String userName, String passWord, String mobile) {
+
+        if (!isNetworkAvailable(getActivity())){
+            binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+            binding.txtCredit.setText("خطا در اتصال به اینترنت");
+            return;
+        }
+
+        try {
+            compositeDisposable.add(
+                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelAccount>() {
+                                }.getType();
+                                ModelAccount iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+
+                                if (iDs != null)
+                                    if (iDs.getAccountList() == null) {
+                                        Type typeIDs0 = new TypeToken<ModelLog>() {
+                                        }.getType();
+                                        ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
+
+                                        if (iDs0.getLogs() != null) {
+                                            String description = iDs0.getLogs().get(0).getDescription();
+                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } else {
+
+                                        //user is register
+                                        if (iDs.getAccountList().size() > 0) {
+                                            Account.deleteAll(Account.class);
+                                            Account.saveInTx(iDs.getAccountList());
+
+
+                                            Account acc = Select.from(Account.class).first();
+                                            if (acc != null && acc.CRDT != null)
+                                                binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+
+                                            binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+
+
+                                        } else {
+
+                                            binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                                            binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
+
+                                        }
+
+
+
+                                    }
+
+
+
+                            }, throwable -> {
+
+                                getActivity().getResources().getColor(R.color.red_table);
+                                binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
+
+
+                            })
+            );
+        } catch (Exception e) {
+
+
+        }
+
+    }
+
+
+    private   boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+
+        getInquiryAccount1(userName,passWord,mobile);
 
         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("SettingFragment");
         FragmentManager ft = getActivity().getSupportFragmentManager();

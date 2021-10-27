@@ -23,18 +23,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
 
-
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.Random;
 
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinmeat.DataBase.Account;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.DataBase.User;
 
@@ -42,6 +47,8 @@ import ir.kitgroup.saleinmeat.R;
 import ir.kitgroup.saleinmeat.Util.Util;
 import ir.kitgroup.saleinmeat.databinding.FragmentLoginMobileBinding;
 
+import ir.kitgroup.saleinmeat.models.ModelAccount;
+import ir.kitgroup.saleinmeat.models.ModelLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +58,7 @@ public class LoginClientFragment extends Fragment {
 
 
     //region PARAMETER
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
     private User user;
 
@@ -178,48 +186,42 @@ public class LoginClientFragment extends Fragment {
 
     //region Method
     private void login(String mobile, int code, String message) {
-
-
         try {
-
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
+            compositeDisposable.add(
+                    App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                binding.progressBar.setVisibility(View.GONE);
+                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                binding.btnLogin.setEnabled(true);
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("mobile", mobile);
+                                bundle.putInt("code", code);
+                                ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
+                                confirmCodeFragment.setArguments(bundle);
+                                FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
+                                addFragment.commit();
 
 
-            Call<String> call = App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                            }, throwable -> {
 
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("mobile", mobile);
-                    bundle.putInt("code", code);
-                    ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
-                    confirmCodeFragment.setArguments(bundle);
-                    FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
-                    addFragment.commit();
+                                Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
+                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                binding.btnLogin.setEnabled(true);
+                                binding.progressBar.setVisibility(View.GONE);
 
 
-                }
-
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                    Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-                    binding.progressBar.setVisibility(View.GONE);
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
+                            })
+            );
+        }
+        catch (NetworkOnMainThreadException ex) {
             Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
@@ -227,7 +229,6 @@ public class LoginClientFragment extends Fragment {
 
 
         }
-
 
     }
     //endregion Method

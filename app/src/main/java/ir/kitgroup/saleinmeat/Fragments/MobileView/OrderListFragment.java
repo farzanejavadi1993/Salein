@@ -264,7 +264,7 @@ public class OrderListFragment extends Fragment {
 
     }
 
-    public  boolean isNetworkAvailable(Activity activity) {
+    private   boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

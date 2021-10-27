@@ -2,6 +2,10 @@ package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.os.CountDownTimer;
@@ -32,6 +36,9 @@ import java.lang.reflect.Type;
 import java.util.Random;
 
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.DataBase.Account;
@@ -50,6 +57,7 @@ import retrofit2.Response;
 public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentConfirmCodeBinding binding;
     private User user;
     private int imageLogo;
@@ -368,7 +376,7 @@ public class ConfirmCodeFragment extends Fragment {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
              return;
             }
-            getInquiryAccount(user.userName, user.passWord, mobile);
+            getInquiryAccount1(user.userName, user.passWord, mobile);
         });
         //endregion Action BtnLogin
 
@@ -382,178 +390,65 @@ public class ConfirmCodeFragment extends Fragment {
         //startTimer();
         binding.resendCode.setOnClickListener(v -> {
             code= new Random(System.nanoTime()).nextInt(89000) + 10000;
-            login(mobile, String.valueOf(code));
+           // login(mobile, String.valueOf(code));
         });
     }
 
 
 
     //region Method
-    private void getInquiryAccount(String userName, String passWord, String mobile) {
-
-        try {
-            Call<String> call = App.api.getInquiryAccount(userName, passWord, mobile, "", "", 1,1);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnLogin.setEnabled(false);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelAccount>() {
-                    }.getType();
-                    ModelAccount iDs;
-                    try {
-                        iDs = gson.fromJson(response.body(), typeIDs);
-                    } catch (Exception e) {
-                        Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
-                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                        binding.btnLogin.setEnabled(true);
-                        binding.progressBar.setVisibility(View.GONE);
-                        return;
-                    }
-
-
-                    assert iDs != null;
-                    if (iDs.getAccountList() == null) {
-                        Type typeIDs0 = new TypeToken<ModelLog>() {
-                        }.getType();
-                        ModelLog iDs0 = gson.fromJson(response.body(), typeIDs0);
-
-                        if (iDs0.getLogs() != null) {
-                            String description = iDs0.getLogs().get(0).getDescription();
-                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                        }
-
-                    } else {
-
-                        //region Account Is Register
-                        if (iDs.getAccountList().size() > 0) {
-                            Account.deleteAll(Account.class);
-                            Account.saveInTx(iDs.getAccountList());
-                            getFragmentManager().popBackStack();
-
-
-                            //region Show All Company
-                            if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
-                                FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
-                                replaceFragment.commit();
-                            }
-                            //endregion Show All Company
-
-
-                            //region Go To MainOrderFragment Because Account Is Register
-                            else {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("Ord_TYPE", "");
-                                bundle.putString("Tbl_GUID", "");
-                                bundle.putString("Inv_GUID", "");
-                                MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                                mainOrderMobileFragment.setArguments(bundle);
-                                FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-                                replaceFragment.commit();
-                            }
-                            //endregion Go To MainOrderFragment Because Account Is Register
-
-
-                        }
-                        //endregion Account Is Register
-
-
-                        //region Account Is Not Register
-                        else {
-                            getFragmentManager().popBackStack();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("mobile", mobile);
-                            MapFragment mapFragment = new MapFragment();
-                            mapFragment.setArguments(bundle);
-                            FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment, "MapFragment");
-                            addFragment.commit();
-                        }
-                        //endregion Account Is Not Register
-
-
-                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                        binding.btnLogin.setEnabled(true);
-                        binding.progressBar.setVisibility(View.GONE);
-
-                    }
-
-
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                    Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان." + t.toString(), Toast.LENGTH_SHORT).show();
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-                    binding.progressBar.setVisibility(View.GONE);
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان." + ex.toString(), Toast.LENGTH_SHORT).show();
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            binding.progressBar.setVisibility(View.GONE);
-        }
-
-
-    }
 
 
 
 
 
 
-    private void login(String mobile, String message) {
 
-
-        try {
-
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnLogin.setEnabled(false);
-            binding.progressBar.setVisibility(View.VISIBLE);
-
-
-            Call<String> call = App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-
-                }
-
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-                    binding.progressBar.setVisibility(View.GONE);
-
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-            Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            binding.progressBar.setVisibility(View.GONE);
-
-
-        }
-
-
-    }
+//    private void login(String mobile, String message) {
+//
+//
+//        try {
+//
+//            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+//            binding.btnLogin.setEnabled(false);
+//            binding.progressBar.setVisibility(View.VISIBLE);
+//
+//
+//            Call<String> call = App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2);
+//            call.enqueue(new Callback<String>() {
+//                @Override
+//                public void onResponse(Call<String> call, Response<String> response) {
+//
+//                    binding.progressBar.setVisibility(View.GONE);
+//                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+//                    binding.btnLogin.setEnabled(true);
+//
+//                }
+//
+//
+//                @Override
+//                public void onFailure(Call<String> call, Throwable t) {
+//                    Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
+//                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+//                    binding.btnLogin.setEnabled(true);
+//                    binding.progressBar.setVisibility(View.GONE);
+//
+//
+//                }
+//            });
+//
+//
+//        } catch (NetworkOnMainThreadException ex) {
+//            Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
+//            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+//            binding.btnLogin.setEnabled(true);
+//            binding.progressBar.setVisibility(View.GONE);
+//
+//
+//        }
+//
+//
+//    }
 
 
 
@@ -604,5 +499,137 @@ public class ConfirmCodeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
       //  stopTimer();
+    }
+
+
+
+    @SuppressLint("SetTextI18n")
+    private void getInquiryAccount1(String userName, String passWord, String mobile) {
+
+        if (!isNetworkAvailable(getActivity())){
+
+            Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+            binding.btnLogin.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            compositeDisposable.add(
+                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelAccount>() {
+                                }.getType();
+                                ModelAccount iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                    binding.btnLogin.setEnabled(true);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    return;
+                                }
+
+
+                                assert iDs != null;
+                                if (iDs.getAccountList() == null) {
+                                    Type typeIDs0 = new TypeToken<ModelLog>() {
+                                    }.getType();
+                                    ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
+
+                                    if (iDs0.getLogs() != null) {
+                                        String description = iDs0.getLogs().get(0).getDescription();
+                                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } else {
+
+                                    //region Account Is Register
+                                    if (iDs.getAccountList().size() > 0) {
+                                        Account.deleteAll(Account.class);
+                                        Account.saveInTx(iDs.getAccountList());
+                                        getFragmentManager().popBackStack();
+
+
+                                        //region Show All Company
+                                        if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
+                                            FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                                            replaceFragment.commit();
+                                        }
+                                        //endregion Show All Company
+
+
+                                        //region Go To MainOrderFragment Because Account Is Register
+                                        else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("Ord_TYPE", "");
+                                            bundle.putString("Tbl_GUID", "");
+                                            bundle.putString("Inv_GUID", "");
+                                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                                            mainOrderMobileFragment.setArguments(bundle);
+                                            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
+                                            replaceFragment.commit();
+                                        }
+                                        //endregion Go To MainOrderFragment Because Account Is Register
+
+
+                                    }
+                                    //endregion Account Is Register
+
+
+                                    //region Account Is Not Register
+                                    else {
+                                        getFragmentManager().popBackStack();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("mobile", mobile);
+                                        MapFragment mapFragment = new MapFragment();
+                                        mapFragment.setArguments(bundle);
+                                        FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment, "MapFragment");
+                                        addFragment.commit();
+                                    }
+                                    //endregion Account Is Not Register
+
+
+                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                    binding.btnLogin.setEnabled(true);
+                                    binding.progressBar.setVisibility(View.GONE);
+
+                                }
+
+
+
+                            }, throwable -> {
+
+                                Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                binding.btnLogin.setEnabled(true);
+                                binding.progressBar.setVisibility(View.GONE);
+
+
+                            })
+            );
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            binding.progressBar.setVisibility(View.GONE);
+
+        }
+
+    }
+
+
+    private   boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

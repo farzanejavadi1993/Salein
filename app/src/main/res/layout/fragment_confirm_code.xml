@@ -199,7 +199,6 @@
 
 
             <ProgressBar
-
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="30dp"

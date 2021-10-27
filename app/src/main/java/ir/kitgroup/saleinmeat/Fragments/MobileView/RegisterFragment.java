@@ -1,6 +1,11 @@
 package ir.kitgroup.saleinmeat.Fragments.MobileView;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.view.LayoutInflater;
@@ -29,6 +34,9 @@ import java.util.List;
 
 import java.util.UUID;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.classes.App;
 import ir.kitgroup.saleinmeat.DataBase.Account;
@@ -46,7 +54,7 @@ import retrofit2.Response;
 public class RegisterFragment extends Fragment {
     //region  Parameter
 
-
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
     private User user;
@@ -165,10 +173,19 @@ public class RegisterFragment extends Fragment {
         public List<Account> Account;
     }
 
+
+
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
-
+        if (!isNetworkAvailable(getActivity())) {
+            Toast.makeText(getActivity(),"خطا در اتصال به اینترنت",Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
+            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+            binding.btnRegisterInformation.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+
             JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
             jsonObjectAcc.Account = accounts;
 
@@ -177,85 +194,85 @@ public class RegisterFragment extends Fragment {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnRegisterInformation.setEnabled(false);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+            compositeDisposable.add(
+                    App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
 
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
+                                Gson gson1 = new Gson();
+                                Type typeIDs = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDs = gson1.fromJson(jsonElement, typeIDs);
 
-                    assert iDs != null;
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
-                    Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                    if (message == 1) {
+                                assert iDs != null;
+                                int message = iDs.getLogs().get(0).getMessage();
+                                String description = iDs.getLogs().get(0).getDescription();
+                                Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                if (message == 1) {
 
-                        Account.deleteAll(Account.class);
-                        Account.saveInTx(accountsList);
-                        accountsList.clear();
+                                    Account.deleteAll(Account.class);
+                                    Account.saveInTx(accountsList);
+                                    accountsList.clear();
 
-                        //region Show All Company
+                                    //region Show All Company
 
-                        if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
-                            FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
-                            replaceFragment.commit();
-                        }
-                        //endregion Show All Company
+                                    if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
+                                        FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                                        replaceFragment.commit();
+                                    }
+                                    //endregion Show All Company
 
-                        //region Go To MainOrderFragment Because Account Is Register
-                        else {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("Ord_TYPE", "");
-                            bundle.putString("Tbl_GUID", "");
-                            bundle.putString("Inv_GUID", "");
-                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                            mainOrderMobileFragment.setArguments(bundle);
-                            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-                            replaceFragment.commit();
-                        }
-                        //endregion Go To MainOrderFragment Because Account Is Register
+                                    //region Go To MainOrderFragment Because Account Is Register
+                                    else {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("Ord_TYPE", "");
+                                        bundle.putString("Tbl_GUID", "");
+                                        bundle.putString("Inv_GUID", "");
+                                        MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                                        mainOrderMobileFragment.setArguments(bundle);
+                                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
+                                        replaceFragment.commit();
+                                    }
+                                    //endregion Go To MainOrderFragment Because Account Is Register
 
-                    }
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    binding.progressBar.setVisibility(View.GONE);
+                                }
+                                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                binding.btnRegisterInformation.setEnabled(true);
+                                binding.progressBar.setVisibility(View.GONE);
 
+                            }, throwable -> {
+                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" , Toast.LENGTH_SHORT).show();
 
-                }
+                                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                binding.btnRegisterInformation.setEnabled(true);
+                                binding.progressBar.setVisibility(View.GONE);
 
+                            })
+            );
+        } catch (Exception e) {
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" + t.toString(), Toast.LENGTH_SHORT).show();
-
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    binding.progressBar.setVisibility(View.GONE);
-
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" + ex.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در ثبت مشتری" , Toast.LENGTH_SHORT).show();
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnRegisterInformation.setEnabled(true);
             binding.progressBar.setVisibility(View.GONE);
-
         }
 
 
+
     }
+
+
+
     //endregion Method
 
 
-
+    private   boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

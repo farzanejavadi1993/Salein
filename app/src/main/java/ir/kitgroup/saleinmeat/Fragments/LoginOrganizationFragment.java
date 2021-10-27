@@ -18,25 +18,36 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 
 import java.util.Objects;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.saleinmeat.Activities.Classes.LauncherActivity;
 import ir.kitgroup.saleinmeat.Connect.API;
+import ir.kitgroup.saleinmeat.DataBase.Account;
+import ir.kitgroup.saleinmeat.Fragments.MobileView.MainOrderMobileFragment;
+import ir.kitgroup.saleinmeat.Fragments.MobileView.MapFragment;
+import ir.kitgroup.saleinmeat.Fragments.MobileView.StoriesFragment;
 import ir.kitgroup.saleinmeat.Util.Util;
 import ir.kitgroup.saleinmeat.classes.App;
-import ir.kitgroup.saleinmeat.classes.CustomProgress;
+
 
 import ir.kitgroup.saleinmeat.DataBase.User;
 
@@ -44,6 +55,8 @@ import ir.kitgroup.saleinmeat.DataBase.User;
 import ir.kitgroup.saleinmeat.R;
 
 import ir.kitgroup.saleinmeat.databinding.FragmentOrganizationLoginBinding;
+import ir.kitgroup.saleinmeat.models.ModelAccount;
+import ir.kitgroup.saleinmeat.models.ModelLog;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,8 +68,9 @@ public class LoginOrganizationFragment extends Fragment {
 
 
     //region Parameter
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentOrganizationLoginBinding binding;
-    private CustomProgress customProgress;
+
     //endregion Parameter
 
 
@@ -76,7 +90,6 @@ public class LoginOrganizationFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        customProgress = CustomProgress.getInstance();
 
 
         binding.btnLogin.setOnClickListener(v -> {
@@ -114,7 +127,7 @@ public class LoginOrganizationFragment extends Fragment {
 
     private void Login(String userName, String passWord, String ipOrganization, String saleCode) {
 
-      String  baseUrl = "http://" + Util.toEnglishNumber(ipOrganization) + "/api/REST/";
+        String baseUrl = "http://" + Util.toEnglishNumber(ipOrganization) + "/api/REST/";
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
@@ -140,60 +153,63 @@ public class LoginOrganizationFragment extends Fragment {
                     .build();
 
             App.api = App.retrofit.create(API.class);
-            Call<String> call = App.api.Login(userName, passWord);
-
-            customProgress.showProgress(getContext(), getString(R.string.get_data_from_server), false);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    binding.btnLogin.setEnabled(true);
-                    assert response.body() != null;
-                    if (response.body().isEmpty()) {
-
-                        if (User.count(User.class) > 0)
-                            User.deleteAll(User.class);
-
-                        User user = new User();
-                        user.userName = userName;
-                        user.passWord = passWord;
-                        user.ipLocal = ipOrganization;
-                        user.ipStatic = "";
-                        user.numberPos = saleCode;
-                        user.CheckUser = true;
-                        user.save();
-
-                        customProgress.hideProgress();
-                        assert getFragmentManager() != null;
-                        getFragmentManager().popBackStack();
-                        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
-
-                    } else {
-
-                        Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
-                        customProgress.hideProgress();
-                    }
 
 
-                }
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+            binding.btnLogin.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            compositeDisposable.add(
+                    App.api.Login(userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    binding.btnLogin.setEnabled(true);
-                    Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + t.toString(), Toast.LENGTH_SHORT).show();
-                    customProgress.hideProgress();
+                                binding.btnLogin.setEnabled(true);
+                                assert jsonElement != null;
+                                if (jsonElement.isEmpty()) {
 
-                }
-            });
+                                    if (User.count(User.class) > 0)
+                                        User.deleteAll(User.class);
+
+                                    User user = new User();
+                                    user.userName = userName;
+                                    user.passWord = passWord;
+                                    user.ipLocal = ipOrganization;
+                                    user.ipStatic = "";
+                                    user.numberPos = saleCode;
+                                    user.CheckUser = true;
+                                    user.save();
+
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    assert getFragmentManager() != null;
+                                    getFragmentManager().popBackStack();
+                                    requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+
+                                } else {
+
+                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
+                                }
+
+
+                            }, throwable -> {
+
+                                binding.btnLogin.setEnabled(true);
+                                Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
+                                binding.progressBar.setVisibility(View.GONE);
+
+
+                            })
+            );
 
 
         } catch (NetworkOnMainThreadException ex) {
             binding.btnLogin.setEnabled(true);
-            customProgress.hideProgress();
+            binding.progressBar.setVisibility(View.GONE);
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public String appVersion() throws PackageManager.NameNotFoundException {

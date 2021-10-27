@@ -1161,7 +1161,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     public List<InvoiceDetail> getInvoiceDetail() {
         return invDetails;
     }
-    public  boolean isNetworkAvailable(Activity activity) {
+    private   boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

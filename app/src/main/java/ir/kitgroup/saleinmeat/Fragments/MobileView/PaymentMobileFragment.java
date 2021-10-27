@@ -275,6 +275,14 @@ public class PaymentMobileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
+
+        try {
+
+
+
+
         OrdTList = new ArrayList<>();
 
         userName = Select.from(User.class).first().userName;
@@ -1164,6 +1172,9 @@ public class PaymentMobileFragment extends Fragment {
 
          getSetting1();
 
+
+        }catch (Exception ignore){
+        }
     }
 
 

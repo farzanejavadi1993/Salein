@@ -1536,8 +1536,12 @@ public class MainOrderMobileFragment extends Fragment {
 
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
-
+        if (!isNetworkAvailable(getActivity())) {
+            ShowErrorConnection("خطا در اتصال به اینترنت");
+            return;
+        }
         try {
+            customProgress.showProgress(getContext(), "در حال ثبت مشتری در سرور...", true);
             JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
             jsonObjectAcc.Account = accounts;
 
@@ -1546,55 +1550,50 @@ public class MainOrderMobileFragment extends Fragment {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
-            customProgress.showProgress(getContext(), "در حال ثبت مشتری در سرور...", false);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+            compositeDisposable.add(
+                    App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
 
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
+                                Gson gson1 = new Gson();
+                                Type typeIDs = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDs = gson1.fromJson(jsonElement, typeIDs);
 
-                    assert iDs != null;
-                    int message = iDs.getLogs().get(0).getMessage();
-                    String description = iDs.getLogs().get(0).getDescription();
-                    if (message == 1) {
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                        dialogAddAccount.dismiss();
-                        customProgress.hideProgress();
-                        Acc_GUID = accountsList.get(0).I;
-                        Acc_NAME = accountsList.get(0).N;
-                        binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-                        binding.edtNameCustomer.setText(accountsList.get(0).N);
-                        binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-                        accountsList.clear();
-
-
-                    } else {
-                        customProgress.hideProgress();
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                    }
+                                assert iDs != null;
+                                int message = iDs.getLogs().get(0).getMessage();
+                                String description = iDs.getLogs().get(0).getDescription();
+                                if (message == 1) {
+                                    Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                    dialogAddAccount.dismiss();
+                                    customProgress.hideProgress();
+                                    Acc_GUID = accountsList.get(0).I;
+                                    Acc_NAME = accountsList.get(0).N;
+                                    binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+                                    binding.edtNameCustomer.setText(accountsList.get(0).N);
+                                    binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
+                                    accountsList.clear();
 
 
-                }
+                                } else {
+                                    customProgress.hideProgress();
+                                    Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                }
 
+                            }, throwable -> {
+                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" , Toast.LENGTH_SHORT).show();
+                                customProgress.hideProgress();
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" + t.toString(), Toast.LENGTH_SHORT).show();
-                    customProgress.hideProgress();
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" + ex.toString(), Toast.LENGTH_SHORT).show();
+                            })
+            );
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "خطا در ثبت مشتری" , Toast.LENGTH_SHORT).show();
             customProgress.hideProgress();
         }
+
 
 
     }
@@ -1778,7 +1777,7 @@ public class MainOrderMobileFragment extends Fragment {
 
     }
 
-    public boolean isNetworkAvailable(Activity activity) {
+    private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
