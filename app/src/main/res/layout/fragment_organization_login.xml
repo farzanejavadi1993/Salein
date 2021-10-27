@@ -140,6 +140,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
         <ProgressBar
+            android:visibility="gone"
             android:layout_marginTop="@dimen/margin10"
             android:layout_gravity="center_horizontal"
             android:id="@+id/progressBar"
