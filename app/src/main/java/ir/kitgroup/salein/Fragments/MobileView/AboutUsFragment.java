@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein.R;
@@ -22,8 +25,17 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.AboutUsFragmentBinding;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
+import ir.kitgroup.salein.models.Company;
 
+@AndroidEntryPoint
 public class AboutUsFragment extends Fragment {
+
+
+    @Inject
+    Company company;
+
+
+
 
     //region Parameter
     private AboutUsFragmentBinding binding;
@@ -56,7 +68,7 @@ public class AboutUsFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (Util.getUser(getActivity()).name) {
+        switch (company.name) {
             case "ir.kitgroup.salein":
                 imageLogo = R.drawable.salein;
                 title="سالین دمو";

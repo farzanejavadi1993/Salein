@@ -143,7 +143,7 @@ public class LauncherActivity extends AppCompatActivity {
         }
 
 
-        else if (Util.getUser(LauncherActivity.this).mode ==1 &&
+        else if (company.mode ==1 &&
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")
         ){
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
@@ -153,7 +153,7 @@ public class LauncherActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().popBackStack();
         }
-        else if (Util.getUser(LauncherActivity.this).namePackage!=null && Util.getUser(LauncherActivity.this).namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        else if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             for (int i=0;i<size;i++){

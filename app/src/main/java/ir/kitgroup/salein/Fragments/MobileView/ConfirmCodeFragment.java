@@ -46,6 +46,7 @@ import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
 
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
@@ -58,6 +59,10 @@ public class ConfirmCodeFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
+
+
+    @Inject
+    Company company;
     //region  Parameter
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentConfirmCodeBinding binding;
@@ -111,7 +116,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (Util.getUser(getActivity()).name) {
+        switch (company.name) {
             case "ir.kitgroup.salein":
                 imageLogo = R.drawable.salein;
                 break;
@@ -130,7 +135,7 @@ public class ConfirmCodeFragment extends Fragment {
                 break;
         }
 
-        if (Util.getUser(getActivity()).mode  == 2) {
+        if (company.mode  == 2) {
             binding.ivLogo.setImageResource(imageLogo);
         }
 
@@ -561,7 +566,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
                                         //region Show All Company
-                                        if (Util.getUser(getActivity()).name.equals("ir.kitgroup.salein")) {
+                                        if (company.name.equals("ir.kitgroup.salein")) {
                                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                             replaceFragment.commit();
                                         }

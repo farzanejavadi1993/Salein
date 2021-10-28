@@ -61,6 +61,7 @@ import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.Fragments.ShowDetailFragment;
 
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
@@ -70,6 +71,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     @Inject
     Double ScreenSize;
+
+    @Inject
+    Company company;
     private final Activity context;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -128,7 +132,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         df = new DecimalFormat();
 
         try {
-            switch (Util.getUser(context).name) {
+            switch (company.name) {
                 case "ir.kitgroup.salein":
                     placeHolderImage = R.drawable.salein;
                     break;
@@ -721,7 +725,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-                                                if (Util.getUser(context).mode ==1)
+                                                if (company.mode ==1)
                                                     invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
 

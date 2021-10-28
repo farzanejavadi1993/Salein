@@ -45,6 +45,7 @@ import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentLoginMobileBinding;
+import ir.kitgroup.salein.models.Company;
 
 @AndroidEntryPoint
 
@@ -52,6 +53,10 @@ public class LoginClientFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
+
+
+    @Inject
+    Company company;
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
@@ -95,7 +100,7 @@ public class LoginClientFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
                 case "ir.kitgroup.salein":
                     messageWelcome = "به سالین دمو خوش آمدید";
                     imageLogo = R.drawable.salein;
@@ -127,7 +132,7 @@ public class LoginClientFragment extends Fragment {
 
 
 
-        if (Util.getUser(getActivity()).mode  == 2) {
+        if (company.mode  == 2) {
             binding.tvWelcome.setText(messageWelcome);
             binding.ivLogo.setImageResource(imageLogo);
         }
