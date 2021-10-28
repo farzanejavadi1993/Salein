@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.airbnb.lottie.LottieAnimationView;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -48,7 +50,7 @@ public class Util {
 
     }
 
- public static void playLottieAnimation(String json, LottieAnimationView animationView) {
+    public static void playLottieAnimation(String json, LottieAnimationView animationView) {
 
         if (animationView.isAnimating()) {
             animationView.pauseAnimation();
@@ -59,9 +61,10 @@ public class Util {
         animationView.loop(true);
         animationView.playAnimation();
     }
+
     public static String getPrice() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.context);
-        return sharedPreferences.getString("priceProduct","");
+        return sharedPreferences.getString("priceProduct", "");
     }
 
     public static void hideKeyBoard(Context context, View view) {
@@ -70,8 +73,7 @@ public class Util {
 
     }
 
-    public static final LatLng VANAK_SQUARE = new LatLng(36.310699,  59.599457);
-
+    public static final LatLng VANAK_SQUARE = new LatLng(36.310699, 59.599457);
 
 
     public static String toEnglishNumber(String input) {
@@ -101,12 +103,10 @@ public class Util {
     }
 
 
-
-
-    public static User getUser(@ApplicationContext Context  context) {
-       String name="";
-       String namePackage="";
-       int image=0;
+    public static User getUser(@ApplicationContext Context context) {
+        String name = "";
+        String namePackage = "";
+        int image = 0;
 
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -140,7 +140,7 @@ public class Util {
                     break;
 
                 default:
-                    image =R.drawable.saleinorder_png;
+                    image = R.drawable.saleinorder_png;
                     name = "ir.kitgroup.saleiOrder";
                     namePackage = "ir.kitgroup.saleinOrder";
                     break;
@@ -150,15 +150,15 @@ public class Util {
         }
 
 
-        User user=new User();
-        if (name.equals("ir.kitgroup.salein")){
+        User user = new User();
+        if (name.equals("ir.kitgroup.salein")) {
 
-            user.ipLocal="192.168.20.8:96";
-            user.image=image;
-            user.name=name;
-            user.namePackage=namePackage;
-            user.userName="admin";
-            user.passWord="123";
+            user.ipLocal = "192.168.20.8:96";
+            user.image = image;
+            user.name = name;
+            user.namePackage = namePackage;
+            user.userName = "admin";
+            user.passWord = "123";
         }
 
         return user;
@@ -166,9 +166,24 @@ public class Util {
     }
 
 
+    public static ArrayList<Double> getSizeMobile(Activity context) {
 
-
-
+        ArrayList<Double> SizeApp = new ArrayList<>();
+        double width = 0;
+        double height = 0;
+        double screenInches = 0.0;
+        DisplayMetrics dm = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        width = dm.widthPixels;
+        height = dm.heightPixels;
+        double x = Math.pow(width / dm.xdpi, 2);
+        double y = Math.pow(height / dm.ydpi, 2);
+        screenInches = Math.sqrt(x + y);
+        SizeApp.add(screenInches);
+        SizeApp.add(width);
+        SizeApp.add(height);
+        return SizeApp;
+    }
 
 
 }

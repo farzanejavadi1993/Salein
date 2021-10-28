@@ -189,7 +189,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Configuration Text Size
         int fontSize;
         int fontLargeSize;
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {

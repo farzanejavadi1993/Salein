@@ -344,7 +344,7 @@ public class PaymentMobileFragment extends Fragment {
         //region Configuration Size
         int fontBigSize;
         int fontSize;
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
             fontBigSize = 14;
             fontSize = 13;
         } else {

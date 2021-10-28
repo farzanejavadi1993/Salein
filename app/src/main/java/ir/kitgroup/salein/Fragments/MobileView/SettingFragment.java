@@ -72,7 +72,7 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-        if (SplashScreenFragment.screenInches >= 7)
+        if (Util.getSizeMobile(getActivity()).get(0)  >= 7)
             fontSize = 14;
         else
             fontSize = 12;

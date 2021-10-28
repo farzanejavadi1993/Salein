@@ -94,7 +94,7 @@ public class ConfirmCodeFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize;
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
         } else

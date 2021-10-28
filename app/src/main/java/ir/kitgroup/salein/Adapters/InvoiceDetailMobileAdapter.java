@@ -3,6 +3,7 @@ package ir.kitgroup.salein.Adapters;
 
 import android.annotation.SuppressLint;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,7 +44,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
     private final String type;//1 seen      //2 edit
     private final Boolean Seen; //when Type 1 but Edit
-    private final Context contex;
+    private final Activity contex;
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -80,7 +81,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
 
-    public InvoiceDetailMobileAdapter(Context context, List<InvoiceDetail> orderDetailList, String type,boolean Seen) {
+    public InvoiceDetailMobileAdapter(Activity context, List<InvoiceDetail> orderDetailList, String type,boolean Seen) {
 
         this.orderDetailList = orderDetailList;
         this.type = type;
@@ -95,7 +96,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(contex).get(0) >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {

@@ -2,6 +2,7 @@ package ir.kitgroup.salein.Adapters;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 
 import android.os.Bundle;
@@ -64,7 +65,7 @@ import ir.kitgroup.salein.models.Product;
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
 
-    private final Context context;
+    private final Activity context;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -114,7 +115,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Context context, List<Product> productsList) {
+    public ProductAdapter1(Activity context, List<Product> productsList) {
         this.context = context;
 
         this.productsList = productsList;
@@ -194,7 +195,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Constant.VIEW_TYPE_ITEM) {
-            if (SplashScreenFragment.screenInches >= 7) {
+            if (Util.getSizeMobile(context).get(0)  >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
 

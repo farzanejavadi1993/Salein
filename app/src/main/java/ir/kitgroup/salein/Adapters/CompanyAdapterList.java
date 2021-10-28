@@ -3,6 +3,7 @@ package ir.kitgroup.salein.Adapters;
 
 
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.view.LayoutInflater;
@@ -22,13 +23,14 @@ import java.util.List;
 
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ModelCompany;
 
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
 
     private List<ModelCompany> list ;
-    private Context context;
+    private Activity context;
     private int fontSize = 0;
     private int type= 2;
 
@@ -43,7 +45,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
     private ClickItem clickItem;
 
 
-    public CompanyAdapterList(Context context, List<ModelCompany> list,int type) {
+    public CompanyAdapterList(Activity context, List<ModelCompany> list,int type) {
         this.context = context;
         this.list = list;
         this.type=type;
@@ -52,7 +54,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(context).get(0)>= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;

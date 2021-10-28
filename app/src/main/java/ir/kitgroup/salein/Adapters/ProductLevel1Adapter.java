@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 
 import android.view.LayoutInflater;
@@ -20,13 +21,14 @@ import java.util.List;
 
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ProductLevel1;
 
 
 public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adapter.viewHolder> {
 
     private final List<ProductLevel1> productGroupLevel1s ;
-    private final Context context;
+    private final Activity context;
     private  int fontSize=0;
 
     public interface ClickItem {
@@ -40,7 +42,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     }
 
 
-    public ProductLevel1Adapter(Context context, List<ProductLevel1> groupList) {
+    public ProductLevel1Adapter(Activity context, List<ProductLevel1> groupList) {
         this.context = context;
         this.productGroupLevel1s = groupList;
 
@@ -49,7 +51,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-        if (SplashScreenFragment.screenInches>=7)
+        if (Util.getSizeMobile(context).get(0) >=7)
             fontSize=13;
         else
             fontSize=11;

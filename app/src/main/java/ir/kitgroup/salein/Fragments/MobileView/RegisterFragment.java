@@ -91,7 +91,7 @@ public class RegisterFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize;
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);

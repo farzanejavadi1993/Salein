@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.Adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.R;
 
@@ -24,7 +26,7 @@ import ir.kitgroup.salein.R;
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.viewHolder> {
 
     private List<Description> list = new ArrayList<>();
-    private Context context;
+    private Activity context;
     private int fontSize = 0;
 
     public void setOnClickItemListener(ClickItem clickItem) {
@@ -38,7 +40,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     private ClickItem clickItem;
 
 
-    public DescriptionAdapter(Context context, List<Description> list) {
+        public DescriptionAdapter(Activity context, List<Description> list) {
         this.context = context;
         this.list = list;
 
@@ -46,7 +48,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (SplashScreenFragment.screenInches >= 7) {
+        if (Util.getSizeMobile(context).get(0) >= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;

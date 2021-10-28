@@ -33,7 +33,7 @@ public class SplashScreenFragment extends Fragment {
 
     public static int width = 0;
     public static int height = 0;
-    public static double screenInches = 0.0;
+
     private String title = "SaleIn Order";
     private String description = "اپلیکیشن سفارش گیر مشتریان سالین";
     private FragmentSplashScreenBinding binding;
@@ -56,7 +56,7 @@ public class SplashScreenFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            getSizeMobile();
+
             switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
 
@@ -181,15 +181,5 @@ public class SplashScreenFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
-    public void getSizeMobile() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        width = dm.widthPixels;
-        height = dm.heightPixels;
-        double x = Math.pow(width / dm.xdpi, 2);
-        double y = Math.pow(height / dm.ydpi, 2);
-        screenInches = Math.sqrt(x + y);
 
-
-    }
 }

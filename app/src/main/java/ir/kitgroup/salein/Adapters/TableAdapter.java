@@ -2,6 +2,7 @@ package ir.kitgroup.salein.Adapters;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Tables;
@@ -33,7 +35,7 @@ import ir.kitgroup.salein.R;
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> {
 
     private final List<Tables> tableList;
-    private final Context context;
+    private final Activity context;
 
 
     public void setOnClickItemListener(ClickItem clickItem) {
@@ -58,7 +60,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
     }
 
 
-    public TableAdapter(Context context, List<Tables> tableList) {
+    public TableAdapter(Activity context, List<Tables> tableList) {
         this.context = context;
         this.tableList = tableList;
     }
@@ -156,7 +158,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
     }
 
-    static class viewHolder extends RecyclerView.ViewHolder {
+     class viewHolder extends RecyclerView.ViewHolder {
 
         private final RelativeLayout rlTable;
         private final TextView tableName;
@@ -178,7 +180,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
             if (App.mode == 1) {
-                if (SplashScreenFragment.screenInches >= 7) {
+                if (Util.getSizeMobile(context).get(0)  >= 7) {
                     int height;
                     if (SplashScreenFragment.width > SplashScreenFragment.height)
                         height = SplashScreenFragment.width / 2;

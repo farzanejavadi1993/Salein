@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.databinding.FragmentProfileBinding;
 
@@ -37,7 +38,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
 
-        if (SplashScreenFragment.screenInches>=7)
+        if (Util.getSizeMobile(getActivity()).get(0) >=7)
             fontSize=14;
         else
             fontSize=12;

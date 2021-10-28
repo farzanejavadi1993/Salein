@@ -2,6 +2,7 @@ package ir.kitgroup.salein.Adapters;
 
 
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.OrderType;
 
 
@@ -29,7 +31,7 @@ import ir.kitgroup.salein.R;
 public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaymentAdapter1.viewHolder> {
 
     private  final List<OrderType> list;
-    private final Context context;
+    private final Activity context;
 
     private int fontSize=0;
     public interface ClickItem {
@@ -43,14 +45,14 @@ public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaym
     }
 
 
-    public OrderTypePaymentAdapter1(Context context, List<OrderType> list) {
+    public OrderTypePaymentAdapter1(Activity context, List<OrderType> list) {
         this.context = context;
         this.list = list;
     }
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        if (SplashScreenFragment.screenInches>=7)
+        if (Util.getSizeMobile(context).get(0) >=7)
             fontSize=13;
         else
             fontSize=11;
