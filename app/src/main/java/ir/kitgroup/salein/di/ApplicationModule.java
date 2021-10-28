@@ -33,6 +33,7 @@ import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
+import ir.kitgroup.salein.models.Company;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -66,7 +67,7 @@ public class ApplicationModule {
     }
     @Provides
     @Singleton
-    public static User getUser(@ApplicationContext Context context) {
+    public static Company getUser(@ApplicationContext Context context) {
         String name = "";
         String namePackage = "";
         String title = "";
@@ -128,21 +129,21 @@ public class ApplicationModule {
         }
 
 
-        User user = new User();
+        Company company = new Company();
         if (name.equals("ir.kitgroup.salein")) {
 
-            user.ipLocal = "192.168.20.8:96";
-            user.image = image;
-            user.title=title;
-            user.Description= description;
-            user.name = name;
-            user.mode = mode;
-            user.namePackage = namePackage;
-            user.userName = "admin";
-            user.passWord = "123";
+           company.ipLocal = "192.168.20.8:96";
+           company.image = image;
+           company.title=title;
+           company.Description= description;
+           company.name = name;
+           company.mode = mode;
+           company.namePackage = namePackage;
+           company.userName = "admin";
+           company.passWord = "123";
         }
 
-        return user;
+        return company;
 
     }
 
