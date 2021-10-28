@@ -61,7 +61,7 @@ public class SettingFragment extends Fragment {
     @Inject
     Double ScreenSize;
 
-    Inject
+    @Inject
     Company company;
 
 

@@ -44,7 +44,7 @@ public class SplashScreenFragment extends Fragment {
     //endregion Parameter
 
     @Inject
-    private Company company;
+    Company company;
 
 
 
