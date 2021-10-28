@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import dagger.hilt.android.HiltAndroidApp;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
+import ir.kitgroup.salein.Util.Util;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -47,7 +48,7 @@ public class App extends Application {
 
             switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
-                    if (App.mode == 2)
+                    if (Util.getUser(getApplicationContext()).mode  == 2)
                         User.deleteAll(User.class);
 
 
@@ -62,7 +63,7 @@ public class App extends Application {
                     break;
 
                 case "ir.kitgroup.saleintop":
-                    if (App.mode == 2)
+                    if (Util.getUser(getApplicationContext()).mode  == 2)
                         User.deleteAll(User.class);
 
                     User user1 = new User();
@@ -76,7 +77,7 @@ public class App extends Application {
 
 
                 case "ir.kitgroup.saleinmeat":
-                    if (App.mode == 2)
+                    if (Util.getUser(getApplicationContext()).mode  == 2)
                         User.deleteAll(User.class);
 
                     User user2 = new User();

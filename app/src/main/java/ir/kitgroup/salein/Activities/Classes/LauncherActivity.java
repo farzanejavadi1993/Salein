@@ -138,7 +138,7 @@ public class LauncherActivity extends AppCompatActivity {
         }
 
 
-        else if (App.mode==1 &&
+        else if (Util.getUser(LauncherActivity.this).mode ==1 &&
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")
         ){
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");

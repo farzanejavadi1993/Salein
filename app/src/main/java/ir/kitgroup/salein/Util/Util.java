@@ -108,6 +108,7 @@ public class Util {
         String namePackage = "";
         String title = "";
         String description = "";
+        int  mode = 2;
         int image = 0;
 
         try {
@@ -121,12 +122,15 @@ public class Util {
                     title = "سالین دمو";
                     description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
 
+
                     break;
 
                 case "ir.kitgroup.saleintop":
                     image = R.drawable.top_png;
                     name = "ir.kitgroup.saleintop";
                     namePackage = "ir.kitgroup.salein";
+                    title = "تاپ کباب";
+                    description="عرضه کننده بهترین غذاها";
                     break;
 
 
@@ -134,6 +138,8 @@ public class Util {
                     image = R.drawable.meat_png;
                     name = "ir.kitgroup.saleinmeat";
                     namePackage = "ir.kitgroup.salein";
+                    title = "گوشت دنیوی";
+                    description="عرضه کننده انواع گوشت";
 
                     break;
 
@@ -141,12 +147,17 @@ public class Util {
                     image = R.drawable.noon;
                     name = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.salein";
+                    title = "کافه نون";
+                    description="متنوع ترین محصولات";
                     break;
 
                 default:
                     image = R.drawable.saleinorder_png;
                     name = "ir.kitgroup.saleiOrder";
                     namePackage = "ir.kitgroup.saleinOrder";
+                   title = "SaleIn Order";
+                   description = "اپلیکیشن سفارش گیر مشتریان سالین";
+                   mode=1;
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -160,6 +171,7 @@ public class Util {
             user.ipLocal = "192.168.20.8:96";
             user.image = image;
             user.name = name;
+            user.mode = mode;
             user.namePackage = namePackage;
             user.userName = "admin";
             user.passWord = "123";

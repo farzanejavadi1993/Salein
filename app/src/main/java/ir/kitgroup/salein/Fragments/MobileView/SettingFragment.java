@@ -166,7 +166,7 @@ public class SettingFragment extends Fragment {
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
-            if (App.mode==1){
+            if (Util.getUser(getActivity()).mode ==1){
                 if (User.count(User.class) > 0)
                     User.deleteAll(User.class);
             }

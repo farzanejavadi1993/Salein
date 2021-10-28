@@ -332,10 +332,10 @@ public class PaymentMobileFragment extends Fragment {
         else
             new_Tbl_GUID = Tbl_GUID;
 
-        if (App.mode == 2 || (App.mode == 1 && edit) || (App.mode == 1 && Tbl_GUID.equals("")))
+        if (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && edit) || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("")))
             new_Inv_GUID = Inv_GUID;
 
-        else if (App.mode == 1 && !Tbl_GUID.equals(""))
+        else if (Util.getUser(getActivity()).mode  == 1 && !Tbl_GUID.equals(""))
             new_Inv_GUID = UUID.randomUUID().toString();
 
 
@@ -343,7 +343,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-        if (App.mode==1) {
+        if (Util.getUser(getActivity()).mode ==1) {
             binding.layoutTypeOrder.setVisibility(View.GONE);
             binding.layoutAddress.setVisibility(View.GONE);
             binding.layoutTime.setVisibility(View.GONE);
@@ -485,7 +485,7 @@ public class PaymentMobileFragment extends Fragment {
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
                     dialogAddress.dismiss();
-                    if (App.mode == 2)
+                    if (Util.getUser(getActivity()).mode  == 2)
                         binding.tvTypeOrder.setVisibility(View.GONE);
                     return;
                 } else {
@@ -770,7 +770,7 @@ public class PaymentMobileFragment extends Fragment {
 
         //region Configuration TypeOrder
 
-        if (App.mode == 1) {
+        if (Util.getUser(getActivity()).mode == 1) {
             binding.layoutTypeOrder.setVisibility(View.GONE);
         }
 
@@ -830,7 +830,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //region Configuration Payment
-        if (App.mode == 1)
+        if (Util.getUser(getActivity()).mode  == 1)
             binding.tvTitlePaymentPlace.setText("پرداخت در صندوق");
 
 
@@ -909,13 +909,13 @@ public class PaymentMobileFragment extends Fragment {
             if (typePayment.equals("-1")) {
                 Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                return;
-            } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
+            } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (timeChoose.equals("") && (App.mode == 2 || (App.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
+            } else if (timeChoose.equals("") && (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -924,7 +924,7 @@ public class PaymentMobileFragment extends Fragment {
             rlButtons.setVisibility(View.VISIBLE);
             btnReturned.setVisibility(View.GONE);
 
-            if (App.mode == 2)
+            if (Util.getUser(getActivity()).mode == 2)
                 dialogSendOrder.show();
             else
                 getTable1();
@@ -1097,7 +1097,7 @@ public class PaymentMobileFragment extends Fragment {
         btnReturned.setOnClickListener(v -> {
 
             dialogSendOrder.dismiss();
-            if (App.mode == 2) {
+            if (Util.getUser(getActivity()).mode == 2) {
 
                 if (edit) {
                     for (int i = 0; i < 5; i++) {
@@ -1279,7 +1279,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         dialogSendOrder.show();
                     } else {
-                        if (App.mode == 1) {
+                        if (Util.getUser(getActivity()).mode  == 1) {
                             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
                             for (int i = 0; i < invDetails.size(); i++) {
                                 InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
@@ -1622,11 +1622,11 @@ public class PaymentMobileFragment extends Fragment {
                                     }
 
 
-                                    if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && App.mode == 1) {
+                                    if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && Util.getUser(getActivity()).mode  == 1) {
                                         binding.layoutAddress.setVisibility(View.VISIBLE);
                                         binding.layoutTime.setVisibility(View.VISIBLE);
 
-                                    } else if (App.mode == 1) {
+                                    } else if (Util.getUser(getActivity()).mode  == 1) {
                                         binding.layoutTypeOrder.setVisibility(View.GONE);
                                         binding.layoutAddress.setVisibility(View.GONE);
                                         binding.layoutTime.setVisibility(View.GONE);
@@ -1728,7 +1728,7 @@ public class PaymentMobileFragment extends Fragment {
                                                 binding.tvTransport.setText("0 ریال");
                                                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                                             } else {
-                                                if ((OrdTList.size() == 1 && App.mode == 2) || (App.mode == 1)) {
+                                                if ((OrdTList.size() == 1 && Util.getUser(getActivity()).mode  == 2) || (Util.getUser(getActivity()).mode  == 1)) {
                                                     sumTransport = calculateTransport;
                                                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");

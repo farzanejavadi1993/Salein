@@ -316,7 +316,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         //region Configuration Client Application
-        if (App.mode == 2) {
+        if (Util.getUser(getActivity()).mode == 2) {
             binding.tvNameCustomer.setVisibility(View.GONE);
             binding.txtTableNumber.setVisibility(View.GONE);
 
@@ -445,7 +445,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtDate.setText(text2);
 
 
-            if (App.mode == 1) {
+            if (Util.getUser(getActivity()).mode  == 1) {
                 Account acc = Select.from(Account.class).first();
 
 
@@ -689,7 +689,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle1.putString("Acc_GUID", Acc_GUID);
 
 
-            if (App.mode == 2)
+            if (Util.getUser(getActivity()).mode == 2)
                 bundle1.putString("Ord_TYPE", "");
             else
                 bundle1.putString("Ord_TYPE", Ord_TYPE);
@@ -1007,7 +1007,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
 
 
-                                        if (App.mode == 1) {
+                                        if (Util.getUser(getActivity()).mode  == 1) {
                                             Acc_NAME = iDs.getInvoice().get(0).accClbName;
                                             Acc_GUID = iDs.getInvoice().get(0).ACC_CLB_UID;
                                         }
@@ -1092,7 +1092,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             }
 
 
-                            if (App.mode == 2) {
+                            if (Util.getUser(getActivity()).mode  == 2) {
                                 getActivity().getSupportFragmentManager().popBackStack();
                                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
                                 FragmentManager ft = getActivity().getSupportFragmentManager();

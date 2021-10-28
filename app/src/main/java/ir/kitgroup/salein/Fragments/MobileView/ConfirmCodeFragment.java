@@ -130,7 +130,7 @@ public class ConfirmCodeFragment extends Fragment {
                 break;
         }
 
-        if (App.mode == 2) {
+        if (Util.getUser(getActivity()).mode  == 2) {
             binding.ivLogo.setImageResource(imageLogo);
         }
 

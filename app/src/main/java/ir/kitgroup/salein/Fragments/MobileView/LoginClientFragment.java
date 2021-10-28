@@ -127,7 +127,7 @@ public class LoginClientFragment extends Fragment {
 
 
 
-        if (App.mode == 2) {
+        if (Util.getUser(getActivity()).mode  == 2) {
             binding.tvWelcome.setText(messageWelcome);
             binding.ivLogo.setImageResource(imageLogo);
         }

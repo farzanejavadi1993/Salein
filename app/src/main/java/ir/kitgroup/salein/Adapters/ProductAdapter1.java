@@ -721,7 +721,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-                                                if (App.mode==1)
+                                                if (Util.getUser(context).mode ==1)
                                                     invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
 

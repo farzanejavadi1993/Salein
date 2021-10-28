@@ -243,7 +243,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Delete InvoiceDetail UnNecessary
-        if (App.mode == 1) {
+        if (Util.getUser(getActivity()).mode  == 1) {
             List<InvoiceDetail> invDetail = Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
             for (int i = 0; i < invDetail.size(); i++) {
                 InvoiceDetail.delete(invDetail.get(i));
@@ -312,7 +312,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Configuration Organization Application
-        if (App.mode == 1) {
+        if (Util.getUser(getActivity()).mode  == 1) {
             binding.defineCompany.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.VISIBLE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
@@ -502,7 +502,7 @@ public class MainOrderMobileFragment extends Fragment {
                         bundle.putString("Ord_TYPE", Ord_TYPE);
                         bundle.putString("Acc_Name", Acc_NAME);
                         bundle.putString("Acc_GUID", Acc_GUID);
-                        if (!Inv_GUID_ORG.equals("") && App.mode == 2)
+                        if (!Inv_GUID_ORG.equals("") && Util.getUser(getActivity()).mode  == 2)
                             bundle.putBoolean("EDIT", true);
                         else
                             bundle.putBoolean("EDIT", false);
@@ -588,7 +588,7 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Get Bundle
 
 
-        if (App.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
+        if (Util.getUser(getActivity()).mode  == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
             binding.edtNameCustomer.setEnabled(false);
             binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
             binding.edtNameCustomer.setText(Acc_NAME);
@@ -759,7 +759,7 @@ public class MainOrderMobileFragment extends Fragment {
         //region Action BtnRegister
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
-            if (App.mode == 1 && Acc_GUID.equals("")) {
+            if (Util.getUser(getActivity()).mode  == 1 && Acc_GUID.equals("")) {
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -779,9 +779,9 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals("") && App.mode == 2)
+                if (!Inv_GUID_ORG.equals("") && Util.getUser(getActivity()).mode  == 2)
                     bundle.putBoolean("EDIT", true);
-                else if ((App.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
+                else if ((Util.getUser(getActivity()).mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
                     bundle.putBoolean("EDIT", true);
                 else
                     bundle.putBoolean("EDIT", false);
@@ -1023,7 +1023,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 counter = invDetails.size();
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-                if (App.mode == 1)
+                if (Util.getUser(getActivity()).mode  == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
