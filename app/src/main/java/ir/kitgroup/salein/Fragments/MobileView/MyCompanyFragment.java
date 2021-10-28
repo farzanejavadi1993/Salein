@@ -38,6 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -50,18 +53,22 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.FragmentMyCompanyBinding;
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelCompany;
 import ir.kitgroup.salein.models.ModelLog;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+@AndroidEntryPoint
 public class MyCompanyFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMyCompanyBinding binding;
     private SharedPreferences sharedPreferences;
 
+
+    @Inject
+    Company company;
 
     private Account account;
 
@@ -121,7 +128,7 @@ public class MyCompanyFragment extends Fragment {
                     userName = user.userName;
                     password = user.passWord;
                     name = company.NameCompany;
-                    Util.getUser(getActivity()).name = company.PACKAGEName;
+                    company.NameCompany= company.PACKAGEName;
 
 
                     String nameSave = sharedPreferences.getString("CN", "");

@@ -73,6 +73,7 @@ import ir.kitgroup.salein.Adapters.TimeAdapter;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.Util.Utilities;
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelDate;
 import ir.kitgroup.salein.models.ModelTable;
 import ir.kitgroup.salein.models.Setting;
@@ -112,6 +113,10 @@ public class PaymentMobileFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
+
+
+    @Inject
+    Company company;
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;
@@ -241,7 +246,7 @@ public class PaymentMobileFragment extends Fragment {
 
         customProgress = CustomProgress.getInstance();
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
                 case "ir.kitgroup.salein":
                     imageIconDialog = R.drawable.saleinicon128;
 
@@ -332,10 +337,10 @@ public class PaymentMobileFragment extends Fragment {
         else
             new_Tbl_GUID = Tbl_GUID;
 
-        if (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && edit) || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("")))
+        if (company.mode  == 2 || (company.mode  == 1 && edit) || (company.mode  == 1 && Tbl_GUID.equals("")))
             new_Inv_GUID = Inv_GUID;
 
-        else if (Util.getUser(getActivity()).mode  == 1 && !Tbl_GUID.equals(""))
+        else if (company.mode  == 1 && !Tbl_GUID.equals(""))
             new_Inv_GUID = UUID.randomUUID().toString();
 
 
@@ -343,7 +348,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-        if (Util.getUser(getActivity()).mode ==1) {
+        if (company.mode ==1) {
             binding.layoutTypeOrder.setVisibility(View.GONE);
             binding.layoutAddress.setVisibility(View.GONE);
             binding.layoutTime.setVisibility(View.GONE);
@@ -485,7 +490,7 @@ public class PaymentMobileFragment extends Fragment {
                 if (price == -1.0) {
                     Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
                     dialogAddress.dismiss();
-                    if (Util.getUser(getActivity()).mode  == 2)
+                    if (company.mode  == 2)
                         binding.tvTypeOrder.setVisibility(View.GONE);
                     return;
                 } else {
@@ -770,7 +775,7 @@ public class PaymentMobileFragment extends Fragment {
 
         //region Configuration TypeOrder
 
-        if (Util.getUser(getActivity()).mode == 1) {
+        if (company.mode == 1) {
             binding.layoutTypeOrder.setVisibility(View.GONE);
         }
 
@@ -830,7 +835,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         //region Configuration Payment
-        if (Util.getUser(getActivity()).mode  == 1)
+        if (company.mode  == 1)
             binding.tvTitlePaymentPlace.setText("پرداخت در صندوق");
 
 
@@ -909,13 +914,13 @@ public class PaymentMobileFragment extends Fragment {
             if (typePayment.equals("-1")) {
                 Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                return;
-            } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
+            } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (company.mode  == 2 || (company.mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
                 Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                 Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (timeChoose.equals("") && (Util.getUser(getActivity()).mode  == 2 || (Util.getUser(getActivity()).mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
+            } else if (timeChoose.equals("") && (company.mode  == 2 || (company.mode  == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                 Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -924,7 +929,7 @@ public class PaymentMobileFragment extends Fragment {
             rlButtons.setVisibility(View.VISIBLE);
             btnReturned.setVisibility(View.GONE);
 
-            if (Util.getUser(getActivity()).mode == 2)
+            if (company.mode == 2)
                 dialogSendOrder.show();
             else
                 getTable1();
@@ -1097,7 +1102,7 @@ public class PaymentMobileFragment extends Fragment {
         btnReturned.setOnClickListener(v -> {
 
             dialogSendOrder.dismiss();
-            if (Util.getUser(getActivity()).mode == 2) {
+            if (company.mode == 2) {
 
                 if (edit) {
                     for (int i = 0; i < 5; i++) {
@@ -1127,7 +1132,7 @@ public class PaymentMobileFragment extends Fragment {
                     MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                     mainOrderMobileFragment.setArguments(bundle1);
                     FragmentTransaction replaceFragment;
-                    if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein")) {
+                    if (company.namePackage.equals("ir.kitgroup.salein")) {
                         replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                     } else {
                         replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
@@ -1250,7 +1255,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         String name;
                         try {
-                            name = Util.getUser(getActivity()).name.split("ir.kitgroup.")[1];
+                            name = company.name.split("ir.kitgroup.")[1];
                             sharedPreferences.edit().putString(name, "").apply();
                         } catch (Exception ignore) {
 
@@ -1279,7 +1284,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         dialogSendOrder.show();
                     } else {
-                        if (Util.getUser(getActivity()).mode  == 1) {
+                        if (company.mode  == 1) {
                             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
                             for (int i = 0; i < invDetails.size(); i++) {
                                 InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
@@ -1343,7 +1348,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
                 case "ir.kitgroup.saleinmeat":
 
                     imageIconDialog = R.drawable.meat_png;
@@ -1622,11 +1627,11 @@ public class PaymentMobileFragment extends Fragment {
                                     }
 
 
-                                    if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && Util.getUser(getActivity()).mode  == 1) {
+                                    if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode  == 1) {
                                         binding.layoutAddress.setVisibility(View.VISIBLE);
                                         binding.layoutTime.setVisibility(View.VISIBLE);
 
-                                    } else if (Util.getUser(getActivity()).mode  == 1) {
+                                    } else if (company.mode  == 1) {
                                         binding.layoutTypeOrder.setVisibility(View.GONE);
                                         binding.layoutAddress.setVisibility(View.GONE);
                                         binding.layoutTime.setVisibility(View.GONE);
@@ -1728,7 +1733,7 @@ public class PaymentMobileFragment extends Fragment {
                                                 binding.tvTransport.setText("0 ریال");
                                                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                                             } else {
-                                                if ((OrdTList.size() == 1 && Util.getUser(getActivity()).mode  == 2) || (Util.getUser(getActivity()).mode  == 1)) {
+                                                if ((OrdTList.size() == 1 && company.mode  == 2) || (company.mode  == 1)) {
                                                     sumTransport = calculateTransport;
                                                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
@@ -1744,9 +1749,9 @@ public class PaymentMobileFragment extends Fragment {
                                         //region Get Credit Club
                                         String name;
                                         try {
-                                            if (!OnceSee && !Util.getUser(getActivity()).name.equals("ir.kitgroup.saleinmeat"))
+                                            if (!OnceSee && !company.name.equals("ir.kitgroup.saleinmeat"))
                                                 getInquiryAccount1(userName, passWord, acc.M);
-                                            else if (OnceSee && !Util.getUser(getActivity()).name.equals("ir.kitgroup.saleinmeat"))
+                                            else if (OnceSee && !company.name.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
                                             getInquiryAccount1(userName, passWord, acc.M);

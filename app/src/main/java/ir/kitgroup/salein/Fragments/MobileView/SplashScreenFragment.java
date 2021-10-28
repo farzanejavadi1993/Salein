@@ -21,6 +21,9 @@ import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
@@ -29,7 +32,9 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 
 import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
+import ir.kitgroup.salein.models.Company;
 
+@AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
 
 
@@ -38,7 +43,8 @@ public class SplashScreenFragment extends Fragment {
     private FragmentSplashScreenBinding binding;
     //endregion Parameter
 
-
+    @Inject
+    private Company company;
 
 
 
@@ -62,8 +68,8 @@ public class SplashScreenFragment extends Fragment {
 
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
-        binding.tvTitle.setText(Util.getUser(getActivity()).title);
-        binding.tvDescription.setText(Util.getUser(getActivity()).Description);
+        binding.tvTitle.setText(company.title);
+        binding.tvDescription.setText(company.Description);
 
 
 
@@ -90,12 +96,12 @@ public class SplashScreenFragment extends Fragment {
 
 
                 //regionClient Application
-                if (Util.getUser(getActivity()).mode == 2) {
+                if (company.mode == 2) {
                     //region Account Is Login & Register
                     if (Select.from(Account.class).list().size() > 0) {
 
                         //regionShow All Company
-                        if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein"))
+                        if (company.namePackage.equals("ir.kitgroup.salein"))
                             replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
 
 

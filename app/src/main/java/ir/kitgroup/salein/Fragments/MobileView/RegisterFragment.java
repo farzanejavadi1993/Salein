@@ -46,6 +46,7 @@ import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.User;
 
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentRegisterBinding;
@@ -56,6 +57,9 @@ public class RegisterFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
+
+    @Inject
+    Company company;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
@@ -221,7 +225,7 @@ public class RegisterFragment extends Fragment {
 
                                     //region Show All Company
 
-                                    if (Util.getUser(getActivity()).name.equals("ir.kitgroup.salein")) {
+                                    if (company.name.equals("ir.kitgroup.salein")) {
                                         FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                         replaceFragment.commit();
                                     }

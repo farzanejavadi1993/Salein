@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 
@@ -18,9 +21,12 @@ import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
+import ir.kitgroup.salein.models.Company;
 
+@AndroidEntryPoint
 public class ShowDetailFragment  extends Fragment {
-
+    @Inject
+    Company company;
 
 
 
@@ -39,7 +45,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
                 case "ir.kitgroup.salein":
 
                     placeHolderImage = R.drawable.salein;

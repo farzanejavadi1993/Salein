@@ -91,6 +91,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.DataBase.User;
 
@@ -123,6 +124,10 @@ public class MainOrderMobileFragment extends Fragment {
 
     @Inject
    Double ScreenSize;
+
+
+    @Inject
+    Company company;
     //region Parameter
     private FragmentMobileOrderMainBinding binding;
 
@@ -243,7 +248,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Delete InvoiceDetail UnNecessary
-        if (Util.getUser(getActivity()).mode  == 1) {
+        if (company.mode  == 1) {
             List<InvoiceDetail> invDetail = Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
             for (int i = 0; i < invDetail.size(); i++) {
                 InvoiceDetail.delete(invDetail.get(i));
@@ -269,7 +274,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
                 case "ir.kitgroup.salein":
                     nameCompany = "سالین دمو";
                     imageLogo = R.drawable.salein;
@@ -312,7 +317,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Configuration Organization Application
-        if (Util.getUser(getActivity()).mode  == 1) {
+        if (company.mode  == 1) {
             binding.defineCompany.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.VISIBLE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
@@ -471,7 +476,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
                 int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein") && size > 0)
+                if (company.namePackage.equals("ir.kitgroup.salein") && size > 0)
                     size = size - 1;
 
                 if (Inv_GUID_ORG.equals("")) {
@@ -502,7 +507,7 @@ public class MainOrderMobileFragment extends Fragment {
                         bundle.putString("Ord_TYPE", Ord_TYPE);
                         bundle.putString("Acc_Name", Acc_NAME);
                         bundle.putString("Acc_GUID", Acc_GUID);
-                        if (!Inv_GUID_ORG.equals("") && Util.getUser(getActivity()).mode  == 2)
+                        if (!Inv_GUID_ORG.equals("") && company.mode  == 2)
                             bundle.putBoolean("EDIT", true);
                         else
                             bundle.putBoolean("EDIT", false);
@@ -588,7 +593,7 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Get Bundle
 
 
-        if (Util.getUser(getActivity()).mode  == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
+        if (company.mode  == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
             binding.edtNameCustomer.setEnabled(false);
             binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
             binding.edtNameCustomer.setText(Acc_NAME);
@@ -604,7 +609,7 @@ public class MainOrderMobileFragment extends Fragment {
             String name;
             try {
                 //Client
-                name = Util.getUser(getActivity()).name.split("ir.kitgroup.")[1];
+                name = company.name.split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
                 if (Inv_GUID.equals("")) {
                     Inv_GUID = UUID.randomUUID().toString();
@@ -662,7 +667,7 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein"))
+            if (company.namePackage.equals("ir.kitgroup.salein"))
                 getFragmentManager().popBackStack();
             else
                 getActivity().finish();
@@ -759,7 +764,7 @@ public class MainOrderMobileFragment extends Fragment {
         //region Action BtnRegister
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
-            if (Util.getUser(getActivity()).mode  == 1 && Acc_GUID.equals("")) {
+            if (company.mode  == 1 && Acc_GUID.equals("")) {
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -779,9 +784,9 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals("") && Util.getUser(getActivity()).mode  == 2)
+                if (!Inv_GUID_ORG.equals("") && company.mode  == 2)
                     bundle.putBoolean("EDIT", true);
-                else if ((Util.getUser(getActivity()).mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
+                else if ((company.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
                     bundle.putBoolean("EDIT", true);
                 else
                     bundle.putBoolean("EDIT", false);
@@ -1023,7 +1028,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 counter = invDetails.size();
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-                if (Util.getUser(getActivity()).mode  == 1)
+                if (company.mode  == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();

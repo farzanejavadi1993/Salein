@@ -18,10 +18,13 @@ import com.orm.query.Select;
 import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.HiltAndroidApp;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Util.Util;
+import ir.kitgroup.salein.models.Company;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,7 +32,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @HiltAndroidApp
 public class App extends Application {
 
-
+    @Inject
+    Company company;
     public static API api;
     public static Context context;
     private String baseUrl = "http://192.168.20.8:96/api/REST/";
@@ -48,7 +52,7 @@ public class App extends Application {
 
             switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
-                    if (Util.getUser(getApplicationContext()).mode  == 2)
+                    if (company.mode  == 2)
                         User.deleteAll(User.class);
 
 
@@ -63,7 +67,7 @@ public class App extends Application {
                     break;
 
                 case "ir.kitgroup.saleintop":
-                    if (Util.getUser(getApplicationContext()).mode  == 2)
+                    if (company.mode  == 2)
                         User.deleteAll(User.class);
 
                     User user1 = new User();
@@ -77,7 +81,7 @@ public class App extends Application {
 
 
                 case "ir.kitgroup.saleinmeat":
-                    if (Util.getUser(getApplicationContext()).mode  == 2)
+                    if (company.mode  == 2)
                         User.deleteAll(User.class);
 
                     User user2 = new User();

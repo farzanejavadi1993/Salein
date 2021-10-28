@@ -187,7 +187,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl("http://" + Util.getUser(context).ipLocal + "/api/REST/")
+                .baseUrl("http://" + getUser(context).ipLocal + "/api/REST/")
                 .client(okHttpClient)
                 .build();
     }

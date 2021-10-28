@@ -48,6 +48,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
+import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 
@@ -59,6 +60,9 @@ public class SettingFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
+
+    Inject
+    Company company;
 
 
     //region Parameter
@@ -101,7 +105,7 @@ public class SettingFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         try {
-            switch (Util.getUser(getActivity()).name) {
+            switch (company.name) {
 
 
                 case "ir.kitgroup.saleintop":
@@ -166,7 +170,7 @@ public class SettingFragment extends Fragment {
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
-            if (Util.getUser(getActivity()).mode ==1){
+            if (company.mode ==1){
                 if (User.count(User.class) > 0)
                     User.deleteAll(User.class);
             }
