@@ -40,10 +40,11 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.Product;
 
-@AndroidEntryPoint
+
 public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private final List<InvoiceDetail> orderDetailList;
 
     private final String type;//1 seen      //2 edit

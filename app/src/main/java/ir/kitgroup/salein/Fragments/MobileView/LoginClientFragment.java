@@ -51,7 +51,7 @@ import ir.kitgroup.salein.databinding.FragmentLoginMobileBinding;
 public class LoginClientFragment extends Fragment {
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;

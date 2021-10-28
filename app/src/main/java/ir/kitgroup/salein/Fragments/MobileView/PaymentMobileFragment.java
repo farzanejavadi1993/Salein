@@ -111,7 +111,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;

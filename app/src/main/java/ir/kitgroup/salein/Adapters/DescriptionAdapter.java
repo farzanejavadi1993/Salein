@@ -25,15 +25,14 @@ import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.R;
 
-@AndroidEntryPoint
-
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.viewHolder> {
 
     private List<Description> list = new ArrayList<>();
     private Activity context;
     private int fontSize = 0;
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }

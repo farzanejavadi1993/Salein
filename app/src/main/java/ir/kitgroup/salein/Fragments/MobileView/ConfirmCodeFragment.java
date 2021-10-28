@@ -55,8 +55,9 @@ import ir.kitgroup.salein.databinding.FragmentConfirmCodeBinding;
 @AndroidEntryPoint
 
 public class ConfirmCodeFragment extends Fragment {
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     //region  Parameter
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentConfirmCodeBinding binding;

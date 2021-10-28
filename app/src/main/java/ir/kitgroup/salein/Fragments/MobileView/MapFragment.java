@@ -100,7 +100,7 @@ import static android.os.Looper.getMainLooper;
 public class MapFragment extends Fragment implements PermissionsListener {
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;

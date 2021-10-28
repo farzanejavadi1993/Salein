@@ -30,14 +30,14 @@ import ir.kitgroup.salein.models.OrderType;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
 
-@AndroidEntryPoint
+
 public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaymentAdapter1.viewHolder> {
 
     private  final List<OrderType> list;
     private final Activity context;
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private int fontSize=0;
     public interface ClickItem {
         void onRowClick(String GUID,Integer code);

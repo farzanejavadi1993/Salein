@@ -65,10 +65,11 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
 
-@AndroidEntryPoint
+
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private final Activity context;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();

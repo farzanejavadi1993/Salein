@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ActivityContext;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import ir.kitgroup.salein.Connect.API;
@@ -44,15 +45,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Double provideSize(@ApplicationContext Activity context) {
+    Double provideSize(@ActivityContext Activity activity) {
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         double width = dm.widthPixels;
         double height = dm.heightPixels;
         double x = Math.pow(width / dm.xdpi, 2);
         double y = Math.pow(height / dm.ydpi, 2);
-        double screenInches = Math.sqrt(x + y);
-        return screenInches;
+        return Math.sqrt(x + y);
+
 
     }
 

@@ -55,7 +55,7 @@ public class RegisterFragment extends Fragment {
     //region  Parameter
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();

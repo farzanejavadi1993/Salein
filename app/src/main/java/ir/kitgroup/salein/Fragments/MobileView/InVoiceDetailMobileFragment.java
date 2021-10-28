@@ -98,7 +98,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     //region Parameter
 
     @Inject
-    private  Double ScreenSize;
+   Double ScreenSize;
     private FragmentInvoiceDetailMobileBinding binding;
     private CustomProgress customProgress;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();

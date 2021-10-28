@@ -27,11 +27,10 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ProductLevel2;
 
-@AndroidEntryPoint
-
 public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adapter.viewHolder> {
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private final List<ProductLevel2> subGroupList ;
     private final Activity context;
     private  int fontSize=0;

@@ -120,8 +120,9 @@ import static java.lang.Math.min;
 @AndroidEntryPoint
 
 public class MainOrderMobileFragment extends Fragment {
+
     @Inject
-    private  Double ScreenSize;
+   Double ScreenSize;
     //region Parameter
     private FragmentMobileOrderMainBinding binding;
 

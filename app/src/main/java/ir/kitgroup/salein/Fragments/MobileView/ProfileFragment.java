@@ -27,7 +27,7 @@ public class ProfileFragment extends Fragment {
 
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
     private FragmentProfileBinding binding;
 
     private String type = "";

@@ -34,14 +34,15 @@ import ir.kitgroup.salein.DataBase.Tables;
 
 import ir.kitgroup.salein.R;
 
-@AndroidEntryPoint
+
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> {
 
     private final List<Tables> tableList;
     private final Activity context;
+
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;

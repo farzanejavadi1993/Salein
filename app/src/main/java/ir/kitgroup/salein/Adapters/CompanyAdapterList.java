@@ -29,13 +29,12 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ModelCompany;
 
-@AndroidEntryPoint
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
 
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
 
     private List<ModelCompany> list ;
     private Activity context;

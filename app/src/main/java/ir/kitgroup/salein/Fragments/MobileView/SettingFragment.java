@@ -58,7 +58,7 @@ import ir.kitgroup.salein.models.ModelLog;
 public class SettingFragment extends Fragment {
 
     @Inject
-    private  Double ScreenSize;
+    Double ScreenSize;
 
 
     //region Parameter
