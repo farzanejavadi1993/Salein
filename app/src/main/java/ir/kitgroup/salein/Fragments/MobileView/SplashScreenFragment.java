@@ -25,6 +25,7 @@ import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
 
@@ -56,7 +57,7 @@ public class SplashScreenFragment extends Fragment {
         //region Set Icon And Title
         try {
             getSizeMobile();
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
 
                     title = "سالین دمو";
@@ -114,7 +115,7 @@ public class SplashScreenFragment extends Fragment {
                     if (Select.from(Account.class).list().size() > 0) {
 
                         //regionShow All Company
-                        if (LauncherActivity.name.equals("ir.kitgroup.salein"))
+                        if (Util.getUser(getActivity()).name.equals("ir.kitgroup.salein"))
                             replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
 
 

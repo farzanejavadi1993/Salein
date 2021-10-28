@@ -68,6 +68,7 @@ import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
 
 import ir.kitgroup.salein.DataBase.Product;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.Util.Utilities;
 import ir.kitgroup.salein.models.ModelDate;
 import ir.kitgroup.salein.models.ModelTable;
@@ -232,7 +233,7 @@ public class PaymentMobileFragment extends Fragment {
 
         customProgress = CustomProgress.getInstance();
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
                     imageIconDialog = R.drawable.saleinicon128;
 
@@ -1118,7 +1119,7 @@ public class PaymentMobileFragment extends Fragment {
                     MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                     mainOrderMobileFragment.setArguments(bundle1);
                     FragmentTransaction replaceFragment;
-                    if (LauncherActivity.namePackage.equals("ir.kitgroup.salein")) {
+                    if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein")) {
                         replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                     } else {
                         replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
@@ -1241,7 +1242,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         String name;
                         try {
-                            name = LauncherActivity.name.split("ir.kitgroup.")[1];
+                            name = Util.getUser(getActivity()).name.split("ir.kitgroup.")[1];
                             sharedPreferences.edit().putString(name, "").apply();
                         } catch (Exception ignore) {
 
@@ -1334,7 +1335,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.saleinmeat":
 
                     imageIconDialog = R.drawable.meat_png;
@@ -1735,9 +1736,9 @@ public class PaymentMobileFragment extends Fragment {
                                         //region Get Credit Club
                                         String name;
                                         try {
-                                            if (!OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
+                                            if (!OnceSee && !Util.getUser(getActivity()).name.equals("ir.kitgroup.saleinmeat"))
                                                 getInquiryAccount1(userName, passWord, acc.M);
-                                            else if (OnceSee && !LauncherActivity.name.equals("ir.kitgroup.saleinmeat"))
+                                            else if (OnceSee && !Util.getUser(getActivity()).name.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
                                             getInquiryAccount1(userName, passWord, acc.M);

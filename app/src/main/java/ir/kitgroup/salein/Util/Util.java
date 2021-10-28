@@ -3,6 +3,8 @@ package ir.kitgroup.salein.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,6 +19,9 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import ir.kitgroup.salein.DataBase.User;
+import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.App;
 
 
@@ -93,6 +98,71 @@ public class Util {
         cal.setTime(date);
         cal.add(Calendar.DATE, days);
         return cal.getTime();
+    }
+
+
+
+
+    public static User getUser(@ApplicationContext Context  context) {
+       String name="";
+       String namePackage="";
+       int image=0;
+
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+
+            switch (pInfo.packageName) {
+                case "ir.kitgroup.salein":
+                    image = R.drawable.saleinicon128;
+                    name = "ir.kitgroup.salein";
+                    namePackage = "ir.kitgroup.salein";
+
+                    break;
+
+                case "ir.kitgroup.saleintop":
+                    image = R.drawable.top_png;
+                    name = "ir.kitgroup.saleintop";
+                    namePackage = "ir.kitgroup.salein";
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+                    image = R.drawable.meat_png;
+                    name = "ir.kitgroup.saleinmeat";
+                    namePackage = "ir.kitgroup.salein";
+
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+                    image = R.drawable.noon;
+                    name = "ir.kitgroup.saleinnoon";
+                    namePackage = "ir.kitgroup.salein";
+                    break;
+
+                default:
+                    image =R.drawable.saleinorder_png;
+                    name = "ir.kitgroup.saleiOrder";
+                    namePackage = "ir.kitgroup.saleinOrder";
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        User user=new User();
+        if (name.equals("ir.kitgroup.salein")){
+
+            user.ipLocal="192.168.20.8:96";
+            user.image=image;
+            user.name=name;
+            user.namePackage=namePackage;
+            user.userName="admin";
+            user.passWord="123";
+        }
+
+        return user;
+
     }
 
 

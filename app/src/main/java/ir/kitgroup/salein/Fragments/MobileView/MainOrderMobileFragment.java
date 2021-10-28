@@ -78,6 +78,7 @@ import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 
@@ -262,7 +263,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
                     nameCompany = "سالین دمو";
                     imageLogo = R.drawable.salein;
@@ -464,7 +465,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
                 int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                if (LauncherActivity.namePackage.equals("ir.kitgroup.salein") && size > 0)
+                if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein") && size > 0)
                     size = size - 1;
 
                 if (Inv_GUID_ORG.equals("")) {
@@ -597,7 +598,7 @@ public class MainOrderMobileFragment extends Fragment {
             String name;
             try {
                 //Client
-                name = LauncherActivity.name.split("ir.kitgroup.")[1];
+                name = Util.getUser(getActivity()).name.split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
                 if (Inv_GUID.equals("")) {
                     Inv_GUID = UUID.randomUUID().toString();
@@ -655,7 +656,7 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            if (LauncherActivity.namePackage.equals("ir.kitgroup.salein"))
+            if (Util.getUser(getActivity()).namePackage.equals("ir.kitgroup.salein"))
                 getFragmentManager().popBackStack();
             else
                 getActivity().finish();

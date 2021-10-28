@@ -121,7 +121,7 @@ public class MyCompanyFragment extends Fragment {
                     userName = user.userName;
                     password = user.passWord;
                     name = company.NameCompany;
-                    LauncherActivity.name = company.PACKAGEName;
+                    Util.getUser(getActivity()).name = company.PACKAGEName;
 
 
                     String nameSave = sharedPreferences.getString("CN", "");

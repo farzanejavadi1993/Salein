@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.Fragments.MobileView;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,14 +20,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 
 import ir.kitgroup.salein.databinding.FragmentStoriesBinding;
 
+
+@AndroidEntryPoint
 public class StoriesFragment extends Fragment {
 
     private FragmentStoriesBinding binding;
+    @Inject
+    Typeface iranSansFont;
 
 
     @Nullable
@@ -67,7 +75,7 @@ public class StoriesFragment extends Fragment {
             for (int i = 0; i < tabChildsCount; i++) {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(LauncherActivity.iranSansBold);
+                    ((TextView) tabViewChild).setTypeface(iranSansFont);
                     ((TextView) tabViewChild).setTextSize(12);
                 }
             }

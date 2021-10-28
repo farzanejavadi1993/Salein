@@ -122,7 +122,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         df = new DecimalFormat();
 
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(context).name) {
                 case "ir.kitgroup.salein":
                     placeHolderImage = R.drawable.salein;
                     break;

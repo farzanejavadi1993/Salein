@@ -16,6 +16,7 @@ import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 
 public class ShowDetailFragment  extends Fragment {
@@ -38,7 +39,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
 
                     placeHolderImage = R.drawable.salein;

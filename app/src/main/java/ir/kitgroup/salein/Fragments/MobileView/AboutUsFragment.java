@@ -19,6 +19,7 @@ import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.AboutUsFragmentBinding;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 
@@ -55,7 +56,7 @@ public class AboutUsFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
+        switch (Util.getUser(getActivity()).name) {
             case "ir.kitgroup.salein":
                 imageLogo = R.drawable.salein;
                 title="سالین دمو";

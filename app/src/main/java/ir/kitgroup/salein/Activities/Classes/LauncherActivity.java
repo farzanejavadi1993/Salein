@@ -11,11 +11,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import android.preference.PreferenceManager;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -30,116 +29,93 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 
 import ir.kitgroup.salein.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 
+
+@AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {
 
     //region Parameter
-    private SharedPreferences sharedPreferences;
 
-    private Dialog dialog;
-    private TextView textExit;
-    private ImageView ivIcon;
-    private int imageIconDialog=R.drawable.saleinorder_png;
-    public static Typeface iranSansBold;
-    public static String name;
-    public  static  String namePackage;
+    @Inject
+    SharedPreferences sharedPreferences;
 
 
-    private int type = 0;
-    private Boolean showView = false;
+    //region Parameter Dialog
+    private Dialog ExitDialog;
+    private TextView messageTextExitDialog;
+    //endregion Parameter Dialog
+
+
+
+    private Boolean refreshApplication = false;
+
     //endregion Parameter
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        refreshApplication =false;
 
-        showView=false;
-        iranSansBold = Typeface.createFromAsset(getAssets(), "iransans.ttf");
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
+        //region Set Layout to LauncherActivity class
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         View viewRoot = binding.getRoot();
         setContentView(viewRoot);
+        //endregion Set Layout to LauncherActivity class
 
 
+        //region Call SplashScreenFragment
         FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
         addFragment.commit();
+        //endregion Call SplashScreenFragment
 
 
+        //region Cast ExitDialog
 
 
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        ExitDialog = new Dialog(this);
+        ExitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ExitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ExitDialog.setContentView(R.layout.custom_dialog);
+        ExitDialog.setCancelable(false);
 
-            switch (pInfo.packageName) {
-                case "ir.kitgroup.salein":
+        messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
-                    imageIconDialog = R.drawable.saleinicon128;
-                    name = "ir.kitgroup.salein";
-                    namePackage = "ir.kitgroup.salein";
+        int imageIconDialog = Util.getUser(LauncherActivity.this).image;
+        ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
+        imageIconExitDialog.setImageResource(imageIconDialog);
 
-                    break;
-
-                case "ir.kitgroup.saleintop":
-
-                    imageIconDialog = R.drawable.top_png;
-                    name = "ir.kitgroup.saleintop";
-                    namePackage = "ir.kitgroup.saleintop";
-
-                    break;
+        MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
+        MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);
 
 
-                case "ir.kitgroup.saleinmeat":
-
-                    imageIconDialog = R.drawable.meat_png;
-                    name = "ir.kitgroup.saleinmeat";
-                    namePackage = "ir.kitgroup.saleinmeat";
-
-                    break;
-
-                case "ir.kitgroup.saleinnoon":
-
-                    imageIconDialog = R.drawable.noon;
-                    name = "ir.kitgroup.saleinnoon";
-                    namePackage = "ir.kitgroup.saleinnoon";
-
-                    break;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCancelable(false);
-
-        textExit = dialog.findViewById(R.id.tv_message);
-        ivIcon = dialog.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imageIconDialog);
-
-        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
-        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
-        btnNo.setOnClickListener(v -> {
-            dialog.dismiss();
-
-        });
-        btnOk.setOnClickListener(v -> {
-            dialog.dismiss();
+        //region action ExitDialog's buttons
+        btnNoExitDialog.setOnClickListener(v -> ExitDialog.dismiss());
+        btnYesExitDialog.setOnClickListener(v -> {
+            ExitDialog.dismiss();
 
             finish();
 
         });
+        //endregion action ExitDialog's buttons
+
+
+        //endregion Cast ExitDialog
 
 
     }
@@ -147,20 +123,24 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
+    //region Override Method
     @Override
     public void onBackPressed() {
 
 
         final int size = getSupportFragmentManager().getBackStackEntryCount();
+
+
         if (size == 0) {
-            textExit.setText("آیا از برنامه خارج می شوید؟");
-            type = 0;
-            dialog.show();
+            messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
+            ExitDialog.show();
 
         }
+
+
         else if (App.mode==1 &&
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")
-                        ){
+        ){
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
             if (fragment instanceof LauncherOrganizationFragment) {
                 LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) fragment;
@@ -168,20 +148,19 @@ public class LauncherActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().popBackStack();
         }
-        else if (LauncherActivity.namePackage!=null && LauncherActivity.namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        else if (Util.getUser(LauncherActivity.this).namePackage!=null && Util.getUser(LauncherActivity.this).namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             for (int i=0;i<size;i++){
                 getSupportFragmentManager().popBackStack();
-         }
+            }
 
         }
         else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
-            textExit.setText("آیا از برنامه خارج می شوید؟");
-            type = 0;
-            dialog.show();
+            messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
+            ExitDialog.show();
         } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF")) {
 
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
@@ -199,24 +178,16 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public   String appVersion() throws PackageManager.NameNotFoundException {
-        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        return pInfo.versionName;
-    }
-
-
-
     @Override
     public void onResume() {
         super.onResume();
 
-        int p=0;
-        if (showView) {
+        if (refreshApplication) {
             String dateOld = sharedPreferences.getString("timeOld", "");
             Date oldDate;
             Date dateNow = Calendar.getInstance().getTime();
             if (!dateOld.equals("")) {
-                oldDate = stringToDate(dateOld, "dd/MM/yyyy HH:mm:ss");
+                oldDate = stringToDate(dateOld);
             } else {
                 oldDate = dateNow;
             }
@@ -231,7 +202,7 @@ public class LauncherActivity extends AppCompatActivity {
                 finish();
                 startActivity(getIntent());
             }
-            showView=false;
+            refreshApplication =false;
         }
     }
 
@@ -239,23 +210,32 @@ public class LauncherActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
-        if (!showView) {
-            showView = true;
+        if (!refreshApplication) {
+            refreshApplication = true;
             Date dateOld = Calendar.getInstance().getTime();
             @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
                     new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             sharedPreferences.edit().putString("timeOld", dateFormats.format(dateOld)).apply();
         }
     }
+    //endregion Override Method
 
 
-    private Date stringToDate(String aDate, String aFormat) {
+
+
+    //region Custom  Method
+    private Date stringToDate(String aDate) {
 
         if (aDate == null) return null;
         ParsePosition pos = new ParsePosition(0);
-        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
-        Date stringDate = simpledateformat.parse(aDate, pos);
-        return stringDate;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return simpledateformat.parse(aDate, pos);
 
     }
+    public   String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        return pInfo.versionName;
+    }
+    //endregion Custom Method
+
 }

@@ -18,19 +18,22 @@ import com.orm.query.Select;
 import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 
+import dagger.hilt.android.HiltAndroidApp;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@HiltAndroidApp
 public class App extends Application {
+
 
     public static API api;
     public static Context context;
     private String baseUrl = "http://192.168.20.8:96/api/REST/";
     public static Retrofit retrofit;
-    public static int mode = 1;//1  ordOrganization  //2  OrdClient
+    public static int mode = 2;//1  ordOrganization  //2  OrdClient
 
 
 

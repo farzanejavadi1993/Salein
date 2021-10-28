@@ -42,6 +42,7 @@ import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 import ir.kitgroup.salein.models.ModelAccount;
@@ -89,7 +90,7 @@ public class SettingFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
 
 
                 case "ir.kitgroup.saleintop":
@@ -174,7 +175,7 @@ public class SettingFragment extends Fragment {
 
             getFragmentManager().popBackStack();
             getFragmentManager().popBackStack();
-            LauncherActivity.name=LauncherActivity.namePackage;
+           // LauncherActivity.name=LauncherActivity.namePackage;
             LoginClientFragment userFragment = new LoginClientFragment();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, userFragment).commit();
 

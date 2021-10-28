@@ -65,6 +65,7 @@ import ir.kitgroup.salein.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.Tables;
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.Util.Utilities;
@@ -222,7 +223,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Cast Dialog Delete
 
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog = R.drawable.saleinicon128;

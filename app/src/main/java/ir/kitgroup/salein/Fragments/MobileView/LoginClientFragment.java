@@ -90,7 +90,7 @@ public class LoginClientFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            switch (LauncherActivity.name) {
+            switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
                     messageWelcome = "به سالین دمو خوش آمدید";
                     imageLogo = R.drawable.salein;

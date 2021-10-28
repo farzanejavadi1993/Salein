@@ -105,7 +105,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (LauncherActivity.name) {
+        switch (Util.getUser(getActivity()).name) {
             case "ir.kitgroup.salein":
                 imageLogo = R.drawable.salein;
                 break;
@@ -555,7 +555,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
                                         //region Show All Company
-                                        if (LauncherActivity.name.equals("ir.kitgroup.salein")) {
+                                        if (Util.getUser(getActivity()).name.equals("ir.kitgroup.salein")) {
                                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                             replaceFragment.commit();
                                         }
