@@ -166,24 +166,5 @@ public class Util {
     }
 
 
-    public static ArrayList<Double> getSizeMobile(Activity context) {
-
-        ArrayList<Double> SizeApp = new ArrayList<>();
-        double width = 0;
-        double height = 0;
-        double screenInches = 0.0;
-        DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        width = dm.widthPixels;
-        height = dm.heightPixels;
-        double x = Math.pow(width / dm.xdpi, 2);
-        double y = Math.pow(height / dm.ydpi, 2);
-        screenInches = Math.sqrt(x + y);
-        SizeApp.add(screenInches);
-        SizeApp.add(width);
-        SizeApp.add(height);
-        return SizeApp;
-    }
-
 
 }

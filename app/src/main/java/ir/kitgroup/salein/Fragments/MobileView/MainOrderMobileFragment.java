@@ -67,6 +67,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -114,9 +117,11 @@ import ir.kitgroup.salein.models.ProductLevel2;
 
 import static java.lang.Math.min;
 
+@AndroidEntryPoint
 
 public class MainOrderMobileFragment extends Fragment {
-
+    @Inject
+    private  Double ScreenSize;
     //region Parameter
     private FragmentMobileOrderMainBinding binding;
 
@@ -249,7 +254,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize;
-        if (Util.getSizeMobile(getActivity()).get(0) >= 7)
+        if (ScreenSize >= 7)
             fontSize = 14;
         else
             fontSize = 12;

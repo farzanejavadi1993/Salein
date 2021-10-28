@@ -21,13 +21,21 @@ import com.github.siyamed.shapeimageview.CircularImageView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ModelCompany;
 
+@AndroidEntryPoint
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
+
+
+    @Inject
+    private  Double ScreenSize;
 
     private List<ModelCompany> list ;
     private Activity context;
@@ -54,7 +62,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (Util.getSizeMobile(context).get(0)>= 7) {
+        if (ScreenSize>= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;

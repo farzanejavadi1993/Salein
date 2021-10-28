@@ -23,6 +23,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
@@ -31,12 +34,14 @@ import ir.kitgroup.salein.DataBase.Tables;
 
 import ir.kitgroup.salein.R;
 
+@AndroidEntryPoint
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> {
 
     private final List<Tables> tableList;
     private final Activity context;
-
+    @Inject
+    private  Double ScreenSize;
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
@@ -180,7 +185,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
             if (App.mode == 1) {
-                if (Util.getSizeMobile(context).get(0)  >= 7) {
+                if (ScreenSize  >= 7) {
                     int height;
                     if (SplashScreenFragment.width > SplashScreenFragment.height)
                         height = SplashScreenFragment.width / 2;

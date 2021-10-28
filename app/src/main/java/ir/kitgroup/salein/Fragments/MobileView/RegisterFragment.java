@@ -33,6 +33,9 @@ import java.util.List;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -47,10 +50,12 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentRegisterBinding;
 
-
+@AndroidEntryPoint
 public class RegisterFragment extends Fragment {
     //region  Parameter
 
+    @Inject
+    private  Double ScreenSize;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
@@ -91,7 +96,7 @@ public class RegisterFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize;
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
+        if (ScreenSize >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);

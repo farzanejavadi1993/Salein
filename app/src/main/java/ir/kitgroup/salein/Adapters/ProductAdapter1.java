@@ -44,6 +44,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -62,9 +65,10 @@ import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
 
-
+@AndroidEntryPoint
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
-
+    @Inject
+    private  Double ScreenSize;
     private final Activity context;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -195,7 +199,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Constant.VIEW_TYPE_ITEM) {
-            if (Util.getSizeMobile(context).get(0)  >= 7) {
+            if (ScreenSize  >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
 

@@ -59,6 +59,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -102,8 +105,13 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
+
+@AndroidEntryPoint
 public class PaymentMobileFragment extends Fragment {
 
+
+    @Inject
+    private  Double ScreenSize;
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;
@@ -344,7 +352,7 @@ public class PaymentMobileFragment extends Fragment {
         //region Configuration Size
         int fontBigSize;
         int fontSize;
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
+        if (ScreenSize  >= 7) {
             fontBigSize = 14;
             fontSize = 13;
         } else {

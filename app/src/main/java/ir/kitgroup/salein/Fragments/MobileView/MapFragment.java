@@ -77,6 +77,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Adapters.SearchViewAdapter;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
@@ -92,10 +95,12 @@ import retrofit2.Response;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
+@AndroidEntryPoint
 
 public class MapFragment extends Fragment implements PermissionsListener {
 
-
+    @Inject
+    private  Double ScreenSize;
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
@@ -162,7 +167,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         //region Configuration Text Size
         int fontSize;
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
+        if (ScreenSize >= 7) {
 
             fontSize = 14;
         } else

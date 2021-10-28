@@ -19,14 +19,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.ProductLevel1;
 
+@AndroidEntryPoint
 
 public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adapter.viewHolder> {
-
+    @Inject
+    private  Double ScreenSize;
     private final List<ProductLevel1> productGroupLevel1s ;
     private final Activity context;
     private  int fontSize=0;
@@ -51,7 +56,7 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-        if (Util.getSizeMobile(context).get(0) >=7)
+        if (ScreenSize >=7)
             fontSize=13;
         else
             fontSize=11;

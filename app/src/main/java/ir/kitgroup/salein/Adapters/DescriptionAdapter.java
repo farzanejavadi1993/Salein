@@ -17,18 +17,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.R;
 
+@AndroidEntryPoint
 
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.viewHolder> {
 
     private List<Description> list = new ArrayList<>();
     private Activity context;
     private int fontSize = 0;
-
+    @Inject
+    private  Double ScreenSize;
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
@@ -48,7 +53,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (Util.getSizeMobile(context).get(0) >= 7) {
+        if (ScreenSize>= 7) {
             fontSize = 13;
         } else {
             fontSize = 12;

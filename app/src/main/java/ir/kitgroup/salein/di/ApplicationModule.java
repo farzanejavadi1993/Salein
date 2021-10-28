@@ -1,9 +1,11 @@
 package ir.kitgroup.salein.di;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -11,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.orm.query.Select;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -39,6 +42,20 @@ public class ApplicationModule {
 
     }
 
+    @Provides
+    @Singleton
+    Double provideSize(@ApplicationContext Activity context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        double width = dm.widthPixels;
+        double height = dm.heightPixels;
+        double x = Math.pow(width / dm.xdpi, 2);
+        double y = Math.pow(height / dm.ydpi, 2);
+        double screenInches = Math.sqrt(x + y);
+        return screenInches;
+
+    }
+
 
     @Provides
     @Singleton
@@ -46,6 +63,7 @@ public class ApplicationModule {
         return Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
 
     }
+
     @Provides
     @Singleton
     Cache provideOkHttpCache(Application application) {
@@ -72,10 +90,9 @@ public class ApplicationModule {
     }
 
 
-
     @Provides
     @Singleton
-    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient,@ApplicationContext Context context) {
+    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient, @ApplicationContext Context context) {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -90,5 +107,4 @@ public class ApplicationModule {
     API api(Retrofit retrofit) {
         return retrofit.create(API.class);
     }
-
-    }
+}

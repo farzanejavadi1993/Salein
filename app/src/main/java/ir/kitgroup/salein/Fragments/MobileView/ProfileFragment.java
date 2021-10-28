@@ -13,15 +13,21 @@ import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.databinding.FragmentProfileBinding;
-
+@AndroidEntryPoint
 public class ProfileFragment extends Fragment {
 
+
+    @Inject
+    private  Double ScreenSize;
     private FragmentProfileBinding binding;
 
     private String type = "";
@@ -38,7 +44,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
 
-        if (Util.getSizeMobile(getActivity()).get(0) >=7)
+        if (ScreenSize >=7)
             fontSize=14;
         else
             fontSize=12;

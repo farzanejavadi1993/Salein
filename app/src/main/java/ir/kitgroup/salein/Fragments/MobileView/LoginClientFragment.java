@@ -32,6 +32,9 @@ import java.util.Objects;
 import java.util.Random;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -43,10 +46,12 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentLoginMobileBinding;
 
+@AndroidEntryPoint
 
 public class LoginClientFragment extends Fragment {
 
-
+    @Inject
+    private  Double ScreenSize;
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
@@ -74,7 +79,7 @@ public class LoginClientFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize ;
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
+        if (ScreenSize  >= 7) {
             binding.tvWelcome.setTextSize(18);
             fontSize = 14;
         } else

@@ -30,6 +30,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -48,7 +51,15 @@ import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 
+
+
+
+@AndroidEntryPoint
 public class SettingFragment extends Fragment {
+
+    @Inject
+    private  Double ScreenSize;
+
 
     //region Parameter
     private boolean Seen=true;
@@ -72,7 +83,7 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7)
+        if (ScreenSize  >= 7)
             fontSize = 14;
         else
             fontSize = 12;

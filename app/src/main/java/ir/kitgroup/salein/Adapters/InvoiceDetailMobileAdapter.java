@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 
@@ -37,9 +40,10 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.Product;
 
-
+@AndroidEntryPoint
 public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {
-
+    @Inject
+    private  Double ScreenSize;
     private final List<InvoiceDetail> orderDetailList;
 
     private final String type;//1 seen      //2 edit
@@ -96,7 +100,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (Util.getSizeMobile(contex).get(0) >= 7) {
+        if (ScreenSize >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {

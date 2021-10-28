@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.models.OrderType;
 
@@ -27,12 +30,14 @@ import ir.kitgroup.salein.models.OrderType;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.R;
 
-
+@AndroidEntryPoint
 public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaymentAdapter1.viewHolder> {
 
     private  final List<OrderType> list;
     private final Activity context;
 
+    @Inject
+    private  Double ScreenSize;
     private int fontSize=0;
     public interface ClickItem {
         void onRowClick(String GUID,Integer code);
@@ -52,7 +57,7 @@ public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaym
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        if (Util.getSizeMobile(context).get(0) >=7)
+        if (ScreenSize >=7)
             fontSize=13;
         else
             fontSize=11;

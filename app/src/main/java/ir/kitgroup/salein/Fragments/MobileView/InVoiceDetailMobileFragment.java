@@ -55,6 +55,9 @@ import java.util.List;
 import java.util.Locale;
 
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -88,10 +91,14 @@ import ir.kitgroup.salein.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+@AndroidEntryPoint
 
 public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Parameter
+
+    @Inject
+    private  Double ScreenSize;
     private FragmentInvoiceDetailMobileBinding binding;
     private CustomProgress customProgress;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -189,7 +196,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Configuration Text Size
         int fontSize;
         int fontLargeSize;
-        if (Util.getSizeMobile(getActivity()).get(0)  >= 7) {
+        if (ScreenSize  >= 7) {
             fontSize = 13;
             fontLargeSize = 14;
         } else {
