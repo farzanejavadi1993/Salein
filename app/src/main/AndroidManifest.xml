@@ -35,7 +35,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="191" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
+            android:value="192" /> <!-- DO NOT FORGET UPDATE VERSION IN DBHelper -->
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />

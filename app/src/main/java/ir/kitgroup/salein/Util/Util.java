@@ -106,6 +106,8 @@ public class Util {
     public static User getUser(@ApplicationContext Context context) {
         String name = "";
         String namePackage = "";
+        String title = "";
+        String description = "";
         int image = 0;
 
         try {
@@ -116,6 +118,8 @@ public class Util {
                     image = R.drawable.saleinicon128;
                     name = "ir.kitgroup.salein";
                     namePackage = "ir.kitgroup.salein";
+                    title = "سالین دمو";
+                    description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
 
                     break;
 

@@ -31,18 +31,24 @@ import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
 
 public class SplashScreenFragment extends Fragment {
 
-    public static int width = 0;
-    public static int height = 0;
 
+
+    //region Parameter
     private String title = "SaleIn Order";
     private String description = "اپلیکیشن سفارش گیر مشتریان سالین";
     private FragmentSplashScreenBinding binding;
+    //endregion Parameter
+
+
+
+
+
+    //region Override Method
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-
         binding = FragmentSplashScreenBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
@@ -59,7 +65,6 @@ public class SplashScreenFragment extends Fragment {
 
             switch (Util.getUser(getActivity()).name) {
                 case "ir.kitgroup.salein":
-
                     title = "سالین دمو";
                     description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
                     break;
@@ -121,7 +126,7 @@ public class SplashScreenFragment extends Fragment {
 
                             //endregionShow All Company
 
-                        //region Go To MainOrderFragment Because Account Is Register
+                            //region Go To MainOrderFragment Because Account Is Register
                         else {
                             Bundle bundle = new Bundle();
                             bundle.putString("Ord_TYPE", "");
@@ -176,6 +181,9 @@ public class SplashScreenFragment extends Fragment {
         thread.start();
         //endregion Thread
     }
+
+    //endregion Override Method
+
 
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);

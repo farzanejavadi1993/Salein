@@ -185,30 +185,30 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             tvStatus = itemView.findViewById(R.id.tv_status_table);
 
 
-            if (App.mode == 1) {
-                if (ScreenSize  >= 7) {
-                    int height;
-                    if (SplashScreenFragment.width > SplashScreenFragment.height)
-                        height = SplashScreenFragment.width / 2;
-                    else
-                        height = SplashScreenFragment.height / 2;
-                    rlTable.getLayoutParams().width = (int) (height / 3.3);
-                    rlTable.getLayoutParams().height = (int) (height / 4.2);
-
-
-                } else {
-
-                    int width;
-                    if (SplashScreenFragment.width > SplashScreenFragment.height)
-                        width = SplashScreenFragment.height / 2;
-                    else
-                        width = SplashScreenFragment.width / 2;
-
-                    rlTable.getLayoutParams().width = (int) (width / 1.2);
-                    rlTable.getLayoutParams().height = (int) (width / 1.7);
-
-                }
-            }
+//            if (App.mode == 1) {
+//                if (ScreenSize  >= 7) {
+//                    int height;
+//                    if (SplashScreenFragment.width > SplashScreenFragment.height)
+//                        height = SplashScreenFragment.width / 2;
+//                    else
+//                        height = SplashScreenFragment.height / 2;
+//                    rlTable.getLayoutParams().width = (int) (height / 3.3);
+//                    rlTable.getLayoutParams().height = (int) (height / 4.2);
+//
+//
+//                } else {
+//
+//                    int width;
+//                    if (SplashScreenFragment.width > SplashScreenFragment.height)
+//                        width = SplashScreenFragment.height / 2;
+//                    else
+//                        width = SplashScreenFragment.width / 2;
+//
+//                    rlTable.getLayoutParams().width = (int) (width / 1.2);
+//                    rlTable.getLayoutParams().height = (int) (width / 1.7);
+//
+//                }
+//            }
 
 
         }
