@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 
 
 import com.google.gson.FieldNamingPolicy;
@@ -42,8 +43,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreference(@ApplicationContext Context context) {
-        return context.getSharedPreferences("preferences_name", Context.MODE_PRIVATE);
-
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
 
@@ -209,6 +209,11 @@ public class ApplicationModule {
                 .client(okHttpClient)
                 .build();
     }
+
+
+
+
+
 
 
     @Provides

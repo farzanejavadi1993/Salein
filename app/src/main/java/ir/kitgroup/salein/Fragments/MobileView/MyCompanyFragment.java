@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.orm.query.Select;
@@ -33,10 +30,8 @@ import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -47,10 +42,9 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.Adapters.CompanyAdapterList;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.User;
+
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.Util.Util;
-import ir.kitgroup.salein.classes.App;
+
 import ir.kitgroup.salein.databinding.FragmentMyCompanyBinding;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
@@ -59,25 +53,46 @@ import ir.kitgroup.salein.models.ModelLog;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 @AndroidEntryPoint
 public class MyCompanyFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMyCompanyBinding binding;
-    private SharedPreferences sharedPreferences;
+
 
 
     @Inject
+    SharedPreferences sharedPreferences;
+
+    @Inject
     Company company;
+
+
+    @Inject
+    API api;
+
+
+    @Inject
+    Gson gson;
+
+    @Inject
+    OkHttpClient okHttpClient;
+
+    @Inject
+    Retrofit retrofit;
 
     private Account account;
 
 
     private Dialog dialog;
-    private TextView textExit;
-    private int imageIconDialog;
-    private String name;
-    private String userName = "";
-    private String password = "";
+    private TextView textMessageDialog;
+
+
+    private Company newCompany;
+
+
+
+
 
 
     @Nullable
@@ -92,8 +107,8 @@ public class MyCompanyFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        account = Select.from(Account.class).first();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         ArrayList<Company> list = new ArrayList<>(fullList());
         ArrayList<Company> listCompany = new ArrayList<>();
@@ -103,11 +118,13 @@ public class MyCompanyFragment extends Fragment {
                 listCompany.add(list.get(i));
         }
 
-        if (listCompany.size()==0)
+        if (listCompany.size() == 0)
             binding.txtError.setText("لیست فروشگاه های انتخابی شما خالی می باشد با مراجعه به تب فروشگاه ها ،فروشگاه  مورد نظر خود را انتخاب کنید");
 
         else
             binding.txtError.setText("");
+
+
         CompanyAdapterList companyAdapterList = new CompanyAdapterList(getActivity(), listCompany, 1);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
@@ -115,40 +132,25 @@ public class MyCompanyFragment extends Fragment {
         companyAdapterList.setOnClickItemListener((company, check) ->
                 {
 
-
-                    User.deleteAll(User.class);
-                    User user = new User();
-                    user.ipLocal = company.ipLocal;
-                    user.userName = company.userName;
-                    user.passWord = company.passWord;
-                    user.lat = company.lat;
-                    user.lng = company.lng;
-                    user.save();
-                    userName = user.userName;
-                    password = user.passWord;
-                    name = company.nameCompany;
-                    company.nameCompany= company.namePackage;
-
-
-                    String nameSave = sharedPreferences.getString("CN", "");
-                    if (nameSave.equals(company.nameCompany)) {
+                    newCompany = company;
+                    String nameCompanySave = sharedPreferences.getString("CN", "");
+                    if (nameCompanySave.equals(company.nameCompany)) {
                         Bundle bundle = new Bundle();
                         bundle.putString("Ord_TYPE", "");
                         bundle.putString("Tbl_GUID", "");
                         bundle.putString("Inv_GUID", "");
-
-                        sharedPreferences.edit().putString("CN", name).apply();
+                        sharedPreferences.edit().putString("NC", company.nameCompany).apply();
                         MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                         mainOrderMobileFragment.setArguments(bundle);
                         FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                         replaceFragment.commit();
                     } else
-                        configRetrofit(name, userName, password, account.M);
+                        configRetrofit(account.M);
                 }
         );
 
 
-        imageIconDialog = R.drawable.saleinicon128;
+
 
 
         dialog = new Dialog(getActivity());
@@ -157,78 +159,59 @@ public class MyCompanyFragment extends Fragment {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
 
-        textExit = dialog.findViewById(R.id.tv_message);
-        ImageView ivIcon = dialog.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imageIconDialog);
+        textMessageDialog = dialog.findViewById(R.id.tv_message);
+        ImageView imageDialog = dialog.findViewById(R.id.iv_icon);
+        imageDialog.setImageResource(R.drawable.saleinicon128);
 
 
-        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
-        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
-        btnNo.setOnClickListener(v -> {
-            dialog.dismiss();
 
-        });
-        btnOk.setOnClickListener(v -> {
+        MaterialButton btnOkDialog = dialog.findViewById(R.id.btn_ok);
+        MaterialButton btnNoDialog = dialog.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> dialog.dismiss());
+        btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
             ArrayList<Account> AccList = new ArrayList<>();
-            AccList.clear();
             AccList.add(account);
-            addAccount(userName, password, AccList);
+            addAccount(newCompany.userName, newCompany.passWord, AccList);
 
 
         });
 
 
-        account = Select.from(Account.class).first();
+
 
 
     }
 
 
-    private void configRetrofit(String name, String user, String pass, String mobile) {
-        String baseUrl = "http://" + Util.toEnglishNumber(Select.from(User.class).first().ipLocal) + "/api/REST/";
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
+    private void configRetrofit( String mobile) {
+
+
+        String baseUrl = "http://" + newCompany.ipLocal + "/api/REST/";
+
+         retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(baseUrl)
+                .client(okHttpClient)
                 .build();
 
-        Gson gson = new GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .serializeNulls()
-                .setDateFormat(DateFormat.LONG)
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .setPrettyPrinting()
-                .setVersion(1.0)
-                .create();
 
-
+         api=retrofit.create(API.class);
         try {
-            App.retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(client)
-                    .build();
 
-            App.api = App.retrofit.create(API.class);
+            getInquiryAccount1(mobile);
 
-            getInquiryAccount1(name, user, pass, mobile);
-
-        } catch (NetworkOnMainThreadException ex) {
-
-
-        }
+        } catch (NetworkOnMainThreadException ignored) {}
     }
-
 
 
     @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String name,String userName, String passWord, String mobile) {
-     binding.progressbar.setVisibility(View.VISIBLE);
+    private void getInquiryAccount1(String mobile) {
+        binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(newCompany.userName, newCompany.passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -262,6 +245,7 @@ public class MyCompanyFragment extends Fragment {
 
                                         //user is register
                                         if (iDs.getAccountList().size() > 0) {
+                                            company=newCompany;
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
                                             getFragmentManager().popBackStack();
@@ -270,21 +254,20 @@ public class MyCompanyFragment extends Fragment {
                                             bundle.putString("Tbl_GUID", "");
                                             bundle.putString("Inv_GUID", "");
 
-                                            sharedPreferences.edit().putString("CN", name).apply();
+                                            sharedPreferences.edit().putString("NC", newCompany.nameCompany).apply();
                                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                                             mainOrderMobileFragment.setArguments(bundle);
                                             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                                             replaceFragment.commit();
 
-                                            binding.progressbar.setVisibility(View.GONE);
                                         }
 
                                         //user not register
                                         else {
-                                            textExit.setText(" شما مشترک " + name + " نیستید.آیا مشترک میشوید؟ ");
+                                            textMessageDialog.setText(" شما مشترک " + newCompany.nameCompany + " نیستید.آیا مشترک میشوید؟ ");
                                             dialog.show();
-                                            binding.progressbar.setVisibility(View.GONE);
                                         }
+                                        binding.progressbar.setVisibility(View.GONE);
 
 
                                     }
@@ -296,26 +279,18 @@ public class MyCompanyFragment extends Fragment {
 
                             }, throwable -> {
 
-                                Toast.makeText(getContext(), "فروشگاه تعطیل می باشد." , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
 
                             })
             );
         } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
 
             binding.progressbar.setVisibility(View.GONE);
         }
 
     }
-
-
-
-
-
-
-
-
 
 
     private static class JsonObjectAccount {
@@ -327,17 +302,16 @@ public class MyCompanyFragment extends Fragment {
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
 
+        JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
+        jsonObjectAcc.Account = accounts;
 
-            JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
-            jsonObjectAcc.Account = accounts;
-
-            Gson gson1 = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
-            }.getType();
+        Gson gson1 = new Gson();
+        Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
+        }.getType();
 
         try {
             compositeDisposable.add(
-                    App.api.addAccount1(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount1(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -353,6 +327,7 @@ public class MyCompanyFragment extends Fragment {
                                 int message = iDs.getLogs().get(0).getMessage();
                                 String description = iDs.getLogs().get(0).getDescription();
                                 if (message == 1) {
+                                    company=newCompany;
                                     Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
 
                                     Bundle bundle = new Bundle();
@@ -364,23 +339,21 @@ public class MyCompanyFragment extends Fragment {
                                     FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                                     replaceFragment.commit();
 
-                             binding.progressbar.setVisibility(View.GONE);
-
                                 } else {
 
                                     Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                                    binding.progressbar.setVisibility(View.GONE);
                                 }
+                                binding.progressbar.setVisibility(View.GONE);
 
                             }, throwable -> {
 
-                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت اطلاعات مشتری." , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت اطلاعات مشتری.", Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
 
                             })
             );
         } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در ثبت اطلاعات مشتری." , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در ثبت اطلاعات مشتری.", Toast.LENGTH_SHORT).show();
             binding.progressbar.setVisibility(View.GONE);
         }
 
@@ -396,8 +369,11 @@ public class MyCompanyFragment extends Fragment {
         company_SaleIn.Description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
         company_SaleIn.namePackage = "ir.kitgroup.salein";
         company_SaleIn.CheckUser = false;
-        company_SaleIn.ipLocal = "2.180.28.6:3333";
-        company_SaleIn.userName = "administrator";
+//        company_SaleIn.ipLocal = "2.180.28.6:3333";
+//        company_SaleIn.userName = "administrator";
+
+        company_SaleIn.ipLocal = "192.168.20.8:96";
+        company_SaleIn.userName = "admin";
         company_SaleIn.passWord = "123";
         company_SaleIn.lat = 36.326805522660464;
         company_SaleIn.lng = 59.56450551053102;
@@ -521,7 +497,6 @@ public class MyCompanyFragment extends Fragment {
         company_ashreza.imageLogo = R.drawable.white;
 
 
-        companyList.clear();
         companyList.add(company_SaleIn);
         companyList.add(company_top);
         companyList.add(company_meat);

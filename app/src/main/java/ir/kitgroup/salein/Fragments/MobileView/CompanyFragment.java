@@ -16,17 +16,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.CompanyAdapterList;
+import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentCompanyBinding;
 import ir.kitgroup.salein.models.Company;
 
-
+@AndroidEntryPoint
 public class CompanyFragment extends Fragment {
 
+
     private FragmentCompanyBinding binding;
-    private SharedPreferences sharedPreferences;
+
+
+    @Inject
+    SharedPreferences sharedPreferences;
+
+    @Inject
+    API api;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -41,7 +52,7 @@ public class CompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         ArrayList<Company> list = new ArrayList<>(fullList());
         for (int i = 0; i < list.size(); i++) {
             boolean check = sharedPreferences.getBoolean(list.get(i).namePackage, false);
@@ -60,8 +71,7 @@ public class CompanyFragment extends Fragment {
 
         binding.btnRegisterCompany.setOnClickListener(v -> {
 
-            LauncherActivity mainActivity = (LauncherActivity) v.getContext();
-            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("StoriesFragment");
+            Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("StoriesFragment");
             if (fragment instanceof StoriesFragment) {
                 StoriesFragment fgf = (StoriesFragment) fragment;
                 fgf.setMyCompany();
@@ -76,8 +86,8 @@ public class CompanyFragment extends Fragment {
         company_SaleIn.Description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
         company_SaleIn.namePackage = "ir.kitgroup.salein";
         company_SaleIn.CheckUser = false;
-        company_SaleIn.ipLocal = "2.180.28.6:3333";
-        company_SaleIn.userName = "administrator";
+        company_SaleIn.ipLocal = "192.168.20.8:96";
+        company_SaleIn.userName = "admin";
         company_SaleIn.passWord = "123";
         company_SaleIn.lat = 36.326805522660464;
         company_SaleIn.lng = 59.56450551053102;
@@ -94,7 +104,7 @@ public class CompanyFragment extends Fragment {
         company_top.passWord = "9929";
         company_top.lat = 36.318805483696735;
         company_top.lng = 59.555196457006296;
-        company_top.imageLogo = R.drawable.top_png;
+        company_top.imageLogo = R.drawable.top_icon;
 
 
         Company company_meat = new Company();
@@ -108,7 +118,7 @@ public class CompanyFragment extends Fragment {
         company_meat.passWord = "0123";
         company_meat.lat = 36.31947320471888;
         company_meat.lng = 59.605469293071884;
-        company_meat.imageLogo = R.drawable.meat_png;
+        company_meat.imageLogo = R.drawable.meat_icon;
 
 
         Company company_noon = new Company();
@@ -124,19 +134,17 @@ public class CompanyFragment extends Fragment {
         company_noon.imageLogo = R.drawable.noon;
 
 
-
         Company company_bahraman = new Company();
-       company_bahraman.ipLocal = "22";
-       company_bahraman.namePackage = "ir.kitgroup.saleinbahraman";
-       company_bahraman.CheckUser = false;
-       company_bahraman.nameCompany = "زعفران بهرامن";
-       company_bahraman.Description = "تولید وصادرکننده بهترین زعفران خاورمیانه";
-       company_bahraman.userName = "";
-       company_bahraman.passWord = "";
-       company_bahraman.lat = 0.0;
-       company_bahraman.lng = 0.0;
-       company_bahraman.imageLogo = R.drawable.bahraman;
-
+        company_bahraman.ipLocal = "22";
+        company_bahraman.namePackage = "ir.kitgroup.saleinbahraman";
+        company_bahraman.CheckUser = false;
+        company_bahraman.nameCompany = "زعفران بهرامن";
+        company_bahraman.Description = "تولید وصادرکننده بهترین زعفران خاورمیانه";
+        company_bahraman.userName = "";
+        company_bahraman.passWord = "";
+        company_bahraman.lat = 0.0;
+        company_bahraman.lng = 0.0;
+        company_bahraman.imageLogo = R.drawable.bahraman;
 
 
         Company company_shaparak = new Company();
@@ -178,7 +186,6 @@ public class CompanyFragment extends Fragment {
         company_tek.imageLogo = R.drawable.tek;
 
 
-
         Company company_andishe = new Company();
         company_andishe.ipLocal = "22";
         company_andishe.namePackage = "ir.kitgroup.saleinandishe";
@@ -202,7 +209,6 @@ public class CompanyFragment extends Fragment {
         company_ashreza.lat = 0.0;
         company_ashreza.lng = 0.0;
         company_ashreza.imageLogo = R.drawable.white;
-
 
 
         companyList.clear();
