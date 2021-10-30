@@ -1,10 +1,14 @@
 package ir.kitgroup.salein.DataBase;
 
 
+import android.content.SharedPreferences;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
+
+import javax.inject.Inject;
 
 import ir.kitgroup.salein.Util.Util;
 
@@ -65,6 +69,8 @@ public class Product  extends SugarRecord {
     private Integer key;
 
 
+    @Inject
+    SharedPreferences sharedPreferences;
     private Double Amount;
 
     public Double getAmount() {
@@ -131,7 +137,7 @@ public class Product  extends SugarRecord {
         Double showPrice = 0.0;
         try {
 
-            String priceList = Util.getPrice();
+            String priceList = Util.getPrice(sharedPreferences);
 
             switch (priceList) {
                 case "2":

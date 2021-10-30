@@ -1,23 +1,19 @@
 package ir.kitgroup.salein.di;
 
-import android.app.Activity;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.util.DisplayMetrics;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import com.orm.query.Select;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -25,14 +21,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.qualifiers.ActivityContext;
+
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.android.scopes.ActivityScoped;
+
 import dagger.hilt.components.SingletonComponent;
 import ir.kitgroup.salein.Connect.API;
-import ir.kitgroup.salein.DataBase.User;
+
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.Util.Util;
+
 import ir.kitgroup.salein.models.Company;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -53,6 +49,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    Context provideContext(@ApplicationContext Context context) {
+        return context;
+
+    }
+
+
+
+    @Provides
+    @Singleton
     Double provideSize() {
 //        DisplayMetrics dm = new DisplayMetrics();
 //        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -67,7 +72,7 @@ public class ApplicationModule {
     }
     @Provides
     @Singleton
-    public static Company getUser(@ApplicationContext Context context) {
+      Company getUser(@ApplicationContext Context context) {
         String name = "";
         String namePackage = "";
         String title = "";

@@ -1,8 +1,12 @@
 package ir.kitgroup.salein.models;
 
 
+import android.content.SharedPreferences;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.inject.Inject;
 
 import ir.kitgroup.salein.Util.Util;
 
@@ -70,6 +74,8 @@ public class Product {
         return amount;
     }
 
+    @Inject
+    SharedPreferences sharedPreferences;
     public void setAmount(Double amount) {
         Amount = amount;
     }
@@ -127,7 +133,7 @@ public class Product {
         Double showPrice = 0.0;
         try {
 
-            String priceList = Util.getPrice();
+            String priceList = Util.getPrice(sharedPreferences);
 
             switch (priceList) {
                 case "2":

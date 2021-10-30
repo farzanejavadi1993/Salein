@@ -21,15 +21,20 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.App;
 
-
+@AndroidEntryPoint
 public class Util {
 
 
+    @Inject
+    SharedPreferences sharedPreferences;
     public static boolean isValid(String s) {
         Pattern p = Pattern.compile("(0/9)?[0-9]{11}");
         Matcher m = p.matcher(s);
@@ -62,8 +67,7 @@ public class Util {
         animationView.playAnimation();
     }
 
-    public static String getPrice() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.context);
+    public static String getPrice(SharedPreferences sharedPreferences) {
         return sharedPreferences.getString("priceProduct", "");
     }
 
