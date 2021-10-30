@@ -65,13 +65,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DateAdapter;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
 
 import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.Util.Utilities;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelDate;
@@ -246,7 +244,7 @@ public class PaymentMobileFragment extends Fragment {
 
         customProgress = CustomProgress.getInstance();
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.salein":
                     imageIconDialog = R.drawable.saleinicon128;
 
@@ -1255,7 +1253,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         String name;
                         try {
-                            name = company.name.split("ir.kitgroup.")[1];
+                            name = company.nameCompany.split("ir.kitgroup.")[1];
                             sharedPreferences.edit().putString(name, "").apply();
                         } catch (Exception ignore) {
 
@@ -1348,7 +1346,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.saleinmeat":
 
                     imageIconDialog = R.drawable.meat_png;
@@ -1749,9 +1747,9 @@ public class PaymentMobileFragment extends Fragment {
                                         //region Get Credit Club
                                         String name;
                                         try {
-                                            if (!OnceSee && !company.name.equals("ir.kitgroup.saleinmeat"))
+                                            if (!OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
                                                 getInquiryAccount1(userName, passWord, acc.M);
-                                            else if (OnceSee && !company.name.equals("ir.kitgroup.saleinmeat"))
+                                            else if (OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
                                             getInquiryAccount1(userName, passWord, acc.M);

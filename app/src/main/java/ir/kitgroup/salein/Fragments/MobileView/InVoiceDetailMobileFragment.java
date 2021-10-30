@@ -61,14 +61,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.Tables;
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.Util.Utilities;
@@ -234,7 +232,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         //region Cast Dialog Delete
 
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.salein":
 
                     imageIconDialog = R.drawable.saleinicon128;

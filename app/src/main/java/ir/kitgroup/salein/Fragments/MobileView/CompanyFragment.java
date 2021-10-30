@@ -20,7 +20,8 @@ import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.Adapters.CompanyAdapterList;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentCompanyBinding;
-import ir.kitgroup.salein.models.ModelCompany;
+import ir.kitgroup.salein.models.Company;
+
 
 public class CompanyFragment extends Fragment {
 
@@ -41,11 +42,11 @@ public class CompanyFragment extends Fragment {
 
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        ArrayList<ModelCompany> list = new ArrayList<>(fullList());
+        ArrayList<Company> list = new ArrayList<>(fullList());
         for (int i = 0; i < list.size(); i++) {
-            boolean check = sharedPreferences.getBoolean(list.get(i).PACKAGEName, false);
+            boolean check = sharedPreferences.getBoolean(list.get(i).namePackage, false);
             if (check)
-                list.get(i).Check = true;
+                list.get(i).CheckUser = true;
         }
 
 
@@ -54,7 +55,7 @@ public class CompanyFragment extends Fragment {
         binding.recyclerView.setAdapter(companyAdapterList);
 
         companyAdapterList.setOnClickItemListener((company, check) ->
-                sharedPreferences.edit().putBoolean(company.PACKAGEName, check).apply()
+                sharedPreferences.edit().putBoolean(company.namePackage, check).apply()
         );
 
         binding.btnRegisterCompany.setOnClickListener(v -> {
@@ -68,140 +69,139 @@ public class CompanyFragment extends Fragment {
         });
     }
 
-    private ArrayList<ModelCompany> fullList() {
-        ArrayList<ModelCompany> companyList = new ArrayList<>();
-        ModelCompany company_SaleIn = new ModelCompany();
-
-        company_SaleIn.NameCompany = "سالین دمو";
-        company_SaleIn.DESC = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
-        company_SaleIn.PACKAGEName = "ir.kitgroup.salein";
-        company_SaleIn.Check = false;
-        company_SaleIn.IP = "2.180.28.6:3333";
-        company_SaleIn.USER = "administrator";
-        company_SaleIn.PASS = "123";
-        company_SaleIn.LAT = 36.326805522660464;
-        company_SaleIn.LNG = 59.56450551053102;
-        company_SaleIn.ICON = R.drawable.salein;
-
-
-        ModelCompany company_top = new ModelCompany();
-        company_top.IP = "188.158.121.253:9999";
-        company_top.NameCompany = "رستوران تاپ کباب";
-        company_top.DESC = "عرضه کننده بهترین غذاها";
-        company_top.PACKAGEName = "ir.kitgroup.saleintop";
-        company_top.Check = false;
-        company_top.USER = "topkabab";
-        company_top.PASS = "9929";
-        company_top.LAT = 36.318805483696735;
-        company_top.LNG = 59.555196457006296;
-        company_top.ICON = R.drawable.top_png;
+    private ArrayList<Company> fullList() {
+        ArrayList<Company> companyList = new ArrayList<>();
+        Company company_SaleIn = new Company();
+        company_SaleIn.nameCompany = "سالین دمو";
+        company_SaleIn.Description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
+        company_SaleIn.namePackage = "ir.kitgroup.salein";
+        company_SaleIn.CheckUser = false;
+        company_SaleIn.ipLocal = "2.180.28.6:3333";
+        company_SaleIn.userName = "administrator";
+        company_SaleIn.passWord = "123";
+        company_SaleIn.lat = 36.326805522660464;
+        company_SaleIn.lng = 59.56450551053102;
+        company_SaleIn.imageLogo = R.drawable.salein;
 
 
-        ModelCompany company_meat = new ModelCompany();
-        company_meat.IP = "109.125.133.149:9999";
-
-        company_meat.PACKAGEName = "ir.kitgroup.saleinmeat";
-        company_meat.NameCompany = "هایپر گوشت دنیوی";
-        company_meat.DESC = "عرضه کننده انواع گوشت";
-        company_meat.Check = false;
-        company_meat.USER = "admin";
-        company_meat.PASS = "0123";
-        company_meat.LAT = 36.31947320471888;
-        company_meat.LNG = 59.605469293071884;
-        company_meat.ICON = R.drawable.meat_png;
-
-
-        ModelCompany company_noon = new ModelCompany();
-        company_noon.IP = "91.243.168.57:8080";
-        company_noon.PACKAGEName = "ir.kitgroup.saleinnoon";
-        company_noon.Check = false;
-        company_noon.NameCompany = "کافه نون";
-        company_noon.DESC = "بهترین کافه ، متنوع ترین محصولات";
-        company_noon.USER = "admin";
-        company_noon.PASS = "123";
-        company_noon.LAT = 36.32650550170935;
-        company_noon.LNG = 59.54865109150493;
-        company_noon.ICON = R.drawable.noon;
+        Company company_top = new Company();
+        company_top.ipLocal = "188.158.121.253:9999";
+        company_top.nameCompany = "رستوران تاپ کباب";
+        company_top.Description = "عرضه کننده بهترین غذاها";
+        company_top.namePackage = "ir.kitgroup.saleintop";
+        company_top.CheckUser = false;
+        company_top.userName = "topkabab";
+        company_top.passWord = "9929";
+        company_top.lat = 36.318805483696735;
+        company_top.lng = 59.555196457006296;
+        company_top.imageLogo = R.drawable.top_png;
 
 
+        Company company_meat = new Company();
+        company_meat.ipLocal = "109.125.133.149:9999";
 
-        ModelCompany company_bahraman = new ModelCompany();
-       company_bahraman.IP = "22";
-       company_bahraman.PACKAGEName = "ir.kitgroup.saleinbahraman";
-       company_bahraman.Check = false;
-       company_bahraman.NameCompany = "زعفران بهرامن";
-       company_bahraman.DESC = "تولید وصادرکننده بهترین زعفران خاورمیانه";
-       company_bahraman.USER = "";
-       company_bahraman.PASS = "";
-       company_bahraman.LAT = 0.0;
-       company_bahraman.LNG = 0.0;
-       company_bahraman.ICON = R.drawable.bahraman;
+        company_meat.namePackage = "ir.kitgroup.saleinmeat";
+        company_meat.nameCompany = "هایپر گوشت دنیوی";
+        company_meat.Description = "عرضه کننده انواع گوشت";
+        company_meat.CheckUser = false;
+        company_meat.userName = "admin";
+        company_meat.passWord = "0123";
+        company_meat.lat = 36.31947320471888;
+        company_meat.lng = 59.605469293071884;
+        company_meat.imageLogo = R.drawable.meat_png;
+
+
+        Company company_noon = new Company();
+        company_noon.ipLocal = "91.243.168.57:8080";
+        company_noon.namePackage = "ir.kitgroup.saleinnoon";
+        company_noon.CheckUser = false;
+        company_noon.nameCompany = "کافه نون";
+        company_noon.Description = "بهترین کافه ، متنوع ترین محصولات";
+        company_noon.userName = "admin";
+        company_noon.passWord = "123";
+        company_noon.lat = 36.32650550170935;
+        company_noon.lng = 59.54865109150493;
+        company_noon.imageLogo = R.drawable.noon;
 
 
 
-        ModelCompany company_shaparak = new ModelCompany();
-        company_shaparak.IP = "22";
-        company_shaparak.PACKAGEName = "ir.kitgroup.saleinshaparak";
-        company_shaparak.Check = false;
-        company_shaparak.NameCompany = "کلینیک شاپرک";
-        company_shaparak.DESC = "کلینیک تخصصی زیبایی";
-        company_shaparak.USER = "";
-        company_shaparak.PASS = "";
-        company_shaparak.LAT = 0.0;
-        company_shaparak.LNG = 0.0;
-        company_shaparak.ICON = R.drawable.shaparak;
-
-
-        ModelCompany company_ajil = new ModelCompany();
-        company_ajil.IP = "22";
-        company_ajil.PACKAGEName = "ir.kitgroup.saleinajil";
-        company_ajil.Check = false;
-        company_ajil.NameCompany = "آجیل حسینی";
-        company_ajil.DESC = "محصولات خشکبار وآجیل";
-        company_ajil.USER = "";
-        company_ajil.PASS = "";
-        company_ajil.LAT = 0.0;
-        company_ajil.LNG = 0.0;
-        company_ajil.ICON = R.drawable.ajil;
-
-
-        ModelCompany company_tek = new ModelCompany();
-        company_tek.IP = "22";
-        company_tek.PACKAGEName = "ir.kitgroup.saleinatek";
-        company_tek.Check = false;
-        company_tek.NameCompany = "ایران تک";
-        company_tek.DESC = "پخش تلفن همراه و تجهیزات";
-        company_tek.USER = "";
-        company_tek.PASS = "";
-        company_tek.LAT = 0.0;
-        company_tek.LNG = 0.0;
-        company_tek.ICON = R.drawable.tek;
+        Company company_bahraman = new Company();
+       company_bahraman.ipLocal = "22";
+       company_bahraman.namePackage = "ir.kitgroup.saleinbahraman";
+       company_bahraman.CheckUser = false;
+       company_bahraman.nameCompany = "زعفران بهرامن";
+       company_bahraman.Description = "تولید وصادرکننده بهترین زعفران خاورمیانه";
+       company_bahraman.userName = "";
+       company_bahraman.passWord = "";
+       company_bahraman.lat = 0.0;
+       company_bahraman.lng = 0.0;
+       company_bahraman.imageLogo = R.drawable.bahraman;
 
 
 
-        ModelCompany company_andishe = new ModelCompany();
-        company_andishe.IP = "22";
-        company_andishe.PACKAGEName = "ir.kitgroup.saleinandishe";
-        company_andishe.Check = false;
-        company_andishe.NameCompany = "کلینیک اندیشه و رفتار";
-        company_andishe.DESC = "کلینیک تخصصی مشاوره و روانشناسی";
-        company_andishe.USER = "";
-        company_andishe.PASS = "";
-        company_andishe.LAT = 0.0;
-        company_andishe.LNG = 0.0;
-        company_andishe.ICON = R.drawable.white;
+        Company company_shaparak = new Company();
+        company_shaparak.ipLocal = "22";
+        company_shaparak.namePackage = "ir.kitgroup.saleinshaparak";
+        company_shaparak.CheckUser = false;
+        company_shaparak.nameCompany = "کلینیک شاپرک";
+        company_shaparak.Description = "کلینیک تخصصی زیبایی";
+        company_shaparak.userName = "";
+        company_shaparak.passWord = "";
+        company_shaparak.lat = 0.0;
+        company_shaparak.lng = 0.0;
+        company_shaparak.imageLogo = R.drawable.shaparak;
 
-        ModelCompany company_ashreza = new ModelCompany();
-        company_ashreza.IP = "22";
-        company_ashreza.PACKAGEName = "ir.kitgroup.saleinashreza";
-        company_ashreza.Check = false;
-        company_ashreza.NameCompany = "آش رضا";
-        company_ashreza.DESC = "غذاهای محلی مشهد";
-        company_ashreza.USER = "";
-        company_ashreza.PASS = "";
-        company_ashreza.LAT = 0.0;
-        company_ashreza.LNG = 0.0;
-        company_ashreza.ICON = R.drawable.white;
+
+        Company company_ajil = new Company();
+        company_ajil.ipLocal = "22";
+        company_ajil.namePackage = "ir.kitgroup.saleinajil";
+        company_ajil.CheckUser = false;
+        company_ajil.nameCompany = "آجیل حسینی";
+        company_ajil.Description = "محصولات خشکبار وآجیل";
+        company_ajil.userName = "";
+        company_ajil.passWord = "";
+        company_ajil.lat = 0.0;
+        company_ajil.lng = 0.0;
+        company_ajil.imageLogo = R.drawable.ajil;
+
+
+        Company company_tek = new Company();
+        company_tek.ipLocal = "22";
+        company_tek.namePackage = "ir.kitgroup.saleinatek";
+        company_tek.CheckUser = false;
+        company_tek.nameCompany = "ایران تک";
+        company_tek.Description = "پخش تلفن همراه و تجهیزات";
+        company_tek.userName = "";
+        company_tek.passWord = "";
+        company_tek.lat = 0.0;
+        company_tek.lng = 0.0;
+        company_tek.imageLogo = R.drawable.tek;
+
+
+
+        Company company_andishe = new Company();
+        company_andishe.ipLocal = "22";
+        company_andishe.namePackage = "ir.kitgroup.saleinandishe";
+        company_andishe.CheckUser = false;
+        company_andishe.nameCompany = "کلینیک اندیشه و رفتار";
+        company_andishe.Description = "کلینیک تخصصی مشاوره و روانشناسی";
+        company_andishe.userName = "";
+        company_andishe.passWord = "";
+        company_andishe.lat = 0.0;
+        company_andishe.lng = 0.0;
+        company_andishe.imageLogo = R.drawable.white;
+
+        Company company_ashreza = new Company();
+        company_ashreza.ipLocal = "22";
+        company_ashreza.namePackage = "ir.kitgroup.saleinashreza";
+        company_ashreza.CheckUser = false;
+        company_ashreza.nameCompany = "آش رضا";
+        company_ashreza.Description = "غذاهای محلی مشهد";
+        company_ashreza.userName = "";
+        company_ashreza.passWord = "";
+        company_ashreza.lat = 0.0;
+        company_ashreza.lng = 0.0;
+        company_ashreza.imageLogo = R.drawable.white;
 
 
 

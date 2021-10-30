@@ -26,7 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orm.query.Select;
+
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,10 +41,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.classes.App;
+
+import ir.kitgroup.salein.Connect.API;
+
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.User;
+
 
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
@@ -63,11 +64,13 @@ public class ConfirmCodeFragment extends Fragment {
 
     @Inject
     Company company;
+
+
+    @Inject
+    API api;
     //region  Parameter
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentConfirmCodeBinding binding;
-    private User user;
-    private int imageLogo;
     private int code;
     private CountDownTimer countDownTimer;
     private long timeInLeftMillisSecond=60000;
@@ -92,7 +95,7 @@ public class ConfirmCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        user = Select.from(User.class).first();
+
 
         //region Get Bundle And Set Data
         Bundle bundle = getArguments();
@@ -116,27 +119,10 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Set Icon And Title
-        switch (company.name) {
-            case "ir.kitgroup.salein":
-                imageLogo = R.drawable.salein;
-                break;
 
-            case "ir.kitgroup.saleintop":
-                imageLogo = R.drawable.top;
-                break;
-
-
-            case "ir.kitgroup.saleinmeat":
-                imageLogo = R.drawable.goosht;
-                break;
-
-            case "ir.kitgroup.saleinnoon":
-                imageLogo = R.drawable.noon;
-                break;
-        }
 
         if (company.mode  == 2) {
-            binding.ivLogo.setImageResource(imageLogo);
+            binding.ivLogo.setImageResource(company.imageLogo);
         }
 
         //endregion Set Icon And Title
@@ -381,9 +367,9 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-             return;
+          //9   return;
             }
-            getInquiryAccount1(user.userName, user.passWord, mobile);
+            getInquiryAccount1(company.userName, company.passWord, mobile);
         });
         //endregion Action BtnLogin
 
@@ -516,7 +502,7 @@ public class ConfirmCodeFragment extends Fragment {
         if (!isNetworkAvailable(getActivity())){
 
             Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-            return;
+           return;
         }
 
         try {
@@ -524,7 +510,7 @@ public class ConfirmCodeFragment extends Fragment {
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                  api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -566,7 +552,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
                                         //region Show All Company
-                                        if (company.name.equals("ir.kitgroup.salein")) {
+                                        if (company.nameCompany.equals("ir.kitgroup.salein")) {
                                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                             replaceFragment.commit();
                                         }

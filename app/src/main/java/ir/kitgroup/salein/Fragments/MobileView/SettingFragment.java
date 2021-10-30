@@ -36,7 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
@@ -45,7 +44,6 @@ import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.R;
 
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 import ir.kitgroup.salein.models.Company;
@@ -105,7 +103,7 @@ public class SettingFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
 
 
                 case "ir.kitgroup.saleintop":

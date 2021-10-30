@@ -29,12 +29,10 @@ import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.App;
 
-@AndroidEntryPoint
+
 public class Util {
 
 
-    @Inject
-    SharedPreferences sharedPreferences;
     public static boolean isValid(String s) {
         Pattern p = Pattern.compile("(0/9)?[0-9]{11}");
         Matcher m = p.matcher(s);

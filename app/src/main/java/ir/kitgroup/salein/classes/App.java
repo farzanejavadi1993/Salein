@@ -40,7 +40,6 @@ public class App extends Application {
     SharedPreferences sharedPreferences;
 
     public static API api;
-    private String baseUrl = "http://192.168.20.8:96/api/REST/";
     public static Retrofit retrofit;
     private int mode=2;
 

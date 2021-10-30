@@ -39,8 +39,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.DataBase.Account;
 
@@ -225,7 +223,7 @@ public class RegisterFragment extends Fragment {
 
                                     //region Show All Company
 
-                                    if (company.name.equals("ir.kitgroup.salein")) {
+                                    if (company.nameCompany.equals("ir.kitgroup.salein")) {
                                         FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                         replaceFragment.commit();
                                     }

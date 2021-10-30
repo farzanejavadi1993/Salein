@@ -3,7 +3,6 @@ package ir.kitgroup.salein.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,12 +45,9 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.Constant;
@@ -132,7 +128,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         df = new DecimalFormat();
 
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.salein":
                     placeHolderImage = R.drawable.salein;
                     break;

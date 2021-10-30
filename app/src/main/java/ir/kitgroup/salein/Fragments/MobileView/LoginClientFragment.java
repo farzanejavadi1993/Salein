@@ -38,8 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
-import ir.kitgroup.salein.classes.App;
+import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.R;
@@ -53,17 +52,15 @@ public class LoginClientFragment extends Fragment {
 
     @Inject
     Double ScreenSize;
-
-
     @Inject
     Company company;
+    @Inject
+    API api;
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
-    private User user;
 
-    private String messageWelcome = "";
-    private int imageLogo;
+
     //endregion PARAMETER
 
     @SuppressLint("ClickableViewAccessibility")
@@ -80,7 +77,6 @@ public class LoginClientFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        user = Select.from(User.class).first();
 
         //region Configuration Text Size
         int fontSize ;
@@ -99,42 +95,10 @@ public class LoginClientFragment extends Fragment {
 
 
         //region Set Icon And Title
-        try {
-            switch (company.name) {
-                case "ir.kitgroup.salein":
-                    messageWelcome = "به سالین دمو خوش آمدید";
-                    imageLogo = R.drawable.salein;
-
-                    break;
-
-                case "ir.kitgroup.saleintop":
-                    messageWelcome = "به رستوران تاپ کباب خوش آمدید";
-                    imageLogo = R.drawable.top;
-
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-                    messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
-                    imageLogo = R.drawable.goosht;
-
-                    break;
-
-                case "ir.kitgroup.saleinnoon":
-                    messageWelcome = "به کافه نون دنیوی خوش آمدید";
-                    imageLogo = R.drawable.noon;
-
-                    break;
-            }
-        }catch (Exception ignore){
-
-        }
-
-
 
         if (company.mode  == 2) {
-            binding.tvWelcome.setText(messageWelcome);
-            binding.ivLogo.setImageResource(imageLogo);
+            binding.tvWelcome.setText(company.messageWelcome);
+            binding.ivLogo.setImageResource(company.imageLogo);
         }
         //endregion Set Icon And Title
 
@@ -169,6 +133,8 @@ public class LoginClientFragment extends Fragment {
         //endregion TextWatcher edtMobile
 
 
+
+
       //region Action btnLogin
         binding.btnLogin.setOnClickListener(v -> {
             int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
@@ -191,7 +157,7 @@ public class LoginClientFragment extends Fragment {
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    App.api.getSmsLogin(user.userName, user.passWord, message, mobile,2)
+                  api.getSmsLogin(company.userName, company.passWord, message, mobile,2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

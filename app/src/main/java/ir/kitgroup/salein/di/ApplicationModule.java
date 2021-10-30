@@ -77,35 +77,43 @@ public class ApplicationModule {
         String namePackage = "";
         String title = "";
         String description = "";
+        String messageWelcome="";
         int  mode = 2;
-        int image = 0;
+        int imageLogo = 0;
+        int imageDialog = 0;
 
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
             switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
-                    image = R.drawable.saleinicon128;
+                    imageLogo = R.drawable.salein;
+                    imageDialog = R.drawable.saleinicon128;
                     name = "ir.kitgroup.salein";
                     namePackage = "ir.kitgroup.salein";
                     title = "سالین دمو";
+                    messageWelcome = "به سالین دمو خوش آمدید";
                     description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
 
 
                     break;
 
                 case "ir.kitgroup.saleintop":
-                    image = R.drawable.top_png;
+                    imageLogo = R.drawable.top_icon;
+                    imageDialog = R.drawable.top_png;
                     name = "ir.kitgroup.saleintop";
                     namePackage = "ir.kitgroup.salein";
                     title = "تاپ کباب";
+                    messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                     description="عرضه کننده بهترین غذاها";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
-                    image = R.drawable.meat_png;
+                    imageLogo = R.drawable.meat_icon;
+                    imageDialog = R.drawable.meat_png;
                     name = "ir.kitgroup.saleinmeat";
+                    messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                     namePackage = "ir.kitgroup.salein";
                     title = "گوشت دنیوی";
                     description="عرضه کننده انواع گوشت";
@@ -113,15 +121,18 @@ public class ApplicationModule {
                     break;
 
                 case "ir.kitgroup.saleinnoon":
-                    image = R.drawable.noon;
+                    imageLogo = R.drawable.noon;
+                    imageDialog = R.drawable.noon;
                     name = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.salein";
+                    messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";
                     description="متنوع ترین محصولات";
                     break;
 
                 default:
-                    image = R.drawable.saleinorder_png;
+                    imageLogo = R.drawable.saleinorder_icon;
+                    imageDialog = R.drawable.saleinorder_png;
                     name = "ir.kitgroup.saleiOrder";
                     namePackage = "ir.kitgroup.saleinOrder";
                     title = "SaleIn Order";
@@ -138,11 +149,13 @@ public class ApplicationModule {
         if (name.equals("ir.kitgroup.salein")) {
 
            company.ipLocal = "192.168.20.8:96";
-           company.image = image;
+           company.imageLogo = imageLogo;
+           company.imageDialog =imageDialog;
            company.title=title;
            company.Description= description;
-           company.name = name;
+           company.nameCompany = name;
            company.mode = mode;
+           company.messageWelcome = messageWelcome;
            company.namePackage = namePackage;
            company.userName = "admin";
            company.passWord = "123";

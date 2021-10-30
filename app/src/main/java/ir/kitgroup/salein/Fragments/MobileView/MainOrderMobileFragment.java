@@ -73,7 +73,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 import ir.kitgroup.salein.Adapters.AccountAdapter;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
@@ -81,7 +80,6 @@ import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.classes.CustomProgress;
 
@@ -274,7 +272,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Set Icon And Title
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.salein":
                     nameCompany = "سالین دمو";
                     imageLogo = R.drawable.salein;
@@ -609,7 +607,7 @@ public class MainOrderMobileFragment extends Fragment {
             String name;
             try {
                 //Client
-                name = company.name.split("ir.kitgroup.")[1];
+                name = company.nameCompany.split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
                 if (Inv_GUID.equals("")) {
                     Inv_GUID = UUID.randomUUID().toString();

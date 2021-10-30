@@ -14,12 +14,10 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.Activities.Classes.LauncherActivity;
 
 
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.models.Company;
 
@@ -45,7 +43,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
         try {
-            switch (company.name) {
+            switch (company.nameCompany) {
                 case "ir.kitgroup.salein":
 
                     placeHolderImage = R.drawable.salein;

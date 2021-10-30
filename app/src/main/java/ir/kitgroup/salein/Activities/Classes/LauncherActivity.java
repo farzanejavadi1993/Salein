@@ -32,14 +32,11 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.salein.Fragments.MobileView.SplashScreenFragment;
 
 import ir.kitgroup.salein.Fragments.MobileView.MainOrderMobileFragment;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.Util.Util;
-import ir.kitgroup.salein.classes.App;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 import ir.kitgroup.salein.models.Company;
 
@@ -101,7 +98,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
-        int imageIconDialog = company.image;
+        int imageIconDialog = company.imageLogo;
         ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
         imageIconExitDialog.setImageResource(imageIconDialog);
 
