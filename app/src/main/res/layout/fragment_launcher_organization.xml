@@ -31,76 +31,141 @@
             android:elevation="4dp"
             tools:targetApi="lollipop">
 
-            <TextView
-                android:id="@+id/txt_title_toolbar"
-                style="@style/launcher_toolbar_TextView"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="@string/launcher_toolbar_title"
-                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/txt_title_toolbar"
                 android:layout_toRightOf="@+id/btn_logout">
 
-                <ImageView
+                <RelativeLayout
+                    android:layout_toLeftOf="@+id/rl_reserve_table"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/rl_get_out_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:padding="10dp"
+                        android:id="@+id/get_out_order"
+                        android:layout_width="@dimen/filter_view_size"
+                        android:layout_height="@dimen/filter_view_size"
+                        android:layout_marginRight="@dimen/margin4"
+                        android:background="@drawable/rectangle_table_pink"
+                        tools:ignore="ContentDescription" />
 
-                    android:id="@+id/get_out_order"
-                    android:layout_width="@dimen/filter_view_size"
-                    android:layout_height="@dimen/filter_view_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginRight="@dimen/margin4"
-                    android:layout_toLeftOf="@+id/reserve_table"
-                    android:background="@drawable/rectangle_table_pink"
-                    android:padding="5dp"
-                    tools:ignore="ContentDescription" />
 
-                <ImageView
-                    android:id="@+id/reserve_table"
-                    android:layout_width="@dimen/filter_view_size"
-                    android:layout_height="@dimen/filter_view_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginRight="@dimen/margin4"
-                    android:layout_toLeftOf="@+id/busy_table"
-                    android:background="@drawable/rectangle_table_blue"
-                    android:padding="5dp"
-                    tools:ignore="ContentDescription" />
+                    <TextView
+                        android:textSize="10sp"
+                        android:text= "بیرون بر"
+                        android:layout_centerInParent="true"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/busy_table"
-                    android:layout_width="@dimen/filter_view_size"
-                    android:layout_height="@dimen/filter_view_size"
+
+
+
+                <RelativeLayout
+                    android:layout_toLeftOf="@+id/rl_busy_table"
+                   android:layout_centerVertical="true"
+                    android:id="@+id/rl_reserve_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/reserve_table"
+                        android:layout_width="@dimen/filter_view_size"
+                        android:layout_height="@dimen/filter_view_size"
+                        android:layout_marginRight="@dimen/margin4"
+                        android:background="@drawable/rectangle_table_blue"
+                        android:padding="10dp"
+                        tools:ignore="ContentDescription" />
+                    <TextView
+                        android:textSize="10sp"
+                        android:text="رزرو"
+                        android:layout_centerInParent="true"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+
+
+
+                <RelativeLayout
                     android:layout_centerInParent="true"
-                    android:background="@drawable/rectangle_table_red"
-                    android:padding="5dp"
-                    tools:ignore="ContentDescription" />
+                    android:id="@+id/rl_busy_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/busy_table"
+                        android:layout_width="@dimen/filter_view_size"
+                        android:layout_height="@dimen/filter_view_size"
+                        android:background="@drawable/rectangle_table_red"
+                        android:padding="10dp"
+                        tools:ignore="ContentDescription" />
+                    <TextView
+                        android:textSize="10sp"
+                        android:text="مشغول"
+                        android:layout_centerInParent="true"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+
+
+
+                <RelativeLayout
+                   android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/rl_busy_table"
+                    android:id="@+id/rl_vacant_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
 
                 <ImageView
                     android:id="@+id/vacant_table"
                     android:layout_width="@dimen/filter_view_size"
                     android:layout_height="@dimen/filter_view_size"
-                    android:layout_centerInParent="true"
                     android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@+id/busy_table"
                     android:background="@drawable/rectangle_table_green"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     tools:ignore="ContentDescription" />
+                    <TextView
+                        android:textSize="10sp"
+                        android:text="خالی"
+                        android:layout_centerInParent="true"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
 
-                <ImageView
-                    android:src="@drawable/ic_tik_black"
-                    android:id="@+id/whole_table"
-                    android:layout_width="@dimen/filter_view_size"
-                    android:layout_height="@dimen/filter_view_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@+id/vacant_table"
-                    android:background="@drawable/rectangle_whole_table"
-                    android:padding="5dp"
-                    tools:ignore="ContentDescription" />
+
+                <RelativeLayout
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/rl_vacant_table"
+                    android:id="@+id/rl_whole_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/ic_tik_black"
+                        android:id="@+id/whole_table"
+                        android:layout_width="@dimen/filter_view_size"
+                        android:layout_height="@dimen/filter_view_size"
+                        android:layout_marginLeft="3dp"
+                        android:background="@drawable/rectangle_whole_table"
+                        android:padding="10dp"
+                        tools:ignore="ContentDescription" />
+                    <TextView
+                        android:textSize="10sp"
+                        android:text="همه"
+                        android:layout_centerInParent="true"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <ImageView
@@ -132,8 +197,7 @@
                android:layout_width="match_parent"
                android:layout_height="match_parent">
                <androidx.recyclerview.widget.RecyclerView
-
-                   android:layout_above="@+id/recycle_get_out_order"
+                   android:layout_marginBottom="60dp"
                    android:id="@+id/recycler_table"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"

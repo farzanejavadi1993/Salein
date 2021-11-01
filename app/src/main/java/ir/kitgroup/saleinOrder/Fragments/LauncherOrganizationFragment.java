@@ -381,8 +381,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
             if (code == 0 && ty == 0) {
-
                 filter("whole");
+                binding.txtError.setText("");
                 tablesList.clear();
                 tablesList.addAll(AllTable);
                 if (tablesList.size()==0)
@@ -391,12 +391,13 @@ public class LauncherOrganizationFragment extends Fragment {
                 return;
             }
             else if (ty == 100) {
+                binding.txtError.setText("");
                 tablesList.clear();
                 List<Tables> tbls = Select.from(Tables.class).list();
                 CollectionUtils.filter(tbls, t -> t.C != null && t.C.equals(code));
                 tablesList.addAll(tbls);
                 if (tablesList.size()==0)
-                    binding.txtError.setText("هیچ میزی موجود نمی باشد.");
+                    binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
                 tableAdapter.notifyDataSetChanged();
                 return;
             }

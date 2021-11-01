@@ -22,7 +22,7 @@
     <dimen name="normal_left_right_margin">22dp</dimen>
     <dimen name="button_margin_bottom">18dp</dimen>
     <dimen name="logo_size">100dp</dimen>
-    <dimen name="filter_view_size">33dp</dimen>
+    <dimen name="filter_view_size">42dp</dimen>
 
     <dimen name="launcher_recycle_table_card_padding">4dp</dimen>
     <dimen name="launcher_recycle_table_card_elevation">4dp</dimen>
