@@ -233,11 +233,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         try {
             switch (company.nameCompany) {
-                case "ir.kitgroup.salein":
 
-                    imageIconDialog = R.drawable.saleinicon128;
-
-                    break;
 
                 case "ir.kitgroup.saleintop":
 

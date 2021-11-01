@@ -244,11 +244,7 @@ public class PaymentMobileFragment extends Fragment {
         customProgress = CustomProgress.getInstance();
         try {
             switch (company.nameCompany) {
-                case "ir.kitgroup.salein":
-                    imageIconDialog = R.drawable.saleinicon128;
 
-
-                    break;
 
                 case "ir.kitgroup.saleintop":
 
@@ -1129,11 +1125,9 @@ public class PaymentMobileFragment extends Fragment {
                     MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                     mainOrderMobileFragment.setArguments(bundle1);
                     FragmentTransaction replaceFragment;
-                    if (company.namePackage.equals("ir.kitgroup.salein")) {
-                        replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
-                    } else {
+
                         replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-                    }
+
 
 
                     replaceFragment.commit();

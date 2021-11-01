@@ -280,11 +280,7 @@ public class MainOrderMobileFragment extends Fragment {
         //region Set Icon And Title
         try {
             switch (company.nameCompany) {
-                case "ir.kitgroup.salein":
-                    nameCompany = "سالین دمو";
-                    imageLogo = R.drawable.salein;
-                    imgIconDialog = R.drawable.saleinicon128;
-                    break;
+
 
                 case "ir.kitgroup.saleintop":
                     nameCompany = " تاپ کباب";
@@ -481,8 +477,6 @@ public class MainOrderMobileFragment extends Fragment {
 
                 //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
                 int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                if (company.namePackage.equals("ir.kitgroup.salein") && size > 0)
-                    size = size - 1;
 
                 if (Inv_GUID_ORG.equals("")) {
                     for (int i = 1; i <= size; i++) {
@@ -677,9 +671,7 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            if (company.namePackage.equals("ir.kitgroup.salein"))
-                getFragmentManager().popBackStack();
-            else
+
                 getActivity().finish();
 
 

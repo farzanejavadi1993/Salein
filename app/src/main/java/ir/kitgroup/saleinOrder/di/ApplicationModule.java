@@ -91,25 +91,13 @@ public class ApplicationModule {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
             switch (pInfo.packageName) {
-                case "ir.kitgroup.salein":
-                    changeConfig=true;
-                    imageLogo = R.drawable.salein;
-                    imageDialog = R.drawable.saleinicon128;
-                    name = "ir.kitgroup.salein";
-                    namePackage = "ir.kitgroup.salein";
-                    title = "سالین دمو";
-                    ipLocal = "192.168.20.8:96";
-                    userName = "admin";
-                    passWord = "123";
-                    messageWelcome = "به سالین دمو خوش آمدید";
-                    description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
-                    break;
+
 
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_icon;
                     imageDialog = R.drawable.top_png;
                     name = "ir.kitgroup.saleintop";
-                    namePackage = "ir.kitgroup.salein";
+                    namePackage = "ir.kitgroup.saleintop";
                     title = "تاپ کباب";
                     messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                     description = "عرضه کننده بهترین غذاها";
@@ -124,7 +112,7 @@ public class ApplicationModule {
                     imageDialog = R.drawable.meat_png;
                     name = "ir.kitgroup.saleinmeat";
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
-                    namePackage = "ir.kitgroup.salein";
+                    namePackage = "ir.kitgroup.saleinmeat";
                     title = "گوشت دنیوی";
                     description = "عرضه کننده انواع گوشت";
                     ipLocal = "109.125.133.149:9999";
@@ -137,7 +125,7 @@ public class ApplicationModule {
                     imageLogo = R.drawable.noon;
                     imageDialog = R.drawable.noon;
                     name = "ir.kitgroup.saleinnoon";
-                    namePackage = "ir.kitgroup.salein";
+                    namePackage = "ir.kitgroup.saleinnoon";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";
                     description = "متنوع ترین محصولات";

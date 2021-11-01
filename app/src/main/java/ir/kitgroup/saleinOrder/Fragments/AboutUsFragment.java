@@ -66,12 +66,7 @@ public class AboutUsFragment extends Fragment {
 
         //region Set Icon And Title
         switch (company.nameCompany) {
-            case "ir.kitgroup.salein":
-                imageLogo = R.drawable.salein;
-                title="سالین دمو";
-                description="سالین دمو ، راهنمای استفاده از اپلیکیشن";
-                phoneNumber="05137638311";
-                break;
+
 
             case "ir.kitgroup.saleintop":
                 imageLogo = R.drawable.top_png;

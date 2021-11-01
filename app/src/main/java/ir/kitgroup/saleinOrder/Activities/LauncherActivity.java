@@ -172,14 +172,7 @@ public class LauncherActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().popBackStack();
         }
-        else if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.salein") &&getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
-        ) {
-            for (int i=0;i<size;i++){
-                getSupportFragmentManager().popBackStack();
-            }
-
-        }
         else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
