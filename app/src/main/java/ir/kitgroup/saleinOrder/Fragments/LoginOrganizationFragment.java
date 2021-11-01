@@ -38,7 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 
 
@@ -173,9 +173,11 @@ public class LoginOrganizationFragment extends Fragment {
                                     user.save();
 
                                     binding.progressBar.setVisibility(View.GONE);
-                                    assert getFragmentManager() != null;
-                                    getFragmentManager().popBackStack();
-                                    requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                                    getActivity().finish();
+                                    startActivity(getActivity().getIntent());
+                                   // assert getFragmentManager() != null;
+                                    //getFragmentManager().popBackStack();
+                                   // requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
 
                                 } else {
 

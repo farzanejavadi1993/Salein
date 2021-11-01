@@ -51,7 +51,7 @@ import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
 import ir.kitgroup.saleinOrder.models.ModelLog;
 import ir.kitgroup.saleinOrder.R;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentConfirmCodeBinding;
 
 @AndroidEntryPoint
@@ -552,15 +552,15 @@ public class ConfirmCodeFragment extends Fragment {
 
 
                                         //region Show All Company
-                                        if (company.nameCompany.equals("ir.kitgroup.salein")) {
+                                     /*   if (company.nameCompany.equals("ir.kitgroup.salein")) {
                                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                             replaceFragment.commit();
-                                        }
+                                        }*/
                                         //endregion Show All Company
 
 
                                         //region Go To MainOrderFragment Because Account Is Register
-                                        else {
+                                     //   else {
                                             Bundle bundle = new Bundle();
                                             bundle.putString("Ord_TYPE", "");
                                             bundle.putString("Tbl_GUID", "");
@@ -569,7 +569,7 @@ public class ConfirmCodeFragment extends Fragment {
                                             mainOrderMobileFragment.setArguments(bundle);
                                             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
                                             replaceFragment.commit();
-                                        }
+                                       // }
                                         //endregion Go To MainOrderFragment Because Account Is Register
 
 

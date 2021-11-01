@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinOrder.Util;
+package ir.kitgroup.saleinOrder.classes;
 
 import android.app.Activity;
 import android.content.Context;

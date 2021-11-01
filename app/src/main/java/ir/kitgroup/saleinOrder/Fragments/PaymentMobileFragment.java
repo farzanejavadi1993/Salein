@@ -70,7 +70,8 @@ import ir.kitgroup.saleinOrder.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 
 import ir.kitgroup.saleinOrder.DataBase.Product;
-import ir.kitgroup.saleinOrder.Util.Utilities;
+import ir.kitgroup.saleinOrder.DataBase.Tables;
+import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelDate;
 import ir.kitgroup.saleinOrder.models.ModelTable;

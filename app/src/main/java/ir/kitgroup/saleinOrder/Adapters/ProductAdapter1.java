@@ -46,7 +46,7 @@ import java.util.UUID;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 

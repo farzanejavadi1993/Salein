@@ -10,7 +10,7 @@ import com.orm.dsl.Unique;
 
 import javax.inject.Inject;
 
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 
 public class Product  extends SugarRecord {
 

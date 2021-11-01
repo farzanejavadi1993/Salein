@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
 
 import ir.kitgroup.saleinOrder.R;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentLoginMobileBinding;
 import ir.kitgroup.saleinOrder.models.Company;
 

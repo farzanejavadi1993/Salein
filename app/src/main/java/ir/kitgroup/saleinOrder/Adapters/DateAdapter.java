@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ir.kitgroup.saleinOrder.R;
-import ir.kitgroup.saleinOrder.Util.Utilities;
+import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.models.ModelDate;
 
 

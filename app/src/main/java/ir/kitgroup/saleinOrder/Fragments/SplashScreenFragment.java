@@ -88,7 +88,7 @@ public class SplashScreenFragment extends Fragment {
                 Thread.sleep(2000);
 
 
-                FragmentTransaction replaceFragment;
+                FragmentTransaction replaceFragment = null;
 
 
 
@@ -98,14 +98,14 @@ public class SplashScreenFragment extends Fragment {
                     if (Select.from(Account.class).list().size() > 0) {
 
                         //regionShow All Company
-                        if (company.namePackage.equals("ir.kitgroup.salein"))
-                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+//                        if (company.namePackage.equals("ir.kitgroup.salein"))
+//                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
 
 
                         //endregionShow All Company
 
                             //region Go To MainOrderFragment Because Account Is Register
-                        else {
+                        //else {
                             Bundle bundle = new Bundle();
                             bundle.putString("Ord_TYPE", "");
                             bundle.putString("Tbl_GUID", "");
@@ -113,7 +113,7 @@ public class SplashScreenFragment extends Fragment {
                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
                             mainOrderMobileFragment.setArguments(bundle);
                             replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-                        }
+                       // }
                         //endregion Go To MainOrderFragment Because Account Is Register
 
                     }
@@ -129,27 +129,6 @@ public class SplashScreenFragment extends Fragment {
                     //endregion Account Is Not Login & Register
                 }
                 //endregionClient Application
-
-
-
-
-                //regionOrganization Application
-                else {
-                    //When User Is Login
-
-                    if (Select.from(User.class).list().size()>0 && Select.from(User.class).list().get(0).CheckUser) {
-                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
-                    }
-
-                    //When User Is Not Login
-                    else {
-
-                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
-
-                    }
-
-                }
-                //endregionOrganization Application
 
                 replaceFragment.commit();
 

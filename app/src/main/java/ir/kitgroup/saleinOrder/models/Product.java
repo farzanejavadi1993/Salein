@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import javax.inject.Inject;
 
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 
 public class Product {
 

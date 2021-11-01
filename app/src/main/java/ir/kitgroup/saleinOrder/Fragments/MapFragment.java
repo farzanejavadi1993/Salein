@@ -84,7 +84,7 @@ import ir.kitgroup.saleinOrder.Adapters.SearchViewAdapter;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 import ir.kitgroup.saleinOrder.databinding.FragmentMapBinding;

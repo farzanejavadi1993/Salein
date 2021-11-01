@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import ir.kitgroup.saleinOrder.DataBase.Tables;
+
 public class ModelTable {
     @SerializedName("Table")
     @Expose

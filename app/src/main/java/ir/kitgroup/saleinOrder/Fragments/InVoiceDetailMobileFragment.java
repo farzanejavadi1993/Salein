@@ -66,9 +66,10 @@ import ir.kitgroup.saleinOrder.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinOrder.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 
+import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
-import ir.kitgroup.saleinOrder.Util.Utilities;
+import ir.kitgroup.saleinOrder.classes.Utilities;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 

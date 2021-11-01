@@ -34,7 +34,7 @@ import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
 import ir.kitgroup.saleinOrder.R;
-import ir.kitgroup.saleinOrder.Util.Util;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.Product;
 
 

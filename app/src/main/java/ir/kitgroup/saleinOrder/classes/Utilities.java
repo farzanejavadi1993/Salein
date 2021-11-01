@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinOrder.Util;
+package ir.kitgroup.saleinOrder.classes;
 
 import java.util.Date;
 

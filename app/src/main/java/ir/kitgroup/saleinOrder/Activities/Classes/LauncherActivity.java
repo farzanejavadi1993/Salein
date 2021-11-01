@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 
 import com.google.android.material.button.MaterialButton;
+import com.orm.query.Select;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;
@@ -32,6 +33,9 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.saleinOrder.DataBase.User;
+import ir.kitgroup.saleinOrder.Fragments.LauncherOrganizationFragment;
+import ir.kitgroup.saleinOrder.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.saleinOrder.Fragments.SplashScreenFragment;
 
 import ir.kitgroup.saleinOrder.Fragments.MainOrderMobileFragment;
@@ -80,10 +84,29 @@ public class LauncherActivity extends AppCompatActivity {
         //endregion Set Layout to LauncherActivity class
 
 
-        //region Call SplashScreenFragment
-        FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
-        addFragment.commit();
-        //endregion Call SplashScreenFragment
+        if (company.mode==2){
+            //region Call SplashScreenFragment
+            FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
+            addFragment.commit();
+            //endregion Call SplashScreenFragment
+        }else {
+            //When User Is Login
+            FragmentTransaction replaceFragment = null;
+            if (Select.from(User.class).list().size()>0 && Select.from(User.class).list().get(0).CheckUser) {
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
+            }
+
+            //When User Is Not Login
+            else {
+
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
+
+            }
+            replaceFragment.commit();
+
+
+        }
+
 
 
         //region Cast ExitDialog

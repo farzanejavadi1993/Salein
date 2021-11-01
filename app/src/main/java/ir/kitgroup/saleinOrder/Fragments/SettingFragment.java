@@ -39,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.DataBase.Product;
+import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.DataBase.User;
 
 import ir.kitgroup.saleinOrder.R;
