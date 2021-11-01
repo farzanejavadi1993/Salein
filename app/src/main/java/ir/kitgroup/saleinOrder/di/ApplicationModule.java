@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinmeat.di;
+package ir.kitgroup.saleinOrder.di;
 
 
 import android.app.Application;
@@ -27,13 +27,13 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import dagger.hilt.components.SingletonComponent;
-import ir.kitgroup.saleinmeat.Connect.API;
+import ir.kitgroup.saleinOrder.Connect.API;
 
-import ir.kitgroup.saleinmeat.DataBase.User;
-import ir.kitgroup.saleinmeat.R;
+import ir.kitgroup.saleinOrder.DataBase.User;
+import ir.kitgroup.saleinOrder.R;
 
-import ir.kitgroup.saleinmeat.classes.Util;
-import ir.kitgroup.saleinmeat.models.Company;
+import ir.kitgroup.saleinOrder.classes.Util;
+import ir.kitgroup.saleinOrder.models.Company;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

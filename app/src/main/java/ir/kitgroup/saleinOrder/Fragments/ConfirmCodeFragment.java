@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinmeat.Fragments;
+package ir.kitgroup.saleinOrder.Fragments;
 
 
 import android.annotation.SuppressLint;
@@ -42,17 +42,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-import ir.kitgroup.saleinmeat.Connect.API;
+import ir.kitgroup.saleinOrder.Connect.API;
 
-import ir.kitgroup.saleinmeat.DataBase.Account;
+import ir.kitgroup.saleinOrder.DataBase.Account;
 
 
-import ir.kitgroup.saleinmeat.models.Company;
-import ir.kitgroup.saleinmeat.models.ModelAccount;
-import ir.kitgroup.saleinmeat.models.ModelLog;
-import ir.kitgroup.saleinmeat.R;
-import ir.kitgroup.saleinmeat.classes.Util;
-import ir.kitgroup.saleinmeat.databinding.FragmentConfirmCodeBinding;
+import ir.kitgroup.saleinOrder.models.Company;
+import ir.kitgroup.saleinOrder.models.ModelAccount;
+import ir.kitgroup.saleinOrder.models.ModelLog;
+import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.Util;
+import ir.kitgroup.saleinOrder.databinding.FragmentConfirmCodeBinding;
 
 @AndroidEntryPoint
 
@@ -240,6 +240,8 @@ public class ConfirmCodeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+
+
             }
 
             @Override
@@ -248,9 +250,7 @@ public class ConfirmCodeFragment extends Fragment {
                     binding.edtV5.requestFocus();
                 }
                 else {
-
                     binding.edtV3.requestFocus();
-
                 }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +

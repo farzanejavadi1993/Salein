@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinmeat.Fragments;
+package ir.kitgroup.saleinOrder.Fragments;
 
 
 import android.annotation.SuppressLint;
@@ -36,12 +36,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.saleinmeat.Connect.API;
+import ir.kitgroup.saleinOrder.Connect.API;
 
-import ir.kitgroup.saleinmeat.R;
-import ir.kitgroup.saleinmeat.classes.Util;
-import ir.kitgroup.saleinmeat.databinding.FragmentLoginMobileBinding;
-import ir.kitgroup.saleinmeat.models.Company;
+import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.Util;
+import ir.kitgroup.saleinOrder.databinding.FragmentLoginMobileBinding;
+import ir.kitgroup.saleinOrder.models.Company;
 
 @AndroidEntryPoint
 public class LoginClientFragment extends Fragment {
