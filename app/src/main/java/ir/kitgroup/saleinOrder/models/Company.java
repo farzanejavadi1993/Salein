@@ -8,6 +8,7 @@ public class Company {
     public String name;
     public String nameCompany;
     public String userName;
+    public String baseUrl;
     public String passWord;
     public int imageLogo;
     public int imageDialog;

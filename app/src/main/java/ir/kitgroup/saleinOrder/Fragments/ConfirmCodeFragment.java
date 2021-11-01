@@ -58,8 +58,6 @@ import ir.kitgroup.saleinOrder.databinding.FragmentConfirmCodeBinding;
 
 public class ConfirmCodeFragment extends Fragment {
 
-    @Inject
-    Double ScreenSize;
 
 
     @Inject
@@ -107,12 +105,12 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Configuration Text Size
-        int fontSize;
-        if (ScreenSize  >= 7) {
+        int fontSize=12;
+        /*if (ScreenSize  >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
         } else
-            fontSize = 12;
+            fontSize = 12;*/
         binding.tvEnterCode.setTextSize(fontSize);
         binding.btnLogin.setTextSize(fontSize);
         //endregion Configuration Text Size

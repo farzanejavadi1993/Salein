@@ -27,8 +27,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     private Activity context;
     private int fontSize = 0;
 
-    @Inject
-    Double ScreenSize;
+
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
@@ -48,11 +47,11 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (ScreenSize>= 7) {
-            fontSize = 13;
-        } else {
-            fontSize = 12;
-        }
+//        if (ScreenSize>= 7) {
+//            fontSize = 13;
+//        } else {
+//            fontSize = 12;
+//        }
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false);
         return new viewHolder(view);

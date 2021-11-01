@@ -46,8 +46,7 @@ import ir.kitgroup.saleinOrder.models.Company;
 @AndroidEntryPoint
 public class LoginClientFragment extends Fragment {
 
-    @Inject
-    Double ScreenSize;
+
 
     @Inject
     Company company;
@@ -78,12 +77,12 @@ public class LoginClientFragment extends Fragment {
 
 
         //region Configuration Text Size
-        int fontSize;
-        if (ScreenSize >= 7) {
-            binding.tvWelcome.setTextSize(18);
-            fontSize = 14;
-        } else
-            fontSize = 12;
+        int fontSize=12;
+//        if (ScreenSize >= 7) {
+//            binding.tvWelcome.setTextSize(18);
+//            fontSize = 14;
+//        } else
+//            fontSize = 12;
 
 
         binding.tvLogin.setTextSize(fontSize);

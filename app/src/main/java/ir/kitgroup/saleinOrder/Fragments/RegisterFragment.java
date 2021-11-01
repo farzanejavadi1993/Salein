@@ -53,8 +53,6 @@ import ir.kitgroup.saleinOrder.databinding.FragmentRegisterBinding;
 public class RegisterFragment extends Fragment {
     //region  Parameter
 
-    @Inject
-    Double ScreenSize;
 
     @Inject
     Company company;
@@ -97,13 +95,13 @@ public class RegisterFragment extends Fragment {
         //endregion Get Bundle And Set Data
 
         //region Configuration Text Size
-        int fontSize;
-        if (ScreenSize >= 7) {
+        int fontSize=12;
+     /*   if (ScreenSize >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);
         } else
-            fontSize = 12;
+            fontSize = 12;*/
 
 
         binding.tvNameCustomer.setTextSize(fontSize);

@@ -25,8 +25,7 @@ import ir.kitgroup.saleinOrder.models.ProductLevel2;
 
 public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adapter.viewHolder> {
 
-    @Inject
-    Double ScreenSize;
+
     private final List<ProductLevel2> subGroupList ;
     private final Activity context;
     private  int fontSize=0;

@@ -40,8 +40,7 @@ import ir.kitgroup.saleinOrder.models.Product;
 
 public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {
 
-    @Inject
-    Double ScreenSize;
+
     private final List<InvoiceDetail> orderDetailList;
 
     private final String type;//1 seen      //2 edit
@@ -50,8 +49,8 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
     private static final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
-    private int fontSize = 0;
-    private int fontLargeSize = 0;
+    private int fontSize = 12;
+    private int fontLargeSize =13;
 
     private final DecimalFormat df;
 
@@ -98,13 +97,13 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (ScreenSize >= 7) {
-            fontSize = 13;
-            fontLargeSize = 14;
-        } else {
-            fontSize = 11;
-            fontLargeSize = 12;
-        }
+//        if (ScreenSize >= 7) {
+//            fontSize = 13;
+//            fontLargeSize = 14;
+//        } else {
+//            fontSize = 11;
+//            fontLargeSize = 12;
+//        }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.invoice_list_item_recycle, parent, false);
         return new viewHolder(view);
     }

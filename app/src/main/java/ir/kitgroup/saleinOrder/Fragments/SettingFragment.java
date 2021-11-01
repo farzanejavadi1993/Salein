@@ -56,8 +56,6 @@ import ir.kitgroup.saleinOrder.models.ModelLog;
 @AndroidEntryPoint
 public class SettingFragment extends Fragment {
 
-    @Inject
-    Double ScreenSize;
 
     @Inject
     Company company;
@@ -72,7 +70,7 @@ public class SettingFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private int fontSize = 0;
+    private int fontSize =12;
     private String userName;
     private String passWord;
     private String mobile;
@@ -85,10 +83,10 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-        if (ScreenSize  >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
+//        if (ScreenSize  >= 7)
+//            fontSize = 14;
+//        else
+//            fontSize = 12;
         return binding.getRoot();
 
 

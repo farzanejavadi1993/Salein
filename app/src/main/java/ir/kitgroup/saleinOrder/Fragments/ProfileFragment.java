@@ -25,8 +25,7 @@ import ir.kitgroup.saleinOrder.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
 
-    @Inject
-    Double ScreenSize;
+
     private FragmentProfileBinding binding;
 
     private String type = "";
@@ -34,7 +33,7 @@ public class ProfileFragment extends Fragment {
     private CustomProgress customProgress;
     private String userName = "";
     private String passWord = "";
-    private int fontSize=0;
+    private int fontSize=12;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -43,10 +42,10 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
 
-        if (ScreenSize >=7)
+      /*  if (ScreenSize >=7)
             fontSize=14;
         else
-            fontSize=12;
+            fontSize=12;*/
 
         Bundle bundle = getArguments();
 

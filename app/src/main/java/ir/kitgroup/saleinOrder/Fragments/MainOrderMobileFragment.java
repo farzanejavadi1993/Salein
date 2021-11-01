@@ -120,8 +120,7 @@ import static java.lang.Math.min;
 
 public class MainOrderMobileFragment extends Fragment {
 
-    @Inject
-   Double ScreenSize;
+
 
     Company company;
 
@@ -264,11 +263,11 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Configuration Text Size
-        int fontSize;
-        if (ScreenSize >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
+        int fontSize=12;
+//        if (ScreenSize >= 7)
+//            fontSize = 14;
+//        else
+//            fontSize = 12;
 
 
         binding.edtSearchProduct.setTextSize(fontSize);

@@ -22,13 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.R;
-
+import ir.kitgroup.saleinOrder.classes.Util;
 
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> {
@@ -37,31 +36,27 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
     private final Activity context;
 
-    private int ScreenSize=0;
-
-
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
+
     public interface ClickItem {
         void onRowClick(String Name, boolean Reserve, String Tbl_Guid, String Inv_Guid);
     }
+
     private ClickItem clickItem;
 
 
-
-
-
     private ShowDialog showDialog;
+
     public interface ShowDialog {
         void onShow(String Inv_GUID, int position, boolean type);
     }
+
     public void OnclickShowDialog(ShowDialog showDialog) {
         this.showDialog = showDialog;
     }
-
-
 
 
     public TableAdapter(Activity context, List<Tables> tableList) {
@@ -69,6 +64,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         this.tableList = tableList;
 
     }
+
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,17 +82,18 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
         holder.tableName.setText("میز شماره : " + table.N);
         holder.tvCapacity.setText("تعداد صندلی میز : " + table.CC);
+
+
         if (table.ACT) {
             holder.tvStatus.setText("میز مشغول است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.red_table));
             holder.ivDelete.setVisibility(View.GONE);
 
-        }else if (table.RSV) {
+        } else if (table.RSV) {
             holder.tvStatus.setText("میز رزرو شده است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.blue_table));
             holder.ivDelete.setVisibility(View.GONE);
-        }
-        else if (Select.from(InvoiceDetail.class).where("INVUID ='" + tableList.get(position).I + "'").list().size() > 0
+        } else if (Select.from(InvoiceDetail.class).where("INVUID ='" + tableList.get(position).I + "'").list().size() > 0
                 && table.GO == null
         ) {
             holder.tvStatus.setText("سفارش ذخیره شده");
@@ -104,7 +101,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.ivDelete.setImageResource(R.drawable.ic_delete);
 
-        }   else if (!table.ACT && !table.RSV && table.GO == null) {
+        } else if (!table.ACT && !table.RSV && table.GO == null) {
             Tables tb = Select.from(Tables.class).where("I ='" + table.I + "'").first();
             if (tb != null)
                 Tables.delete(tb);
@@ -123,14 +120,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         }
 
 
-        holder.ivDelete.setOnClickListener(v -> {
-
-            if (holder.tableName.getText().toString().equals("سفارش بیرون بر"))
-                showDialog.onShow(tableList.get(position).I, position, true);
-            else
-                showDialog.onShow(tableList.get(position).I, position, false);
-
-        });
+        holder.ivDelete.setOnClickListener(v -> showDialog.onShow(tableList.get(position).I, position, table.GO != null && table.C != null));
 
 
         holder.itemView.setOnClickListener(view -> {
@@ -164,7 +154,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
     }
 
-     class viewHolder extends RecyclerView.ViewHolder {
+    static class viewHolder extends RecyclerView.ViewHolder {
 
         private final RelativeLayout rlTable;
         private final TextView tableName;
@@ -184,31 +174,24 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             tvCapacity = itemView.findViewById(R.id.tv_capacity_table);
             tvStatus = itemView.findViewById(R.id.tv_status_table);
 
+            double height ;
+            if (Util.screenSize >= 7) {
+                 /*  double height;
+                   if (Util.width > Util.height)
+                       height = Util.width / 2;
+                   else*/
+                height = Util.height / 2;
+                rlTable.getLayoutParams().width = (int) (height / 3.3);
+                rlTable.getLayoutParams().height = (int) (height / 4.2);
 
-//            if (App.mode == 1) {
-//                if (ScreenSize  >= 7) {
-//                    int height;
-//                    if (SplashScreenFragment.width > SplashScreenFragment.height)
-//                        height = SplashScreenFragment.width / 2;
-//                    else
-//                        height = SplashScreenFragment.height / 2;
-//                    rlTable.getLayoutParams().width = (int) (height / 3.3);
-//                    rlTable.getLayoutParams().height = (int) (height / 4.2);
-//
-//
-//                } else {
-//
-//                    int width;
-//                    if (SplashScreenFragment.width > SplashScreenFragment.height)
-//                        width = SplashScreenFragment.height / 2;
-//                    else
-//                        width = SplashScreenFragment.width / 2;
-//
-//                    rlTable.getLayoutParams().width = (int) (width / 1.2);
-//                    rlTable.getLayoutParams().height = (int) (width / 1.7);
-//
-//                }
-//            }
+
+            } else {
+
+                height = Util.width / 2;
+                rlTable.getLayoutParams().width = (int) (height / 1.2);
+                rlTable.getLayoutParams().height = (int) (height / 1.7);
+
+            }
 
 
         }

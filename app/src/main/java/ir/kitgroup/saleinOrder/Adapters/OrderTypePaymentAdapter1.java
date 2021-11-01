@@ -32,8 +32,7 @@ public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaym
     private  final List<OrderType> list;
     private final Activity context;
 
-    @Inject
-    Double ScreenSize;
+
     private int fontSize=0;
     public interface ClickItem {
         void onRowClick(String GUID,Integer code);
@@ -53,10 +52,10 @@ public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaym
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        if (ScreenSize >=7)
-            fontSize=13;
-        else
-            fontSize=11;
+//        if (ScreenSize >=7)
+//            fontSize=13;
+//        else
+//            fontSize=11;
         return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
 
 

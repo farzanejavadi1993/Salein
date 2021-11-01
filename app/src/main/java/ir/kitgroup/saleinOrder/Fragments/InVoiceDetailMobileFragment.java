@@ -96,8 +96,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Parameter
 
-    @Inject
-   Double ScreenSize;
 
     @Inject
     Company company;
@@ -196,15 +194,15 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         //region Configuration Text Size
-        int fontSize;
-        int fontLargeSize;
-        if (ScreenSize  >= 7) {
-            fontSize = 13;
-            fontLargeSize = 14;
-        } else {
-            fontSize = 11;
-            fontLargeSize = 12;
-        }
+        int fontSize=12;
+        int fontLargeSize=13;
+//        if (ScreenSize  >= 7) {
+//            fontSize = 13;
+//            fontLargeSize = 14;
+//        } else {
+//            fontSize = 11;
+//            fontLargeSize = 12;
+//        }
 
 
         binding.tvNameCustomer.setTextSize(fontSize);

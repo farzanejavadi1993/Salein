@@ -58,11 +58,10 @@ public class ApplicationModule {
     }
 
 
-
     @Provides
     @Singleton
     Company getUser(@ApplicationContext Context context) {
-        Boolean changeConfig=false;
+        Boolean changeConfig = false;
         String name = "";
         String namePackage = "";
         String title = "";
@@ -128,9 +127,11 @@ public class ApplicationModule {
                     title = "SaleIn Order";
                     description = "اپلیکیشن سفارش گیر مشتریان سالین";
                     mode = 1;
-                    if (Select.from(User.class).list().size()>0){
+                    ipLocal="";
+                    if (Select.from(User.class).list().size() > 0) {
                         userName = Select.from(User.class).first().userName;
-                        passWord =  Select.from(User.class).first().passWord;
+                        passWord = Select.from(User.class).first().passWord;
+                        ipLocal = Select.from(User.class).first().ipLocal;
                     }
 
                     break;
@@ -152,13 +153,12 @@ public class ApplicationModule {
         company.namePackage = namePackage;
         company.userName = userName;
         company.passWord = passWord;
-        Util.Base_Url = "http://" + ipLocal + "/api/REST/";
+        company.baseUrl = "http://" + ipLocal + "/api/REST/";
 
 
         return company;
 
     }
-
 
 
     @Provides
@@ -167,9 +167,6 @@ public class ApplicationModule {
 
         return getUser(context).changeConfig;
     }
-
-
-
 
 
     @Provides
@@ -212,9 +209,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Select.from(User.class).first()!=null?
-                        Select.from(User.class).first().ipLocal:
-                        Util.Base_Url)
+                .baseUrl(getUser(context).baseUrl)
                 .client(okHttpClient)
                 .build();
     }

@@ -108,8 +108,7 @@ import static java.lang.Math.toRadians;
 public class PaymentMobileFragment extends Fragment {
 
 
-    @Inject
-    Double ScreenSize;
+
 
 
     @Inject
@@ -294,8 +293,8 @@ public class PaymentMobileFragment extends Fragment {
 
         userName = Select.from(User.class).first().userName;
         passWord = Select.from(User.class).first().passWord;
-        lat = Select.from(User.class).first().lat;
-        lng = Select.from(User.class).first().lng;
+       // lat = Select.from(User.class).first().lat;
+       // lng = Select.from(User.class).first().lng;
         numberPos = Select.from(User.class).first().numberPos;
         if (numberPos != null && numberPos.equals(""))
             numberPos = "0";
@@ -348,15 +347,15 @@ public class PaymentMobileFragment extends Fragment {
             binding.layoutPayment.setVisibility(View.VISIBLE);
         }
         //region Configuration Size
-        int fontBigSize;
-        int fontSize;
-        if (ScreenSize  >= 7) {
+        int fontBigSize=13;
+        int fontSize=12;
+      /*  if (ScreenSize  >= 7) {
             fontBigSize = 14;
             fontSize = 13;
         } else {
             fontBigSize = 12;
             fontSize = 11;
-        }
+        }*/
 
 
         binding.tvAddress.setTextSize(fontBigSize);
