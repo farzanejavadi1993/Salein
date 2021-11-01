@@ -53,7 +53,7 @@
 
         <ImageView
 
-            android:id="@+id/iv_logo"
+            android:id="@+id/image_logo"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_below="@+id/tv_welcome"
