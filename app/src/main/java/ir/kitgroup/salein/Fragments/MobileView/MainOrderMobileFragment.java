@@ -80,7 +80,8 @@ import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein.classes.App;
+import ir.kitgroup.salein.Connect.API;
+
 import ir.kitgroup.salein.classes.CustomProgress;
 
 
@@ -89,6 +90,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.DataBase.User;
@@ -112,6 +114,7 @@ import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
 import ir.kitgroup.salein.models.ProductLevel2;
+import retrofit2.Retrofit;
 
 
 import static java.lang.Math.min;
@@ -123,9 +126,17 @@ public class MainOrderMobileFragment extends Fragment {
     @Inject
    Double ScreenSize;
 
+    Company company;
+
+
+    API api;
+
+
+    HostSelectionInterceptor hostSelectionInterceptor;
+
 
     @Inject
-    Company company;
+    Boolean changeConfig;
     //region Parameter
     private FragmentMobileOrderMainBinding binding;
 
@@ -141,8 +152,7 @@ public class MainOrderMobileFragment extends Fragment {
     private String Acc_NAME = "";
 
 
-    private String userName;
-    private String passWord;
+
 
 
     private TextWatcher textWatcherProduct;
@@ -214,6 +224,7 @@ public class MainOrderMobileFragment extends Fragment {
     private int imageLogo = R.drawable.salein;
     private int imgIconDialog = R.drawable.saleinorder_png;
     private int imgBackground = 0;
+    private  String namePackage;
     private String nameCompany = "Salein Order";
 
 
@@ -234,6 +245,7 @@ public class MainOrderMobileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
@@ -366,7 +378,7 @@ public class MainOrderMobileFragment extends Fragment {
                     account.S = String.valueOf(gender);
                     accountsList.clear();
                     accountsList.add(account);
-                    addAccount(userName, passWord, accountsList);
+                    addAccount(accountsList);
 
                 }
             });
@@ -567,8 +579,7 @@ public class MainOrderMobileFragment extends Fragment {
         Tbl_GUID = "";
 
 
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
+
 
 
         //endregion First Value Parameter
@@ -582,13 +593,19 @@ public class MainOrderMobileFragment extends Fragment {
         Inv_GUID = bnd.getString("Inv_GUID");
         Inv_GUID_ORG = bnd.getString("Inv_GUID");
         try {
+             namePackage = bnd.getString("namePackage");
             Acc_NAME = bnd.getString("Acc_NAME");
             Acc_GUID = bnd.getString("Acc_GUID");
             Seen = bnd.getBoolean("Seen");
+
         } catch (Exception ignore) {
         }
 
         //endregion Get Bundle
+
+
+
+
 
 
         if (company.mode  == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
@@ -1043,7 +1060,7 @@ public class MainOrderMobileFragment extends Fragment {
                     edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
-                    getDescription(userName, passWord, GUID);
+                    getDescription(GUID);
 
                 }
             } else {
@@ -1110,7 +1127,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getProductLevel1("saleinkit_api", userName, passWord)
+                   api.getProductLevel1("saleinkit_api",company.userName,company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1177,7 +1194,7 @@ public class MainOrderMobileFragment extends Fragment {
         try {
             binding.progressbar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    App.api.getProductLevel2("saleinkit_api", userName, passWord, GuidPrdLvl1)
+                   api.getProductLevel2("saleinkit_api", company.userName, company.passWord, GuidPrdLvl1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1278,7 +1295,7 @@ public class MainOrderMobileFragment extends Fragment {
         }
         try {
             compositeDisposable.add(
-                    App.api.getProduct1("saleinkit_api", userName, passWord, GuidPrdLvl2)
+                  api.getProduct1("saleinkit_api", company.userName, company.passWord, GuidPrdLvl2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1368,7 +1385,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getSetting1(userName, passWord)
+                   api.getSetting1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1406,7 +1423,7 @@ public class MainOrderMobileFragment extends Fragment {
 
     }
 
-    private void getDescription(String userName, String pass, String id) {
+    private void getDescription(String id) {
         if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
@@ -1416,7 +1433,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getDescription1(userName, pass, id)
+                   api.getDescription1(company.userName, company.passWord, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1548,7 +1565,7 @@ public class MainOrderMobileFragment extends Fragment {
         public List<Account> Account;
     }
 
-    private void addAccount(String userName, String pass, List<Account> accounts) {
+    private void addAccount(List<Account> accounts) {
 
         if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
@@ -1565,7 +1582,7 @@ public class MainOrderMobileFragment extends Fragment {
             }.getType();
 
             compositeDisposable.add(
-                    App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                   api.addAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1615,7 +1632,7 @@ public class MainOrderMobileFragment extends Fragment {
     private void getAccountSearch1(String word, int type) {
         try {
             compositeDisposable.add(
-                    App.api.getAccountSearch1("saleinkit_api", userName, passWord, word)
+                  api.getAccountSearch1("saleinkit_api", company.userName, company.passWord, word)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1680,7 +1697,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getSetting1(userName, passWord)
+                   api.getSetting1(company.userName,company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1747,7 +1764,7 @@ public class MainOrderMobileFragment extends Fragment {
     private void getSearchProduct(String s) {
         try {
             compositeDisposable.add(
-                    App.api.getSearchProduct("saleinkit_api", userName, passWord, s)
+                  api.getSearchProduct("saleinkit_api", company.userName, company.passWord, s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

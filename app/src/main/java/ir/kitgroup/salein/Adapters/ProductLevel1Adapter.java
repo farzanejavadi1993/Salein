@@ -30,8 +30,8 @@ import ir.kitgroup.salein.models.ProductLevel1;
 
 public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adapter.viewHolder> {
 
-    @Inject
-    Double ScreenSize;
+//    @Inject
+//    Double ScreenSize;
     private final List<ProductLevel1> productGroupLevel1s ;
     private final Activity context;
     private  int fontSize=0;
@@ -56,10 +56,10 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-        if (ScreenSize >=7)
+        /*if (ScreenSize >=7)
             fontSize=13;
         else
-            fontSize=11;
+            fontSize=11;*/
        /* if (LauncherActivity.screenInches >= 7) {
 
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_group_item, parent, false));

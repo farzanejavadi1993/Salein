@@ -43,9 +43,12 @@ import ir.kitgroup.salein.Adapters.CompanyAdapterList;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
 
+import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.Util.Util;
 import ir.kitgroup.salein.databinding.FragmentMyCompanyBinding;
+import ir.kitgroup.salein.di.ApplicationModule;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 
@@ -59,18 +62,14 @@ public class MyCompanyFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentMyCompanyBinding binding;
 
-
-
     @Inject
     SharedPreferences sharedPreferences;
 
     @Inject
     Company company;
 
-
     @Inject
     API api;
-
 
     @Inject
     Gson gson;
@@ -82,18 +81,9 @@ public class MyCompanyFragment extends Fragment {
     Retrofit retrofit;
 
     private Account account;
-
-
     private Dialog dialog;
     private TextView textMessageDialog;
-
-
     private Company newCompany;
-
-
-
-
-
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -150,9 +140,6 @@ public class MyCompanyFragment extends Fragment {
         );
 
 
-
-
-
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -162,7 +149,6 @@ public class MyCompanyFragment extends Fragment {
         textMessageDialog = dialog.findViewById(R.id.tv_message);
         ImageView imageDialog = dialog.findViewById(R.id.iv_icon);
         imageDialog.setImageResource(R.drawable.saleinicon128);
-
 
 
         MaterialButton btnOkDialog = dialog.findViewById(R.id.btn_ok);
@@ -178,31 +164,33 @@ public class MyCompanyFragment extends Fragment {
         });
 
 
-
-
-
     }
 
 
-    private void configRetrofit( String mobile) {
+    private void configRetrofit(String mobile) {
 
 
-        String baseUrl = "http://" + newCompany.ipLocal + "/api/REST/";
+        Util.Base_Url =  "http://" + newCompany.ipLocal + "/api/REST/";
+        User.deleteAll(User.class);
+        User user=new User();
+        user.ipLocal= "http://" + newCompany.ipLocal + "/api/REST/";
+        user.save();
 
-         retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(baseUrl)
+                .baseUrl(Util.Base_Url)
                 .client(okHttpClient)
                 .build();
 
+        api = retrofit.create(API.class);
 
-         api=retrofit.create(API.class);
         try {
 
             getInquiryAccount1(mobile);
 
-        } catch (NetworkOnMainThreadException ignored) {}
+        } catch (NetworkOnMainThreadException ignored) {
+        }
     }
 
 
@@ -245,7 +233,8 @@ public class MyCompanyFragment extends Fragment {
 
                                         //user is register
                                         if (iDs.getAccountList().size() > 0) {
-                                            company=newCompany;
+                                            company = newCompany;
+                                            Util.Base_Url = "http://" + newCompany.ipLocal + "/api/REST/";
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
                                             getFragmentManager().popBackStack();
@@ -253,6 +242,7 @@ public class MyCompanyFragment extends Fragment {
                                             bundle.putString("Ord_TYPE", "");
                                             bundle.putString("Tbl_GUID", "");
                                             bundle.putString("Inv_GUID", "");
+                                            bundle.putString("namePackage", newCompany.namePackage);
 
                                             sharedPreferences.edit().putString("NC", newCompany.nameCompany).apply();
                                             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
@@ -327,7 +317,8 @@ public class MyCompanyFragment extends Fragment {
                                 int message = iDs.getLogs().get(0).getMessage();
                                 String description = iDs.getLogs().get(0).getDescription();
                                 if (message == 1) {
-                                    company=newCompany;
+                                    company = newCompany;
+                                    Util.Base_Url = "http://" + newCompany.ipLocal + "/api/REST/";
                                     Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
 
                                     Bundle bundle = new Bundle();

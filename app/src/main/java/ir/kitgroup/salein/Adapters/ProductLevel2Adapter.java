@@ -62,10 +62,10 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
 
         }else {*/
 
-        if (ScreenSize >=7)
+      /*  if (ScreenSize >=7)
             fontSize=13;
         else
-            fontSize=11;
+            fontSize=11;*/
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
        // }
 

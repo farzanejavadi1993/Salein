@@ -65,11 +65,11 @@ import ir.kitgroup.salein.models.Product;
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
 
-    @Inject
+ /*   @Inject
     Double ScreenSize;
 
     @Inject
-    Company company;
+    Company company;*/
     private final Activity context;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -127,29 +127,29 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         df = new DecimalFormat();
 
-        try {
-            switch (company.nameCompany) {
-                case "ir.kitgroup.salein":
-                    placeHolderImage = R.drawable.salein;
-                    break;
-
-                case "ir.kitgroup.saleintop":
-                    placeHolderImage = R.drawable.top_icon;
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-                    placeHolderImage = R.drawable.meat_icon;
-                    ShowUnit=true;
-                    break;
-
-
-                case "ir.kitgroup.saleinnoon":
-
-                    placeHolderImage = R.drawable.noon;
-                    break;
-            }
-        }catch (Exception ignore){}
+//        try {
+//            switch (company.nameCompany) {
+//                case "ir.kitgroup.salein":
+//                    placeHolderImage = R.drawable.salein;
+//                    break;
+//
+//                case "ir.kitgroup.saleintop":
+//                    placeHolderImage = R.drawable.top_icon;
+//                    break;
+//
+//
+//                case "ir.kitgroup.saleinmeat":
+//                    placeHolderImage = R.drawable.meat_icon;
+//                    ShowUnit=true;
+//                    break;
+//
+//
+//                case "ir.kitgroup.saleinnoon":
+//
+//                    placeHolderImage = R.drawable.noon;
+//                    break;
+//            }
+//        }catch (Exception ignore){}
 
 
     }
@@ -200,15 +200,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Constant.VIEW_TYPE_ITEM) {
-            if (ScreenSize  >= 7) {
+          /*  if (ScreenSize  >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
 
             } else {
                 fontSize = 11;
                 fontLargeSize = 12;
-
-            }
+*/
+           // }
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
                     false));
         } else if (viewType == Constant.VIEW_TYPE_LOADING) {
@@ -721,8 +721,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-                                                if (company.mode ==1)
-                                                    invoicedetail.TBL = Tbl_GUID;
+//                                                if (company.mode ==1)
+//                                                    invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
 
 

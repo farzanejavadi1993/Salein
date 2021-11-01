@@ -34,23 +34,25 @@ public class Util {
 
 
     public static boolean isValid(String s) {
+
         Pattern p = Pattern.compile("(0/9)?[0-9]{11}");
         Matcher m = p.matcher(s);
         return (m.find() && m.group().equals(s));
     }
 
     public static boolean isValidCode(String s) {
+
         Pattern p = Pattern.compile("(0/9)?[0-9]{5}");
         Matcher m = p.matcher(s);
         return (m.find() && m.group().equals(s));
     }
 
     public static boolean isValidRegister(Boolean name, Boolean phone, Boolean address, boolean plaque) {
+
         boolean active = false;
         if (name && phone && address && plaque)
             active = true;
         return active;
-
     }
 
     public static void playLottieAnimation(String json, LottieAnimationView animationView) {
@@ -60,16 +62,17 @@ public class Util {
         }
 
         animationView.setAnimation(json);
-
         animationView.loop(true);
         animationView.playAnimation();
     }
 
     public static String getPrice(SharedPreferences sharedPreferences) {
+
         return sharedPreferences.getString("priceProduct", "");
     }
 
     public static void hideKeyBoard(Context context, View view) {
+
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
@@ -110,7 +113,7 @@ public class Util {
         String namePackage = "";
         String title = "";
         String description = "";
-        int  mode = 2;
+        int mode = 2;
         int image = 0;
 
         try {
@@ -132,7 +135,7 @@ public class Util {
                     name = "ir.kitgroup.saleintop";
                     namePackage = "ir.kitgroup.salein";
                     title = "تاپ کباب";
-                    description="عرضه کننده بهترین غذاها";
+                    description = "عرضه کننده بهترین غذاها";
                     break;
 
 
@@ -141,7 +144,7 @@ public class Util {
                     name = "ir.kitgroup.saleinmeat";
                     namePackage = "ir.kitgroup.salein";
                     title = "گوشت دنیوی";
-                    description="عرضه کننده انواع گوشت";
+                    description = "عرضه کننده انواع گوشت";
 
                     break;
 
@@ -150,22 +153,21 @@ public class Util {
                     name = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.salein";
                     title = "کافه نون";
-                    description="متنوع ترین محصولات";
+                    description = "متنوع ترین محصولات";
                     break;
 
                 default:
                     image = R.drawable.saleinorder_png;
                     name = "ir.kitgroup.saleiOrder";
                     namePackage = "ir.kitgroup.saleinOrder";
-                   title = "SaleIn Order";
-                   description = "اپلیکیشن سفارش گیر مشتریان سالین";
-                   mode=1;
+                    title = "SaleIn Order";
+                    description = "اپلیکیشن سفارش گیر مشتریان سالین";
+                    mode = 1;
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
 
         User user = new User();
         if (name.equals("ir.kitgroup.salein")) {
@@ -180,8 +182,7 @@ public class Util {
         }
 
         return user;
-
     }
 
-
+    public static String Base_Url = "";
 }

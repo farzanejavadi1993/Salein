@@ -14,6 +14,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.orm.query.Select;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,10 +27,14 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import dagger.hilt.components.SingletonComponent;
+import ir.kitgroup.salein.BuildConfig;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.Util.Util;
+import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.models.Company;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -43,22 +48,21 @@ public class ApplicationModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreference(@ApplicationContext Context context) {
+
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
-
 
     @Provides
     @Singleton
     Context provideContext(@ApplicationContext Context context) {
+
         return context;
-
     }
-
-
 
     @Provides
     @Singleton
     Double provideSize() {
+
 //        DisplayMetrics dm = new DisplayMetrics();
 //        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
 //        double width = dm.widthPixels;
@@ -66,36 +70,41 @@ public class ApplicationModule {
 //        double x = Math.pow(width / dm.xdpi, 2);
 //        double y = Math.pow(height / dm.ydpi, 2);
 //        return Math.sqrt(x + y);
-
         return 6.0;
-
     }
+
     @Provides
     @Singleton
-      Company getUser(@ApplicationContext Context context) {
+    Company getUser(@ApplicationContext Context context) {
+        Boolean changeConfig=false;
         String name = "";
         String namePackage = "";
         String title = "";
         String description = "";
-        String messageWelcome="";
-        int  mode = 2;
+        String messageWelcome = "";
+        String ipLocal = "";
+        int mode = 2;
         int imageLogo = 0;
         int imageDialog = 0;
+        String userName = "";
+        String passWord = "";
 
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
             switch (pInfo.packageName) {
                 case "ir.kitgroup.salein":
+                    changeConfig=true;
                     imageLogo = R.drawable.salein;
                     imageDialog = R.drawable.saleinicon128;
                     name = "ir.kitgroup.salein";
                     namePackage = "ir.kitgroup.salein";
                     title = "سالین دمو";
+                    ipLocal = "192.168.20.8:96";
+                    userName = "admin";
+                    passWord = "123";
                     messageWelcome = "به سالین دمو خوش آمدید";
                     description = "سالین دمو ، راهنمای استفاده از اپلیکیشن";
-
-
                     break;
 
                 case "ir.kitgroup.saleintop":
@@ -105,7 +114,10 @@ public class ApplicationModule {
                     namePackage = "ir.kitgroup.salein";
                     title = "تاپ کباب";
                     messageWelcome = "به رستوران تاپ کباب خوش آمدید";
-                    description="عرضه کننده بهترین غذاها";
+                    description = "عرضه کننده بهترین غذاها";
+                    ipLocal = "188.158.121.253:9999";
+                    userName = "topkabab";
+                    passWord = "9929";
                     break;
 
 
@@ -116,7 +128,10 @@ public class ApplicationModule {
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                     namePackage = "ir.kitgroup.salein";
                     title = "گوشت دنیوی";
-                    description="عرضه کننده انواع گوشت";
+                    description = "عرضه کننده انواع گوشت";
+                    ipLocal = "109.125.133.149:9999";
+                    userName = "admin";
+                    passWord = "0123";
 
                     break;
 
@@ -127,17 +142,18 @@ public class ApplicationModule {
                     namePackage = "ir.kitgroup.salein";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";
-                    description="متنوع ترین محصولات";
+                    description = "متنوع ترین محصولات";
                     break;
 
                 default:
+
                     imageLogo = R.drawable.saleinorder_icon;
                     imageDialog = R.drawable.saleinorder_png;
                     name = "ir.kitgroup.saleiOrder";
                     namePackage = "ir.kitgroup.saleinOrder";
                     title = "SaleIn Order";
                     description = "اپلیکیشن سفارش گیر مشتریان سالین";
-                    mode=1;
+                    mode = 1;
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -146,24 +162,35 @@ public class ApplicationModule {
 
 
         Company company = new Company();
-        if (name.equals("ir.kitgroup.salein")) {
+        company.ipLocal = ipLocal;
+        company.imageLogo = imageLogo;
+        company.imageDialog = imageDialog;
+        company.title = title;
+        company.Description = description;
+        company.nameCompany = name;
+        company.mode = mode;
+        company.messageWelcome = messageWelcome;
+        company.namePackage = namePackage;
+        company.userName = userName;
+        company.passWord = passWord;
+        Util.Base_Url = "http://" + ipLocal + "/api/REST/";
 
-           company.ipLocal = "192.168.20.8:96";
-           company.imageLogo = imageLogo;
-           company.imageDialog =imageDialog;
-           company.title=title;
-           company.Description= description;
-           company.nameCompany = name;
-           company.mode = mode;
-           company.messageWelcome = messageWelcome;
-           company.namePackage = namePackage;
-           company.userName = "admin";
-           company.passWord = "123";
-        }
 
         return company;
 
     }
+
+
+
+    @Provides
+    @Singleton
+    Boolean getChangeConfig(@ApplicationContext Context context) {
+
+        return getUser(context).changeConfig;
+    }
+
+
+
 
 
     @Provides
@@ -183,6 +210,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient(Cache cache) {
+
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.cache(cache);
         client.readTimeout(30, TimeUnit.SECONDS);
@@ -193,11 +221,11 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Gson provideGson() {
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
     }
-
 
     @Provides
     @Singleton
@@ -205,15 +233,12 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl("http://" + getUser(context).ipLocal + "/api/REST/")
+                .baseUrl(Select.from(User.class).first()!=null?
+                        Select.from(User.class).first().ipLocal:
+                        Util.Base_Url)
                 .client(okHttpClient)
                 .build();
     }
-
-
-
-
-
 
 
     @Provides

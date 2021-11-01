@@ -17,5 +17,6 @@ public class Company {
     public double lat;
     public double lng;
     public boolean CheckUser=false;
+    public boolean changeConfig=false;
     public String messageWelcome;
 }
