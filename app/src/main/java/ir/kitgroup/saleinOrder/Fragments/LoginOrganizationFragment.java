@@ -19,11 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import com.google.gson.Gson;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.orm.query.Select;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +43,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 
 
@@ -139,7 +142,7 @@ public class LoginOrganizationFragment extends Fragment {
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                   api.Login(userName, passWord)
+                  api.Login(userName, passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -150,7 +153,6 @@ public class LoginOrganizationFragment extends Fragment {
                                 if (jsonElement == null || !jsonElement.isEmpty()) {
 
                                     Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
                                 } else {
 
                                     if (User.count(User.class) > 0)
@@ -164,11 +166,15 @@ public class LoginOrganizationFragment extends Fragment {
                                     user.passWord=passWord;
                                     user.save();
 
-                                    binding.progressBar.setVisibility(View.GONE);
-                                    getActivity().finish();
-                                    startActivity(getActivity().getIntent());
+
+                                    getActivity().getSupportFragmentManager().popBackStack();
+
+                                    if (Select.from(User.class).list().size()>0) {
+                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                                    }
 
                                 }
+                                binding.progressBar.setVisibility(View.GONE);
 
 
                             }, throwable -> {

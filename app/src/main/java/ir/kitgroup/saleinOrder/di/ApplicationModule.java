@@ -32,8 +32,8 @@ import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
 
-import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.Company;
+import ir.kitgroup.saleinOrder.models.Config;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -57,6 +57,51 @@ public class ApplicationModule {
         return context;
     }
 
+
+    @Provides
+    @Singleton
+    Config getConfig(@ApplicationContext Context context) {
+
+        int mode = 2;
+        int imageLogo = 0;
+
+
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+
+            switch (pInfo.packageName) {
+
+
+                case "ir.kitgroup.saleintop":
+                    imageLogo = R.drawable.top_icon;
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+                    imageLogo = R.drawable.meat_icon;
+                    break;
+
+                case "ir.kitgroup.saleinnoon":
+                    imageLogo = R.drawable.noon;
+                    break;
+
+                default:
+
+                    imageLogo = R.drawable.saleinorder_icon;
+                    mode = 1;
+                    break;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Config config=new Config();
+        config.imageLogo =imageLogo;
+        config.mode=mode;
+
+        return config;
+
+    }
 
     @Provides
     @Singleton
@@ -154,7 +199,6 @@ public class ApplicationModule {
         company.userName = userName;
         company.passWord = passWord;
         company.baseUrl = "http://" + ipLocal + "/api/REST/";
-
 
         return company;
 

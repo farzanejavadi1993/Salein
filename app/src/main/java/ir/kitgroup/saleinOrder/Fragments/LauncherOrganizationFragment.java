@@ -577,7 +577,7 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                 api.getTable1( company.userName, company.passWord)
+                 api.getTable1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

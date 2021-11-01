@@ -36,13 +36,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.saleinOrder.Fragments.LoginOrganizationFragment;
-import ir.kitgroup.saleinOrder.Fragments.SplashScreenFragment;
 
 import ir.kitgroup.saleinOrder.Fragments.MainOrderMobileFragment;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.ActivityLauncherBinding;
-import ir.kitgroup.saleinOrder.models.Company;
+import ir.kitgroup.saleinOrder.models.Config;
 
 
 @AndroidEntryPoint
@@ -54,7 +53,7 @@ public class LauncherActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
 
     @Inject
-    Company company;
+    Config config;
 
 
     //region Parameter Dialog
@@ -63,20 +62,16 @@ public class LauncherActivity extends AppCompatActivity {
     //endregion Parameter Dialog
 
 
-
     private Boolean refreshApplication = false;
 
     //endregion Parameter
-
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        refreshApplication =false;
+        refreshApplication = false;
         Util.ScreenSize(this);
 
         //region Set Layout to LauncherActivity class
@@ -86,29 +81,43 @@ public class LauncherActivity extends AppCompatActivity {
         //endregion Set Layout to LauncherActivity class
 
 
-        if (company.mode==2){
-            //region Call SplashScreenFragment
-            FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
-            addFragment.commit();
-            //endregion Call SplashScreenFragment
-        }else {
-            //When User Is Login
-            FragmentTransaction replaceFragment = null;
-            if (Select.from(User.class).list().size()>0) {
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
-            }
+//        if (company.mode==2){
+//            //region Call SplashScreenFragment
+//            FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
+//            addFragment.commit();
+//            //endregion Call SplashScreenFragment
+//        }
+//        else {
+//            //When User Is Login
+//            FragmentTransaction replaceFragment = null;
+//            if (Select.from(User.class).list().size()>0) {
+//                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
+//            }
+//
+//            //When User Is Not Login
+//            else {
+//
+//                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
+//
+//            }
+//            replaceFragment.commit();
+//
+//
+//        }
 
-            //When User Is Not Login
-            else {
 
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
-
-            }
-            replaceFragment.commit();
-
-
+        FragmentTransaction replaceFragment = null;
+        if (Select.from(User.class).list().size() > 0) {
+            replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
         }
 
+        //When User Is Not Login
+        else {
+
+            replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
+
+        }
+        replaceFragment.commit();
 
 
         //region Cast ExitDialog
@@ -122,7 +131,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
-        int imageIconDialog = company.imageLogo;
+        int imageIconDialog = config.imageLogo;
         ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
         imageIconExitDialog.setImageResource(imageIconDialog);
 
@@ -147,8 +156,6 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-
-
     //region Override Method
     @Override
     public void onBackPressed() {
@@ -161,21 +168,16 @@ public class LauncherActivity extends AppCompatActivity {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
 
-        }
-
-
-        else if (company.mode ==1 &&
+        } else if (config.mode == 1 &&
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")
-        ){
+        ) {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
             if (fragment instanceof LauncherOrganizationFragment) {
                 LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) fragment;
                 fgf.refreshAdapter();
             }
             getSupportFragmentManager().popBackStack();
-        }
-
-        else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
@@ -189,10 +191,7 @@ public class LauncherActivity extends AppCompatActivity {
             }
 
 
-
-        }
-
-        else
+        } else
             getSupportFragmentManager().popBackStack();
     }
 
@@ -216,12 +215,12 @@ public class LauncherActivity extends AppCompatActivity {
             long seconds = diff / 1000;
             long minutes = seconds / 60;
 
-            if (minutes >=2) {
+            if (minutes >= 2) {
 
                 finish();
                 startActivity(getIntent());
             }
-            refreshApplication =false;
+            refreshApplication = false;
         }
     }
 
@@ -240,8 +239,6 @@ public class LauncherActivity extends AppCompatActivity {
     //endregion Override Method
 
 
-
-
     //region Custom  Method
     private Date stringToDate(String aDate) {
 
@@ -251,7 +248,8 @@ public class LauncherActivity extends AppCompatActivity {
         return simpledateformat.parse(aDate, pos);
 
     }
-    public   String appVersion() throws PackageManager.NameNotFoundException {
+
+    public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         return pInfo.versionName;
     }
