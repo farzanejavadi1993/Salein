@@ -1115,7 +1115,7 @@ public class PaymentMobileFragment extends Fragment {
 
                     if (frg instanceof MainOrderMobileFragment) {
                         MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
-                        fgf.setHomeBottomBarAndClearBadge();
+                      //  fgf.setHomeBottomBarAndClearBadge();
                     }
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("Ord_TYPE", "");

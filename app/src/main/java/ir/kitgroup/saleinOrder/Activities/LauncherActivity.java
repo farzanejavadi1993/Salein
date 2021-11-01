@@ -169,7 +169,7 @@ public class LauncherActivity extends AppCompatActivity {
             ExitDialog.show();
 
         } else if (config.mode == 1 &&
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderMobileF")
+                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainF")
         ) {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
             if (fragment instanceof LauncherOrganizationFragment) {
@@ -187,7 +187,7 @@ public class LauncherActivity extends AppCompatActivity {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
             if (fragment instanceof MainOrderMobileFragment) {
                 MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
-                fgf.setHomeBottomBar();
+               // fgf.setHomeBottomBar();
             }
 
 

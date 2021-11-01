@@ -352,9 +352,10 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putBoolean("EDIT",false);
 
 
-                MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                mainOrderMobileFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
+
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.setArguments(bundle);
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
             }
@@ -413,9 +414,10 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putBoolean("EDIT",false);
 
 
-            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-            mainOrderMobileFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF").commit();
+
+            MainFragment mainFragment = new MainFragment();
+            mainFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
         });

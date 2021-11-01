@@ -19,7 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Handler;
-import android.preference.PreferenceManager;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 
@@ -74,6 +74,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+
 import ir.kitgroup.saleinOrder.Adapters.AccountAdapter;
 import ir.kitgroup.saleinOrder.Adapters.DescriptionAdapter;
 
@@ -90,6 +91,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.Setting;
 
@@ -117,36 +119,33 @@ import ir.kitgroup.saleinOrder.models.ProductLevel2;
 import static java.lang.Math.min;
 
 @AndroidEntryPoint
-
 public class MainOrderMobileFragment extends Fragment {
 
 
-
-    Company company;
-
-
-    API api;
-
-
+    //region Parameter
 
     @Inject
-    Boolean changeConfig;
-    //region Parameter
+    Company company;
+
+    @Inject
+    API api;
+
+    @Inject
+    SharedPreferences sharedPreferences;
+
+
     private FragmentMobileOrderMainBinding binding;
 
-    private SharedPreferences sharedPreferences;
     private CustomProgress customProgress;
 
-    private String Ord_TYPE;
+
     private String Tbl_GUID;
+    private String Ord_TYPE;
     private String Inv_GUID;
-    private String Inv_GUID_ORG;
+    private String Acc_NAME = "";
     private String Acc_GUID = "";
     private Boolean Seen = false;
-    private String Acc_NAME = "";
-
-
-
+    private Boolean EDIT = false;
 
 
     private TextWatcher textWatcherProduct;
@@ -171,8 +170,6 @@ public class MainOrderMobileFragment extends Fragment {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String error;
-
-    private int counter;
 
 
     //region Variable Dialog Description
@@ -207,26 +204,18 @@ public class MainOrderMobileFragment extends Fragment {
     //region Variable DialogAddAccount
     private List<Account> accountsList;
     private Dialog dialogAddAccount;
-    private EditText edtNameUser;
-    private EditText edtAddressUser;
-    private EditText edtMobileUser;
-    private int gender;
+    private EditText edtNameAccount;
+    private EditText edtAddressAccount;
+    private EditText edtMobileAccount;
+    private int genderAccount;
     //endregion Variable DialogAddAccount
-
-
-    private int imageLogoCopy = R.drawable.salein;
-    private int imageLogo = R.drawable.salein;
-    private int imgIconDialog = R.drawable.saleinorder_png;
-    private int imgBackground = 0;
-    private  String namePackage;
-    private String nameCompany = "Salein Order";
 
 
     //region Variable DialogUpdate
     private Dialog dialogUpdate;
     private TextView textUpdate;
     private MaterialButton btnNo;
-    private String linkUpdate;
+
     //endregion Variable DialogUpdate
 
     private String maxSales = "0";
@@ -241,33 +230,29 @@ public class MainOrderMobileFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
-
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         customProgress = CustomProgress.getInstance();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
 
         //region Delete InvoiceDetail UnNecessary
-        if (company.mode  == 1) {
+        if (company.mode == 1) {
             List<InvoiceDetail> invDetail = Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
             for (int i = 0; i < invDetail.size(); i++) {
                 InvoiceDetail.delete(invDetail.get(i));
             }
         }
-
-        //region Delete InvoiceDetail UnNecessary
+        //endregion Delete InvoiceDetail UnNecessary
 
 
         //region Configuration Text Size
-        int fontSize=12;
-//        if (ScreenSize >= 7)
-//            fontSize = 14;
-//        else
-//            fontSize = 12;
+        int fontSize;
+        if (Util.screenSize >= 7)
+            fontSize = 14;
+        else
+            fontSize = 12;
 
 
         binding.edtSearchProduct.setTextSize(fontSize);
@@ -277,51 +262,17 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Set Icon And Title
-        try {
-            switch (company.nameCompany) {
-
-
-                case "ir.kitgroup.saleintop":
-                    nameCompany = " تاپ کباب";
-                    imageLogo = R.drawable.top;
-                    //  imgBackground = R.drawable.top_pas;
-                    imgIconDialog = R.drawable.top_png;
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-                    nameCompany = " گوشت دنیوی";
-                    imageLogo = R.drawable.goosht;
-                    //imgBackground = R.drawable.donyavi_pas;
-                    imgIconDialog = R.drawable.meat_png;
-                    linkUpdate = "https://b2n.ir/b37054";
-                    break;
-
-
-                case "ir.kitgroup.saleinnoon":
-                    nameCompany = "کافه نون";
-                    imageLogo = R.drawable.noon;
-                    imgIconDialog = R.drawable.noon;
-                    break;
-            }
-        } catch (Exception ignore) {
-
-        }
-
-
-        binding.ivIconCompany.setImageResource(imageLogo);
-        binding.tvCompany.setText(nameCompany);
-        if (imgBackground != 0)
-            binding.image.setImageResource(imgBackground);
+        binding.ivIconCompany.setImageResource(company.imageLogo);
+        binding.tvCompany.setText(company.nameCompany);
         //endregion Set Icon And Title
 
 
         //region Configuration Organization Application
-        if (company.mode  == 1) {
+        if (company.mode == 1) {
             binding.defineCompany.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.VISIBLE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
-            binding.bottomNavigationViewLinear.setVisibility(View.GONE);
+
 
             //region Cast DialogAddAcc
             dialogAddAccount = new Dialog(getActivity());
@@ -333,20 +284,20 @@ public class MainOrderMobileFragment extends Fragment {
 
 
             ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
-            edtNameUser = dialogAddAccount.findViewById(R.id.edt_address);
-            edtMobileUser = dialogAddAccount.findViewById(R.id.edt_unit);
-            edtAddressUser = dialogAddAccount.findViewById(R.id.edt_pelaque);
+            edtNameAccount = dialogAddAccount.findViewById(R.id.edt_address);
+            edtMobileAccount = dialogAddAccount.findViewById(R.id.edt_unit);
+            edtAddressAccount = dialogAddAccount.findViewById(R.id.edt_pelaque);
             RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
             RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
             MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_address);
             radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    gender = 0;
+                    genderAccount = 0;
                 }
             });
             radioWoman.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    gender = 1;
+                    genderAccount = 1;
                 }
             });
 
@@ -354,18 +305,20 @@ public class MainOrderMobileFragment extends Fragment {
 
 
             btnRegisterAccount.setOnClickListener(v -> {
-                if (edtNameUser.getText().toString().equals("") || edtMobileUser.getText().toString().equals("")) {
+                if (edtNameAccount.getText().toString().isEmpty() || edtMobileAccount.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "لطفا فیلد نام مشتری و شماره موبایل مشتری را پر کنید.", Toast.LENGTH_SHORT).show();
-                } else if (!edtMobileUser.getText().toString().equals("1") && (edtMobileUser.getText().toString().length() < 11 || edtMobileUser.getText().toString().length() > 11)) {
+
+                } else if (!edtMobileAccount.getText().toString().equals("1") && (edtMobileAccount.getText().toString().length() < 11 || edtMobileAccount.getText().toString().length() > 11)) {
                     Toast.makeText(getActivity(), "شماره موبایل صحیح نمی باشد.", Toast.LENGTH_SHORT).show();
+
                 } else {
 
                     Account account = new Account();
                     account.I = UUID.randomUUID().toString();
-                    account.N = edtNameUser.getText().toString();
-                    account.M = edtMobileUser.getText().toString();
-                    account.ADR = edtAddressUser.getText().toString();
-                    account.S = String.valueOf(gender);
+                    account.N = edtNameAccount.getText().toString();
+                    account.M = edtMobileAccount.getText().toString();
+                    account.ADR = edtAddressAccount.getText().toString();
+                    account.S = String.valueOf(genderAccount);
                     accountsList.clear();
                     accountsList.add(account);
                     addAccount(accountsList);
@@ -373,6 +326,7 @@ public class MainOrderMobileFragment extends Fragment {
                 }
             });
             //endregion Cast DialogAddAcc
+
 
             accList = new ArrayList<>();
             accAdapter = new AccountAdapter(getActivity(), accList);
@@ -393,9 +347,8 @@ public class MainOrderMobileFragment extends Fragment {
 
                     if (s.toString().isEmpty()) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
-                        binding.edtNameCustomer.setHint("نام مشترک");
-                    } else if (s.toString().length() >=8) {
-
+                        binding.edtNameCustomer.setHint("جستجو مشتری");
+                    } else if (s.toString().length() >= 8) {
                         getAccountSearch1(s.toString(), 0);
                     }
 
@@ -404,7 +357,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    int p = 0;
+
                 }
             };
 
@@ -422,9 +375,9 @@ public class MainOrderMobileFragment extends Fragment {
 
 
             binding.btnAddAccount.setOnClickListener(v -> {
-                edtNameUser.setText("");
-                edtAddressUser.setText("");
-                edtMobileUser.setText("");
+                edtNameAccount.setText("");
+                edtAddressAccount.setText("");
+                edtMobileAccount.setText("");
                 dialogAddAccount.show();
             });
 
@@ -439,94 +392,14 @@ public class MainOrderMobileFragment extends Fragment {
         //region Configuration Client Application
 
         else {
-
             binding.defineCompany.setVisibility(View.VISIBLE);
             binding.layoutAccount.setVisibility(View.GONE);
             binding.layoutSearchProduct.setVisibility(View.VISIBLE);
             binding.btnRegisterOrder.setVisibility(View.GONE);
 
+
             Acc_NAME = Select.from(Account.class).first().N;
             Acc_GUID = Select.from(Account.class).first().I;
-
-            binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
-            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setBackgroundColor(getActivity().getResources().getColor(R.color.red_table));
-            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
-            binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
-
-                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                //region Delete Item Transport For Show Counter
-                if (invDetails.size() > 0) {
-
-                    for (int i = 0; i < invDetails.size(); i++) {
-                        if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-                            invDetails.remove(invDetails.get(i));
-                        }
-                    }
-
-                    counter = invDetails.size();
-                    binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-
-
-                }
-                //endregion Delete Item Transport For Show Counter
-                else
-                    binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
-
-
-                //region Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
-                int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-
-                if (Inv_GUID_ORG.equals("")) {
-                    for (int i = 1; i <= size; i++) {
-                        getFragmentManager().popBackStack();
-                    }
-                }
-
-                //endregion Delete Layout In Fragment When Going To MainOrderFragment For Buy Not Edit
-
-
-                switch (item.getItemId()) {
-                    case R.id.homee:
-
-                        if (!Inv_GUID_ORG.equals("") && !Seen) {
-                            getFragmentManager().popBackStack();
-                        }
-                        productAdapter.notifyDataSetChanged();
-                        return true;
-
-
-                    case R.id.orders:
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
-                        bundle.putString("Inv_GUID", Inv_GUID);
-                        bundle.putBoolean("Seen", Seen);
-                        bundle.putString("Tbl_GUID", Tbl_GUID);
-                        bundle.putString("Ord_TYPE", Ord_TYPE);
-                        bundle.putString("Acc_Name", Acc_NAME);
-                        bundle.putString("Acc_GUID", Acc_GUID);
-                        if (!Inv_GUID_ORG.equals("") && company.mode  == 2)
-                            bundle.putBoolean("EDIT", true);
-                        else
-                            bundle.putBoolean("EDIT", false);
-
-                        InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
-                        inVoiceDetailFragmentMobile.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailF").commit();
-
-                        return true;
-
-
-                    case R.id.profile:
-
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_mobile, new SettingFragment(),"SettingFragment").addToBackStack("SettingF").commit();
-                        return true;
-                }
-
-
-                return false;
-            });
-
 
         }
 
@@ -534,9 +407,9 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region First Value Parameter
-        counter = 0;
+
         Inv_GUID = "";
-        Inv_GUID_ORG = "";
+
 
 
         descriptionList = new ArrayList<>();
@@ -567,9 +440,6 @@ public class MainOrderMobileFragment extends Fragment {
         Tbl_GUID = "";
 
 
-
-
-
         //endregion First Value Parameter
 
 
@@ -579,24 +449,15 @@ public class MainOrderMobileFragment extends Fragment {
         Ord_TYPE = bnd.getString("Ord_TYPE");
         Tbl_GUID = bnd.getString("Tbl_GUID");
         Inv_GUID = bnd.getString("Inv_GUID");
-        Inv_GUID_ORG = bnd.getString("Inv_GUID");
-        try {
-             namePackage = bnd.getString("namePackage");
-            Acc_NAME = bnd.getString("Acc_NAME");
-            Acc_GUID = bnd.getString("Acc_GUID");
-            Seen = bnd.getBoolean("Seen");
 
-        } catch (Exception ignore) {
-        }
-
+        Acc_NAME = bnd.getString("Acc_NAME");
+        Acc_GUID = bnd.getString("Acc_GUID");
+        EDIT = bnd.getBoolean("EDIT");//when order need EDIT
+        Seen = bnd.getBoolean("Seen");
         //endregion Get Bundle
 
 
-
-
-
-
-        if (company.mode  == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)) {
+        if (company.mode == 1 && EDIT) {
             binding.edtNameCustomer.setEnabled(false);
             binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
             binding.edtNameCustomer.setText(Acc_NAME);
@@ -604,56 +465,6 @@ public class MainOrderMobileFragment extends Fragment {
             binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
             getAccountSearch1(Acc_NAME, 1);
         }
-
-
-        //region Create Order
-
-        if (Inv_GUID.equals("")) {
-            String name;
-            try {
-                //Client
-                name = company.nameCompany.split("ir.kitgroup.")[1];
-                Inv_GUID = sharedPreferences.getString(name, "");
-                if (Inv_GUID.equals("")) {
-                    Inv_GUID = UUID.randomUUID().toString();
-                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
-                }
-            } catch (Exception ignore) {
-                Inv_GUID = UUID.randomUUID().toString();
-            }
-
-
-            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            if (invDetails.size() > 0) {
-                for (int i = 0; i < invDetails.size(); i++) {
-                    if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-                        invDetails.remove(invDetails.get(i));
-                    }
-                }
-                counter = invDetails.size();
-            }
-
-
-            if (counter == 0)
-                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
-            else
-                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-        } else {
-            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            if (invDetails.size() > 0) {
-                for (int i = 0; i < invDetails.size(); i++) {
-                    if (invDetails.get(i).INV_DET_DESCRIBTION != null && invDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-                        invDetails.remove(invDetails.get(i));
-                    }
-                }
-                counter = invDetails.size();
-            }
-            binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-            binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
-        }
-
-
-        //endregion Create Order
 
 
         //region Cast Variable Dialog Sync
@@ -671,8 +482,11 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
 
+            if (company.mode == 2)
                 getActivity().finish();
 
+            else
+                getActivity().getSupportFragmentManager().popBackStack();
 
         });
 
@@ -681,6 +495,7 @@ public class MainOrderMobileFragment extends Fragment {
             dialogSync.dismiss();
             getProductLevel1();
         });
+
 
         //endregion Cast Variable Dialog Sync
 
@@ -765,7 +580,7 @@ public class MainOrderMobileFragment extends Fragment {
         //region Action BtnRegister
         binding.btnRegisterOrder.setOnClickListener(view1 -> {
 
-            if (company.mode  == 1 && Acc_GUID.equals("")) {
+            if (Acc_GUID.equals("")) {
                 Toast.makeText(getActivity(), "مشتری را انتخاب کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -785,12 +600,7 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
-                if (!Inv_GUID_ORG.equals("") && company.mode  == 2)
-                    bundle.putBoolean("EDIT", true);
-                else if ((company.mode == 1 && !Inv_GUID_ORG.equals(Tbl_GUID)))
-                    bundle.putBoolean("EDIT", true);
-                else
-                    bundle.putBoolean("EDIT", false);
+                bundle.putBoolean("EDIT", EDIT);
 
 
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
@@ -811,7 +621,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         textUpdate = dialogUpdate.findViewById(R.id.tv_message);
         ImageView ivIcon = dialogUpdate.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imgIconDialog);
+        ivIcon.setImageResource(company.imageDialog);
 
 
         MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
@@ -824,10 +634,13 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         btnOk.setOnClickListener(v -> {
+
             dialogUpdate.dismiss();
-            Uri uri = Uri.parse(linkUpdate);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            if (!company.linkUpdate.equals("")) {
+                Uri uri = Uri.parse(company.linkUpdate);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
 
 
         });
@@ -875,7 +688,6 @@ public class MainOrderMobileFragment extends Fragment {
                 productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
             }
             //endregion Click New Item ProductLevel1
-
 
 
             productLevel1Adapter.notifyDataSetChanged();
@@ -1019,19 +831,27 @@ public class MainOrderMobileFragment extends Fragment {
         });
 
 
-
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            if (invDetails.size() > 0) {
 
-                counter = invDetails.size();
-                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
-                if (company.mode  == 1)
+
+            Fragment tagMainFragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
+
+            MainFragment tempMainFragment = null;
+            if (tagMainFragment instanceof MainFragment)
+                tempMainFragment = (MainFragment) tagMainFragment;
+
+
+            if (invDetails.size() > 0) {
+                int counter = invDetails.size();
+                tempMainFragment.setCounterOrder(counter);
+                if (company.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else
-                binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+                tempMainFragment.setClearCounterOrder();
+
 
         });
 
@@ -1105,14 +925,14 @@ public class MainOrderMobileFragment extends Fragment {
 
     private void getProductLevel1() {
 
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
             return;
         }
 
         try {
             compositeDisposable.add(
-                   api.getProductLevel1("saleinkit_api",company.userName,company.passWord)
+                    api.getProductLevel1("saleinkit_api", company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1172,14 +992,14 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private void getProductLevel2(String GuidPrdLvl1) {
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
             return;
         }
         try {
             binding.progressbar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                   api.getProductLevel2("saleinkit_api", company.userName, company.passWord, GuidPrdLvl1)
+                    api.getProductLevel2("saleinkit_api", company.userName, company.passWord, GuidPrdLvl1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1208,7 +1028,7 @@ public class MainOrderMobileFragment extends Fragment {
                                         }
 
                                         productLevel2List.clear();
-                                        CollectionUtils.filter(iDs.getProductLevel2(), i -> i.getSts());
+                                        CollectionUtils.filter(iDs.getProductLevel2(), ProductLevel2::getSts);
                                         productLevel2List.addAll(iDs.getProductLevel2());
 
 
@@ -1274,13 +1094,13 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private void getProduct1(String GuidPrdLvl2) {
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
             return;
         }
         try {
             compositeDisposable.add(
-                  api.getProduct1("saleinkit_api", company.userName, company.passWord, GuidPrdLvl2)
+                    api.getProduct1("saleinkit_api", company.userName, company.passWord, GuidPrdLvl2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1308,7 +1128,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         }
 
                                         productList.clear();
-                                        CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
 
 
                                         ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
@@ -1370,7 +1189,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                   api.getSetting1(company.userName, company.passWord)
+                    api.getSetting1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1409,8 +1228,8 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
     private void getDescription(String id) {
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
             return;
         }
 
@@ -1418,7 +1237,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                   api.getDescription1(company.userName, company.passWord, id)
+                    api.getDescription1(company.userName, company.passWord, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1468,8 +1287,8 @@ public class MainOrderMobileFragment extends Fragment {
 
 
     private void showError(String error) {
-        imageLogoCopy = imgIconDialog;
-        ivIconSync.setImageResource(imageLogoCopy);
+
+        ivIconSync.setImageResource(company.imageDialog);
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");
@@ -1480,8 +1299,8 @@ public class MainOrderMobileFragment extends Fragment {
     }
 
 
-    private void ShowErrorConnection(String error) {
-        textMessageDialog.setText(error);
+    private void ShowErrorConnection() {
+        textMessageDialog.setText("خطا در اتصال به اینترنت");
         ivIconSync.setImageResource(R.drawable.ic_wifi);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");
@@ -1489,18 +1308,6 @@ public class MainOrderMobileFragment extends Fragment {
         dialogSync.show();
         customProgress.hideProgress();
 
-    }
-
-
-    public void setHomeBottomBar() {
-        if (Seen)
-            getFragmentManager().popBackStack();
-        binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
-    }
-
-    public void setHomeBottomBarAndClearBadge() {
-        binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
-        binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
     }
 
 
@@ -1552,8 +1359,8 @@ public class MainOrderMobileFragment extends Fragment {
 
     private void addAccount(List<Account> accounts) {
 
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
             return;
         }
         try {
@@ -1567,7 +1374,7 @@ public class MainOrderMobileFragment extends Fragment {
             }.getType();
 
             compositeDisposable.add(
-                   api.addAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1600,16 +1407,15 @@ public class MainOrderMobileFragment extends Fragment {
                                 }
 
                             }, throwable -> {
-                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری", Toast.LENGTH_SHORT).show();
                                 customProgress.hideProgress();
 
                             })
             );
         } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در ثبت مشتری", Toast.LENGTH_SHORT).show();
             customProgress.hideProgress();
         }
-
 
 
     }
@@ -1617,7 +1423,7 @@ public class MainOrderMobileFragment extends Fragment {
     private void getAccountSearch1(String word, int type) {
         try {
             compositeDisposable.add(
-                  api.getAccountSearch1("saleinkit_api", company.userName, company.passWord, word)
+                    api.getAccountSearch1("saleinkit_api", company.userName, company.passWord, word)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1636,14 +1442,7 @@ public class MainOrderMobileFragment extends Fragment {
                                 }
 
                                 assert iDs != null;
-                                if (iDs.getAccountList() == null) {
-                                    Type typeIDs0 = new TypeToken<ModelLog>() {
-                                    }.getType();
-                                    ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
-
-
-                                } else {
-
+                                if (iDs.getAccountList() != null) {
                                     if (type == 0) {
                                         accList.clear();
                                         accList.addAll(iDs.getAccountList());
@@ -1656,8 +1455,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         if (accList.size() > 0)
                                             Account.saveInTx(accList.get(0));
                                     }
-
-
                                 }
                                 customProgress.hideProgress();
 
@@ -1666,7 +1463,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                             })
             );
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -1682,7 +1479,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                   api.getSetting1(company.userName,company.passWord)
+                    api.getSetting1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1749,7 +1546,7 @@ public class MainOrderMobileFragment extends Fragment {
     private void getSearchProduct(String s) {
         try {
             compositeDisposable.add(
-                  api.getSearchProduct("saleinkit_api", company.userName, company.passWord, s)
+                    api.getSearchProduct("saleinkit_api", company.userName, company.passWord, s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1773,7 +1570,6 @@ public class MainOrderMobileFragment extends Fragment {
                                         if (!emptySearch) {
                                             productList.clear();
 
-                                            CollectionUtils.filter(iDs.getProductList(), r -> !r.getN().contains("توزیع") && r.getPrice() > 0 && r.getSts());
                                             if (iDs.getProductList().size() > 0)
                                                 for (int i = 0; i < 18; i++) {
                                                     if (iDs.getProductList().size() > i)
@@ -1788,12 +1584,12 @@ public class MainOrderMobileFragment extends Fragment {
                                     , throwable -> {
                                     })
             );
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
     }
 
-    private boolean isNetworkAvailable(Activity activity) {
+    private Boolean networkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

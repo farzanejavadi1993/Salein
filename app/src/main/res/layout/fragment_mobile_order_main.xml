@@ -256,33 +256,7 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <FrameLayout
 
-            android:id="@+id/frame_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_navigation_view_linear" />
-
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation_view_linear"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:backgroundTint="@color/very_light"
-            android:elevation="8dp"
-            android:layoutDirection="rtl"
-            android:orientation="horizontal"
-            android:textDirection="rtl"
-            app:itemIconSize="20dp"
-            app:itemIconTint="@drawable/navigation_view_colored"
-            app:itemTextColor="@drawable/navigation_view_colored"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu"
-            tools:targetApi="lollipop">
-
-        </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
     </RelativeLayout>

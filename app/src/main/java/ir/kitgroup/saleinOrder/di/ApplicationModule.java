@@ -106,8 +106,9 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Company getUser(@ApplicationContext Context context) {
-        Boolean changeConfig = false;
-        String name = "";
+
+        String nameCompany = "";
+        String linkUpdate = "";
         String namePackage = "";
         String title = "";
         String description = "";
@@ -128,9 +129,9 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_icon;
                     imageDialog = R.drawable.top_png;
-                    name = "ir.kitgroup.saleintop";
+                    nameCompany="تاپ کباب";
                     namePackage = "ir.kitgroup.saleintop";
-                    title = "تاپ کباب";
+                    title =  "رستوران تاپ کباب";
                     messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                     description = "عرضه کننده بهترین غذاها";
                     ipLocal = "188.158.121.253:9999";
@@ -142,10 +143,11 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_icon;
                     imageDialog = R.drawable.meat_png;
-                    name = "ir.kitgroup.saleinmeat";
+                    nameCompany="گوشت دنیوی";
+                    nameCompany = "ir.kitgroup.saleinmeat";
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                     namePackage = "ir.kitgroup.saleinmeat";
-                    title = "گوشت دنیوی";
+                    title = " هایپر گوشت دنیوی";
                     description = "عرضه کننده انواع گوشت";
                     ipLocal = "109.125.133.149:9999";
                     userName = "admin";
@@ -156,7 +158,8 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleinnoon":
                     imageLogo = R.drawable.noon;
                     imageDialog = R.drawable.noon;
-                    name = "ir.kitgroup.saleinnoon";
+                    nameCompany="کافه نون";
+                    nameCompany = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.saleinnoon";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";
@@ -167,7 +170,7 @@ public class ApplicationModule {
 
                     imageLogo = R.drawable.saleinorder_icon;
                     imageDialog = R.drawable.saleinorder_png;
-                    name = "ir.kitgroup.saleiOrder";
+                    nameCompany = "سالین سفارش گیر";
                     namePackage = "ir.kitgroup.saleinOrder";
                     title = "SaleIn Order";
                     description = "اپلیکیشن سفارش گیر مشتریان سالین";
@@ -192,12 +195,13 @@ public class ApplicationModule {
         company.imageDialog = imageDialog;
         company.title = title;
         company.Description = description;
-        company.nameCompany = name;
+        company.nameCompany = nameCompany;
         company.mode = mode;
         company.messageWelcome = messageWelcome;
         company.namePackage = namePackage;
         company.userName = userName;
         company.passWord = passWord;
+        company.linkUpdate = linkUpdate;
         company.baseUrl = "http://" + ipLocal + "/api/REST/";
 
         return company;
@@ -205,12 +209,7 @@ public class ApplicationModule {
     }
 
 
-    @Provides
-    @Singleton
-    Boolean getChangeConfig(@ApplicationContext Context context) {
 
-        return getUser(context).changeConfig;
-    }
 
 
     @Provides
