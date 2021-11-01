@@ -802,7 +802,7 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList);
+        productAdapter = new ProductAdapter1(getActivity(), productList,company,api);
         productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);

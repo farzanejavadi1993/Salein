@@ -17,10 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-
-import javax.inject.Inject;
-
 import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.ProductLevel2;
 
 public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adapter.viewHolder> {
@@ -51,18 +49,13 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
 
-     /*   if (LauncherActivity.screenInches >= 7){
 
-            return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_tablet, parent, false));
-
-        }else {*/
-
-      /*  if (ScreenSize >=7)
+       if (Util.screenSize >=7)
             fontSize=13;
         else
-            fontSize=11;*/
+            fontSize=11;
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
-       // }
+
 
 
     }

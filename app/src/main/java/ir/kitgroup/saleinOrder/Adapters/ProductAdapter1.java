@@ -29,7 +29,6 @@ import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
 
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +45,7 @@ import java.util.UUID;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
@@ -54,6 +54,7 @@ import ir.kitgroup.saleinOrder.DataBase.User;
 
 import ir.kitgroup.saleinOrder.Fragments.ShowDetailFragment;
 
+import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelLog;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.models.Product;
@@ -61,12 +62,9 @@ import ir.kitgroup.saleinOrder.models.Product;
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
 
- /*   @Inject
-    Double ScreenSize;
-
-    @Inject
-    Company company;*/
     private final Activity context;
+
+    private final Company company;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -74,7 +72,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private final List<Product> productsList;
 
     private String maxSale;
-    private Boolean Seen=false;
+
+    private Boolean Seen = false;
 
     private String Inv_GUID;
     private String Tbl_GUID;
@@ -83,9 +82,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private int fontSize = 0;
     private int fontLargeSize = 0;
-    private  Boolean ShowUnit=false;
+    private final Boolean ShowUnit = false;
 
-    private int placeHolderImage=R.drawable.saleinorder_icon;
+    private API api;
+
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -116,36 +116,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Activity context, List<Product> productsList) {
+    public ProductAdapter1(Activity context, List<Product> productsList, Company company,API api) {
         this.context = context;
 
         this.productsList = productsList;
+        this.company = company;
+        this.api=api;
 
         df = new DecimalFormat();
-
-//        try {
-//            switch (company.nameCompany) {
-//                case "ir.kitgroup.salein":
-//                    placeHolderImage = R.drawable.salein;
-//                    break;
-//
-//                case "ir.kitgroup.saleintop":
-//                    placeHolderImage = R.drawable.top_icon;
-//                    break;
-//
-//
-//                case "ir.kitgroup.saleinmeat":
-//                    placeHolderImage = R.drawable.meat_icon;
-//                    ShowUnit=true;
-//                    break;
-//
-//
-//                case "ir.kitgroup.saleinnoon":
-//
-//                    placeHolderImage = R.drawable.noon;
-//                    break;
-//            }
-//        }catch (Exception ignore){}
 
 
     }
@@ -161,6 +139,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public void setInv_GUID(String inv_guid) {
         this.Inv_GUID = inv_guid;
     }
+
     public void setTbl_GUID(String Tbl_GUID) {
         this.Tbl_GUID = Tbl_GUID;
     }
@@ -196,15 +175,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Util.VIEW_TYPE_ITEM) {
-          /*  if (ScreenSize  >= 7) {
+            if (Util.screenSize >= 7) {
                 fontSize = 13;
                 fontLargeSize = 14;
 
             } else {
                 fontSize = 11;
                 fontLargeSize = 12;
-*/
-           // }
+
+            }
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
                     false));
         } else if (viewType == Util.VIEW_TYPE_LOADING) {
@@ -226,13 +205,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             String ip = Select.from(User.class).first().ipLocal;
 
-                Picasso.get()
-                        .load("http://" + ip + "/GetImage?productId=" + productsList
-                                .get(holder.getAdapterPosition()).getI())
-                        .error(placeHolderImage)
-                        .placeholder(R.drawable.loading)
-                        .into(holder.productImage);
-
+            Picasso.get()
+                    .load("http://" + ip + "/GetImage?productId=" + productsList
+                            .get(holder.getAdapterPosition()).getI())
+                    .error(company.imageLogo)
+                    .placeholder(R.drawable.loading)
+                    .into(holder.productImage);
 
 
             holder.productOldPrice.setTextSize(13);
@@ -246,7 +224,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
-            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0 ) {
+            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
                 if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
@@ -260,8 +238,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
-            }
-            else {
+            } else {
                 if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
 
                     holder.productDiscountPercent.setVisibility(View.GONE);
@@ -288,15 +265,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
 
-
-            double amount ;
-            String description ;
+            double amount;
+            String description;
 
             if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null) {
                 amount = invoiceDetail.INV_DET_QUANTITY;
 
-                if (amount>0 && Seen){
-                    if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0 ) {
+                if (amount > 0 && Seen) {
+                    if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
                         if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
@@ -306,12 +282,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
                             holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()));
                             holder.Line.setText("------------");
-                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (invoiceDetail.INV_DET_PERCENT_DISCOUNT/ 100);
+                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
                             double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
                         }
-                    }
-                    else {
+                    } else {
                         if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
 
                             holder.productDiscountPercent.setVisibility(View.GONE);
@@ -322,8 +297,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         }
                     }
                 }
-            }
-            else
+            } else
                 amount = 0.0;
 
 
@@ -333,25 +307,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 description = "";
 
 
-
             holder.edtDesc.setText(description);
             productsList.get(position).setAmount(amount);
 
             holder.error.setText("");
-            if (amount> 0) {
+            if (amount > 0) {
                 holder.ivMinus.setVisibility(View.VISIBLE);
                 holder.ProductAmountTxt.setVisibility(View.VISIBLE);
                 if (ShowUnit)
-                holder.unit.setVisibility(View.VISIBLE);
-            }
-            else {
+                    holder.unit.setVisibility(View.VISIBLE);
+            } else {
                 holder.ivMinus.setVisibility(View.GONE);
                 holder.ProductAmountTxt.setVisibility(View.GONE);
                 if (ShowUnit)
-                holder.unit.setVisibility(View.GONE);
+                    holder.unit.setVisibility(View.GONE);
             }
-
-
 
 
             holder.ivMax.setOnClickListener(view -> doAction(
@@ -370,8 +340,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     "",
                     1
             ));
-
-
 
 
             holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(position).getAmount(),
@@ -444,7 +412,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
             holder.ProductAmountTxt.setText(df.format(amount));
-
 
 
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
@@ -521,9 +488,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-
-
-    private void getMaxSales(double amount1,int position,TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -533,7 +498,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         try {
             compositeDisposable.add(
-                    App.api.getMaxSales(userName, pass, Prd_GUID)
+                   api.getMaxSales(userName, pass, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -567,15 +532,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                             CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
 
 
-
-
                                             if (remain <= 0) {
                                                 productsList.get(position).setAmount(0.0);
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText("0");
                                                     if (ShowUnit)
-                                                    unit.setVisibility(View.GONE);
+                                                        unit.setVisibility(View.GONE);
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                     ivMinus.setVisibility(View.GONE);
                                                     ProductAmountTxt.setVisibility(View.GONE);
@@ -594,7 +557,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                             }
 
 
-
                                             double amount = 0;
                                             if (MinOrPlus == 1)
                                                 amount = amount1 + finalAPlus;
@@ -602,7 +564,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                             else if (MinOrPlus == 2) {
                                                 if (amount1 >= finalAPlus)
-                                                    amount =amount1- finalAPlus;
+                                                    amount = amount1 - finalAPlus;
                                                 else
                                                     return;
 
@@ -615,7 +577,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
                                                         if (ShowUnit)
-                                                        unit.setVisibility(View.GONE);
+                                                            unit.setVisibility(View.GONE);
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
                                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -628,7 +590,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                                 }
                                             }
-
 
 
                                             productsList.get(position).setAmount(amount);
@@ -645,11 +606,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 productsList.get(position).setAmount(remain);
 
 
-
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(remain));
                                                 if (ShowUnit)
-                                                unit.setVisibility(View.VISIBLE);
+                                                    unit.setVisibility(View.VISIBLE);
 
 
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
@@ -684,7 +644,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
                                                         if (ShowUnit)
-                                                        unit.setVisibility(View.GONE);
+                                                            unit.setVisibility(View.GONE);
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
                                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -705,7 +665,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText(df.format(amount));
                                                     if (ShowUnit)
-                                                    unit.setVisibility(View.VISIBLE);
+                                                        unit.setVisibility(View.VISIBLE);
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                 }
 
@@ -717,15 +677,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-//                                                if (company.mode ==1)
-//                                                    invoicedetail.TBL = Tbl_GUID;
+                                               if (company.mode ==1)
+                                                   invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
 
 
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(amount));
                                                 if (ShowUnit)
-                                                unit.setVisibility(View.VISIBLE);
+                                                    unit.setVisibility(View.VISIBLE);
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
 
                                             }
@@ -736,36 +696,31 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                             clickItem.onClick();
 
 
-
                                         }
 
                                     }
                                     , throwable -> {
-                                        Toast.makeText(context, "خطا در دریافت اطلاعات مانده کالا" , Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "خطا در دریافت اطلاعات مانده کالا", Toast.LENGTH_SHORT).show();
                                         progressBar.setVisibility(View.GONE);
 
 
                                     })
             );
         } catch (Exception e) {
-            Toast.makeText(context, "خطا در دریافت اطلاعات مانده کالا" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "خطا در دریافت اطلاعات مانده کالا", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
         }
 
 
-
-
-
-
     }
 
-    private void doAction(double amount1,int position,TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         error.setText("");
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(amount1,position,error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)
@@ -773,106 +728,105 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             double amount = 0;
-                if (MinOrPlus == 1) {
+            if (MinOrPlus == 1) {
 
-                    amount = amount1+ aPlus;
-                } else if (MinOrPlus == 2) {
-                    if (amount1>= aPlus)
-                        amount = amount1 - aPlus;
+                amount = amount1 + aPlus;
+            } else if (MinOrPlus == 2) {
+                if (amount1 >= aPlus)
+                    amount = amount1 - aPlus;
 
-                    else
-                        return;
+                else
+                    return;
 
-                } else {
-                    try {
-                        amount = Float.parseFloat(s);
-                        if (amount % aPlus != 0) {
-                            Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + aPlus + " باشد.", Toast.LENGTH_SHORT).show();
-                            amount = 0;
-                            ProductAmountTxt.removeTextChangedListener(textWatcher);
-                            ProductAmountTxt.setText("0");
-                            if (ShowUnit)
+            } else {
+                try {
+                    amount = Float.parseFloat(s);
+                    if (amount % aPlus != 0) {
+                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + aPlus + " باشد.", Toast.LENGTH_SHORT).show();
+                        amount = 0;
+                        ProductAmountTxt.removeTextChangedListener(textWatcher);
+                        ProductAmountTxt.setText("0");
+                        if (ShowUnit)
                             unit.setVisibility(View.GONE);
-                            ProductAmountTxt.addTextChangedListener(textWatcher);
-                            ivMinus.setVisibility(View.GONE);
-                            ProductAmountTxt.setVisibility(View.GONE);
-                        }
-                    } catch (Exception ignored) {
-
+                        ProductAmountTxt.addTextChangedListener(textWatcher);
+                        ivMinus.setVisibility(View.GONE);
+                        ProductAmountTxt.setVisibility(View.GONE);
                     }
+                } catch (Exception ignored) {
+
                 }
+            }
 
-                productsList.get(position).setAmount(amount);
-                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-                ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
-                CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+            productsList.get(position).setAmount(amount);
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+            ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
+            CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
 
-                //edit
-                if (result.size() > 0) {
+            //edit
+            if (result.size() > 0) {
 
-                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
 
-                    if (amount == 0) {
+                if (amount == 0) {
 
-                        if (invoiceDetail != null)
+                    if (invoiceDetail != null)
 
-                            invoiceDetail.delete();
-
-                        if (MinOrPlus != 3) {
-
-                            ProductAmountTxt.removeTextChangedListener(textWatcher);
-                            ProductAmountTxt.setText("0");
-                            if (ShowUnit)
-                            unit.setVisibility(View.GONE);
-                            ProductAmountTxt.addTextChangedListener(textWatcher);
-                            ivMinus.setVisibility(View.GONE);
-                            ProductAmountTxt.setVisibility(View.GONE);
-                        }
-
-                        clickItem.onClick();
-                        return;
-                    }
-
-                    if (invoiceDetail != null) {
-
-                        invoiceDetail.INV_DET_QUANTITY = amount;
-                        invoiceDetail.update();
-                    }
+                        invoiceDetail.delete();
 
                     if (MinOrPlus != 3) {
 
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
-                        ProductAmountTxt.setText(df.format(amount));
+                        ProductAmountTxt.setText("0");
                         if (ShowUnit)
-                        unit.setVisibility(View.VISIBLE);
+                            unit.setVisibility(View.GONE);
                         ProductAmountTxt.addTextChangedListener(textWatcher);
+                        ivMinus.setVisibility(View.GONE);
+                        ProductAmountTxt.setVisibility(View.GONE);
                     }
+
+                    clickItem.onClick();
+                    return;
                 }
 
-                //Create
-                else {
+                if (invoiceDetail != null) {
 
-                    InvoiceDetail invoicedetail = new InvoiceDetail();
-                    invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                    invoicedetail.INV_UID = Inv_GUID;
-                    invoicedetail.INV_DET_QUANTITY = amount;
-                    invoicedetail.PRD_UID = Prd_GUID;
+                    invoiceDetail.INV_DET_QUANTITY = amount;
+                    invoiceDetail.update();
+                }
 
-                    invoicedetail.save();
+                if (MinOrPlus != 3) {
+
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                     ProductAmountTxt.setText(df.format(amount));
                     if (ShowUnit)
-                    unit.setVisibility(View.VISIBLE);
+                        unit.setVisibility(View.VISIBLE);
                     ProductAmountTxt.addTextChangedListener(textWatcher);
-                    clickItem.onClick();
                 }
+            }
 
-                ivMinus.setVisibility(View.VISIBLE);
-                ProductAmountTxt.setVisibility(View.VISIBLE);
+            //Create
+            else {
+
+                InvoiceDetail invoicedetail = new InvoiceDetail();
+                invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
+                invoicedetail.INV_UID = Inv_GUID;
+                invoicedetail.INV_DET_QUANTITY = amount;
+                invoicedetail.PRD_UID = Prd_GUID;
+
+                invoicedetail.save();
+                ProductAmountTxt.removeTextChangedListener(textWatcher);
+                ProductAmountTxt.setText(df.format(amount));
+                if (ShowUnit)
+                    unit.setVisibility(View.VISIBLE);
+                ProductAmountTxt.addTextChangedListener(textWatcher);
+                clickItem.onClick();
+            }
+
+            ivMinus.setVisibility(View.VISIBLE);
+            ProductAmountTxt.setVisibility(View.VISIBLE);
 
         }
     }
-
 
 
 }
