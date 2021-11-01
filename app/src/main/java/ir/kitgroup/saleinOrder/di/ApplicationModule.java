@@ -57,19 +57,7 @@ public class ApplicationModule {
         return context;
     }
 
-    @Provides
-    @Singleton
-    Double provideSize() {
 
-//        DisplayMetrics dm = new DisplayMetrics();
-//        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        double width = dm.widthPixels;
-//        double height = dm.heightPixels;
-//        double x = Math.pow(width / dm.xdpi, 2);
-//        double y = Math.pow(height / dm.ydpi, 2);
-//        return Math.sqrt(x + y);
-        return 6.0;
-    }
 
     @Provides
     @Singleton
@@ -140,6 +128,11 @@ public class ApplicationModule {
                     title = "SaleIn Order";
                     description = "اپلیکیشن سفارش گیر مشتریان سالین";
                     mode = 1;
+                    if (Select.from(User.class).list().size()>0){
+                        userName = Select.from(User.class).first().userName;
+                        passWord =  Select.from(User.class).first().passWord;
+                    }
+
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {

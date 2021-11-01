@@ -20,26 +20,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.FieldNamingPolicy;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
+
 
 import java.util.Objects;
 
-import java.util.concurrent.TimeUnit;
 
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.classes.Util;
-import ir.kitgroup.saleinOrder.classes.App;
+
 
 
 import ir.kitgroup.saleinOrder.DataBase.User;
@@ -52,12 +55,22 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+@AndroidEntryPoint
 public class LoginOrganizationFragment extends Fragment {
 
 
     //region Parameter
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @Inject
+    OkHttpClient okHttpClient;
+
+    @Inject
+    Gson gson;
+
     private FragmentOrganizationLoginBinding binding;
+
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     //endregion Parameter
 
@@ -67,36 +80,31 @@ public class LoginOrganizationFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         binding = FragmentOrganizationLoginBinding.inflate(getLayoutInflater());
         return binding.getRoot();
 
     }
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint({"CommitPrefEdits", "SetTextI18n"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
 
         binding.btnLogin.setOnClickListener(v -> {
 
 
             if (Objects.requireNonNull(binding.edtUser.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edtPassword.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edtIp.getText()).toString().isEmpty()) {
-
-                Toast.makeText(getActivity(), "اطلاعات را به صورت کامل وارد کنید", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "فیلدها را به صورت کامل وارد کنید", Toast.LENGTH_SHORT).show();
                 return;
-
             }
 
+
             binding.btnLogin.setEnabled(false);
-            Login(
-                    binding.edtUser.getText().toString(),
+            Login(binding.edtUser.getText().toString(),
                     binding.edtPassword.getText().toString(),
                     binding.edtIp.getText().toString(),
-                    Objects.requireNonNull(binding.edtSaleCode.getText()).toString()
-            );
+                    Objects.requireNonNull(binding.edtSaleCode.getText()).toString());
 
         });
 
@@ -116,38 +124,22 @@ public class LoginOrganizationFragment extends Fragment {
     private void Login(String userName, String passWord, String ipOrganization, String saleCode) {
 
         String baseUrl = "http://" + Util.toEnglishNumber(ipOrganization) + "/api/REST/";
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
-
-        Gson gson = new GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .serializeNulls()
-                .setDateFormat(DateFormat.LONG)
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .setPrettyPrinting()
-                .setVersion(1.0)
-                .create();
-
-
         try {
-            App.retrofit = new Retrofit.Builder()
+            Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(client)
+                    .client(okHttpClient)
                     .build();
 
-            App.api = App.retrofit.create(API.class);
+            API api = retrofit.create(API.class);
 
 
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    App.api.Login(userName, passWord)
+                   api.Login(userName, passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -155,39 +147,31 @@ public class LoginOrganizationFragment extends Fragment {
                             .subscribe(jsonElement -> {
 
                                 binding.btnLogin.setEnabled(true);
-                                assert jsonElement != null;
-                                if (jsonElement.isEmpty()) {
+                                if (jsonElement == null || !jsonElement.isEmpty()) {
+
+                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
+                                } else {
 
                                     if (User.count(User.class) > 0)
                                         User.deleteAll(User.class);
 
                                     User user = new User();
-                                    user.userName = userName;
-                                    user.passWord = passWord;
+
                                     user.ipLocal = ipOrganization;
-                                    user.ipStatic = "";
-                                    user.numberPos = saleCode;
-                                    user.lat = 36.318805483696735;
-                                    user.lng = 59.555196457006296;
-                                    user.CheckUser = true;
+                                    user.numberPos=saleCode;
+                                    user.userName=userName;
+                                    user.passWord=passWord;
                                     user.save();
 
                                     binding.progressBar.setVisibility(View.GONE);
                                     getActivity().finish();
                                     startActivity(getActivity().getIntent());
-                                   // assert getFragmentManager() != null;
-                                    //getFragmentManager().popBackStack();
-                                   // requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
 
-                                } else {
-
-                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
                                 }
 
 
                             }, throwable -> {
-
                                 binding.btnLogin.setEnabled(true);
                                 Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
                                 binding.progressBar.setVisibility(View.GONE);

@@ -3,6 +3,7 @@ package ir.kitgroup.saleinOrder.classes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -19,8 +20,29 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+
+    public static double width = 0.0;
+    public static double height = 0.0;
+    public static double screenSize = 0.0;
+
+    public static void ScreenSize(Activity activity) {
+        if (width == 0.0) {
+            DisplayMetrics dm = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+            width = dm.widthPixels;
+            height = dm.heightPixels;
+            double x = Math.pow(width / dm.xdpi, 2);
+            double y = Math.pow(height / dm.ydpi, 2);
+            screenSize=Math.sqrt(x + y);
+        }
+
+
+    }
+
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_LOADING = 1;
+
     public static boolean isValid(String s) {
 
         Pattern p = Pattern.compile("(0/9)?[0-9]{11}");
@@ -94,8 +116,6 @@ public class Util {
         cal.add(Calendar.DATE, days);
         return cal.getTime();
     }
-
-
 
 
     public static String Base_Url = "";

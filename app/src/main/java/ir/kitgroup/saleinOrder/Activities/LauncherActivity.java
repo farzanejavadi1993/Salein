@@ -40,6 +40,7 @@ import ir.kitgroup.saleinOrder.Fragments.SplashScreenFragment;
 
 import ir.kitgroup.saleinOrder.Fragments.MainOrderMobileFragment;
 import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.ActivityLauncherBinding;
 import ir.kitgroup.saleinOrder.models.Company;
 
@@ -76,6 +77,7 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         refreshApplication =false;
+        Util.ScreenSize(this);
 
         //region Set Layout to LauncherActivity class
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
@@ -92,7 +94,7 @@ public class LauncherActivity extends AppCompatActivity {
         }else {
             //When User Is Login
             FragmentTransaction replaceFragment = null;
-            if (Select.from(User.class).list().size()>0 && Select.from(User.class).list().get(0).CheckUser) {
+            if (Select.from(User.class).list().size()>0) {
                 replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
             }
 

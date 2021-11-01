@@ -35,7 +35,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="199" />
+            android:value="200" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />

@@ -34,36 +34,40 @@ import ir.kitgroup.saleinOrder.R;
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> {
 
     private final List<Tables> tableList;
+
     private final Activity context;
 
-    @Inject
-    Double ScreenSize;
+    private int ScreenSize=0;
+
+
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
-
     public interface ClickItem {
         void onRowClick(String Name, boolean Reserve, String Tbl_Guid, String Inv_Guid);
     }
-
     private ClickItem clickItem;
 
 
-    private ShowDialog showDialog;
 
+
+
+    private ShowDialog showDialog;
     public interface ShowDialog {
         void onShow(String Inv_GUID, int position, boolean type);
     }
-
     public void OnclickShowDialog(ShowDialog showDialog) {
         this.showDialog = showDialog;
     }
 
 
+
+
     public TableAdapter(Activity context, List<Tables> tableList) {
         this.context = context;
         this.tableList = tableList;
+
     }
 
     @Override
@@ -71,6 +75,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_new_table, parent, false);
         return new viewHolder(view);
     }
+
 
     @SuppressLint("SetTextI18n")
     @Override
