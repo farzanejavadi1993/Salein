@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinOrder.Activities.Classes;
+package ir.kitgroup.saleinOrder.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;

@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:supportsRtl"
         tools:targetApi="m">
-        <activity android:name="ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity"
+        <activity android:name="ir.kitgroup.saleinOrder.Activities.LauncherActivity"
             android:screenOrientation="portrait"
 
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">

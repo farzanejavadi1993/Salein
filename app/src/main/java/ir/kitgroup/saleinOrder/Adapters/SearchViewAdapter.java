@@ -15,7 +15,7 @@ import com.cedarstudios.cedarmapssdk.model.geocoder.forward.ForwardGeocode;
 
 import java.util.List;
 
-import ir.kitgroup.saleinOrder.Activities.Classes.LauncherActivity;
+import ir.kitgroup.saleinOrder.Activities.LauncherActivity;
 import ir.kitgroup.saleinOrder.Fragments.MapFragment;
 
 import ir.kitgroup.saleinOrder.R;
