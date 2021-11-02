@@ -173,10 +173,10 @@ public class PaymentMobileFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
+
     private CustomProgress customProgress;
 
-    private String userName;
-    private String passWord;
+
 
     private String numberPos = "";
 
@@ -233,6 +233,8 @@ public class PaymentMobileFragment extends Fragment {
 
     private Boolean OnceSee = false;
     private LinearLayout bottomRow;
+
+    private  String Transport_GUID;
 
 
     //end region Parameter
@@ -292,13 +294,11 @@ public class PaymentMobileFragment extends Fragment {
 
         try {
 
+            Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
+
+          OrdTList = new ArrayList<>();
 
 
-
-        OrdTList = new ArrayList<>();
-
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
        // lat = Select.from(User.class).first().lat;
        // lng = Select.from(User.class).first().lng;
         numberPos = Select.from(User.class).first().numberPos;
@@ -525,12 +525,12 @@ public class PaymentMobileFragment extends Fragment {
         acc = Select.from(Account.class).first();
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
-            String address = "";
-            try {
-                latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+       if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
+           String address = "";
+           try {
+               latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
+               longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
+               address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
 
             } catch (Exception e) {
                 address = acc.ADR + "( نامعتبر )";
@@ -539,8 +539,7 @@ public class PaymentMobileFragment extends Fragment {
             }
             radioAddress1.setText(address);
 
-        } else
-            radioAddress1.setText("ناموجود");
+        }
 
 
         if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
@@ -557,8 +556,8 @@ public class PaymentMobileFragment extends Fragment {
             }
             radioAddress2.setText(address);
 
-        } else
-            radioAddress2.setText("ناموجود");
+        }
+
 
 
         if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
@@ -949,7 +948,7 @@ public class PaymentMobileFragment extends Fragment {
             double sumPurePrice = 0;
 
 
-            InvoiceDetail invoiceDetailTransport = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND INVDETDESCRIBTION ='" + "توزیع" + "'").first();
+            InvoiceDetail invoiceDetailTransport = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + Transport_GUID + "'").first();
 
 
             if (invoiceDetailTransport == null) {
@@ -970,7 +969,7 @@ public class PaymentMobileFragment extends Fragment {
                     return;
                 }
 
-                invoiceDetailTransport.INV_DET_DESCRIBTION = "توزیع";
+
 
 
                 if (sumTransport!=0)
@@ -991,7 +990,7 @@ public class PaymentMobileFragment extends Fragment {
             }
 
 
-            CollectionUtils.filter(invDetails, i -> (i.INV_DET_DESCRIBTION != null && !i.INV_DET_DESCRIBTION.equals("توزیع") || i.INV_DET_DESCRIBTION == null));
+            CollectionUtils.filter(invDetails, i ->  !i.PRD_UID.equals(Transport_GUID));
             for (int i = 0; i < invDetails.size(); i++) {
 
                 ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
@@ -1215,7 +1214,7 @@ public class PaymentMobileFragment extends Fragment {
             }.getType();
 
 
-            Call<String> call = api.PostData(userName, passWord,
+            Call<String> call = api.PostData(company.userName, company.passWord,
                     gson.toJson(jsonObject, typeJsonObject),
                     "",
                     numberPos);
@@ -1557,7 +1556,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    api.getSetting1(userName, passWord)
+                    api.getSetting1(company.userName,company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1676,7 +1675,7 @@ public class PaymentMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getOrderType1(userName, passWord)
+                    api.getOrderType1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1746,11 +1745,11 @@ public class PaymentMobileFragment extends Fragment {
                                         String name;
                                         try {
                                             if (!OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
-                                                getInquiryAccount1(userName, passWord, acc.M);
+                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
                                             else if (OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                            getInquiryAccount1(userName, passWord, acc.M);
+                                            getInquiryAccount1(company.userName, company.passWord, acc.M);
                                         }
 
 
@@ -1782,7 +1781,7 @@ public class PaymentMobileFragment extends Fragment {
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
-            compositeDisposable.add(api.getTable1(userName, passWord)
+            compositeDisposable.add(api.getTable1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

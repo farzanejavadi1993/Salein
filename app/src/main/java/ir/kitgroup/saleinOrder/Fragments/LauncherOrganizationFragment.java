@@ -308,6 +308,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Ord_TYPE", "");
                 bundle.putString("Tbl_GUID", T_GUID);
+                bundle.putString("Tbl_NAME", "میز " + Name);
                 bundle.putBoolean("EDIT", true);
 
 

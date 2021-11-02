@@ -1496,6 +1496,7 @@ public class MainOrderMobileFragment extends Fragment {
                                         sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
 
                                         Acc_GUID=settingsList.get(0).DEFAULT_CUSTOMER;
+                                        if (!EDIT)
                                         binding.edtNameCustomer.setHint("مشتری پیش فرض");
 
                                         if (Update.equals("3") && !AppVersion.equals(NewVersion)) {

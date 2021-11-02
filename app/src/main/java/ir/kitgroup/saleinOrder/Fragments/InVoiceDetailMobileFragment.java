@@ -76,7 +76,6 @@ import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
-
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.Description;
 import ir.kitgroup.saleinOrder.models.ModelDesc;
@@ -91,6 +90,7 @@ import ir.kitgroup.saleinOrder.models.Product;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 @AndroidEntryPoint
 
 public class InVoiceDetailMobileFragment extends Fragment {
@@ -106,20 +106,19 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
-    
+
     private FragmentInvoiceDetailMobileBinding binding;
     private CustomProgress customProgress;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
     private String type;
-    private Boolean Seen =false;
+    private Boolean Seen = false;
     private String Inv_GUID;
     private String Tbl_GUID = "";
     private String Tbl_NAME = "";
     private String Ord_TYPE;
     private boolean EDIT = false;
-
 
 
     private double sumPrice;
@@ -137,12 +136,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-    private  ImageView ivIconSync;
+    private ImageView ivIconSync;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
-
-
 
 
     //region Variable Dialog
@@ -164,7 +161,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private Boolean invFinal;
     private double sumTransport = 0.0;
     private String maxSales = "0";
-    private String Transport_GUID ;
+    private String Transport_GUID;
     private List<InvoiceDetail> invDetails = new ArrayList<>();
 
 
@@ -189,7 +186,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         customProgress = CustomProgress.getInstance();
 
 
@@ -199,18 +195,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
 
-
-
         //region Configuration Text Size
         int fontSize;
         int fontLargeSize;
-       if (Util.screenSize  >= 7) {
-           fontSize = 13;
-           fontLargeSize = 14;
-       } else {
-           fontSize = 11;
-           fontLargeSize = 12;
-       }
+        if (Util.screenSize >= 7) {
+            fontSize = 13;
+            fontLargeSize = 14;
+        } else {
+            fontSize = 11;
+            fontLargeSize = 12;
+        }
 
 
         binding.tvNameCustomer.setTextSize(fontSize);
@@ -236,8 +230,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         //region Cast Dialog Delete
-
-
 
 
         dialogDelete = new Dialog(getActivity());
@@ -275,15 +267,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Tbl_GUID = bundle.getString("Tbl_GUID");
         Ord_TYPE = bundle.getString("Ord_TYPE");
         Tbl_NAME = bundle.getString("Tbl_NAME");
-        try {
-            Acc_NAME = bundle.getString("Acc_NAME");
-            Seen = bundle.getBoolean("Seen");
+        Acc_NAME = bundle.getString("Acc_NAME");
+        Seen = bundle.getBoolean("Seen");
+        binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
 
-                binding.tvNameCustomer.setText(Acc_NAME);
-
-
-        } catch (Exception ignore) {
-        }
 
         EDIT = bundle.getBoolean("EDIT");
         //endregion Get Bundle
@@ -338,7 +325,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
         });
 
         //endregion Cast Variable Dialog Sync
-
 
 
         //region Cast DialogDescription
@@ -417,9 +403,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
             binding.txtDate.setText(text2);
 
 
-            if (company.mode  == 1) {
+            if (company.mode == 1) {
                 Account acc = Select.from(Account.class).first();
-                binding.tvNameCustomer.setText(acc != null ? acc.N+"  "+Tbl_NAME :"");
+                if (acc != null)
+                    binding.tvNameCustomer.setText("(" + acc.N + " _ " + Tbl_NAME + ")");
+                else
+                    binding.tvNameCustomer.setText("(" + "مشتری پیش فرض" + " _ " + Tbl_NAME + ")");
             }
 
 
@@ -445,8 +434,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
 
-
-        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type,Seen,sharedPreferences);
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type, Seen, sharedPreferences);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -457,7 +445,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
 
             if (maxSales.equals("1")) {
-                getMaxSales( Prd_GUID, s);
+                getMaxSales(Prd_GUID, s);
             } else {
                 ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
@@ -492,11 +480,12 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 sumDiscounts = 0;
 
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                for (int i = 0; i < invoiceDetails.size(); i++) {
-                    if (invoiceDetails.get(i).INV_DET_DESCRIBTION != null && invoiceDetails.get(i).INV_DET_DESCRIBTION.equals("توزیع")) {
-                        invoiceDetails.remove(invoiceDetails.get(i));
-                    }
+
+                if (invoiceDetails.size() > 0) {
+                    CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.equals(Transport_GUID));
                 }
+
+
                 for (int i = 0; i < invoiceDetails.size(); i++) {
                     ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
                     if (product != null) {
@@ -504,7 +493,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                         double discountPrice;
                         if (type.equals("1") || Seen)
-                            discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT/ 100);
+                            discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT / 100);
 
                         else
                             discountPrice = sumprice * (product.getPercDis() / 100);
@@ -628,24 +617,26 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 return;
             }
 
-            Bundle bundle1=new Bundle();
+            Bundle bundle1 = new Bundle();
             bundle1.putString("Ord_TYPE", Ord_TYPE);
             Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-           // if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
+            // if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
             if (tb != null && tb.GO != null)
                 bundle1.putString("Tbl_GUID", "");
             else
                 bundle1.putString("Tbl_GUID", Tbl_GUID);
 
             bundle1.putString("Inv_GUID", Inv_GUID);
+            bundle1.putString("Tbl_NAME", Tbl_NAME);
             bundle1.putBoolean("Seen", true);
             bundle1.putString("Acc_NAME", Acc_NAME);
             bundle1.putString("Acc_GUID", Acc_GUID);
+            bundle1.putBoolean("EDIT", EDIT);
 
 
-            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-            mainOrderMobileFragment.setArguments(bundle);
-            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileFX");
+            MainFragment mainFragment = new MainFragment();
+            mainFragment.setArguments(bundle1);
+            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF");
             replaceFragment.commit();
         });
         //endregion Action BtnEdit
@@ -706,16 +697,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-    private void getDescription( String id) {
+    private void getDescription(String id) {
 
-        if (!networkAvailable(getActivity())){
+        if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
         }
         customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", true);
         try {
             compositeDisposable.add(
-                   api.getDescription1(company.userName, company.passWord, id)
+                    api.getDescription1(company.userName, company.passWord, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -763,16 +754,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
     }
 
 
-    private void getMaxSales( String Prd_GUID, String s) {
+    private void getMaxSales(String Prd_GUID, String s) {
 
 
-        if (!networkAvailable(getActivity())){
+        if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
         }
         try {
             compositeDisposable.add(
-                 api.getMaxSales(company.userName, company.passWord, Prd_GUID)
+                    api.getMaxSales(company.userName, company.passWord, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -849,7 +840,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getProduct(String Guid) {
 
-        if (!networkAvailable(getActivity())){
+        if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
         }
@@ -857,7 +848,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         try {
 
             compositeDisposable.add(
-                   api.getProduct(company.userName, company.passWord, Guid)
+                    api.getProduct(company.userName, company.passWord, Guid)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -898,20 +889,21 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                     if (counter == invDetails.size()) {
                                         invoiceDetailList.clear();
 
-                                        for (int j = 0; j < invDetails.size(); j++) {
-                                            if (invDetails.get(j).INV_DET_DESCRIBTION != null && invDetails.get(j).INV_DET_DESCRIBTION.equals("توزیع")) {
 
+                                        if (invDetails.size() > 0) {
+                                            ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
+                                            CollectionUtils.filter(invDtls, i -> i.PRD_UID.equals(Transport_GUID));
+                                            if (invDtls.size() > 0) {
                                                 if (type.equals("1")) {
-                                                    sumTransport = Double.parseDouble(invDetails.get(j).INV_DET_TOTAL_AMOUNT);
+                                                    sumTransport = Double.parseDouble(invDtls.get(0).INV_DET_TOTAL_AMOUNT);
                                                     binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
                                                     binding.layoutTransport.setVisibility(View.VISIBLE);
                                                 }
-
-                                                invDetails.remove(invDetails.get(j));
-
-
                                             }
+
+                                            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equals(Transport_GUID));
                                         }
+
 
                                         invoiceDetailList.addAll(invDetails);
                                         invoiceDetailAdapter.notifyDataSetChanged();
@@ -939,7 +931,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getInvoice() {
 
-        if (!networkAvailable(getActivity())){
+        if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
         }
@@ -947,7 +939,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                  api.getInvoice1(company.userName, company.passWord, Inv_GUID)
+                    api.getInvoice1(company.userName, company.passWord, Inv_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -976,16 +968,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         invFinal = iDs.getInvoice().get(0).invFinalStatusControl;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
-                                     //   sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
+                                        //   sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
 
 
-                                        if (company.mode  == 1) {
+                                        if (company.mode == 1) {
                                             Acc_NAME = iDs.getInvoice().get(0).accClbName;
                                             Acc_GUID = iDs.getInvoice().get(0).ACC_CLB_UID;
                                         }
 
 
-                                            binding.tvNameCustomer.setText(Acc_NAME);
+                                        binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
 
                                         if (status != null && (status.equals("*") || invFinal)) {
                                             binding.layoutEditDelete.setVisibility(View.GONE);
@@ -1034,7 +1026,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-    private void getDeleteInvoice( String Inv_GUID) {
+    private void getDeleteInvoice(String Inv_GUID) {
 
         customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
 
@@ -1064,7 +1056,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             }
 
 
-                            if (company.mode  == 2) {
+                            if (company.mode == 2) {
                                 getActivity().getSupportFragmentManager().popBackStack();
                                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
                                 FragmentManager ft = getActivity().getSupportFragmentManager();
@@ -1141,9 +1133,10 @@ public class InVoiceDetailMobileFragment extends Fragment {
     public List<InvoiceDetail> getInvoiceDetail() {
         return invDetails;
     }
-    private   Boolean networkAvailable(Activity activity) {
+
+    private Boolean networkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

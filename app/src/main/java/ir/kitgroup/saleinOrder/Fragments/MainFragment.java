@@ -166,12 +166,7 @@ public class MainFragment extends Fragment {
 
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetails.size() > 0) {
-                ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
-                CollectionUtils.filter(invDtls, i -> i.PRD_UID.equals(Transport_GUID));
-                if (invDtls.size() > 0) {
-                    invDetails.remove(invDtls.get(0));
-                }
-
+                CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equals(Transport_GUID));
                 counter = invDetails.size();
             }
 
@@ -185,12 +180,7 @@ public class MainFragment extends Fragment {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetails.size() > 0) {
                 if (invDetails.size() > 0) {
-                    ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
-                    CollectionUtils.filter(invDtls, i -> i.PRD_UID.equals(Transport_GUID));
-                    if (invDtls.size() > 0) {
-                        invDetails.remove(invDtls.get(0));
-                    }
-
+                    CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equals(Transport_GUID));
                     counter = invDetails.size();
                 }
                 counter = invDetails.size();
