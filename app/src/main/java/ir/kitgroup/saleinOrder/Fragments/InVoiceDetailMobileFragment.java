@@ -665,6 +665,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
             bundle1.putBoolean("Seen", Seen);
+            bundle1.putString("Tbl_NAME", Tbl_NAME);
+
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();

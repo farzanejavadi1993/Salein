@@ -8,6 +8,8 @@ public class Company {
     public String namePackage;
     public String nameCompany;
     public String linkUpdate;
+    public String paymentLink;
+
     public String userName;
     public String baseUrl;
     public String passWord;

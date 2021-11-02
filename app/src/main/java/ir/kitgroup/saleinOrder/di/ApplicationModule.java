@@ -73,12 +73,12 @@ public class ApplicationModule {
 
 
                 case "ir.kitgroup.saleintop":
-                    imageLogo = R.drawable.top_icon;
+                    imageLogo = R.drawable.top_png;
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
-                    imageLogo = R.drawable.meat_icon;
+                    imageLogo = R.drawable.meat_png;
                     break;
 
                 case "ir.kitgroup.saleinnoon":
@@ -87,7 +87,7 @@ public class ApplicationModule {
 
                 default:
 
-                    imageLogo = R.drawable.saleinorder_icon;
+                    imageLogo = R.drawable.saleinorder_png;
                     mode = 1;
                     break;
             }
@@ -95,9 +95,9 @@ public class ApplicationModule {
             e.printStackTrace();
         }
 
-        Config config=new Config();
-        config.imageLogo =imageLogo;
-        config.mode=mode;
+        Config config = new Config();
+        config.imageLogo = imageLogo;
+        config.mode = mode;
 
         return config;
 
@@ -109,6 +109,7 @@ public class ApplicationModule {
 
         String nameCompany = "";
         String linkUpdate = "";
+        String paymentLink = "";
         String namePackage = "";
         String title = "";
         String description = "";
@@ -119,6 +120,8 @@ public class ApplicationModule {
         int imageDialog = 0;
         String userName = "";
         String passWord = "";
+        Double lat = 0.0;
+        Double lng = 0.0;
 
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -129,21 +132,24 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_icon;
                     imageDialog = R.drawable.top_png;
-                    nameCompany="تاپ کباب";
+                    nameCompany = "تاپ کباب";
                     namePackage = "ir.kitgroup.saleintop";
-                    title =  "رستوران تاپ کباب";
+                    title = "رستوران تاپ کباب";
                     messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                     description = "عرضه کننده بهترین غذاها";
                     ipLocal = "188.158.121.253:9999";
+                    paymentLink = "http://185.201.49.204:4008/";
                     userName = "topkabab";
                     passWord = "9929";
+                    lat = 36.318805483696735;
+                    lng = 59.555196457006296;
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_icon;
                     imageDialog = R.drawable.meat_png;
-                    nameCompany="گوشت دنیوی";
+                    nameCompany = "گوشت دنیوی";
                     nameCompany = "ir.kitgroup.saleinmeat";
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                     namePackage = "ir.kitgroup.saleinmeat";
@@ -152,13 +158,15 @@ public class ApplicationModule {
                     ipLocal = "109.125.133.149:9999";
                     userName = "admin";
                     passWord = "0123";
+                    lat = 36.31947320471888;
+                    lng = 59.605469293071884;
 
                     break;
 
                 case "ir.kitgroup.saleinnoon":
                     imageLogo = R.drawable.noon;
                     imageDialog = R.drawable.noon;
-                    nameCompany="کافه نون";
+                    nameCompany = "کافه نون";
                     nameCompany = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.saleinnoon";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
@@ -175,12 +183,15 @@ public class ApplicationModule {
                     title = "SaleIn Order";
                     description = "اپلیکیشن سفارش گیر مشتریان سالین";
                     mode = 1;
-                    ipLocal="";
+                    ipLocal = "";
                     if (Select.from(User.class).list().size() > 0) {
                         userName = Select.from(User.class).first().userName;
                         passWord = Select.from(User.class).first().passWord;
                         ipLocal = Select.from(User.class).first().ipLocal;
                     }
+
+                    lat = 36.318805483696735;
+                    lng = 59.555196457006296;
 
                     break;
             }
@@ -202,14 +213,14 @@ public class ApplicationModule {
         company.userName = userName;
         company.passWord = passWord;
         company.linkUpdate = linkUpdate;
+        company.paymentLink = paymentLink;
+        company.lat = lat;
+        company.lng = lng;
         company.baseUrl = "http://" + ipLocal + "/api/REST/";
 
         return company;
 
     }
-
-
-
 
 
     @Provides

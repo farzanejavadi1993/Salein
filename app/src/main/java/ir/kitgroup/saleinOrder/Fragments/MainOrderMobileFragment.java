@@ -351,7 +351,7 @@ public class MainOrderMobileFragment extends Fragment {
                         binding.accountRecyclerView.setVisibility(View.GONE);
 
                         binding.edtNameCustomer.setHint("جستجو مشتری");
-                    } else if (s.toString().length() >= 8) {
+                    } else if (s.toString().length() > 3) {
                         getAccountSearch1(s.toString(), 0);
                     }
 

@@ -42,7 +42,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
     }
 
     public interface ClickItem {
-        void onRowClick(String Name, boolean Reserve, String Tbl_Guid, String Inv_Guid);
+        void onRowClick(boolean Organization,String Name, boolean Reserve, String Tbl_Guid, String Inv_Guid);
     }
 
     private ClickItem clickItem;
@@ -111,8 +111,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
 
 
         } else {
+            holder.tableName.setText( table.N);
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
-            holder.tableName.setText("سفارش بیرون بر");
             holder.tvCapacity.setText(table.GO);
             holder.tvStatus.setText(table.DATE != null ? table.DATE : "");
             holder.ivDelete.setVisibility(View.VISIBLE);
@@ -126,11 +126,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         holder.itemView.setOnClickListener(view -> {
             if (table.GO != null) {
                 //getOut
-                clickItem.onRowClick(table.N, true, table.I, table.INVID);
+                clickItem.onRowClick(false,table.N, true, table.I, table.INVID);
 
             } else if (!table.ACT && !table.RSV) {
                 //vacant
-                clickItem.onRowClick(table.N, false, table.I, table.I);
+                clickItem.onRowClick(true,table.N, false, table.I, table.I);
 
             } else if (table.RSV) {
                 Toast.makeText(context, "میز رزرو شده است", Toast.LENGTH_SHORT).show();
@@ -139,7 +139,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
                 if (tb == null) {
                     Toast.makeText(context, "دسترسی به سفارش امکان پذیر نمی باشد.", Toast.LENGTH_SHORT).show();
                 } else {
-                    clickItem.onRowClick(table.N, true, table.I, tb.INVID);
+                    clickItem.onRowClick(true,table.N, true, table.I, tb.INVID);
                 }
             }
         });

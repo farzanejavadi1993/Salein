@@ -300,7 +300,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-        tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID, Inv_GUID) -> {
+        tableAdapter.setOnClickItemListener((organization,Name, Reserve, T_GUID, Inv_GUID) -> {
             binding.txtError.setText("");
             if (Reserve) {
                 Bundle bundle = new Bundle();
@@ -308,7 +308,10 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Ord_TYPE", "");
                 bundle.putString("Tbl_GUID", T_GUID);
+                if (organization)
                 bundle.putString("Tbl_NAME", "میز " + Name);
+                else
+                    bundle.putString("Tbl_NAME",  Name);
                 bundle.putBoolean("EDIT", true);
 
 
@@ -331,7 +334,10 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Acc_NAME", "");
                 bundle.putString("Acc_GUID", "");
+                if (organization)
                 bundle.putString("Tbl_NAME", "میز " + Name);
+                else
+                    bundle.putString("Tbl_NAME",  Name);
                 bundle.putBoolean("EDIT", false);
 
 
