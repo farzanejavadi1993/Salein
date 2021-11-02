@@ -1584,4 +1584,9 @@ public class MainOrderMobileFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+
+    public  void refreshProductList(){
+        productAdapter.notifyDataSetChanged();;
+    }
+
 }

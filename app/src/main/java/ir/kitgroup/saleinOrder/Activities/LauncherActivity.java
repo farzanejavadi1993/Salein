@@ -167,17 +167,31 @@ public class LauncherActivity extends AppCompatActivity {
         if (size == 0) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
+        }
 
-        } else if (config.mode == 1 &&
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainF")
-        ) {
+
+        else if (config.mode == 1 &&
+            getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainF")) {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("LauncherFragment");
             if (fragment instanceof LauncherOrganizationFragment) {
                 LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) fragment;
                 fgf.refreshAdapter();
             }
             getSupportFragmentManager().popBackStack();
-        } else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
+        }
+
+
+        else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailFMobile")) {
+            Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+            if (fragment instanceof MainOrderMobileFragment) {
+                MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
+                fgf.refreshProductList();
+            }
+            getSupportFragmentManager().popBackStack();
+        }
+
+
+        else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF")
 
         ) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
@@ -187,7 +201,7 @@ public class LauncherActivity extends AppCompatActivity {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
             if (fragment instanceof MainOrderMobileFragment) {
                 MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
-               // fgf.setHomeBottomBar();
+                // fgf.setHomeBottomBar();
             }
 
 
