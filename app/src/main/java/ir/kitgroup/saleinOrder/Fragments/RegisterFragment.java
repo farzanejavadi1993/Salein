@@ -39,11 +39,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.classes.App;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 
 import ir.kitgroup.saleinOrder.DataBase.User;
 
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelLog;
 import ir.kitgroup.saleinOrder.R;
@@ -56,6 +58,9 @@ public class RegisterFragment extends Fragment {
 
     @Inject
     Company company;
+
+    @Inject
+    API api;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
@@ -96,12 +101,12 @@ public class RegisterFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize=12;
-     /*   if (ScreenSize >= 7) {
+      if (Util.screenSize >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);
         } else
-            fontSize = 12;*/
+            fontSize = 12;
 
 
         binding.tvNameCustomer.setTextSize(fontSize);
@@ -197,7 +202,7 @@ public class RegisterFragment extends Fragment {
             }.getType();
 
             compositeDisposable.add(
-                    App.api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

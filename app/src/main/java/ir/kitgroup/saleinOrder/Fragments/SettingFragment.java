@@ -36,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.DataBase.Product;
@@ -45,6 +46,7 @@ import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
 
 import ir.kitgroup.saleinOrder.classes.App;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentSettingBinding;
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
@@ -60,6 +62,11 @@ public class SettingFragment extends Fragment {
     @Inject
     Company company;
 
+    @Inject
+    API api;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     //region Parameter
     private boolean Seen=true;
@@ -67,7 +74,7 @@ public class SettingFragment extends Fragment {
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
     //endregion Parameter
 
-    private SharedPreferences sharedPreferences;
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private int fontSize =12;
@@ -83,10 +90,10 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-//        if (ScreenSize  >= 7)
-//            fontSize = 14;
-//        else
-//            fontSize = 12;
+       if (Util.screenSize  >= 7)
+           fontSize = 14;
+       else
+           fontSize = 12;
         return binding.getRoot();
 
 
@@ -98,7 +105,7 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 
         try {
             switch (company.nameCompany) {
@@ -230,7 +237,7 @@ public class SettingFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

@@ -78,11 +78,11 @@ public class LoginClientFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize=12;
-//        if (ScreenSize >= 7) {
-//            binding.tvWelcome.setTextSize(18);
-//            fontSize = 14;
-//        } else
-//            fontSize = 12;
+      if (Util.screenSize >= 7) {
+          binding.tvWelcome.setTextSize(18);
+          fontSize = 14;
+      } else
+          fontSize = 12;
 
 
         binding.tvLogin.setTextSize(fontSize);

@@ -69,8 +69,10 @@ import ir.kitgroup.saleinOrder.Adapters.DateAdapter;
 import ir.kitgroup.saleinOrder.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.saleinOrder.Adapters.TimeAdapter;
 
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.DataBase.Tables;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.models.Company;
 import ir.kitgroup.saleinOrder.models.ModelDate;
@@ -113,6 +115,9 @@ public class PaymentMobileFragment extends Fragment {
 
     @Inject
     Company company;
+
+    @Inject
+    API api;
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;
@@ -164,7 +169,8 @@ public class PaymentMobileFragment extends Fragment {
     private String typePayment = "-1";
 
 
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
 
 
     private CustomProgress customProgress;
@@ -237,7 +243,7 @@ public class PaymentMobileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 
 
         customProgress = CustomProgress.getInstance();
@@ -349,13 +355,13 @@ public class PaymentMobileFragment extends Fragment {
         //region Configuration Size
         int fontBigSize=13;
         int fontSize=12;
-      /*  if (ScreenSize  >= 7) {
+       if (Util.screenSize  >= 7) {
             fontBigSize = 14;
             fontSize = 13;
         } else {
             fontBigSize = 12;
             fontSize = 11;
-        }*/
+        }
 
 
         binding.tvAddress.setTextSize(fontBigSize);
@@ -1209,7 +1215,7 @@ public class PaymentMobileFragment extends Fragment {
             }.getType();
 
 
-            Call<String> call = App.api.PostData(userName, passWord,
+            Call<String> call = api.PostData(userName, passWord,
                     gson.toJson(jsonObject, typeJsonObject),
                     "",
                     numberPos);
@@ -1468,7 +1474,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    App.api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1551,7 +1557,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    App.api.getSetting1(userName, passWord)
+                    api.getSetting1(userName, passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1670,7 +1676,7 @@ public class PaymentMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getOrderType1(userName, passWord)
+                    api.getOrderType1(userName, passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1776,8 +1782,7 @@ public class PaymentMobileFragment extends Fragment {
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
-            compositeDisposable.add(
-                    App.api.getTable1(userName, passWord)
+            compositeDisposable.add(api.getTable1(userName, passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

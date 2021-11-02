@@ -64,16 +64,17 @@ import io.reactivex.schedulers.Schedulers;
 
 import ir.kitgroup.saleinOrder.Adapters.DescriptionAdapter;
 import ir.kitgroup.saleinOrder.Adapters.InvoiceDetailMobileAdapter;
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 
 import ir.kitgroup.saleinOrder.DataBase.Tables;
-import ir.kitgroup.saleinOrder.classes.App;
+
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
-import ir.kitgroup.saleinOrder.DataBase.User;
 
 
 import ir.kitgroup.saleinOrder.models.Company;
@@ -99,24 +100,30 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     @Inject
     Company company;
+
+    @Inject
+    API api;
+
+    @Inject
+    SharedPreferences sharedPreferences;
+    
     private FragmentInvoiceDetailMobileBinding binding;
     private CustomProgress customProgress;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    private String userName;
-    private String passWord;
-    private String Inv_GUID;
-    private String Ord_TYPE;
-    private String Tbl_GUID = "";
-    private Boolean Seen =false;
-    private boolean edit = false;
     private String type;
+    private Boolean Seen =false;
+    private String Inv_GUID;
+    private String Tbl_GUID = "";
+    private String Ord_TYPE;
+    private boolean EDIT = false;
+
+
 
     private double sumPrice;
     private double sumPurePrice;
     private double sumDiscounts;
-    private double sumDiscountsInvoiceRial=0.0;
 
 
     private List<InvoiceDetail> invoiceDetailList;
@@ -180,7 +187,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         customProgress = CustomProgress.getInstance();
 
 
@@ -189,20 +196,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
         maxSales = sharedPreferences.getString("maxSale", "0");
 
 
-        userName = Select.from(User.class).list().get(0).userName;
-        passWord = Select.from(User.class).list().get(0).passWord;
 
 
         //region Configuration Text Size
-        int fontSize=12;
-        int fontLargeSize=13;
-//        if (ScreenSize  >= 7) {
-//            fontSize = 13;
-//            fontLargeSize = 14;
-//        } else {
-//            fontSize = 11;
-//            fontLargeSize = 12;
-//        }
+        int fontSize;
+        int fontLargeSize;
+       if (Util.screenSize  >= 7) {
+           fontSize = 13;
+           fontLargeSize = 14;
+       } else {
+           fontSize = 11;
+           fontLargeSize = 12;
+       }
 
 
         binding.tvNameCustomer.setTextSize(fontSize);
@@ -273,10 +278,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         MaterialButton btnOk = dialogDelete.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialogDelete.findViewById(R.id.btn_cancel);
-        btnNo.setOnClickListener(v -> {
-            dialogDelete.dismiss();
-
-        });
+        btnNo.setOnClickListener(v -> dialogDelete.dismiss());
         btnOk.setOnClickListener(v -> {
             dialogDelete.dismiss();
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -307,7 +309,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         } catch (Exception ignore) {
         }
 
-        edit = bundle.getBoolean("EDIT");
+        EDIT = bundle.getBoolean("EDIT");
         //endregion Get Bundle
 
 
@@ -337,9 +339,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
-        btnNoDialog.setOnClickListener(v -> {
-            dialogSync.dismiss();
-        });
+        btnNoDialog.setOnClickListener(v -> dialogSync.dismiss());
 
 
         btnOkDialog.setOnClickListener(v -> {
@@ -354,7 +354,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 else {
                     counter = 0;
                     for (int i = 0; i < invDetails.size(); i++) {
-                        getProduct(invDetails.get(i).PRD_UID, i);
+                        getProduct(invDetails.get(i).PRD_UID);
                     }
                 }
             }
@@ -481,7 +481,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
 
             if (maxSales.equals("1")) {
-                getMaxSales(userName, passWord, Prd_GUID, s);
+                getMaxSales( Prd_GUID, s);
             } else {
                 ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
@@ -526,7 +526,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     if (product != null) {
                         double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice());
 
-                        double discountPrice=0.0;
+                        double discountPrice;
                         if (type.equals("1") || Seen)
                             discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT/ 100);
 
@@ -607,7 +607,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             edtDescriptionItem.setText(description);
             descriptionList.clear();
             GuidInv = GUIDInv;
-            getDescription(userName, passWord, GUIDPrd);
+            getDescription(GUIDPrd);
         });
 
 
@@ -639,7 +639,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         binding.btnDelete.setOnClickListener(v -> {
 
             if (status.equals("-"))
-                getDeleteInvoice(userName, passWord, Inv_GUID);
+                getDeleteInvoice(Inv_GUID);
         });
 
         //endregion Action BtnDelete
@@ -690,7 +690,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             else
                 bundle1.putString("Ord_TYPE", Ord_TYPE);
 
-            if (edit)
+            if (EDIT)
                 bundle1.putBoolean("EDIT", true);
 
             bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
@@ -719,7 +719,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             else {
                 counter = 0;
                 for (int i = 0; i < invDetails.size(); i++) {
-                    getProduct(invDetails.get(i).PRD_UID, i);
+                    getProduct(invDetails.get(i).PRD_UID);
                 }
             }
         }
@@ -727,16 +727,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-    private void getDescription(String userName, String pass, String id) {
+    private void getDescription( String id) {
 
-        if (!isNetworkAvailable(getActivity())){
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())){
+            ShowErrorConnection();
             return;
         }
         customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", true);
         try {
             compositeDisposable.add(
-                    App.api.getDescription1(userName, pass, id)
+                   api.getDescription1(company.userName, company.passWord, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -784,16 +784,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
     }
 
 
-    private void getMaxSales(String userName, String pass, String Prd_GUID, String s) {
+    private void getMaxSales( String Prd_GUID, String s) {
 
 
-        if (!isNetworkAvailable(getActivity())){
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())){
+            ShowErrorConnection();
             return;
         }
         try {
             compositeDisposable.add(
-                    App.api.getMaxSales(userName, pass, Prd_GUID)
+                 api.getMaxSales(company.userName, company.passWord, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -856,10 +856,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         }
 
                                     }
-                                    , throwable -> {
-                                        Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
-
-                                    })
+                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show())
             );
         } catch (Exception e) {
             Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
@@ -871,17 +868,17 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
     @SuppressLint("SetTextI18n")
-    private void getProduct(String Guid, int i) {
+    private void getProduct(String Guid) {
 
-        if (!isNetworkAvailable(getActivity())){
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())){
+            ShowErrorConnection();
             return;
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
 
             compositeDisposable.add(
-                    App.api.getProduct(userName, passWord, Guid)
+                   api.getProduct(company.userName, company.passWord, Guid)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -963,15 +960,15 @@ public class InVoiceDetailMobileFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getInvoice() {
 
-        if (!isNetworkAvailable(getActivity())){
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+        if (!networkAvailable(getActivity())){
+            ShowErrorConnection();
             return;
         }
 
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    App.api.getInvoice1(userName, passWord, Inv_GUID)
+                  api.getInvoice1(company.userName, company.passWord, Inv_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1000,7 +997,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         invFinal = iDs.getInvoice().get(0).invFinalStatusControl;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
-                                        sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
+                                     //   sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
 
 
                                         if (company.mode  == 1) {
@@ -1033,7 +1030,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                                         binding.progressBar.setVisibility(View.GONE);
                                     else
                                         for (int i = 0; i < invDetails.size(); i++) {
-                                            getProduct(invDetails.get(i).PRD_UID, i);
+                                            getProduct(invDetails.get(i).PRD_UID);
                                         }
 
 
@@ -1058,18 +1055,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     }
 
-    private void getDeleteInvoice(String userName, String pass, String Inv_GUID) {
+    private void getDeleteInvoice( String Inv_GUID) {
 
         customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
 
         try {
 
 
-            Call<String> call = App.api.getDeleteInvoice(userName, pass, Inv_GUID);
+            Call<String> call = api.getDeleteInvoice(company.userName, company.passWord, Inv_GUID);
 
             call.enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
                     Gson gson = new Gson();
                     Type typeIDs = new TypeToken<ModelLog>() {
                     }.getType();
@@ -1130,7 +1127,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
                     customProgress.hideProgress();
                     Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + t.toString(), Toast.LENGTH_SHORT).show();
 
@@ -1165,16 +1162,16 @@ public class InVoiceDetailMobileFragment extends Fragment {
     public List<InvoiceDetail> getInvoiceDetail() {
         return invDetails;
     }
-    private   boolean isNetworkAvailable(Activity activity) {
+    private   Boolean networkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private void ShowErrorConnection(String error) {
+    private void ShowErrorConnection() {
         binding.progressBar.setVisibility(View.GONE);
-        textMessageDialog.setText(error);
+        textMessageDialog.setText("خطا در اتصال به اینترنت");
         ivIconSync.setImageResource(R.drawable.ic_wifi);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");

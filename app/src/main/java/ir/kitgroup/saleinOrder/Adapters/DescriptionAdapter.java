@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.Description;
 import ir.kitgroup.saleinOrder.R;
 
@@ -47,11 +48,11 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        if (ScreenSize>= 7) {
-//            fontSize = 13;
-//        } else {
-//            fontSize = 12;
-//        }
+       if (Util.screenSize>= 7) {
+           fontSize = 13;
+       } else {
+           fontSize = 12;
+       }
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false);
         return new viewHolder(view);

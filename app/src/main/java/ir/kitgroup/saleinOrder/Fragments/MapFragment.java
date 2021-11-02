@@ -81,6 +81,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinOrder.Adapters.SearchViewAdapter;
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
@@ -99,6 +100,8 @@ import static android.os.Looper.getMainLooper;
 
 public class MapFragment extends Fragment implements PermissionsListener {
 
+    @Inject
+    API api;
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
@@ -165,11 +168,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         //region Configuration Text Size
         int fontSize=12;
-//        if (ScreenSize >= 7) {
-//
-//            fontSize = 14;
-//        } else
-//            fontSize = 12;
+        if (Util.screenSize >= 7) {
+
+            fontSize = 14;
+        } else
+            fontSize = 12;
         binding.edtAddress.setTextSize(fontSize);
 
         binding.btnRegisterInformation.setTextSize(fontSize);
@@ -881,7 +884,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = App.api.UpdateAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
+            Call<String> call = api.UpdateAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnRegisterInformation.setEnabled(false);
 

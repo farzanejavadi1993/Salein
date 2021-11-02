@@ -20,6 +20,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentProfileBinding;
 @AndroidEntryPoint
 public class ProfileFragment extends Fragment {
@@ -42,10 +43,10 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
 
-      /*  if (ScreenSize >=7)
+      if (Util.screenSize >=7)
             fontSize=14;
         else
-            fontSize=12;*/
+            fontSize=12;
 
         Bundle bundle = getArguments();
 

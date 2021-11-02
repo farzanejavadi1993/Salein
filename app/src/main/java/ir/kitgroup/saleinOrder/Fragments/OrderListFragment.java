@@ -39,11 +39,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Adapters.OrderListAdapter;
 
+import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.models.Invoice;
 
@@ -58,10 +62,12 @@ import ir.kitgroup.saleinOrder.databinding.FragmentOrderListBinding;
 import ir.kitgroup.saleinOrder.models.ModelInvoice;
 
 
-
+@AndroidEntryPoint
 public class OrderListFragment extends Fragment {
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    @Inject
+    API api;
+     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //region Parameter
     private FragmentOrderListBinding binding;
 
@@ -192,7 +198,7 @@ public class OrderListFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    App.api.getAllInvoice1(userName, pass,AccGuid,date )
+                   api.getAllInvoice1(userName, pass,AccGuid,date )
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

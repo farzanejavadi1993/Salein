@@ -106,11 +106,11 @@ public class ConfirmCodeFragment extends Fragment {
 
         //region Configuration Text Size
         int fontSize=12;
-        /*if (ScreenSize  >= 7) {
+        if (Util.screenSize  >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
         } else
-            fontSize = 12;*/
+            fontSize = 12;
         binding.tvEnterCode.setTextSize(fontSize);
         binding.btnLogin.setTextSize(fontSize);
         //endregion Configuration Text Size

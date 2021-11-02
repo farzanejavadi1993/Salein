@@ -47,7 +47,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.classes.Util;
-import ir.kitgroup.saleinOrder.classes.App;
+
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 import ir.kitgroup.saleinOrder.DataBase.User;
@@ -84,7 +84,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private int fontLargeSize = 0;
     private final Boolean ShowUnit = false;
 
-    private API api;
+    private final API api;
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
@@ -116,12 +116,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Activity context, List<Product> productsList, Company company,API api) {
+    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api) {
         this.context = context;
 
         this.productsList = productsList;
         this.company = company;
-        this.api=api;
+        this.api = api;
 
         df = new DecimalFormat();
 
@@ -220,7 +220,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.edtDesc.setTextSize(fontSize);
             holder.ProductAmountTxt.setTextSize(fontSize);
             holder.unit.setTextSize(fontSize);
-
 
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
@@ -333,8 +332,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     holder.ProductAmountTxt,
                     holder.unit,
                     holder.ivMinus,
-                    Select.from(User.class).first().userName,
-                    Select.from(User.class).first().passWord,
+                    company,
                     maxSale,
                     productsList.get(position).getI(),
                     "",
@@ -350,8 +348,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     holder.ProductAmountTxt,
                     holder.unit,
                     holder.ivMinus,
-                    Select.from(User.class).first().userName,
-                    Select.from(User.class).first().passWord,
+                    company,
                     maxSale,
                     productsList.get(position).getI(),
                     "",
@@ -390,8 +387,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 holder.ProductAmountTxt,
                                 holder.unit,
                                 holder.ivMinus,
-                                Select.from(User.class).first().userName,
-                                Select.from(User.class).first().passWord,
+                                company,
                                 maxSale,
                                 productsList.get(position).getI(),
                                 s,
@@ -488,7 +484,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String pass, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, Company company, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -498,7 +494,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         try {
             compositeDisposable.add(
-                   api.getMaxSales(userName, pass, Prd_GUID)
+                    api.getMaxSales(company.userName, company.passWord, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -677,8 +673,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-                                               if (company.mode ==1)
-                                                   invoicedetail.TBL = Tbl_GUID;
+                                                if (company.mode == 1)
+                                                    invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
 
 
@@ -714,13 +710,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     }
 
-    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, String userName, String passWord, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, Company company, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         error.setText("");
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, userName, passWord, Prd_GUID, s, MinOrPlus);
+            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, company, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)

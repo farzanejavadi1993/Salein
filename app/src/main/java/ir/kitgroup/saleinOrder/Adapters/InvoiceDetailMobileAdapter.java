@@ -97,13 +97,13 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     @Override
     public @NotNull viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-//        if (ScreenSize >= 7) {
-//            fontSize = 13;
-//            fontLargeSize = 14;
-//        } else {
-//            fontSize = 11;
-//            fontLargeSize = 12;
-//        }
+       if (Util.screenSize >= 7) {
+           fontSize = 13;
+           fontLargeSize = 14;
+       } else {
+           fontSize = 11;
+           fontLargeSize = 12;
+       }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.invoice_list_item_recycle, parent, false);
         return new viewHolder(view);
     }

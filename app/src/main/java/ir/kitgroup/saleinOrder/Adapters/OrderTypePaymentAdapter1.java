@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.models.OrderType;
 
 
@@ -52,10 +53,10 @@ public class OrderTypePaymentAdapter1 extends RecyclerView.Adapter<OrderTypePaym
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-//        if (ScreenSize >=7)
-//            fontSize=13;
-//        else
-//            fontSize=11;
+       if (Util.screenSize >=7)
+           fontSize=13;
+       else
+           fontSize=11;
         return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
 
 
