@@ -411,7 +411,6 @@ public class InVoiceDetailMobileFragment extends Fragment {
                     binding.tvNameCustomer.setText("(" + "مشتری پیش فرض" + " _ " + Tbl_NAME + ")");
             }
 
-
         }
         //endregion See Order During Work
 
