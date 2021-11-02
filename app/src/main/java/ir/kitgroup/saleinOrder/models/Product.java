@@ -74,8 +74,7 @@ public class Product {
         return amount;
     }
 
-    @Inject
-    SharedPreferences sharedPreferences;
+
     public void setAmount(Double amount) {
         Amount = amount;
     }
@@ -129,7 +128,7 @@ public class Product {
     }
 
 
-    public Double getPrice() {
+    public Double getPrice(SharedPreferences sharedPreferences) {
         Double showPrice = 0.0;
         try {
 

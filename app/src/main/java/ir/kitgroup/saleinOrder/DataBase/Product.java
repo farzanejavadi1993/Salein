@@ -69,8 +69,7 @@ public class Product  extends SugarRecord {
     private Integer key;
 
 
-    @Inject
-    SharedPreferences sharedPreferences;
+
     private Double Amount;
 
     public Double getAmount() {
@@ -133,7 +132,7 @@ public class Product  extends SugarRecord {
     }
 
 
-    public Double getPrice() {
+    public Double getPrice(SharedPreferences sharedPreferences) {
         Double showPrice = 0.0;
         try {
 

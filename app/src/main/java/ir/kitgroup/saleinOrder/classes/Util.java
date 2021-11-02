@@ -77,7 +77,6 @@ public class Util {
     }
 
     public static String getPrice(SharedPreferences sharedPreferences) {
-
         return sharedPreferences.getString("priceProduct", "");
     }
 

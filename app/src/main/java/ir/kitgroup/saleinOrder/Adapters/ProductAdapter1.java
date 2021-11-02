@@ -4,6 +4,7 @@ package ir.kitgroup.saleinOrder.Adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -66,6 +67,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final Company company;
 
+    private SharedPreferences sharedPreferences;
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
@@ -116,11 +119,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api) {
+    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api,SharedPreferences sharedPreferences) {
         this.context = context;
 
         this.productsList = productsList;
         this.company = company;
+        this.sharedPreferences = sharedPreferences;
         this.api = api;
 
         df = new DecimalFormat();
@@ -224,27 +228,27 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
             if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
-                if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+                if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
 
                     holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
-                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()));
+                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                     holder.Line.setText("------------");
-                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (productsList.get(holder.getAdapterPosition()).getPercDis() / 100);
-                    double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
+                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (productsList.get(holder.getAdapterPosition()).getPercDis() / 100);
+                    double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
             } else {
-                if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+                if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
 
                     holder.productDiscountPercent.setVisibility(View.GONE);
                     holder.layoutDiscount.setVisibility(View.GONE);
                     holder.productOldPrice.setVisibility(View.GONE);
                     holder.Line.setVisibility(View.GONE);
-                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()) + " ریال ");
+                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
                 }
             }
 
@@ -272,27 +276,27 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 if (amount > 0 && Seen) {
                     if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
-                        if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
                             holder.productOldPrice.setVisibility(View.VISIBLE);
                             holder.Line.setVisibility(View.VISIBLE);
 
                             holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
-                            holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()));
+                            holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                             holder.Line.setText("------------");
-                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice() * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
-                            double newPrice = productsList.get(holder.getAdapterPosition()).getPrice() - discountPrice;
+                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
+                            double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
                         }
                     } else {
-                        if (productsList.get(holder.getAdapterPosition()).getPrice() > 0) {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
 
                             holder.productDiscountPercent.setVisibility(View.GONE);
                             holder.layoutDiscount.setVisibility(View.GONE);
                             holder.productOldPrice.setVisibility(View.GONE);
                             holder.Line.setVisibility(View.GONE);
-                            holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice()) + " ریال ");
+                            holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
                         }
                     }
                 }

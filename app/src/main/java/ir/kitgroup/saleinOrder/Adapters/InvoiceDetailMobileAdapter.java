@@ -4,6 +4,7 @@ package ir.kitgroup.saleinOrder.Adapters;
 import android.annotation.SuppressLint;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
     private final List<InvoiceDetail> orderDetailList;
 
+    private SharedPreferences sharedPreferences;
     private final String type;//1 seen      //2 edit
     private final Boolean Seen; //when Type 1 but Edit
     private final Activity contex;
@@ -82,8 +84,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
 
-    public InvoiceDetailMobileAdapter(Activity context, List<InvoiceDetail> orderDetailList, String type,boolean Seen) {
+    public InvoiceDetailMobileAdapter(Activity context, List<InvoiceDetail> orderDetailList, String type,boolean Seen,SharedPreferences sharedPreferences) {
 
+        this.sharedPreferences=sharedPreferences;
         this.orderDetailList = orderDetailList;
         this.type = type;
         this.Seen = Seen;
@@ -143,10 +146,10 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 holder.discount.setText(format.format(invoicedetail.INV_DET_PERCENT_DISCOUNT) + "%");
 
             holder.name.setText(holder.getAdapterPosition()+1+"_"+prd1.get(0).getN());
-            holder.price.setText(format.format(prd1.get(0).getPrice()));
+            holder.price.setText(format.format(prd1.get(0).getPrice(sharedPreferences)));
 
 
-            double sumprice = (invoicedetail.INV_DET_QUANTITY * prd1.get(0).getPrice());
+            double sumprice = (invoicedetail.INV_DET_QUANTITY * prd1.get(0).getPrice(sharedPreferences));
             holder.sumPrice.setText(format.format(sumprice));
 
             }
@@ -205,7 +208,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                             holder.edtAmount.setText("0");
                             holder.edtAmount.addTextChangedListener(holder.textWatcher);
-                            double sumprice = (0 * prd1.get(0).getPrice());
+                            double sumprice = (0 * prd1.get(0).getPrice(sharedPreferences));
 
                             holder.sumPrice.setText(format.format(sumprice));
 
@@ -214,11 +217,11 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 discountPercent=invoicedetail.INV_DET_PERCENT_DISCOUNT;
                             else
                                 discountPercent=prd1.get(0).getPercDis();
-                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", prd1.get(0).getPrice(), discountPercent / 100);
+                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
                             return;
                         }
                     }
-                    double sumprice = (amount * prd1.get(0).getPrice());
+                    double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
 
                     holder.sumPrice.setText(format.format(sumprice));
 
@@ -229,7 +232,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                         discountPercent=invoicedetail.INV_DET_PERCENT_DISCOUNT;
                     else
                         discountPercent=prd1.get(0).getPercDis();
-                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, prd1.get(0).getPrice(), discountPercent / 100);
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
 
 
                 }
@@ -302,7 +305,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * prd1.get(0).getPrice());
+            double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
             holder.sumPrice.setText(format.format(sumprice));
 
 
@@ -313,7 +316,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 discountPercent=prd1.get(0).getPercDis();
 
 
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(), discountPercent / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
 
         });
 
@@ -337,7 +340,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.edtAmount.setText(format.format(amount));
             holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
-            double sumprice = (amount * prd1.get(0).getPrice());
+            double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
             holder.sumPrice.setText(format.format(sumprice));
 
             double discountPercent=0.0;
@@ -346,7 +349,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             else
                 discountPercent=prd1.get(0).getPercDis();
 
-            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(), discountPercent / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
         });
 
     }

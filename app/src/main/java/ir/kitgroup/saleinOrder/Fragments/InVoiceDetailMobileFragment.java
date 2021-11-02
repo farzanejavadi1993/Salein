@@ -116,6 +116,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private Boolean Seen =false;
     private String Inv_GUID;
     private String Tbl_GUID = "";
+    private String Tbl_NAME = "";
     private String Ord_TYPE;
     private boolean EDIT = false;
 
@@ -146,7 +147,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
     //region Variable Dialog
     private Dialog dialogDelete;
-    private int imageIconDialog = R.drawable.saleinorder_png;
+
     //endregion Variable Dialog
 
 
@@ -163,6 +164,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private Boolean invFinal;
     private double sumTransport = 0.0;
     private String maxSales = "0";
+    private String Transport_GUID ;
     private List<InvoiceDetail> invDetails = new ArrayList<>();
 
 
@@ -194,6 +196,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
         maxSales = sharedPreferences.getString("maxSale", "0");
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
 
 
@@ -234,35 +237,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         //region Cast Dialog Delete
 
-        try {
-            switch (company.nameCompany) {
 
-
-                case "ir.kitgroup.saleintop":
-
-                    imageIconDialog = R.drawable.top_png;
-
-
-                    break;
-
-
-                case "ir.kitgroup.saleinmeat":
-
-                    imageIconDialog = R.drawable.meat_png;
-
-
-                    break;
-
-                case "ir.kitgroup.saleinnoon":
-
-                    imageIconDialog = R.drawable.noon;
-
-
-                    break;
-            }
-        } catch (Exception ignore) {
-
-        }
 
 
         dialogDelete = new Dialog(getActivity());
@@ -274,7 +249,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         TextView textExit = dialogDelete.findViewById(R.id.tv_message);
         textExit.setText("آیا مایل به حذف کامل سبد خرید هستید؟");
         ImageView ivIcon = dialogDelete.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(imageIconDialog);
+        ivIcon.setImageResource(company.imageDialog);
 
         MaterialButton btnOk = dialogDelete.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialogDelete.findViewById(R.id.btn_cancel);
@@ -299,6 +274,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
         Inv_GUID = bundle.getString("Inv_GUID");
         Tbl_GUID = bundle.getString("Tbl_GUID");
         Ord_TYPE = bundle.getString("Ord_TYPE");
+        Tbl_NAME = bundle.getString("Tbl_NAME");
         try {
             Acc_NAME = bundle.getString("Acc_NAME");
             Seen = bundle.getBoolean("Seen");
@@ -443,9 +419,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             if (company.mode  == 1) {
                 Account acc = Select.from(Account.class).first();
-
-
-                    binding.tvNameCustomer.setText(acc != null ? acc.N :"");
+                binding.tvNameCustomer.setText(acc != null ? acc.N+"  "+Tbl_NAME :"");
             }
 
 
@@ -461,16 +435,18 @@ public class InVoiceDetailMobileFragment extends Fragment {
         invoiceDetailList.clear();
 
 
-        if (type.equals("1") )
+        if (type.equals("1") && !EDIT)
             binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
         else
             binding.tvSumPurePrice.setText(format.format(sumPurePrice) + " ریال ");
+
 
         binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
         binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
 
-        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type,Seen);
+
+        invoiceDetailAdapter = new InvoiceDetailMobileAdapter(getActivity(), invoiceDetailList, type,Seen,sharedPreferences);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -524,7 +500,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 for (int i = 0; i < invoiceDetails.size(); i++) {
                     ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
                     if (product != null) {
-                        double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice());
+                        double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
 
                         double discountPrice;
                         if (type.equals("1") || Seen)
@@ -534,7 +510,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
                             discountPrice = sumprice * (product.getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice());
+                        sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -573,11 +549,11 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
                     ir.kitgroup.saleinOrder.DataBase.Product product = Select.from(ir.kitgroup.saleinOrder.DataBase.Product.class).where("I ='" + invoiceDetailList.get(i).PRD_UID + "'").first();
                     if (product != null) {
-                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice());
+                        double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
                         double discountPrice = sumprice * (product.getPercDis() / 100);
                         double totalPrice = sumprice - discountPrice;
 
-                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice());
+                        sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
                         sumPurePrice = sumPurePrice + totalPrice;
                         sumDiscounts = sumDiscounts + discountPrice;
 
@@ -651,17 +627,20 @@ public class InVoiceDetailMobileFragment extends Fragment {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
                 return;
             }
-            bundle.putString("Ord_TYPE", Ord_TYPE);
-            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-            if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
-                bundle.putString("Tbl_GUID", "");
-            else
-                bundle.putString("Tbl_GUID", Tbl_GUID);
 
-            bundle.putString("Inv_GUID", Inv_GUID);
-            bundle.putBoolean("Seen", true);
-            bundle.putString("Acc_NAME", Acc_NAME);
-            bundle.putString("Acc_GUID", Acc_GUID);
+            Bundle bundle1=new Bundle();
+            bundle1.putString("Ord_TYPE", Ord_TYPE);
+            Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+           // if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
+            if (tb != null && tb.GO != null)
+                bundle1.putString("Tbl_GUID", "");
+            else
+                bundle1.putString("Tbl_GUID", Tbl_GUID);
+
+            bundle1.putString("Inv_GUID", Inv_GUID);
+            bundle1.putBoolean("Seen", true);
+            bundle1.putString("Acc_NAME", Acc_NAME);
+            bundle1.putString("Acc_GUID", Acc_GUID);
 
 
             MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();

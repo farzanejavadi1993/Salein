@@ -999,7 +999,7 @@ public class PaymentMobileFragment extends Fragment {
                 InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
 
                 if (product != null) {
-                    double sumTotalPrice = (invoiceDtl.INV_DET_QUANTITY * product.getPrice());//جمع کل ردیف
+                    double sumTotalPrice = (invoiceDtl.INV_DET_QUANTITY * product.getPrice(sharedPreferences));//جمع کل ردیف
                     double discountPrice = 0.0;//جمع تخفیف ردیف
 
                     if (Seen)
@@ -1021,7 +1021,7 @@ public class PaymentMobileFragment extends Fragment {
                         invoiceDtl.INV_DET_PERCENT_DISCOUNT = product.getPercDis();
 
                     invoiceDtl.INV_DET_DISCOUNT = String.valueOf(discountPrice);
-                    invoiceDtl.INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice());
+                    invoiceDtl.INV_DET_PRICE_PER_UNIT = String.valueOf(product.getPrice(sharedPreferences));
                     sumDiscount = sumDiscount + discountPrice;
                     sumDiscountPercent = sumDiscountPercent + (product.getPercDis() / 100);
 

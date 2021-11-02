@@ -604,6 +604,7 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putBoolean("Seen", Seen);
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Tbl_GUID", Tbl_GUID);
+                bundle.putString("Tbl_NAME", Tbl_NAME);
                 bundle.putString("Ord_TYPE", Ord_TYPE);
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
@@ -809,7 +810,7 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api,sharedPreferences);
         productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
