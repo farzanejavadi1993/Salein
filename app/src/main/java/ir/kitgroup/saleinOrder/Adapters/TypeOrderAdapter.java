@@ -35,7 +35,7 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
     }
 
     public interface ClickItem {
-        void onRowClick(Integer code, Integer ty);
+        void onRowClick(String name,Integer code, Integer ty);
     }
 
     private ClickItem clickItem;
@@ -74,20 +74,17 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
 
         holder.cardOrderType.setLongClickable(true);
 
-        holder.cardOrderType.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                holder.longClick++;
-                ArrayList<OrderType> arrayList = new ArrayList<>(list);
-                CollectionUtils.filter(arrayList, a -> a.Click);
-                if (arrayList.size() > 0)
-                    list.get(list.indexOf(arrayList.get(0))).Click = false;
-                list.get(position).Click = true;
-                notifyDataSetChanged();
-                clickItem.onRowClick(list.get(position).getC(), 100);
+        holder.cardOrderType.setOnLongClickListener(v -> {
+            holder.longClick++;
+            ArrayList<OrderType> arrayList = new ArrayList<>(list);
+            CollectionUtils.filter(arrayList, a -> a.Click);
+            if (arrayList.size() > 0)
+                list.get(list.indexOf(arrayList.get(0))).Click = false;
+            list.get(position).Click = true;
+            notifyDataSetChanged();
+            clickItem.onRowClick(list.get(position).getN(),list.get(position).getC(), 100);
 
-                return false;
-            }
+            return false;
         });
         holder.cardOrderType.setOnClickListener(view -> {
 
@@ -99,7 +96,7 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
                 if (arrayList.size() > 0)
                     list.get(list.indexOf(arrayList.get(0))).Click = false;
                 notifyDataSetChanged();
-                clickItem.onRowClick(list.get(position).getC(), list.get(position).getTy());
+                clickItem.onRowClick(list.get(position).getN(),list.get(position).getC(), list.get(position).getTy());
             } else {
                 ArrayList<OrderType> arrayList = new ArrayList<>(list);
                 CollectionUtils.filter(arrayList, a -> a.Click);
@@ -107,7 +104,7 @@ public class TypeOrderAdapter extends RecyclerView.Adapter<TypeOrderAdapter.view
                     list.get(list.indexOf(arrayList.get(0))).Click = false;
                 notifyDataSetChanged();
                 holder.longClick=0;
-                clickItem.onRowClick(0, 0);
+                clickItem.onRowClick("",0, 0);
             }
 
 

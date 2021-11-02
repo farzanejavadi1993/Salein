@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -59,7 +58,6 @@ import ir.kitgroup.saleinOrder.models.OrderType;
 
 
 import ir.kitgroup.saleinOrder.DataBase.User;
-
 
 
 import ir.kitgroup.saleinOrder.models.ModelTable;
@@ -95,7 +93,6 @@ public class LauncherOrganizationFragment extends Fragment {
     private String TypeClickButtonDialog = "";
 
 
-
     //region Dialog
     private Dialog dialog;
     private TextView textMessageDialog;
@@ -104,7 +101,6 @@ public class LauncherOrganizationFragment extends Fragment {
     private String TableGUID;
     private int position1;
     //endregion Dialog
-
 
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -124,7 +120,6 @@ public class LauncherOrganizationFragment extends Fragment {
         AllTable = new ArrayList<>();
 
 
-
         //region Cast Variable Dialog
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -141,10 +136,7 @@ public class LauncherOrganizationFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> dialog.dismiss());
 
 
-
         binding.refreshLayout.setOnRefreshListener(this::getTable1);
-
-
 
 
         btnOkDialog.setOnClickListener(v -> {
@@ -220,20 +212,16 @@ public class LauncherOrganizationFragment extends Fragment {
         //endregion Cast Variable Dialog
 
 
-
-
-
-
         //region Action FilterButton
 
         binding.busyTable.setOnClickListener(v -> {
             requireNonNull(binding.txtError).setText("");
             filter("busy");
             tablesList.clear();
-            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            ArrayList<Tables> arrayList = new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> t.C == null && t.ACT);
             tablesList.addAll(arrayList);
-            if (tablesList.size()==0)
+            if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ میز مشغولی موجود نمی باشد.");
 
             tableAdapter.notifyDataSetChanged();
@@ -242,10 +230,10 @@ public class LauncherOrganizationFragment extends Fragment {
             binding.txtError.setText("");
             filter("reserve");
             tablesList.clear();
-            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            ArrayList<Tables> arrayList = new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> t.C == null && t.RSV);
             tablesList.addAll(arrayList);
-            if (tablesList.size()==0)
+            if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ میز رزرو شده ای موجود نمی باشد. ");
             tableAdapter.notifyDataSetChanged();
         });
@@ -253,10 +241,10 @@ public class LauncherOrganizationFragment extends Fragment {
             binding.txtError.setText("");
             filter("vacant");
             tablesList.clear();
-            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            ArrayList<Tables> arrayList = new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> t.C == null && !t.ACT && !t.RSV);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
-            if (tablesList.size()==0)
+            if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
@@ -264,10 +252,10 @@ public class LauncherOrganizationFragment extends Fragment {
             binding.txtError.setText("");
             filter("whole");
             tablesList.clear();
-            ArrayList<Tables> arrayList=new ArrayList<>(AllTable);
+            ArrayList<Tables> arrayList = new ArrayList<>(AllTable);
             CollectionUtils.filter(arrayList, t -> t.C == null);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
-            if (tablesList.size()==0)
+            if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ میزی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
@@ -276,17 +264,15 @@ public class LauncherOrganizationFragment extends Fragment {
             tablesList.clear();
             filter("getOut");
             tablesList.clear();
-            List<Tables> arrayList=Select.from(Tables.class).list();
-            CollectionUtils.filter(arrayList, t -> t.C!=null && t.GO != null);
+            List<Tables> arrayList = Select.from(Tables.class).list();
+            CollectionUtils.filter(arrayList, t -> t.C != null && t.GO != null);
             LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
-            if (tablesList.size()==0)
+            if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
         });
 
         //endregion Action FilterButton
-
-
 
 
         //region Configuration RecyclerView Table
@@ -304,42 +290,37 @@ public class LauncherOrganizationFragment extends Fragment {
         tableAdapter.OnclickShowDialog((Tbl_GUID, position, type) -> {
 
             textMessageDialog.setText("آیا مایل به حذف سفارش می باشید؟");
-            position1=position;
-            TableGUID=Tbl_GUID;
+            position1 = position;
+            TableGUID = Tbl_GUID;
             if (type)
-                TypeClickButtonDialog ="deleteTable";
+                TypeClickButtonDialog = "deleteTable";
             else
-                TypeClickButtonDialog ="deleteInvoice";
+                TypeClickButtonDialog = "deleteInvoice";
             dialog.show();
         });
 
 
-
-        tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID,Inv_GUID) -> {
+        tableAdapter.setOnClickItemListener((Name, Reserve, T_GUID, Inv_GUID) -> {
             binding.txtError.setText("");
             if (Reserve) {
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "1");//go to InVoiceDetailMobileFragment for register order first time
                 bundle.putString("Inv_GUID", Inv_GUID);
-                bundle.putString("Ord_TYPE","");
-                bundle.putString("Tbl_GUID",T_GUID);
-                bundle.putBoolean("EDIT",true);
-
+                bundle.putString("Ord_TYPE", "");
+                bundle.putString("Tbl_GUID", T_GUID);
+                bundle.putBoolean("EDIT", true);
 
 
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
 
-            }
+            } else {
 
-
-            else {
-
-                List<OrderType> orderType =new ArrayList<>(orderTypes);
+                List<OrderType> orderType = new ArrayList<>(orderTypes);
                 CollectionUtils.filter(orderType, o -> o.getTy() == 1);
-                int OrderType=0;
-                if (orderType.size()>0) {
+                int OrderType = 0;
+                if (orderType.size() > 0) {
                     OrderType = orderType.get(0).getC();
                 }
 
@@ -349,21 +330,18 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Inv_GUID", Inv_GUID);
                 bundle.putString("Acc_NAME", "");
                 bundle.putString("Acc_GUID", "");
-                bundle.putBoolean("EDIT",false);
-
+                bundle.putString("Tbl_NAME", "میز " + Name);
+                bundle.putBoolean("EDIT", false);
 
 
                 MainFragment mainFragment = new MainFragment();
                 mainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mainFragment, "MainFragment").addToBackStack("MainF").commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
             }
         });
         //endregion Configuration RecyclerView Table
-
-
-
 
 
         //region Configuration RecyclerView GetOutOrder
@@ -378,7 +356,7 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.recycleGetOutOrder.setHasFixedSize(false);
 
 
-        getOutOrderAdapter.setOnClickItemListener((code, ty) -> {
+        getOutOrderAdapter.setOnClickItemListener((name, code, ty) -> {
 
 
             if (code == 0 && ty == 0) {
@@ -386,23 +364,21 @@ public class LauncherOrganizationFragment extends Fragment {
                 binding.txtError.setText("");
                 tablesList.clear();
                 tablesList.addAll(AllTable);
-                if (tablesList.size()==0)
+                if (tablesList.size() == 0)
                     binding.txtError.setText("هیچ میزی موجود نمی باشد.");
                 tableAdapter.notifyDataSetChanged();
                 return;
-            }
-            else if (ty == 100) {
+            } else if (ty == 100) {
                 binding.txtError.setText("");
                 tablesList.clear();
                 List<Tables> tbls = Select.from(Tables.class).list();
                 CollectionUtils.filter(tbls, t -> t.C != null && t.C.equals(code));
                 tablesList.addAll(tbls);
-                if (tablesList.size()==0)
+                if (tablesList.size() == 0)
                     binding.txtError.setText("هیچ سفارشی موجود نمی باشد.");
                 tableAdapter.notifyDataSetChanged();
                 return;
             }
-
 
 
             Bundle bundle = new Bundle();
@@ -411,20 +387,17 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putString("Inv_GUID", "");
             bundle.putString("Acc_GUID", "");
             bundle.putString("Acc_NAME", "");
-            bundle.putBoolean("EDIT",false);
-
+            bundle.putBoolean("EDIT", false);
+            bundle.putString("Tbl_NAME", name);
 
 
             MainFragment mainFragment = new MainFragment();
             mainFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main,mainFragment, "MainFragment").addToBackStack("MainF").commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
         });
         //endregion Configuration RecyclerView getOutOrder
-
-
-
 
 
         //region Action btnLogOut
@@ -439,11 +412,7 @@ public class LauncherOrganizationFragment extends Fragment {
         //endregion Action btnLogOut
 
 
-
-
-
         getTable1();
-
 
 
         return binding.getRoot();
@@ -468,13 +437,11 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-
-
     private void getTypeOrder() {
 
         try {
             compositeDisposable.add(
-                   api.getOrderType1( company.userName,company.passWord)
+                    api.getOrderType1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -487,8 +454,7 @@ public class LauncherOrganizationFragment extends Fragment {
                                 ModelTypeOrder iDs;
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
 
                                     error = "مدل دریافت شده از نوع سفارش نا معتبر است";
                                     showError(error);
@@ -499,7 +465,7 @@ public class LauncherOrganizationFragment extends Fragment {
                                 }
 
                                 if (iDs == null) {
-                                    error ="لیست دریافت شده از نوع سفارش نا معتبر می باشد";
+                                    error = "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
                                     showError(error);
 
                                 } else {
@@ -515,9 +481,8 @@ public class LauncherOrganizationFragment extends Fragment {
                                 binding.refreshLayout.setRefreshing(false);
 
 
-
                             }, throwable -> {
-                                error =  "خطا در ارتباط با سرور";
+                                error = "خطا در ارتباط با سرور";
                                 showError(error);
                                 binding.progressbar.setVisibility(View.GONE);
                                 binding.refreshLayout.setRefreshing(false);
@@ -534,7 +499,6 @@ public class LauncherOrganizationFragment extends Fragment {
         }
 
     }
-
 
 
     private void filter(String viewName) {
@@ -580,7 +544,7 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                 api.getTable1(company.userName, company.passWord)
+                    api.getTable1(company.userName, company.passWord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -592,8 +556,7 @@ public class LauncherOrganizationFragment extends Fragment {
                                 ModelTable iDs;
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     error = "مدل دریافت شده از میزها نا معتبر است";
                                     showError(error);
                                     binding.progressbar.setVisibility(View.GONE);
@@ -608,7 +571,7 @@ public class LauncherOrganizationFragment extends Fragment {
                                     AllTable.clear();
                                     AllTable.addAll(iDs.getTables());
 
-                                    if (tablesList.size()==0)
+                                    if (tablesList.size() == 0)
                                         binding.txtError.setText("هیچ میزی موجود نمی باشد.");
 
 
@@ -627,7 +590,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
                             }, throwable -> {
-                                error =  "خطا در ارتباط با سرور";
+                                error = "خطا در ارتباط با سرور";
                                 showError(error);
                                 binding.progressbar.setVisibility(View.GONE);
                                 binding.refreshLayout.setRefreshing(false);
@@ -635,7 +598,7 @@ public class LauncherOrganizationFragment extends Fragment {
                             })
             );
         } catch (Exception e) {
-            error =  "خطا در اتصال به سرور";
+            error = "خطا در اتصال به سرور";
             showError(error);
             binding.progressbar.setVisibility(View.GONE);
             binding.refreshLayout.setRefreshing(false);
@@ -644,8 +607,7 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-
-    public void refreshAdapter(){
+    public void refreshAdapter() {
         filter("whole");
         getTable1();
         getTypeOrder();

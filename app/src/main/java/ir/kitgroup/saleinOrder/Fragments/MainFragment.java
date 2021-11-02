@@ -43,6 +43,7 @@ public class MainFragment extends Fragment {
 
 
     private String Tbl_GUID;
+    private String Tbl_NAME;
     private String Ord_TYPE;
     private String Inv_GUID;
     private String Inv_GUID_ORG;
@@ -68,6 +69,7 @@ public class MainFragment extends Fragment {
         assert bnd != null;
 
         Tbl_GUID = bnd.getString("Tbl_GUID");
+        Tbl_NAME = bnd.getString("Tbl_NAME");
         Ord_TYPE = bnd.getString("Ord_TYPE");
         Inv_GUID = bnd.getString("Inv_GUID");
         Inv_GUID_ORG = bnd.getString("Inv_GUID");
@@ -114,6 +116,7 @@ public class MainFragment extends Fragment {
                         bundle.putString("Inv_GUID", Inv_GUID);
                         bundle.putBoolean("Seen", Seen);
                         bundle.putString("Tbl_GUID", Tbl_GUID);
+                        bundle.putString("Tbl_NAME", Tbl_NAME);
                         bundle.putString("Ord_TYPE", Ord_TYPE);
                         bundle.putString("Acc_Name", Acc_NAME);
                         bundle.putString("Acc_GUID", Acc_GUID);
@@ -208,6 +211,7 @@ public class MainFragment extends Fragment {
 
         bundle1 = new Bundle();
         bundle1.putString("Tbl_GUID", Tbl_GUID);
+        bundle1.putString("Tbl_NAME", Tbl_NAME);
         bundle1.putString("Ord_TYPE", Ord_TYPE);
         bundle1.putString("Inv_GUID", Inv_GUID);
         bundle1.putString("Acc_GUID", Acc_GUID);

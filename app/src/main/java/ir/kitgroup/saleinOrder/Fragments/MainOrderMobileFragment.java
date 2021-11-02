@@ -140,6 +140,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
     private String Tbl_GUID;
+    private String Tbl_NAME;
     private String Ord_TYPE;
     private String Inv_GUID;
     private String Acc_NAME = "";
@@ -192,8 +193,6 @@ public class MainOrderMobileFragment extends Fragment {
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
-    private float sumPrice = 0;
-    private float sumPurePrice = 0;
 
 
     private TextWatcher textWatcherAcc;
@@ -235,6 +234,9 @@ public class MainOrderMobileFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         customProgress = CustomProgress.getInstance();
+
+
+
 
 
         //region Delete InvoiceDetail UnNecessary
@@ -347,6 +349,7 @@ public class MainOrderMobileFragment extends Fragment {
 
                     if (s.toString().isEmpty()) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
+
                         binding.edtNameCustomer.setHint("جستجو مشتری");
                     } else if (s.toString().length() >= 8) {
                         getAccountSearch1(s.toString(), 0);
@@ -411,7 +414,6 @@ public class MainOrderMobileFragment extends Fragment {
         Inv_GUID = "";
 
 
-
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
 
@@ -448,6 +450,7 @@ public class MainOrderMobileFragment extends Fragment {
         assert bnd != null;
         Ord_TYPE = bnd.getString("Ord_TYPE");
         Tbl_GUID = bnd.getString("Tbl_GUID");
+        Tbl_NAME = bnd.getString("Tbl_NAME");
         Inv_GUID = bnd.getString("Inv_GUID");
 
         Acc_NAME = bnd.getString("Acc_NAME");
@@ -456,6 +459,10 @@ public class MainOrderMobileFragment extends Fragment {
         Seen = bnd.getBoolean("Seen");
         //endregion Get Bundle
 
+
+
+
+        binding.orderListTvRegister.setText("تکمیل سفارش " + "(" + Tbl_NAME + ")");
 
         if (company.mode == 1 && EDIT) {
             binding.edtNameCustomer.setEnabled(false);
@@ -802,7 +809,7 @@ public class MainOrderMobileFragment extends Fragment {
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList,company,api);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api);
         productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
@@ -873,41 +880,7 @@ public class MainOrderMobileFragment extends Fragment {
             }
         });
 
-        productAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
 
-
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                super.onItemRangeRemoved(positionStart, itemCount);
-
-
-            }
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                sumPrice = 0;
-                sumPurePrice = 0;
-
-                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                for (int i = 0; i < invoiceDetails.size(); i++) {
-                    sumPrice = (float) (sumPrice + invoiceDetails.get(i).INV_DET_QUANTITY
-                            * Float.parseFloat(invoiceDetails.get(i).INV_DET_PRICE_PER_UNIT));
-                    sumPurePrice = sumPurePrice + Float.parseFloat(invoiceDetails.get(i).INV_DET_TOTAL_AMOUNT);
-                }
-
-
-                binding.orderListTvRegister.setText("تکمیل سفارش " + "(" + format.format(sumPurePrice) + " ریال " + ")");
-
-
-            }
-        });
 
         //endregion CONFIGURATION DATA PRODUCT
 
@@ -1505,25 +1478,38 @@ public class MainOrderMobileFragment extends Fragment {
 
 
                                     List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
-                                    String Update = settingsList.get(0).UPDATE_APP;
-                                    String NewVersion = settingsList.get(0).VERSION_APP;
-                                    String AppVersion = "";
-                                    try {
-                                        AppVersion = appVersion();
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        e.printStackTrace();
+
+                                    if (settingsList.size()>0){
+                                        String Update = settingsList.get(0).UPDATE_APP;
+                                        String NewVersion = settingsList.get(0).VERSION_APP;
+                                        String AppVersion = "";
+                                        try {
+                                            AppVersion = appVersion();
+                                        } catch (PackageManager.NameNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+
+                                        sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
+                                        sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+
+                                        Acc_GUID=settingsList.get(0).DEFAULT_CUSTOMER;
+                                        binding.edtNameCustomer.setHint("مشتری پیش فرض");
+
+                                        if (Update.equals("3") && !AppVersion.equals(NewVersion)) {
+                                            textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
+                                            btnNo.setVisibility(View.GONE);
+                                            dialogUpdate.setCancelable(false);
+                                            dialogUpdate.show();
+                                        } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
+                                            textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
+                                            btnNo.setVisibility(View.VISIBLE);
+                                            dialogUpdate.setCancelable(true);
+                                            dialogUpdate.show();
+                                        }
                                     }
-                                    if (Update.equals("3") && !AppVersion.equals(NewVersion)) {
-                                        textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را آپدیت کنید.");
-                                        btnNo.setVisibility(View.GONE);
-                                        dialogUpdate.setCancelable(false);
-                                        dialogUpdate.show();
-                                    } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
-                                        textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را آپدیت کنید.");
-                                        btnNo.setVisibility(View.VISIBLE);
-                                        dialogUpdate.setCancelable(true);
-                                        dialogUpdate.show();
-                                    }
+
                                 }
 
 
