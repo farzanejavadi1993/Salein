@@ -207,7 +207,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
 
-            String ip = Select.from(User.class).first().ipLocal;
+            String ip =company.ipLocal;
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList

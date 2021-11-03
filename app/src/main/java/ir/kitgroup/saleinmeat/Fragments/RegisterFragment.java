@@ -63,7 +63,7 @@ public class RegisterFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
-    private User user;
+
     private int gender = 0;
 
 
@@ -82,7 +82,7 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        user = Select.from(User.class).first();
+
 
         //region Get Bundle And Set Data
         Bundle bundle = getArguments();
@@ -163,7 +163,7 @@ public class RegisterFragment extends Fragment {
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);
-            addAccount(user.userName, user.passWord, accountsList);
+            addAccount(company.userName, company.passWord, accountsList);
 
         });
         //endregion Action btnRegisterInformation
@@ -237,9 +237,9 @@ public class RegisterFragment extends Fragment {
                                         bundle.putString("Ord_TYPE", "");
                                         bundle.putString("Tbl_GUID", "");
                                         bundle.putString("Inv_GUID", "");
-                                        MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                                        mainOrderMobileFragment.setArguments(bundle);
-                                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
+                                        MainFragment mainFragment = new MainFragment();
+                                        mainFragment.setArguments(bundle);
+                                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
                                         replaceFragment.commit();
                                   //  }
                                     //endregion Go To MainOrderFragment Because Account Is Register

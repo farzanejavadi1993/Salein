@@ -75,6 +75,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
+import ir.kitgroup.saleinmeat.Activities.LauncherActivity;
 import ir.kitgroup.saleinmeat.Adapters.AccountAdapter;
 import ir.kitgroup.saleinmeat.Adapters.DescriptionAdapter;
 
@@ -260,7 +261,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Set Icon And Title
-        binding.ivIconCompany.setImageResource(company.imageLogo);
+
         binding.tvCompany.setText(company.nameCompany);
         //endregion Set Icon And Title
 
@@ -1584,7 +1585,11 @@ public class MainOrderMobileFragment extends Fragment {
 
     public void refreshProductList() {
         productAdapter.notifyDataSetChanged();
-        ;
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
+        if (fragment instanceof MainFragment) {
+            MainFragment fgf = (MainFragment) fragment;
+            fgf.setHomeBottomBar();
+        }
     }
 
 }

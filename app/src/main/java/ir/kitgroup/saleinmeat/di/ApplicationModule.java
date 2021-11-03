@@ -169,14 +169,19 @@ public class ApplicationModule {
                     imageLogo = R.drawable.meat_icon;
                     imageDialog = R.drawable.meat_png;
                     nameCompany = "گوشت دنیوی";
-                    nameCompany = "ir.kitgroup.saleinmeat";
+                    namePackage = "ir.kitgroup.saleinmeat";
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
                     namePackage = "ir.kitgroup.saleinmeat";
                     title = " هایپر گوشت دنیوی";
                     description = "عرضه کننده انواع گوشت";
-                    ipLocal = "109.125.133.149:9999";
+//                    ipLocal = "109.125.133.149:9999";
+//                    userName = "admin";
+//                    passWord = "0123";
+
+
+                    ipLocal = "192.168.20.8:96";
                     userName = "admin";
-                    passWord = "0123";
+                    passWord = "123";
                     lat = 36.31947320471888;
                     lng = 59.605469293071884;
 
@@ -186,7 +191,6 @@ public class ApplicationModule {
                     imageLogo = R.drawable.noon;
                     imageDialog = R.drawable.noon;
                     nameCompany = "کافه نون";
-                    nameCompany = "ir.kitgroup.saleinnoon";
                     namePackage = "ir.kitgroup.saleinnoon";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";

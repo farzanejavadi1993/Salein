@@ -40,6 +40,7 @@ public class MainFragment extends Fragment {
     private FragmentMainBinding binding;
     private int counter;
 
+    private  boolean callHome=true;
 
     private String Tbl_GUID;
     private String Tbl_NAME;
@@ -63,6 +64,7 @@ public class MainFragment extends Fragment {
         binding = FragmentMainBinding.inflate(getLayoutInflater());
 
 
+        callHome=true;
         //region Get Bundle
         Bundle bnd = getArguments();
         assert bnd != null;
@@ -97,15 +99,21 @@ public class MainFragment extends Fragment {
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
 
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setBackgroundColor(getActivity().getResources().getColor(R.color.red_table));
+
+            binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(false);
+
             binding.bottomNavigationViewLinear.setOnNavigationItemSelectedListener(item -> {
 
-                binding.bottomNavigationViewLinear.getMenu().getItem(0).setEnabled(false);
+
 
                 switch (item.getItemId()) {
                     case R.id.homee:
 
-                        mainOrderMobileFragment.setArguments(bundle1);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher_main, mainOrderMobileFragment, "MainOrderMobileFragment").commit();
+                        if (callHome){
+                            mainOrderMobileFragment.setArguments(bundle1);
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher_main, mainOrderMobileFragment, "MainOrderMobileFragment").commit();
+                        }
+
                         return true;
 
 
@@ -129,7 +137,8 @@ public class MainFragment extends Fragment {
 
 
                     case R.id.profile:
-                        binding.bottomNavigationViewLinear.getMenu().getItem(0).setEnabled(true);
+                        callHome=true;
+                        binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(true);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher_main, new SettingFragment(), "SettingFragment").commit();
                         return true;
                 }
@@ -152,10 +161,12 @@ public class MainFragment extends Fragment {
                 //Client
                 name = company.namePackage.split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
-                if (Inv_GUID.equals("") && !name.equals("saleinOrder")) {
+                if (Inv_GUID.equals("")) {
                     Inv_GUID = UUID.randomUUID().toString();
                     sharedPreferences.edit().putString(name, Inv_GUID).apply();
-                }else {
+                }
+
+                if (!Inv_GUID.equals("")&&name.equals("saleinOrder")){
                     Inv_GUID = UUID.randomUUID().toString();
                 }
 
@@ -223,6 +234,12 @@ public class MainFragment extends Fragment {
 
     public void setClearCounterOrder() {
         binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).clearNumber();
+    }
+
+
+    public void setHomeBottomBar() {
+        callHome=false;
+        binding.bottomNavigationViewLinear.setSelectedItemId(R.id.homee);
     }
 
 

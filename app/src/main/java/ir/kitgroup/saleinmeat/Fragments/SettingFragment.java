@@ -76,8 +76,7 @@ public class SettingFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private int fontSize =12;
-    private String userName;
-    private String passWord;
+
     private String mobile;
     private String link = "";
 
@@ -125,8 +124,7 @@ public class SettingFragment extends Fragment {
 
 
 
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
+
         mobile = Select.from(Account.class).first().M;
         binding.btnComment.setOnClickListener(v -> Toast.makeText(getActivity(), "به زودی", Toast.LENGTH_SHORT).show());
 
@@ -225,7 +223,7 @@ public class SettingFragment extends Fragment {
 
 
     @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String userName, String passWord, String mobile) {
+    private void getInquiryAccount1(String mobile) {
 
         if (!isNetworkAvailable(getActivity())){
             binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
@@ -235,7 +233,7 @@ public class SettingFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(company.userName,company.passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -323,7 +321,7 @@ public class SettingFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
 
         Seen=true;
-        getInquiryAccount1(userName,passWord,mobile);
+        getInquiryAccount1(mobile);
 
     }
 

@@ -76,7 +76,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-        String ip = Select.from(User.class).first().ipLocal;
+        String ip = company.ipLocal;
 
         Picasso.get()
                 .load("http://" + ip + "/GetImage?productId=" + Id

@@ -272,9 +272,12 @@ public class PaymentMobileFragment extends Fragment {
             OrdTList = new ArrayList<>();
 
 
-            numberPos = Select.from(User.class).first().numberPos;
-            if (numberPos != null && numberPos.equals(""))
-                numberPos = "0";
+            if (company.mode==1){
+                numberPos = Select.from(User.class).first().numberPos;
+                if (numberPos != null && numberPos.equals(""))
+                    numberPos = "0";
+            }
+
 
 
 
@@ -734,10 +737,9 @@ public class PaymentMobileFragment extends Fragment {
 
 
                             if (hour > date.getHours())
-                                if ((hour - date.getHours() != 1) && date.getMinutes() <=45) {
+                                if ((hour - date.getHours() != 1) || date.getMinutes() <=45) {
                                     timesList.add(allTime.get(i));
                                 }
-
 
                         } catch (Exception ignore) {
                         }
@@ -745,6 +747,7 @@ public class PaymentMobileFragment extends Fragment {
                     }
                     times.clear();
                     times.addAll(timesList);
+                    timeAdapter.notifyDataSetChanged();
                     dialogTime.show();
                 }
             });
@@ -1319,7 +1322,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            if ("ir.kitgroup.saleinmeat".equals(company.nameCompany)) {
+            if ("ir.kitgroup.saleinmeat".equals(company.namePackage)) {
 
                 if (SumPurePrice > 2000000) {
                     priceTransport = 0.0;

@@ -30,8 +30,7 @@ public class ProfileFragment extends Fragment {
     private String type = "";
     private String address = "";
     private CustomProgress customProgress;
-    private String userName = "";
-    private String passWord = "";
+
     private int fontSize=12;
 
     @Nullable
@@ -66,8 +65,6 @@ public class ProfileFragment extends Fragment {
 
 
 
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
 
 
 

@@ -109,9 +109,9 @@ public class SplashScreenFragment extends Fragment {
                             bundle.putString("Ord_TYPE", "");
                             bundle.putString("Tbl_GUID", "");
                             bundle.putString("Inv_GUID", "");
-                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                            mainOrderMobileFragment.setArguments(bundle);
-                            replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment");
+                            MainFragment mainFragment = new MainFragment();
+                            mainFragment.setArguments(bundle);
+                            replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
                        // }
                         //endregion Go To MainOrderFragment Because Account Is Register
 

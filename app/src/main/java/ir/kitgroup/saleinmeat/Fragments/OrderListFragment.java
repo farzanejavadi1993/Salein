@@ -49,6 +49,7 @@ import ir.kitgroup.saleinmeat.Adapters.OrderListAdapter;
 
 import ir.kitgroup.saleinmeat.Connect.API;
 import ir.kitgroup.saleinmeat.DataBase.Account;
+import ir.kitgroup.saleinmeat.models.Company;
 import ir.kitgroup.saleinmeat.models.Invoice;
 
 import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
@@ -66,6 +67,9 @@ public class OrderListFragment extends Fragment {
 
     @Inject
     API api;
+
+    @Inject
+    Company company;
      private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //region Parameter
     private FragmentOrderListBinding binding;
@@ -98,8 +102,7 @@ public class OrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        String userName = Select.from(User.class).list().get(0).userName;
-        String passWord = Select.from(User.class).list().get(0).passWord;
+
         String accGUID = Select.from(Account.class).list().get(0).I;
 
 
@@ -143,7 +146,7 @@ public class OrderListFragment extends Fragment {
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            getAllInvoice1(userName, passWord, accGUID,datVip);
+            getAllInvoice1( accGUID,datVip);
 
         });
 
@@ -177,7 +180,7 @@ public class OrderListFragment extends Fragment {
 
 
 
-        getAllInvoice1(userName, passWord, accGUID,datVip);
+        getAllInvoice1( accGUID,datVip);
     }
 
 
@@ -189,7 +192,7 @@ public class OrderListFragment extends Fragment {
 
 
 
-    private void getAllInvoice1(String userName, String pass, String AccGuid, String date) {
+    private void getAllInvoice1(String AccGuid, String date) {
         if (!isNetworkAvailable(getActivity())){
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
@@ -197,7 +200,7 @@ public class OrderListFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                   api.getAllInvoice1(userName, pass,AccGuid,date )
+                   api.getAllInvoice1(company.userName, company.passWord,AccGuid,date )
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

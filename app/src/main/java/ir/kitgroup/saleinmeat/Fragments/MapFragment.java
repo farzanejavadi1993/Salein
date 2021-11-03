@@ -88,6 +88,7 @@ import ir.kitgroup.saleinmeat.R;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.classes.CustomProgress;
 import ir.kitgroup.saleinmeat.databinding.FragmentMapBinding;
+import ir.kitgroup.saleinmeat.models.Company;
 import ir.kitgroup.saleinmeat.models.ModelLog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,6 +102,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     @Inject
     API api;
+    @Inject
+    Company company;
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
@@ -141,8 +144,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-    private String userName = "";
-    private String passWord = "";
+
 
     //endregion Parameter
     @Nullable
@@ -160,8 +162,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onViewCreated(view, savedInstanceState);
 
         customProgress = CustomProgress.getInstance();
-        userName = Select.from(User.class).first().userName;
-        passWord = Select.from(User.class).first().passWord;
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
@@ -275,7 +275,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
 
-                UpdateAccount(userName, passWord, list, 1, "");
+                UpdateAccount(list, 1, "");
 
                 return;
 
@@ -307,7 +307,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
-                UpdateAccount(userName, passWord, list, 0, type);
+                UpdateAccount(list, 0, type);
             }
 
 
@@ -870,7 +870,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     }
 
-    private void UpdateAccount(String userName, String pass, List<Account> accounts, int flag, String locationAddress) {
+    private void UpdateAccount( List<Account> accounts, int flag, String locationAddress) {
 
 
         try {
@@ -883,7 +883,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = api.UpdateAccount(userName, pass, gson.toJson(jsonObjectAcc, typeJsonObject), "");
+            Call<String> call = api.UpdateAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "");
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnRegisterInformation.setEnabled(false);
 

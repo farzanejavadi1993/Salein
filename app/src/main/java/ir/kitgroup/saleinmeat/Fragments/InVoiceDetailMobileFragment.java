@@ -634,7 +634,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
             MainFragment mainFragment = new MainFragment();
             mainFragment.setArguments(bundle1);
-            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF");
+            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
             replaceFragment.commit();
         });
         //endregion Action BtnEdit
