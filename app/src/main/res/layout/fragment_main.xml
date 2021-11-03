@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:focusable="true"
-        android:clickable="true"
-        android:background="@color/white"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
