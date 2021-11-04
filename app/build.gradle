@@ -11,7 +11,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinbahraman"
+        applicationId "ir.kitgroup.saleinOrder"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
 
 
 

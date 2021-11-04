@@ -2,18 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-
     <item android:title="پروفایل"
         android:id="@+id/profile"
         android:icon="@drawable/ic_profile"
         />
+
     <item android:title="سبد خرید"
         android:id="@+id/orders"
         android:icon="@drawable/ic_buylist"
         />
 
+
+
     <item android:title="خانه"
         android:id="@+id/homee"
         android:icon="@drawable/ic_home"
         />
+
+
 </menu>

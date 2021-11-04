@@ -47,7 +47,7 @@
                     app:cardElevation="4dp"
                     tools:ignore="UnusedAttribute">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/layout_search_customer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -56,15 +56,51 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+
                         <RelativeLayout
+                            android:layout_centerVertical="true"
+                            android:id="@+id/define_company_layout"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:layout_marginRight="12dp"
+                                android:layout_marginLeft="12dp"
+                                android:id="@+id/iv_logo_company"
+                                android:src="@drawable/top_png"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"/>
+
+
+                            <TextView
+                                android:layout_toLeftOf="@+id/iv_logo_company"
+
+                                android:id="@+id/tv_company"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="4dp"
+                                android:textColor="@color/purple_700"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:visibility="gone"
+                            android:layout_toRightOf="@+id/ivSearch"
+                            android:layout_marginRight="12dp"
+                            android:layout_toLeftOf="@+id/define_company_layout"
+                            android:layout_centerVertical="true"
                             android:id="@+id/layout_account"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="2dp"
-                            android:layout_weight="0.5"
                             android:background="@drawable/background_edittext"
                             android:padding="5dp"
-                            android:visibility="gone">
+                           >
 
 
                             <ImageView
@@ -96,74 +132,26 @@
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/define_company"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/margin10">
+                        <ImageView
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:padding="5dp"
+                            android:layout_marginLeft="12dp"
+                            android:id="@+id/ivSearch"
+                            android:src="@drawable/ic_search"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
 
 
-                            <TextView
-                                android:id="@+id/tv_company"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/margin8"
-                                android:layout_marginRight="@dimen/margin8"
-                                android:textColor="@color/purple_700"
-                                android:textSize="8sp"
-                                android:textStyle="bold" />
-                        </RelativeLayout>
-
-                        <View
-                            android:layout_width="0.5dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/margin4"
-                            android:layout_marginBottom="@dimen/margin4"
-                            android:background="#ccc" />
-
-                        <RelativeLayout
-                            android:id="@+id/layout_search_product"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:layout_weight="0.5"
-                            android:background="@drawable/background_edittext">
-
-                            <ImageView
-                                android:id="@+id/iv_search"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/margin8"
-                                android:layout_marginRight="@dimen/margin8"
-                                android:src="@drawable/ic_search"
-                                tools:ignore="ContentDescription" />
 
 
-                            <EditText
-
-                                android:id="@+id/edt_search_product"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/iv_search"
-                                android:background="@drawable/background_edittext"
-                                android:backgroundTint="@android:color/transparent"
-                                android:fontFamily="@font/iransans"
-                                android:gravity="right"
-                                android:hint="@string/search_product"
-                                android:inputType="text"
-                                android:textColor="@color/medium_color"
-                                android:textSize="12sp"
-                                tools:targetApi="lollipop" />
 
 
-                        </RelativeLayout>
 
-
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
                 </com.google.android.material.card.MaterialCardView>
