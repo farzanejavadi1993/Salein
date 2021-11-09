@@ -7,6 +7,7 @@ public class Company {
     public String Description;
     public String namePackage;
     public String nameCompany;
+    public String services;
     public String linkUpdate;
     public String paymentLink;
 

@@ -86,7 +86,7 @@
                 app:cardCornerRadius="12dp"
                 app:strokeColor="#ddd"
                 app:strokeWidth="1.5dp"
-                tools:targetApi="lollipop">
+              >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

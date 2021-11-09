@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Toast;
 
 
@@ -47,7 +48,6 @@ import ir.kitgroup.saleinmeat.models.Company;
 public class LoginClientFragment extends Fragment {
 
 
-
     @Inject
     Company company;
 
@@ -58,6 +58,7 @@ public class LoginClientFragment extends Fragment {
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
+    private Boolean acceptRule =true;
 
     //endregion PARAMETER
 
@@ -71,20 +72,24 @@ public class LoginClientFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
         //region Configuration Text Size
-        int fontSize=12;
-      if (Util.screenSize >= 7) {
-          binding.tvWelcome.setTextSize(18);
-          fontSize = 14;
-      } else
-          fontSize = 12;
+        int fontSize ;
+        if (Util.screenSize >= 7) {
+            binding.tvWelcome.setTextSize(18);
+            fontSize = 14;
+        } else
+            fontSize = 12;
 
 
+        binding.loginTvRules.setTextSize(fontSize);
+        binding.loginTvRules1.setTextSize(fontSize);
+        binding.loginTvRules2.setTextSize(fontSize);
         binding.tvLogin.setTextSize(fontSize);
         binding.btnLogin.setTextSize(fontSize);
         binding.tvEnterMobile.setTextSize(fontSize);
@@ -92,6 +97,8 @@ public class LoginClientFragment extends Fragment {
         //endregion Configuration Text Size
 
 
+
+        binding.loginTvRules.setText("با ثبت نام در " +company.nameCompany);
         //region Set Icon And Title
         binding.tvWelcome.setText(company.messageWelcome);
         binding.imageLogo.setImageResource(company.imageLogo);
@@ -130,13 +137,39 @@ public class LoginClientFragment extends Fragment {
 
         //region Action btnLogin
         binding.btnLogin.setOnClickListener(v -> {
-            int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-            String messageCode = String.valueOf(code);
-            String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
-            login(mobileNumber, code, messageCode);
+            if (acceptRule){
+                int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+                String messageCode = String.valueOf(code);
+                String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+                login(mobileNumber, code, messageCode);
+            }
+
 
         });
         //endregion Action btnLogin
+
+
+        //region Action btnLogin
+        binding.loginTvRules1.setOnClickListener(v -> {
+            if (company.namePackage.equals("ir.kitgroup.saleinmeat")) {
+              requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new RulesFragment()).addToBackStack("RulesF").commit();
+
+            }
+        });
+        //endregion Action btnLogin
+
+
+        //region Action CheckBox
+        binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                acceptRule =true;
+                binding.btnLogin.setVisibility(View.VISIBLE);
+            }else {
+                acceptRule =false;
+                binding.btnLogin.setVisibility(View.GONE);
+            }
+        });
+        //endregion Action CheckBox
 
 
     }

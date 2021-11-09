@@ -1214,7 +1214,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         String name;
                         try {
-                            name = company.nameCompany.split("ir.kitgroup.")[1];
+                            name = company.namePackage.split("ir.kitgroup.")[1];
                             sharedPreferences.edit().putString(name, "").apply();
                         } catch (Exception ignore) {
 
@@ -1701,9 +1701,9 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-                                            if (!OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
+                                            if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
                                                 getInquiryAccount1(company.userName, company.passWord, acc.M);
-                                            else if (OnceSee && !company.nameCompany.equals("ir.kitgroup.saleinmeat"))
+                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
                                             if (acc!=null)

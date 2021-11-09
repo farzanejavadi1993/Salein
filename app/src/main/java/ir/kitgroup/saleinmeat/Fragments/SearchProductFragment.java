@@ -145,6 +145,8 @@ public class SearchProductFragment extends Fragment {
         recyclerDescription.setAdapter(descriptionAdapter);
 
 
+        binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
+
         descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
             if (click) {
                 descriptionList.get(position).Click = true;
@@ -220,9 +222,11 @@ public class SearchProductFragment extends Fragment {
                     productList.clear();
                     productAdapter.notifyDataSetChanged();
                     emptySearch=true;
+                    binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
 
 
                 } else {
+
                     emptySearch = false;
                     getSearchProduct(s.toString());
                 }
@@ -319,6 +323,10 @@ public class SearchProductFragment extends Fragment {
                                                     if (iDs.getProductList().size() > i)
                                                         productList.add(iDs.getProductList().get(i));
                                                 }
+                                            if (productList.size()>0)
+                                                binding.txtError.setText("");
+                                            else
+                                                binding.txtError.setText("کالایی یافت نشد");
                                             productAdapter.setMaxSale(maxSales);
                                             productAdapter.notifyDataSetChanged();
                                         }

@@ -132,18 +132,30 @@
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
 
-                        <ImageView
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:padding="5dp"
+
+                        <RelativeLayout
                             android:layout_marginLeft="12dp"
-                            android:id="@+id/ivSearch"
-                            android:src="@drawable/ic_search"
                             android:layout_centerVertical="true"
                             android:layout_alignParentLeft="true"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"/>
+                            android:layout_marginStart="22dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:id="@+id/btn_filter"
+                            android:background="@drawable/bookmark_search_layout_background"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:padding="5dp"
+                                android:layout_centerInParent="true"
+                                android:id="@+id/ivSearch"
+                                android:src="@drawable/ic_search"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"/>
+
+                        </RelativeLayout>
+
+
 
 
 

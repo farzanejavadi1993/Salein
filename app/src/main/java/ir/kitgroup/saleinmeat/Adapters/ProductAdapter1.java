@@ -205,7 +205,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (productsList.get(holder.getAdapterPosition()) != null) {
 
             if (maxSale.equals("1"))
-                getMaxSale(holder.layoutAmount, holder.error, productsList.get(position).getI(), position);
+                getMaxSale(holder.error, productsList.get(position).getI(), position);
 
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
@@ -317,10 +317,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 description = "";
 
 
+          holder.error.setText("");
             holder.edtDesc.setText(description);
             productsList.get(position).setAmount(amount);
 
-            holder.error.setText("");
+
             if (amount > 0) {
                 holder.ivMinus.setVisibility(View.VISIBLE);
                 holder.ProductAmountTxt.setVisibility(View.VISIBLE);
@@ -724,7 +725,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void getMaxSale(ConstraintLayout layout, TextView txtError, String Prd_GUID, int position) {
+    private void getMaxSale( TextView txtError, String Prd_GUID, int position) {
 
 
         try {

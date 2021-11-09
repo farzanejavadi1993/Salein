@@ -64,6 +64,7 @@ public class ApplicationModule {
 
         int mode = 2;
         int imageLogo = 0;
+        String name = "";
 
 
         try {
@@ -73,19 +74,24 @@ public class ApplicationModule {
 
                 case "ir.kitgroup.saleinbahraman":
                     imageLogo = R.drawable.bahraman_png;
+                    name="زعفران بهرامن";
+
                     break;
 
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_png;
+                    name="تاپ کباب";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_png;
+                    name="گوشت دنیوی";
                     break;
 
                 case "ir.kitgroup.saleinnoon":
                     imageLogo = R.drawable.noon;
+                    name="کافه نون";
                     break;
 
                 default:
@@ -101,6 +107,7 @@ public class ApplicationModule {
         Config config = new Config();
         config.imageLogo = imageLogo;
         config.mode = mode;
+        config.name = name;
 
         return config;
 
@@ -116,6 +123,7 @@ public class ApplicationModule {
         String paymentLink = "";
         String namePackage = "";
         String title = "";
+        String Service = "";
         String description = "";
         String messageWelcome = "";
         String ipLocal = "";
@@ -134,6 +142,7 @@ public class ApplicationModule {
             switch (pInfo.packageName) {
 
                 case "ir.kitgroup.saleinbahraman":
+                    Service=" ارائه  زعفران و انواع ادویه در مشهد فعالیت میکند.";
                     imageLogo = R.drawable.bahraman_icon;
                     imageDialog = R.drawable.bahraman_png;
                     nameCompany = "زعفران بهرامن";
@@ -155,6 +164,7 @@ public class ApplicationModule {
                     imageDialog = R.drawable.top_png;
                     nameCompany = "تاپ کباب";
                     namePackage = "ir.kitgroup.saleintop";
+                    Service=" ارائه انواع غذا در مشهد فعالیت میکند.";
                     title = "رستوران تاپ کباب";
                     messageWelcome = "به رستوران تاپ کباب خوش آمدید";
                     description = "عرضه کننده بهترین غذاها";
@@ -178,6 +188,7 @@ public class ApplicationModule {
                     nameCompany = "گوشت دنیوی";
                     namePackage = "ir.kitgroup.saleinmeat";
                     messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
+                    Service=" ارائه پروتئین و گوشت در مشهد فعالیت میکند.";
                     namePackage = "ir.kitgroup.saleinmeat";
                     title = " هایپر گوشت دنیوی";
                     description = "عرضه کننده انواع گوشت";
@@ -196,6 +207,7 @@ public class ApplicationModule {
                     imageLogo = R.drawable.noon;
                     imageDialog = R.drawable.noon;
                     nameCompany = "کافه نون";
+                    Service=" ارائه انواع نوشیدنی های گرم و سرد در مشهد فعالیت میکند.";
                     namePackage = "ir.kitgroup.saleinnoon";
                     messageWelcome = "به کافه نون دنیوی خوش آمدید";
                     title = "کافه نون";
@@ -230,6 +242,7 @@ public class ApplicationModule {
 
 
         Company company = new Company();
+        company.services = Service;
         company.ipLocal = ipLocal;
         company.imageLogo = imageLogo;
         company.imageDialog = imageDialog;

@@ -63,7 +63,7 @@ public class AboutUsFragment extends Fragment {
 
 
 
-            binding.imageView.setImageResource(company.imageLogo);
+            binding.imageView.setImageResource(company.imageDialog);
         binding.title.setText(company.title);
         binding.description.setText(company.Description);
         binding.textView4.setText(company.numberPhone);

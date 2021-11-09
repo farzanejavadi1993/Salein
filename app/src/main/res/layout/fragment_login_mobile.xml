@@ -122,15 +122,60 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <LinearLayout
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="25dp"
+            android:gravity="right|center_vertical"
+            android:layout_below="@+id/layout_editText"
+            android:orientation="horizontal"
+            android:id="@+id/layoutRule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="آن را می پذیرم."
+                android:id="@+id/login_tv_rules2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:text="  قوانین و مقررات "
+                android:id="@+id/login_tv_rules1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/purple_700"
+                android:textSize="12sp"
+         />
+
+            <TextView
+                android:text="با ثبت نام در سالین"
+                android:id="@+id/login_tv_rules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp"
+                 />
+
+            <CheckBox
+                android:layout_marginLeft="1dp"
+                android:checked="true"
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
 
 
 
         <com.google.android.material.button.MaterialButton
+            android:layout_below="@+id/layoutRule"
             android:id="@+id/btn_login"
             android:layout_width="360dp"
             android:layout_height="@dimen/bottom_height_size"
-            android:layout_below="@+id/layout_editText"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="22dp"
             android:layout_marginTop="8dp"
