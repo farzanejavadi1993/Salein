@@ -116,6 +116,17 @@ public class MainFragment extends Fragment {
 
                     case R.id.orders:
                         Bundle bundle = new Bundle();
+                       Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+                        if (frg instanceof MainOrderMobileFragment) {
+                            MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
+                            if (fgf.typeAddress==2)
+                            bundle.putBoolean("setADR1",true);
+                        }
+
+
+
+
+
                         bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
                         bundle.putString("Inv_GUID", Inv_GUID);
                         bundle.putBoolean("Seen", Seen);

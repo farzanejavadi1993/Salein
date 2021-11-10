@@ -218,7 +218,7 @@ public class MainOrderMobileFragment extends Fragment {
     private Dialog dialogAddress;
     private RadioButton radioAddress1;
     private RadioButton radioAddress2;
-    private int typeAddress = 0;
+    public int typeAddress = 0;
 
 
     private Double latitude1 = 0.0;
@@ -803,8 +803,6 @@ public class MainOrderMobileFragment extends Fragment {
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
                 bundle.putBoolean("EDIT", EDIT);
-
-
                 InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();

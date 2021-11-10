@@ -118,6 +118,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
     private String Tbl_NAME = "";
     private String Ord_TYPE;
     private boolean EDIT = false;
+    private boolean setADR1 = false;
 
 
     private double sumPrice;
@@ -272,6 +273,8 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
         EDIT = bundle.getBoolean("EDIT");
+        setADR1 = bundle.getBoolean("setADR1");
+
         //endregion Get Bundle
 
 
@@ -668,6 +671,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
             bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
             bundle1.putBoolean("Seen", Seen);
             bundle1.putString("Tbl_NAME", Tbl_NAME);
+            bundle1.putBoolean("setADR1", setADR1);
 
             PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
             paymentFragment.setArguments(bundle1);
