@@ -58,59 +58,39 @@
 
 
                         <RelativeLayout
-                            android:layout_centerVertical="true"
-                            android:id="@+id/define_company_layout"
-                            android:layout_alignParentRight="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_marginRight="12dp"
-                                android:layout_marginLeft="12dp"
-                                android:id="@+id/iv_logo_company"
-                                android:src="@drawable/top_png"
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"/>
-
-
-                            <TextView
-                                android:layout_toLeftOf="@+id/iv_logo_company"
-
-                                android:id="@+id/tv_company"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="4dp"
-                                android:textColor="@color/purple_700"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:visibility="gone"
-                            android:layout_toRightOf="@+id/ivSearch"
-                            android:layout_marginRight="12dp"
-                            android:layout_toLeftOf="@+id/define_company_layout"
-                            android:layout_centerVertical="true"
                             android:id="@+id/layout_account"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
                             android:layout_marginEnd="2dp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@+id/btn_filter"
                             android:background="@drawable/background_edittext"
-                            android:padding="5dp"
-                           >
+                            android:visibility="gone"
 
+                            >
 
-                            <ImageView
-                                android:id="@+id/btn_add_account"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                            <RelativeLayout
+                                android:id="@+id/btn_filter_add"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/ic_plus_black"
-                                tools:ignore="ContentDescription" />
+                                android:layout_marginLeft="8dp"
+                                android:background="@drawable/bookmark_search_layout_background"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <ImageView
+
+                                    android:id="@+id/btn_add_account"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_centerInParent="true"
+                                    android:src="@drawable/ic_plus_black"
+                                    tools:ignore="ContentDescription" />
+                            </RelativeLayout>
 
 
                             <EditText
@@ -119,7 +99,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/margin8"
-                                android:layout_toRightOf="@+id/btn_add_account"
+                                android:layout_toRightOf="@+id/btn_filter_add"
                                 android:background="@android:color/transparent"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="right|center_vertical"
@@ -132,35 +112,137 @@
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
 
-
                         <RelativeLayout
-                            android:layout_marginLeft="12dp"
-                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:layout_marginStart="22dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12dp"
+                            android:background="@drawable/bookmark_search_layout_background"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:id="@+id/btn_filter"
-                            android:background="@drawable/bookmark_search_layout_background"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            app:layout_constraintTop_toTopOf="parent">
+
                             <ImageView
-                                android:padding="5dp"
-                                android:layout_centerInParent="true"
                                 android:id="@+id/ivSearch"
-                                android:src="@drawable/ic_search"
                                 android:layout_width="30dp"
-                                android:layout_height="30dp"/>
+                                android:layout_height="30dp"
+                                android:layout_centerInParent="true"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_search" />
 
                         </RelativeLayout>
 
+                        <LinearLayout
+                            android:layout_marginBottom="@dimen/margin2"
+                            android:layout_marginTop="@dimen/margin2"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="12dp"
+                            android:id="@+id/layout_address_branch"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_toRightOf="@+id/btn_filter"
+                            android:orientation="horizontal">
 
 
 
+                            <RelativeLayout
+                                android:id="@+id/btn_add_address"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:background="@drawable/bookmark_search_layout_background"
+                                android:padding="1dp"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" >
+                                <ImageView
+                                    android:id="@+id/iv_address"
+                                    android:padding="@dimen/margin4"
+                                    android:layout_centerVertical="true"
+                                    android:rotation="270"
+                                    android:src="@drawable/ic_left_icon"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_width="17dp"
+                                    android:layout_height="17dp"/>
+                                <TextView
+                                    android:layout_marginRight="3dp"
+                                    android:layout_toRightOf="@+id/iv_address"
+                                    android:id="@+id/tvTitleaddress"
+                                    android:text="ارسال به"
+                                    android:textColor="@color/medium_color"
+                                    android:textSize="11sp"
+                                    android:singleLine="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
 
+                                <TextView
+                                    android:layout_marginRight="3dp"
+                                    android:id="@+id/tvAddress"
+                                    android:layout_below="@+id/tvTitleaddress"
+                                    android:text="مشهد خیابان یاس انتهای یاس 8"
+                                    android:textColor="@color/purple_700"
+                                    android:textSize="11sp"
+                                    android:singleLine="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </RelativeLayout>
 
+                            <RelativeLayout
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:background="@drawable/bookmark_search_layout_background"
+                                android:padding="1dp"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" >
+                                <ImageView
+                                    android:id="@+id/iv_store"
+                                    android:padding="@dimen/margin4"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"/>
+                                <TextView
 
+                                    android:layout_toLeftOf="@+id/iv_store"
+                                    android:id="@+id/tvTitleStore"
+                                    android:text="خرید از فروشگاه"
+                                    android:textColor="@color/medium_color"
+                                    android:textSize="11sp"
+                                    android:singleLine="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <TextView
+
+                                    android:id="@+id/tvNameStore"
+                                    android:layout_toLeftOf="@+id/iv_store"
+                                    android:layout_below="@+id/tvTitleStore"
+                                    android:text="گوشت دنیوی"
+                                    android:textColor="@color/purple_700"
+                                    android:textSize="11sp"
+                                    android:singleLine="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <ImageView
+                                    android:id="@+id/iv_store_left"
+                                    android:padding="@dimen/margin4"
+                                    android:layout_centerVertical="true"
+                                    android:rotation="270"
+                                    android:src="@drawable/ic_left_icon"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_width="17dp"
+                                    android:layout_height="17dp"/>
+
+                            </RelativeLayout>
+                        </LinearLayout>
 
 
                     </RelativeLayout>

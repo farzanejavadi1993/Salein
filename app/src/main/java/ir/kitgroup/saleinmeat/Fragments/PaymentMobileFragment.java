@@ -148,11 +148,7 @@ public class PaymentMobileFragment extends Fragment {
     private Double latitude2 = 0.0;
     private Double longitude2 = 0.0;
 
-    public static Boolean setADR1 = false;
-
-
-
-
+    private Boolean setADR1 = false;
 
 
     private double calculateTransport = 0.0;
@@ -256,7 +252,6 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
-
         return binding.getRoot();
     }
 
@@ -274,14 +269,11 @@ public class PaymentMobileFragment extends Fragment {
             OrdTList = new ArrayList<>();
 
 
-            if (company.mode==1){
+            if (company.mode == 1) {
                 numberPos = Select.from(User.class).first().numberPos;
                 if (numberPos != null && numberPos.equals(""))
                     numberPos = "0";
             }
-
-
-
 
 
             timesList = new ArrayList<>();
@@ -291,10 +283,8 @@ public class PaymentMobileFragment extends Fragment {
             dateList = new ArrayList<>();
 
 
-
             Date dateNow = Calendar.getInstance().getTime();
             dateChoose = dateNow;
-
 
 
             //region get Bundle
@@ -316,7 +306,7 @@ public class PaymentMobileFragment extends Fragment {
             else
                 new_Tbl_GUID = Tbl_GUID;
 
-            if (company.mode == 2 || (company.mode == 1 && edit)  || (company.mode == 1 && Tbl_GUID.equals("")))
+            if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
                 new_Inv_GUID = Inv_GUID;
 
             else if (company.mode == 1 && !Tbl_GUID.equals(""))
@@ -336,7 +326,7 @@ public class PaymentMobileFragment extends Fragment {
 
             //region Configuration Size
             int fontBigSize;
-            int fontSize ;
+            int fontSize;
             if (Util.screenSize >= 7) {
                 fontBigSize = 14;
                 fontSize = 13;
@@ -371,7 +361,6 @@ public class PaymentMobileFragment extends Fragment {
             //endregion Configuration Size
 
 
-
             //region Cast Variable Dialog Sync
             dialogSync = new Dialog(getActivity());
             dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -394,9 +383,6 @@ public class PaymentMobileFragment extends Fragment {
             });
 
             //endregion Cast Variable Dialog Sync
-
-
-
 
 
             //region Cast DialogAddress
@@ -435,7 +421,7 @@ public class PaymentMobileFragment extends Fragment {
                     } else {
                         calculateTransport = price;
                         binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
-                        binding.tvTransport.setText(format.format(calculateTransport)+" ریال ");
+                        binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
                     }
 
 
@@ -473,7 +459,7 @@ public class PaymentMobileFragment extends Fragment {
                     } else {
                         calculateTransport = price;
                         binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
-                        binding.tvTransport.setText(format.format(calculateTransport)+" ریال ");
+                        binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
                     }
 
 
@@ -488,7 +474,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             btnNewAddress.setOnClickListener(v -> {
-                 if (acc==null){
+                if (acc == null) {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -525,10 +511,8 @@ public class PaymentMobileFragment extends Fragment {
                 radioAddress1.setText(address);
 
             }
-
-
             if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
-                String address ;
+                String address;
                 try {
                     latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                     longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
@@ -557,7 +541,7 @@ public class PaymentMobileFragment extends Fragment {
                     binding.tvError.setVisibility(View.GONE);
                     calculateTransport = price;
                 }
-                String address ;
+                String address;
                 try {
                     address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
                 } catch (Exception e) {
@@ -581,7 +565,7 @@ public class PaymentMobileFragment extends Fragment {
                     calculateTransport = price;
                 }
 
-                String address ;
+                String address;
                 try {
                     address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
                 } catch (Exception e) {
@@ -596,7 +580,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
             } else {
-
                 typeAddress = 0;
                 ValidAddress = "ناموجود";
             }
@@ -605,10 +588,10 @@ public class PaymentMobileFragment extends Fragment {
             binding.layoutAddress.setOnClickListener(v -> {
 
 
-                if (latitude1!=0.0 && latitude2!=0.0) {
+                if (latitude1 != 0.0 && latitude2 != 0.0) {
                     dialogAddress.show();
                     return;
-                }else if (acc==null){
+                } else if (acc == null) {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -739,7 +722,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
                             if (hour > date.getHours())
-                                if ((hour - date.getHours() != 1) || date.getMinutes() <=45) {
+                                if ((hour - date.getHours() != 1) || date.getMinutes() <= 45) {
                                     timesList.add(allTime.get(i));
                                 }
 
@@ -893,7 +876,7 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
-                   return;
+                    return;
                 } else if (((ValidAddress.equals("ناموجود") || typeAddress == 0) && (company.mode == 2 || (company.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp))))) {
                     Toast.makeText(getActivity(), "آدرس وارد شده نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
@@ -980,7 +963,7 @@ public class PaymentMobileFragment extends Fragment {
 
                     if (product != null) {
                         double sumTotalPrice = (invoiceDtl.INV_DET_QUANTITY * product.getPrice(sharedPreferences));//جمع کل ردیف
-                        double discountPrice ;//جمع تخفیف ردیف
+                        double discountPrice;//جمع تخفیف ردیف
 
                         if (Seen)
                             discountPrice = sumTotalPrice * (invoiceDtl.INV_DET_PERCENT_DISCOUNT / 100);
@@ -997,7 +980,6 @@ public class PaymentMobileFragment extends Fragment {
 
                         if (!Seen)
                             invoiceDtl.INV_DET_PERCENT_DISCOUNT = product.getPercDis();
-
 
 
                         invoiceDtl.INV_DET_DISCOUNT = String.valueOf(discountPrice);
@@ -1037,8 +1019,7 @@ public class PaymentMobileFragment extends Fragment {
                 invoice.INV_DUE_TIME = hour + ":" + "00";
                 invoice.INV_STATUS = true;
 
-                if (Select.from(Account.class).first()==null)
-                {
+                if (Select.from(Account.class).first() == null) {
                     Toast.makeText(getActivity(), "مشتری معتبر نمی باشد", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -1087,24 +1068,22 @@ public class PaymentMobileFragment extends Fragment {
                 dialogSendOrder.dismiss();
                 if (company.mode == 2) {
                     final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i=0;i<size;i++){
-                    getFragmentManager().popBackStack();
-                }
+                    for (int i = 0; i < size; i++) {
+                        getFragmentManager().popBackStack();
+                    }
 
 
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putString("Ord_TYPE", "");
-                        bundle1.putString("Tbl_GUID", "");
-                        bundle1.putString("Inv_GUID", "");
-                        MainFragment mainFragment = new MainFragment();
-                        mainFragment.setArguments(bundle1);
-                        FragmentTransaction replaceFragment;
-                        replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
-                        replaceFragment.commit();
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("Ord_TYPE", "");
+                    bundle1.putString("Tbl_GUID", "");
+                    bundle1.putString("Inv_GUID", "");
+                    MainFragment mainFragment = new MainFragment();
+                    mainFragment.setArguments(bundle1);
+                    FragmentTransaction replaceFragment;
+                    replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
+                    replaceFragment.commit();
 
-                }
-
-                else {
+                } else {
 
                     if (Tbl_GUID.equals("")) {
 
@@ -1541,8 +1520,7 @@ public class PaymentMobileFragment extends Fragment {
                                     Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
                                     binding.progressBar.setVisibility(View.GONE);
 
-                                }
-                                else {
+                                } else {
 
                                     timesList.clear();
 
@@ -1551,7 +1529,7 @@ public class PaymentMobileFragment extends Fragment {
                                     if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
                                         sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                                        if (!Ord_TYPE.equals(OrderTypeApp) && Tbl_GUID.equals("") && company.mode==1){
+                                        if (!Ord_TYPE.equals(OrderTypeApp) && Tbl_GUID.equals("") && company.mode == 1) {
                                             binding.btnPaymentPlace.setVisibility(View.GONE);
 
                                         }
@@ -1594,7 +1572,7 @@ public class PaymentMobileFragment extends Fragment {
                                         binding.layoutPayment.setVisibility(View.VISIBLE);
                                     }
 
-                                    Transport_GUID=settingsList.get(0).PEYK;
+                                    Transport_GUID = settingsList.get(0).PEYK;
                                     sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
                                     try {
                                         allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
@@ -1706,8 +1684,8 @@ public class PaymentMobileFragment extends Fragment {
                                             else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                            if (acc!=null)
-                                            getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                            if (acc != null)
+                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
                                         }
 
 

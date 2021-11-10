@@ -311,6 +311,35 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             //endregion Edit Address When Going From ProfileFragment
 
+            //region Edit Address When Going From ProfileFragment
+
+            else if (edit_address != null && edit_address.equals("3")) {
+                Account account = new Account();
+                account.I = accountORG.I;
+                account.N = accountORG.N;
+                account.M = accountORG.M;
+                account.CRDT = accountORG.CRDT;
+
+                if (type.equals("1")) {
+                    account.ADR2 = accountORG.ADR2;
+                    account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+
+                } else {
+
+                    account.ADR = accountORG.ADR;
+                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+
+                }
+
+
+                ArrayList<Account> list = new ArrayList<>();
+                list.add(account);
+                UpdateAccount(list, 2, type);
+            }
+
+
+            //endregion Edit Address When Going From ProfileFragment
+
 
         });
 
@@ -324,7 +353,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             @Override
             public void onClick(View v) {
                 Account accountORG = Select.from(Account.class).first();
-                if (edit_address != null && edit_address.equals("1")) {
+                if (edit_address != null && (edit_address.equals("1") || edit_address.equals("2") || edit_address.equals("3"))) {
 
                     if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
                         linearButtons.setVisibility(View.VISIBLE);
@@ -334,14 +363,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     return;
                 }
 
-                //region Edit Address when Going From ProfileFragment
-                else if (edit_address != null && edit_address.equals("2")) {
-                    linearButtons.setVisibility(View.GONE);
-                    dialogEditAddress.show();
-                    return;
 
-                }
-                //endregion Edit Address when Going From ProfileFragment
 
                 //region Region Gps Information And Go To RegisterFragment
                 getFragmentManager().popBackStack();
@@ -962,7 +984,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 bundle1.putString("type", locationAddress);
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
                                 frg.setArguments(bundle1);
-                            } else {
+                            }
+                            else if (flag==1){
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
                                 if (frg instanceof PaymentMobileFragment) {
@@ -972,6 +995,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 }
 
 
+                            }else {
+
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+                                Bundle bundle=new Bundle();
+                                bundle.putBoolean("setADR1",setADR2);
+                                frg.setArguments(bundle);
                             }
 
 
