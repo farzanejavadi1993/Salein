@@ -257,20 +257,17 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region First Value Parameter
 
-        Inv_GUID = "";
+
 
 
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
-
         productLevel1List = new ArrayList<>();
-
-
         productLevel2List = new ArrayList<>();
-
-
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
+
+
 
         if (productAdapter != null) {
             productAdapter.notifyDataSetChanged();
@@ -278,14 +275,16 @@ public class MainOrderMobileFragment extends Fragment {
             productLevel2Adapter.notifyDataSetChanged();
         }
 
-        isLastPage = false;
-        isLoading = false;
-        currentPage = 1;
 
-        error = "";
-
-        Ord_TYPE = "";
-        Tbl_GUID = "";
+//        Inv_GUID = "";
+//        isLastPage = false;
+//        isLoading = false;
+//        currentPage = 1;
+//
+//        error = "";
+//
+//        Ord_TYPE = "";
+//        Tbl_GUID = "";
 
 
         //endregion First Value Parameter
@@ -1730,7 +1729,22 @@ public class MainOrderMobileFragment extends Fragment {
 
     public void refreshProductFromSearch() {
         productAdapter.notifyDataSetChanged();
+    }
 
+
+    public Bundle reloadFragment(Boolean setAddress) {
+        Bundle bundle = getArguments();
+        bundle.putString("Inv_GUID", Inv_GUID);
+        bundle.putString("Tbl_GUID", Tbl_GUID);
+        bundle.putBoolean("Seen", Seen);
+        bundle.putString("Tbl_NAME", Tbl_NAME);
+        bundle.putString("Ord_TYPE", Ord_TYPE);
+        bundle.putString("Acc_NAME", Acc_NAME);
+        bundle.putString("Acc_GUID", Acc_GUID);
+        bundle.putBoolean("EDIT", EDIT);
+        bundle.putBoolean("Seen", Seen);
+        bundle.putBoolean("setARD1", setARD1);
+        return bundle;
     }
 
 

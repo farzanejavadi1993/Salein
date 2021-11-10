@@ -1385,20 +1385,16 @@ public class PaymentMobileFragment extends Fragment {
 
 
     public Bundle reloadFragment(Boolean setAddress) {
-
         Bundle bundle = getArguments();
         bundle.putString("Inv_GUID", Inv_GUID);
         bundle.putString("Tbl_GUID", Tbl_GUID);
         bundle.putBoolean("Seen", Seen);
-
         bundle.putString("Tbl_GUID", Tbl_GUID);
         bundle.putString("Ord_TYPE", String.valueOf(Ord_TYPE));
         bundle.putString("Sum_PURE_PRICE", Sum_PURE_PRICE);
         bundle.putBoolean("edit", edit);
         bundle.putBoolean("setADR1", setAddress);
         return bundle;
-
-
     }
 
 

@@ -998,9 +998,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             }else {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-                                Bundle bundle=new Bundle();
-                                bundle.putBoolean("setADR1",setADR2);
-                                frg.setArguments(bundle);
+                                if (frg instanceof MainOrderMobileFragment) {
+                                    MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
+                                    Bundle bundle = fgf.reloadFragment(setADR2);
+                                    frg.setArguments(bundle);
+                                }
                             }
 
 
