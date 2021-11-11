@@ -15,26 +15,16 @@
 
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_above="@+id/btn_register_company"
             android:layout_height="match_parent"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_register_company"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_height_size"
 
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/normal_left_right_margin"
-            android:layout_marginLeft="22dp"
-            android:layout_marginEnd="@dimen/normal_left_right_margin"
-            android:layout_marginRight="22dp"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/purple_700"
-            android:fontFamily="@font/iransans"
-            android:text="اننتخاب فروشگاه"
-            android:textColor="@color/white"
-            app:cornerRadius="@dimen/box_radius"
-            tools:ignore="UnusedAttribute" />
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressbar"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_circle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </RelativeLayout>
 
 </layout>

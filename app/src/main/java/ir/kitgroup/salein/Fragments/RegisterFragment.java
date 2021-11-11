@@ -78,8 +78,6 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -95,8 +93,8 @@ public class RegisterFragment extends Fragment {
         //endregion Get Bundle And Set Data
 
         //region Configuration Text Size
-        int fontSize=12;
-      if (Util.screenSize >= 7) {
+        int fontSize = 12;
+        if (Util.screenSize >= 7) {
 
             fontSize = 14;
             binding.textView2.setTextSize(15);
@@ -120,7 +118,6 @@ public class RegisterFragment extends Fragment {
         //endregion Configuration Text Size
 
 
-
         //region Action RadioButton
         binding.radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -133,7 +130,6 @@ public class RegisterFragment extends Fragment {
             }
         });
         //endregion Action RadioButton
-
 
 
         //region Action btnRegisterInformation
@@ -155,7 +151,7 @@ public class RegisterFragment extends Fragment {
             account.N = binding.edtFLNameCustomer.getText().toString();
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
             account.PSW = binding.edtNumberPhoneCustomer.getText().toString();
-            account.ADR = longitude+"longitude"+binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString()+"latitude"+latitude;
+            account.ADR = longitude + "longitude" + binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString() + "latitude" + latitude;
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);
@@ -165,9 +161,7 @@ public class RegisterFragment extends Fragment {
         //endregion Action btnRegisterInformation
 
 
-
     }
-
 
 
     //region Method
@@ -176,11 +170,10 @@ public class RegisterFragment extends Fragment {
     }
 
 
-
     private void addAccount(String userName, String pass, List<Account> accounts) {
 
         if (!isNetworkAvailable(getActivity())) {
-            Toast.makeText(getActivity(),"خطا در اتصال به اینترنت",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -221,14 +214,16 @@ public class RegisterFragment extends Fragment {
 
                                     //region Show All Company
 
-                                /*    if (company.nameCompany.equals("ir.kitgroup.salein")) {
+                                    if (company.namePackage.equals("ir.kitgroup.salein")) {
                                         FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                         replaceFragment.commit();
-                                    }*/
+                                    }
                                     //endregion Show All Company
 
+
+
                                     //region Go To MainOrderFragment Because Account Is Register
-                                  //  else {
+                                    else {
                                         Bundle bundle = new Bundle();
                                         bundle.putString("Ord_TYPE", "");
                                         bundle.putString("Tbl_GUID", "");
@@ -237,7 +232,7 @@ public class RegisterFragment extends Fragment {
                                         mainFragment.setArguments(bundle);
                                         FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
                                         replaceFragment.commit();
-                                  //  }
+                                    }
                                     //endregion Go To MainOrderFragment Because Account Is Register
 
                                 }
@@ -246,7 +241,7 @@ public class RegisterFragment extends Fragment {
                                 binding.progressBar.setVisibility(View.GONE);
 
                             }, throwable -> {
-                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری", Toast.LENGTH_SHORT).show();
 
                                 binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
                                 binding.btnRegisterInformation.setEnabled(true);
@@ -256,24 +251,22 @@ public class RegisterFragment extends Fragment {
             );
         } catch (Exception e) {
 
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در ثبت مشتری", Toast.LENGTH_SHORT).show();
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnRegisterInformation.setEnabled(true);
             binding.progressBar.setVisibility(View.GONE);
         }
 
 
-
     }
-
 
 
     //endregion Method
 
 
-    private   boolean isNetworkAvailable(Activity activity) {
+    private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

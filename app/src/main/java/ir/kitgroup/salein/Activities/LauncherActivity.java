@@ -4,10 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.annotation.SuppressLint;
+
 import android.app.Dialog;
 
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -24,9 +23,7 @@ import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import javax.inject.Inject;
 
@@ -50,8 +47,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     //region Parameter
 
-    @Inject
-    SharedPreferences sharedPreferences;
+
 
     @Inject
     Config config;
@@ -63,7 +59,7 @@ public class LauncherActivity extends AppCompatActivity {
     //endregion Parameter Dialog
 
 
-    private Boolean refreshApplication = false;
+  //  private Boolean refreshApplication = false;
 
     //endregion Parameter
 
@@ -72,7 +68,7 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        refreshApplication = false;
+        //refreshApplication = false;
         Util.ScreenSize(this);
 
         //region Set Layout to LauncherActivity class
@@ -121,9 +117,9 @@ public class LauncherActivity extends AppCompatActivity {
 
         messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
-        int imageIconDialog = config.imageLogo;
+
         ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
-        imageIconExitDialog.setImageResource(imageIconDialog);
+        imageIconExitDialog.setImageResource( config.imageLogo);
 
         MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
         MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);
@@ -267,14 +263,14 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     //region Custom  Method
-    private Date stringToDate(String aDate) {
+/*    private Date stringToDate(String aDate) {
 
         if (aDate == null) return null;
         ParsePosition pos = new ParsePosition(0);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return simpledateformat.parse(aDate, pos);
 
-    }
+    }*/
 
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);

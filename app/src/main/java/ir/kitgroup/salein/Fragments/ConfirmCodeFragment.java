@@ -59,7 +59,6 @@ import ir.kitgroup.salein.databinding.FragmentConfirmCodeBinding;
 public class ConfirmCodeFragment extends Fragment {
 
 
-
     @Inject
     Company company;
 
@@ -71,8 +70,8 @@ public class ConfirmCodeFragment extends Fragment {
     private FragmentConfirmCodeBinding binding;
     private int code;
     private CountDownTimer countDownTimer;
-    private long timeInLeftMillisSecond=60000;
-    boolean endTime=false;
+    private long timeInLeftMillisSecond = 60000;
+    boolean endTime = false;
 
 
     //endregion Parameter
@@ -93,20 +92,18 @@ public class ConfirmCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         assert bundle != null;
         String mobile = bundle.getString("mobile");
-         code = bundle.getInt("code");
+        code = bundle.getInt("code");
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
         //endregion Get Bundle And Set Data
 
 
         //region Configuration Text Size
-        int fontSize=12;
-        if (Util.screenSize  >= 7) {
+        int fontSize = 12;
+        if (Util.screenSize >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
         } else
@@ -170,8 +167,7 @@ public class ConfirmCodeFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV3.requestFocus();
-                }
-                else {
+                } else {
 
                     binding.edtV1.requestFocus();
 
@@ -207,8 +203,7 @@ public class ConfirmCodeFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV4.requestFocus();
-                }
-                else {
+                } else {
 
                     binding.edtV2.requestFocus();
 
@@ -239,15 +234,13 @@ public class ConfirmCodeFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
 
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 1) {
                     binding.edtV5.requestFocus();
-                }
-                else {
+                } else {
                     binding.edtV3.requestFocus();
                 }
                 String code = binding.edtV1.getText().toString() +
@@ -284,7 +277,7 @@ public class ConfirmCodeFragment extends Fragment {
 
                 if (editable.length() == 1) {
                     Util.hideKeyBoard(getActivity(), binding.edtV5);
-                }else {
+                } else {
                     binding.edtV4.requestFocus();
                 }
                 String code = binding.edtV1.getText().toString() +
@@ -358,7 +351,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-     return;
+                return;
             }
             getInquiryAccount1(company.userName, company.passWord, mobile);
         });
@@ -370,22 +363,15 @@ public class ConfirmCodeFragment extends Fragment {
         //endregion Action ivBackFragment
 
 
-
         //startTimer();
         binding.resendCode.setOnClickListener(v -> {
-            code= new Random(System.nanoTime()).nextInt(89000) + 10000;
-           // login(mobile, String.valueOf(code));
+            code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+            // login(mobile, String.valueOf(code));
         });
     }
 
 
-
     //region Method
-
-
-
-
-
 
 
 //    private void login(String mobile, String message) {
@@ -435,19 +421,18 @@ public class ConfirmCodeFragment extends Fragment {
 //    }
 
 
-
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setEditBackground(int drawable, EditText view) {
         view.setBackground(getResources().getDrawable(drawable));
     }
 
 
-    private void startTimer(){
-        countDownTimer=new CountDownTimer(timeInLeftMillisSecond,1000) {
+    private void startTimer() {
+        countDownTimer = new CountDownTimer(timeInLeftMillisSecond, 1000) {
             @Override
             public void onTick(long l) {
 
-                timeInLeftMillisSecond=l;
+                timeInLeftMillisSecond = l;
                 updateTime();
             }
 
@@ -460,21 +445,21 @@ public class ConfirmCodeFragment extends Fragment {
     }
 
 
-    private void stopTimer(){
+    private void stopTimer() {
         countDownTimer.cancel();
     }
 
-    private void updateTime(){
+    private void updateTime() {
 
-        int minute=(int) timeInLeftMillisSecond/6000;
-        int second=(int) timeInLeftMillisSecond%6000/1000;
-        String text=""+minute;
-        text +=":";
-        if (second<10)
-            text +="0";
+        int minute = (int) timeInLeftMillisSecond / 6000;
+        int second = (int) timeInLeftMillisSecond % 6000 / 1000;
+        String text = "" + minute;
+        text += ":";
+        if (second < 10)
+            text += "0";
 
-        text +=second;
-        binding.resendCode.setText(" ارسال مجدد کد تا "+text);
+        text += second;
+        binding.resendCode.setText(" ارسال مجدد کد تا " + text);
     }
     //endregion Method
 
@@ -482,18 +467,17 @@ public class ConfirmCodeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-      //  stopTimer();
+        //  stopTimer();
     }
-
 
 
     @SuppressLint("SetTextI18n")
     private void getInquiryAccount1(String userName, String passWord, String mobile) {
 
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
 
             Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-           return;
+            return;
         }
 
         try {
@@ -501,7 +485,7 @@ public class ConfirmCodeFragment extends Fragment {
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                  api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -543,15 +527,15 @@ public class ConfirmCodeFragment extends Fragment {
 
 
                                         //region Show All Company
-                                     /*   if (company.nameCompany.equals("ir.kitgroup.salein")) {
+                                        if (company.namePackage.equals("ir.kitgroup.salein")) {
                                             FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
                                             replaceFragment.commit();
-                                        }*/
+                                        }
                                         //endregion Show All Company
 
 
                                         //region Go To MainOrderFragment Because Account Is Register
-                                     //   else {
+                                        else {
                                             Bundle bundle = new Bundle();
                                             bundle.putString("Ord_TYPE", "");
                                             bundle.putString("Tbl_GUID", "");
@@ -560,7 +544,7 @@ public class ConfirmCodeFragment extends Fragment {
                                             mainFragment.setArguments(bundle);
                                             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
                                             replaceFragment.commit();
-                                       // }
+                                        }
                                         //endregion Go To MainOrderFragment Because Account Is Register
 
 
@@ -588,10 +572,9 @@ public class ConfirmCodeFragment extends Fragment {
                                 }
 
 
-
                             }, throwable -> {
 
-                                Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
                                 binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                                 binding.btnLogin.setEnabled(true);
                                 binding.progressBar.setVisibility(View.GONE);
@@ -600,7 +583,7 @@ public class ConfirmCodeFragment extends Fragment {
                             })
             );
         } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان." , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             binding.progressBar.setVisibility(View.GONE);
@@ -610,9 +593,9 @@ public class ConfirmCodeFragment extends Fragment {
     }
 
 
-    private   boolean isNetworkAvailable(Activity activity) {
+    private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

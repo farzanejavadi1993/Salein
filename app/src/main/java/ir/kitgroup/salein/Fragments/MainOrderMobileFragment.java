@@ -83,6 +83,7 @@ import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 
 
@@ -114,6 +115,7 @@ import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
 import ir.kitgroup.salein.models.ProductLevel2;
+import okhttp3.OkHttpClient;
 
 
 import static java.lang.Math.min;
@@ -132,6 +134,14 @@ public class MainOrderMobileFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+    @Inject
+    Gson gson;
+
+    @Inject
+    OkHttpClient okHttpClient;
+
+   private ConfigRetrofit configRetrofit;
 
 
     private FragmentMobileOrderMainBinding binding;
@@ -255,10 +265,6 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region First Value Parameter
-
-
-
-
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
         productLevel1List = new ArrayList<>();

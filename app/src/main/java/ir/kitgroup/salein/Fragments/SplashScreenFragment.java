@@ -34,14 +34,12 @@ import ir.kitgroup.salein.models.Company;
 public class SplashScreenFragment extends Fragment {
 
 
-
     //region Parameter
     private FragmentSplashScreenBinding binding;
     //endregion Parameter
 
     @Inject
     Company company;
-
 
 
     //region Override Method
@@ -61,13 +59,9 @@ public class SplashScreenFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
-
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
         binding.tvTitle.setText(company.title);
         binding.tvDescription.setText(company.Description);
-
 
 
         try {
@@ -76,8 +70,6 @@ public class SplashScreenFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-
 
 
         //region Thread
@@ -91,21 +83,19 @@ public class SplashScreenFragment extends Fragment {
                 FragmentTransaction replaceFragment = null;
 
 
-
                 //regionClient Application
                 if (company.mode == 2) {
                     //region Account Is Login & Register
                     if (Select.from(Account.class).list().size() > 0) {
 
-                        //regionShow All Company
-//                        if (company.namePackage.equals("ir.kitgroup.salein"))
-//                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                     //regionShow All Company
+                        if (company.namePackage.equals("ir.kitgroup.salein"))
+                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                     //endregionShow All Company
 
 
-                        //endregionShow All Company
-
-                            //region Go To MainOrderFragment Because Account Is Register
-                        //else {
+                      //region Go To MainOrderFragment Because Account Is Register
+                        else {
                             Bundle bundle = new Bundle();
                             bundle.putString("Ord_TYPE", "");
                             bundle.putString("Tbl_GUID", "");
@@ -113,7 +103,7 @@ public class SplashScreenFragment extends Fragment {
                             MainFragment mainFragment = new MainFragment();
                             mainFragment.setArguments(bundle);
                             replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
-                       // }
+                        }
                         //endregion Go To MainOrderFragment Because Account Is Register
 
                     }
@@ -142,9 +132,6 @@ public class SplashScreenFragment extends Fragment {
     }
 
     //endregion Override Method
-
-
-
 
 
     //region Custom Method
