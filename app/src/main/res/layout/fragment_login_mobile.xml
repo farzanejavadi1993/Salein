@@ -122,12 +122,37 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
+
+
+
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_below="@+id/layout_editText"
+            android:id="@+id/btn_login"
+            android:layout_width="360dp"
+            android:layout_height="@dimen/bottom_height_size"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/bottom_background_inActive_color"
+            android:enabled="false"
+            android:fontFamily="@font/iransans"
+            android:text="@string/get_code"
+            android:textColor="@color/white"
+            app:cornerRadius="@dimen/box_radius"
+            tools:ignore="UnusedAttribute" />
+
+
         <LinearLayout
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="8dp"
             android:gravity="right|center_vertical"
-            android:layout_below="@+id/layout_editText"
+            android:layout_below="@+id/btn_login"
             android:orientation="horizontal"
             android:id="@+id/layoutRule"
             android:layout_width="match_parent"
@@ -148,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
-         />
+                />
 
             <TextView
                 android:text="با ثبت نام در سالین"
@@ -157,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/medium_color"
                 android:textSize="12sp"
-                 />
+                />
 
             <CheckBox
                 android:layout_marginLeft="1dp"
@@ -166,28 +191,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-
-
-
-
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_below="@+id/layoutRule"
-            android:id="@+id/btn_login"
-            android:layout_width="360dp"
-            android:layout_height="@dimen/bottom_height_size"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="22dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/bottom_background_inActive_color"
-            android:enabled="false"
-            android:fontFamily="@font/iransans"
-            android:text="@string/get_code"
-            android:textColor="@color/white"
-            app:cornerRadius="@dimen/box_radius"
-            tools:ignore="UnusedAttribute" />
 
     </RelativeLayout>
 
