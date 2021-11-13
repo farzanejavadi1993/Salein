@@ -135,111 +135,107 @@
                         </RelativeLayout>
 
                         <LinearLayout
-                            android:layout_marginBottom="@dimen/margin2"
-                            android:layout_marginTop="@dimen/margin2"
-                            android:layout_marginLeft="6dp"
-                            android:layout_marginRight="12dp"
                             android:id="@+id/layout_address_branch"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginTop="@dimen/margin2"
+                            android:layout_marginRight="12dp"
+                            android:layout_marginBottom="@dimen/margin2"
                             android:layout_toRightOf="@+id/btn_filter"
                             android:orientation="horizontal">
 
 
-
                             <RelativeLayout
                                 android:id="@+id/btn_add_address"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginRight="3dp"
-                                android:background="@drawable/bookmark_search_layout_background"
-                                android:padding="1dp"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5" >
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:layout_weight="0.6"
+                                android:background="@drawable/bookmark_search_layout_background"
+                                android:padding="1dp">
+
                                 <ImageView
                                     android:id="@+id/iv_address"
-                                    android:padding="@dimen/margin4"
-                                    android:layout_centerVertical="true"
-                                    android:rotation="270"
-                                    android:src="@drawable/ic_left_icon"
-                                    android:layout_alignParentLeft="true"
                                     android:layout_width="17dp"
-                                    android:layout_height="17dp"/>
-                                <TextView
-                                    android:layout_marginRight="3dp"
-                                    android:layout_toRightOf="@+id/iv_address"
-                                    android:id="@+id/tvTitleaddress"
-                                    android:text="ارسال به"
-                                    android:textColor="@color/medium_color"
-                                    android:textSize="11sp"
-                                    android:singleLine="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="17dp"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_centerVertical="true"
+                                    android:padding="@dimen/margin4"
+                                    android:rotation="270"
+                                    android:src="@drawable/ic_left_icon" />
 
                                 <TextView
+                                    android:id="@+id/tvTitleaddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
                                     android:layout_marginRight="3dp"
+                                    android:layout_toRightOf="@+id/iv_address"
+                                    android:singleLine="true"
+                                    android:text="ارسال به"
+                                    android:textColor="@color/medium_color"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:layout_toRightOf="@+id/iv_address"
                                     android:id="@+id/tvAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTitleaddress"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="3dp"
+                                    android:singleLine="true"
                                     android:text="مشهد خیابان یاس انتهای یاس 8"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp"
-                                    android:singleLine="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="11sp" />
                             </RelativeLayout>
 
                             <RelativeLayout
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginRight="3dp"
-                                android:background="@drawable/bookmark_search_layout_background"
-                                android:padding="1dp"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5" >
-                                <ImageView
-                                    android:id="@+id/iv_store"
-                                    android:padding="@dimen/margin4"
-                                    android:layout_marginLeft="3dp"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"/>
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/bookmark_search_layout_background"
+                                android:padding="1dp">
+
                                 <TextView
 
-                                    android:layout_toLeftOf="@+id/iv_store"
                                     android:id="@+id/tvTitleStore"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:singleLine="true"
+                                    android:layout_toRightOf="@+id/iv_store_left"
                                     android:text="خرید از فروشگاه"
                                     android:textColor="@color/medium_color"
-                                    android:textSize="11sp"
-                                    android:singleLine="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="11sp" />
 
                                 <TextView
-
+                                    android:layout_toRightOf="@+id/iv_store_left"
                                     android:id="@+id/tvNameStore"
-                                    android:layout_toLeftOf="@+id/iv_store"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTitleStore"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:singleLine="true"
                                     android:text="گوشت دنیوی"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp"
-                                    android:singleLine="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="11sp" />
 
                                 <ImageView
                                     android:id="@+id/iv_store_left"
-                                    android:padding="@dimen/margin4"
-                                    android:layout_centerVertical="true"
-                                    android:rotation="270"
-                                    android:src="@drawable/ic_left_icon"
-                                    android:layout_alignParentLeft="true"
                                     android:layout_width="17dp"
-                                    android:layout_height="17dp"/>
+                                    android:layout_height="17dp"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_centerVertical="true"
+                                    android:padding="@dimen/margin4"
+                                    android:rotation="270"
+                                    android:src="@drawable/ic_left_icon" />
 
                             </RelativeLayout>
                         </LinearLayout>

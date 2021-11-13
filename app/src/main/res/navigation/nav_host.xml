@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/splashFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="ir.kitgroup.salein.Fragments.SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen">
+
+    <action
+        android:id="@+id/action_go_to_LoginFragment"
+        app:destination="@id/LoginFragment" />
+
+    <action
+        android:id="@+id/action_go_to_MainOrderFragment"
+        app:destination="@id/MainOrderFragment" />
+
+        <action
+            android:id="@+id/action_go_to_StoreFragment"
+            app:destination="@id/StoriesFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="ir.kitgroup.salein.Fragments.LoginClientFragment"
+        tools:layout="@layout/fragment_login_mobile">
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/MainOrderFragment"
+        android:name="ir.kitgroup.salein.Fragments.MainOrderFragment"
+        tools:layout="@layout/fragment_mobile_order_main">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/StoriesFragment"
+        android:name="ir.kitgroup.salein.Fragments.StoriesFragment"
+        tools:layout="@layout/fragment_mobile_order_main">
+
+    </fragment>
+
+
+</navigation>

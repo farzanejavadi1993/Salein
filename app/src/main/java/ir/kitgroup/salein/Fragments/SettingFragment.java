@@ -44,6 +44,7 @@ import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 import ir.kitgroup.salein.models.Company;
@@ -91,6 +92,10 @@ public class SettingFragment extends Fragment {
            fontSize = 14;
        else
            fontSize = 12;
+
+
+
+
         return binding.getRoot();
 
 
@@ -103,7 +108,13 @@ public class SettingFragment extends Fragment {
 
 
 
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
+        }
 
 
         binding.tvProfile.setTextSize(fontSize);

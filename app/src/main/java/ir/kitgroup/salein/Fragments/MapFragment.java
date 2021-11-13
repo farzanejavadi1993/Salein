@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.content.res.ColorStateList;
@@ -86,6 +87,7 @@ import ir.kitgroup.salein.Adapters.SearchViewAdapter;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.databinding.FragmentMapBinding;
@@ -106,6 +108,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     API api;
     @Inject
     Company company;
+    @Inject
+    SharedPreferences sharedPreferences;
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
@@ -166,6 +170,15 @@ public class MapFragment extends Fragment implements PermissionsListener {
         customProgress = CustomProgress.getInstance();
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
+
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
 
         //region Configuration Text Size
         int fontSize = 12;
@@ -998,8 +1011,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             }else {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-                                if (frg instanceof MainOrderMobileFragment) {
-                                    MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
+                                if (frg instanceof MainOrderFragment) {
+                                    MainOrderFragment fgf = (MainOrderFragment) frg;
                                     Bundle bundle = fgf.reloadFragment(setADR2);
                                     frg.setArguments(bundle);
                                 }

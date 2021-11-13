@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -49,6 +50,7 @@ import ir.kitgroup.salein.Adapters.OrderListAdapter;
 
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Invoice;
 
@@ -69,6 +71,10 @@ public class OrderListFragment extends Fragment {
 
     @Inject
     Company company;
+
+
+    @Inject
+    SharedPreferences sharedPreferences;
      private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //region Parameter
     private FragmentOrderListBinding binding;
@@ -103,7 +109,13 @@ public class OrderListFragment extends Fragment {
 
 
         String accGUID = Select.from(Account.class).list().get(0).I;
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
+        }
 
 
 

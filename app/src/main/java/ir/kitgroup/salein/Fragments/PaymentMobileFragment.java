@@ -72,6 +72,7 @@ import ir.kitgroup.salein.Adapters.TimeAdapter;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Tables;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.models.Company;
@@ -232,6 +233,18 @@ public class PaymentMobileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
+
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
+
+
+
 
 
         customProgress = CustomProgress.getInstance();

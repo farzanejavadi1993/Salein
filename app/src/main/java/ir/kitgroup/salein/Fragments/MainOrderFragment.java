@@ -58,7 +58,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 
 import java.lang.reflect.Type;
-import java.text.DecimalFormat;
+
 
 import java.util.ArrayList;
 
@@ -94,6 +94,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.Setting;
 
 import ir.kitgroup.salein.classes.PaginationScrollListener;
@@ -115,13 +116,12 @@ import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
 
 
 import ir.kitgroup.salein.models.ProductLevel2;
-import okhttp3.OkHttpClient;
 
 
 import static java.lang.Math.min;
 
 @AndroidEntryPoint
-public class MainOrderMobileFragment extends Fragment {
+public class MainOrderFragment extends Fragment {
 
 
     //region Parameter
@@ -130,18 +130,14 @@ public class MainOrderMobileFragment extends Fragment {
     Company company;
 
     @Inject
+    Config config;
+
+
+    @Inject
     API api;
 
     @Inject
     SharedPreferences sharedPreferences;
-
-    @Inject
-    Gson gson;
-
-    @Inject
-    OkHttpClient okHttpClient;
-
-   private ConfigRetrofit configRetrofit;
 
 
     private FragmentMobileOrderMainBinding binding;
@@ -198,7 +194,7 @@ public class MainOrderMobileFragment extends Fragment {
     //endregion Dialog Sync
 
 
-    private final DecimalFormat format = new DecimalFormat("#,###,###,###");
+
 
 
     private TextWatcher textWatcherAcc;
@@ -237,15 +233,11 @@ public class MainOrderMobileFragment extends Fragment {
     private Double longitude2 = 0.0;
 
 
-    private boolean setARD1=false;
     //endregion Dialog Address
 
 
     private String maxSales = "0";
     private boolean chooseAccount = false;
-
-
-
 
 
     //endregion Parameter
@@ -264,6 +256,15 @@ public class MainOrderMobileFragment extends Fragment {
         customProgress = CustomProgress.getInstance();
 
 
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
+
+
         //region First Value Parameter
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
@@ -271,7 +272,6 @@ public class MainOrderMobileFragment extends Fragment {
         productLevel2List = new ArrayList<>();
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
-
 
 
         if (productAdapter != null) {
@@ -307,10 +307,8 @@ public class MainOrderMobileFragment extends Fragment {
         Acc_GUID = bnd.getString("Acc_GUID");
         EDIT = bnd.getBoolean("EDIT");//when order need EDIT
         Seen = bnd.getBoolean("Seen");
-        setARD1=bnd.getBoolean("setADR1");
+        boolean setARD1 = bnd.getBoolean("setADR1");
         //endregion Get Bundle
-
-
 
 
         //region Delete InvoiceDetail UnNecessary
@@ -338,13 +336,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         //region Set Icon And Title
         binding.tvNameStore.setText(company.nameCompany);
-        binding.ivStore.setImageResource(company.imageDialog);
         //endregion Set Icon And Title
-
-
-
-
-
 
 
         Account acc = Select.from(Account.class).first();
@@ -379,7 +371,7 @@ public class MainOrderMobileFragment extends Fragment {
 
         }
         if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
-            String address ;
+            String address;
             try {
                 latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                 longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
@@ -395,13 +387,13 @@ public class MainOrderMobileFragment extends Fragment {
         }
 
 
-
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 try {
                     latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
                     longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
@@ -410,7 +402,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
                 typeAddress = 1;
-                String address=radioAddress1.getText().toString();
+                String address = radioAddress1.getText().toString();
                 binding.tvAddress.setText(address);
                 dialogAddress.dismiss();
 
@@ -422,12 +414,12 @@ public class MainOrderMobileFragment extends Fragment {
                 try {
                     latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                     longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 if (latitude2 == 0.0 || longitude2 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
                     return;
                 }
-
 
 
                 typeAddress = 2;
@@ -439,7 +431,7 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         btnNewAddress.setOnClickListener(v -> {
-            if (acc==null){
+            if (acc == null) {
                 Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -460,28 +452,24 @@ public class MainOrderMobileFragment extends Fragment {
         //region SetAddress
 
 
-
-
         if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setARD1) {
-            String address="نامشخص";
+            String address = "نامشخص";
             try {
                 typeAddress = 1;
                 address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             binding.tvAddress.setText(address);
-        }
-        else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") ) {
-            String address="نامشخص";
+        } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
+            String address = "نامشخص";
             try {
                 typeAddress = 2;
                 address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
             binding.tvAddress.setText(address);
-        }
-        else {
+        } else {
             typeAddress = 0;
             binding.tvAddress.setText("نامشخص");
         }
@@ -490,26 +478,19 @@ public class MainOrderMobileFragment extends Fragment {
 
 
         //region Action BtnAddress
-        binding.btnAddAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (acc!=null && acc.ADR!=null && !acc.ADR.equals("") && acc.ADR2!=null && !acc.ADR2.equals(""))
-                    dialogAddress.show();
-                else
-                {
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putString("edit_address", "3");
-                    bundle1.putString("type", String.valueOf(typeAddress));
-                    MapFragment mapFragment = new MapFragment();
-                    mapFragment.setArguments(bundle1);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
-                }
+        binding.btnAddAddress.setOnClickListener(v -> {
+            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR2 != null && !acc.ADR2.equals(""))
+                dialogAddress.show();
+            else {
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("edit_address", "3");
+                bundle1.putString("type", String.valueOf(typeAddress));
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundle1);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
             }
         });
         //endregion Action BtnAddress
-
-
-
 
 
         //region Configuration Organization Application
@@ -652,9 +633,6 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion Configuration Client Application
 
 
-
-
-
         binding.orderListTvRegister.setText("تکمیل سفارش " + "(" + Tbl_NAME + ")");
 
         if (EDIT && company.mode == 2) {
@@ -688,7 +666,7 @@ public class MainOrderMobileFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
 
-            if (company.mode == 2)
+            if (company.mode == 2 && !config.name.equals("ir.kitgroup.salein"))
                 getActivity().finish();
 
             else
@@ -1047,17 +1025,14 @@ public class MainOrderMobileFragment extends Fragment {
         //endregion CONFIGURATION DATA PRODUCT
 
 
-        binding.ivSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("Inv_GUID", Inv_GUID);
-                bundle2.putString("Tbl_GUID", Tbl_GUID);
-                bundle2.putBoolean("Seen", Seen);
-                SearchProductFragment searchProductFragment = new SearchProductFragment();
-                searchProductFragment.setArguments(bundle2);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
-            }
+        binding.ivSearch.setOnClickListener(v -> {
+            Bundle bundle2 = new Bundle();
+            bundle2.putString("Inv_GUID", Inv_GUID);
+            bundle2.putString("Tbl_GUID", Tbl_GUID);
+            bundle2.putBoolean("Seen", Seen);
+            SearchProductFragment searchProductFragment = new SearchProductFragment();
+            searchProductFragment.setArguments(bundle2);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
         });
         return binding.getRoot();
     }
@@ -1746,7 +1721,7 @@ public class MainOrderMobileFragment extends Fragment {
         bundle.putString("Acc_GUID", Acc_GUID);
         bundle.putBoolean("EDIT", EDIT);
         bundle.putBoolean("Seen", Seen);
-        bundle.putBoolean("setARD1", setARD1);
+        bundle.putBoolean("setARD1", setAddress);
         return bundle;
     }
 

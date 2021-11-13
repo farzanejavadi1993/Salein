@@ -93,7 +93,7 @@ public class RegisterFragment extends Fragment {
         //endregion Get Bundle And Set Data
 
         //region Configuration Text Size
-        int fontSize = 12;
+        int fontSize ;
         if (Util.screenSize >= 7) {
 
             fontSize = 14;

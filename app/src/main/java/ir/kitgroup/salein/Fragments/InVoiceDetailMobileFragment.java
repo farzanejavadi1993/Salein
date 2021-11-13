@@ -68,6 +68,7 @@ import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.Tables;
 
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
@@ -188,6 +189,14 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
         customProgress = CustomProgress.getInstance();
 
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
 
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
@@ -638,7 +647,7 @@ public class InVoiceDetailMobileFragment extends Fragment {
 
 
 
-            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+            MainOrderFragment mainOrderMobileFragment = new MainOrderFragment();
             mainOrderMobileFragment.setArguments(bundle1);
             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
             replaceFragment.commit();

@@ -19,7 +19,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentProfileBinding;
-@AndroidEntryPoint
+
 public class ProfileFragment extends Fragment {
 
 

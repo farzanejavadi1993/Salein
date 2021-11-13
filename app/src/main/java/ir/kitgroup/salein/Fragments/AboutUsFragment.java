@@ -2,6 +2,7 @@ package ir.kitgroup.salein.Fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.AboutUsFragmentBinding;
 import ir.kitgroup.salein.models.Company;
 
@@ -28,6 +32,9 @@ public class AboutUsFragment extends Fragment {
 
     @Inject
     Company company;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
 
 
@@ -61,7 +68,13 @@ public class AboutUsFragment extends Fragment {
 
         //region Set Icon And Title
 
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
 
+
+        }
 
             binding.imageView.setImageResource(company.imageDialog);
         binding.title.setText(company.title);

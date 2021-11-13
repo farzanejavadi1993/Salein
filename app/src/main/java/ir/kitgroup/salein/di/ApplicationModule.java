@@ -287,11 +287,17 @@ public class ApplicationModule {
     }
 
 
+
+
+
+
+
+
+
+
     @Provides
     @Singleton
-    ArrayList<Company> ListCompany(@ApplicationContext Context context) {
-
-
+    ArrayList<Company> ListCompany() {
         ArrayList<Company> arrayList = new ArrayList<>();
         Company companySalein = new Company();
         Company companySaleinMeat = new Company();

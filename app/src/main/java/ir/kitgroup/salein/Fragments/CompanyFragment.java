@@ -78,6 +78,7 @@ public class CompanyFragment extends Fragment {
 
     private Dialog dialog;
     private TextView textExit;
+    private   ImageView ivIcon;
 
 
     @Nullable
@@ -92,7 +93,7 @@ public class CompanyFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        companies = new ArrayList<>();
+
         configRetrofit = new ConfigRetrofit();
 
 
@@ -112,10 +113,10 @@ public class CompanyFragment extends Fragment {
                         bundle.putString("Tbl_GUID", "");
                         bundle.putString("Inv_GUID", "");
 
-
-                        MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
-                        mainOrderMobileFragment.setArguments(bundle);
-                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
+                        sharedPreferences.edit().putString("CN", company.nameCompany).apply();
+                        MainFragment mainFragment = new MainFragment();
+                        mainFragment.setArguments(bundle);
+                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF");
                         replaceFragment.commit();
                     } else {
                         api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
@@ -135,8 +136,8 @@ public class CompanyFragment extends Fragment {
         dialog.setCancelable(false);
 
         textExit = dialog.findViewById(R.id.tv_message);
-        ImageView ivIcon = dialog.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(companySelect.imageDialog);
+         ivIcon = dialog.findViewById(R.id.iv_icon);
+
 
 
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
@@ -204,7 +205,8 @@ public class CompanyFragment extends Fragment {
                                             bundle.putString("Inv_GUID", "");
 
                                             sharedPreferences.edit().putString(name, name).apply();
-                                            MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                                            sharedPreferences.edit().putString("CN", name).apply();
+                                            MainOrderFragment mainOrderMobileFragment = new MainOrderFragment();
                                             mainOrderMobileFragment.setArguments(bundle);
                                             FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                                             replaceFragment.commit();
@@ -214,6 +216,7 @@ public class CompanyFragment extends Fragment {
                                         //user not register
                                         else {
                                             textExit.setText(" شما مشترک " + name + " نیستید.آیا مشترک میشوید؟ ");
+                                            ivIcon.setImageResource(companySelect.imageDialog);
                                             dialog.show();
                                         }
                                         binding.progressbar.setVisibility(View.GONE);
@@ -282,7 +285,7 @@ public class CompanyFragment extends Fragment {
                                     bundle.putString("Ord_TYPE", "");
                                     bundle.putString("Tbl_GUID", "");
                                     bundle.putString("Inv_GUID", "");
-                                    MainOrderMobileFragment mainOrderMobileFragment = new MainOrderMobileFragment();
+                                    MainOrderFragment mainOrderMobileFragment = new MainOrderFragment();
                                     mainOrderMobileFragment.setArguments(bundle);
                                     FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
                                     replaceFragment.commit();

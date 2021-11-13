@@ -74,7 +74,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
 
         holder.itemView.setOnClickListener(v -> {
-            if (type==1)
+
                 clickItem.onRowClick(company,true);
         });
 

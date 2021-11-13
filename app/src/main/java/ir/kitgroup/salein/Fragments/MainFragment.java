@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentMainBinding;
 import ir.kitgroup.salein.models.Company;
 
@@ -38,6 +40,9 @@ public class MainFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+
+
     private FragmentMainBinding binding;
     private int counter;
 
@@ -53,7 +58,7 @@ public class MainFragment extends Fragment {
     private Boolean Seen = false;
 
     private String Transport_GUID = "";
-    private MainOrderMobileFragment mainOrderMobileFragment;
+    private MainOrderFragment mainOrderMobileFragment;
     private Bundle bundle1;
 
 
@@ -64,6 +69,14 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentMainBinding.inflate(getLayoutInflater());
 
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            if (!name.equals(""))
+            company = configRetrofit.getCompany(name);
+
+        }
 
         callHome = true;
         //region Get Bundle
@@ -117,8 +130,8 @@ public class MainFragment extends Fragment {
                     case R.id.orders:
                         Bundle bundle = new Bundle();
                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-                        if (frg instanceof MainOrderMobileFragment) {
-                            MainOrderMobileFragment fgf = (MainOrderMobileFragment) frg;
+                        if (frg instanceof MainOrderFragment) {
+                            MainOrderFragment fgf = (MainOrderFragment) frg;
                             if (fgf.typeAddress==2)
                             bundle.putBoolean("setADR1",true);
                         }
@@ -221,7 +234,7 @@ public class MainFragment extends Fragment {
         bundle1.putString("Acc_NAME", Acc_NAME);
         bundle1.putBoolean("EDIT", EDIT);
 
-        mainOrderMobileFragment = new MainOrderMobileFragment();
+        mainOrderMobileFragment = new MainOrderFragment();
         mainOrderMobileFragment.setArguments(bundle1);
 
         FragmentTransaction replaceFragment ;

@@ -54,6 +54,7 @@ import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSearchProductBinding;
@@ -121,7 +122,19 @@ public class SearchProductFragment extends Fragment {
         maxSales = sharedPreferences.getString("maxSale", "0");
         customProgress=CustomProgress.getInstance();
 
+
         productList=new ArrayList<>();
+
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
+
+
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
         dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -33,7 +33,7 @@ import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 
 import ir.kitgroup.salein.Fragments.MainFragment;
-import ir.kitgroup.salein.Fragments.MainOrderMobileFragment;
+import ir.kitgroup.salein.Fragments.MainOrderFragment;
 import ir.kitgroup.salein.Fragments.SettingFragment;
 import ir.kitgroup.salein.Fragments.SplashScreenFragment;
 import ir.kitgroup.salein.R;
@@ -150,6 +150,7 @@ public class LauncherActivity extends AppCompatActivity {
         final int size = getSupportFragmentManager().getBackStackEntryCount();
 
 
+
         if (size == 0) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
@@ -168,8 +169,8 @@ public class LauncherActivity extends AppCompatActivity {
 
         else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailFMobile")) {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-            if (fragment instanceof MainOrderMobileFragment) {
-                MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
+            if (fragment instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) fragment;
                 fgf.refreshProductList();
             }else {
                 fragment=  LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("SettingFragment");
@@ -188,10 +189,12 @@ public class LauncherActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
         }
 
+
+
         else if (getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SearchProductF")) {
             Fragment fragment = LauncherActivity.this.getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-            if (fragment instanceof MainOrderMobileFragment) {
-                MainOrderMobileFragment fgf = (MainOrderMobileFragment) fragment;
+            if (fragment instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) fragment;
                 fgf.refreshProductFromSearch();
             }
             getSupportFragmentManager().popBackStack();

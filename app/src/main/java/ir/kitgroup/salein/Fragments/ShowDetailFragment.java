@@ -3,6 +3,7 @@ package ir.kitgroup.salein.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConfigRetrofit;
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.ModelProduct;
@@ -44,6 +47,11 @@ public class ShowDetailFragment  extends Fragment {
     API api;
 
 
+    @Inject
+    SharedPreferences sharedPreferences;
+
+
+
     private ActivityDetailBinding binding;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -51,6 +59,14 @@ public class ShowDetailFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
+        if (!Util.RetrofitValue) {
+            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+            String name = sharedPreferences.getString("CN", "");
+            company = configRetrofit.getCompany(name);
+            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+        }
 
         binding=ActivityDetailBinding.inflate(getLayoutInflater());
         Bundle bundle = getArguments();
