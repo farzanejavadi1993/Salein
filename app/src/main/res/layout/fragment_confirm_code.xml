@@ -227,16 +227,6 @@
                 tools:ignore="UnusedAttribute" />
 
 
-            <TextView
-
-                android:id="@+id/resend_code"
-                android:textColor="@color/medium_color"
-                android:textSize="12sp"
-                android:gravity="center"
-
-                android:layout_below="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
         </RelativeLayout>
 

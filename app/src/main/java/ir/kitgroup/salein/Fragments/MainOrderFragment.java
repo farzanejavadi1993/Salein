@@ -296,18 +296,21 @@ public class MainOrderFragment extends Fragment {
 
 
         //region Get Bundle
-        Bundle bnd = getArguments();
-        assert bnd != null;
-        Ord_TYPE = bnd.getString("Ord_TYPE");
-        Tbl_GUID = bnd.getString("Tbl_GUID");
-        Tbl_NAME = bnd.getString("Tbl_NAME");
-        Inv_GUID = bnd.getString("Inv_GUID");
 
-        Acc_NAME = bnd.getString("Acc_NAME");
-        Acc_GUID = bnd.getString("Acc_GUID");
-        EDIT = bnd.getBoolean("EDIT");//when order need EDIT
-        Seen = bnd.getBoolean("Seen");
-        boolean setARD1 = bnd.getBoolean("setADR1");
+
+
+
+
+        Ord_TYPE = MainOrderFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
+        Tbl_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getTblGUID();
+        Tbl_NAME = MainOrderFragmentArgs.fromBundle(getArguments()).getTblNAME();
+        Inv_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getInvGUID();
+
+        Acc_NAME = MainOrderFragmentArgs.fromBundle(getArguments()).getAccNAME();
+        Acc_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getAccGUID();
+        EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
+        Seen =MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
+        boolean setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
         //endregion Get Bundle
 
 
@@ -786,7 +789,7 @@ public class MainOrderFragment extends Fragment {
                 bundle.putString("Acc_Name", Acc_NAME);
                 bundle.putString("Acc_GUID", Acc_GUID);
                 bundle.putBoolean("EDIT", EDIT);
-                InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
             }

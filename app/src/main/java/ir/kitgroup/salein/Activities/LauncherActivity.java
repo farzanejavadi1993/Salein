@@ -1,11 +1,10 @@
 package ir.kitgroup.salein.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-
 
 
 import android.annotation.SuppressLint;
@@ -30,18 +29,18 @@ import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
 
 
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.User;
+import ir.kitgroup.salein.Fragments.InVoiceDetailFragmentDirections;
 import ir.kitgroup.salein.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 
-import ir.kitgroup.salein.Fragments.MainFragment;
-import ir.kitgroup.salein.Fragments.MainOrderFragment;
-import ir.kitgroup.salein.Fragments.SettingFragment;
+import ir.kitgroup.salein.Fragments.MainOrderFragmentDirections;
+import ir.kitgroup.salein.Fragments.SearchProductFragmentDirections;
 
+import ir.kitgroup.salein.Fragments.SettingFragmentDirections;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
@@ -54,9 +53,14 @@ public class LauncherActivity extends AppCompatActivity {
     //region Parameter
 
 
-
     @Inject
     Config config;
+
+
+    private Boolean mainOrder = false;
+    private Boolean searchProduct = false;
+    private Boolean invoiceDetail = false;
+    private Boolean setting = false;
 
 
     //region Parameter Dialog
@@ -64,8 +68,6 @@ public class LauncherActivity extends AppCompatActivity {
     private TextView messageTextExitDialog;
     //endregion Parameter Dialog
 
-
-  //  private Boolean refreshApplication = false;
 
     //endregion Parameter
 
@@ -82,53 +84,157 @@ public class LauncherActivity extends AppCompatActivity {
         //endregion Set Layout to LauncherActivity class
 
 
-
-
         Util.ScreenSize(this);
 
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        binding.navView.setSelectedItemId(R.id.homee);
+
+        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+
+        binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
+
+
+
+        binding.navView.setOnNavigationItemSelectedListener(item -> {
+
+            switch (item.getItemId()) {
+
+                case R.id.homee:
+                    NavDirections actionHome = null;
+                    if (searchProduct) {
+                         actionHome = (NavDirections) SearchProductFragmentDirections.actionGoToMainOrderFragment();
+
+                    } else if (invoiceDetail) {
+                         actionHome = (NavDirections) InVoiceDetailFragmentDirections.actionGoToMainOrderFragment();
+                    } else if (setting) {
+                        actionHome = (NavDirections) SettingFragmentDirections.actionGoToMainOrderFragment();
+                    }
+
+                    navController.navigate(actionHome);
+
+                    return true;
+
+                case R.id.search:
+
+                    NavDirections actionSearch = null;
+
+                    if (mainOrder) {
+                        actionSearch = (NavDirections) MainOrderFragmentDirections.actionGoToSearchProductFragment();
+
+                    } else if (invoiceDetail) {
+                        actionSearch = (NavDirections) InVoiceDetailFragmentDirections.actionGoToSearchProductFragment();
+                    } else if (setting) {
+                        actionSearch = (NavDirections) SettingFragmentDirections.actionGoToSearchProductFragment();
+                    }
+
+                    navController.navigate(actionSearch);
+                    return true;
+
+
+                case R.id.orders:
+
+                    NavDirections actionInvoiceDetail= null;
+
+                    if (mainOrder) {
+                        actionInvoiceDetail = (NavDirections) MainOrderFragmentDirections.actionGoToInvoiceDetailFragment();
+                    } else if (searchProduct) {
+                        actionInvoiceDetail = (NavDirections) SearchProductFragmentDirections.actionGoToInvoiceDetailFragment();
+                    } else if (setting) {
+                        actionInvoiceDetail = (NavDirections) SettingFragmentDirections.actionGoToInvoiceDetailFragment();
+                    }
+
+                    navController.navigate(actionInvoiceDetail);
+                    return true;
+
+
+                case R.id.profile:
+
+                    NavDirections actionProfile= null;
+
+                    if (mainOrder) {
+                        actionProfile = (NavDirections) MainOrderFragmentDirections.actionGoToSettingFragment();
+
+                    } else if (searchProduct) {
+                        actionProfile = (NavDirections) SearchProductFragmentDirections.actionGoToSettingFragment();
+                    } else if (invoiceDetail) {
+                        actionProfile = (NavDirections) InVoiceDetailFragmentDirections.actionGoToSettingFragment();
+                    }
+
+                    navController.navigate(actionProfile);
+                    return true;
+
+
+            }
+
+
+            return false;
+        });
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
 
 
             switch (destination.getId()) {
-                case R.id.LoginFragment:
-                    Toast.makeText(this, "Login", Toast.LENGTH_SHORT).show();
+                case R.id.MainOrderFragment:
+                    binding.navView.setVisibility(View.VISIBLE);
+                    mainOrder = true;
+                    searchProduct = false;
+                    invoiceDetail = false;
+                    setting = false;
                     break;
-                case R.id.ConfirmFragment:
-                    Toast.makeText(this, "Confirm", Toast.LENGTH_SHORT).show();
+
+                case R.id.SearchProductFragment:
+                    binding.navView.setVisibility(View.VISIBLE);
+                    mainOrder = false;
+                    searchProduct = true;
+                    invoiceDetail = false;
+                    setting = false;
                     break;
+                case R.id.InvoiceDetailFragment:
+                    binding.navView.setVisibility(View.VISIBLE);
+                    mainOrder = false;
+                    searchProduct = false;
+                    invoiceDetail = true;
+                    setting = false;
+                    break;
+                case R.id.SettingFragment:
+                    binding.navView.setVisibility(View.VISIBLE);
+                    mainOrder = false;
+                    searchProduct = false;
+                    invoiceDetail = false;
+                    setting = true;
+                    break;
+
                 default:
                     Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
                     break;
-
 
 
             }
         });
 
 
+        if (config.mode == 1) {
+            //When User Is Login
+            FragmentTransaction replaceFragment;
+            if (Select.from(User.class).list().size() > 0) {
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
+            }
 
-        if (config.mode==1){
-           //When User Is Login
-           FragmentTransaction replaceFragment ;
-           if (Select.from(User.class).list().size() > 0) {
-               replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
-           }
+            //When User Is Not Login
+            else {
 
-           //When User Is Not Login
-           else {
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
 
-               replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
-
-           }
-           replaceFragment.commit();
-
-
-       }
+            }
+            replaceFragment.commit();
 
 
-       //region Cast ExitDialog
+        }
+
+
+        //region Cast ExitDialog
         ExitDialog = new Dialog(this);
         ExitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         ExitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -139,7 +245,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
         ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
-        imageIconExitDialog.setImageResource( config.imageLogo);
+        imageIconExitDialog.setImageResource(config.imageLogo);
 
         MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
         MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);
@@ -166,8 +272,8 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-
-        final int size = getSupportFragmentManager().getBackStackEntryCount();
+        super.onBackPressed();
+   /*     final int size = getSupportFragmentManager().getBackStackEntryCount();
 
 
 
@@ -232,69 +338,14 @@ public class LauncherActivity extends AppCompatActivity {
 
 
         else
-            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();*/
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        /*if (refreshApplication) {
-            String dateOld = sharedPreferences.getString("timeOld", "");
-            Date oldDate;
-            Date dateNow = Calendar.getInstance().getTime();
-            if (!dateOld.equals("")) {
-                oldDate = stringToDate(dateOld);
-            } else {
-                oldDate = dateNow;
-            }
-
-
-            long diff = dateNow.getTime() - oldDate.getTime();
-            long seconds = diff / 1000;
-            long minutes = seconds / 60;
-
-            if (minutes >= 0 && (Select.from(User.class).list().size()>0 || config.mode==2) && !PaymentMobileFragment.ShowClub) {
-                final int size = getSupportFragmentManager().getBackStackEntryCount();
-                for (int i=0;i<size;i++){
-                    getSupportFragmentManager().popBackStack();
-                }
-
-                FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
-                addFragment.commit();
-
-
-            }
-            refreshApplication = false;
-        }*/
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        /*if (!refreshApplication) {
-            refreshApplication = true;
-            Date dateOld = Calendar.getInstance().getTime();
-            @SuppressLint("SimpleDateFormat") DateFormat dateFormats =
-                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            sharedPreferences.edit().putString("timeOld", dateFormats.format(dateOld)).apply();
-        }*/
-    }
     //endregion Override Method
 
 
     //region Custom  Method
-/*    private Date stringToDate(String aDate) {
-
-        if (aDate == null) return null;
-        ParsePosition pos = new ParsePosition(0);
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return simpledateformat.parse(aDate, pos);
-
-    }*/
-
     public String appVersion() throws PackageManager.NameNotFoundException {
         PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         return pInfo.versionName;

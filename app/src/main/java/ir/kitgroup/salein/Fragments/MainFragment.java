@@ -150,7 +150,7 @@ public class MainFragment extends Fragment {
                         bundle.putString("Acc_GUID", Acc_GUID);
                         bundle.putBoolean("EDIT", !Inv_GUID_ORG.equals("") && company.mode == 2);
 
-                        InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                        InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
                         inVoiceDetailFragmentMobile.setArguments(bundle);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
 

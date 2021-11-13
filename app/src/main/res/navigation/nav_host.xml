@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_host"
-    app:startDestination="@id/LoginFragment"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:id="@+id/nav_host"
+    app:startDestination="@id/LoginFragment">
 
     <fragment
         android:id="@+id/SplashFragment"
@@ -12,14 +11,13 @@
         tools:layout="@layout/fragment_splash_screen">
 
 
+        <action
+            android:id="@+id/action_go_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
 
-    <action
-        android:id="@+id/action_go_to_LoginFragment"
-        app:destination="@id/LoginFragment" />
-
-    <action
-        android:id="@+id/action_go_to_MainOrderFragment"
-        app:destination="@id/MainOrderFragment" />
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment" />
 
         <action
             android:id="@+id/action_go_to_StoreFragment"
@@ -32,6 +30,19 @@
         android:name="ir.kitgroup.salein.Fragments.LoginClientFragment"
         tools:layout="@layout/fragment_login_mobile">
 
+        <action
+            android:id="@+id/action_go_to_ConfirmFragment"
+            app:destination="@id/ConfirmFragment" />
+
+
+        <action
+            android:id="@+id/action_go_to_StoreFragment"
+            app:destination="@id/StoriesFragment" />
+
+        <action
+            android:id="@+id/action_go_to_RulesFragment"
+            app:destination="@id/RulesFragment" />
+
     </fragment>
 
 
@@ -40,21 +51,208 @@
         android:name="ir.kitgroup.salein.Fragments.MainOrderFragment"
         tools:layout="@layout/fragment_mobile_order_main">
 
+
+        <argument
+            android:name="Ord_TYPE"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="Tbl_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Inv_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Tbl_NAME"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Acc_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Acc_NAME"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="EDIT"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <argument
+            android:name="SEEN"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+
+        <argument
+            android:name="SetADR1"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+
+        <action
+            android:id="@+id/action_go_to_SearchProductFragment"
+            app:destination="@id/SearchProductFragment"
+            app:popUpTo="@id/MainOrderFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_go_to_InvoiceDetailFragment"
+            app:destination="@id/InvoiceDetailFragment"
+            app:popUpTo="@id/MainOrderFragment"
+            app:popUpToInclusive="true" />
+        <action
+
+            android:id="@+id/action_go_to_SettingFragment"
+            app:destination="@id/SettingFragment"
+            app:popUpTo="@id/MainOrderFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
+
+
+    <fragment
+        android:id="@+id/SettingFragment"
+        android:name="ir.kitgroup.salein.Fragments.SettingFragment"
+        tools:layout="@layout/fragment_setting">
+
+
+        <action
+            android:id="@+id/action_go_to_SearchProductFragment"
+            app:destination="@id/SearchProductFragment"
+            app:popUpTo="@id/SettingFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_go_to_InvoiceDetailFragment"
+            app:destination="@id/InvoiceDetailFragment"
+            app:popUpTo="@id/SettingFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment"
+            app:popUpTo="@id/SettingFragment"
+            app:popUpToInclusive="true" />
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/InvoiceDetailFragment"
+        android:name="ir.kitgroup.salein.Fragments.InVoiceDetailFragment"
+        tools:layout="@layout/fragment_invoice_detail_mobile">
+
+        <action
+            android:id="@+id/action_go_to_SettingFragment"
+            app:destination="@id/SettingFragment"
+            app:popUpTo="@id/InvoiceDetailFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_go_to_SearchProductFragment"
+            app:destination="@id/SearchProductFragment"
+            app:popUpTo="@id/InvoiceDetailFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment"
+            app:popUpTo="@id/InvoiceDetailFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/SearchProductFragment"
+        android:name="ir.kitgroup.salein.Fragments.SearchProductFragment"
+        tools:layout="@layout/fragment_search_product">
+        <action
+            android:id="@+id/action_go_to_SettingFragment"
+            app:destination="@id/SettingFragment"
+            app:popUpTo="@id/SearchProductFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_go_to_InvoiceDetailFragment"
+            app:destination="@id/InvoiceDetailFragment"
+            app:popUpTo="@id/SearchProductFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment"
+            app:popUpTo="@id/SearchProductFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/StoriesFragment"
         android:name="ir.kitgroup.salein.Fragments.StoriesFragment"
         tools:layout="@layout/fragment_mobile_order_main">
 
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment" />
     </fragment>
 
 
     <fragment
         android:id="@+id/ConfirmFragment"
-        android:name="ir.kitgroup.salein.Fragments.SplashScreenFragment"
-        tools:layout="@layout/fragment_splash_screen">
+
+        android:name="ir.kitgroup.salein.Fragments.ConfirmCodeFragment"
+        tools:layout="@layout/fragment_confirm_code">
+
+        <argument
+            android:name="code"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+        <argument
+            android:name="mobileNumber"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_go_to_StoreFragment"
+            app:destination="@id/StoriesFragment" />
+
+        <action
+            android:id="@+id/action_go_to_MapFragment"
+            app:destination="@id/MapFragment" />
+
+        <action
+            android:id="@+id/action_go_to_MainOrderFragment"
+            app:destination="@id/MainOrderFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/RulesFragment"
+        android:name="ir.kitgroup.salein.Fragments.RulesFragment"
+        tools:layout="@layout/fragment_rules">
+
 
     </fragment>
+
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="ir.kitgroup.salein.Fragments.MainFragment"
+        tools:layout="@layout/fragment_map">
+
+        <argument
+            android:name="mobileNumber"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
 
 </navigation>

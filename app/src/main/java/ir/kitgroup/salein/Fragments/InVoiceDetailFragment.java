@@ -93,7 +93,7 @@ import retrofit2.Response;
 
 @AndroidEntryPoint
 
-public class InVoiceDetailMobileFragment extends Fragment {
+public class InVoiceDetailFragment extends Fragment {
 
     //region Parameter
 

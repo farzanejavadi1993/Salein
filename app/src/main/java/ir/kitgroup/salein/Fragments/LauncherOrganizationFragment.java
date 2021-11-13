@@ -315,7 +315,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putBoolean("EDIT", true);
 
 
-                InVoiceDetailMobileFragment inVoiceDetailFragmentMobile = new InVoiceDetailMobileFragment();
+                InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobileX").commit();
 

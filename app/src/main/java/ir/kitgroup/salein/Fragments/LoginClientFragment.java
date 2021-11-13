@@ -21,11 +21,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+
+import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +43,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentLoginMobileBinding;
@@ -83,6 +85,9 @@ public class LoginClientFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(binding.getRoot());
+
+
+
         //region Configuration Text Size
         int fontSize;
         if (Util.screenSize >= 7) {
@@ -155,10 +160,8 @@ public class LoginClientFragment extends Fragment {
 
         //region Action btnLogin
         binding.loginTvRules1.setOnClickListener(v -> {
-            if (company.namePackage.equals("ir.kitgroup.saleinmeat")) {
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new RulesFragment()).addToBackStack("RulesF").commit();
-
-            }
+            NavDirections action = LoginClientFragmentDirections.actionGoToRulesFragment();
+            navController.navigate(action);
         });
         //endregion Action btnLogin
 
@@ -176,17 +179,24 @@ public class LoginClientFragment extends Fragment {
         //endregion Action CheckBox
 
 
+
+        if (Select.from(Account.class).list().size()>0)
+        {
+            NavDirections action = LoginClientFragmentDirections.actionGoToStoreFragment();
+            navController.navigate(action);
+        }
+
     }
 
 
     //region Method
-    private void login(String mobile, int code, String message) {
+    private void login(String mobileNumber, int code, String message) {
         try {
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    api.getSmsLogin(company.userName, company.passWord, message, mobile, 2)
+                    api.getSmsLogin(company.userName, company.passWord, message, mobileNumber, 2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -196,14 +206,11 @@ public class LoginClientFragment extends Fragment {
                                 binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                                 binding.btnLogin.setEnabled(true);
 
-                                Bundle bundle = new Bundle();
-                                bundle.putString("mobile", mobile);
-                                bundle.putInt("code", code);
-                                navController.navigate(R.id.ConfirmFragment);
-                               /* ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
-                                confirmCodeFragment.setArguments(bundle);
-                                FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
-                                addFragment.commit();*/
+
+
+                                NavDirections action = (NavDirections) LoginClientFragmentDirections.actionGoToConfirmFragment().setCode(code).setMobileNumber(mobileNumber);
+                                navController.navigate(action);
+
 
 
                             }, throwable -> {
