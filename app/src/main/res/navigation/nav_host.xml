@@ -2,14 +2,16 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_host"
-    app:startDestination="@id/splashFragment"
+    app:startDestination="@id/LoginFragment"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
     <fragment
-        android:id="@+id/splashFragment"
+        android:id="@+id/SplashFragment"
         android:name="ir.kitgroup.salein.Fragments.SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen">
+
+
 
     <action
         android:id="@+id/action_go_to_LoginFragment"
@@ -47,5 +49,12 @@
 
     </fragment>
 
+
+    <fragment
+        android:id="@+id/ConfirmFragment"
+        android:name="ir.kitgroup.salein.Fragments.SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen">
+
+    </fragment>
 
 </navigation>

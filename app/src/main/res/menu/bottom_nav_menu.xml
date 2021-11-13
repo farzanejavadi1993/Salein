@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <item android:title="پروفایل"
         android:id="@+id/profile"
         android:icon="@drawable/ic_profile"
+        app:showAsAction="ifRoom"
         />
 
     <item android:title="سبد خرید"
         android:id="@+id/orders"
         android:icon="@drawable/ic_buylist"
+        app:showAsAction="always"
         />
 
-
+    <item android:title="جستجو"
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        />
 
     <item android:title="خانه"
         android:id="@+id/homee"
         android:icon="@drawable/ic_home"
+        app:showAsAction="always"
         />
 
 

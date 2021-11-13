@@ -22,6 +22,9 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -54,11 +57,13 @@ public class LoginClientFragment extends Fragment {
     @Inject
     API api;
 
+    private NavController navController;
+
 
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
-    private Boolean acceptRule =true;
+    private Boolean acceptRule = true;
 
     //endregion PARAMETER
 
@@ -77,9 +82,9 @@ public class LoginClientFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        navController = Navigation.findNavController(binding.getRoot());
         //region Configuration Text Size
-        int fontSize ;
+        int fontSize;
         if (Util.screenSize >= 7) {
             binding.tvWelcome.setTextSize(18);
             fontSize = 14;
@@ -97,8 +102,7 @@ public class LoginClientFragment extends Fragment {
         //endregion Configuration Text Size
 
 
-
-        binding.loginTvRules.setText("با ثبت نام در " +company.nameCompany);
+        binding.loginTvRules.setText("با ثبت نام در " + company.nameCompany);
         //region Set Icon And Title
         binding.tvWelcome.setText(company.messageWelcome);
         binding.imageLogo.setImageResource(company.imageLogo);
@@ -137,7 +141,7 @@ public class LoginClientFragment extends Fragment {
 
         //region Action btnLogin
         binding.btnLogin.setOnClickListener(v -> {
-            if (acceptRule){
+            if (acceptRule) {
                 int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
                 String messageCode = String.valueOf(code);
                 String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
@@ -152,7 +156,7 @@ public class LoginClientFragment extends Fragment {
         //region Action btnLogin
         binding.loginTvRules1.setOnClickListener(v -> {
             if (company.namePackage.equals("ir.kitgroup.saleinmeat")) {
-              requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new RulesFragment()).addToBackStack("RulesF").commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new RulesFragment()).addToBackStack("RulesF").commit();
 
             }
         });
@@ -161,11 +165,11 @@ public class LoginClientFragment extends Fragment {
 
         //region Action CheckBox
         binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
-                acceptRule =true;
+            if (isChecked) {
+                acceptRule = true;
                 binding.btnLogin.setVisibility(View.VISIBLE);
-            }else {
-                acceptRule =false;
+            } else {
+                acceptRule = false;
                 binding.btnLogin.setVisibility(View.GONE);
             }
         });
@@ -195,10 +199,11 @@ public class LoginClientFragment extends Fragment {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("mobile", mobile);
                                 bundle.putInt("code", code);
-                                ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
+                                navController.navigate(R.id.ConfirmFragment);
+                               /* ConfirmCodeFragment confirmCodeFragment = new ConfirmCodeFragment();
                                 confirmCodeFragment.setArguments(bundle);
                                 FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, confirmCodeFragment).addToBackStack("ConfirmCodeF");
-                                addFragment.commit();
+                                addFragment.commit();*/
 
 
                             }, throwable -> {

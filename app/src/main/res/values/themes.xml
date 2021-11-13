@@ -24,6 +24,17 @@
     </style>
 
 
+
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/iransans</item>
+        <item name="android:layoutDirection">ltr</item>
+    </style>
+
+
+
+
+
     <style name="launcher_recycle_table_TextView" >
         <item name="android:textColor">@color/black_l</item>
         <item name="android:textSize">11sp</item>

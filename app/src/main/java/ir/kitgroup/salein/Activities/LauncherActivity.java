@@ -3,12 +3,17 @@ package ir.kitgroup.salein.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 
+
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -35,7 +41,7 @@ import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.salein.Fragments.MainFragment;
 import ir.kitgroup.salein.Fragments.MainOrderFragment;
 import ir.kitgroup.salein.Fragments.SettingFragment;
-import ir.kitgroup.salein.Fragments.SplashScreenFragment;
+
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
@@ -64,12 +70,10 @@ public class LauncherActivity extends AppCompatActivity {
     //endregion Parameter
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //refreshApplication = false;
-        Util.ScreenSize(this);
 
         //region Set Layout to LauncherActivity class
         ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
@@ -78,37 +82,53 @@ public class LauncherActivity extends AppCompatActivity {
         //endregion Set Layout to LauncherActivity class
 
 
-        if (config.mode==2){
-            //region Call SplashScreenFragment
-            FragmentTransaction addFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new SplashScreenFragment());
-            addFragment.commit();
-            //endregion Call SplashScreenFragment
-        }
-        else {
-            //When User Is Login
-            FragmentTransaction replaceFragment ;
-            if (Select.from(User.class).list().size() > 0) {
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
+
+
+        Util.ScreenSize(this);
+
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+
+
+            switch (destination.getId()) {
+                case R.id.LoginFragment:
+                    Toast.makeText(this, "Login", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.ConfirmFragment:
+                    Toast.makeText(this, "Confirm", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
+                    break;
+
+
+
             }
-
-            //When User Is Not Login
-            else {
-
-                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
-
-            }
-            replaceFragment.commit();
-
-
-        }
+        });
 
 
 
+        if (config.mode==1){
+           //When User Is Login
+           FragmentTransaction replaceFragment ;
+           if (Select.from(User.class).list().size() > 0) {
+               replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment");
+           }
+
+           //When User Is Not Login
+           else {
+
+               replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginOrganizationFragment());
+
+           }
+           replaceFragment.commit();
 
 
-        //region Cast ExitDialog
+       }
 
 
+       //region Cast ExitDialog
         ExitDialog = new Dialog(this);
         ExitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         ExitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
