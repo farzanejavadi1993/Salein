@@ -16,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 
 import com.google.gson.Gson;
@@ -56,6 +59,11 @@ public class RegisterFragment extends Fragment {
 
     @Inject
     API api;
+
+
+
+    private NavController navController;
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
@@ -79,21 +87,24 @@ public class RegisterFragment extends Fragment {
 
 
         //region Get Bundle And Set Data
-        Bundle bundle = getArguments();
-        assert bundle != null;
-        String mobile = bundle.getString("mobile");
-        String address1 = bundle.getString("address1");
-        String address2 = bundle.getString("address2");
-        double latitude = bundle.getDouble("lat");
-        double longitude = bundle.getDouble("lng");
+
+
+        navController = Navigation.findNavController(binding.getRoot());
+
+
+
+        String mobileNumber = RegisterFragmentArgs.fromBundle(getArguments()).getMobileNumber();
+        String address2 = RegisterFragmentArgs.fromBundle(getArguments()).getAddress2();
+        double latitude = RegisterFragmentArgs.fromBundle(getArguments()).getLat();
+        double longitude = RegisterFragmentArgs.fromBundle(getArguments()).getLng();
 
 
         binding.edtAddressCustomerComplete.setText(address2);
-        binding.edtNumberPhoneCustomer.setText(mobile);
+        binding.edtNumberPhoneCustomer.setText(mobileNumber);
         //endregion Get Bundle And Set Data
 
         //region Configuration Text Size
-        int fontSize ;
+        int fontSize;
         if (Util.screenSize >= 7) {
 
             fontSize = 14;
@@ -215,23 +226,16 @@ public class RegisterFragment extends Fragment {
                                     //region Show All Company
 
                                     if (company.namePackage.equals("ir.kitgroup.salein")) {
-                                        FragmentTransaction replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
-                                        replaceFragment.commit();
+                                        NavDirections action = RegisterFragmentDirections.actionGoToStoreFragment();
+                                        navController.navigate(action);
                                     }
                                     //endregion Show All Company
 
 
-
                                     //region Go To MainOrderFragment Because Account Is Register
                                     else {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("Ord_TYPE", "");
-                                        bundle.putString("Tbl_GUID", "");
-                                        bundle.putString("Inv_GUID", "");
-                                        MainFragment mainFragment = new MainFragment();
-                                        mainFragment.setArguments(bundle);
-                                        FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
-                                        replaceFragment.commit();
+                                        NavDirections action = RegisterFragmentDirections.actionGoToMainOrderFragment();
+                                        navController.navigate(action);
                                     }
                                     //endregion Go To MainOrderFragment Because Account Is Register
 

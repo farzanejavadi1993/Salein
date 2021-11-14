@@ -58,6 +58,7 @@ import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.lang.reflect.Type;
@@ -254,10 +255,22 @@ public class MainOrderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
-        navController = Navigation.findNavController(binding.getRoot());
+
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
+
+
+        return binding.getRoot();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        navController = Navigation.findNavController(binding.getRoot());
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -1068,9 +1081,10 @@ public class MainOrderFragment extends Fragment {
             searchProductFragment.setArguments(bundle2);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
         });
-        return binding.getRoot();
-    }
 
+
+
+    }
 
     @Override
     public void onDestroy() {

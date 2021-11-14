@@ -36,6 +36,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -110,6 +113,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
     Company company;
     @Inject
     SharedPreferences sharedPreferences;
+
+
+    private NavController navController;
+
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
@@ -171,6 +178,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
+        navController = Navigation.findNavController(binding.getRoot());
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -197,7 +205,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //region Get Bundle
         Bundle bundle = getArguments();
         assert bundle != null;
-        String mobile = bundle.getString("mobile");
+        String mobileNumber = bundle.getString("mobile");
         String type = bundle.getString("type");
         String edit_address = bundle.getString("edit_address");
         //endregion Get Bundle
@@ -377,19 +385,14 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
 
 
-
                 //region Region Gps Information And Go To RegisterFragment
-                getFragmentManager().popBackStack();
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("mobile", mobile);
-                bundle1.putString("address1", address);
-                bundle1.putDouble("lat", latitude);
-                bundle1.putDouble("lng", longitude);
-                bundle1.putString("address2", ADDRESS);
-                RegisterFragment registerFragment = new RegisterFragment();
-                registerFragment.setArguments(bundle1);
-                FragmentTransaction addFragment = requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, registerFragment).addToBackStack("RegisterF");
-                addFragment.commit();
+
+                NavDirections action = MapFragmentDirections.actionGoToRegisterFragment()
+                        .setAddress2(ADDRESS)
+                        .setLat(latitude)
+                        .setLng(longitude)
+                        .setMobileNumber(mobileNumber);
+                navController.navigate(action);
                 //endregion Region Gps Information And Go To RegisterFragment
             }
         });
@@ -398,7 +401,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         try {
             binding.mapView.onCreate(savedInstanceState);
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
 
 
         binding.mapView.getMapAsync(mapboxMap -> {
@@ -472,12 +476,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
         binding.searchView.setMaxWidth(Integer.MAX_VALUE);
 
 
-        List<ForwardGeocode> resultsLis=new ArrayList<>();
+        List<ForwardGeocode> resultsLis = new ArrayList<>();
         mRecyclerAdapter = new SearchViewAdapter(resultsLis);
 
         binding.recyclerView.setAdapter(mRecyclerAdapter);
-
-
 
 
         try {
@@ -997,8 +999,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 bundle1.putString("type", locationAddress);
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
                                 frg.setArguments(bundle1);
-                            }
-                            else if (flag==1){
+                            } else if (flag == 1) {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
                                 if (frg instanceof PaymentMobileFragment) {
@@ -1008,7 +1009,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 }
 
 
-                            }else {
+                            } else {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
                                 if (frg instanceof MainOrderFragment) {
@@ -1019,20 +1020,21 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             }
 
 
-                            FragmentManager ft = getActivity().getSupportFragmentManager();
-                            if (frg != null) {
-                                getFragmentManager().popBackStack();
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                                    ft.beginTransaction().detach(frg).commitNow();
-                                    ft.beginTransaction().attach(frg).commitNow();
-
-                                } else {
-
-                                    ft.beginTransaction().detach(frg).attach(frg).commit();
-                                }
-                            }
+                            navController.popBackStack();
+//                            FragmentManager ft = getActivity().getSupportFragmentManager();
+//                            if (frg != null) {
+//                                getFragmentManager().popBackStack();
+//
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//
+//                                    ft.beginTransaction().detach(frg).commitNow();
+//                                    ft.beginTransaction().attach(frg).commitNow();
+//
+//                                } else {
+//
+//                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+//                                }
+//                            }
                         }
 
                     } else {

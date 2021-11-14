@@ -62,6 +62,7 @@ public class LoginClientFragment extends Fragment {
     private NavController navController;
 
 
+
     //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
@@ -85,6 +86,7 @@ public class LoginClientFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(binding.getRoot());
+
 
 
 
