@@ -79,6 +79,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.AccountAdapter;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 
@@ -149,14 +150,17 @@ public class MainOrderFragment extends Fragment {
     private CustomProgress customProgress;
 
 
-    private String Tbl_GUID;
-    private String Tbl_NAME;
-    private String Ord_TYPE;
-    private String Inv_GUID;
+    private String Tbl_GUID = "";
+    private String Tbl_NAME = "";
+    private String Ord_TYPE = "";
+    private String Inv_GUID = "";
     private String Acc_NAME = "";
     private String Acc_GUID = "";
     private Boolean Seen = false;
     private Boolean EDIT = false;
+
+
+    private int counter = 0;
 
 
     private ArrayList<ProductLevel1> productLevel1List;
@@ -177,7 +181,7 @@ public class MainOrderFragment extends Fragment {
 
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String error;
+    private String error = "";
 
 
     //region Variable Dialog Description
@@ -196,9 +200,6 @@ public class MainOrderFragment extends Fragment {
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
-
-
-
 
 
     private TextWatcher textWatcherAcc;
@@ -246,6 +247,9 @@ public class MainOrderFragment extends Fragment {
     private NavController navController;
 
 
+    private String Transport_GUID = "";
+
+
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -255,25 +259,19 @@ public class MainOrderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
-
-
-
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
-
-
         return binding.getRoot();
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
         navController = Navigation.findNavController(binding.getRoot());
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         customProgress = CustomProgress.getInstance();
 
 
@@ -302,24 +300,10 @@ public class MainOrderFragment extends Fragment {
         }
 
 
-//        Inv_GUID = "";
-//        isLastPage = false;
-//        isLoading = false;
-//        currentPage = 1;
-//
-//        error = "";
-//
-//        Ord_TYPE = "";
-//        Tbl_GUID = "";
-
-
         //endregion First Value Parameter
 
 
         //region Get Bundle
-
-
-
 
 
         Ord_TYPE = MainOrderFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
@@ -330,8 +314,11 @@ public class MainOrderFragment extends Fragment {
         Acc_NAME = MainOrderFragmentArgs.fromBundle(getArguments()).getAccNAME();
         Acc_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getAccGUID();
         EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
-        Seen =MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
+        Seen = MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
         boolean setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
+
+
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
 
         //region Create Order
@@ -346,11 +333,31 @@ public class MainOrderFragment extends Fragment {
                 sharedPreferences.edit().putString(name, Inv_GUID).apply();
             }
 
+
             if (!Inv_GUID.equals("") && name.equals("saleinOrder")) {
                 Inv_GUID = UUID.randomUUID().toString();
             }
 
         }
+
+
+        List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+        if (invDetailses.size() > 0) {
+
+            CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equals(Transport_GUID));
+            counter = invDetailses.size();
+
+
+        }
+
+        if (counter == 0)
+            ((LauncherActivity) getActivity()).setClearCounterOrder();
+        else
+            ((LauncherActivity) getActivity()).setCounterOrder(counter);
+
+
+        if (EDIT)
+            ((LauncherActivity) getActivity()).setInVisibiltyItem();
 
 
         //endregion Create Order
@@ -1027,25 +1034,22 @@ public class MainOrderFragment extends Fragment {
 
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
+
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-
             Fragment tagMainFragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
-
-            MainFragment tempMainFragment = null;
-            if (tagMainFragment instanceof MainFragment)
-                tempMainFragment = (MainFragment) tagMainFragment;
 
 
             if (invDetails.size() > 0) {
                 int counter = invDetails.size();
-                if (tempMainFragment != null)
-                    tempMainFragment.setCounterOrder(counter);
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+
                 if (company.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
-            } else if (tempMainFragment != null)
-                tempMainFragment.setClearCounterOrder();
+            } else {
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
+            }
 
 
         });
@@ -1081,7 +1085,6 @@ public class MainOrderFragment extends Fragment {
             searchProductFragment.setArguments(bundle2);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
         });
-
 
 
     }

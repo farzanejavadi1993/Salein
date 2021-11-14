@@ -34,8 +34,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -156,7 +155,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         RESULTS
     }
 
-    List<ForwardGeocode> results;
+
 
 
     //endregion Parameter
@@ -189,7 +188,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         }
 
         //region Configuration Text Size
-        int fontSize = 12;
+        int fontSize ;
         if (Util.screenSize >= 7) {
 
             fontSize = 14;
@@ -296,7 +295,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 UpdateAccount(list, 1, "");
 
-                return;
+
 
 
             }
@@ -370,31 +369,28 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //region Action btnRegisterInformation
 
 
-        binding.btnRegisterInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Account accountORG = Select.from(Account.class).first();
-                if (edit_address != null && (edit_address.equals("1") || edit_address.equals("2") || edit_address.equals("3"))) {
+        binding.btnRegisterInformation.setOnClickListener(v -> {
+            Account accountORG = Select.from(Account.class).first();
+            if (edit_address != null && (edit_address.equals("1") || edit_address.equals("2") || edit_address.equals("3"))) {
 
-                    if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
-                        linearButtons.setVisibility(View.VISIBLE);
-                    }
-
-                    dialogEditAddress.show();
-                    return;
+                if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
+                    linearButtons.setVisibility(View.VISIBLE);
                 }
 
-
-                //region Region Gps Information And Go To RegisterFragment
-
-                NavDirections action = MapFragmentDirections.actionGoToRegisterFragment()
-                        .setAddress2(ADDRESS)
-                        .setLat(latitude)
-                        .setLng(longitude)
-                        .setMobileNumber(mobileNumber);
-                navController.navigate(action);
-                //endregion Region Gps Information And Go To RegisterFragment
+                dialogEditAddress.show();
+                return;
             }
+
+
+            //region Region Gps Information And Go To RegisterFragment
+
+            NavDirections action = MapFragmentDirections.actionGoToRegisterFragment()
+                    .setAddress2(ADDRESS)
+                    .setLat(String.valueOf(latitude))
+                    .setLng(String.valueOf(longitude))
+                    .setMobileNumber(mobileNumber);
+            navController.navigate(action);
+            //endregion Region Gps Information And Go To RegisterFragment
         });
         //endregion Action btnRegisterInformation
 
@@ -568,12 +564,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
 
 
-        mRecyclerAdapter.setOnClickItemListener(new SearchViewAdapter.ClickItem() {
-            @Override
-            public void onRowClick(ForwardGeocode mItem) {
-                showItemOnMap(mItem);
-            }
-        });
+        mRecyclerAdapter.setOnClickItemListener(this::showItemOnMap);
 
     }
 
@@ -972,7 +963,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             call.enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
 
                     Gson gson = new Gson();
                     Type typeIDs = new TypeToken<ModelLog>() {
@@ -1049,7 +1040,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
                     Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" + t.toString(), Toast.LENGTH_SHORT).show();
 
                     binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));

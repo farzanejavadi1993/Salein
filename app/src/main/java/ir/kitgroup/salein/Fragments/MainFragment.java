@@ -42,7 +42,6 @@ public class MainFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-
     private FragmentMainBinding binding;
     private int counter;
 
@@ -74,7 +73,7 @@ public class MainFragment extends Fragment {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
             if (!name.equals(""))
-            company = configRetrofit.getCompany(name);
+                company = configRetrofit.getCompany(name);
 
         }
 
@@ -109,7 +108,8 @@ public class MainFragment extends Fragment {
 
             binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setBackgroundColor(getActivity().getResources().getColor(R.color.red_table));
 
-           binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(false);
+            binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(false);
+
 
 
 
@@ -129,15 +129,12 @@ public class MainFragment extends Fragment {
 
                     case R.id.orders:
                         Bundle bundle = new Bundle();
-                       Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
+                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
                         if (frg instanceof MainOrderFragment) {
                             MainOrderFragment fgf = (MainOrderFragment) frg;
-                            if (fgf.typeAddress==2)
-                            bundle.putBoolean("setADR1",true);
+                            if (fgf.typeAddress == 2)
+                                bundle.putBoolean("setADR1", true);
                         }
-
-
-
 
 
                         bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
@@ -218,7 +215,7 @@ public class MainFragment extends Fragment {
                 binding.bottomNavigationViewLinear.getOrCreateBadge(R.id.orders).setNumber(counter);
 
 
-           binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
+            binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(false);
         }
 
 
@@ -237,12 +234,9 @@ public class MainFragment extends Fragment {
         mainOrderMobileFragment = new MainOrderFragment();
         mainOrderMobileFragment.setArguments(bundle1);
 
-        FragmentTransaction replaceFragment ;
+        FragmentTransaction replaceFragment;
 
         replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher_main, mainOrderMobileFragment, "MainOrderMobileFragment");
-
-
-
 
 
         replaceFragment.commit();
@@ -276,10 +270,11 @@ public class MainFragment extends Fragment {
         mainOrderMobileFragment.setArguments(bundle1);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher_main, mainOrderMobileFragment, "MainOrderMobileFragment").commit();
     }
+
     public void setVisibleItem() {
-       binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(true);
+        binding.bottomNavigationViewLinear.getMenu().getItem(0).setVisible(true);
         callHome = true;
-      binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(true);
+        binding.bottomNavigationViewLinear.getMenu().getItem(2).setEnabled(true);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher_main, new SettingFragment(), "SettingFragment").commit();
     }
 

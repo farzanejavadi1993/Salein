@@ -56,6 +56,10 @@ public class LauncherActivity extends AppCompatActivity {
     @Inject
     Config config;
 
+    private ActivityLauncherBinding binding;
+
+    private int counter = 0;
+
 
     private Boolean mainOrder = false;
     private Boolean searchProduct = false;
@@ -78,9 +82,8 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //region Set Layout to LauncherActivity class
-        ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
-        View viewRoot = binding.getRoot();
-        setContentView(viewRoot);
+        binding = ActivityLauncherBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         //endregion Set Layout to LauncherActivity class
 
 
@@ -96,7 +99,6 @@ public class LauncherActivity extends AppCompatActivity {
         binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
 
 
-
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
             switch (item.getItemId()) {
@@ -104,10 +106,10 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.homee:
                     NavDirections actionHome = null;
                     if (searchProduct) {
-                         actionHome = (NavDirections) SearchProductFragmentDirections.actionGoToMainOrderFragment();
+                        actionHome = (NavDirections) SearchProductFragmentDirections.actionGoToMainOrderFragment();
 
                     } else if (invoiceDetail) {
-                         actionHome = (NavDirections) InVoiceDetailFragmentDirections.actionGoToMainOrderFragment();
+                        actionHome = (NavDirections) InVoiceDetailFragmentDirections.actionGoToMainOrderFragment();
                     } else if (setting) {
                         actionHome = (NavDirections) SettingFragmentDirections.actionGoToMainOrderFragment();
                     }
@@ -135,7 +137,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                 case R.id.orders:
 
-                    NavDirections actionInvoiceDetail= null;
+                    NavDirections actionInvoiceDetail = null;
 
                     if (mainOrder) {
                         actionInvoiceDetail = (NavDirections) MainOrderFragmentDirections.actionGoToInvoiceDetailFragment();
@@ -151,7 +153,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                 case R.id.profile:
 
-                    NavDirections actionProfile= null;
+                    NavDirections actionProfile = null;
 
                     if (mainOrder) {
                         actionProfile = (NavDirections) MainOrderFragmentDirections.actionGoToSettingFragment();
@@ -268,6 +270,23 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
+    public void setCounterOrder(int count) {
+        counter = count;
+        binding.navView.getOrCreateBadge(R.id.orders).setNumber(count);
+
+    }
+
+    public void setClearCounterOrder() {
+        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+    }
+
+
+    public void setInVisibiltyItem() {
+        binding.navView.getMenu().getItem(0).setVisible(false);
+    }
+
+
+
     //region Override Method
     @Override
     public void onBackPressed() {
@@ -351,5 +370,6 @@ public class LauncherActivity extends AppCompatActivity {
         return pInfo.versionName;
     }
     //endregion Custom Method
+
 
 }

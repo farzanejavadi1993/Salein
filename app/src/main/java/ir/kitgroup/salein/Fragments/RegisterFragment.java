@@ -95,8 +95,11 @@ public class RegisterFragment extends Fragment {
 
         String mobileNumber = RegisterFragmentArgs.fromBundle(getArguments()).getMobileNumber();
         String address2 = RegisterFragmentArgs.fromBundle(getArguments()).getAddress2();
-        double latitude = RegisterFragmentArgs.fromBundle(getArguments()).getLat();
-        double longitude = RegisterFragmentArgs.fromBundle(getArguments()).getLng();
+        String lat = RegisterFragmentArgs.fromBundle(getArguments()).getLat();
+        String longi= RegisterFragmentArgs.fromBundle(getArguments()).getLng();
+
+        double latitude=Double.parseDouble(lat);
+        double longitude=Double.parseDouble(longi);
 
 
         binding.edtAddressCustomerComplete.setText(address2);

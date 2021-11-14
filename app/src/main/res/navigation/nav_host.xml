@@ -353,11 +353,11 @@
         <argument
             android:name="lat"
             android:defaultValue="0.0"
-            app:argType="double" />
+            app:argType="string" />
         <argument
             android:name="lng"
             android:defaultValue="0.0"
-            app:argType="double" />
+            app:argType="string" />
 
 
         <action
