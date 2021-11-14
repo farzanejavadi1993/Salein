@@ -41,6 +41,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -239,6 +242,8 @@ public class MainOrderFragment extends Fragment {
     private String maxSales = "0";
     private boolean chooseAccount = false;
 
+    private NavController navController;
+
 
     //endregion Parameter
 
@@ -247,6 +252,9 @@ public class MainOrderFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+
+        navController = Navigation.findNavController(binding.getRoot());
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
@@ -311,6 +319,30 @@ public class MainOrderFragment extends Fragment {
         EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
         Seen =MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
         boolean setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
+
+
+        //region Create Order
+        if (Inv_GUID.equals("")) {
+            String name;
+
+
+            name = company.namePackage.split("ir.kitgroup.")[1];
+            Inv_GUID = sharedPreferences.getString(name, "");
+            if (Inv_GUID.equals("")) {
+                Inv_GUID = UUID.randomUUID().toString();
+                sharedPreferences.edit().putString(name, Inv_GUID).apply();
+            }
+
+            if (!Inv_GUID.equals("") && name.equals("saleinOrder")) {
+                Inv_GUID = UUID.randomUUID().toString();
+            }
+
+        }
+
+
+        //endregion Create Order
+
+
         //endregion Get Bundle
 
 
@@ -442,9 +474,8 @@ public class MainOrderFragment extends Fragment {
             Bundle bundle1 = new Bundle();
             bundle1.putString("edit_address", "3");
             bundle1.putString("type", String.valueOf(typeAddress));
-            MapFragment mapFragment = new MapFragment();
-            mapFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+            NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment().setEditAddress("3").setType(String.valueOf(typeAddress));
+            navController.navigate(action);
 
         });
 

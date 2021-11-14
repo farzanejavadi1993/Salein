@@ -270,19 +270,22 @@ public class InVoiceDetailFragment extends Fragment {
 
 
         //region Get Bundle
-        Bundle bundle = getArguments();
-        type = bundle.getString("type");  //1 seen   //2 Edit
-        Inv_GUID = bundle.getString("Inv_GUID");
-        Tbl_GUID = bundle.getString("Tbl_GUID");
-        Ord_TYPE = bundle.getString("Ord_TYPE");
-        Tbl_NAME = bundle.getString("Tbl_NAME");
-        Acc_NAME = bundle.getString("Acc_NAME");
-        Seen = bundle.getBoolean("Seen");
+
+        type = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 seen   //2 Edit
+        Ord_TYPE = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
+        Tbl_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getTblGUID();
+        Tbl_NAME = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getTblNAME();
+        Inv_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getInvGUID();
+
+        Acc_NAME = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getAccNAME();
+        Acc_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getAccGUID();
+        EDIT = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
+        Seen = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getSEEN();
+        setADR1 = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getSetADR1();
+
+
         binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
 
-
-        EDIT = bundle.getBoolean("EDIT");
-        setADR1 = bundle.getBoolean("setADR1");
 
         //endregion Get Bundle
 
@@ -628,7 +631,6 @@ public class InVoiceDetailFragment extends Fragment {
             }
 
 
-
             Bundle bundle1 = new Bundle();
             bundle1.putString("Ord_TYPE", Ord_TYPE);
             Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
@@ -644,7 +646,6 @@ public class InVoiceDetailFragment extends Fragment {
             bundle1.putString("Acc_NAME", Acc_NAME);
             bundle1.putString("Acc_GUID", Acc_GUID);
             bundle1.putBoolean("EDIT", true);
-
 
 
             MainOrderFragment mainOrderMobileFragment = new MainOrderFragment();
@@ -926,8 +927,7 @@ public class InVoiceDetailFragment extends Fragment {
                                         binding.progressBar.setVisibility(View.GONE);
                                         counter = 0;
                                     }
-                                }
-                                else {
+                                } else {
                                     Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
                                     binding.progressBar.setVisibility(View.GONE);
                                 }
@@ -1008,7 +1008,7 @@ public class InVoiceDetailFragment extends Fragment {
                                             binding.txtDate.setText(iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
 
 
-                                        CollectionUtils.filter(iDs.getInvoiceDetail(),i->!i.PRD_UID.equals(Transport_GUID));
+                                        CollectionUtils.filter(iDs.getInvoiceDetail(), i -> !i.PRD_UID.equals(Transport_GUID));
                                         invDetails.clear();
                                         invDetails.addAll(iDs.getInvoiceDetail());
 

@@ -116,6 +116,11 @@
             app:popUpTo="@id/MainOrderFragment"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/action_go_to_MapFragment"
+            app:destination="@id/MapFragment"
+     />
+
     </fragment>
 
 
@@ -150,6 +155,63 @@
         android:id="@+id/InvoiceDetailFragment"
         android:name="ir.kitgroup.salein.Fragments.InVoiceDetailFragment"
         tools:layout="@layout/fragment_invoice_detail_mobile">
+
+
+        <argument
+            android:name="type"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Inv_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="Tbl_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Ord_TYPE"
+            android:defaultValue=""
+            app:argType="string" />
+
+
+        <argument
+            android:name="Tbl_NAME"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Acc_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Acc_NAME"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="EDIT"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <argument
+            android:name="SEEN"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+
+        <argument
+            android:name="SetADR1"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+
+
+
+
 
         <action
             android:id="@+id/action_go_to_SettingFragment"
@@ -250,6 +312,15 @@
 
         <argument
             android:name="mobileNumber"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="edit_address"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="type"
             android:defaultValue=""
             app:argType="string" />
     </fragment>
