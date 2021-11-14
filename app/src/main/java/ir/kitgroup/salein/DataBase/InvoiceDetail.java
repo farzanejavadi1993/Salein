@@ -48,7 +48,7 @@ public class InvoiceDetail extends SugarRecord {
     
     @SerializedName("INV_DET_PERCENT_DISCOUNT")//درصد تخفیف کالا
     @Expose
-    public Double INV_DET_PERCENT_DISCOUNT;
+    public Double INV_DET_PERCENT_DISCOUNT=0.0;
 
 
     @SerializedName("INV_DET_DISCOUNT")//مبلغ تخفیف کالا

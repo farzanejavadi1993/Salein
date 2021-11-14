@@ -149,15 +149,15 @@ public class MainOrderFragment extends Fragment {
 
     private CustomProgress customProgress;
 
-
+    private String Inv_GUID = "";
     private String Tbl_GUID = "";
     private String Tbl_NAME = "";
     private String Ord_TYPE = "";
-    private String Inv_GUID = "";
-    private String Acc_NAME = "";
     private String Acc_GUID = "";
+    private String Acc_NAME = "";
     private Boolean Seen = false;
     private Boolean EDIT = false;
+    boolean setARD1 = false;
 
 
     private int counter = 0;
@@ -315,7 +315,7 @@ public class MainOrderFragment extends Fragment {
         Acc_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getAccGUID();
         EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
         Seen = MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
-        boolean setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
+        setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
 
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
@@ -360,8 +360,14 @@ public class MainOrderFragment extends Fragment {
             ((LauncherActivity) getActivity()).setInVisibiltyItem();
 
 
+
+        ((LauncherActivity) getActivity()).setMainOrder(this);
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar();
         //endregion Create Order
 
+
+        if (company.mode==2)
+            binding.btnFilter.setVisibility(View.GONE);
 
         //endregion Get Bundle
 
@@ -1774,6 +1780,40 @@ public class MainOrderFragment extends Fragment {
         bundle.putBoolean("Seen", Seen);
         bundle.putBoolean("setARD1", setAddress);
         return bundle;
+    }
+
+
+    public ArrayList<String> getValueOfParameter() {
+        ArrayList<String> list = new ArrayList<>();
+
+        list.add(Inv_GUID);
+        list.add(Tbl_GUID);
+        list.add(Tbl_NAME);
+        list.add(Ord_TYPE);
+        list.add(Acc_GUID);
+        list.add(Acc_NAME);
+        if (EDIT) {
+            list.add("1");
+            list.add("1");
+
+        } else {
+            list.add("2");
+            list.add("0");
+        }
+
+        if (Seen)
+            list.add("1");
+        else
+            list.add("0");
+
+
+        if (setARD1)
+            list.add("1");
+        else
+            list.add("0");
+
+
+        return list;
     }
 
 

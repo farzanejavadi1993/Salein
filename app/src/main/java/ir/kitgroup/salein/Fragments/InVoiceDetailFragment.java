@@ -78,6 +78,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Description;
+import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.models.ModelDesc;
 
 import ir.kitgroup.salein.models.ModelInvoice;
@@ -923,7 +924,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                                         invoiceDetailList.addAll(invDetails);
-                                        invoiceDetailAdapter.notifyDataSetChanged();
+                                       invoiceDetailAdapter.notifyDataSetChanged();
                                         binding.progressBar.setVisibility(View.GONE);
                                         counter = 0;
                                     }

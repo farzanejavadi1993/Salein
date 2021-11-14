@@ -140,7 +140,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
             if (prd1.get(0).getPercDis() != 0.0 && type.equals("2"))
                 holder.discount.setText(format.format(prd1.get(0).getPercDis()) + "%");
-            else if ((type.equals("1") || Seen)&& invoicedetail.INV_DET_PERCENT_DISCOUNT!=0.0)
+            else if ((type.equals("1") || Seen)&& invoicedetail.INV_DET_PERCENT_DISCOUNT!=null && invoicedetail.INV_DET_PERCENT_DISCOUNT!=0.0)
                 holder.discount.setText(format.format(invoicedetail.INV_DET_PERCENT_DISCOUNT) + "%");
 
             holder.name.setText(holder.getAdapterPosition()+1+"_"+prd1.get(0).getN());
