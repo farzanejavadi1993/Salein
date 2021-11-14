@@ -30,6 +30,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -172,6 +175,9 @@ public class InVoiceDetailFragment extends Fragment {
     private int counter = 0;
 
 
+    private NavController navController;
+
+
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -188,6 +194,7 @@ public class InVoiceDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        navController = Navigation.findNavController(binding.getRoot());
         customProgress = CustomProgress.getInstance();
 
 
@@ -630,29 +637,24 @@ public class InVoiceDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("Ord_TYPE", Ord_TYPE);
             Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-            // if (tb != null && tb.INVID != null && tb.I.equals(tb.INVID))
+            String tblGuid;
             if (tb != null && tb.GO != null)
-                bundle1.putString("Tbl_GUID", "");
+                tblGuid = "";
             else
-                bundle1.putString("Tbl_GUID", Tbl_GUID);
+                tblGuid = Tbl_GUID;
+            NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainOrderFragment()
+                    .setOrdTYPE(Ord_TYPE)
+                    .setTblGUID(tblGuid)
+                    .setInvGUID(Inv_GUID)
+                    .setTblNAME(Tbl_NAME)
+                    .setOrdTYPE(Ord_TYPE)
+                    .setSEEN(true)
+                    .setAccGUID(Acc_GUID)
+                    .setAccNAME(Acc_NAME)
+                    .setEDIT(true);
+            navController.navigate(action);
 
-            bundle1.putString("Inv_GUID", Inv_GUID);
-            bundle1.putString("Tbl_NAME", Tbl_NAME);
-            bundle1.putBoolean("Seen", true);
-            bundle1.putString("Acc_NAME", Acc_NAME);
-            bundle1.putString("Acc_GUID", Acc_GUID);
-            bundle1.putBoolean("EDIT", true);
-
-
-            MainOrderFragment mainOrderMobileFragment = new MainOrderFragment();
-            mainOrderMobileFragment.setArguments(bundle1);
-            FragmentTransaction replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainOrderMobileFragment, "MainOrderMobileFragment").addToBackStack("MainOrderMobileF");
-            replaceFragment.commit();
         });
         //endregion Action BtnEdit
 
@@ -663,30 +665,28 @@ public class InVoiceDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("Inv_GUID", Inv_GUID);
-            bundle1.putString("Tbl_GUID", Tbl_GUID);
-            bundle1.putString("Acc_NAME", Acc_NAME);
-            bundle1.putString("Acc_GUID", Acc_GUID);
+            String ordTy = "";
+            if (company.mode != 2)
+                ordTy = Ord_TYPE;
 
 
-            if (company.mode == 2)
-                bundle1.putString("Ord_TYPE", "");
-            else
-                bundle1.putString("Ord_TYPE", Ord_TYPE);
-
+            boolean edit = false;
             if (EDIT)
-                bundle1.putBoolean("EDIT", true);
+                edit = true;
 
-            bundle1.putString("Sum_PURE_PRICE", String.valueOf(sumPurePrice));
-            bundle1.putString("Sum_PRICE", String.valueOf(sumPrice));
-            bundle1.putBoolean("Seen", Seen);
-            bundle1.putString("Tbl_NAME", Tbl_NAME);
-            bundle1.putBoolean("setADR1", setADR1);
-
-            PaymentMobileFragment paymentFragment = new PaymentMobileFragment();
-            paymentFragment.setArguments(bundle1);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, paymentFragment, "PaymentFragment").addToBackStack("PaymentF").commit();
+            NavDirections action = InVoiceDetailFragmentDirections.actionGoToPaymentFragment()
+                    .setInvGUID(Inv_GUID)
+                    .setTblGUID(Tbl_GUID)
+                    .setAccNAME(Acc_NAME)
+                    .setAccGUID(Acc_GUID)
+                    .setOrdTYPE(ordTy)
+                    .setEDIT(edit)
+                    .setSEEN(Seen)
+                    .setInvGUID(Inv_GUID)
+                    .setSumPRICE(String.valueOf(sumPrice))
+                    .setTblNAME(Tbl_NAME)
+                    .setSetADR1(setADR1);
+            navController.navigate(action);
         });
         //endregion Action BtnContinue
 
@@ -924,7 +924,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                                         invoiceDetailList.addAll(invDetails);
-                                       invoiceDetailAdapter.notifyDataSetChanged();
+                                        invoiceDetailAdapter.notifyDataSetChanged();
                                         binding.progressBar.setVisibility(View.GONE);
                                         counter = 0;
                                     }
@@ -1076,36 +1076,16 @@ public class InVoiceDetailFragment extends Fragment {
                             }
 
 
-                            if (company.mode == 2) {
-                                getActivity().getSupportFragmentManager().popBackStack();
-                                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
-                                FragmentManager ft = getActivity().getSupportFragmentManager();
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if (company.mode != 2) {
+                                navController.popBackStack();
 
-                                    ft.beginTransaction().detach(frg).commitNow();
-                                    ft.beginTransaction().attach(frg).commitNow();
-
-                                } else {
-
-                                    ft.beginTransaction().detach(frg).attach(frg).commit();
-                                }
-                            } else {
                                 Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
                                 if (tb != null && tb.GO != null)
                                     Tables.delete(tb);
-
-                                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                                FragmentManager ft = getActivity().getSupportFragmentManager();
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                                    ft.beginTransaction().detach(frg).commitNow();
-                                    ft.beginTransaction().attach(frg).commitNow();
-
-                                } else {
-
-                                    ft.beginTransaction().detach(frg).attach(frg).commit();
-                                }
                             }
+
+
+                            navController.popBackStack();
 
                         }
                     } else {

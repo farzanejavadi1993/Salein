@@ -33,6 +33,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -117,6 +120,7 @@ public class PaymentMobileFragment extends Fragment {
     @Inject
     API api;
 
+    private NavController navController;
     //region Parameter
     private FragmentPaymentMobileBinding binding;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -246,7 +250,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-
         customProgress = CustomProgress.getInstance();
 
         switch (company.namePackage) {
@@ -275,7 +278,19 @@ public class PaymentMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
         try {
+
+
+            navController = Navigation.findNavController(binding.getRoot());
+            if (!Util.RetrofitValue) {
+                ConfigRetrofit configRetrofit = new ConfigRetrofit();
+                String name = sharedPreferences.getString("CN", "");
+                company = configRetrofit.getCompany(name);
+                api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+            }
+
 
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
@@ -301,15 +316,19 @@ public class PaymentMobileFragment extends Fragment {
 
 
             //region get Bundle
-            Bundle bundle = getArguments();
-            Inv_GUID = bundle.getString("Inv_GUID");
-            Tbl_GUID = bundle.getString("Tbl_GUID");
-            Tbl_NAME = bundle.getString("Tbl_NAME");
-            Sum_PURE_PRICE = bundle.getString("Sum_PURE_PRICE");
-            edit = bundle.getBoolean("EDIT");
-            setADR1 = bundle.getBoolean("setADR1");
-            Seen = bundle.getBoolean("Seen");
-            String ord_type = bundle.getString("Ord_TYPE");
+
+
+            Inv_GUID=PaymentMobileFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            Tbl_GUID=PaymentMobileFragmentArgs.fromBundle(getArguments()).getTblGUID();
+            Tbl_NAME=PaymentMobileFragmentArgs.fromBundle(getArguments()).getTblNAME();
+            Sum_PURE_PRICE=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSumPRICE();
+            edit=PaymentMobileFragmentArgs.fromBundle(getArguments()).getEDIT();
+            setADR1=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSetADR1();
+            String ord_type=PaymentMobileFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
+
+
+
+
             if (ord_type != null && !ord_type.equals(""))
                 Ord_TYPE = Integer.parseInt(ord_type);
 
@@ -319,11 +338,18 @@ public class PaymentMobileFragment extends Fragment {
             else
                 new_Tbl_GUID = Tbl_GUID;
 
+
+
+
+
             if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
                 new_Inv_GUID = Inv_GUID;
 
+
+
             else if (company.mode == 1 && !Tbl_GUID.equals(""))
                 new_Inv_GUID = UUID.randomUUID().toString();
+
 
 
             //endregion get Bundle
@@ -492,12 +518,12 @@ public class PaymentMobileFragment extends Fragment {
                     return;
                 }
                 dialogAddress.dismiss();
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("edit_address", "1");
-                bundle1.putString("type", String.valueOf(typeAddress));
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundle1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+
+
+                NavDirections action = PaymentMobileFragmentDirections.actionGoToMapFragment()
+                        .setEditAddress("1")
+                        .setType(String.valueOf(typeAddress));
+                navController.navigate(action);
 
             });
 
@@ -608,12 +634,11 @@ public class PaymentMobileFragment extends Fragment {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("edit_address", "1");
-                bundle1.putString("type", String.valueOf(typeAddress));
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundle1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+
+                NavDirections action = PaymentMobileFragmentDirections.actionGoToMapFragment()
+                        .setEditAddress("1")
+                        .setType(String.valueOf(typeAddress));
+                navController.navigate(action);
             });
 
             //endregion SetAddress
@@ -1080,23 +1105,15 @@ public class PaymentMobileFragment extends Fragment {
 
                 dialogSendOrder.dismiss();
                 if (company.mode == 2) {
-                    final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                    for (int i = 0; i < size; i++) {
-                        getFragmentManager().popBackStack();
-                    }
+                   navController.popBackStack();
+                   navController.popBackStack();
+
+                   //MainFragment
+
+                }
 
 
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putString("Ord_TYPE", "");
-                    bundle1.putString("Tbl_GUID", "");
-                    bundle1.putString("Inv_GUID", "");
-                    MainFragment mainFragment = new MainFragment();
-                    mainFragment.setArguments(bundle1);
-                    FragmentTransaction replaceFragment;
-                    replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
-                    replaceFragment.commit();
-
-                } else {
+                else {
 
                     if (Tbl_GUID.equals("")) {
 
@@ -1382,18 +1399,8 @@ public class PaymentMobileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         OnceSee = false;
 
-        reloadFragment(setADR1);
-        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
-        FragmentManager ft = getActivity().getSupportFragmentManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        //reloadFrgament
 
-            ft.beginTransaction().detach(frg).commitNow();
-            ft.beginTransaction().attach(frg).commitNow();
-
-        } else {
-
-            ft.beginTransaction().detach(frg).attach(frg).commit();
-        }
     }
 
 
