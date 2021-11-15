@@ -345,6 +345,28 @@
         android:id="@+id/SearchProductFragment"
         android:name="ir.kitgroup.salein.Fragments.SearchProductFragment"
         tools:layout="@layout/fragment_search_product">
+
+
+        <argument
+            android:name="Tbl_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="Inv_GUID"
+            android:defaultValue=""
+            app:argType="string" />
+
+
+        <argument
+            android:name="SEEN"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+
+
+
+
         <action
             android:id="@+id/action_go_to_SettingFragment"
             app:destination="@id/SettingFragment"

@@ -235,7 +235,7 @@ public class LauncherActivity extends AppCompatActivity {
                     setting = false;
                     break;
                 case R.id.InvoiceDetailFragment:
-                    binding.navView.setVisibility(View.GONE);
+
                     mainOrder = false;
                     searchProduct = false;
                     invoiceDetail = true;
@@ -250,7 +250,7 @@ public class LauncherActivity extends AppCompatActivity {
                     break;
 
                 default:
-                    Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
+
                     break;
 
 
@@ -332,8 +332,11 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public void getVisibilityBottomBar() {
+    public void getVisibilityBottomBar(Boolean show) {
+        if (show)
         binding.navView.setVisibility(View.VISIBLE);
+        else
+            binding.navView.setVisibility(View.GONE);
     }
 
 

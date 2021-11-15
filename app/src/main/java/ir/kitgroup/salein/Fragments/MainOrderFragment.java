@@ -365,7 +365,10 @@ public class MainOrderFragment extends Fragment {
 
 
         ((LauncherActivity) getActivity()).setMainOrder(this);
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar();
+
+        MapFragment mapFragment=new MapFragment();
+        mapFragment.getFragment(this,null,null);
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         //endregion Create Order
 
 
@@ -545,12 +548,12 @@ public class MainOrderFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR2 != null && !acc.ADR2.equals(""))
                 dialogAddress.show();
             else {
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("edit_address", "3");
-                bundle1.putString("type", String.valueOf(typeAddress));
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundle1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+                NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment()
+                        .setEditAddress("3")
+                        .setType(String.valueOf(typeAddress));
+                navController.navigate(action);
+
+
             }
         });
         //endregion Action BtnAddress
@@ -1086,15 +1089,10 @@ public class MainOrderFragment extends Fragment {
 
 
         binding.ivSearch.setOnClickListener(v -> {
-            Bundle bundle2 = new Bundle();
-            bundle2.putString("Inv_GUID", Inv_GUID);
-            bundle2.putString("Tbl_GUID", Tbl_GUID);
-            bundle2.putBoolean("Seen", Seen);
-            SearchProductFragment searchProductFragment = new SearchProductFragment();
-            searchProductFragment.setArguments(bundle2);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
-
-            NavDirections action = MainOrderFragmentDirections.actionGoToSearchProductFragment();
+            NavDirections action = MainOrderFragmentDirections.actionGoToSearchProductFragment()
+                    .setInvGUID(Inv_GUID)
+                    .setTblGUID(Tbl_GUID)
+                    .setSEEN(Seen);
             navController.navigate(action);
 
 

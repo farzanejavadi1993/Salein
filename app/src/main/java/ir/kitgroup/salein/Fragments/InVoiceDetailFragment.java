@@ -64,6 +64,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.InvoiceDetailMobileAdapter;
 import ir.kitgroup.salein.Connect.API;
@@ -206,6 +207,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         }
 
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
         maxSales = sharedPreferences.getString("maxSale", "0");

@@ -85,6 +85,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.SearchViewAdapter;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
@@ -116,12 +117,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private NavController navController;
 
+    private ProfileFragment profileFragment;
+    private MainOrderFragment mainOrderFragment;
+    private PaymentMobileFragment paymentMobileFragment;
+
     //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
 
 
-    private Boolean setADR2 = false;// If setADR1  Is True Set Address1 In TvAddress(PaymentFragment)
+    private Boolean setADR1 = false;// If setADR1  Is True Set Address1 In TvAddress(PaymentFragment)
     private Boolean ChooseAddress = false;
 
 
@@ -175,6 +180,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+
         navController = Navigation.findNavController(binding.getRoot());
 
         if (!Util.RetrofitValue) {
@@ -222,7 +230,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         EditText edtPlaque = dialogEditAddress.findViewById(R.id.edt_plaque);
         address1.setOnClickListener(v -> {
             ChooseAddress = true;
-            setADR2 = false;
+            setADR1 = false;
             address1.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.green_table)));
             address1.setTextColor(getActivity().getResources().getColor(R.color.green_table));
             address2.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.purple_700)));
@@ -231,7 +239,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
         address2.setOnClickListener(v -> {
             ChooseAddress = true;
-            setADR2 = true;
+            setADR1 = true;
             address2.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.green_table)));
             address2.setTextColor(getActivity().getResources().getColor(R.color.green_table));
             address1.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.purple_700)));
@@ -270,15 +278,15 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
                 if (account.ADR == null) {
-                    setADR2 = false;
+                    setADR1 = false;
                     account.ADR = longitude + "longitude" + " " + ADDRESS + "latitude" + latitude;
 
                 } else if (account.ADR2 == null) {
-                    setADR2 = true;
+                    setADR1 = true;
                     account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                 } else {
-                    if (setADR2)
+                    if (setADR1)
                         account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                     else
@@ -984,42 +992,27 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 bundle1.putString("type", locationAddress);
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
                                 frg.setArguments(bundle1);
+
+
                             } else if (flag == 1) {
 
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
                                 if (frg instanceof PaymentMobileFragment) {
                                     PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
-                                    Bundle bundle = fgf.reloadFragment(setADR2);
+                                    Bundle bundle = fgf.reloadFragment(setADR1);
                                     frg.setArguments(bundle);
                                 }
 
 
                             } else {
 
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderMobileFragment");
-                                if (frg instanceof MainOrderFragment) {
-                                    MainOrderFragment fgf = (MainOrderFragment) frg;
-                                    Bundle bundle = fgf.reloadFragment(setADR2);
-                                    frg.setArguments(bundle);
-                                }
+
+                                mainOrderFragment.setARD1 = setADR1;
                             }
 
 
                             navController.popBackStack();
-//                            FragmentManager ft = getActivity().getSupportFragmentManager();
-//                            if (frg != null) {
-//                                getFragmentManager().popBackStack();
-//
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//
-//                                    ft.beginTransaction().detach(frg).commitNow();
-//                                    ft.beginTransaction().attach(frg).commitNow();
-//
-//                                } else {
-//
-//                                    ft.beginTransaction().detach(frg).attach(frg).commit();
-//                                }
-//                            }
+
                         }
 
                     } else {
@@ -1055,6 +1048,14 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         }
 
+
+    }
+
+
+    public void getFragment(MainOrderFragment mainOrderFragmentT, ProfileFragment profileFragmentT, PaymentMobileFragment paymentMobileFragmentT) {
+        mainOrderFragment = mainOrderFragmentT;
+        profileFragment = profileFragmentT;
+        paymentMobileFragment = paymentMobileFragmentT;
 
     }
 }
