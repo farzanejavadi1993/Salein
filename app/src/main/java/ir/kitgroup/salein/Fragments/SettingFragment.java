@@ -19,6 +19,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,8 +55,6 @@ import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 
 
-
-
 @AndroidEntryPoint
 public class SettingFragment extends Fragment {
 
@@ -67,8 +68,11 @@ public class SettingFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
+
+    private NavController navController;
+
     //region Parameter
-    private boolean Seen=true;
+    private boolean Seen = true;
     private FragmentSettingBinding binding;
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
     //endregion Parameter
@@ -76,7 +80,7 @@ public class SettingFragment extends Fragment {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private int fontSize =12;
+    private int fontSize = 12;
 
     private String mobile;
 
@@ -88,12 +92,10 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-       if (Util.screenSize  >= 7)
-           fontSize = 14;
-       else
-           fontSize = 12;
-
-
+        if (Util.screenSize >= 7)
+            fontSize = 14;
+        else
+            fontSize = 12;
 
 
         return binding.getRoot();
@@ -106,7 +108,7 @@ public class SettingFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        navController = Navigation.findNavController(binding.getRoot());
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -124,18 +126,15 @@ public class SettingFragment extends Fragment {
         binding.btnLogOut.setTextSize(fontSize);
 
 
-
-
         mobile = Select.from(Account.class).first().M;
         binding.btnComment.setOnClickListener(v -> Toast.makeText(getActivity(), "به زودی", Toast.LENGTH_SHORT).show());
 
 
         binding.btnCredit.setOnClickListener(v -> {
 
-            if (!company.paymentLink.equals(""))
-            {
-                if (Seen){
-                    Seen=false;
+            if (!company.paymentLink.equals("")) {
+                if (Seen) {
+                    Seen = false;
 
                     Uri uri = Uri.parse(company.paymentLink);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -144,7 +143,7 @@ public class SettingFragment extends Fragment {
                 }
 
 
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "دسترسی به باشگاه امکان پذیر نمی باشد", Toast.LENGTH_SHORT).show();
             }
 
@@ -158,20 +157,14 @@ public class SettingFragment extends Fragment {
                 InvoiceDetail.deleteAll(InvoiceDetail.class);
 
 
-
             if (Product.count(Product.class) > 0)
                 Product.deleteAll(Product.class);
-
-
-
-
-
 
 
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
-            if (company.mode ==1){
+            if (company.mode == 1) {
                 if (User.count(User.class) > 0)
                     User.deleteAll(User.class);
             }
@@ -185,15 +178,10 @@ public class SettingFragment extends Fragment {
             sharedPreferences.edit().putBoolean("firstSyncSetting", false).apply();
 
 
+          navController.popBackStack();
+          navController.popBackStack();
+          //reload loginFragment
 
-
-
-
-            getFragmentManager().popBackStack();
-            getFragmentManager().popBackStack();
-           // LauncherActivity.name=LauncherActivity.namePackage;
-            LoginClientFragment userFragment = new LoginClientFragment();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, userFragment).commit();
 
 
         });
@@ -201,23 +189,45 @@ public class SettingFragment extends Fragment {
 
         try {
             binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
+
+
+        binding.lProfile.setOnClickListener(v ->
+                {
+                    NavDirections action = SettingFragmentDirections.actionGoToProfileFragment();
+                    navController.navigate(action);
+                }
+        );
+
+        binding.btnSupport.setOnClickListener(v ->
+
+
+                {
+                    NavDirections action = SettingFragmentDirections.actionGoToAboutFragment();
+                    navController.navigate(action);
+                }
 
 
 
+        );
+
+        binding.btnOrderList.setOnClickListener(v ->
 
 
-        binding.lProfile.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit());
+                {
+                    NavDirections action = SettingFragmentDirections.actionGoToOrderListFragment();
+                    navController.navigate(action);
+                }
 
-        binding.btnSupport.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit());
 
-        binding.btnOrderList.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListFMobile").commit());
+        );
 
-        Account acc=Select.from(Account.class).first();
+        Account acc = Select.from(Account.class).first();
         if (acc != null && acc.CRDT != null) {
             binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-        }else {
-            binding.txtCredit.setText("موجودی : " +"0" + " ریال ");
+        } else {
+            binding.txtCredit.setText("موجودی : " + "0" + " ریال ");
         }
 
 
@@ -227,7 +237,7 @@ public class SettingFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getInquiryAccount1(String mobile) {
 
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
             binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
             binding.txtCredit.setText("خطا در اتصال به اینترنت");
             return;
@@ -235,7 +245,7 @@ public class SettingFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getInquiryAccount1(company.userName,company.passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(company.userName, company.passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -286,15 +296,12 @@ public class SettingFragment extends Fragment {
                                                 binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
 
                                             }
-                                        }catch (Exception e){
+                                        } catch (Exception e) {
 
                                         }
 
 
-
-
                                     }
-
 
 
                             }, throwable -> {
@@ -313,28 +320,27 @@ public class SettingFragment extends Fragment {
     }
 
 
-    private   boolean isNetworkAvailable(Activity activity) {
+    private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
 
-        Seen=true;
+        Seen = true;
         getInquiryAccount1(mobile);
 
     }
 
     @Override
     public void onDestroy() {
-        Seen=false;
+        Seen = false;
 
         super.onDestroy();
     }
-
-
 
 
     public void refreshProductList() {

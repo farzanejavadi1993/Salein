@@ -156,8 +156,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-
-
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -188,7 +186,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         }
 
         //region Configuration Text Size
-        int fontSize ;
+        int fontSize;
         if (Util.screenSize >= 7) {
 
             fontSize = 14;
@@ -202,11 +200,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         //region Get Bundle
-        Bundle bundle = getArguments();
-        assert bundle != null;
-        String mobileNumber = bundle.getString("mobile");
-        String type = bundle.getString("type");
-        String edit_address = bundle.getString("edit_address");
+        String mobileNumber = MapFragmentArgs.fromBundle(getArguments()).getMobileNumber();
+        String type = MapFragmentArgs.fromBundle(getArguments()).getType();
+        String edit_address = MapFragmentArgs.fromBundle(getArguments()).getEditAddress();
         //endregion Get Bundle
 
 
@@ -294,8 +290,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 list.add(account);
 
                 UpdateAccount(list, 1, "");
-
-
 
 
             }

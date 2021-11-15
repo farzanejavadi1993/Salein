@@ -23,6 +23,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
@@ -75,7 +78,10 @@ public class OrderListFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
-     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private NavController navController;
+
+
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //region Parameter
     private FragmentOrderListBinding binding;
 
@@ -93,6 +99,7 @@ public class OrderListFragment extends Fragment {
     public OrderListAdapter orderListAdapter;
     private final ArrayList<Invoice> list = new ArrayList<>();
 
+
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -106,6 +113,7 @@ public class OrderListFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController =Navigation.findNavController(binding.getRoot());
 
 
         String accGUID = Select.from(Account.class).list().get(0).I;
@@ -118,8 +126,7 @@ public class OrderListFragment extends Fragment {
         }
 
 
-
-           //region Calculate Date Always Product
+        //region Calculate Date Always Product
 
 
         int dayAlways = 100;
@@ -157,61 +164,47 @@ public class OrderListFragment extends Fragment {
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            getAllInvoice1( accGUID,datVip);
+            getAllInvoice1(accGUID, datVip);
 
         });
 
         //endregion Cast Variable Dialog Sync
 
 
-
-
-
         list.clear();
 
 
-        orderListAdapter = new OrderListAdapter(getContext(), list,2);
+        orderListAdapter = new OrderListAdapter(getContext(), list, 2);
         binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recycler.setAdapter(orderListAdapter);
         binding.recycler.setHasFixedSize(false);
         orderListAdapter.setOnClickItemListener((type, Inv_GUID) -> {
 
 
-            Bundle bundle = new Bundle();
 
-            bundle.putString("type", "1");
-            bundle.putString("Inv_GUID", Inv_GUID);
-            bundle.putString("Tbl_GUID", "");
-            bundle.putString("Ord_TYPE","");
+            NavDirections action = OrderListFragmentDirections.actionGoToInvoiceDetailFragment()
+                    .setType("1")
+                    .setInvGUID(Inv_GUID);
+            navController.navigate(action);
 
-            InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
-            inVoiceDetailFragmentMobile.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobileX").commit();
+
+
         });
 
 
-
-        getAllInvoice1( accGUID,datVip);
+        getAllInvoice1(accGUID, datVip);
     }
 
 
-
-
-
-
-
-
-
-
     private void getAllInvoice1(String AccGuid, String date) {
-        if (!isNetworkAvailable(getActivity())){
+        if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection("خطا در اتصال به اینترنت");
             return;
         }
 
         try {
             compositeDisposable.add(
-                   api.getAllInvoice1(company.userName, company.passWord,AccGuid,date )
+                    api.getAllInvoice1(company.userName, company.passWord, AccGuid, date)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -235,17 +228,12 @@ public class OrderListFragment extends Fragment {
                                     list.clear();
 
                                     list.addAll(iDs.getInvoice());
-                                    if (list.size()==0){
+                                    if (list.size() == 0) {
                                         binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
                                         binding.txtError.setVisibility(View.VISIBLE);
                                         binding.txtError.setText("هیچ سفارشی وجود ندارد");
                                     }
-                                    orderListAdapter .notifyDataSetChanged();
-
-
-
-
-
+                                    orderListAdapter.notifyDataSetChanged();
 
 
                                     InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
@@ -260,7 +248,6 @@ public class OrderListFragment extends Fragment {
 
                                 }
                                 binding.progressBar.setVisibility(View.GONE);
-
 
 
                             }, throwable -> {
@@ -283,9 +270,9 @@ public class OrderListFragment extends Fragment {
 
     }
 
-    private   boolean isNetworkAvailable(Activity activity) {
+    private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager)  activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

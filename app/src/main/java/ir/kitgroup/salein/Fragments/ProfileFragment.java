@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.orm.query.Select;
 
@@ -32,14 +35,26 @@ public class ProfileFragment extends Fragment {
 
     private int fontSize=12;
 
+    private NavController navController;
+
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
+        return binding.getRoot();
+    }
 
-      if (Util.screenSize >=7)
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        navController = Navigation.findNavController(binding.getRoot());
+
+
+        if (Util.screenSize >=7)
             fontSize=14;
         else
             fontSize=12;
@@ -119,22 +134,27 @@ public class ProfileFragment extends Fragment {
 
             binding.editAddress1.setOnClickListener(v -> {
 
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("edit_address", "2");
-                bundle1.putString("type", "1");
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundle1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+
+
+
+
+                NavDirections action = ProfileFragmentDirections.actionGoToMapFragment()
+                        .setEditAddress("2")
+                        .setType("1");
+                navController.navigate(action);
+
+
+
+
+
             });
 
             binding.editAddress2.setOnClickListener(v -> {
 
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("edit_address", "2");
-                bundle1.putString("type", "2");
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundle1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mapFragment).addToBackStack("MapF").commit();
+                NavDirections action = ProfileFragmentDirections.actionGoToMapFragment()
+                        .setEditAddress("2")
+                        .setType("2");
+                navController.navigate(action);
 
             });
 
@@ -143,13 +163,5 @@ public class ProfileFragment extends Fragment {
 
 
         }
-
-
-        return binding.getRoot();
     }
-
-
-
-
-
 }

@@ -145,6 +145,7 @@ public class MainOrderFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
+    private View viewRoot;
     private FragmentMobileOrderMainBinding binding;
 
     private CustomProgress customProgress;
@@ -260,7 +261,10 @@ public class MainOrderFragment extends Fragment {
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
-        return binding.getRoot();
+        viewRoot = binding.getRoot();
+        return viewRoot;
+
+
     }
 
 
@@ -270,7 +274,7 @@ public class MainOrderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        navController = Navigation.findNavController(binding.getRoot());
+        navController = Navigation.findNavController(viewRoot);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
 
@@ -360,13 +364,12 @@ public class MainOrderFragment extends Fragment {
             ((LauncherActivity) getActivity()).setInVisibiltyItem();
 
 
-
         ((LauncherActivity) getActivity()).setMainOrder(this);
         ((LauncherActivity) getActivity()).getVisibilityBottomBar();
         //endregion Create Order
 
 
-        if (company.mode==2)
+        if (company.mode == 2)
             binding.btnFilter.setVisibility(View.GONE);
 
         //endregion Get Bundle
@@ -836,19 +839,18 @@ public class MainOrderFragment extends Fragment {
 
             } else {
 
-                Bundle bundle = new Bundle();
-                bundle.putString("type", "2");//go to InVoiceDetailMobileFragment for register order first time
-                bundle.putBoolean("Seen", Seen);
-                bundle.putString("Inv_GUID", Inv_GUID);
-                bundle.putString("Tbl_GUID", Tbl_GUID);
-                bundle.putString("Tbl_NAME", Tbl_NAME);
-                bundle.putString("Ord_TYPE", Ord_TYPE);
-                bundle.putString("Acc_Name", Acc_NAME);
-                bundle.putString("Acc_GUID", Acc_GUID);
-                bundle.putBoolean("EDIT", EDIT);
-                InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
-                inVoiceDetailFragmentMobile.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
+
+                NavDirections action = MainOrderFragmentDirections.actionGoToInvoiceDetailFragment()
+                        .setInvGUID(Inv_GUID)
+                        .setType("2")
+                        .setSEEN(Seen)
+                        .setTblGUID(Tbl_GUID)
+                        .setTblNAME(Tbl_NAME)
+                        .setOrdTYPE(Ord_TYPE)
+                        .setAccGUID(Acc_GUID)
+                        .setAccNAME(Acc_NAME)
+                        .setEDIT(EDIT);
+                navController.navigate(action);
             }
 
         });
@@ -905,6 +907,7 @@ public class MainOrderFragment extends Fragment {
 
         //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
+
             binding.progressbar.setVisibility(View.VISIBLE);
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
@@ -1090,6 +1093,11 @@ public class MainOrderFragment extends Fragment {
             SearchProductFragment searchProductFragment = new SearchProductFragment();
             searchProductFragment.setArguments(bundle2);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
+
+            NavDirections action = MainOrderFragmentDirections.actionGoToSearchProductFragment();
+            navController.navigate(action);
+
+
         });
 
 
