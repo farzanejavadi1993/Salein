@@ -319,13 +319,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogOut"
+            android:layout_marginBottom="54dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
-            android:layout_marginBottom="12dp"
             android:backgroundTint="@color/red_table"
             android:fontFamily="@font/iransans"
             android:text="@string/logout"

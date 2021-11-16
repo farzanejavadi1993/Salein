@@ -333,9 +333,12 @@
         <action
             android:id="@+id/action_go_to_MainOrderFragment"
             app:destination="@id/MainOrderFragment"
-            app:popUpTo="@id/MainOrderFragment"
+            app:popUpTo="@id/PaymentFragment"
             app:popUpToInclusive="true"
             />
+
+
+
 
 
 
@@ -537,6 +540,9 @@
             android:id="@+id/action_go_to_MapFragment"
             app:destination="@id/MapFragment"
             />
+
+
+
 
     </fragment>
 </navigation>

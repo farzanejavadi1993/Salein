@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 
 import java.lang.reflect.Type;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -118,8 +120,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api, SharedPreferences sharedPreferences) {
+    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api, SharedPreferences sharedPreferences, String Inv_GUID) {
         this.context = context;
+        this.Inv_GUID = Inv_GUID;
 
         this.productsList = productsList;
         this.company = company;
@@ -139,9 +142,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.Seen = Seen;
     }
 
-    public void setInv_GUID(String inv_guid) {
-        this.Inv_GUID = inv_guid;
-    }
 
     public void setTbl_GUID(String Tbl_GUID) {
         this.Tbl_GUID = Tbl_GUID;
@@ -203,12 +203,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
         if (productsList.get(holder.getAdapterPosition()) != null) {
-
-            if (maxSale.equals("1"))
-                getMaxSale(holder.error, productsList.get(position).getI(), position);
+           // holder.error.setText("");
 
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
+
 
             String ip = company.ipLocal;
 
@@ -233,14 +232,22 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.unit.setTextSize(fontSize);
 
 
+
+
+
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
-            if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
-                if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
+
+
+
+            if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
+
+                holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
+
+                if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
-
                     holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
                     holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                     holder.Line.setText("---------------");
@@ -248,16 +255,18 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
-            } else {
-                if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
 
-                    holder.productDiscountPercent.setVisibility(View.GONE);
-                    holder.layoutDiscount.setVisibility(View.GONE);
-                    holder.productOldPrice.setVisibility(View.GONE);
-                    holder.Line.setVisibility(View.GONE);
-                    holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
-                }
+
+
+
             }
+
+
+
+
+
+
+
 
 
             holder.tab = 0;
@@ -311,13 +320,16 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 amount = 0.0;
 
 
+            if (maxSale.equals("1"))
+                getMaxSale(holder.layoutAmount, holder.error, productsList.get(position).getI(), amount);
+
+
             if (invoiceDetail != null && invoiceDetail.INV_DET_DESCRIBTION != null)
                 description = invoiceDetail.INV_DET_DESCRIBTION;
             else
                 description = "";
 
 
-          holder.error.setText("");
             holder.edtDesc.setText(description);
             productsList.get(position).setAmount(amount);
 
@@ -433,6 +445,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 }
             });
 
+
+
+
+
         }
 
 
@@ -446,6 +462,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final TextView productName;
         private final TextView unit;
         private final TextView error;
+
+
         private final TextView productPrice;
         private final TextView productOldPrice;
         private final TextView productDiscountPercent;
@@ -476,6 +494,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             productName = itemView.findViewById(R.id.order_recycle_item_product_name);
             unit = itemView.findViewById(R.id.unit);
             error = itemView.findViewById(R.id.error);
+
 
 
             productPrice = itemView.findViewById(R.id.order_recycle_item_product_price);
@@ -725,7 +744,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void getMaxSale( TextView txtError, String Prd_GUID, int position) {
+    private void getMaxSale(ConstraintLayout layoutAmount, TextView txtError, String Prd_GUID,double amount) {
 
 
         try {
@@ -736,15 +755,35 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                                        double remain = -1000000000;
+                                        double remain ;
 
                                         try {
                                             assert jsonElement != null;
                                             remain = Integer.parseInt(jsonElement);
-                                            if (remain == 0.0 && txtError.getText().toString().equals("")) {
+                                            if ((remain == 0.0 && txtError.getText().toString().equals("")) ) {
                                                 txtError.setText("این کالا موجود نمی باشد");
+                                                layoutAmount.setVisibility(View.GONE);
+
+                                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("PRDUID ='" + Prd_GUID+ "'").first();
+                                                if (invoiceDetail!=null){
+                                                    InvoiceDetail.deleteInTx(invoiceDetail);
+                                                }
+
 
                                             }
+                                            else if(remain > 0 && remain < amount){
+                                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("PRDUID ='" + Prd_GUID+ "'").first();
+                                                if (invoiceDetail!=null){
+                                                    invoiceDetail.INV_DET_QUANTITY=remain;
+                                                    invoiceDetail.update();
+                                                }
+                                            }
+                                            else {
+                                                txtError.setText("");
+                                                layoutAmount.setVisibility(View.VISIBLE);
+                                            }
+
+
                                         } catch (Exception e) {
                                             Gson gson = new Gson();
                                             Type typeIDs = new TypeToken<ModelLog>() {

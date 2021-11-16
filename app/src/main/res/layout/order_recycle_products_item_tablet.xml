@@ -54,7 +54,7 @@
         android:textSize="11sp" />
 
     <TextView
-
+        android:visibility="gone"
         android:id="@+id/order_recycle_item_product_old_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
 
 
     <TextView
-
+        android:visibility="gone"
         android:id="@+id/order_recycle_item_product_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,13 +82,12 @@
 
 
     <TextView
-
+     android:visibility="gone"
         android:layout_toRightOf="@+id/order_recycle_item_product_old_price"
         android:id="@+id/order_recycle_item_product_discountPercent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/order_recycle_item_product_name"
-
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:padding="5dp"

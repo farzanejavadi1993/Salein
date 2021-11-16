@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 
@@ -38,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -109,6 +111,12 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(binding.getRoot());
+
+
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+        ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
+
+
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -343,14 +351,6 @@ public class SettingFragment extends Fragment {
     }
 
 
-    public void refreshProductList() {
 
-        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
-        if (fragment instanceof MainFragment) {
-            MainFragment fgf = (MainFragment) fragment;
-            fgf.setHomeBottomBarFromSetting();
-
-        }
-    }
 }
 

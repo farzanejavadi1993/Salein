@@ -9,7 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
@@ -28,8 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -82,7 +81,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Description;
-import ir.kitgroup.salein.models.Invoice;
+
 import ir.kitgroup.salein.models.ModelDesc;
 
 import ir.kitgroup.salein.models.ModelInvoice;
@@ -179,12 +178,14 @@ public class InVoiceDetailFragment extends Fragment {
     private NavController navController;
 
 
+    private View vieRoot;
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentInvoiceDetailMobileBinding.inflate(getLayoutInflater());
+
         return binding.getRoot();
     }
 
@@ -505,7 +506,7 @@ public class InVoiceDetailFragment extends Fragment {
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                 if (invoiceDetails.size() > 0) {
-                    CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.equals(Transport_GUID));
+                    CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
                 }
 
 
@@ -912,7 +913,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                                         if (invDetails.size() > 0) {
                                             ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
-                                            CollectionUtils.filter(invDtls, i -> i.PRD_UID.equals(Transport_GUID));
+                                            CollectionUtils.filter(invDtls, i -> i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
                                             if (invDtls.size() > 0) {
                                                 if (type.equals("1")) {
                                                     sumTransport = Double.parseDouble(invDtls.get(0).INV_DET_TOTAL_AMOUNT);
@@ -921,7 +922,7 @@ public class InVoiceDetailFragment extends Fragment {
                                                 }
                                             }
 
-                                            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equals(Transport_GUID));
+                                            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
                                         }
 
 
@@ -978,6 +979,16 @@ public class InVoiceDetailFragment extends Fragment {
 
                                 if (iDs != null) {
 
+                                    String name = company.namePackage.split("ir.kitgroup.")[1];
+                                    String invGuid = sharedPreferences.getString(name, "");
+
+                                    List<InvoiceDetail> list=Select.from(InvoiceDetail.class).list();
+                                    CollectionUtils.filter(list,l->l.INV_UID!=null && !l.INV_UID.equals(invGuid));
+                                    for (int i=0; i<list.size();i++){
+                                        InvoiceDetail.deleteInTx(list.get(i));
+                                    }
+
+
                                     InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
 
                                     if (iDs.getInvoice().size() == 0) {
@@ -1011,7 +1022,7 @@ public class InVoiceDetailFragment extends Fragment {
                                             binding.txtDate.setText(iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
 
 
-                                        CollectionUtils.filter(iDs.getInvoiceDetail(), i -> !i.PRD_UID.equals(Transport_GUID));
+                                        CollectionUtils.filter(iDs.getInvoiceDetail(), i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
                                         invDetails.clear();
                                         invDetails.addAll(iDs.getInvoiceDetail());
 

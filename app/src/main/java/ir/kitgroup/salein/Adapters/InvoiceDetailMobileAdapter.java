@@ -147,8 +147,10 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.price.setText(format.format(prd1.get(0).getPrice(sharedPreferences)));
 
 
-            double sumprice = (invoicedetail.INV_DET_QUANTITY * prd1.get(0).getPrice(sharedPreferences));
-            holder.sumPrice.setText(format.format(sumprice));
+
+                double sumprice = (invoicedetail.INV_DET_QUANTITY * prd1.get(0).getPrice(sharedPreferences));
+                holder.sumPrice.setText(format.format(sumprice));
+
 
             }
 

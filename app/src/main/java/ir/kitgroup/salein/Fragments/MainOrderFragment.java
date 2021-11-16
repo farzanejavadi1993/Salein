@@ -161,7 +161,7 @@ public class MainOrderFragment extends Fragment {
     boolean setARD1 = false;
 
 
-    private int counter = 0;
+    private int counter;
 
 
     private ArrayList<ProductLevel1> productLevel1List;
@@ -251,6 +251,9 @@ public class MainOrderFragment extends Fragment {
     private String Transport_GUID = "";
 
 
+    private List<InvoiceDetail> invoiceDetails;
+
+
     //endregion Parameter
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
@@ -289,6 +292,7 @@ public class MainOrderFragment extends Fragment {
 
 
         //region First Value Parameter
+        counter = 0;
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
         productLevel1List = new ArrayList<>();
@@ -319,7 +323,8 @@ public class MainOrderFragment extends Fragment {
         Acc_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getAccGUID();
         EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
         Seen = MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
-        setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
+        if (!setARD1)
+            setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
 
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
@@ -348,7 +353,7 @@ public class MainOrderFragment extends Fragment {
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
         if (invDetailses.size() > 0) {
 
-            CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equals(Transport_GUID));
+            CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
             counter = invDetailses.size();
 
 
@@ -360,14 +365,17 @@ public class MainOrderFragment extends Fragment {
             ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
-        if (EDIT)
-            ((LauncherActivity) getActivity()).setInVisibiltyItem();
+        if (EDIT) {
+            ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
+            invoiceDetails = new ArrayList<>(Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list());
+        }else {
+            ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
+        }
 
 
         ((LauncherActivity) getActivity()).setMainOrder(this);
 
-        MapFragment mapFragment=new MapFragment();
-        mapFragment.getFragment(this,null,null);
+
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         //endregion Create Order
 
@@ -503,10 +511,9 @@ public class MainOrderFragment extends Fragment {
                 return;
             }
             dialogAddress.dismiss();
-            Bundle bundle1 = new Bundle();
-            bundle1.putString("edit_address", "3");
-            bundle1.putString("type", String.valueOf(typeAddress));
-            NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment().setEditAddress("3").setType(String.valueOf(typeAddress));
+
+            NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment().
+                    setEditAddress("3");
             navController.navigate(action);
 
         });
@@ -1015,8 +1022,8 @@ public class MainOrderFragment extends Fragment {
 
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences);
-        productAdapter.setInv_GUID(Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID);
+        // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -1123,6 +1130,8 @@ public class MainOrderFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
+                                        if (EDIT && Select.from(InvoiceDetail.class).list().size() == 0)
+                                            InvoiceDetail.saveInTx(invoiceDetails);
                                         Gson gson = new Gson();
                                         Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
                                         }.getType();
@@ -1758,19 +1767,6 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    public void refreshProductList() {
-        productAdapter.notifyDataSetChanged();
-        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
-        if (fragment instanceof MainFragment) {
-            MainFragment fgf = (MainFragment) fragment;
-            fgf.setHomeBottomBar();
-        }
-    }
-
-
-    public void refreshProductFromSearch() {
-        productAdapter.notifyDataSetChanged();
-    }
 
 
     public Bundle reloadFragment(Boolean setAddress) {

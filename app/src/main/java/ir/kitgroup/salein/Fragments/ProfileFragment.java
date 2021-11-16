@@ -17,6 +17,7 @@ import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.CustomProgress;
@@ -29,8 +30,8 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
 
-    private String type = "";
-    private String address = "";
+    public String type = "";
+    public String address = "";
     private CustomProgress customProgress;
 
     private int fontSize=12;
@@ -54,21 +55,16 @@ public class ProfileFragment extends Fragment {
         navController = Navigation.findNavController(binding.getRoot());
 
 
+        ((LauncherActivity) getActivity()).setProfile(this);
         if (Util.screenSize >=7)
             fontSize=14;
         else
             fontSize=12;
 
-        Bundle bundle = getArguments();
 
         customProgress = CustomProgress.getInstance();
-        try {
 
-            address = bundle.getString("address");
-            type = bundle.getString("type");
-        } catch (Exception ignore) {
 
-        }
 
 
         binding.txtTitleToolbar.setTextSize(fontSize);

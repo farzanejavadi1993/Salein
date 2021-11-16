@@ -49,6 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.OrderListAdapter;
 
 import ir.kitgroup.salein.Connect.API;
@@ -115,6 +116,9 @@ public class OrderListFragment extends Fragment {
 
         navController =Navigation.findNavController(binding.getRoot());
 
+
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+        ((LauncherActivity) getActivity()).setClearCounterOrder();
 
         String accGUID = Select.from(Account.class).list().get(0).I;
         if (!Util.RetrofitValue) {
@@ -236,7 +240,7 @@ public class OrderListFragment extends Fragment {
                                     orderListAdapter.notifyDataSetChanged();
 
 
-                                    InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
+                                   // InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
 
                                 } else {
 

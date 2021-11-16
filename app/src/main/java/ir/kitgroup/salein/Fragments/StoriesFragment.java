@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.databinding.FragmentStoriesBinding;
 @AndroidEntryPoint
 public class StoriesFragment extends Fragment {
@@ -46,6 +47,7 @@ public class StoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
 
 

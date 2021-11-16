@@ -85,6 +85,8 @@ public class LoginClientFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        try {
         navController = Navigation.findNavController(binding.getRoot());
 
 
@@ -184,10 +186,14 @@ public class LoginClientFragment extends Fragment {
 
         if (Select.from(Account.class).list().size()>0)
         {
-            NavDirections action = LoginClientFragmentDirections.actionGoToStoreFragment();
-            navController.navigate(action);
+
+                NavDirections action = LoginClientFragmentDirections.actionGoToStoreFragment();
+                navController.navigate(action);
+
         }
 
+      }
+        catch (Exception ignored){}
     }
 
 
@@ -210,7 +216,7 @@ public class LoginClientFragment extends Fragment {
 
 
 
-                                NavDirections action = (NavDirections) LoginClientFragmentDirections.actionGoToConfirmFragment().setCode(code).setMobileNumber(mobileNumber);
+                                NavDirections action = LoginClientFragmentDirections.actionGoToConfirmFragment().setCode(code).setMobileNumber(mobileNumber);
                                 navController.navigate(action);
 
 

@@ -49,6 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Connect.API;
@@ -114,11 +115,12 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle=getArguments();
-        Inv_GUID=bundle.getString("Inv_GUID");
-        Tbl_GUID=bundle.getString("Tbl_GUID");
-        Seen=bundle.getBoolean("Seen");
 
+
+
+        Seen=SearchProductFragmentArgs.fromBundle(getArguments()).getSEEN();
+        Inv_GUID=SearchProductFragmentArgs.fromBundle(getArguments()).getInvGUID();
+        Tbl_GUID=SearchProductFragmentArgs.fromBundle(getArguments()).getTblGUID();
         maxSales = sharedPreferences.getString("maxSale", "0");
         customProgress=CustomProgress.getInstance();
 
@@ -253,8 +255,8 @@ public class SearchProductFragment extends Fragment {
 
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences);
-        productAdapter.setInv_GUID(Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences,Inv_GUID);
+       // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -266,19 +268,15 @@ public class SearchProductFragment extends Fragment {
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-
-            Fragment tagMainFragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
-
-            MainFragment tempMainFragment = null;
-            if (tagMainFragment instanceof MainFragment)
-                tempMainFragment = (MainFragment) tagMainFragment;
-
-
+            int counter=0;
             if (invDetails.size() > 0) {
-                int counter = invDetails.size();
-                tempMainFragment.setCounterOrder(counter);
-            } else
-                tempMainFragment.setClearCounterOrder();
+                counter = invDetails.size();
+            }
+
+            if (counter == 0)
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
+            else
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
         });

@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -117,9 +118,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private NavController navController;
 
-    private ProfileFragment profileFragment;
-    private MainOrderFragment mainOrderFragment;
-    private PaymentMobileFragment paymentMobileFragment;
 
     //region Parameter
     private FragmentMapBinding binding;
@@ -152,6 +150,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private SearchViewAdapter mRecyclerAdapter;
     private State state = State.MAP;
     private CircleManager circleManager;
+
 
     private enum State {
         MAP,
@@ -318,36 +317,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
                 } else {
-
-                    account.ADR = accountORG.ADR;
-                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
-
-                }
-
-
-                ArrayList<Account> list = new ArrayList<>();
-                list.add(account);
-                UpdateAccount(list, 0, type);
-            }
-
-
-            //endregion Edit Address When Going From ProfileFragment
-
-            //region Edit Address When Going From ProfileFragment
-
-            else if (edit_address != null && edit_address.equals("3")) {
-                Account account = new Account();
-                account.I = accountORG.I;
-                account.N = accountORG.N;
-                account.M = accountORG.M;
-                account.CRDT = accountORG.CRDT;
-
-                if (type.equals("1")) {
-                    account.ADR2 = accountORG.ADR2;
-                    account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
-
-                } else {
-
                     account.ADR = accountORG.ADR;
                     account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
 
@@ -361,6 +330,44 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
             //endregion Edit Address When Going From ProfileFragment
+
+
+            //region Edit Address When Going From MainOrderFragment
+
+            else if (edit_address != null && edit_address.equals("3")) {
+                Account account = new Account();
+                account.I = accountORG.I;
+                account.N = accountORG.N;
+                account.M = accountORG.M;
+                account.ADR = accountORG.ADR;
+                account.ADR2= accountORG.ADR2;
+                account.CRDT = accountORG.CRDT;
+
+                if (account.ADR == null) {
+                    setADR1 = false;
+                    account.ADR = longitude + "longitude" + " " + ADDRESS + "latitude" + latitude;
+
+                } else if (account.ADR2 == null) {
+                    setADR1 = true;
+                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+
+                } else {
+
+                    if (setADR1)
+                        account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+
+                    else
+                        account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                }
+
+
+                ArrayList<Account> list = new ArrayList<>();
+                list.add(account);
+                UpdateAccount(list, 3, "");
+            }
+
+
+            //endregion Edit Address When Going From MainOrderFragment
 
 
         });
@@ -377,7 +384,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
                     linearButtons.setVisibility(View.VISIBLE);
-                }
+                }else
+                    linearButtons.setVisibility(View.GONE);
 
                 dialogEditAddress.show();
                 return;
@@ -983,33 +991,20 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             customProgress.hideProgress();
                             Account.deleteAll(Account.class);
                             Account.saveInTx(accounts);
-                            assert getFragmentManager() != null;
-
-                            Fragment frg;
-                            if (flag == 0) {
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putString("address", ADDRESS);
-                                bundle1.putString("type", locationAddress);
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
-                                frg.setArguments(bundle1);
 
 
-                            } else if (flag == 1) {
-
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
-                                if (frg instanceof PaymentMobileFragment) {
-                                    PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
-                                    Bundle bundle = fgf.reloadFragment(setADR1);
-                                    frg.setArguments(bundle);
-                                }
-
-
-                            } else {
-
-
-                                mainOrderFragment.setARD1 = setADR1;
+                              if (flag == 1) {
+                                  ((LauncherActivity) getActivity()).getPaymentFragment().setADR1=setADR1;
                             }
+                            else if (flag == 2) {
 
+                                  ((LauncherActivity) getActivity()).getProfileFragment().address= ADDRESS;
+                                  ((LauncherActivity) getActivity()).getProfileFragment().type= locationAddress;
+                            }
+                              else  {
+
+                                  ((LauncherActivity) getActivity()).getMainOrderFragment().setARD1=setADR1;
+                              }
 
                             navController.popBackStack();
 
@@ -1052,10 +1047,4 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-    public void getFragment(MainOrderFragment mainOrderFragmentT, ProfileFragment profileFragmentT, PaymentMobileFragment paymentMobileFragmentT) {
-        mainOrderFragment = mainOrderFragmentT;
-        profileFragment = profileFragmentT;
-        paymentMobileFragment = paymentMobileFragmentT;
-
-    }
 }

@@ -68,6 +68,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DateAdapter;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
@@ -153,7 +154,7 @@ public class PaymentMobileFragment extends Fragment {
     private Double latitude2 = 0.0;
     private Double longitude2 = 0.0;
 
-    private Boolean setADR1 = false;
+    public Boolean setADR1 = false;
 
 
     private double calculateTransport = 0.0;
@@ -248,6 +249,7 @@ public class PaymentMobileFragment extends Fragment {
         }
 
 
+        ((LauncherActivity) getActivity()).setPayment(this);
 
 
         customProgress = CustomProgress.getInstance();
@@ -272,7 +274,7 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "RestrictedApi"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -323,6 +325,7 @@ public class PaymentMobileFragment extends Fragment {
             Tbl_NAME=PaymentMobileFragmentArgs.fromBundle(getArguments()).getTblNAME();
             Sum_PURE_PRICE=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSumPRICE();
             edit=PaymentMobileFragmentArgs.fromBundle(getArguments()).getEDIT();
+            if (!setADR1)
             setADR1=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSetADR1();
             String ord_type=PaymentMobileFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
 
@@ -952,7 +955,7 @@ public class PaymentMobileFragment extends Fragment {
                 double sumPurePrice = 0;
 
 
-                InvoiceDetail invoiceDetailTransport = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + Transport_GUID + "'").first();
+                InvoiceDetail invoiceDetailTransport = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID.toLowerCase() + "' AND PRDUID ='" + Transport_GUID.toLowerCase() + "'").first();
 
 
                 if (invoiceDetailTransport == null) {
@@ -992,7 +995,7 @@ public class PaymentMobileFragment extends Fragment {
                 }
 
 
-                CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equals(Transport_GUID));
+                CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
                 for (int i = 0; i < invDetails.size(); i++) {
 
                     ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
@@ -1105,8 +1108,23 @@ public class PaymentMobileFragment extends Fragment {
 
                 dialogSendOrder.dismiss();
                 if (company.mode == 2) {
-                   navController.popBackStack();
-                   navController.popBackStack();
+
+                    int size;
+
+                    if (edit)
+                        size=5;
+
+                    else
+                        size=2;
+
+
+                   for (int i=0;i<size;i++){
+                       navController.popBackStack();
+                   }
+
+                    ((LauncherActivity) getActivity()).setFistItem();
+//                    NavDirections action = PaymentMobileFragmentDirections.actionGoToMainOrderFragment();
+//                    navController.navigate(action);
 
                    //MainFragment
 

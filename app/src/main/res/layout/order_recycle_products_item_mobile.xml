@@ -36,6 +36,7 @@
 
 
             <RelativeLayout
+                android:visibility="gone"
                 android:id="@+id/layout_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,6 +88,7 @@
 
 
             <TextView
+
                 android:id="@+id/order_recycle_item_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,17 +112,16 @@
                 android:textSize="@dimen/text_medium_mobile_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-
+                android:visibility="gone"
                 android:id="@+id/order_recycle_item_product_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-
                 android:textColor="@color/black_l"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -197,12 +198,24 @@
                 app:layout_constraintEnd_toStartOf="@+id/unit"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <TextView
+                android:visibility="gone"
+                android:text=""
+                android:id="@+id/unAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/unit"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

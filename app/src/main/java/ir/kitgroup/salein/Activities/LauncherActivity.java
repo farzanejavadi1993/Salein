@@ -5,15 +5,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 
-import android.app.Fragment;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -26,7 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -45,6 +41,8 @@ import ir.kitgroup.salein.Fragments.LoginOrganizationFragment;
 
 import ir.kitgroup.salein.Fragments.MainOrderFragment;
 import ir.kitgroup.salein.Fragments.MainOrderFragmentDirections;
+import ir.kitgroup.salein.Fragments.PaymentMobileFragment;
+import ir.kitgroup.salein.Fragments.ProfileFragment;
 import ir.kitgroup.salein.Fragments.SearchProductFragmentDirections;
 
 import ir.kitgroup.salein.Fragments.SettingFragmentDirections;
@@ -65,8 +63,10 @@ public class LauncherActivity extends AppCompatActivity {
 
     private ActivityLauncherBinding binding;
 
-    private int counter = 0;
-    private  MainOrderFragment mainOrderFragment;
+
+    private MainOrderFragment mainOrderFragment;
+    private PaymentMobileFragment paymentMobileFragment;
+    private ProfileFragment profileFragment;
 
 
     private Boolean mainOrder = false;
@@ -78,7 +78,7 @@ public class LauncherActivity extends AppCompatActivity {
     //region Parameter Dialog
     private Dialog ExitDialog;
     private TextView messageTextExitDialog;
-    private   NavController navController;
+    private NavController navController;
     //endregion Parameter Dialog
 
 
@@ -99,8 +99,7 @@ public class LauncherActivity extends AppCompatActivity {
         Util.ScreenSize(this);
 
 
-         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
 
         binding.navView.setSelectedItemId(R.id.homee);
@@ -113,11 +112,12 @@ public class LauncherActivity extends AppCompatActivity {
 
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
+            ArrayList<String> list = new ArrayList<>(mainOrderFragment.getValueOfParameter());
+            NavDirections actionInvoiceDetail = null;
             switch (item.getItemId()) {
 
                 case R.id.homee:
-                    if (!mainOrder){
-                        binding.navView.getMenu().getItem(3).setEnabled(false);
+                    if (!mainOrder) {
                         navController.popBackStack();
                     }
 
@@ -125,16 +125,24 @@ public class LauncherActivity extends AppCompatActivity {
 
                 case R.id.search:
 
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
                     NavDirections actionSearch = null;
 
                     if (mainOrder) {
-                        actionSearch = (NavDirections) MainOrderFragmentDirections.actionGoToSearchProductFragment();
+                        actionSearch = MainOrderFragmentDirections.actionGoToSearchProductFragment()
+                                .setInvGUID(list.get(0))
+                                .setTblGUID(list.get(1))
+                                .setSEEN(list.get(8).equals("1") ? true : false);
 
                     } else if (invoiceDetail) {
-                        actionSearch = (NavDirections) InVoiceDetailFragmentDirections.actionGoToSearchProductFragment();
+                        actionSearch = InVoiceDetailFragmentDirections.actionGoToSearchProductFragment()
+                                .setInvGUID(list.get(0))
+                                .setTblGUID(list.get(1))
+                                .setSEEN(list.get(8).equals("1") ? true : false);
                     } else if (setting) {
-                        actionSearch = (NavDirections) SettingFragmentDirections.actionGoToSearchProductFragment();
+                        actionSearch = SettingFragmentDirections.actionGoToSearchProductFragment()
+                                .setInvGUID(list.get(0))
+                                .setTblGUID(list.get(1))
+                                .setSEEN(list.get(8).equals("1") ? true : false);
                     }
 
                     navController.navigate(actionSearch);
@@ -142,47 +150,39 @@ public class LauncherActivity extends AppCompatActivity {
 
 
                 case R.id.orders:
-
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
-                    ArrayList<String> list = new ArrayList<>();
-                    list.addAll(mainOrderFragment.getValueOfParameter());
-
-                    NavDirections actionInvoiceDetail = null;
-
                     if (mainOrder) {
-
-                        actionInvoiceDetail = (NavDirections) MainOrderFragmentDirections.actionGoToInvoiceDetailFragment()
+                        actionInvoiceDetail = MainOrderFragmentDirections.actionGoToInvoiceDetailFragment()
                                 .setInvGUID(list.get(0))
                                 .setTblGUID(list.get(1))
                                 .setTblNAME(list.get(2))
                                 .setOrdTYPE(list.get(3))
                                 .setAccGUID(list.get(4))
                                 .setAccNAME(list.get(5))
-                                .setType(list.get(6))
+                                .setType("2")
                                 .setEDIT(list.get(7).equals("1") ? true : false)
                                 .setSEEN(list.get(8).equals("1") ? true : false)
                                 .setSetADR1(list.get(9).equals("1") ? true : false);
                     } else if (searchProduct) {
-                        actionInvoiceDetail = (NavDirections) SearchProductFragmentDirections.actionGoToInvoiceDetailFragment()
+                        actionInvoiceDetail = SearchProductFragmentDirections.actionGoToInvoiceDetailFragment()
                                 .setInvGUID(list.get(0))
                                 .setTblGUID(list.get(1))
                                 .setTblNAME(list.get(2))
                                 .setOrdTYPE(list.get(3))
                                 .setAccGUID(list.get(4))
                                 .setAccNAME(list.get(5))
-                                .setType(list.get(6))
+                                .setType("2")
                                 .setEDIT(list.get(7).equals("1") ? true : false)
                                 .setSEEN(list.get(8).equals("1") ? true : false)
                                 .setSetADR1(list.get(9).equals("1") ? true : false);
                     } else if (setting) {
-                        actionInvoiceDetail = (NavDirections) SettingFragmentDirections.actionGoToInvoiceDetailFragment()
+                        actionInvoiceDetail = SettingFragmentDirections.actionGoToInvoiceDetailFragment()
                                 .setInvGUID(list.get(0))
                                 .setTblGUID(list.get(1))
                                 .setTblNAME(list.get(2))
                                 .setOrdTYPE(list.get(3))
                                 .setAccGUID(list.get(4))
                                 .setAccNAME(list.get(5))
-                                .setType(list.get(6))
+                                .setType("2")
                                 .setEDIT(list.get(7).equals("1") ? true : false)
                                 .setSEEN(list.get(8).equals("1") ? true : false)
                                 .setSetADR1(list.get(9).equals("1") ? true : false);
@@ -193,16 +193,16 @@ public class LauncherActivity extends AppCompatActivity {
 
 
                 case R.id.profile:
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
                     NavDirections actionProfile = null;
 
                     if (mainOrder) {
-                        actionProfile = (NavDirections) MainOrderFragmentDirections.actionGoToSettingFragment();
+                        actionProfile = MainOrderFragmentDirections.actionGoToSettingFragment();
 
                     } else if (searchProduct) {
-                        actionProfile = (NavDirections) SearchProductFragmentDirections.actionGoToSettingFragment();
+                        actionProfile = SearchProductFragmentDirections.actionGoToSettingFragment();
                     } else if (invoiceDetail) {
-                        actionProfile = (NavDirections) InVoiceDetailFragmentDirections.actionGoToSettingFragment();
+                        actionProfile = InVoiceDetailFragmentDirections.actionGoToSettingFragment();
                     }
 
                     navController.navigate(actionProfile);
@@ -249,8 +249,9 @@ public class LauncherActivity extends AppCompatActivity {
                     setting = true;
                     break;
 
-                default:
 
+                default:
+                    binding.navView.setVisibility(View.GONE);
                     break;
 
 
@@ -312,7 +313,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     public void setCounterOrder(int count) {
-        counter = count;
+
         binding.navView.getOrCreateBadge(R.id.orders).setNumber(count);
 
     }
@@ -322,23 +323,51 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public void setInVisibiltyItem() {
-        binding.navView.getMenu().getItem(0).setVisible(false);
+    public void setInVisibiltyItem(boolean show) {
+        if (show)
+            binding.navView.getMenu().getItem(0).setVisible(true);
+        else
+            binding.navView.getMenu().getItem(0).setVisible(false);
+
     }
 
 
     public void setMainOrder(MainOrderFragment mainOrder) {
-        mainOrderFragment=mainOrder;
+        this.mainOrderFragment = mainOrder;
+    }
+
+    public void setPayment(PaymentMobileFragment paymentT) {
+        this.paymentMobileFragment = paymentT;
+    }
+
+    public void setProfile(ProfileFragment profileFragment) {
+        this.profileFragment = profileFragment;
+
+    }
+
+    public MainOrderFragment getMainOrderFragment() {
+        return mainOrderFragment;
+    }
+
+    public PaymentMobileFragment getPaymentFragment() {
+        return paymentMobileFragment;
+    }
+
+    public ProfileFragment getProfileFragment() {
+        return profileFragment;
     }
 
 
     public void getVisibilityBottomBar(Boolean show) {
         if (show)
-        binding.navView.setVisibility(View.VISIBLE);
+            binding.navView.setVisibility(View.VISIBLE);
         else
             binding.navView.setVisibility(View.GONE);
     }
 
+    public void setFistItem() {
+        binding.navView.setSelectedItemId(R.id.homee);
+    }
 
 
     //region Override Method
@@ -346,11 +375,13 @@ public class LauncherActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         super.onBackPressed();
-        if (mainOrder){
+        if (mainOrder) {
             binding.navView.setSelected(false);
             binding.navView.setSelectedItemId(R.id.homee);
 
         }
+
+
    /*     final int size = getSupportFragmentManager().getBackStackEntryCount();
 
 
