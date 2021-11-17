@@ -10,7 +10,7 @@ import com.orm.dsl.Unique;
 
 import ir.kitgroup.salein.classes.Util;
 
-public class Product  extends SugarRecord {
+public class Product extends SugarRecord {
 
     @Unique
 
@@ -66,14 +66,17 @@ public class Product  extends SugarRecord {
     @Expose
     private Integer key;
 
+    @SerializedName("UM1")
+    @Expose
+    public String UM1;
 
 
     private Double Amount;
 
     public Double getAmount() {
-        double amount=0.0;
-        if (Amount!=null)
-            amount=Amount;
+        double amount = 0.0;
+        if (Amount != null)
+            amount = Amount;
         return amount;
     }
 
@@ -155,13 +158,10 @@ public class Product  extends SugarRecord {
             }
 
 
-
         } catch (Exception ignored) {
         }
         return showPrice;
     }
-
-
 
 
     public String getDes() {

@@ -166,12 +166,12 @@ public class ApplicationModule {
                     messageWelcome = "به سالین دمو خوش آمدید";
                     description = "عرضه کننده بهترین محصولات نر افزاری";
                     paymentLink = "";
-                   ipLocal = "2.180.28.6:3333";
-                   userName = "administrator";
-                   passWord = "123";
-//                    ipLocal="192.168.20.8:96";
-//                   userName= "admin";
-//                   passWord= "123";
+//                    ipLocal = "2.180.28.6:3333";
+//                    userName = "administrator";
+//                    passWord = "123";
+                   ipLocal="192.168.20.8:96";
+                  userName= "admin";
+                  passWord= "123";
                     numberPhone = "05137638311";
                     lat = 36.326805522660464;
                     lng = 59.56450551053102;
@@ -317,13 +317,13 @@ public class ApplicationModule {
         companySalein.Description = "عرضه کننده بهترین محصولات نرم افزاری";
 
         companySalein.paymentLink = "";
-       companySalein.ipLocal = "2.180.28.6:3333";
-       companySalein.userName = "administrator";
-       companySalein.passWord = "123";
+//       companySalein.ipLocal = "2.180.28.6:3333";
+//       companySalein.userName = "administrator";
+//       companySalein.passWord = "123";
 
-//        companySalein.ipLocal = "192.168.20.8:96";
-//        companySalein.userName = "admin";
-//        companySalein.passWord = "123";
+        companySalein.ipLocal = "192.168.20.8:96";
+        companySalein.userName = "admin";
+        companySalein.passWord = "123";
 
         companySalein.numberPhone = "05137638311";
         companySalein.lat = 36.326805522660464;

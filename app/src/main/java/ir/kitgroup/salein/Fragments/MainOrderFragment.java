@@ -289,7 +289,7 @@ public class MainOrderFragment extends Fragment {
 
         }
 
-      //  getUnit();
+       getUnit();
 
 
         //region First Value Parameter

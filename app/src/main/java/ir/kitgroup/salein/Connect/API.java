@@ -1,5 +1,7 @@
 package ir.kitgroup.salein.Connect;
 
+import android.content.Intent;
+
 import io.reactivex.Observable;
 
 import retrofit2.Call;
@@ -57,7 +59,7 @@ public interface API {
 
 
     @GET("GetImage")
-    Call<String> getImage(@Query("productId") String productId);
+    Observable<String> getImage(@Query("productId") String productId, @Query("width") Integer width ,@Query("height") Integer height);
 
 
     @GET("SettingSync")

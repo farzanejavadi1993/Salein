@@ -170,19 +170,32 @@
 
 
             <TextView
+                android:layout_marginRight="@dimen/margin4"
                 android:id="@+id/unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="2dp"
                 android:singleLine="true"
-
                 android:textColor="@color/medium_color"
                 android:textSize="11sp"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
+                app:layout_constraintTop_toTopOf="parent"  />
+
 
             <TextView
                 android:id="@+id/error"
@@ -199,16 +212,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <TextView
-                android:visibility="gone"
-                android:text=""
-                android:id="@+id/unAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/unit"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -235,17 +239,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
 
-                <ProgressBar
-                    android:id="@+id/progress"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="4dp"
-                    android:layout_toLeftOf="@+id/iv_minus"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_minus"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/order_recycle_item_product_txt_amount"

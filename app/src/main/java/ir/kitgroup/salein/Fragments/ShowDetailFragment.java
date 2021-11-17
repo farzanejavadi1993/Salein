@@ -74,6 +74,7 @@ public class ShowDetailFragment  extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        compositeDisposable=new CompositeDisposable();
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
@@ -94,11 +95,13 @@ public class ShowDetailFragment  extends Fragment {
 
         getProduct(Id);
         Picasso.get()
-                .load("http://" + ip + "/GetImage?productId=" + Id
-                )
+                .load("http://" + ip + "/GetImage?productId=" + Id+"&width="+(int)Util.width+"&height="+(int)Util.height/2)
                 .error(company.imageLogo)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
+
+
+
 
     }
 
@@ -164,6 +167,8 @@ public class ShowDetailFragment  extends Fragment {
         }
 
     }
+
+
 
 
     @Override

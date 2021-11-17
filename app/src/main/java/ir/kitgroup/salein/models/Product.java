@@ -63,17 +63,17 @@ public class Product {
     private Integer key;
 
 
-    @SerializedName("UM")
+    @SerializedName("UM1")
     @Expose
-    private String UM;
+    public String UM1;
 
 
     private Double Amount;
 
     public Double getAmount() {
-        double amount=0.0;
-        if (Amount!=null)
-            amount=Amount;
+        double amount = 0.0;
+        if (Amount != null)
+            amount = Amount;
         return amount;
     }
 
@@ -156,13 +156,10 @@ public class Product {
             }
 
 
-
         } catch (Exception ignored) {
         }
         return showPrice;
     }
-
-
 
 
     public String getDes() {

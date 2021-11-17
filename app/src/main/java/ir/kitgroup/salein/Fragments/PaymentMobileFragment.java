@@ -246,8 +246,7 @@ public class PaymentMobileFragment extends Fragment {
         try {
 
 
-
-                binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
+            binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
 
 
         } catch (Exception ignored) {
@@ -1316,8 +1315,6 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-
-
     private long getDistanceMeters(LatLng StartP, LatLng EndP) {
 
         double l1 = toRadians(StartP.getLatitude());
@@ -1577,11 +1574,35 @@ public class PaymentMobileFragment extends Fragment {
 
                                         sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                                       // paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
-                                        if (!Ord_TYPE.equals(OrderTypeApp) && Tbl_GUID.equals("") && company.mode == 1) {
-                                            binding.btnPaymentPlace.setVisibility(View.GONE);
+                                        paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
 
-                                        }
+
+
+                                         if ((company.mode==2 && paymentType==1)
+                                         ||
+                                         (!Ord_TYPE.equals(OrderTypeApp) &&
+                                                 Tbl_GUID.equals("") &&
+                                                 company.mode == 1)){
+
+                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                                             binding.layoutPaymentOnline.setVisibility(View.GONE);
+
+                                         }
+
+                                         else if ((company.mode==2 && paymentType==2) ||
+                                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                                Tbl_GUID.equals("") &&
+                                                company.mode == 1)){
+                                             binding.btnPaymentPlace.setVisibility(View.GONE);
+                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                                         }
+
+                                         else {
+                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                                         }
+
+
                                     }
 
 
@@ -1728,13 +1749,13 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-                                        if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                                               getInquiryAccount1(company.userName, company.passWord, acc.M);
-                                           else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                                               binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                                            if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+                                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                           if (acc != null)
-                                            getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                            if (acc != null)
+                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
                                         }
 
 
@@ -1833,7 +1854,7 @@ public class PaymentMobileFragment extends Fragment {
         bundle.putString("Tbl_GUID", Tbl_GUID);
         bundle.putString("Tbl_NAME", Tbl_NAME);
         bundle.putString("Ord_TYPE", String.valueOf(Ord_TYPE));
-        bundle.putString("Sum_PRICE",Sum_PURE_PRICE);
+        bundle.putString("Sum_PRICE", Sum_PURE_PRICE);
 
 
         bundle.putBoolean("EDIT", edit);
@@ -1864,8 +1885,6 @@ public class PaymentMobileFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
-
-
 
 
 }

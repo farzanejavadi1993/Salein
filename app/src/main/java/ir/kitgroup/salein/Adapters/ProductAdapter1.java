@@ -50,6 +50,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.classes.Util;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -89,6 +90,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
     private final API api;
+
+    private  List<Unit> unitList;
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
@@ -131,6 +134,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         df = new DecimalFormat();
         compositeDisposable = new CompositeDisposable();
+        unitList=Select.from(Unit.class).list();
 
 
     }
@@ -218,10 +222,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
-                            .get(position).getI())
+                            .get(position).getI()+"&width=200&height=200")
                     .error(company.imageLogo)
                     .placeholder(R.drawable.loading)
                     .into(holder.productImage);
+
+
+
 
 
             holder.productOldPrice.setTextSize(13);
@@ -235,6 +242,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
+
+            ArrayList<Unit> units=new ArrayList<>(unitList);
+            CollectionUtils.filter(units,u->u.getUomUid().equals(productsList.get(position).UM1));
+            if (units.size()>0)
+                holder.unit.setText(units.get(0).getUomName());
+            else
+                holder.unit.setText("");
 
 
             holder.productName.setText(productsList.get(position).getN());
