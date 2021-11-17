@@ -6,8 +6,10 @@ import android.app.Application;
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.model.MapID;
 import com.orm.SugarContext;
+import com.squareup.leakcanary.LeakCanary;
 
 import dagger.hilt.android.HiltAndroidApp;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 
 
 @HiltAndroidApp
@@ -15,6 +17,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         SugarContext.init(getApplicationContext());
+
+
+
 
         CedarMaps.getInstance()
                 .setClientID("sportapp-6594917192157661130")

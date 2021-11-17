@@ -149,7 +149,7 @@ public class MainFragment extends Fragment {
 
                         InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
                         inVoiceDetailFragmentMobile.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobile").commit();
 
                         return true;
 

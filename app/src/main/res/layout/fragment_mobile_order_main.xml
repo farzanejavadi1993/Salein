@@ -64,7 +64,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="2dp"
                             android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@+id/btn_filter"
+
                             android:background="@drawable/background_edittext"
                             android:visibility="gone"
 
@@ -112,27 +112,7 @@
                                 tools:ignore="Autofill" />
                         </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/btn_filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="12dp"
-                            android:background="@drawable/bookmark_search_layout_background"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:id="@+id/ivSearch"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_centerInParent="true"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_search" />
-
-                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/layout_address_branch"
@@ -142,7 +122,6 @@
                             android:layout_marginTop="@dimen/margin2"
                             android:layout_marginRight="12dp"
                             android:layout_marginBottom="@dimen/margin2"
-                            android:layout_toRightOf="@+id/btn_filter"
                             android:orientation="horizontal">
 
 
@@ -321,6 +300,24 @@
         </RelativeLayout>
 
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            android:theme="@style/Widget.BottomNavigationView"
+            app:itemIconSize="22dp"
+            app:itemTextColor="@drawable/navigation_view_colored"
+            app:labelVisibilityMode="labeled"
+            android:foreground="?attr/selectableItemBackground"
+            app:menu="@menu/bottom_nav_menu" />
+
+
     </RelativeLayout>
+
+
+
+
 
 </layout>

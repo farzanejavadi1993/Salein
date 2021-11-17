@@ -15,10 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
 
 
 import com.google.gson.Gson;
@@ -62,7 +59,7 @@ public class RegisterFragment extends Fragment {
 
 
 
-    private NavController navController;
+
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentRegisterBinding binding;
@@ -88,18 +85,14 @@ public class RegisterFragment extends Fragment {
 
         //region Get Bundle And Set Data
 
+        Bundle bundle=getArguments();
+        String mobileNumber = bundle.getString("mobileNumber");
+        String address2 = bundle.getString("address2");
+        double latitude=bundle.getDouble("lat");
+        double longitude= bundle.getDouble("lng");
 
-        navController = Navigation.findNavController(binding.getRoot());
 
 
-
-        String mobileNumber = RegisterFragmentArgs.fromBundle(getArguments()).getMobileNumber();
-        String address2 = RegisterFragmentArgs.fromBundle(getArguments()).getAddress2();
-        String lat = RegisterFragmentArgs.fromBundle(getArguments()).getLat();
-        String longi= RegisterFragmentArgs.fromBundle(getArguments()).getLng();
-
-        double latitude=Double.parseDouble(lat);
-        double longitude=Double.parseDouble(longi);
 
 
         binding.edtAddressCustomerComplete.setText(address2);
@@ -226,19 +219,26 @@ public class RegisterFragment extends Fragment {
                                     Account.saveInTx(accountsList);
                                     accountsList.clear();
 
+                                    getActivity().getSupportFragmentManager().popBackStack();
                                     //region Show All Company
 
                                     if (company.namePackage.equals("ir.kitgroup.salein")) {
-                                        NavDirections action = RegisterFragmentDirections.actionGoToStoreFragment();
-                                        navController.navigate(action);
+                                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment").commit();
                                     }
                                     //endregion Show All Company
 
 
                                     //region Go To MainOrderFragment Because Account Is Register
                                     else {
-                                        NavDirections action = RegisterFragmentDirections.actionGoToMainOrderFragment();
-                                        navController.navigate(action);
+                                        Bundle bundleMainOrder= new Bundle();
+                                        bundleMainOrder.putString("Inv_GUID", "");
+                                        bundleMainOrder.putString("Tbl_GUID", "");
+                                        bundleMainOrder.putString("Ord_TYPE", "");
+
+                                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                        mainOrderFragment.setArguments(bundleMainOrder);
+                                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").commit();
+
                                     }
                                     //endregion Go To MainOrderFragment Because Account Is Register
 

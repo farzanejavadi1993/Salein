@@ -79,11 +79,8 @@ public class SearchProductFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     private  FragmentSearchProductBinding binding;
-    private TextWatcher textWatcherProduct;
     private ProductAdapter1 productAdapter;
     private String Inv_GUID="";
-    private String Tbl_GUID="";
-    private Boolean Seen;
 
 
     private ArrayList<Product> productList;
@@ -98,7 +95,7 @@ public class SearchProductFragment extends Fragment {
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
-    private ArrayList<Description> descriptionList=new ArrayList<>();
+    private final ArrayList<Description> descriptionList=new ArrayList<>();
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv;
     //endregion Variable Dialog Description
@@ -111,18 +108,19 @@ public class SearchProductFragment extends Fragment {
        return  binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
-        Seen=SearchProductFragmentArgs.fromBundle(getArguments()).getSEEN();
+        Boolean seen = SearchProductFragmentArgs.fromBundle(getArguments()).getSEEN();
         Inv_GUID=SearchProductFragmentArgs.fromBundle(getArguments()).getInvGUID();
-        Tbl_GUID=SearchProductFragmentArgs.fromBundle(getArguments()).getTblGUID();
+        String tbl_GUID = SearchProductFragmentArgs.fromBundle(getArguments()).getTblGUID();
         maxSales = sharedPreferences.getString("maxSale", "0");
         customProgress=CustomProgress.getInstance();
+
+
 
 
         productList=new ArrayList<>();
@@ -224,7 +222,7 @@ public class SearchProductFragment extends Fragment {
 
         binding.edtSearchProduct.setTextSize(fontSize);
 
-        textWatcherProduct = new TextWatcher() {
+        TextWatcher textWatcherProduct = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -236,7 +234,7 @@ public class SearchProductFragment extends Fragment {
 
                     productList.clear();
                     productAdapter.notifyDataSetChanged();
-                    emptySearch=true;
+                    emptySearch = true;
                     binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
 
 
@@ -257,8 +255,8 @@ public class SearchProductFragment extends Fragment {
 
         productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences,Inv_GUID);
        // productAdapter.setInv_GUID(Inv_GUID);
-        productAdapter.setTbl_GUID(Tbl_GUID);
-        productAdapter.setType(Seen);
+        productAdapter.setTbl_GUID(tbl_GUID);
+        productAdapter.setType(seen);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -273,10 +271,10 @@ public class SearchProductFragment extends Fragment {
                 counter = invDetails.size();
             }
 
-            if (counter == 0)
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
-            else
-                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+//            if (counter == 0)
+//                ((LauncherActivity) getActivity()).setClearCounterOrder();
+//            else
+//                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
         });

@@ -27,16 +27,14 @@ import ir.kitgroup.salein.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
 
-
     private FragmentProfileBinding binding;
 
-    public String type = "";
-    public String address = "";
+    private String type = "";
+    private String address = "";
     private CustomProgress customProgress;
 
-    private int fontSize=12;
+    private int fontSize = 12;
 
-    private NavController navController;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -52,19 +50,20 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(binding.getRoot());
+
+        Bundle bundle = getArguments();
+        address = bundle.getString("address");
+        type = bundle.getString("type");
 
 
-        ((LauncherActivity) getActivity()).setProfile(this);
-        if (Util.screenSize >=7)
-            fontSize=14;
+
+        if (Util.screenSize >= 7)
+            fontSize = 14;
         else
-            fontSize=12;
+            fontSize = 12;
 
 
         customProgress = CustomProgress.getInstance();
-
-
 
 
         binding.txtTitleToolbar.setTextSize(fontSize);
@@ -74,13 +73,7 @@ public class ProfileFragment extends Fragment {
         binding.txtAddress1.setTextSize(fontSize);
 
 
-
-
-
-
-
         Account account = Select.from(Account.class).first();
-
 
 
         if (account != null) {
@@ -89,11 +82,11 @@ public class ProfileFragment extends Fragment {
 
             if (account.ADR != null && !account.ADR.equals("")) {
 
-                String address="";
+                String address = "";
                 try {
-                    address= account.ADR.replace(account.ADR.split("latitude")[1],"").replace("latitude","").replace(account.ADR.split("longitude")[0],"").replace("longitude","");
-                }catch (Exception e){
-                    address=account.ADR;
+                    address = account.ADR.replace(account.ADR.split("latitude")[1], "").replace("latitude", "").replace(account.ADR.split("longitude")[0], "").replace("longitude", "");
+                } catch (Exception e) {
+                    address = account.ADR;
                 }
 
                 binding.txtAddress1.setText(address);
@@ -107,11 +100,11 @@ public class ProfileFragment extends Fragment {
             if (account.ADR2 != null && !account.ADR2.equals("")) {
 
 
-                String address="";
+                String address = "";
                 try {
-                    address= account.ADR2.replace(account.ADR2.split("latitude")[1],"").replace("latitude","").replace(account.ADR2.split("longitude")[0],"").replace("longitude","");
-                }catch (Exception e){
-                    address=account.ADR2;
+                    address = account.ADR2.replace(account.ADR2.split("latitude")[1], "").replace("latitude", "").replace(account.ADR2.split("longitude")[0], "").replace("longitude", "");
+                } catch (Exception e) {
+                    address = account.ADR2;
                 }
 
                 binding.txtAddress2.setText(address);
@@ -131,31 +124,30 @@ public class ProfileFragment extends Fragment {
             binding.editAddress1.setOnClickListener(v -> {
 
 
-
-
-
-                NavDirections action = ProfileFragmentDirections.actionGoToMapFragment()
-                        .setEditAddress("2")
-                        .setType("1");
-                navController.navigate(action);
-
-
-
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber", "");
+                bundleMap.putString("edit_address", "2");
+                bundleMap.putString("type", "1");
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
 
 
             });
 
             binding.editAddress2.setOnClickListener(v -> {
 
-                NavDirections action = ProfileFragmentDirections.actionGoToMapFragment()
-                        .setEditAddress("2")
-                        .setType("2");
-                navController.navigate(action);
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber", "");
+                bundleMap.putString("edit_address", "2");
+                bundleMap.putString("type", "2");
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
 
             });
 
             binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
-
 
 
         }

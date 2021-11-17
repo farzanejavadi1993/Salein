@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,11 @@ public class StoriesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
        binding=FragmentStoriesBinding.inflate(getLayoutInflater());
+
+
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        return binding.getRoot();
     }
 
@@ -47,6 +54,8 @@ public class StoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
 
 
@@ -112,19 +121,5 @@ public class StoriesFragment extends Fragment {
         }
     }
 
-    public void setMyCompany(){
-        binding.viewPager.setCurrentItem(1);
-        binding.tabLayout.getTabAt(1).select();
-        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("StoriesFragment");
-        FragmentManager ft = getActivity().getSupportFragmentManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-            ft.beginTransaction().detach(frg).commitNow();
-            ft.beginTransaction().attach(frg).commitNow();
-
-        } else {
-
-            ft.beginTransaction().detach(frg).attach(frg).commit();
-        }
-    }
 }

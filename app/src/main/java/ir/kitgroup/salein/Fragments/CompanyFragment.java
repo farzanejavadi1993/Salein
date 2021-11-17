@@ -18,10 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
@@ -71,7 +68,7 @@ public class CompanyFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private NavController navController;
+
 
 
     private Company companySelect;
@@ -98,7 +95,7 @@ public class CompanyFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(binding.getRoot());
+
 
 
         configRetrofit = new ConfigRetrofit();
@@ -116,8 +113,14 @@ public class CompanyFragment extends Fragment {
                     String nameSave = sharedPreferences.getString(company.nameCompany, "");
                     if (!nameSave.equals("")) {
                         sharedPreferences.edit().putString("CN",company.nameCompany).apply();
-                        NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                        navController.navigate(action);
+                        Bundle bundleMainOrder= new Bundle();
+                        bundleMainOrder.putString("Inv_GUID", "");
+                        bundleMainOrder.putString("Tbl_GUID", "");
+                        bundleMainOrder.putString("Ord_TYPE", "");
+
+                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                        mainOrderFragment.setArguments(bundleMainOrder);
+                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
                         api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
                         getInquiryAccount1(company.nameCompany, company.userName, company.passWord, account.M);
@@ -201,8 +204,16 @@ public class CompanyFragment extends Fragment {
 
                                             sharedPreferences.edit().putString("CN",name).apply();
                                             sharedPreferences.edit().putString(name,name).apply();
-                                            NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                                            navController.navigate(action);
+
+
+                                            Bundle bundleMainOrder= new Bundle();
+                                            bundleMainOrder.putString("Inv_GUID", "");
+                                            bundleMainOrder.putString("Tbl_GUID", "");
+                                            bundleMainOrder.putString("Ord_TYPE", "");
+
+                                            MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                            mainOrderFragment.setArguments(bundleMainOrder);
+                                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
                                         }
 
@@ -274,8 +285,14 @@ public class CompanyFragment extends Fragment {
                                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                 if (message == 1) {
 
-                                    NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                                    navController.navigate(action);
+                                    Bundle bundleMainOrder= new Bundle();
+                                    bundleMainOrder.putString("Inv_GUID", "");
+                                    bundleMainOrder.putString("Tbl_GUID", "");
+                                    bundleMainOrder.putString("Ord_TYPE", "");
+
+                                    MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                    mainOrderFragment.setArguments(bundleMainOrder);
+                                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
                                 }
                                 binding.progressbar.setVisibility(View.GONE);

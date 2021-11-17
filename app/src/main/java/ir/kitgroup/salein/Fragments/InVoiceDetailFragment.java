@@ -10,8 +10,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,9 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+import androidx.fragment.app.FragmentManager;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +49,7 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -172,13 +174,9 @@ public class InVoiceDetailFragment extends Fragment {
 
     private String Acc_NAME;
     private String Acc_GUID;
-    private int counter = 0;
+    private int counter=0;
 
 
-    private NavController navController;
-
-
-    private View vieRoot;
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -196,19 +194,23 @@ public class InVoiceDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        navController = Navigation.findNavController(binding.getRoot());
+        try {
+
         customProgress = CustomProgress.getInstance();
 
 
-        if (!Util.RetrofitValue) {
+        if (Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
         }
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
         maxSales = sharedPreferences.getString("maxSale", "0");
@@ -276,23 +278,34 @@ public class InVoiceDetailFragment extends Fragment {
             invoiceDetailList.clear();
             invoiceDetailAdapter.notifyDataSetChanged();
 
+
+
+           Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+
+            if (frg instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) frg;
+                fgf.refreshProductList();
+            }
+
         });
         //endregion Cast Dialog Delete
 
 
         //region Get Bundle
 
-        type = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 seen   //2 Edit
-        Ord_TYPE = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
-        Tbl_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getTblGUID();
-        Tbl_NAME = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getTblNAME();
-        Inv_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getInvGUID();
 
-        Acc_NAME = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getAccNAME();
-        Acc_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getAccGUID();
-        EDIT = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
-        Seen = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getSEEN();
-        setADR1 = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getSetADR1();
+        Bundle bundle = getArguments();
+        type = bundle.getString("type");//1 seen   //2 Edit
+        Ord_TYPE = bundle.getString("Ord_TYPE");
+        Tbl_GUID = bundle.getString("Tbl_GUID");
+        Tbl_NAME = bundle.getString("Tbl_NAME");
+        Inv_GUID = bundle.getString("Inv_GUID");
+
+        Acc_NAME = bundle.getString("Acc_NAME");
+        Acc_GUID = bundle.getString("Acc_GUID");
+        EDIT = bundle.getBoolean("EDIT");//when order need EDIT
+        Seen = bundle.getBoolean("Seen");
+        setADR1 = bundle.getBoolean("setADR1");
 
 
         binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
@@ -646,17 +659,23 @@ public class InVoiceDetailFragment extends Fragment {
                 tblGuid = "";
             else
                 tblGuid = Tbl_GUID;
-            NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainOrderFragment()
-                    .setOrdTYPE(Ord_TYPE)
-                    .setTblGUID(tblGuid)
-                    .setInvGUID(Inv_GUID)
-                    .setTblNAME(Tbl_NAME)
-                    .setOrdTYPE(Ord_TYPE)
-                    .setSEEN(true)
-                    .setAccGUID(Acc_GUID)
-                    .setAccNAME(Acc_NAME)
-                    .setEDIT(true);
-            navController.navigate(action);
+
+
+        // getActivity().getSupportFragmentManager().popBackStack();
+            Bundle bundleMainOrder = new Bundle();
+            bundleMainOrder.putSerializable("key", (Serializable) invoiceDetailList);
+            bundleMainOrder.putString("Inv_GUID", Inv_GUID);
+            bundleMainOrder.putString("Tbl_GUID", tblGuid);
+            bundleMainOrder.putString("Tbl_NAME", Tbl_NAME);
+            bundleMainOrder.putString("Ord_TYPE", Ord_TYPE);
+            bundleMainOrder.putString("Acc_GUID", Acc_GUID);
+            bundleMainOrder.putString("Acc_NAME", Acc_NAME);
+            bundleMainOrder.putBoolean("EDIT", true);
+            bundleMainOrder.putBoolean("Seen", true);
+            MainOrderFragment mainOrderFragment = new MainOrderFragment();
+            mainOrderFragment.setArguments(bundleMainOrder);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+
 
         });
         //endregion Action BtnEdit
@@ -664,6 +683,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         //region Action BtnContinue
         binding.btnContinue.setOnClickListener(v -> {
+            binding.btnContinue.setEnabled(false);
             if (invoiceDetailList.size() == 0) {
                 Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
                 return;
@@ -677,19 +697,23 @@ public class InVoiceDetailFragment extends Fragment {
             if (EDIT)
                 edit = true;
 
-            NavDirections action = InVoiceDetailFragmentDirections.actionGoToPaymentFragment()
-                    .setInvGUID(Inv_GUID)
-                    .setTblGUID(Tbl_GUID)
-                    .setAccNAME(Acc_NAME)
-                    .setAccGUID(Acc_GUID)
-                    .setOrdTYPE(ordTy)
-                    .setEDIT(edit)
-                    .setSEEN(Seen)
-                    .setInvGUID(Inv_GUID)
-                    .setSumPRICE(String.valueOf(sumPrice))
-                    .setTblNAME(Tbl_NAME)
-                    .setSetADR1(setADR1);
-            navController.navigate(action);
+
+            Bundle bundlePayment = new Bundle();
+            bundlePayment.putString("Inv_GUID", Inv_GUID);
+            bundlePayment.putString("Tbl_GUID", Tbl_GUID);
+            bundlePayment.putString("Tbl_NAME", Tbl_NAME);
+            bundlePayment.putString("Ord_TYPE", ordTy);
+            bundlePayment.putString("Acc_GUID", Acc_GUID);
+            bundlePayment.putString("Acc_NAME", Acc_NAME);
+            bundlePayment.putString("Sum_PRICE", String.valueOf(sumPurePrice));
+            bundlePayment.putBoolean("EDIT", edit);
+            bundlePayment.putBoolean("Seen", Seen);
+            bundlePayment.putBoolean("setADR1", setADR1);
+
+            PaymentMobileFragment paymentMobileFragment = new PaymentMobileFragment();
+            paymentMobileFragment.setArguments(bundlePayment);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, paymentMobileFragment, "PaymentMobileFragment").addToBackStack("PaymentMobileF").commit();
+            binding.btnContinue.setEnabled(true);
         });
         //endregion Action BtnContinue
 
@@ -716,6 +740,9 @@ public class InVoiceDetailFragment extends Fragment {
         }
 
 
+        }catch (Exception ignore){
+            Toast.makeText(getActivity(), "Invoice", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getDescription(String id) {
@@ -982,9 +1009,9 @@ public class InVoiceDetailFragment extends Fragment {
                                     String name = company.namePackage.split("ir.kitgroup.")[1];
                                     String invGuid = sharedPreferences.getString(name, "");
 
-                                    List<InvoiceDetail> list=Select.from(InvoiceDetail.class).list();
-                                    CollectionUtils.filter(list,l->l.INV_UID!=null && !l.INV_UID.equals(invGuid));
-                                    for (int i=0; i<list.size();i++){
+                                    List<InvoiceDetail> list = Select.from(InvoiceDetail.class).list();
+                                    CollectionUtils.filter(list, l -> l.INV_UID != null && !l.INV_UID.equals(invGuid));
+                                    for (int i = 0; i < list.size(); i++) {
                                         InvoiceDetail.deleteInTx(list.get(i));
                                     }
 
@@ -1088,17 +1115,31 @@ public class InVoiceDetailFragment extends Fragment {
                                 InvoiceDetail.deleteInTx(invoiceDetail.get(i));
                             }
 
+                            Fragment frg;
+                            if (company.mode == 2) {
+                                getActivity().getSupportFragmentManager().popBackStack();
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
 
-                            if (company.mode != 2) {
-                                navController.popBackStack();
-
+                            } else {
                                 Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
                                 if (tb != null && tb.GO != null)
                                     Tables.delete(tb);
+
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
                             }
 
 
-                            navController.popBackStack();
+                            FragmentManager ft = getActivity().getSupportFragmentManager();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                ft.beginTransaction().detach(frg).commitNow();
+                                ft.beginTransaction().attach(frg).commitNow();
+
+                            } else {
+
+                                ft.beginTransaction().detach(frg).attach(frg).commit();
+                            }
+
 
                         }
                     } else {
@@ -1119,7 +1160,8 @@ public class InVoiceDetailFragment extends Fragment {
             });
 
 
-        } catch (NetworkOnMainThreadException ex) {
+        } catch (
+                NetworkOnMainThreadException ex) {
             customProgress.hideProgress();
             Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + ex.toString(), Toast.LENGTH_SHORT).show();
 
@@ -1131,6 +1173,7 @@ public class InVoiceDetailFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         if (type.equals("1")) {
             List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                     Inv_GUID + "'").list();
@@ -1140,12 +1183,9 @@ public class InVoiceDetailFragment extends Fragment {
         }
 
 
-        super.onDestroy();
+
     }
 
-    public List<InvoiceDetail> getInvoiceDetail() {
-        return invDetails;
-    }
 
     private Boolean networkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
@@ -1164,6 +1204,13 @@ public class InVoiceDetailFragment extends Fragment {
         dialogSync.show();
         customProgress.hideProgress();
 
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+       binding=null;
     }
 }
 

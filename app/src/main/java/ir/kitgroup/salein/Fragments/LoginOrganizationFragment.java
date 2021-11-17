@@ -169,7 +169,7 @@ public class LoginOrganizationFragment extends Fragment {
                                     getActivity().getSupportFragmentManager().popBackStack();
 
                                     if (Select.from(User.class).list().size()>0) {
-                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
                                     }
 
                                 }

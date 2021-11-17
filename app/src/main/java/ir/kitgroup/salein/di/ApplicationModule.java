@@ -66,6 +66,7 @@ public class ApplicationModule {
         int mode = 2;
         int imageLogo = 0;
         String name = "";
+        String packageName="";
 
 
         try {
@@ -76,6 +77,7 @@ public class ApplicationModule {
                 case "ir.kitgroup.salein":
                     imageLogo = R.drawable.saleinicon128;
                     name = "سالین دمو";
+                    packageName="ir.kitgroup.salein";
 
                     break;
 
@@ -83,22 +85,26 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleinbahraman":
                     imageLogo = R.drawable.bahraman_png;
                     name = "زعفران بهرامن";
+                    packageName="ir.kitgroup.saleinbahraman";
 
                     break;
 
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_png;
                     name = "تاپ کباب";
+                    packageName="ir.kitgroup.saleintop";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_png;
                     name = "گوشت دنیوی";
+                    packageName="ir.kitgroup.saleinmeat";
                     break;
 
                 case "ir.kitgroup.saleinnoon":
                     imageLogo = R.drawable.noon;
+                    packageName="ir.kitgroup.saleinnoon";
                     name = "کافه نون";
                     break;
 
@@ -116,6 +122,7 @@ public class ApplicationModule {
         config.imageLogo = imageLogo;
         config.mode = mode;
         config.name = name;
+        config.packageName = packageName;
 
         return config;
 
@@ -159,12 +166,12 @@ public class ApplicationModule {
                     messageWelcome = "به سالین دمو خوش آمدید";
                     description = "عرضه کننده بهترین محصولات نر افزاری";
                     paymentLink = "";
-//                    ipLocal = "2.180.28.6:3333";
-//                    userName = "administrator";
-//                    passWord = "123";
-                    ipLocal="192.168.20.8:96";
-                    userName="admin";
-                    passWord="123";
+                  ipLocal = "2.180.28.6:3333";
+                  userName = "administrator";
+                  passWord = "123";
+                   // ipLocal="192.168.20.8:96";
+                   // userName="admin";
+                   // passWord="123";
                     numberPhone = "05137638311";
                     lat = 36.326805522660464;
                     lng = 59.56450551053102;

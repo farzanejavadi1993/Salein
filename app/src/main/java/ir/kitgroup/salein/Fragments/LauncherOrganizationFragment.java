@@ -317,7 +317,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                 InVoiceDetailFragment inVoiceDetailFragmentMobile = new InVoiceDetailFragment();
                 inVoiceDetailFragmentMobile.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobileX").commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragmentMobile, "InVoiceDetailFragmentMobile").addToBackStack("InVoiceDetailFMobileX").commit();
 
             } else {
 
@@ -343,7 +343,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                 MainFragment mainFragment = new MainFragment();
                 mainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF").commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
             }
@@ -400,13 +400,13 @@ public class LauncherOrganizationFragment extends Fragment {
 
             MainFragment mainFragment = new MainFragment();
             mainFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, mainFragment, "MainFragment").addToBackStack("MainF").commit();
-
+            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
         });
         //endregion Configuration RecyclerView getOutOrder
 
 
+       
         //region Action btnLogOut
         binding.btnLogout.setOnClickListener(v -> {
             TypeClickButtonDialog = "logOut";

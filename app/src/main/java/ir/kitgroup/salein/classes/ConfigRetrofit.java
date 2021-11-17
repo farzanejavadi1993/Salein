@@ -19,28 +19,41 @@ public class ConfigRetrofit {
 
 
 
+
+
     public Retrofit getRetrofit(String baseUrl) {
+
+        Retrofit retrofit=null;
+        try {
+
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 
 
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.readTimeout(30, TimeUnit.SECONDS);
         client.connectTimeout(30, TimeUnit.SECONDS);
 
 
-        return new Retrofit.Builder()
+        retrofit=new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(baseUrl)
                 .client(client.build())
                 .build();
+
+        }catch (Exception e){
+
+        }
+        return retrofit;
     }
 
     public Company getCompany(String name) {
+        Company company = new Company();
+        try {
+
 
         String nameCompany = "";
         String linkUpdate = "";
@@ -152,7 +165,7 @@ public class ConfigRetrofit {
         }
 
 
-        Company company = new Company();
+
         company.services = Service;
         company.ipLocal = ipLocal;
         company.imageLogo = imageLogo;
@@ -171,7 +184,7 @@ public class ConfigRetrofit {
         company.lng = lng;
         company.baseUrl = "http://" + ipLocal + "/api/REST/";
         company.numberPhone = numberPhone;
-
+        }catch (Exception exception){}
         return company;
 
     }

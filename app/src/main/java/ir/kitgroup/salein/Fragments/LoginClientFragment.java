@@ -21,9 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
 
 
 import com.orm.query.Select;
@@ -53,17 +51,15 @@ import ir.kitgroup.salein.models.Company;
 public class LoginClientFragment extends Fragment {
 
 
+    //region PARAMETER
+
     @Inject
     Company company;
 
     @Inject
     API api;
 
-    private NavController navController;
 
-
-
-    //region PARAMETER
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentLoginMobileBinding binding;
     private Boolean acceptRule = true;
@@ -87,113 +83,121 @@ public class LoginClientFragment extends Fragment {
 
 
         try {
-        navController = Navigation.findNavController(binding.getRoot());
+
+
+
+            //region Configuration Text Size
+            int fontSize;
+            if (Util.screenSize >= 7) {
+                binding.tvWelcome.setTextSize(18);
+                fontSize = 14;
+            } else
+                fontSize = 12;
+
+
+            binding.loginTvRules.setTextSize(fontSize);
+            binding.loginTvRules1.setTextSize(fontSize);
+            binding.loginTvRules2.setTextSize(fontSize);
+            binding.tvLogin.setTextSize(fontSize);
+            binding.btnLogin.setTextSize(fontSize);
+            binding.tvEnterMobile.setTextSize(fontSize);
+            binding.edtMobile.setTextSize(fontSize);
+            //endregion Configuration Text Size
+
+
+            binding.loginTvRules.setText("با ثبت نام در " + company.nameCompany);
+
+
+
+            //region Set Icon And Title
+            binding.tvWelcome.setText(company.messageWelcome);
+            binding.imageLogo.setImageResource(company.imageLogo);
+            //endregion Set Icon And Title
 
 
 
 
-        //region Configuration Text Size
-        int fontSize;
-        if (Util.screenSize >= 7) {
-            binding.tvWelcome.setTextSize(18);
-            fontSize = 14;
-        } else
-            fontSize = 12;
+            //region TextWatcher edtMobile
+            binding.edtMobile.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-
-        binding.loginTvRules.setTextSize(fontSize);
-        binding.loginTvRules1.setTextSize(fontSize);
-        binding.loginTvRules2.setTextSize(fontSize);
-        binding.tvLogin.setTextSize(fontSize);
-        binding.btnLogin.setTextSize(fontSize);
-        binding.tvEnterMobile.setTextSize(fontSize);
-        binding.edtMobile.setTextSize(fontSize);
-        //endregion Configuration Text Size
-
-
-        binding.loginTvRules.setText("با ثبت نام در " + company.nameCompany);
-        //region Set Icon And Title
-        binding.tvWelcome.setText(company.messageWelcome);
-        binding.imageLogo.setImageResource(company.imageLogo);
-        //endregion Set Icon And Title
-
-
-        //region TextWatcher edtMobile
-        binding.edtMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Util.isValid(s.toString())) {
-
-                    Util.hideKeyBoard(getActivity(), binding.edtMobile);
-
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnLogin.setEnabled(true);
-                } else {
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-                    binding.btnLogin.setEnabled(false);
                 }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (Util.isValid(s.toString())) {
+
+                        Util.hideKeyBoard(getActivity(), binding.edtMobile);
+
+                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                        binding.btnLogin.setEnabled(true);
+                    } else {
+                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                        binding.btnLogin.setEnabled(false);
+                    }
+                }
+            });
+            //endregion TextWatcher edtMobile
+
+
+
+
+
+
+            //region Action btnLogin
+            binding.btnLogin.setOnClickListener(v -> {
+                if (acceptRule) {
+                    int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+                    String messageCode = String.valueOf(code);
+                    String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+                    login(mobileNumber, code, messageCode);
+                }
+
+
+            });
+            //endregion Action btnLogin
+
+
+
+
+
+
+            //region Action btnLogin
+            binding.loginTvRules1.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new RulesFragment(), "RulesFragment").addToBackStack("RulesF").commit());
+            //endregion Action btnLogin
+
+
+
+            //region Action CheckBox
+            binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    acceptRule = true;
+                    binding.btnLogin.setVisibility(View.VISIBLE);
+                } else {
+                    acceptRule = false;
+                    binding.btnLogin.setVisibility(View.GONE);
+                }
+            });
+            //endregion Action CheckBox
+
+
+
+
+            if (Select.from(Account.class).list().size() > 0) {
+
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment").commit();
+
             }
-        });
-        //endregion TextWatcher edtMobile
 
-
-        //region Action btnLogin
-        binding.btnLogin.setOnClickListener(v -> {
-            if (acceptRule) {
-                int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-                String messageCode = String.valueOf(code);
-                String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
-                login(mobileNumber, code, messageCode);
-            }
-
-
-        });
-        //endregion Action btnLogin
-
-
-        //region Action btnLogin
-        binding.loginTvRules1.setOnClickListener(v -> {
-            NavDirections action = LoginClientFragmentDirections.actionGoToRulesFragment();
-            navController.navigate(action);
-        });
-        //endregion Action btnLogin
-
-
-        //region Action CheckBox
-        binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                acceptRule = true;
-                binding.btnLogin.setVisibility(View.VISIBLE);
-            } else {
-                acceptRule = false;
-                binding.btnLogin.setVisibility(View.GONE);
-            }
-        });
-        //endregion Action CheckBox
-
-
-
-        if (Select.from(Account.class).list().size()>0)
-        {
-
-                NavDirections action = LoginClientFragmentDirections.actionGoToStoreFragment();
-                navController.navigate(action);
-
+        } catch (Exception ignored) {
         }
-
-      }
-        catch (Exception ignored){}
     }
 
 
@@ -215,9 +219,18 @@ public class LoginClientFragment extends Fragment {
                                 binding.btnLogin.setEnabled(true);
 
 
+                                Bundle bundleOrder = new Bundle();
+                                bundleOrder.putString("mobileNumber",mobileNumber);
+                                bundleOrder.putInt("code", code);
 
-                                NavDirections action = LoginClientFragmentDirections.actionGoToConfirmFragment().setCode(code).setMobileNumber(mobileNumber);
-                                navController.navigate(action);
+                                ConfirmCodeFragment inVoiceDetailFragment=new ConfirmCodeFragment();
+                                inVoiceDetailFragment.setArguments(bundleOrder);
+                                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
+
+
+
+
+
 
 
 

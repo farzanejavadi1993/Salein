@@ -5,7 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
-public class InvoiceDetail extends SugarRecord {
+import java.io.Serializable;
+
+public class InvoiceDetail extends SugarRecord implements Serializable {
 
     @Unique
     @SerializedName("INV_DET_UID")//ای دی ردیف

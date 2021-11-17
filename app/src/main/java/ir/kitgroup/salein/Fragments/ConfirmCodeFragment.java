@@ -21,9 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+import androidx.fragment.app.FragmentTransaction;
+
 
 
 import com.google.gson.Gson;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.lang.reflect.Type;
-
 
 
 import javax.inject.Inject;
@@ -60,6 +58,7 @@ import ir.kitgroup.salein.databinding.FragmentConfirmCodeBinding;
 
 public class ConfirmCodeFragment extends Fragment {
 
+    //region  Parameter
 
     @Inject
     Company company;
@@ -67,13 +66,11 @@ public class ConfirmCodeFragment extends Fragment {
 
     @Inject
     API api;
-    //region  Parameter
+
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentConfirmCodeBinding binding;
     private int code;
-
-
-    private NavController navController;
 
 
     //endregion Parameter
@@ -94,21 +91,21 @@ public class ConfirmCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        navController = Navigation.findNavController(binding.getRoot());
-
         //region Get Bundle And Set Data
-        code=ConfirmCodeFragmentArgs.fromBundle(getArguments()).getCode();
-        String mobileNumber=ConfirmCodeFragmentArgs.fromBundle(getArguments()).getMobileNumber();
 
-        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobileNumber + " " + getString(R.string.send_code_part2));
+        Bundle bundle = getArguments();
+        code = bundle.getInt("code");
+        String mobileNumber = bundle.getString("mobileNumber");
+
+
         //endregion Get Bundle And Set Data
 
 
-
+        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobileNumber + " " + getString(R.string.send_code_part2));
 
 
         //region Configuration Text Size
-        int fontSize ;
+        int fontSize;
         if (Util.screenSize >= 7) {
             binding.tvMessage.setTextSize(18);
             fontSize = 14;
@@ -356,7 +353,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-               // return;
+                // return;
             }
             getInquiryAccount1(company.userName, company.passWord, mobileNumber);
         });
@@ -368,12 +365,7 @@ public class ConfirmCodeFragment extends Fragment {
         //endregion Action ivBackFragment
 
 
-
     }
-
-
-
-
 
 
     //region Method
@@ -382,6 +374,7 @@ public class ConfirmCodeFragment extends Fragment {
     private void setEditBackground(int drawable, EditText view) {
         view.setBackground(getResources().getDrawable(drawable));
     }
+
     private boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -442,13 +435,15 @@ public class ConfirmCodeFragment extends Fragment {
                                     if (iDs.getAccountList().size() > 0) {
                                         Account.deleteAll(Account.class);
                                         Account.saveInTx(iDs.getAccountList());
+
+
                                         getFragmentManager().popBackStack();
 
-
+                                        FragmentTransaction addFragment;
                                         //region Show All Company
-                                        NavDirections action;
+
                                         if (company.namePackage.equals("ir.kitgroup.salein")) {
-                                            action = (NavDirections) ConfirmCodeFragmentDirections.actionGoToStoreFragment();
+                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
 
                                         }
                                         //endregion Show All Company
@@ -456,20 +451,33 @@ public class ConfirmCodeFragment extends Fragment {
 
                                         //region Go To MainOrderFragment Because Account Is Register
                                         else {
-                                            action = (NavDirections) ConfirmCodeFragmentDirections.actionGoToMainOrderFragment();
+                                            Bundle bundleMain = new Bundle();
+                                            bundleMain.putString("Inv_GUID", "");
+                                            bundleMain.putString("Tbl_GUID", "");
+                                            bundleMain.putString("Ord_TYPE", "");
+                                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                                            mainOrderFragment.setArguments(bundleMain);
+                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
                                         }
-                                        navController.navigate(action);
+
                                         //endregion Go To MainOrderFragment Because Account Is Register
 
 
+                                        addFragment.commit();
                                     }
                                     //endregion Account Is Register
 
 
                                     //region Account Is Not Register
                                     else {
-                                        NavDirections action = (NavDirections) ConfirmCodeFragmentDirections.actionGoToMapFragment().setMobileNumber(mobileNumber);
-                                        navController.navigate(action);
+                                        Bundle bundleMap = new Bundle();
+                                        bundleMap.putString("mobileNumber", mobileNumber);
+                                        bundleMap.putString("edit_address", "");
+                                        bundleMap.putString("type", "");
+                                        MapFragment mapFragment = new MapFragment();
+                                        mapFragment.setArguments(bundleMap);
+                                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+
                                     }
                                     //endregion Account Is Not Register
 
@@ -501,13 +509,6 @@ public class ConfirmCodeFragment extends Fragment {
 
     }
     //endregion Method
-
-
-
-
-
-
-
 
 
 }

@@ -90,7 +90,7 @@ public class SplashScreenFragment extends Fragment {
 
                      //regionShow All Company
                         if (company.namePackage.equals("ir.kitgroup.salein"))
-                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, new StoriesFragment(), "StoriesFragment");
+                            replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
                      //endregionShow All Company
 
 
@@ -102,7 +102,7 @@ public class SplashScreenFragment extends Fragment {
                             bundle.putString("Inv_GUID", "");
                             MainFragment mainFragment = new MainFragment();
                             mainFragment.setArguments(bundle);
-                            replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, mainFragment, "MainFragment");
+                            replaceFragment = requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, mainFragment, "MainFragment");
                         }
                         //endregion Go To MainOrderFragment Because Account Is Register
 
@@ -113,7 +113,7 @@ public class SplashScreenFragment extends Fragment {
                     //region Account Is Not Login & Register
                     else {
 
-                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new LoginClientFragment());
+                        replaceFragment = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LoginClientFragment());
 
                     }
                     //endregion Account Is Not Login & Register

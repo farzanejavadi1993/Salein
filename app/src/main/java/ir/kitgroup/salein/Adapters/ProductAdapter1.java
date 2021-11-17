@@ -33,7 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
+
 
 
 import java.lang.reflect.Type;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -68,7 +68,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final Company company;
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -79,7 +79,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private Boolean Seen = false;
 
-    private String Inv_GUID;
+    private final String Inv_GUID;
     private String Tbl_GUID;
 
     private final DecimalFormat df;
@@ -278,7 +278,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_main, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
                 }
 
             });
@@ -805,7 +805,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                     })
             );
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
 

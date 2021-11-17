@@ -23,9 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
@@ -58,7 +56,7 @@ import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Invoice;
 
-import ir.kitgroup.salein.DataBase.InvoiceDetail;
+
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 
@@ -79,7 +77,7 @@ public class OrderListFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
-    private NavController navController;
+
 
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -114,11 +112,11 @@ public class OrderListFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController =Navigation.findNavController(binding.getRoot());
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-        ((LauncherActivity) getActivity()).setClearCounterOrder();
+
+
+
 
         String accGUID = Select.from(Account.class).list().get(0).I;
         if (!Util.RetrofitValue) {
@@ -161,9 +159,7 @@ public class OrderListFragment extends Fragment {
 
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
-        btnNoDialog.setOnClickListener(v -> {
-            dialogSync.dismiss();
-        });
+        btnNoDialog.setOnClickListener(v -> dialogSync.dismiss());
 
 
         btnOkDialog.setOnClickListener(v -> {
@@ -185,11 +181,18 @@ public class OrderListFragment extends Fragment {
         orderListAdapter.setOnClickItemListener((type, Inv_GUID) -> {
 
 
+            Bundle bundleOrder = new Bundle();
+            bundleOrder.putString("Inv_GUID", Inv_GUID);
+            bundleOrder.putString("Tbl_GUID", "");
+            bundleOrder.putString("Tbl_NAME", "");
+            bundleOrder.putString("Ord_TYPE", "");
+            bundleOrder.putString("Acc_GUID", "");
+            bundleOrder.putString("Acc_NAME", "");
+            bundleOrder.putString("type", "1");
 
-            NavDirections action = OrderListFragmentDirections.actionGoToInvoiceDetailFragment()
-                    .setType("1")
-                    .setInvGUID(Inv_GUID);
-            navController.navigate(action);
+            InVoiceDetailFragment inVoiceDetailFragment=new InVoiceDetailFragment();
+            inVoiceDetailFragment.setArguments(bundleOrder);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
 
 
 
@@ -202,7 +205,7 @@ public class OrderListFragment extends Fragment {
 
     private void getAllInvoice1(String AccGuid, String date) {
         if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection("خطا در اتصال به اینترنت");
+            ShowErrorConnection();
             return;
         }
 
@@ -281,9 +284,9 @@ public class OrderListFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private void ShowErrorConnection(String error) {
+    private void ShowErrorConnection() {
         binding.progressBar.setVisibility(View.GONE);
-        textMessageDialog.setText(error);
+        textMessageDialog.setText("خطا در اتصال به اینترنت");
         ivIconSync.setImageResource(R.drawable.ic_wifi);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");

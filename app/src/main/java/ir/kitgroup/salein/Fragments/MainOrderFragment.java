@@ -41,9 +41,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
+
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,7 +79,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-import ir.kitgroup.salein.Activities.LauncherActivity;
+
 import ir.kitgroup.salein.Adapters.AccountAdapter;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 
@@ -145,7 +145,6 @@ public class MainOrderFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-    private View viewRoot;
     private FragmentMobileOrderMainBinding binding;
 
     private CustomProgress customProgress;
@@ -159,9 +158,6 @@ public class MainOrderFragment extends Fragment {
     private Boolean Seen = false;
     private Boolean EDIT = false;
     boolean setARD1 = false;
-
-
-    private int counter;
 
 
     private ArrayList<ProductLevel1> productLevel1List;
@@ -245,13 +241,12 @@ public class MainOrderFragment extends Fragment {
     private String maxSales = "0";
     private boolean chooseAccount = false;
 
-    private NavController navController;
-
 
     private String Transport_GUID = "";
 
+    private int counter1 = 0;
 
-    private List<InvoiceDetail> invoiceDetails;
+    //  private List<InvoiceDetail> invoiceDetails;
 
 
     //endregion Parameter
@@ -264,27 +259,28 @@ public class MainOrderFragment extends Fragment {
 
 
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
-        viewRoot = binding.getRoot();
-        return viewRoot;
+
+        return binding.getRoot();
 
 
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
-        navController = Navigation.findNavController(viewRoot);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
 
 
-        if (!Util.RetrofitValue) {
+        if (Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
@@ -292,7 +288,9 @@ public class MainOrderFragment extends Fragment {
 
 
         //region First Value Parameter
-        counter = 0;
+
+        counter1 = 0;
+
         descriptionList = new ArrayList<>();
         accountsList = new ArrayList<>();
         productLevel1List = new ArrayList<>();
@@ -313,18 +311,23 @@ public class MainOrderFragment extends Fragment {
 
         //region Get Bundle
 
+        Bundle bundle = getArguments();
+        Ord_TYPE = bundle.getString("Ord_TYPE");
+        Tbl_GUID = bundle.getString("Tbl_GUID");
+        Tbl_NAME = bundle.getString("Tbl_NAME");
+        Inv_GUID = bundle.getString("Inv_GUID");
 
-        Ord_TYPE = MainOrderFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
-        Tbl_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getTblGUID();
-        Tbl_NAME = MainOrderFragmentArgs.fromBundle(getArguments()).getTblNAME();
-        Inv_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getInvGUID();
+        Acc_NAME = bundle.getString("Acc_NAME");
+        Acc_GUID = bundle.getString("Acc_GUID");
+        EDIT = bundle.getBoolean("EDIT");//when order need EDIT
+        Seen = bundle.getBoolean("Seen");
+        // invoiceDetails = (List<InvoiceDetail>) bundle.getSerializable("key");
 
-        Acc_NAME = MainOrderFragmentArgs.fromBundle(getArguments()).getAccNAME();
-        Acc_GUID = MainOrderFragmentArgs.fromBundle(getArguments()).getAccGUID();
-        EDIT = MainOrderFragmentArgs.fromBundle(getArguments()).getEDIT();//when order need EDIT
-        Seen = MainOrderFragmentArgs.fromBundle(getArguments()).getSEEN();
+
+        setARD1 = bundle.getBoolean("setADR");
+
         if (!setARD1)
-            setARD1 = MainOrderFragmentArgs.fromBundle(getArguments()).getSetADR1();
+            setARD1 = bundle.getBoolean("setADR1");
 
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
@@ -351,39 +354,146 @@ public class MainOrderFragment extends Fragment {
 
 
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+
         if (invDetailses.size() > 0) {
 
             CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-            counter = invDetailses.size();
+            counter1 = invDetailses.size();
 
 
         }
 
-        if (counter == 0)
-            ((LauncherActivity) getActivity()).setClearCounterOrder();
+        if (counter1 == 0)
+            binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
         else
-            ((LauncherActivity) getActivity()).setCounterOrder(counter);
+            binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
 
 
-        if (EDIT) {
-            ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
-            invoiceDetails = new ArrayList<>(Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list());
-        }else {
-            ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
-        }
 
 
-        ((LauncherActivity) getActivity()).setMainOrder(this);
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+
+        binding.navView.getMenu().getItem(0).setVisible(!EDIT);
+
+
+        binding.navView.getMenu().getItem(3).setEnabled(false);
+
+        binding.navView.setSelectedItemId(R.id.homee);
+
+        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+
+        binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
+
+
+        binding.navView.setOnNavigationItemSelectedListener(item -> {
+
+            int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+
+            if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
+                size = size - 1;
+
+
+            switch (item.getItemId()) {
+
+                case R.id.homee:
+
+
+                    if (counter1 == 0)
+                        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+                    else
+                        binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
+                    binding.navView.getMenu().getItem(3).setEnabled(false);
+                    binding.navView.setVisibility(View.VISIBLE);
+                    if (size > 0)
+                        getActivity().getSupportFragmentManager().popBackStack();
+
+
+                    return true;
+
+                case R.id.search:
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
+
+                    if (!EDIT && size > 0)
+                        getActivity().getSupportFragmentManager().popBackStack();
+
+
+                    Bundle bundleSearch = new Bundle();
+                    bundleSearch.putString("Inv_GUID",Inv_GUID);
+                    bundleSearch.putString("Tbl_GUID", Tbl_GUID);
+                    bundleSearch.putBoolean("Seen", Seen);
+                    SearchProductFragment searchProductFragment = new SearchProductFragment();
+                    searchProductFragment.setArguments(bundleSearch);
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
+
+
+                    return true;
+
+
+                case R.id.orders:
+
+
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
+
+                    if (!EDIT && size > 0)
+                       getActivity(). getSupportFragmentManager().popBackStack();
+
+
+                    Bundle bundleOrder = new Bundle();
+                    bundleOrder.putString("Inv_GUID", Inv_GUID);
+                    bundleOrder.putString("Tbl_GUID", Tbl_GUID);
+                    bundleOrder.putString("Tbl_NAME", Tbl_NAME);
+                    bundleOrder.putString("Ord_TYPE", Ord_TYPE);
+                    bundleOrder.putString("Acc_GUID", Acc_GUID);
+                    bundleOrder.putString("Acc_NAME", Acc_NAME);
+                    bundleOrder.putString("type", "2");
+                    bundleOrder.putBoolean("EDIT", EDIT);
+                    bundleOrder.putBoolean("Seen", Seen);
+                    bundleOrder.putBoolean("setADR1",setARD1);
+                    InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
+                    inVoiceDetailFragment.setArguments(bundleOrder);
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
+
+
+                    return true;
+
+
+                case R.id.profile:
+
+
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
+
+                    if (size > 0)
+                        getActivity().getSupportFragmentManager().popBackStack();
+
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SettingFragment(), "SettingFragment").addToBackStack("SettingF").commit();
+
+
+                    return true;
+
+
+            }
+
+
+            return false;
+        });
+
+
         //endregion Create Order
 
 
-        if (company.mode == 2)
-            binding.btnFilter.setVisibility(View.GONE);
-
         //endregion Get Bundle
+
+
+
+        if (EDIT)
+            binding.navView.getMenu().getItem(0).setVisible(!EDIT);
+
+
 
 
         //region Delete InvoiceDetail UnNecessary
@@ -512,9 +622,15 @@ public class MainOrderFragment extends Fragment {
             }
             dialogAddress.dismiss();
 
-            NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment().
-                    setEditAddress("3");
-            navController.navigate(action);
+
+            Bundle bundleMap = new Bundle();
+            bundleMap.putString("mobileNumber", "");
+            bundleMap.putString("edit_address", "3");
+            bundleMap.putString("type", "");
+            MapFragment mapFragment = new MapFragment();
+            mapFragment.setArguments(bundleMap);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
+
 
         });
 
@@ -555,10 +671,13 @@ public class MainOrderFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR2 != null && !acc.ADR2.equals(""))
                 dialogAddress.show();
             else {
-                NavDirections action = MainOrderFragmentDirections.actionGoToMapFragment()
-                        .setEditAddress("3")
-                        .setType(String.valueOf(typeAddress));
-                navController.navigate(action);
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber", "");
+                bundleMap.putString("edit_address", "3");
+                bundleMap.putString("type", "");
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
 
 
             }
@@ -850,17 +969,21 @@ public class MainOrderFragment extends Fragment {
             } else {
 
 
-                NavDirections action = MainOrderFragmentDirections.actionGoToInvoiceDetailFragment()
-                        .setInvGUID(Inv_GUID)
-                        .setType("2")
-                        .setSEEN(Seen)
-                        .setTblGUID(Tbl_GUID)
-                        .setTblNAME(Tbl_NAME)
-                        .setOrdTYPE(Ord_TYPE)
-                        .setAccGUID(Acc_GUID)
-                        .setAccNAME(Acc_NAME)
-                        .setEDIT(EDIT);
-                navController.navigate(action);
+                Bundle bundleOrder = new Bundle();
+                bundleOrder.putString("Inv_GUID", Inv_GUID);
+                bundleOrder.putString("Tbl_GUID", Tbl_GUID);
+                bundleOrder.putString("Tbl_NAME", Tbl_NAME);
+                bundleOrder.putString("Ord_TYPE", Ord_TYPE);
+                bundleOrder.putString("Acc_GUID", Acc_GUID);
+                bundleOrder.putString("Acc_NAME", Acc_NAME);
+                bundleOrder.putString("type", "2");
+                bundleOrder.putBoolean("EDIT", EDIT);
+                bundleOrder.putBoolean("Seen", Seen);
+                bundleOrder.putBoolean("setADR1", setARD1);
+                InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
+                inVoiceDetailFragment.setArguments(bundleOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
+
             }
 
         });
@@ -1057,17 +1180,16 @@ public class MainOrderFragment extends Fragment {
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-            Fragment tagMainFragment = getActivity().getSupportFragmentManager().findFragmentByTag("MainFragment");
-
 
             if (invDetails.size() > 0) {
                 int counter = invDetails.size();
-                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+                counter1 = counter;
+                binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
 
                 if (company.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else {
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
+                binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
             }
 
 
@@ -1095,17 +1217,6 @@ public class MainOrderFragment extends Fragment {
         //endregion CONFIGURATION DATA PRODUCT
 
 
-        binding.ivSearch.setOnClickListener(v -> {
-            NavDirections action = MainOrderFragmentDirections.actionGoToSearchProductFragment()
-                    .setInvGUID(Inv_GUID)
-                    .setTblGUID(Tbl_GUID)
-                    .setSEEN(Seen);
-            navController.navigate(action);
-
-
-        });
-
-
     }
 
     @Override
@@ -1130,8 +1241,7 @@ public class MainOrderFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                                        if (EDIT && Select.from(InvoiceDetail.class).list().size() == 0)
-                                            InvoiceDetail.saveInTx(invoiceDetails);
+
                                         Gson gson = new Gson();
                                         Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
                                         }.getType();
@@ -1769,53 +1879,28 @@ public class MainOrderFragment extends Fragment {
 
 
 
-    public Bundle reloadFragment(Boolean setAddress) {
-        Bundle bundle = getArguments();
-        bundle.putString("Inv_GUID", Inv_GUID);
-        bundle.putString("Tbl_GUID", Tbl_GUID);
-        bundle.putBoolean("Seen", Seen);
-        bundle.putString("Tbl_NAME", Tbl_NAME);
-        bundle.putString("Ord_TYPE", Ord_TYPE);
-        bundle.putString("Acc_NAME", Acc_NAME);
-        bundle.putString("Acc_GUID", Acc_GUID);
-        bundle.putBoolean("EDIT", EDIT);
-        bundle.putBoolean("Seen", Seen);
-        bundle.putBoolean("setARD1", setAddress);
-        return bundle;
+
+    public void refreshProductList() {
+        productAdapter.notifyDataSetChanged();
     }
 
 
-    public ArrayList<String> getValueOfParameter() {
-        ArrayList<String> list = new ArrayList<>();
-
-        list.add(Inv_GUID);
-        list.add(Tbl_GUID);
-        list.add(Tbl_NAME);
-        list.add(Ord_TYPE);
-        list.add(Acc_GUID);
-        list.add(Acc_NAME);
-        if (EDIT) {
-            list.add("1");
-            list.add("1");
-
-        } else {
-            list.add("2");
-            list.add("0");
-        }
-
-        if (Seen)
-            list.add("1");
-        else
-            list.add("0");
+//    public void setCounterOrder(int count) {
+//
+//        binding.navView.getOrCreateBadge(R.id.orders).setNumber(count);
+//
+//    }
+//
+//    public void setClearCounterOrder() {
+//        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+//    }
 
 
-        if (setARD1)
-            list.add("1");
-        else
-            list.add("0");
 
-
-        return list;
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding=null;
     }
 
 

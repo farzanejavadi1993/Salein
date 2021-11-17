@@ -29,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
@@ -58,6 +59,10 @@ public class ShowDetailFragment  extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+
+
 
 
         if (!Util.RetrofitValue) {

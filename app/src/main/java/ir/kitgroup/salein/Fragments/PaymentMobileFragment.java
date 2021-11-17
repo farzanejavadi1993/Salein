@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -31,11 +32,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+
 import androidx.fragment.app.FragmentManager;
+
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,6 +80,7 @@ import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.ModelDate;
 import ir.kitgroup.salein.models.ModelTable;
 import ir.kitgroup.salein.models.Setting;
@@ -119,14 +120,17 @@ public class PaymentMobileFragment extends Fragment {
     Company company;
 
     @Inject
+    Config config;
+
+    @Inject
     API api;
 
-    private NavController navController;
+
     //region Parameter
     private FragmentPaymentMobileBinding binding;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private Boolean Seen = false;
+    private final Boolean Seen = false;
 
 
     //region Dialog Sync
@@ -154,7 +158,7 @@ public class PaymentMobileFragment extends Fragment {
     private Double latitude2 = 0.0;
     private Double longitude2 = 0.0;
 
-    public Boolean setADR1 = false;
+    private Boolean setADR1 = false;
 
 
     private double calculateTransport = 0.0;
@@ -237,38 +241,17 @@ public class PaymentMobileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
+
+        try {
 
 
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            if (binding == null)
+                binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
 
+
+        } catch (Exception ignored) {
+            Toast.makeText(getActivity(), "payment", Toast.LENGTH_SHORT).show();
         }
-
-
-        ((LauncherActivity) getActivity()).setPayment(this);
-
-
-        customProgress = CustomProgress.getInstance();
-
-        switch (company.namePackage) {
-            case "ir.kitgroup.saleintop":
-                binding.btnPaymentPlace.setVisibility(View.GONE);
-                break;
-
-
-            case "ir.kitgroup.saleinmeat":
-                binding.layoutPaymentOnline.setVisibility(View.GONE);
-                typePayment = "";
-                binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
-
-                break;
-
-        }
-
 
         return binding.getRoot();
     }
@@ -280,16 +263,33 @@ public class PaymentMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         try {
 
+            customProgress = CustomProgress.getInstance();
 
-            navController = Navigation.findNavController(binding.getRoot());
-            if (!Util.RetrofitValue) {
+            if (Util.RetrofitValue) {
                 ConfigRetrofit configRetrofit = new ConfigRetrofit();
                 String name = sharedPreferences.getString("CN", "");
+                company = null;
+                api = null;
                 company = configRetrofit.getCompany(name);
                 api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+            }
+
+
+            switch (company.namePackage) {
+                case "ir.kitgroup.saleintop":
+                    binding.btnPaymentPlace.setVisibility(View.GONE);
+                    break;
+
+
+                case "ir.kitgroup.saleinmeat":
+                    binding.layoutPaymentOnline.setVisibility(View.GONE);
+                    typePayment = "";
+                    binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
+
+                    break;
 
             }
 
@@ -319,17 +319,23 @@ public class PaymentMobileFragment extends Fragment {
 
             //region get Bundle
 
+            Bundle bundle = getArguments();
 
-            Inv_GUID=PaymentMobileFragmentArgs.fromBundle(getArguments()).getInvGUID();
-            Tbl_GUID=PaymentMobileFragmentArgs.fromBundle(getArguments()).getTblGUID();
-            Tbl_NAME=PaymentMobileFragmentArgs.fromBundle(getArguments()).getTblNAME();
-            Sum_PURE_PRICE=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSumPRICE();
-            edit=PaymentMobileFragmentArgs.fromBundle(getArguments()).getEDIT();
+            Inv_GUID = bundle.getString("Inv_GUID");
+            Tbl_GUID = bundle.getString("Tbl_GUID");
+            Tbl_NAME = bundle.getString("Tbl_NAME");
+            Sum_PURE_PRICE = bundle.getString("Sum_PRICE");
+            edit = bundle.getBoolean("EDIT");
+
+
+            setADR1 = bundle.getBoolean("setADR");
+
+
             if (!setADR1)
-            setADR1=PaymentMobileFragmentArgs.fromBundle(getArguments()).getSetADR1();
-            String ord_type=PaymentMobileFragmentArgs.fromBundle(getArguments()).getOrdTYPE();
+                setADR1 = bundle.getBoolean("setADR1");
 
 
+            String ord_type = bundle.getString("Ord_TYPE");
 
 
             if (ord_type != null && !ord_type.equals(""))
@@ -342,17 +348,12 @@ public class PaymentMobileFragment extends Fragment {
                 new_Tbl_GUID = Tbl_GUID;
 
 
-
-
-
             if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
                 new_Inv_GUID = Inv_GUID;
 
 
-
             else if (company.mode == 1 && !Tbl_GUID.equals(""))
                 new_Inv_GUID = UUID.randomUUID().toString();
-
 
 
             //endregion get Bundle
@@ -523,10 +524,14 @@ public class PaymentMobileFragment extends Fragment {
                 dialogAddress.dismiss();
 
 
-                NavDirections action = PaymentMobileFragmentDirections.actionGoToMapFragment()
-                        .setEditAddress("1")
-                        .setType(String.valueOf(typeAddress));
-                navController.navigate(action);
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber", "");
+                bundleMap.putString("edit_address", "1");
+                bundleMap.putString("type", String.valueOf(typeAddress));
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+
 
             });
 
@@ -638,10 +643,13 @@ public class PaymentMobileFragment extends Fragment {
                     return;
                 }
 
-                NavDirections action = PaymentMobileFragmentDirections.actionGoToMapFragment()
-                        .setEditAddress("1")
-                        .setType(String.valueOf(typeAddress));
-                navController.navigate(action);
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber", "");
+                bundleMap.putString("edit_address", "1");
+                bundleMap.putString("type", String.valueOf(typeAddress));
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
             });
 
             //endregion SetAddress
@@ -1109,29 +1117,33 @@ public class PaymentMobileFragment extends Fragment {
                 dialogSendOrder.dismiss();
                 if (company.mode == 2) {
 
-                    int size;
+                    int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
 
-                    if (edit)
-                        size=5;
+                    if (config.packageName.equals("ir.kitgroup.salein"))
+                        size = size - 2;
 
+
+                    for (int i = 0; i < size; i++) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                    //((LauncherActivity) getActivity()).setFistItem();
+
+                    Bundle bundleMainOrder = new Bundle();
+                    bundleMainOrder.putString("Inv_GUID", "");
+                    bundleMainOrder.putString("Tbl_GUID", "");
+                    bundleMainOrder.putString("Ord_TYPE", "");
+                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                    mainOrderFragment.setArguments(bundleMainOrder);
+                    FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+
+
+                    if (config.packageName.equals("ir.kitgroup.salein"))
+                        addFragment.addToBackStack("MainOrderFragment").commit();
                     else
-                        size=2;
+                        addFragment.commit();
 
 
-                   for (int i=0;i<size;i++){
-                       navController.popBackStack();
-                   }
-
-                    ((LauncherActivity) getActivity()).setFistItem();
-//                    NavDirections action = PaymentMobileFragmentDirections.actionGoToMainOrderFragment();
-//                    navController.navigate(action);
-
-                   //MainFragment
-
-                }
-
-
-                else {
+                } else {
 
                     if (Tbl_GUID.equals("")) {
 
@@ -1159,7 +1171,7 @@ public class PaymentMobileFragment extends Fragment {
                         getFragmentManager().popBackStack();
                     }
                     LauncherOrganizationFragment launcherFragment = new LauncherOrganizationFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_main, launcherFragment, "LauncherFragment").addToBackStack("LauncherF").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").addToBackStack("LauncherF").commit();
 
                 }
 
@@ -1173,22 +1185,23 @@ public class PaymentMobileFragment extends Fragment {
             binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
-            getSetting1();
+           // getSetting1();
 
 
         } catch (Exception ignore) {
+            Toast.makeText(getActivity(), "payment", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private static class JsonObject {
+    private class JsonObject {
         public List<Invoice> Invoice;
         public List<InvoiceDetail> InvoiceDetail;
         public List<PaymentRecieptDetail> PaymentRecieptDetail;
     }
 
 
-    void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+    private void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
 
         if (!isNetworkAvailable(getActivity())) {
             ShowErrorConnection();
@@ -1304,15 +1317,6 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
-    @Override
-    public void onDestroy() {
-
-
-        setADR1 = false;
-
-        super.onDestroy();
-
-    }
 
 
     private long getDistanceMeters(LatLng StartP, LatLng EndP) {
@@ -1417,12 +1421,22 @@ public class PaymentMobileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         OnceSee = false;
 
-        //reloadFrgament
+        reloadFragment(setADR1);
+        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
+        FragmentManager ft = getActivity().getSupportFragmentManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            ft.beginTransaction().detach(frg).commitNow();
+            ft.beginTransaction().attach(frg).commitNow();
+
+        } else {
+            ft.beginTransaction().detach(frg).attach(frg).commit();
+        }
 
     }
 
 
-    public Bundle reloadFragment(Boolean setAddress) {
+    private Bundle reloadFragment(Boolean setAddress) {
         Bundle bundle = getArguments();
         bundle.putString("Inv_GUID", Inv_GUID);
         bundle.putString("Tbl_GUID", Tbl_GUID);
@@ -1713,13 +1727,13 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-                                            if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
-                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+//                                         if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+//                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
+//                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+//                                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                            if (acc != null)
-                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                            //if (acc != null)
+                                            // getInquiryAccount1(company.userName, company.passWord, acc.M);
                                         }
 
 
@@ -1811,4 +1825,13 @@ public class PaymentMobileFragment extends Fragment {
     }
 
 
+    @Override
+    public void onDestroyView() {
+        //setADR1 = false;
+        super.onDestroyView();
+
+        binding = null;
+
+
+    }
 }

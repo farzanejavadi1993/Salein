@@ -12,7 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -36,9 +36,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+import androidx.fragment.app.FragmentManager;
+
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -108,6 +107,9 @@ import static android.os.Looper.getMainLooper;
 
 public class MapFragment extends Fragment implements PermissionsListener {
 
+
+    //region Parameter
+
     @Inject
     API api;
     @Inject
@@ -116,10 +118,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     SharedPreferences sharedPreferences;
 
 
-    private NavController navController;
-
-
-    //region Parameter
     private FragmentMapBinding binding;
     private CustomProgress customProgress;
 
@@ -179,18 +177,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
-        navController = Navigation.findNavController(binding.getRoot());
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
-
         }
+
 
         //region Configuration Text Size
         int fontSize;
@@ -207,9 +203,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         //region Get Bundle
-        String mobileNumber = MapFragmentArgs.fromBundle(getArguments()).getMobileNumber();
-        String type = MapFragmentArgs.fromBundle(getArguments()).getType();
-        String edit_address = MapFragmentArgs.fromBundle(getArguments()).getEditAddress();
+        Bundle bundle = getArguments();
+        String mobileNumber = bundle.getString("mobileNumber");
+        String type = bundle.getString("type");
+        String edit_address = bundle.getString("edit_address");
         //endregion Get Bundle
 
 
@@ -340,7 +337,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.N = accountORG.N;
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
-                account.ADR2= accountORG.ADR2;
+                account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
 
                 if (account.ADR == null) {
@@ -384,7 +381,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
                     linearButtons.setVisibility(View.VISIBLE);
-                }else
+                } else
                     linearButtons.setVisibility(View.GONE);
 
                 dialogEditAddress.show();
@@ -394,12 +391,18 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             //region Region Gps Information And Go To RegisterFragment
 
-            NavDirections action = MapFragmentDirections.actionGoToRegisterFragment()
-                    .setAddress2(ADDRESS)
-                    .setLat(String.valueOf(latitude))
-                    .setLng(String.valueOf(longitude))
-                    .setMobileNumber(mobileNumber);
-            navController.navigate(action);
+
+            Bundle bundleRegister = new Bundle();
+            bundleRegister.putString("address2", ADDRESS);
+            bundleRegister.putDouble("lat", latitude);
+            bundleRegister.putDouble("lng", longitude);
+            bundleRegister.putString("mobileNumber", mobileNumber);
+
+            RegisterFragment registerFragment = new RegisterFragment();
+            registerFragment.setArguments(bundleRegister);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, registerFragment, "RegisterFragment").addToBackStack("RegisterF").commit();
+
+
             //endregion Region Gps Information And Go To RegisterFragment
         });
         //endregion Action btnRegisterInformation
@@ -993,20 +996,50 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             Account.saveInTx(accounts);
 
 
-                              if (flag == 1) {
-                                  ((LauncherActivity) getActivity()).getPaymentFragment().setADR1=setADR1;
+                            getActivity().getSupportFragmentManager().popBackStack();
+                            Fragment frg;
+                            if (flag == 1) {
+
+                                Bundle bundlePayment=new Bundle();
+                                bundlePayment.putBoolean("setADR",setADR1);
+
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
+
+                                frg.setArguments(bundlePayment);
+
+                            } else if (flag == 2) {
+
+                                Bundle bundleProfile = new Bundle();
+                                bundleProfile.putString("address", ADDRESS);
+                                bundleProfile.putString("type", locationAddress);
+
+
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
+
+                                frg.setArguments(bundleProfile);
+                            } else {
+
+                           Bundle bundle=new Bundle();
+                           bundle.putBoolean("setADR",setADR1);
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+
+                                frg.setArguments(bundle);
+
                             }
-                            else if (flag == 2) {
+                            FragmentManager ft = getActivity().getSupportFragmentManager();
+                            if (frg != null) {
+                                getFragmentManager().popBackStack();
 
-                                  ((LauncherActivity) getActivity()).getProfileFragment().address= ADDRESS;
-                                  ((LauncherActivity) getActivity()).getProfileFragment().type= locationAddress;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                    ft.beginTransaction().detach(frg).commitNow();
+                                    ft.beginTransaction().attach(frg).commitNow();
+
+                                } else {
+
+                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                                }
                             }
-                              else  {
-
-                                  ((LauncherActivity) getActivity()).getMainOrderFragment().setARD1=setADR1;
-                              }
-
-                            navController.popBackStack();
 
                         }
 

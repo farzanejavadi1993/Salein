@@ -13,16 +13,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
+
 import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -71,7 +69,6 @@ public class SettingFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-    private NavController navController;
 
     //region Parameter
     private boolean Seen = true;
@@ -110,11 +107,11 @@ public class SettingFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(binding.getRoot());
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-        ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
+
+
+
 
 
 
@@ -182,12 +179,18 @@ public class SettingFragment extends Fragment {
                 Tables.deleteAll(Tables.class);
 
 
-            sharedPreferences.edit().putBoolean("firstSync", false).apply();
-            sharedPreferences.edit().putBoolean("firstSyncSetting", false).apply();
 
 
-          navController.popBackStack();
-          navController.popBackStack();
+
+            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+            for (int i=0;i<size;i++){
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment").commit();
+
+
+
           //reload loginFragment
 
 
@@ -197,24 +200,18 @@ public class SettingFragment extends Fragment {
 
         try {
             binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
 
         binding.lProfile.setOnClickListener(v ->
-                {
-                    NavDirections action = SettingFragmentDirections.actionGoToProfileFragment();
-                    navController.navigate(action);
-                }
+                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit()
         );
 
         binding.btnSupport.setOnClickListener(v ->
 
 
-                {
-                    NavDirections action = SettingFragmentDirections.actionGoToAboutFragment();
-                    navController.navigate(action);
-                }
+                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
 
 
 
@@ -223,10 +220,7 @@ public class SettingFragment extends Fragment {
         binding.btnOrderList.setOnClickListener(v ->
 
 
-                {
-                    NavDirections action = SettingFragmentDirections.actionGoToOrderListFragment();
-                    navController.navigate(action);
-                }
+                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit()
 
 
         );
@@ -304,7 +298,7 @@ public class SettingFragment extends Fragment {
                                                 binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
 
                                             }
-                                        } catch (Exception e) {
+                                        } catch (Exception ignored) {
 
                                         }
 
@@ -320,7 +314,7 @@ public class SettingFragment extends Fragment {
 
                             })
             );
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
 
         }

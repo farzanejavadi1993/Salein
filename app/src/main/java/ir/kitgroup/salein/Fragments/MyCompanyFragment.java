@@ -80,7 +80,7 @@ public class MyCompanyFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private NavController navController;
+
 
 
     private Company companySelect;
@@ -108,7 +108,7 @@ public class MyCompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        navController = Navigation.findNavController(binding.getRoot());
+
 
         configRetrofit = new ConfigRetrofit();
 
@@ -135,8 +135,14 @@ public class MyCompanyFragment extends Fragment {
                     Util.RetrofitValue = false;
                     String nameSave = sharedPreferences.getString(company.nameCompany, "");
                     if (!nameSave.equals("")) {
-                        NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                        navController.navigate(action);
+                        Bundle bundleMainOrder= new Bundle();
+                        bundleMainOrder.putString("Inv_GUID", "");
+                        bundleMainOrder.putString("Tbl_GUID", "");
+                        bundleMainOrder.putString("Ord_TYPE", "");
+
+                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                        mainOrderFragment.setArguments(bundleMainOrder);
+                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
                         api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
                         getInquiryAccount1(company.nameCompany, company.userName, company.passWord, account.M);
@@ -219,8 +225,14 @@ public class MyCompanyFragment extends Fragment {
                                         if (iDs.getAccountList().size() > 0) {
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
-                                            NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                                            navController.navigate(action);
+                                            Bundle bundleMainOrder= new Bundle();
+                                            bundleMainOrder.putString("Inv_GUID", "");
+                                            bundleMainOrder.putString("Tbl_GUID", "");
+                                            bundleMainOrder.putString("Ord_TYPE", "");
+
+                                            MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                            mainOrderFragment.setArguments(bundleMainOrder);
+                                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
                                         }
 
@@ -292,8 +304,14 @@ public class MyCompanyFragment extends Fragment {
                                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                 if (message == 1) {
 
-                                    NavDirections action = StoriesFragmentDirections.actionGoToMainOrderFragment();
-                                    navController.navigate(action);
+                                    Bundle bundleMainOrder= new Bundle();
+                                    bundleMainOrder.putString("Inv_GUID", "");
+                                    bundleMainOrder.putString("Tbl_GUID", "");
+                                    bundleMainOrder.putString("Ord_TYPE", "");
+
+                                    MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                    mainOrderFragment.setArguments(bundleMainOrder);
+                                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
                                 }
                                 binding.progressbar.setVisibility(View.GONE);
