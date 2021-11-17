@@ -61,7 +61,7 @@ public class RegisterFragment extends Fragment {
 
 
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable ;
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        compositeDisposable = new CompositeDisposable();
         //region Get Bundle And Set Data
 
         Bundle bundle=getArguments();

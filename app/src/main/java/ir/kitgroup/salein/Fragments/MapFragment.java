@@ -150,6 +150,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private CircleManager circleManager;
 
 
+    private String edit_address="";
+
     private enum State {
         MAP,
         MAP_PIN,
@@ -177,12 +179,14 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
-
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company = null;
+            api = null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
         }
@@ -206,7 +210,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         Bundle bundle = getArguments();
         String mobileNumber = bundle.getString("mobileNumber");
         String type = bundle.getString("type");
-        String edit_address = bundle.getString("edit_address");
+        edit_address = bundle.getString("edit_address");
         //endregion Get Bundle
 
 
@@ -383,6 +387,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     linearButtons.setVisibility(View.VISIBLE);
                 } else
                     linearButtons.setVisibility(View.GONE);
+
+
+
+
+                if (edit_address.equals("2"))
+                    linearButtons.setVisibility(View.GONE);
+
 
                 dialogEditAddress.show();
                 return;
@@ -870,6 +881,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding.mapView.onDestroy();
+        if (edit_address.equals("3"))
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
     }
 
     @Override
@@ -998,14 +1011,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                             getActivity().getSupportFragmentManager().popBackStack();
                             Fragment frg;
+
+
                             if (flag == 1) {
+                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentMobileFragment");
 
-                                Bundle bundlePayment=new Bundle();
-                                bundlePayment.putBoolean("setADR",setADR1);
-
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentFragment");
-
-                                frg.setArguments(bundlePayment);
+                                if (frg instanceof PaymentMobileFragment) {
+                                    PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
+                                    Bundle bundle = fgf.getBundle(setADR1);
+                                    frg.setArguments(bundle);
+                                }
 
                             } else if (flag == 2) {
 
@@ -1013,32 +1028,38 @@ public class MapFragment extends Fragment implements PermissionsListener {
                                 bundleProfile.putString("address", ADDRESS);
                                 bundleProfile.putString("type", locationAddress);
 
-
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
-
                                 frg.setArguments(bundleProfile);
                             } else {
 
-                           Bundle bundle=new Bundle();
-                           bundle.putBoolean("setADR",setADR1);
                                 frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
 
-                                frg.setArguments(bundle);
+                                if (frg instanceof MainOrderFragment) {
+                                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                                    Bundle bundle = fgf.getBundle(setADR1);
+                                    frg.setArguments(bundle);
+                                }
 
                             }
+
+
                             FragmentManager ft = getActivity().getSupportFragmentManager();
                             if (frg != null) {
-                                getFragmentManager().popBackStack();
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                                    ft.beginTransaction().detach(frg).commitNow();
-                                    ft.beginTransaction().attach(frg).commitNow();
+                                try {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                                } else {
+                                        ft.beginTransaction().detach(frg).commitNow();
+                                        ft.beginTransaction().attach(frg).commitNow();
 
-                                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                                    } else {
+                                        ft.beginTransaction().detach(frg).attach(frg).commit();
+                                    }
+                                } catch (Exception ignored) {
+
                                 }
+
                             }
 
                         }

@@ -43,6 +43,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Tables;
+import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.DataBase.User;
 
 import ir.kitgroup.salein.R;
@@ -77,7 +78,7 @@ public class SettingFragment extends Fragment {
     //endregion Parameter
 
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable;
 
     private int fontSize = 12;
 
@@ -91,10 +92,7 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-        if (Util.screenSize >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
+
 
 
         return binding.getRoot();
@@ -110,18 +108,25 @@ public class SettingFragment extends Fragment {
 
 
 
-
-
-
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+        ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
+        compositeDisposable = new CompositeDisposable();
 
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
         }
+
+        if (Util.screenSize >= 7)
+            fontSize = 14;
+        else
+            fontSize = 12;
 
 
         binding.tvProfile.setTextSize(fontSize);
@@ -178,9 +183,12 @@ public class SettingFragment extends Fragment {
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
+            if (Unit.count(Unit.class) > 0)
+                Unit.deleteAll(Unit.class);
 
 
 
+            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
             for (int i=0;i<size;i++){
@@ -337,11 +345,22 @@ public class SettingFragment extends Fragment {
 
     }
 
-    @Override
-    public void onDestroy() {
-        Seen = false;
 
-        super.onDestroy();
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Seen = false;
+        compositeDisposable.dispose();
+        binding = null;
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
     }
 
 

@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
-import com.squareup.leakcanary.LeakCanary;
+
 
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -75,9 +75,10 @@ public class LauncherActivity extends AppCompatActivity {
     private ActivityLauncherBinding binding;
 
 
+    private MainOrderFragment mainOrderFragment;
 
 
-
+    private boolean loadProfile = true;
 
     //region Parameter Dialog
     private Dialog ExitDialog;
@@ -95,80 +96,228 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
+        //region Set Layout to LauncherActivity class
+        binding = ActivityLauncherBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        //endregion Set Layout to LauncherActivity class
 
 
-
-            //region Set Layout to LauncherActivity class
-            binding = ActivityLauncherBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
-            //endregion Set Layout to LauncherActivity class
+        Util.ScreenSize(this);
 
 
-            Util.ScreenSize(this);
+        binding.navView.getMenu().getItem(3).setEnabled(false);
+
+        binding.navView.setSelectedItemId(R.id.homee);
+
+        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+
+        binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
 
 
+        binding.navView.setOnNavigationItemSelectedListener(item -> {
+
+            int size = getSupportFragmentManager().getBackStackEntryCount();
+
+            if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
+                size = size - 1;
 
 
+            Bundle bundle = mainOrderFragment.getBundle(false);
 
-            if (config.mode == 1) {
-                //When User Is Login
-                FragmentTransaction replaceFragment;
-                if (Select.from(User.class).list().size() > 0) {
-                    replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment");
-                }
 
-                //When User Is Not Login
-                else {
-                    replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LoginOrganizationFragment());
-                }
+            switch (item.getItemId()) {
 
-                replaceFragment.commit();
+                case R.id.homee:
 
-            } else {
-                getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment").commit();
+                    loadProfile = true;
+                    if (mainOrderFragment.counter1 == 0)
+                        setClearCounterOrder();
+                    else
+                        setCounterOrder(mainOrderFragment.counter1);
+                    binding.navView.getMenu().getItem(3).setEnabled(false);
+                    binding.navView.setVisibility(View.VISIBLE);
+                    if (size > 0)
+                        getSupportFragmentManager().popBackStack();
+
+
+                    return true;
+
+                case R.id.search:
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+                    loadProfile = true;
+
+                    if (!bundle.getBoolean("EDIT") && size > 0)
+                        getSupportFragmentManager().popBackStack();
+
+
+                    Bundle bundleSearch = new Bundle();
+                    bundleSearch.putString("Inv_GUID", bundle.getString("Inv_GUID"));
+                    bundleSearch.putString("Tbl_GUID", bundle.getString("Tbl_GUID"));
+                    bundleSearch.putBoolean("Seen", bundle.getBoolean("Seen"));
+                    SearchProductFragment searchProductFragment = new SearchProductFragment();
+                    searchProductFragment.setArguments(bundleSearch);
+                    getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
+
+                    return true;
+
+
+                case R.id.orders:
+
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
+
+                    if (!bundle.getBoolean("EDIT") && size > 0)
+                        getSupportFragmentManager().popBackStack();
+
+                    Bundle bundleOrder = new Bundle();
+
+                    bundleOrder.putString("Inv_GUID", bundle.getString("Inv_GUID"));
+                    bundleOrder.putString("Tbl_GUID", bundle.getString("Tbl_GUID"));
+                    bundleOrder.putString("Tbl_NAME", bundle.getString("Tbl_NAME"));
+                    bundleOrder.putString("Ord_TYPE", bundle.getString("Ord_TYPE"));
+                    bundleOrder.putString("Acc_GUID", bundle.getString("Acc_GUID"));
+                    bundleOrder.putString("Acc_NAME", bundle.getString("Acc_NAME"));
+                    bundleOrder.putString("type", "2");
+                    bundleOrder.putBoolean("EDIT", bundle.getBoolean("EDIT"));
+                    bundleOrder.putBoolean("Seen", bundle.getBoolean("Seen"));
+                    bundleOrder.putBoolean("setADR1", bundle.getBoolean("setADR1"));
+                    if (!loadProfile) {
+                        String name = bundle.getString("NAME").split("ir.kitgroup.")[1];
+                        String Inv_GUID = sharedPreferences.getString(name, "");
+                        getSupportFragmentManager().popBackStack();
+                        bundleOrder.putBoolean("EDIT", false);
+                        bundleOrder.putString("Inv_GUID", Inv_GUID);
+                        bundleOrder.putBoolean("setADR1", false);
+                        bundleOrder.putBoolean("Seen", false);
+                    }
+
+
+                    InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
+                    inVoiceDetailFragment.setArguments(bundleOrder);
+                    getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
+                    loadProfile = true;
+
+                    return true;
+
+
+                case R.id.profile:
+
+
+                    binding.navView.getMenu().getItem(3).setEnabled(true);
+
+
+                    if (loadProfile) {
+                        if (size > 0)
+                            getSupportFragmentManager().popBackStack();
+
+                        getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SettingFragment(), "SettingFragment").addToBackStack("SettingF").commit();
+                    }
+
+
+                    return true;
+
+
             }
 
 
-            //region Cast ExitDialog
-            ExitDialog = new Dialog(this);
-            ExitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            ExitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            ExitDialog.setContentView(R.layout.custom_dialog);
-            ExitDialog.setCancelable(false);
-
-            messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
+            return false;
+        });
 
 
-            ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
-            imageIconExitDialog.setImageResource(config.imageLogo);
+        if (config.mode == 1) {
+            //When User Is Login
+            FragmentTransaction replaceFragment;
+            if (Select.from(User.class).list().size() > 0) {
+                replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment");
+            }
 
-            MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
-            MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);
+            //When User Is Not Login
+            else {
+                replaceFragment = getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LoginOrganizationFragment());
+            }
+
+            replaceFragment.commit();
+
+        } else {
+            getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment").commit();
+        }
 
 
-            //region action ExitDialog's buttons
-            btnNoExitDialog.setOnClickListener(v -> ExitDialog.dismiss());
-            btnYesExitDialog.setOnClickListener(v -> {
-                ExitDialog.dismiss();
+        //region Cast ExitDialog
+        ExitDialog = new Dialog(this);
+        ExitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ExitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ExitDialog.setContentView(R.layout.custom_dialog);
+        ExitDialog.setCancelable(false);
 
-                finish();
-
-            });
-            //endregion action ExitDialog's buttons
+        messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
 
-            //endregion Cast ExitDialog
+        ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
+        imageIconExitDialog.setImageResource(config.imageLogo);
+
+        MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
+        MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);
+
+
+        //region action ExitDialog's buttons
+        btnNoExitDialog.setOnClickListener(v -> ExitDialog.dismiss());
+        btnYesExitDialog.setOnClickListener(v -> {
+            ExitDialog.dismiss();
+
+            finish();
+
+        });
+        //endregion action ExitDialog's buttons
+
+
+        //endregion Cast ExitDialog
 
 
     }
 
 
+    public void setCounterOrder(int count) {
+
+        binding.navView.getOrCreateBadge(R.id.orders).setNumber(count);
+
+    }
+
+    public void setClearCounterOrder() {
+        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+    }
 
 
+    public void setInVisibiltyItem(boolean show) {
+        binding.navView.getMenu().getItem(0).setVisible(show);
 
-    /*public void setFistItem() {
+    }
+
+
+    public void setMainOrderFragment(MainOrderFragment home) {
+        this.mainOrderFragment = home;
+    }
+
+
+    public MainOrderFragment getMainOrderFragment() {
+        return mainOrderFragment;
+    }
+
+
+    public void getVisibilityBottomBar(Boolean show) {
+
+
+        if (show)
+            binding.navView.setVisibility(View.VISIBLE);
+        else
+            binding.navView.setVisibility(View.GONE);
+
+
+    }
+
+    public void setFistItem() {
         binding.navView.setSelectedItemId(R.id.homee);
-    }*/
+    }
 
 
     //region Override Method
@@ -177,11 +326,31 @@ public class LauncherActivity extends AppCompatActivity {
 
 
         final int size = getSupportFragmentManager().getBackStackEntryCount();
-         if (size == 0) {
+        if (size == 0) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
+        } else if (
+                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF") ||
+                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF") ||
+                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SearchProductF")
+        ) {
+            setFistItem();
+        } else if (
+                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("OrderListF") ||
+                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("ProfileF") ||
+                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("AboutAuF")
+
+
+        ) {
+
+            getSupportFragmentManager().popBackStack();
+            getVisibilityBottomBar(true);
+            setInVisibiltyItem(true);
+            loadProfile = false;
+            binding.navView.setSelectedItemId(R.id.profile);
+
         } else {
-           // getVisibilityBottomBar(false);
+            getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
 
         }
@@ -190,14 +359,15 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     //endregion Override Method
 
 
+    //region Custom  Method
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        return pInfo.versionName;
+    }
+    //endregion Custom Method
 
 
 }

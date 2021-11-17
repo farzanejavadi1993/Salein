@@ -6,7 +6,7 @@ import android.app.Application;
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.model.MapID;
 import com.orm.SugarContext;
-import com.squareup.leakcanary.LeakCanary;
+
 
 import dagger.hilt.android.HiltAndroidApp;
 import ir.kitgroup.salein.Activities.LauncherActivity;

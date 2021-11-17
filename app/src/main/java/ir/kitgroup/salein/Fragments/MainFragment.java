@@ -72,8 +72,11 @@ public class MainFragment extends Fragment {
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
-            if (!name.equals(""))
+
+            if (!name.equals("")) {
+                company=null;
                 company = configRetrofit.getCompany(name);
+            }
 
         }
 

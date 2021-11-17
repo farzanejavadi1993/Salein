@@ -63,6 +63,11 @@ public class Product {
     private Integer key;
 
 
+    @SerializedName("UM")
+    @Expose
+    private String UM;
+
+
     private Double Amount;
 
     public Double getAmount() {

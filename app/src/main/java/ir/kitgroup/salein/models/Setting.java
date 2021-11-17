@@ -13,4 +13,5 @@ public class Setting  {
     public String VERSION_APP;
     public String SERVICE_DAY;
     public String PEYK;
+   // public String PAYMENT_TYPE;
 }

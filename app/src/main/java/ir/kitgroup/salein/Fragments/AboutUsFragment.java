@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
@@ -67,10 +68,11 @@ public class AboutUsFragment extends Fragment {
 
 
         //region Set Icon And Title
-
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
             company = configRetrofit.getCompany(name);
 
 

@@ -209,7 +209,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         }
 
-
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         descriptionList = new ArrayList<>();
         invoiceDetailList = new ArrayList<>();
@@ -1171,20 +1171,7 @@ public class InVoiceDetailFragment extends Fragment {
     }
 
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (type.equals("1")) {
-            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
-                    Inv_GUID + "'").list();
-            for (int i = 0; i < invoiceDetails.size(); i++) {
-                InvoiceDetail.delete(invoiceDetails.get(i));
-            }
-        }
 
-
-
-    }
 
 
     private Boolean networkAvailable(Activity activity) {
@@ -1210,6 +1197,13 @@ public class InVoiceDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (type.equals("1")) {
+            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
+                    Inv_GUID + "'").list();
+            for (int i = 0; i < invoiceDetails.size(); i++) {
+                InvoiceDetail.delete(invoiceDetails.get(i));
+            }
+        }
         compositeDisposable.dispose();
        binding=null;
     }

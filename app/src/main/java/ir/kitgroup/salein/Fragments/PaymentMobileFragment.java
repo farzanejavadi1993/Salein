@@ -205,6 +205,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
     private Boolean edit = false;
+    private Integer paymentType = 0;
     private Integer OrderTypeApp = 0;
     private Integer SERVICE_DAY = 0;
     private String timeChoose = "";
@@ -245,12 +246,12 @@ public class PaymentMobileFragment extends Fragment {
         try {
 
 
-            if (binding == null)
+
                 binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
 
 
         } catch (Exception ignored) {
-            Toast.makeText(getActivity(), "payment", Toast.LENGTH_SHORT).show();
+
         }
 
         return binding.getRoot();
@@ -326,7 +327,6 @@ public class PaymentMobileFragment extends Fragment {
             Tbl_NAME = bundle.getString("Tbl_NAME");
             Sum_PURE_PRICE = bundle.getString("Sum_PRICE");
             edit = bundle.getBoolean("EDIT");
-
 
             setADR1 = bundle.getBoolean("setADR");
 
@@ -530,7 +530,7 @@ public class PaymentMobileFragment extends Fragment {
                 bundleMap.putString("type", String.valueOf(typeAddress));
                 MapFragment mapFragment = new MapFragment();
                 mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
 
 
             });
@@ -649,7 +649,7 @@ public class PaymentMobileFragment extends Fragment {
                 bundleMap.putString("type", String.valueOf(typeAddress));
                 MapFragment mapFragment = new MapFragment();
                 mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
             });
 
             //endregion SetAddress
@@ -1126,7 +1126,7 @@ public class PaymentMobileFragment extends Fragment {
                     for (int i = 0; i < size; i++) {
                         getActivity().getSupportFragmentManager().popBackStack();
                     }
-                    //((LauncherActivity) getActivity()).setFistItem();
+                    ((LauncherActivity) getActivity()).setFistItem();
 
                     Bundle bundleMainOrder = new Bundle();
                     bundleMainOrder.putString("Inv_GUID", "");
@@ -1189,7 +1189,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
         } catch (Exception ignore) {
-            Toast.makeText(getActivity(), "payment", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1575,8 +1574,10 @@ public class PaymentMobileFragment extends Fragment {
                                     List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
 
                                     if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
+
                                         sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                                       // paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
                                         if (!Ord_TYPE.equals(OrderTypeApp) && Tbl_GUID.equals("") && company.mode == 1) {
                                             binding.btnPaymentPlace.setVisibility(View.GONE);
 
@@ -1822,6 +1823,28 @@ public class PaymentMobileFragment extends Fragment {
         dialogSync.show();
         customProgress.hideProgress();
 
+    }
+
+
+    public Bundle getBundle(boolean SetARD1) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("Inv_GUID", Inv_GUID);
+        bundle.putString("Tbl_GUID", Tbl_GUID);
+        bundle.putString("Tbl_NAME", Tbl_NAME);
+        bundle.putString("Ord_TYPE", String.valueOf(Ord_TYPE));
+        bundle.putString("Sum_PRICE",Sum_PURE_PRICE);
+
+
+        bundle.putBoolean("EDIT", edit);
+
+        if (!SetARD1)
+            bundle.putBoolean("setADR", setADR1);
+        else
+            bundle.putBoolean("setADR", SetARD1);
+
+
+        return bundle;
     }
 
 

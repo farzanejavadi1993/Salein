@@ -89,7 +89,7 @@ public class SearchProductFragment extends Fragment {
 
     private CustomProgress customProgress;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable ;
 
 
     //region Variable Dialog Description
@@ -113,12 +113,16 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        Boolean seen = SearchProductFragmentArgs.fromBundle(getArguments()).getSEEN();
-        Inv_GUID=SearchProductFragmentArgs.fromBundle(getArguments()).getInvGUID();
-        String tbl_GUID = SearchProductFragmentArgs.fromBundle(getArguments()).getTblGUID();
-        maxSales = sharedPreferences.getString("maxSale", "0");
         customProgress=CustomProgress.getInstance();
+        compositeDisposable = new CompositeDisposable();
+
+
+        Bundle bundle=getArguments();
+        Boolean seen = bundle.getBoolean("Seen");
+        Inv_GUID=bundle.getString("Inv_GUID");
+        String tbl_GUID = bundle.getString("Tbl_GUID");
+        maxSales = sharedPreferences.getString("maxSale", "0");
+
 
 
 
@@ -129,6 +133,8 @@ public class SearchProductFragment extends Fragment {
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
@@ -271,10 +277,10 @@ public class SearchProductFragment extends Fragment {
                 counter = invDetails.size();
             }
 
-//            if (counter == 0)
-//                ((LauncherActivity) getActivity()).setClearCounterOrder();
-//            else
-//                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+           if (counter == 0)
+               ((LauncherActivity) getActivity()).setClearCounterOrder();
+           else
+               ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
         });
@@ -414,4 +420,25 @@ public class SearchProductFragment extends Fragment {
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
+    @Override
+    public void onDestroyView() {
+
+        super.onDestroyView();
+
+        compositeDisposable.dispose();
+        binding = null;
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
+
+
 }

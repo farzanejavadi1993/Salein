@@ -52,9 +52,14 @@ public class ProfileFragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        address = bundle.getString("address");
-        type = bundle.getString("type");
+        try {
+            address = bundle.getString("address");
+            type = bundle.getString("type");
+        }catch (Exception ignored){
 
+        }
+
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
         if (Util.screenSize >= 7)
@@ -130,7 +135,7 @@ public class ProfileFragment extends Fragment {
                 bundleMap.putString("type", "1");
                 MapFragment mapFragment = new MapFragment();
                 mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
 
 
             });
@@ -143,7 +148,7 @@ public class ProfileFragment extends Fragment {
                 bundleMap.putString("type", "2");
                 MapFragment mapFragment = new MapFragment();
                 mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
 
             });
 

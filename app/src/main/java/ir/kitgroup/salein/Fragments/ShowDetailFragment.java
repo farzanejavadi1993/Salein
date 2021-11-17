@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -55,25 +58,33 @@ public class ShowDetailFragment  extends Fragment {
 
     private ActivityDetailBinding binding;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        binding=ActivityDetailBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
+
+    }
 
 
-
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
         }
 
-        binding=ActivityDetailBinding.inflate(getLayoutInflater());
+
         Bundle bundle = getArguments();
         String Id = bundle.getString("Id");
 
@@ -84,12 +95,10 @@ public class ShowDetailFragment  extends Fragment {
         getProduct(Id);
         Picasso.get()
                 .load("http://" + ip + "/GetImage?productId=" + Id
-                        )
+                )
                 .error(company.imageLogo)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
-
-        return binding.getRoot();
 
     }
 
@@ -155,5 +164,24 @@ public class ShowDetailFragment  extends Fragment {
         }
 
     }
+
+
+    @Override
+    public void onDestroyView() {
+        //setADR1 = false;
+        super.onDestroyView();
+
+        compositeDisposable.dispose();
+        binding = null;
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
 
 }

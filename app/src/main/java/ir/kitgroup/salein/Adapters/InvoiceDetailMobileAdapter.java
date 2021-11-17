@@ -126,6 +126,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         if (type.equals("1")) {
             holder.imgDelete.setImageBitmap(null);
             holder.edtDescription.setEnabled(false);
+            holder.imgDescription.setEnabled(false);
             holder.edtAmount.setEnabled(false);
             holder.ivMinus.setVisibility(View.GONE);
             holder.ivMax.setVisibility(View.GONE);

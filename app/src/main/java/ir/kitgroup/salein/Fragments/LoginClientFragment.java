@@ -60,7 +60,7 @@ public class LoginClientFragment extends Fragment {
     API api;
 
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable;
     private FragmentLoginMobileBinding binding;
     private Boolean acceptRule = true;
 
@@ -84,7 +84,7 @@ public class LoginClientFragment extends Fragment {
 
         try {
 
-
+            compositeDisposable = new CompositeDisposable();
 
             //region Configuration Text Size
             int fontSize;

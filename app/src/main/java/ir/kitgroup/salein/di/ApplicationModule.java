@@ -66,7 +66,7 @@ public class ApplicationModule {
         int mode = 2;
         int imageLogo = 0;
         String name = "";
-        String packageName="";
+        String packageName = "";
 
 
         try {
@@ -77,7 +77,7 @@ public class ApplicationModule {
                 case "ir.kitgroup.salein":
                     imageLogo = R.drawable.saleinicon128;
                     name = "سالین دمو";
-                    packageName="ir.kitgroup.salein";
+                    packageName = "ir.kitgroup.salein";
 
                     break;
 
@@ -85,26 +85,26 @@ public class ApplicationModule {
                 case "ir.kitgroup.saleinbahraman":
                     imageLogo = R.drawable.bahraman_png;
                     name = "زعفران بهرامن";
-                    packageName="ir.kitgroup.saleinbahraman";
+                    packageName = "ir.kitgroup.saleinbahraman";
 
                     break;
 
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_png;
                     name = "تاپ کباب";
-                    packageName="ir.kitgroup.saleintop";
+                    packageName = "ir.kitgroup.saleintop";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_png;
                     name = "گوشت دنیوی";
-                    packageName="ir.kitgroup.saleinmeat";
+                    packageName = "ir.kitgroup.saleinmeat";
                     break;
 
                 case "ir.kitgroup.saleinnoon":
                     imageLogo = R.drawable.noon;
-                    packageName="ir.kitgroup.saleinnoon";
+                    packageName = "ir.kitgroup.saleinnoon";
                     name = "کافه نون";
                     break;
 
@@ -166,12 +166,12 @@ public class ApplicationModule {
                     messageWelcome = "به سالین دمو خوش آمدید";
                     description = "عرضه کننده بهترین محصولات نر افزاری";
                     paymentLink = "";
-                  ipLocal = "2.180.28.6:3333";
-                  userName = "administrator";
-                  passWord = "123";
-                   // ipLocal="192.168.20.8:96";
-                   // userName="admin";
-                   // passWord="123";
+                   ipLocal = "2.180.28.6:3333";
+                   userName = "administrator";
+                   passWord = "123";
+//                    ipLocal="192.168.20.8:96";
+//                   userName= "admin";
+//                   passWord= "123";
                     numberPhone = "05137638311";
                     lat = 36.326805522660464;
                     lng = 59.56450551053102;
@@ -187,7 +187,7 @@ public class ApplicationModule {
                     title = "زعفران بهرامن";
                     messageWelcome = "به زعفران بهرامن خوش آمدید";
                     description = "عرضه کننده بهترین محصولات";
-                    ipLocal = "188.158.105.106:8085";
+                    ipLocal = "89.165.69.94:8085";
                     paymentLink = "";
                     userName = "admin";
                     passWord = "123";
@@ -297,14 +297,6 @@ public class ApplicationModule {
     }
 
 
-
-
-
-
-
-
-
-
     @Provides
     @Singleton
     ArrayList<Company> ListCompany() {
@@ -322,11 +314,17 @@ public class ApplicationModule {
         companySalein.namePackage = "ir.kitgroup.salein";
         companySalein.title = "سالین دمو";
         companySalein.messageWelcome = "به سالین دمو خوش آمدید";
-        companySalein.Description = "عرضه کننده بهترین محصولات نر افزاری";
-        companySalein.ipLocal = "2.180.28.6:3333";
+        companySalein.Description = "عرضه کننده بهترین محصولات نرم افزاری";
+
         companySalein.paymentLink = "";
-        companySalein.userName = "administrator";
-        companySalein.passWord = "123";
+       companySalein.ipLocal = "2.180.28.6:3333";
+       companySalein.userName = "administrator";
+       companySalein.passWord = "123";
+
+//        companySalein.ipLocal = "192.168.20.8:96";
+//        companySalein.userName = "admin";
+//        companySalein.passWord = "123";
+
         companySalein.numberPhone = "05137638311";
         companySalein.lat = 36.326805522660464;
         companySalein.lng = 59.56450551053102;
@@ -341,7 +339,7 @@ public class ApplicationModule {
         companySaleinBahraman.title = "زعفران بهرامن";
         companySaleinBahraman.messageWelcome = "به زعفران بهرامن خوش آمدید";
         companySaleinBahraman.Description = "عرضه کننده بهترین محصولات";
-        companySaleinBahraman.ipLocal = "188.158.105.106:8085";
+        companySaleinBahraman.ipLocal = "89.165.69.94:8085";
         companySaleinBahraman.paymentLink = "";
         companySaleinBahraman.userName = "admin";
         companySaleinBahraman.passWord = "123";

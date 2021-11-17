@@ -70,7 +70,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final SharedPreferences sharedPreferences;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable ;
 
 
     private final List<Product> productsList;
@@ -86,7 +86,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private int fontSize = 0;
     private int fontLargeSize = 0;
-    private Boolean ShowUnit = false;
+
 
     private final API api;
 
@@ -130,6 +130,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.api = api;
 
         df = new DecimalFormat();
+        compositeDisposable = new CompositeDisposable();
 
 
     }
@@ -202,7 +203,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
 
 
-        if (productsList.get(holder.getAdapterPosition()) != null) {
+        if (productsList.get(position) != null) {
            // holder.error.setText("");
 
 
@@ -211,13 +212,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             String ip = company.ipLocal;
 
-            if (company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                ShowUnit = true;
+
+
 
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
-                            .get(holder.getAdapterPosition()).getI())
+                            .get(position).getI())
                     .error(company.imageLogo)
                     .placeholder(R.drawable.loading)
                     .into(holder.productImage);
@@ -235,24 +236,25 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
+
+            holder.productName.setText(productsList.get(position).getN());
 
 
 
-            if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
+            if (productsList.get(position).getPrice(sharedPreferences) > 0) {
 
-                holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
+                holder.productPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)) + " ریال ");
 
-                if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
+                if (productsList.get(position).getPercDis() != 0.0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
-                    holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
-                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
+                    holder.productDiscountPercent.setText(format.format(productsList.get(position).getPercDis()) + "%");
+                    holder.productOldPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)));
                     holder.Line.setText("---------------");
-                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (productsList.get(holder.getAdapterPosition()).getPercDis() / 100);
-                    double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
+                    double discountPrice = productsList.get(position).getPrice(sharedPreferences) * (productsList.get(position).getPercDis() / 100);
+                    double newPrice = productsList.get(position).getPrice(sharedPreferences) - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
 
@@ -275,7 +277,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 if (holder.tab == 2) {
                     holder.tab = 0;
                     Bundle bundle = new Bundle();
-                    bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
+                    bundle.putString("Id", productsList.get(position).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
                     ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
@@ -292,27 +294,27 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 if (amount > 0 && Seen) {
                     if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != null && invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
-                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
+                        if (productsList.get(position).getPrice(sharedPreferences) > 0) {
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
                             holder.productOldPrice.setVisibility(View.VISIBLE);
                             holder.Line.setVisibility(View.VISIBLE);
 
                             holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
-                            holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
+                            holder.productOldPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)));
                             holder.Line.setText("------------");
-                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
-                            double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
+                            double discountPrice = productsList.get(position).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
+                            double newPrice = productsList.get(position).getPrice(sharedPreferences) - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
                         }
                     } else {
-                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
+                        if (productsList.get(position).getPrice(sharedPreferences) > 0) {
 
                             holder.productDiscountPercent.setVisibility(View.GONE);
                             holder.layoutDiscount.setVisibility(View.GONE);
                             holder.productOldPrice.setVisibility(View.GONE);
                             holder.Line.setVisibility(View.GONE);
-                            holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
+                            holder.productPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)) + " ریال ");
                         }
                     }
                 }
@@ -337,24 +339,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (amount > 0) {
                 holder.ivMinus.setVisibility(View.VISIBLE);
                 holder.ProductAmountTxt.setVisibility(View.VISIBLE);
-                if (ShowUnit)
-                    holder.unit.setVisibility(View.VISIBLE);
+
             } else {
                 holder.ivMinus.setVisibility(View.GONE);
                 holder.ProductAmountTxt.setVisibility(View.GONE);
-                if (ShowUnit)
-                    holder.unit.setVisibility(View.GONE);
+
             }
 
 
             holder.ivMax.setOnClickListener(view -> doAction(
                     productsList.get(position).getAmount(),
-                    holder.getAdapterPosition(),
+                    position,
                     holder.error,
                     holder.progressBar,
                     holder.textWatcher,
                     holder.ProductAmountTxt,
-                    holder.unit,
                     holder.ivMinus,
                     company,
                     maxSale,
@@ -365,12 +364,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(position).getAmount(),
-                    holder.getAdapterPosition(),
+                    position,
                     holder.error,
                     holder.progressBar,
                     holder.textWatcher,
                     holder.ProductAmountTxt,
-                    holder.unit,
                     holder.ivMinus,
                     company,
                     maxSale,
@@ -404,12 +402,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         }
 
                         doAction(productsList.get(position).getAmount(),
-                                holder.getAdapterPosition(),
+                                position,
                                 holder.error,
                                 holder.progressBar,
                                 holder.textWatcher,
                                 holder.ProductAmountTxt,
-                                holder.unit,
                                 holder.ivMinus,
                                 company,
                                 maxSale,
@@ -438,8 +435,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.cardEdit.setOnClickListener(v -> {
-                if (productsList.get(holder.getAdapterPosition()).getAmount() != null) {
-                    descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).getI(), productsList.get(holder.getAdapterPosition()).getAmount());
+                if (productsList.get(position).getAmount() != null) {
+                    descriptionItem.onDesc(productsList.get(position).getI(), productsList.get(position).getAmount());
                 } else {
                     Toast.makeText(context, " برای کالا  مقداروارد کنید", Toast.LENGTH_SHORT).show();
                 }
@@ -517,7 +514,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, Company company, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, Company company, String Prd_GUID, String s, int MinOrPlus) {
 
         progressBar.setVisibility(View.VISIBLE);
         double aPlus = productsList.get(position).getCoef();
@@ -566,8 +563,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText("0");
-                                                    if (ShowUnit)
-                                                        unit.setVisibility(View.GONE);
+
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                     ivMinus.setVisibility(View.GONE);
                                                     ProductAmountTxt.setVisibility(View.GONE);
@@ -605,8 +601,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                         Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ", Toast.LENGTH_SHORT).show();
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
-                                                        if (ShowUnit)
-                                                            unit.setVisibility(View.GONE);
+
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
                                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -637,8 +632,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(remain));
-                                                if (ShowUnit)
-                                                    unit.setVisibility(View.VISIBLE);
+
 
 
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
@@ -672,8 +666,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                     if (MinOrPlus != 3) {
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
-                                                        if (ShowUnit)
-                                                            unit.setVisibility(View.GONE);
+
                                                         ProductAmountTxt.addTextChangedListener(textWatcher);
                                                         ivMinus.setVisibility(View.GONE);
                                                         ProductAmountTxt.setVisibility(View.GONE);
@@ -693,8 +686,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                     ProductAmountTxt.setText(df.format(amount));
-                                                    if (ShowUnit)
-                                                        unit.setVisibility(View.VISIBLE);
+
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                 }
 
@@ -713,8 +705,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(amount));
-                                                if (ShowUnit)
-                                                    unit.setVisibility(View.VISIBLE);
+
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
 
                                             }
@@ -813,13 +804,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, TextView unit, ImageView ivMinus, Company company, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
+    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, Company company, String maxSales, String Prd_GUID, String s, int MinOrPlus) {
 
         error.setText("");
         if (position < 0)
             return;
         if (maxSales.equals("1")) {
-            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, unit, ivMinus, company, Prd_GUID, s, MinOrPlus);
+            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt,  ivMinus, company, Prd_GUID, s, MinOrPlus);
         } else {
             double aPlus = productsList.get(position).getCoef();
             if (aPlus == 0)
@@ -845,8 +836,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         amount = 0;
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                         ProductAmountTxt.setText("0");
-                        if (ShowUnit)
-                            unit.setVisibility(View.GONE);
+
                         ProductAmountTxt.addTextChangedListener(textWatcher);
                         ivMinus.setVisibility(View.GONE);
                         ProductAmountTxt.setVisibility(View.GONE);
@@ -876,8 +866,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                         ProductAmountTxt.setText("0");
-                        if (ShowUnit)
-                            unit.setVisibility(View.GONE);
+
                         ProductAmountTxt.addTextChangedListener(textWatcher);
                         ivMinus.setVisibility(View.GONE);
                         ProductAmountTxt.setVisibility(View.GONE);
@@ -897,8 +886,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                     ProductAmountTxt.setText(df.format(amount));
-                    if (ShowUnit)
-                        unit.setVisibility(View.VISIBLE);
+
                     ProductAmountTxt.addTextChangedListener(textWatcher);
                 }
             }
@@ -915,8 +903,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 invoicedetail.save();
                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                 ProductAmountTxt.setText(df.format(amount));
-                if (ShowUnit)
-                    unit.setVisibility(View.VISIBLE);
+
                 ProductAmountTxt.addTextChangedListener(textWatcher);
                 clickItem.onClick();
             }

@@ -112,13 +112,17 @@ public class OrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        compositeDisposable = new CompositeDisposable();
 
+
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+        compositeDisposable = new CompositeDisposable();
 
         String accGUID = Select.from(Account.class).list().get(0).I;
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
+            company=null;
+            api=null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 

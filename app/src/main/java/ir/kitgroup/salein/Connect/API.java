@@ -27,6 +27,10 @@ public interface API {
     Observable<String> Login(@Query("userName") String userName, @Query("password") String password);
 
 
+    @GET("UnitSync")
+    Observable<String> getUnitSync(@Query("userName") String userName, @Query("password") String password);
+
+
     @POST("CreateAccount")
     Observable<String> addAccount(@Query("userName") String userName, @Query("password") String password
             , @Body() String jsonObject, @Query("virtualParam") String virtualParam);

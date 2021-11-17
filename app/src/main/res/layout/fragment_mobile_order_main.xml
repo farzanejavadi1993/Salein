@@ -300,18 +300,7 @@
         </RelativeLayout>
 
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            android:theme="@style/Widget.BottomNavigationView"
-            app:itemIconSize="22dp"
-            app:itemTextColor="@drawable/navigation_view_colored"
-            app:labelVisibilityMode="labeled"
-            android:foreground="?attr/selectableItemBackground"
-            app:menu="@menu/bottom_nav_menu" />
+
 
 
     </RelativeLayout>

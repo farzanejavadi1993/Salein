@@ -176,7 +176,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="2dp"
                 android:singleLine="true"
-                android:text="کیلو گرم"
+
                 android:textColor="@color/medium_color"
                 android:textSize="11sp"
                 android:visibility="gone"

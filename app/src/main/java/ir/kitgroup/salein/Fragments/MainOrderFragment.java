@@ -42,7 +42,8 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 
-
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavDirections;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -79,7 +80,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.AccountAdapter;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 
@@ -88,6 +89,7 @@ import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
 import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 
@@ -100,6 +102,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.Company;
 import ir.kitgroup.salein.models.Config;
+import ir.kitgroup.salein.models.ModelUnit;
 import ir.kitgroup.salein.models.Setting;
 
 import ir.kitgroup.salein.classes.PaginationScrollListener;
@@ -177,7 +180,7 @@ public class MainOrderFragment extends Fragment {
     private int totalPage;
 
 
-    private  CompositeDisposable compositeDisposable ;
+    private CompositeDisposable compositeDisposable;
     private String error = "";
 
 
@@ -244,7 +247,7 @@ public class MainOrderFragment extends Fragment {
 
     private String Transport_GUID = "";
 
-    private int counter1 = 0;
+    public int counter1 = 0;
 
     //  private List<InvoiceDetail> invoiceDetails;
 
@@ -266,27 +269,27 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
-            company=null;
-            api=null;
+            company = null;
+            api = null;
             company = configRetrofit.getCompany(name);
             api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
 
         }
+
+      //  getUnit();
 
 
         //region First Value Parameter
@@ -325,7 +328,6 @@ public class MainOrderFragment extends Fragment {
         Seen = bundle.getBoolean("Seen");
         // invoiceDetails = (List<InvoiceDetail>) bundle.getSerializable("key");
 
-
         setARD1 = bundle.getBoolean("setADR");
 
         if (!setARD1)
@@ -345,6 +347,7 @@ public class MainOrderFragment extends Fragment {
             if (Inv_GUID.equals("")) {
                 Inv_GUID = UUID.randomUUID().toString();
                 sharedPreferences.edit().putString(name, Inv_GUID).apply();
+
             }
 
 
@@ -367,135 +370,20 @@ public class MainOrderFragment extends Fragment {
         }
 
         if (counter1 == 0)
-            binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+            ((LauncherActivity) getActivity()).setClearCounterOrder();
         else
-            binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
+            ((LauncherActivity) getActivity()).setCounterOrder(counter1);
 
 
-
-
-
-
-
-        binding.navView.getMenu().getItem(0).setVisible(!EDIT);
-
-
-        binding.navView.getMenu().getItem(3).setEnabled(false);
-
-        binding.navView.setSelectedItemId(R.id.homee);
-
-        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
-
-        binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
-
-
-        binding.navView.setOnNavigationItemSelectedListener(item -> {
-
-            int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-
-            if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
-                size = size - 1;
-
-
-            switch (item.getItemId()) {
-
-                case R.id.homee:
-
-
-                    if (counter1 == 0)
-                        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
-                    else
-                        binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
-                    binding.navView.getMenu().getItem(3).setEnabled(false);
-                    binding.navView.setVisibility(View.VISIBLE);
-                    if (size > 0)
-                        getActivity().getSupportFragmentManager().popBackStack();
-
-
-                    return true;
-
-                case R.id.search:
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
-
-
-                    if (!EDIT && size > 0)
-                        getActivity().getSupportFragmentManager().popBackStack();
-
-
-                    Bundle bundleSearch = new Bundle();
-                    bundleSearch.putString("Inv_GUID",Inv_GUID);
-                    bundleSearch.putString("Tbl_GUID", Tbl_GUID);
-                    bundleSearch.putBoolean("Seen", Seen);
-                    SearchProductFragment searchProductFragment = new SearchProductFragment();
-                    searchProductFragment.setArguments(bundleSearch);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
-
-
-                    return true;
-
-
-                case R.id.orders:
-
-
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
-
-
-                    if (!EDIT && size > 0)
-                       getActivity(). getSupportFragmentManager().popBackStack();
-
-
-                    Bundle bundleOrder = new Bundle();
-                    bundleOrder.putString("Inv_GUID", Inv_GUID);
-                    bundleOrder.putString("Tbl_GUID", Tbl_GUID);
-                    bundleOrder.putString("Tbl_NAME", Tbl_NAME);
-                    bundleOrder.putString("Ord_TYPE", Ord_TYPE);
-                    bundleOrder.putString("Acc_GUID", Acc_GUID);
-                    bundleOrder.putString("Acc_NAME", Acc_NAME);
-                    bundleOrder.putString("type", "2");
-                    bundleOrder.putBoolean("EDIT", EDIT);
-                    bundleOrder.putBoolean("Seen", Seen);
-                    bundleOrder.putBoolean("setADR1",setARD1);
-                    InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
-                    inVoiceDetailFragment.setArguments(bundleOrder);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
-
-
-                    return true;
-
-
-                case R.id.profile:
-
-
-                    binding.navView.getMenu().getItem(3).setEnabled(true);
-
-
-                    if (size > 0)
-                        getActivity().getSupportFragmentManager().popBackStack();
-
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SettingFragment(), "SettingFragment").addToBackStack("SettingF").commit();
-
-
-                    return true;
-
-
-            }
-
-
-            return false;
-        });
+        ((LauncherActivity) getActivity()).setInVisibiltyItem(!EDIT);
+        ((LauncherActivity) getActivity()).setMainOrderFragment(this);
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
 
 
         //endregion Create Order
 
 
         //endregion Get Bundle
-
-
-
-        if (EDIT)
-            binding.navView.getMenu().getItem(0).setVisible(!EDIT);
-
-
 
 
         //region Delete InvoiceDetail UnNecessary
@@ -860,7 +748,7 @@ public class MainOrderFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
 
-            if (company.mode == 2 && !config.name.equals("ir.kitgroup.salein"))
+            if (company.mode == 2 && !config.packageName.equals("ir.kitgroup.salein"))
                 getActivity().finish();
 
             else
@@ -1186,12 +1074,12 @@ public class MainOrderFragment extends Fragment {
             if (invDetails.size() > 0) {
                 int counter = invDetails.size();
                 counter1 = counter;
-                binding.navView.getOrCreateBadge(R.id.orders).setNumber(counter1);
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
                 if (company.mode == 1)
                     binding.btnRegisterOrder.setVisibility(View.VISIBLE);
             } else {
-                binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
             }
 
 
@@ -1221,7 +1109,11 @@ public class MainOrderFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+    }
 
 
     private void getProductLevel1() {
@@ -1395,6 +1287,7 @@ public class MainOrderFragment extends Fragment {
 
     }
 
+
     private void getProduct1(String GuidPrdLvl2) {
         if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
@@ -1487,6 +1380,7 @@ public class MainOrderFragment extends Fragment {
 
     }
 
+
     private void getSettingPrice(String GUID) {
 
         try {
@@ -1523,8 +1417,52 @@ public class MainOrderFragment extends Fragment {
                             })
             );
         } catch (Exception e) {
+            binding.progressbar.setVisibility(View.VISIBLE);
             error = "خطا در اتصال به سرور برای دریافت تنطیمات";
             Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    private void getUnit() {
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
+            return;
+        }
+        try {
+            compositeDisposable.add(
+                    api.getUnitSync(company.userName, company.passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                        Gson gson = new Gson();
+                                        Type typeIDs = new TypeToken<ModelUnit>() {
+                                        }.getType();
+                                        ModelUnit iDs = null;
+
+
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeIDs);
+                                        } catch (Exception ignore) {
+                                        }
+
+
+                                        if (iDs != null && iDs.getUnit().size() > 0) {
+                                            Unit.deleteAll(Unit.class);
+                                            Unit.saveInTx(iDs.getUnit());
+
+                                        }
+                                    }
+                                    , throwable -> {
+
+                                        int q = 0;
+                                    })
+            );
+        } catch (Exception e) {
+
         }
 
     }
@@ -1875,7 +1813,44 @@ public class MainOrderFragment extends Fragment {
     }
 
 
+    public Bundle reloadFragment(Boolean setAddress) {
+        Bundle bundle = getArguments();
+        bundle.putString("Inv_GUID", Inv_GUID);
+        bundle.putString("Tbl_GUID", Tbl_GUID);
+        bundle.putBoolean("Seen", Seen);
+        bundle.putString("Tbl_NAME", Tbl_NAME);
+        bundle.putString("Ord_TYPE", Ord_TYPE);
+        bundle.putString("Acc_NAME", Acc_NAME);
+        bundle.putString("Acc_GUID", Acc_GUID);
+        bundle.putBoolean("EDIT", EDIT);
+        bundle.putBoolean("Seen", Seen);
+        bundle.putBoolean("setARD1", setAddress);
+        return bundle;
+    }
 
+
+    public Bundle getBundle(boolean SetARD1) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Inv_GUID", Inv_GUID);
+        bundle.putString("NAME", company.namePackage);
+        bundle.putString("Tbl_GUID", Tbl_GUID);
+        bundle.putString("Tbl_NAME", Tbl_NAME);
+        bundle.putString("Ord_TYPE", Ord_TYPE);
+        bundle.putString("Acc_GUID", Acc_GUID);
+        bundle.putString("Acc_NAME", Acc_NAME);
+        bundle.putBoolean("EDIT", EDIT);
+        bundle.putBoolean("Seen", Seen);
+
+
+        if (!SetARD1) {
+            if (typeAddress == 2)
+                bundle.putBoolean("setADR1", true);
+        } else
+            bundle.putBoolean("setADR1", SetARD1);
+
+
+        return bundle;
+    }
 
 
     public void refreshProductList() {
@@ -1883,32 +1858,20 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-//    public void setCounterOrder(int count) {
-//
-//        binding.navView.getOrCreateBadge(R.id.orders).setNumber(count);
-//
-//    }
-//
-//    public void setClearCounterOrder() {
-//        binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
-//    }
-
-
-
     @Override
     public void onDestroyView() {
+        //setADR1 = false;
         super.onDestroyView();
-        compositeDisposable.dispose();
-        binding=null;
-    }
 
+        compositeDisposable.dispose();
+        binding = null;
+
+
+    }
 
     @Override
     public void onStop() {
         super.onStop();
         compositeDisposable.clear();
     }
-
-
-
 }
