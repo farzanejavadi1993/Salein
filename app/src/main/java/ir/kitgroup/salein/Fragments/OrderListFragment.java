@@ -79,8 +79,7 @@ public class OrderListFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable;
     //region Parameter
     private FragmentOrderListBinding binding;
 
@@ -113,9 +112,7 @@ public class OrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
-
+        compositeDisposable = new CompositeDisposable();
 
 
         String accGUID = Select.from(Account.class).list().get(0).I;
@@ -190,10 +187,9 @@ public class OrderListFragment extends Fragment {
             bundleOrder.putString("Acc_NAME", "");
             bundleOrder.putString("type", "1");
 
-            InVoiceDetailFragment inVoiceDetailFragment=new InVoiceDetailFragment();
+            InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
             inVoiceDetailFragment.setArguments(bundleOrder);
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
-
 
 
         });
@@ -243,7 +239,7 @@ public class OrderListFragment extends Fragment {
                                     orderListAdapter.notifyDataSetChanged();
 
 
-                                   // InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
+                                    // InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
 
                                 } else {
 
@@ -295,5 +291,20 @@ public class OrderListFragment extends Fragment {
 
 
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        binding = null;
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
 
 }

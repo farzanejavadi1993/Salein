@@ -66,7 +66,7 @@ import ir.kitgroup.salein.models.ModelLog;
 
 @AndroidEntryPoint
 public class MyCompanyFragment extends Fragment {
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable ;
     private FragmentMyCompanyBinding binding;
 
 
@@ -111,7 +111,7 @@ public class MyCompanyFragment extends Fragment {
 
 
         configRetrofit = new ConfigRetrofit();
-
+        compositeDisposable = new CompositeDisposable();
 
         ArrayList<Company> listCompany = new ArrayList<>();
         for (int i = 0; i < companies.size(); i++) {
@@ -131,6 +131,9 @@ public class MyCompanyFragment extends Fragment {
 
       companyAdapterList.setOnClickItemListener((company, check) ->
                 {
+
+                    compositeDisposable.clear();
+
                     companySelect=company;
                     Util.RetrofitValue = false;
                     String nameSave = sharedPreferences.getString(company.nameCompany, "");
@@ -329,6 +332,24 @@ public class MyCompanyFragment extends Fragment {
         }
 
 
+    }
+
+
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        binding=null;
+    }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
     }
 
 

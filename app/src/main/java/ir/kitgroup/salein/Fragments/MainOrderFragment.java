@@ -177,7 +177,7 @@ public class MainOrderFragment extends Fragment {
     private int totalPage;
 
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable ;
     private String error = "";
 
 
@@ -273,10 +273,12 @@ public class MainOrderFragment extends Fragment {
 
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
         customProgress = CustomProgress.getInstance();
+        compositeDisposable = new CompositeDisposable();
 
-
-        if (Util.RetrofitValue) {
+        if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
             company=null;
@@ -1219,11 +1221,7 @@ public class MainOrderFragment extends Fragment {
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
-    }
 
 
     private void getProductLevel1() {
@@ -1900,8 +1898,17 @@ public class MainOrderFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        compositeDisposable.dispose();
         binding=null;
     }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
 
 
 }

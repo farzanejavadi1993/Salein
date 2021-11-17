@@ -115,7 +115,7 @@ public class InVoiceDetailFragment extends Fragment {
 
     private FragmentInvoiceDetailMobileBinding binding;
     private CustomProgress customProgress;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable;
 
 
     private String type;
@@ -197,9 +197,9 @@ public class InVoiceDetailFragment extends Fragment {
         try {
 
         customProgress = CustomProgress.getInstance();
+            compositeDisposable = new CompositeDisposable();
 
-
-        if (Util.RetrofitValue) {
+        if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
             String name = sharedPreferences.getString("CN", "");
             company=null;
@@ -1210,7 +1210,17 @@ public class InVoiceDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        compositeDisposable.dispose();
        binding=null;
     }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
 }
 

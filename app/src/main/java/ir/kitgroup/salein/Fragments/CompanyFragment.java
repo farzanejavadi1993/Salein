@@ -56,7 +56,7 @@ public class CompanyFragment extends Fragment {
 
     private FragmentCompanyBinding binding;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private  CompositeDisposable compositeDisposable ;
 
     @Inject
     API api;
@@ -99,7 +99,7 @@ public class CompanyFragment extends Fragment {
 
 
         configRetrofit = new ConfigRetrofit();
-
+        compositeDisposable = new CompositeDisposable();
 
 
         CompanyAdapterList companyAdapterList = new CompanyAdapterList(companies, 2);
@@ -108,6 +108,7 @@ public class CompanyFragment extends Fragment {
 
         companyAdapterList.setOnClickItemListener((company, check) ->
                 {
+                    compositeDisposable.clear();
                     companySelect=company;
                     Util.RetrofitValue = false;
                     String nameSave = sharedPreferences.getString(company.nameCompany, "");
@@ -310,6 +311,22 @@ public class CompanyFragment extends Fragment {
         }
 
 
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        binding=null;
+    }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
     }
 
 }

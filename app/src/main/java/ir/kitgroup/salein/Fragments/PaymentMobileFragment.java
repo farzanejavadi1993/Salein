@@ -128,7 +128,7 @@ public class PaymentMobileFragment extends Fragment {
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable;
 
     private final Boolean Seen = false;
 
@@ -266,8 +266,8 @@ public class PaymentMobileFragment extends Fragment {
         try {
 
             customProgress = CustomProgress.getInstance();
-
-            if (Util.RetrofitValue) {
+            compositeDisposable = new CompositeDisposable();
+            if (!Util.RetrofitValue) {
                 ConfigRetrofit configRetrofit = new ConfigRetrofit();
                 String name = sharedPreferences.getString("CN", "");
                 company = null;
@@ -1185,7 +1185,7 @@ public class PaymentMobileFragment extends Fragment {
             binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
-           // getSetting1();
+            getSetting1();
 
 
         } catch (Exception ignore) {
@@ -1727,13 +1727,13 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-//                                         if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-//                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
-//                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-//                                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                                        if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+                                               getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                           else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+                                               binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                            //if (acc != null)
-                                            // getInquiryAccount1(company.userName, company.passWord, acc.M);
+                                           if (acc != null)
+                                            getInquiryAccount1(company.userName, company.passWord, acc.M);
                                         }
 
 
@@ -1830,8 +1830,19 @@ public class PaymentMobileFragment extends Fragment {
         //setADR1 = false;
         super.onDestroyView();
 
+        compositeDisposable.dispose();
         binding = null;
 
 
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
+
+
+
 }
