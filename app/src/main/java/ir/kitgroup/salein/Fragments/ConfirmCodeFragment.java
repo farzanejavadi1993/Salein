@@ -437,7 +437,7 @@ public class ConfirmCodeFragment extends Fragment {
                                         Account.saveInTx(iDs.getAccountList());
 
 
-                                        getFragmentManager().popBackStack();
+                                        getActivity().getSupportFragmentManager().popBackStack();
 
                                         FragmentTransaction addFragment;
                                         //region Show All Company

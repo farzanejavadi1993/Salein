@@ -243,16 +243,8 @@ public class PaymentMobileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        try {
 
-
-            binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
-
-
-        } catch (Exception ignored) {
-
-        }
-
+        binding = FragmentPaymentMobileBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -265,8 +257,6 @@ public class PaymentMobileFragment extends Fragment {
 
         try {
 
-            customProgress = CustomProgress.getInstance();
-            compositeDisposable = new CompositeDisposable();
             if (!Util.RetrofitValue) {
                 ConfigRetrofit configRetrofit = new ConfigRetrofit();
                 String name = sharedPreferences.getString("CN", "");
@@ -278,25 +268,25 @@ public class PaymentMobileFragment extends Fragment {
             }
 
 
-            switch (company.namePackage) {
-                case "ir.kitgroup.saleintop":
-                    binding.btnPaymentPlace.setVisibility(View.GONE);
-                    break;
 
-
-                case "ir.kitgroup.saleinmeat":
-                    binding.layoutPaymentOnline.setVisibility(View.GONE);
-                    typePayment = "";
-                    binding.ivOkPaymentPlace.setVisibility(View.VISIBLE);
-
-                    break;
-
-            }
-
-
+            customProgress = CustomProgress.getInstance();
+            compositeDisposable = new CompositeDisposable();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
+
+
             OrdTList = new ArrayList<>();
+            timesList = new ArrayList<>();
+            times = new ArrayList<>();
+            allTime = new ArrayList<>();
+            allDate = new ArrayList<>();
+            dateList = new ArrayList<>();
+
+
+
+            Date dateNow = Calendar.getInstance().getTime();
+            dateChoose = dateNow;
+
 
 
             if (company.mode == 1) {
@@ -305,16 +295,6 @@ public class PaymentMobileFragment extends Fragment {
                     numberPos = "0";
             }
 
-
-            timesList = new ArrayList<>();
-            times = new ArrayList<>();
-            allTime = new ArrayList<>();
-            allDate = new ArrayList<>();
-            dateList = new ArrayList<>();
-
-
-            Date dateNow = Calendar.getInstance().getTime();
-            dateChoose = dateNow;
 
 
             //region get Bundle
@@ -326,19 +306,20 @@ public class PaymentMobileFragment extends Fragment {
             Tbl_NAME = bundle.getString("Tbl_NAME");
             Sum_PURE_PRICE = bundle.getString("Sum_PRICE");
             edit = bundle.getBoolean("EDIT");
-
             setADR1 = bundle.getBoolean("setADR");
+
+
 
 
             if (!setADR1)
                 setADR1 = bundle.getBoolean("setADR1");
 
 
+
             String ord_type = bundle.getString("Ord_TYPE");
-
-
             if (ord_type != null && !ord_type.equals(""))
                 Ord_TYPE = Integer.parseInt(ord_type);
+
 
 
             if (Tbl_GUID.equals(""))
@@ -347,15 +328,17 @@ public class PaymentMobileFragment extends Fragment {
                 new_Tbl_GUID = Tbl_GUID;
 
 
+
             if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
                 new_Inv_GUID = Inv_GUID;
-
 
             else if (company.mode == 1 && !Tbl_GUID.equals(""))
                 new_Inv_GUID = UUID.randomUUID().toString();
 
 
             //endregion get Bundle
+
+
 
 
             if (company.mode == 1) {
@@ -440,6 +423,7 @@ public class PaymentMobileFragment extends Fragment {
             MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
 
 
+
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     try {
@@ -477,19 +461,24 @@ public class PaymentMobileFragment extends Fragment {
             });
             radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-
                     try {
                         latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                         longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         latitude2 = 0.0;
                         longitude2 = 0.0;
                     }
+
+
+
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
                         Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
 
                         return;
                     }
+
+
                     double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(company.lat, company.lng));
                     double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                     if (price == -1.0) {
@@ -513,6 +502,9 @@ public class PaymentMobileFragment extends Fragment {
                     dialogAddress.dismiss();
                 }
             });
+
+
+
 
 
             btnNewAddress.setOnClickListener(v -> {
@@ -1575,32 +1567,28 @@ public class PaymentMobileFragment extends Fragment {
                                         sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
                                         paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
+                                        if (paymentType==null)
+                                            paymentType=3;
 
+                                        if ((company.mode == 2 &&  paymentType == 1)
+                                                ||
+                                                (!Ord_TYPE.equals(OrderTypeApp) &&
+                                                        Tbl_GUID.equals("") &&
+                                                        company.mode == 1)) {
 
+                                            binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                                            binding.layoutPaymentOnline.setVisibility(View.GONE);
 
-                                         if ((company.mode==2 && paymentType==1)
-                                         ||
-                                         (!Ord_TYPE.equals(OrderTypeApp) &&
-                                                 Tbl_GUID.equals("") &&
-                                                 company.mode == 1)){
-
-                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                                             binding.layoutPaymentOnline.setVisibility(View.GONE);
-
-                                         }
-
-                                         else if ((company.mode==2 && paymentType==2) ||
-                                        (!Ord_TYPE.equals(OrderTypeApp) &&
-                                                Tbl_GUID.equals("") &&
-                                                company.mode == 1)){
-                                             binding.btnPaymentPlace.setVisibility(View.GONE);
-                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                         }
-
-                                         else {
-                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                         }
+                                        } else if ((company.mode == 2 && paymentType == 2) ||
+                                                (!Ord_TYPE.equals(OrderTypeApp) &&
+                                                        Tbl_GUID.equals("") &&
+                                                        company.mode == 1)) {
+                                            binding.btnPaymentPlace.setVisibility(View.GONE);
+                                            binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                                        } else {
+                                            binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                                            binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                                        }
 
 
                                     }

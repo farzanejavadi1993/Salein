@@ -74,6 +74,7 @@ public class ShowDetailFragment  extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         compositeDisposable=new CompositeDisposable();
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -175,7 +176,7 @@ public class ShowDetailFragment  extends Fragment {
     public void onDestroyView() {
         //setADR1 = false;
         super.onDestroyView();
-
+        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         compositeDisposable.dispose();
         binding = null;
 

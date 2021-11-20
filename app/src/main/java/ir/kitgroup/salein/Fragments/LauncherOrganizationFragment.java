@@ -340,10 +340,10 @@ public class LauncherOrganizationFragment extends Fragment {
                     bundle.putString("Tbl_NAME",  Name);
                 bundle.putBoolean("EDIT", false);
 
-
-                MainFragment mainFragment = new MainFragment();
-                mainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
+//
+//                MainFragment mainFragment = new MainFragment();
+//                mainFragment.setArguments(bundle);
+//                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
 
             }
@@ -397,10 +397,10 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putBoolean("EDIT", false);
             bundle.putString("Tbl_NAME", name);
 
-
-            MainFragment mainFragment = new MainFragment();
-            mainFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
+//
+//            MainFragment mainFragment = new MainFragment();
+//            mainFragment.setArguments(bundle);
+//            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
 
         });
         //endregion Configuration RecyclerView getOutOrder

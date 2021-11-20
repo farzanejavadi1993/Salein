@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'dagger.hilt.android.plugin'
-    id 'androidx.navigation.safeargs'
+
 }
 
 android {
@@ -63,30 +63,41 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-
-    implementation 'com.google.android:flexbox:2.0.1'
-
     //noinspection GradleCompatible,GradleCompatible
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //noinspection GradleCompatible
-    implementation 'com.github.satyan:sugar:1.5'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
+    implementation 'org.jetbrains:annotations:15.0'
+    implementation "com.airbnb.android:lottie:+"
+    implementation "com.airbnb.android:lottie:+"
+
+   
+    //Retrofit Library
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
 
+    //Db Library
+    implementation 'com.github.satyan:sugar:1.5'
+
+    //Flexbox Item RecyclerView
+    implementation 'com.google.android:flexbox:2.0.1'
 
 
-    implementation 'org.jetbrains:annotations:15.0'
-    implementation "com.airbnb.android:lottie:+"
-    implementation "com.airbnb.android:lottie:+"
+
+
+
+    //CedarMap Library
     implementation 'com.cedarmaps:CedarMapsSDK:4.0.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.6.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 
+
+    //Download Image Library
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
@@ -95,12 +106,14 @@ dependencies {
 
 
 
-
+    //Rx Java Library
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation "io.reactivex.rxjava2:rxjava:2.2.19"
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
-    implementation 'androidx.multidex:multidex:2.0.1'
+
+
+
 
 
     //Hilt Library
@@ -108,17 +121,6 @@ dependencies {
     annotationProcessor "com.google.dagger:hilt-android-compiler:2.38.1"
 
 
-    // Java language implementation
-    implementation "androidx.navigation:navigation-fragment:2.3.1"
-    implementation "androidx.navigation:navigation-ui:2.3.1"
-
-
-
-    // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:2.3.1"
-
-    // Testing Navigation
-    androidTestImplementation "androidx.navigation:navigation-testing:2.3.1"
 
 
     testImplementation 'junit:junit:4.13.2'

@@ -52,7 +52,6 @@
 
     <ImageView
         android:padding="15dp"
-        android:src="@drawable/meat_png"
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -75,7 +74,6 @@
        android:textSize="14sp"
         android:textColor="#000"
         android:textStyle="bold"
-        android:text="lkldklkd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -91,7 +89,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="22dp"
-        android:text="klklkll"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -107,7 +105,6 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="22dp"
-        android:text="call"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" >
@@ -142,7 +139,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="0.35656656565"
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
                 android:textStyle="bold"

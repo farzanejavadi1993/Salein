@@ -15,12 +15,6 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:textViewStyle">@style/FontForWholeApp</item>
 
-        <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge</item>
-        <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
-
-
-    <!-- Customize your theme here. -->
     </style>
 
 
@@ -33,16 +27,6 @@
 
 
 
-
-
-    <style name="launcher_recycle_table_TextView" >
-        <item name="android:textColor">@color/black_l</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="launcher_toolbar_TextView" >
         <item name="android:textColor">@color/black_light</item>
         <item name="android:textSize">12dp</item>
@@ -52,67 +36,12 @@
 
 
 
-    <style name="launcher_toolbar_TextView_portrate" >
-        <item name="android:textColor">@color/black_light</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="launcherToolbarOrderTextView" >
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/launcher_toolbar_order_textView_size</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-
-
-
-    <style name="launcherHeaderOrderTextView" >
-
-        <item name="android:textColor">@color/black_light</item>
-        <item name="android:textSize">@dimen/launcher_header_order_textView_size</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="launcherItemTextView" >
-
-        <item name="android:textColor">@color/launcher_linear_order_textView_header_color</item>
-        <item name="android:textSize">@dimen/launcher_header_order_textView_size</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style parent="android:Widget.TextView" name="FontForWholeApp">
+    <style parent="android:Widget.TextView"
+        name="FontForWholeApp">
         <item name="fontFamily">@font/font</item>
     </style>
-    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-        <item name="android:popupBackground">@android:color/white</item>
-        <item name="android:textColor">#FF01F0</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="myPopupMenuTextAppearanceSmall" parent="@android:style/TextAppearance.DeviceDefault.Widget.PopupMenu.Small">
-        <item name="android:textColor">#545656</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="myPopupMenuTextAppearanceLarge" parent="@android:style/TextAppearance.DeviceDefault.Widget.PopupMenu.Large">
-        <item name="android:textColor">#474747</item>
-        <item name="android:textSize">12sp</item>
-    </style>
 
 
-
-    <style name="MyHelperTextInputLayout" >
-        <item name="fontFamily">@font/iransans</item>
-        <item name="android:textDirection">rtl</item>
-        <item name="android:textAlignment">textStart</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:textColor">@color/medium_color</item>
-    </style>
 
 
 
@@ -124,27 +53,5 @@
         <item name="android:textColor">#474747</item>
     </style>
 
-
-
-    <!--<style name="your_style_name">
-        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scroller_thumb</item>
-    </style>-->
-
-
-  <!--  <attr name="scrollbarStyle" format="reference"/>
-
-    <style name="scrollbar_shape_style">
-        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
-        <item name="android:scrollbarTrackVertical">@drawable/track</item>
-        <item name="android:scrollbarSize">8dp</item>
-    </style>-->
 
 </resources>

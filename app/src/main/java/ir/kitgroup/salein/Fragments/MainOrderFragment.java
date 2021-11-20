@@ -1,5 +1,7 @@
 package ir.kitgroup.salein.Fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,12 +25,14 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 
 import android.widget.ImageView;
@@ -42,8 +46,6 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavDirections;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +55,7 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -928,6 +931,20 @@ public class MainOrderFragment extends Fragment {
         binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
 
@@ -1105,6 +1122,25 @@ public class MainOrderFragment extends Fragment {
 
 
         //endregion CONFIGURATION DATA PRODUCT
+
+
+
+
+        binding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+
+                int scroll=-(verticalOffset);
+                if(verticalOffset>=760){
+                  int p=0;
+                }else{
+               int q=0;
+                }
+
+            }
+        });
+
 
 
     }
@@ -1874,4 +1910,6 @@ public class MainOrderFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
+
+
 }

@@ -84,13 +84,10 @@ public class ConfigRetrofit {
 
                     paymentLink = "";
 
-//                    ipLocal = "2.180.28.6:3333";
-//                    userName = "administrator";
-//                    passWord = "123";
-
-                    ipLocal = "192.168.20.8:96";
-                    userName = "admin";
+                    ipLocal = "2.180.28.6:3333";
+                    userName = "administrator";
                     passWord = "123";
+
                     numberPhone = "05137638311";
                     lat = 36.326805522660464;
                     lng = 59.56450551053102;

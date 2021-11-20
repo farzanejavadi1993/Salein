@@ -80,7 +80,7 @@ public class SettingFragment extends Fragment {
 
     private  CompositeDisposable compositeDisposable;
 
-    private int fontSize = 12;
+    private int fontSize;
 
     private String mobile;
 
