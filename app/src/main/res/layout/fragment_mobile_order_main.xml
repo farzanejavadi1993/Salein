@@ -387,7 +387,7 @@
                                     android:padding="1dp">
 
                                     <TextView
-
+                                        android:layout_marginRight="3dp"
                                         android:id="@+id/tvTitleStore"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -400,6 +400,7 @@
                                         android:textSize="11sp" />
 
                                     <TextView
+                                        android:layout_marginRight="3dp"
                                         android:id="@+id/tvNameStore"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
