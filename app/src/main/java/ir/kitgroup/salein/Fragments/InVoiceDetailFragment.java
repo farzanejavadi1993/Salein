@@ -354,6 +354,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                 else {
                     counter = 0;
+
                     for (int i = 0; i < invDetails.size(); i++) {
                         getProduct(invDetails.get(i).PRD_UID);
                     }
