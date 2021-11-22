@@ -139,6 +139,18 @@
             android:src="@drawable/ic_close" />
 
 
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progress"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+           android:layout_toRightOf="@+id/order_list_item_recycle_img_delete"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="@dimen/margin10"
+          />
+
+
+
     </RelativeLayout>
 
     <RelativeLayout

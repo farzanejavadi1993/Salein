@@ -15,10 +15,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.orm.query.Select;
@@ -34,6 +37,7 @@ import java.util.List;
 import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.saleinmeat.Fragments.MainOrderFragment;
 import ir.kitgroup.saleinmeat.R;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.models.Product;
@@ -284,6 +288,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         holder.imgDelete.setOnClickListener(view -> {
 
+            holder.progressBar.setVisibility(View.VISIBLE);
             holder.imgDelete.setVisibility(View.GONE);
             holder.imgDelete.setEnabled(false);
 
@@ -291,20 +296,18 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             if (result.size() > 0) {
 
-
                 notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
 
-
-                ArrayList<Product> allResultPr = new ArrayList<>(prd1);
-
-                CollectionUtils.filter(allResultPr, r -> r.getI().equals(result.get(0).PRD_UID));
-
-
-
+                Fragment frg =((FragmentActivity)contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    fgf.refreshProductList();
+                }
             }
 
             holder.imgDelete.setEnabled(true);
             holder.imgDelete.setVisibility(View.VISIBLE);
+            holder.progressBar.setVisibility(View.GONE);
 
         });
 
@@ -398,6 +401,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         private final ImageView ivMax;
         private final ImageView ivMinus;
         private final RelativeLayout layoutAmount;
+        private final ProgressBar progressBar;
 
 
         public viewHolder(View itemView) {
@@ -415,6 +419,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             ivMax = itemView.findViewById(R.id.iv_max_invoice);
             ivMinus = itemView.findViewById(R.id.iv_minus_invoice);
             layoutAmount = itemView.findViewById(R.id.layout_amount);
+            progressBar = itemView.findViewById(R.id.progress);
 
 
         }

@@ -44,6 +44,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.utils.widget.ImageFilterView;
 import androidx.fragment.app.Fragment;
 
 
@@ -296,6 +297,9 @@ public class MainOrderFragment extends Fragment {
         getUnit();
 
 
+
+
+
         //region First Value Parameter
 
         counter1 = 0;
@@ -387,6 +391,10 @@ public class MainOrderFragment extends Fragment {
 
 
         //endregion Create Order
+
+
+        if (EDIT)
+            ((LauncherActivity) getActivity()).setFistItem(false);
 
 
         //endregion Get Bundle
@@ -752,6 +760,10 @@ public class MainOrderFragment extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
 
         });
+
+
+        if (config.packageName.equals("ir.kitgroup.saleinmeat"))
+            binding.appBar.setExpanded(true,true);
 
 
         btnOkDialog.setOnClickListener(v -> {
@@ -1789,20 +1801,7 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    public Bundle reloadFragment(Boolean setAddress) {
-        Bundle bundle = getArguments();
-        bundle.putString("Inv_GUID", Inv_GUID);
-        bundle.putString("Tbl_GUID", Tbl_GUID);
-        bundle.putBoolean("Seen", Seen);
-        bundle.putString("Tbl_NAME", Tbl_NAME);
-        bundle.putString("Ord_TYPE", Ord_TYPE);
-        bundle.putString("Acc_NAME", Acc_NAME);
-        bundle.putString("Acc_GUID", Acc_GUID);
-        bundle.putBoolean("EDIT", EDIT);
-        bundle.putBoolean("Seen", Seen);
-        bundle.putBoolean("setARD1", setAddress);
-        return bundle;
-    }
+
 
 
     public Bundle getBundle(boolean SetARD1) {

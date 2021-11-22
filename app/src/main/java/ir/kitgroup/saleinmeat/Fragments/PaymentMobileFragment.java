@@ -1117,7 +1117,7 @@ public class PaymentMobileFragment extends Fragment {
                     for (int i = 0; i < size; i++) {
                         getActivity().getSupportFragmentManager().popBackStack();
                     }
-                    ((LauncherActivity) getActivity()).setFistItem();
+                    ((LauncherActivity) getActivity()).setFistItem(true);
 
                     Bundle bundleMainOrder = new Bundle();
                     bundleMainOrder.putString("Inv_GUID", "");

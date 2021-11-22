@@ -213,7 +213,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
            // holder.error.setText("");
 
 
-            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
+            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
             String ip = company.IP1;
@@ -224,7 +224,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
-                            .get(position).getI()+"&width=200&height=200")
+                            .get(holder.getAdapterPosition()).getI()+"&width=200&height=200")
                     .error(company.imageLogo)
                     .placeholder(R.drawable.loading)
                     .into(holder.productImage);
@@ -246,36 +246,36 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             ArrayList<Unit> units=new ArrayList<>(unitList);
-            CollectionUtils.filter(units,u->u.getUomUid().equals(productsList.get(position).UM1));
+            CollectionUtils.filter(units,u->u.getUomUid().equals(productsList.get(holder.getAdapterPosition()).UM1));
             if (units.size()>0)
                 holder.unit.setText(units.get(0).getUomName());
             else
                 holder.unit.setText("");
 
 
-            holder.productName.setText(productsList.get(position).getN());
+            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
 
 
 
-            if (productsList.get(position).getPrice(sharedPreferences) > 0) {
+            if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
 
-                holder.productPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)) + " ریال ");
+                holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
                 holder.productDiscountPercent.setText("");
                 holder.productOldPrice.setText("");
                 holder.layoutDiscount.setVisibility(View.GONE);
                 holder.productDiscountPercent.setVisibility(View.GONE);
                 holder.productOldPrice.setVisibility(View.GONE);
                 holder.Line.setVisibility(View.GONE);
-                if (productsList.get(position).getPercDis() != 0.0) {
+                if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
                     holder.Line.setVisibility(View.VISIBLE);
-                    holder.productDiscountPercent.setText(format.format(productsList.get(position).getPercDis()) + "%");
-                    holder.productOldPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)));
+                    holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
+                    holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                     holder.Line.setText("---------------");
-                    double discountPrice = productsList.get(position).getPrice(sharedPreferences) * (productsList.get(position).getPercDis() / 100);
-                    double newPrice = productsList.get(position).getPrice(sharedPreferences) - discountPrice;
+                    double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (productsList.get(position).getPercDis() / 100);
+                    double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
                 }
 
@@ -298,7 +298,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 if (holder.tab == 2) {
                     holder.tab = 0;
                     Bundle bundle = new Bundle();
-                    bundle.putString("Id", productsList.get(position).getI());
+                    bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
                     ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
@@ -315,27 +315,27 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                 if (amount > 0 && Seen) {
                     if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != null && invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
-                        if (productsList.get(position).getPrice(sharedPreferences) > 0) {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
                             holder.productOldPrice.setVisibility(View.VISIBLE);
                             holder.Line.setVisibility(View.VISIBLE);
 
                             holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
-                            holder.productOldPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)));
+                            holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                             holder.Line.setText("------------");
-                            double discountPrice = productsList.get(position).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
-                            double newPrice = productsList.get(position).getPrice(sharedPreferences) - discountPrice;
+                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
+                            double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
                         }
                     } else {
-                        if (productsList.get(position).getPrice(sharedPreferences) > 0) {
+                        if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
 
                             holder.productDiscountPercent.setVisibility(View.GONE);
                             holder.layoutDiscount.setVisibility(View.GONE);
                             holder.productOldPrice.setVisibility(View.GONE);
                             holder.Line.setVisibility(View.GONE);
-                            holder.productPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)) + " ریال ");
+                            holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
                         }
                     }
                 }
@@ -344,7 +344,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             if (maxSale.equals("1"))
-                getMaxSale(holder.layoutAmount, holder.error, productsList.get(position).getI(), amount);
+                getMaxSale(holder.layoutAmount, holder.error, productsList.get(holder.getAdapterPosition()).getI(), amount);
 
 
             if (invoiceDetail != null && invoiceDetail.INV_DET_DESCRIBTION != null)
@@ -354,7 +354,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.edtDesc.setText(description);
-            productsList.get(position).setAmount(amount);
+            productsList.get(holder.getAdapterPosition()).setAmount(amount);
 
 
             if (amount > 0) {
@@ -369,8 +369,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.ivMax.setOnClickListener(view -> doAction(
-                    productsList.get(position).getAmount(),
-                    position,
+                    productsList.get(holder.getAdapterPosition()).getAmount(),
+                 holder.getAdapterPosition(),
                     holder.error,
                     holder.progressBar,
                     holder.textWatcher,
@@ -378,14 +378,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     holder.ivMinus,
                     company,
                     maxSale,
-                    productsList.get(position).getI(),
+                    productsList.get(holder.getAdapterPosition()).getI(),
                     "",
                     1
             ));
 
 
-            holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(position).getAmount(),
-                    position,
+            holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                    holder.getAdapterPosition(),
                     holder.error,
                     holder.progressBar,
                     holder.textWatcher,
@@ -393,7 +393,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     holder.ivMinus,
                     company,
                     maxSale,
-                    productsList.get(position).getI(),
+                    productsList.get(holder.getAdapterPosition()).getI(),
                     "",
                     2
 
@@ -422,8 +422,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
                         }
 
-                        doAction(productsList.get(position).getAmount(),
-                                position,
+                        doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                                holder.getAdapterPosition(),
                                 holder.error,
                                 holder.progressBar,
                                 holder.textWatcher,
@@ -431,7 +431,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 holder.ivMinus,
                                 company,
                                 maxSale,
-                                productsList.get(position).getI(),
+                                productsList.get(holder.getAdapterPosition()).getI(),
                                 s,
                                 3
 
@@ -456,8 +456,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.cardEdit.setOnClickListener(v -> {
-                if (productsList.get(position).getAmount() != null) {
-                    descriptionItem.onDesc(productsList.get(position).getI(), productsList.get(position).getAmount());
+                if (productsList.get(holder.getAdapterPosition()).getAmount() != null) {
+                    descriptionItem.onDesc(productsList.get(holder.getAdapterPosition()).getI(), productsList.get(holder.getAdapterPosition()).getAmount());
                 } else {
                     AlertDialog alertDialog=  new AlertDialog.Builder(context)
                             .setMessage("برای کالا مقدار وارد کنید.")

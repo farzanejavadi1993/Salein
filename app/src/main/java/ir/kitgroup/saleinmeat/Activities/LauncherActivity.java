@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinmeat.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -70,6 +71,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     private boolean loadProfile = true;
+    private boolean loadHome = true;
 
     //region Parameter Dialog
     private Dialog ExitDialog;
@@ -93,6 +95,8 @@ public class LauncherActivity extends AppCompatActivity {
         //endregion Set Layout to LauncherActivity class
 
 
+
+
         Util.ScreenSize(this);
 
 
@@ -108,10 +112,12 @@ public class LauncherActivity extends AppCompatActivity {
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
             int size = getSupportFragmentManager().getBackStackEntryCount();
+
+
             String Inv_GUID1 = sharedPreferences.getString("Inv_GUID", "");
-
-
             int counter = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID1 + "'").list().size();
+
+
 
             if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
                 size = size - 1;
@@ -125,13 +131,20 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.homee:
 
                     loadProfile = true;
-                    if (counter== 0)
+
+                    int amount=0;
+                    if (bundle.getBoolean("EDIT"))
+                        amount=mainOrderFragment.counter1;
+                    else
+                        amount=counter;
+
+                    if (amount == 0)
                         setClearCounterOrder();
                     else
-                        setCounterOrder(counter);
+                        setCounterOrder(amount);
                     binding.navView.getMenu().getItem(3).setEnabled(false);
                     binding.navView.setVisibility(View.VISIBLE);
-                    if (size > 0)
+                    if (loadHome && size > 0)
                         getSupportFragmentManager().popBackStack();
 
 
@@ -161,9 +174,14 @@ public class LauncherActivity extends AppCompatActivity {
 
                     binding.navView.getMenu().getItem(3).setEnabled(true);
 
-                    if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size).getName().equals("SearchProductF"))
-                        getSupportFragmentManager().popBackStack();
-                    else if (!bundle.getBoolean("EDIT") && size > 0)
+                    try {
+                        if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size).getName().equals("SearchProductF"))
+                            getSupportFragmentManager().popBackStack();
+                    } catch (Exception ignored) {
+
+                    }
+
+                    if (!bundle.getBoolean("EDIT") && size > 0)
                         getSupportFragmentManager().popBackStack();
 
 
@@ -314,9 +332,12 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-    public void setFistItem() {
+    public void setFistItem(boolean loadHome1) {
+        loadHome=loadHome1;
         binding.navView.setSelectedItemId(R.id.homee);
     }
+
+
 
 
     //region Override Method
@@ -333,7 +354,8 @@ public class LauncherActivity extends AppCompatActivity {
                         getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF") ||
                         getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SearchProductF")
         ) {
-            setFistItem();
+
+            setFistItem(true);
         } else if (
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("OrderListF") ||
                         getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("ProfileF") ||

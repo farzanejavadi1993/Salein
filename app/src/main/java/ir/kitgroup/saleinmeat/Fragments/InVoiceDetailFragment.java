@@ -271,6 +271,7 @@ public class InVoiceDetailFragment extends Fragment {
             btnNo.setOnClickListener(v -> dialogDelete.dismiss());
             btnOk.setOnClickListener(v -> {
                 dialogDelete.dismiss();
+                binding.progressBar.setVisibility(View.VISIBLE);
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                 for (int i = 0; i < invoiceDetails.size(); i++) {
@@ -287,6 +288,7 @@ public class InVoiceDetailFragment extends Fragment {
                     fgf.refreshProductList();
                 }
 
+                binding.progressBar.setVisibility(View.GONE);
             });
             //endregion Cast Dialog Delete
 
@@ -415,6 +417,12 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                 invoiceDetailAdapter.notifyDataSetChanged();
+
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    fgf.refreshProductList();
+                }
                 dialogDescription.dismiss();
             });
             //endregion Cast DialogDescription
@@ -499,6 +507,13 @@ public class InVoiceDetailFragment extends Fragment {
                         }
 
                         invoiceDetailAdapter.notifyDataSetChanged();
+
+                            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                            if (frg instanceof MainOrderFragment) {
+                                MainOrderFragment fgf = (MainOrderFragment) frg;
+                                fgf.refreshProductList();
+                            }
+
 
                     }
                 }
@@ -652,9 +667,7 @@ public class InVoiceDetailFragment extends Fragment {
                 if (invoiceDetailList.size() == 0) {
                     AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
                             .setMessage("سفارشی وجود ندارد")
-                            .setPositiveButton("بستن", (dialog, which) -> {
-                                dialog.dismiss();
-                            })
+                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
                     TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
@@ -698,9 +711,7 @@ public class InVoiceDetailFragment extends Fragment {
                 if (invoiceDetailList.size() == 0) {
                     AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
                             .setMessage("سفارشی وجود ندارد")
-                            .setPositiveButton("بستن", (dialog, which) -> {
-                                dialog.dismiss();
-                            })
+                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
                     TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
@@ -875,9 +886,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                                                         AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
                                                                 .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
-                                                                .setPositiveButton("بستن", (dialog, which) -> {
-                                                                    dialog.dismiss();
-                                                                })
+                                                                .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                                                                 .show();
 
                                                         TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
@@ -894,6 +903,13 @@ public class InVoiceDetailFragment extends Fragment {
 
                                                         invoiceDetailAdapter.notifyDataSetChanged();
 
+                                                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                                                        if (frg instanceof MainOrderFragment) {
+                                                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                                                            fgf.refreshProductList();
+                                                        }
+
+
                                                         return;
                                                     }
                                                 }
@@ -903,7 +919,17 @@ public class InVoiceDetailFragment extends Fragment {
                                                     invoiceDetail.update();
 
                                                 }
+
+
+
+
                                                 invoiceDetailAdapter.notifyDataSetChanged();
+
+                                                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                                                if (frg instanceof MainOrderFragment) {
+                                                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                                                    fgf.refreshProductList();
+                                                }
 
                                             }
 
@@ -1242,12 +1268,6 @@ public class InVoiceDetailFragment extends Fragment {
                     Inv_GUID + "'").list();
             for (int i = 0; i < invoiceDetails.size(); i++) {
                 InvoiceDetail.delete(invoiceDetails.get(i));
-            }
-        }else {
-            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-            if (frg instanceof MainOrderFragment) {
-                MainOrderFragment fgf = (MainOrderFragment) frg;
-                fgf.refreshProductList();
             }
         }
 

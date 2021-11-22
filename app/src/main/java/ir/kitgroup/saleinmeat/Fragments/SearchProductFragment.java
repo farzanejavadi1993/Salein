@@ -199,6 +199,12 @@ public class SearchProductFragment extends Fragment {
             }
 
             productAdapter.notifyDataSetChanged();
+            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+
+            if (frg instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) frg;
+                fgf.refreshProductList();
+            }
 
             dialogDescription.dismiss();
         });
@@ -289,6 +295,14 @@ public class SearchProductFragment extends Fragment {
            else
                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
+
+
+            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+
+            if (frg instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) frg;
+                fgf.refreshProductList();
+            }
 
         });
 
