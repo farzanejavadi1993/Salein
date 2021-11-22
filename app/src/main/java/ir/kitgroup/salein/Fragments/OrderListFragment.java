@@ -3,10 +3,12 @@ package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -52,8 +56,11 @@ import ir.kitgroup.salein.Adapters.OrderListAdapter;
 
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.DataBase.InvoiceDetail;
+
 import ir.kitgroup.salein.classes.ConfigRetrofit;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.classes.CustomProgress;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Invoice;
 
 
@@ -63,6 +70,9 @@ import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.DateConverter;
 import ir.kitgroup.salein.databinding.FragmentOrderListBinding;
 import ir.kitgroup.salein.models.ModelInvoice;
+
+import ir.kitgroup.salein.models.ModelLog;
+import ir.kitgroup.salein.models.PaymentRecieptDetail;
 
 
 @AndroidEntryPoint
@@ -78,9 +88,13 @@ public class OrderListFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
+    @Inject
+    Typeface typeface;
 
-    private CompositeDisposable compositeDisposable;
     //region Parameter
+    private CustomProgress customProgress;
+    private CompositeDisposable compositeDisposable;
+
     private FragmentOrderListBinding binding;
 
     //region Dialog Sync
@@ -112,19 +126,18 @@ public class OrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         compositeDisposable = new CompositeDisposable();
+        customProgress = CustomProgress.getInstance();
 
         String accGUID = Select.from(Account.class).list().get(0).I;
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
-            company=null;
-            api=null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+
+            company = null;
+            api = null;
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
         }
 
@@ -175,31 +188,51 @@ public class OrderListFragment extends Fragment {
         list.clear();
 
 
-        orderListAdapter = new OrderListAdapter(getContext(), list, 2);
+        orderListAdapter = new OrderListAdapter(getActivity(), list);
         binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recycler.setAdapter(orderListAdapter);
         binding.recycler.setHasFixedSize(false);
-        orderListAdapter.setOnClickItemListener((type, Inv_GUID) -> {
+        orderListAdapter.setOnClickItemListener((description,type, Inv_GUID) -> {
+
+            if (type==1){
+                Bundle bundleOrder = new Bundle();
+                bundleOrder.putString("Inv_GUID", Inv_GUID);
+                bundleOrder.putString("Tbl_GUID", "");
+                bundleOrder.putString("Tbl_NAME", "");
+                bundleOrder.putString("Ord_TYPE", "");
+                bundleOrder.putString("Acc_GUID", "");
+                bundleOrder.putString("Acc_NAME", "");
+                bundleOrder.putString("type", "1");
+
+                InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
+                inVoiceDetailFragment.setArguments(bundleOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
+            }else {
+                Invoice invoice = new Invoice();
+                invoice.INV_UID = Inv_GUID;
+                invoice.INV_DESCRIBTION =description;
+                List<Invoice> listInvoice = new ArrayList<>();
+                listInvoice.add(invoice);
 
 
-            Bundle bundleOrder = new Bundle();
-            bundleOrder.putString("Inv_GUID", Inv_GUID);
-            bundleOrder.putString("Tbl_GUID", "");
-            bundleOrder.putString("Tbl_NAME", "");
-            bundleOrder.putString("Ord_TYPE", "");
-            bundleOrder.putString("Acc_GUID", "");
-            bundleOrder.putString("Acc_NAME", "");
-            bundleOrder.putString("type", "1");
+                List<InvoiceDetail> invoiceDetailList = new ArrayList<>();
+                List<PaymentRecieptDetail> clsPaymentRecieptDetails = new ArrayList<>();
+                sendFeedBack(listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
+            }
 
-            InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
-            inVoiceDetailFragment.setArguments(bundleOrder);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
 
 
         });
 
 
+
+        binding.ivBack.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
+
         getAllInvoice1(accGUID, datVip);
+
+
+
+
     }
 
 
@@ -296,6 +329,7 @@ public class OrderListFragment extends Fragment {
 
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -308,6 +342,107 @@ public class OrderListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         compositeDisposable.clear();
+    }
+
+
+    private class JsonObject {
+        public List<Invoice> Invoice;
+        public List<ir.kitgroup.salein.DataBase.InvoiceDetail> InvoiceDetail;
+        public List<ir.kitgroup.salein.models.PaymentRecieptDetail> PaymentRecieptDetail;
+    }
+
+    private void sendFeedBack(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+
+        if (!isNetworkAvailable(getActivity())) {
+            ShowErrorConnection();
+            return;
+        }
+        try {
+            customProgress.showProgress(getActivity(), "در حال ارسال سفارش", true);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.Invoice = invoice;
+            jsonObject.InvoiceDetail = invoiceDetail;
+            jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
+
+
+            Gson gson = new Gson();
+            Type typeJsonObject = new TypeToken<JsonObject>() {
+            }.getType();
+            compositeDisposable.add(
+                    api.sendFeedBack(company.userName, company.passWord, gson.toJson(jsonObject, typeJsonObject))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                customProgress.hideProgress();
+
+                                Gson gson1 = new Gson();
+                                Type typeIDs = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDs = gson1.fromJson(jsonElement, typeIDs);
+                                int message = 0;
+
+                                if (iDs != null) {
+                                    message = iDs.getLogs().get(0).getMessage();
+
+                                }
+                                if (message == 1) {
+
+                                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                                            .setMessage("نظر شما با موفقیت ارسال شد.")
+                                          .setPositiveButton("بستن", (dialog, which) -> {
+                                               dialog.dismiss();
+                                            })
+                                          .show();
+
+                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                    textView.setTypeface(face);
+                                    textView.setTextColor(getResources().getColor(R.color.green_table));
+                                    textView.setTextSize(13);
+
+
+
+
+
+                                } else {
+                                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                                            .setMessage("خطا در ارسال نظر")
+                                            .setPositiveButton("بستن", (dialog, which) -> {
+                                                dialog.dismiss();
+                                            })
+                                            .show();
+
+                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                    textView.setTypeface(face);
+                                    textView.setTextColor(getResources().getColor(R.color.red_table));
+                                    textView.setTextSize(13);
+
+                                }
+
+
+                            }, throwable -> {
+
+                                customProgress.hideProgress();
+
+                                if (customProgress.isShow)
+                                    customProgress.hideProgress();
+                                Toast.makeText(getActivity(), "خطا در ارسال توضیحات", Toast.LENGTH_SHORT).show();
+
+
+                            })
+            );
+        } catch (Exception e) {
+            customProgress.hideProgress();
+
+            if (customProgress.isShow)
+                customProgress.hideProgress();
+            Toast.makeText(getActivity(), "خطا در ارسال توضیحات", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

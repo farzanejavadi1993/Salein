@@ -14,5 +14,5 @@ public class Setting  {
     public String SERVICE_DAY;
     public String PEYK;
     public String PAYMENT_TYPE;
-    public String LINKUPDATE;
+    public String LINK_UPDATE;
 }

@@ -4,7 +4,9 @@ package ir.kitgroup.salein.Adapters;
 import android.annotation.SuppressLint;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,7 +17,7 @@ import android.widget.ImageView;
 
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,7 +116,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
 
 
-        InvoiceDetail invoicedetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(position).INV_DET_UID + "'").first();
+        InvoiceDetail invoicedetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
 
 
         holder.name.setTextSize(fontSize);
@@ -134,7 +136,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
         }
 
 
-       List< Product >prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(position).PRD_UID+"'").list();
+       List< Product >prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(holder.getAdapterPosition()).PRD_UID+"'").list();
 
 
         if (prd1.size()>0 ) {
@@ -144,7 +146,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             else if ((type.equals("1") || Seen)&& invoicedetail.INV_DET_PERCENT_DISCOUNT!=null && invoicedetail.INV_DET_PERCENT_DISCOUNT!=0.0)
                 holder.discount.setText(format.format(invoicedetail.INV_DET_PERCENT_DISCOUNT) + "%");
 
-            holder.name.setText(position+1+"_"+prd1.get(0).getN());
+            holder.name.setText(holder.getAdapterPosition()+1+"_"+prd1.get(0).getN());
             holder.price.setText(format.format(prd1.get(0).getPrice(sharedPreferences)));
 
 
@@ -196,7 +198,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                          amount = Double.parseDouble(s);
 
                         ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
-                      CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(position).PRD_UID));
+                      CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                         double aPlus=1;
                         if (resultPrd1.size()>0){
                             aPlus = resultPrd1.get(0).getCoef();
@@ -205,7 +207,22 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                         }
 
                         if (amount%aPlus!=0){
-                            Toast.makeText(contex,  " مقدار انتخاب شده باید ضریبی از" + aPlus + "باشد  ", Toast.LENGTH_SHORT).show();
+
+
+                            AlertDialog alertDialog=  new AlertDialog.Builder(contex)
+                                    .setMessage( " مقدار انتخاب شده باید ضریبی از" + aPlus + "باشد  ")
+                                    .setPositiveButton("بستن", (dialog, which) -> {
+                                        dialog.dismiss();
+                                    })
+                                    .show();
+
+                            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                            Typeface face=Typeface.createFromAsset(contex.getAssets(), "iransans.ttf");
+                            textView.setTypeface(face);
+                            textView.setTextColor(contex.getResources().getColor(R.color.medium_color));
+                            textView.setTextSize(13);
+
+
                             holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                             holder.edtAmount.setText("0");
                             holder.edtAmount.addTextChangedListener(holder.textWatcher);
@@ -218,7 +235,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 discountPercent=invoicedetail.INV_DET_PERCENT_DISCOUNT;
                             else
                                 discountPercent=prd1.get(0).getPercDis();
-                            editAmountItem.onEditAmountRow(orderDetailList.get(position).PRD_UID, "0", prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
+                            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, "0", prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
                             return;
                         }
                     }
@@ -233,7 +250,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                         discountPercent=invoicedetail.INV_DET_PERCENT_DISCOUNT;
                     else
                         discountPercent=prd1.get(0).getPercDis();
-                    editAmountItem.onEditAmountRow(orderDetailList.get(position).PRD_UID, s, prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, s, prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
 
 
                 }
@@ -246,7 +263,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
         }
-        holder.imgDescription.setOnClickListener(v -> decriptionItem.onRowDescription(orderDetailList.get(position).PRD_UID, orderDetailList.get(position).INV_DET_UID, orderDetailList.get(position).INV_DET_DESCRIBTION));
+        holder.imgDescription.setOnClickListener(v -> decriptionItem.onRowDescription(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID, orderDetailList.get(holder.getAdapterPosition()).INV_DET_DESCRIBTION));
 
 
         holder.edtAmount.removeTextChangedListener(holder.textWatcher);
@@ -271,7 +288,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             holder.imgDelete.setEnabled(false);
 
             ArrayList<InvoiceDetail> result = new ArrayList<>(orderDetailList);
-            CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(position).PRD_UID));
+            CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             if (result.size() > 0) {
 
 
@@ -294,7 +311,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         holder.ivMax.setOnClickListener(v -> {
             ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
-            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(position).PRD_UID));
+            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
                 aPlus = resultPrd1.get(0).getCoef();
@@ -317,14 +334,14 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 discountPercent=prd1.get(0).getPercDis();
 
 
-            editAmountItem.onEditAmountRow(orderDetailList.get(position).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
 
         });
 
 
         holder.ivMinus.setOnClickListener(v -> {
             ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);
-            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(position).PRD_UID));
+            CollectionUtils.filter(resultPrd1, r -> r.getI().equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
             double aPlus=1;
             if (resultPrd1.size()>0){
                  aPlus = resultPrd1.get(0).getCoef();
@@ -350,7 +367,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
             else
                 discountPercent=prd1.get(0).getPercDis();
 
-            editAmountItem.onEditAmountRow(orderDetailList.get(position).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
+            editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), prd1.get(0).getPrice(sharedPreferences), discountPercent / 100);
         });
 
     }

@@ -4,7 +4,9 @@ package ir.kitgroup.salein.Adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -57,7 +59,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.Fragments.ShowDetailFragment;
 
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
@@ -214,7 +216,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(position).getI() + "'").first();
 
 
-            String ip = company.ipLocal;
+            String ip = company.IP1;
 
 
 
@@ -258,7 +260,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             if (productsList.get(position).getPrice(sharedPreferences) > 0) {
 
                 holder.productPrice.setText(format.format(productsList.get(position).getPrice(sharedPreferences)) + " ریال ");
-
+                holder.productDiscountPercent.setText("");
+                holder.productOldPrice.setText("");
+                holder.layoutDiscount.setVisibility(View.GONE);
+                holder.productDiscountPercent.setVisibility(View.GONE);
+                holder.productOldPrice.setVisibility(View.GONE);
+                holder.Line.setVisibility(View.GONE);
                 if (productsList.get(position).getPercDis() != 0.0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
@@ -452,7 +459,18 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 if (productsList.get(position).getAmount() != null) {
                     descriptionItem.onDesc(productsList.get(position).getI(), productsList.get(position).getAmount());
                 } else {
-                    Toast.makeText(context, " برای کالا  مقداروارد کنید", Toast.LENGTH_SHORT).show();
+                    AlertDialog alertDialog=  new AlertDialog.Builder(context)
+                            .setMessage("برای کالا مقدار وارد کنید.")
+                            .setPositiveButton("بستن", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+
+                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                    textView.setTypeface(face);
+                    textView.setTextColor(context.getResources().getColor(R.color.red_table));
+                    textView.setTextSize(13);
                 }
             });
 
@@ -612,7 +630,24 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 try {
                                                     amount = Float.parseFloat(s);
                                                     if (amount % finalAPlus != 0) {
-                                                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ", Toast.LENGTH_SHORT).show();
+
+
+                                                        AlertDialog alertDialog=  new AlertDialog.Builder(context)
+                                                                .setMessage(" مقدار وارد شده باید ضریبی از "+finalAPlus+" باشد ")
+                                                                .setPositiveButton("بستن", (dialog, which) -> {
+                                                                    dialog.dismiss();
+                                                                })
+                                                                .show();
+
+                                                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                                        Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                                                        textView.setTypeface(face);
+                                                        textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+                                                        textView.setTextSize(13);
+
+
+
+
                                                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                         ProductAmountTxt.setText("0");
 
@@ -633,7 +668,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                             productsList.get(position).setAmount(amount);
 
                                             if (Integer.parseInt(jsonElement) - amount < 0) {
-                                                Toast.makeText(context, "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement, Toast.LENGTH_SHORT).show();
+
+
+
+                                                AlertDialog alertDialog=  new AlertDialog.Builder(context)
+                                                        .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
+                                                        .setPositiveButton("بستن", (dialog, which) -> {
+                                                            dialog.dismiss();
+                                                        })
+                                                        .show();
+
+                                                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                                Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                                                textView.setTypeface(face);
+                                                textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+                                                textView.setTextSize(13);
 
                                                 if (remain % finalAPlus != 0) {
 
@@ -735,6 +784,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     }
                                     , throwable -> {
                                         Toast.makeText(context, "خطا در دریافت اطلاعات مانده کالا", Toast.LENGTH_SHORT).show();
+
                                         progressBar.setVisibility(View.GONE);
 
 
@@ -846,7 +896,23 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 try {
                     amount = Float.parseFloat(s);
                     if (amount % aPlus != 0) {
-                        Toast.makeText(context, " مقدار وارد شده باید ضریبی از " + aPlus + " باشد.", Toast.LENGTH_SHORT).show();
+
+
+
+
+                        AlertDialog alertDialog=  new AlertDialog.Builder(context)
+                                .setMessage(" مقدار وارد شده باید ضریبی از "+ aPlus + " باشد.")
+                                .setPositiveButton("بستن", (dialog, which) -> {
+                                    dialog.dismiss();
+                                })
+                                .show();
+
+                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                        Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                        textView.setTypeface(face);
+                        textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+                        textView.setTextSize(13);
+
                         amount = 0;
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
                         ProductAmountTxt.setText("0");

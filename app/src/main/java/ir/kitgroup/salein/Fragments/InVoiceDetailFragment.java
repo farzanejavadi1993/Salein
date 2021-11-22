@@ -2,10 +2,12 @@ package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -80,7 +82,7 @@ import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Description;
 
 import ir.kitgroup.salein.models.ModelDesc;
@@ -200,11 +202,11 @@ public class InVoiceDetailFragment extends Fragment {
 
             if (!Util.RetrofitValue) {
                 ConfigRetrofit configRetrofit = new ConfigRetrofit();
-                String name = sharedPreferences.getString("CN", "");
+
                 company = null;
                 api = null;
-                company = configRetrofit.getCompany(name);
-                api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+                company = Select.from(Company.class).first();
+                api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
             }
 
@@ -496,7 +498,6 @@ public class InVoiceDetailFragment extends Fragment {
                             invoiceDetail.update();
                         }
 
-
                         invoiceDetailAdapter.notifyDataSetChanged();
 
                     }
@@ -649,7 +650,18 @@ public class InVoiceDetailFragment extends Fragment {
             //region Action BtnEdit
             binding.btnEdit.setOnClickListener(v -> {
                 if (invoiceDetailList.size() == 0) {
-                    Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
+                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                            .setMessage("سفارشی وجود ندارد")
+                            .setPositiveButton("بستن", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+
+                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                    textView.setTypeface(face);
+                    textView.setTextColor(getResources().getColor(R.color.red_table));
+                    textView.setTextSize(13);
                     return;
                 }
                 Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
@@ -684,7 +696,18 @@ public class InVoiceDetailFragment extends Fragment {
             binding.btnContinue.setOnClickListener(v -> {
                 binding.btnContinue.setEnabled(false);
                 if (invoiceDetailList.size() == 0) {
-                    Toast.makeText(getContext(), "سفارشی وجود ندارد", Toast.LENGTH_SHORT).show();
+                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                            .setMessage("سفارشی وجود ندارد")
+                            .setPositiveButton("بستن", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+
+                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                    textView.setTypeface(face);
+                    textView.setTextColor(getResources().getColor(R.color.red_table));
+                    textView.setTextSize(13);
                     return;
                 }
                 String ordTy = "";
@@ -740,7 +763,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
         } catch (Exception ignore) {
-            Toast.makeText(getActivity(), "Invoice", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -788,7 +811,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                             }, throwable -> {
                                 customProgress.hideProgress();
-                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت توضیحات", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "خطا در دریافت توضیحات از سرور", Toast.LENGTH_SHORT).show();
 
                             })
             );
@@ -847,7 +870,21 @@ public class InVoiceDetailFragment extends Fragment {
                                                 if (!s.equals("")) {
                                                     amount = Double.parseDouble(s);
                                                     if (remain - amount < 0) {
-                                                        Toast.makeText(getActivity(), "مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement, Toast.LENGTH_SHORT).show();
+
+
+
+                                                        AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                                                                .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
+                                                                .setPositiveButton("بستن", (dialog, which) -> {
+                                                                    dialog.dismiss();
+                                                                })
+                                                                .show();
+
+                                                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                                        Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                                        textView.setTypeface(face);
+                                                        textView.setTextColor(getResources().getColor(R.color.medium_color));
+                                                        textView.setTextSize(13);
 
                                                         if (invoiceDetail != null) {
                                                             invoiceDetail.INV_DET_QUANTITY = 0.0;
@@ -873,7 +910,7 @@ public class InVoiceDetailFragment extends Fragment {
                                         }
 
                                     }
-                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show())
+                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا از سرور", Toast.LENGTH_SHORT).show())
             );
         } catch (Exception e) {
             Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
@@ -1001,7 +1038,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception ignored) {
-                                    Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
                                     binding.progressBar.setVisibility(View.GONE);
                                 }
 
@@ -1027,8 +1064,13 @@ public class InVoiceDetailFragment extends Fragment {
                                         status = iDs.getInvoice().get(0).INV_SYNC;
                                         invFinal = iDs.getInvoice().get(0).invFinalStatusControl;
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
-                                        //   sumDiscountsInvoiceRial = iDs.getInvoice().get(0).INV_TOTAL_DISCOUNT;
+                                        if (iDs.getInvoice().get(0).INV_DESCRIBTION!=null &&!iDs.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
+                                            binding.edtDescription.setHint("توضیحات : " + iDs.getInvoice().get(0).INV_DESCRIBTION);
+                                            binding.edtDescription.setVisibility(View.VISIBLE);
 
+                                        }else {
+                                            binding.edtDescription.setVisibility(View.GONE);
+                                        }
 
                                         if (company.mode == 1) {
                                             Acc_NAME = iDs.getInvoice().get(0).accClbName;
@@ -1067,7 +1109,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                                 } else {
-                                    Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
                                     binding.progressBar.setVisibility(View.GONE);
 
 
@@ -1075,7 +1117,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 binding.progressBar.setVisibility(View.GONE);
 
                             }, throwable -> {
-                                Toast.makeText(getActivity(), "دریافت آخرین اطلاعات ناموفق", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
                                 binding.progressBar.setVisibility(View.GONE);
 
                             })
@@ -1201,7 +1243,14 @@ public class InVoiceDetailFragment extends Fragment {
             for (int i = 0; i < invoiceDetails.size(); i++) {
                 InvoiceDetail.delete(invoiceDetails.get(i));
             }
+        }else {
+            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+            if (frg instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) frg;
+                fgf.refreshProductList();
+            }
         }
+
         compositeDisposable.dispose();
         binding = null;
     }
@@ -1212,6 +1261,7 @@ public class InVoiceDetailFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
+
 
 }
 

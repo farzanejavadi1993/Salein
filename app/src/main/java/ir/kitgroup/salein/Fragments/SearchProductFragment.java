@@ -59,7 +59,7 @@ import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSearchProductBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.models.ModelDesc;
 import ir.kitgroup.salein.models.ModelProduct;
@@ -77,6 +77,9 @@ public class SearchProductFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+
+    private String Transport_GUID = "";
 
     private  FragmentSearchProductBinding binding;
     private ProductAdapter1 productAdapter;
@@ -117,6 +120,8 @@ public class SearchProductFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
 
 
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
+
         Bundle bundle=getArguments();
         Boolean seen = bundle.getBoolean("Seen");
         Inv_GUID=bundle.getString("Inv_GUID");
@@ -132,11 +137,11 @@ public class SearchProductFragment extends Fragment {
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
+
             company=null;
             api=null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
         }
 
@@ -272,6 +277,8 @@ public class SearchProductFragment extends Fragment {
         productAdapter.setOnClickListener(() -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
+
+            CollectionUtils.filter(invDetails,i->!i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
             int counter=0;
             if (invDetails.size() > 0) {
                 counter = invDetails.size();

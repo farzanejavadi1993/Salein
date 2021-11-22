@@ -51,7 +51,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 
@@ -115,11 +115,11 @@ public class SettingFragment extends Fragment {
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
+
             company=null;
             api=null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
         }
 

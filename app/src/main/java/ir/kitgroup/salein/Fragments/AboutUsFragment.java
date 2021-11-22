@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.orm.query.Select;
+
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -24,7 +26,7 @@ import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.AboutUsFragmentBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 
 @AndroidEntryPoint
 public class AboutUsFragment extends Fragment {
@@ -69,10 +71,9 @@ public class AboutUsFragment extends Fragment {
         //region Set Icon And Title
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
+
             company=null;
-            company = configRetrofit.getCompany(name);
+            company = Select.from(Company.class).first();
 
 
         }
@@ -80,7 +81,7 @@ public class AboutUsFragment extends Fragment {
             binding.imageView.setImageResource(company.imageDialog);
         binding.title.setText(company.title);
         binding.description.setText(company.Description);
-        binding.textView4.setText(company.numberPhone);
+        binding.textView4.setText(company.T1);
 
 
         //endregion Set Icon And Title
@@ -96,7 +97,7 @@ public class AboutUsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+company.numberPhone));
+                intent.setData(Uri.parse("tel:"+company.T1));
                 startActivity(intent);
             }
         });

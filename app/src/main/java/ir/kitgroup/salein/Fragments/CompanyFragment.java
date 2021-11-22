@@ -46,8 +46,9 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentCompanyBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelAccount;
+import ir.kitgroup.salein.models.ModelCompany;
 import ir.kitgroup.salein.models.ModelLog;
 
 
@@ -56,19 +57,17 @@ public class CompanyFragment extends Fragment {
 
     private FragmentCompanyBinding binding;
 
-    private  CompositeDisposable compositeDisposable ;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     API api;
 
 
-    @Inject
-    ArrayList<Company> companies;
+    private ArrayList<Company> companies;
+    CompanyAdapterList companyAdapterList;
 
     @Inject
     SharedPreferences sharedPreferences;
-
-
 
 
     private Company companySelect;
@@ -80,7 +79,7 @@ public class CompanyFragment extends Fragment {
 
     private Dialog dialog;
     private TextView textExit;
-    private   ImageView ivIcon;
+    private ImageView ivIcon;
 
 
     @Nullable
@@ -96,41 +95,37 @@ public class CompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         configRetrofit = new ConfigRetrofit();
         compositeDisposable = new CompositeDisposable();
+        companies = new ArrayList<>();
 
-
-        CompanyAdapterList companyAdapterList = new CompanyAdapterList(companies, 2);
+        companyAdapterList = new CompanyAdapterList(companies, 2);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
         companyAdapterList.setOnClickItemListener((company, check) ->
                 {
+                    Company.deleteAll(Company.class);
+                    Company.saveInTx(company);
+
                     compositeDisposable.clear();
-                    companySelect=company;
+                    companySelect = company;
                     Util.RetrofitValue = false;
-                    String nameSave = sharedPreferences.getString(company.nameCompany, "");
+                    String nameSave = sharedPreferences.getString(company.I, "");
                     if (!nameSave.equals("")) {
-                        sharedPreferences.edit().putString("CN",company.nameCompany).apply();
-                        Bundle bundleMainOrder= new Bundle();
+                        Bundle bundleMainOrder = new Bundle();
                         bundleMainOrder.putString("Inv_GUID", "");
                         bundleMainOrder.putString("Tbl_GUID", "");
                         bundleMainOrder.putString("Ord_TYPE", "");
-
-                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                        MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
-                        api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
-                        getInquiryAccount1(company.nameCompany, company.userName, company.passWord, account.M);
+                        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+                        getInquiryAccount1(company.N,company.I, company.userName, company.passWord, account.M);
                     }
                 }
         );
-
-
-
 
 
         dialog = new Dialog(getActivity());
@@ -140,8 +135,7 @@ public class CompanyFragment extends Fragment {
         dialog.setCancelable(false);
 
         textExit = dialog.findViewById(R.id.tv_message);
-         ivIcon = dialog.findViewById(R.id.iv_icon);
-
+        ivIcon = dialog.findViewById(R.id.iv_icon);
 
 
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
@@ -158,11 +152,14 @@ public class CompanyFragment extends Fragment {
 
 
         account = Select.from(Account.class).first();
+
+
+        getCompany("");
     }
 
 
     @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String name, String userName, String passWord, String mobile) {
+    private void getInquiryAccount1(String name,String companyGUID, String userName, String passWord, String mobile) {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -203,16 +200,16 @@ public class CompanyFragment extends Fragment {
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
 
-                                            sharedPreferences.edit().putString("CN",name).apply();
-                                            sharedPreferences.edit().putString(name,name).apply();
+
+                                            sharedPreferences.edit().putString(companyGUID, "login").apply();
 
 
-                                            Bundle bundleMainOrder= new Bundle();
+                                            Bundle bundleMainOrder = new Bundle();
                                             bundleMainOrder.putString("Inv_GUID", "");
                                             bundleMainOrder.putString("Tbl_GUID", "");
                                             bundleMainOrder.putString("Ord_TYPE", "");
 
-                                            MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
                                             mainOrderFragment.setArguments(bundleMainOrder);
                                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -243,6 +240,63 @@ public class CompanyFragment extends Fragment {
             );
         } catch (Exception e) {
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
+
+            binding.progressbar.setVisibility(View.GONE);
+        }
+
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void getCompany(String parentGuid) {
+        binding.progressbar.setVisibility(View.VISIBLE);
+        try {
+            compositeDisposable.add(
+                    api.getCompany(parentGuid)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelCompany>() {
+                                }.getType();
+                                ModelCompany iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از شرکت ها نامعتبر است.", Toast.LENGTH_SHORT).show();
+                                    binding.progressbar.setVisibility(View.GONE);
+                                    return;
+                                }
+
+
+                                if (iDs != null) {
+                                    if (iDs.getCompany() != null) {
+
+                                        companies.clear();
+                                        companies.addAll(iDs.getCompany());
+                                        companyAdapterList.notifyDataSetChanged();
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+
+                                }
+                                binding.progressbar.setVisibility(View.GONE);
+
+
+                            }, throwable -> {
+
+                                Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+                                binding.progressbar.setVisibility(View.GONE);
+
+                            })
+            );
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "خطا در ارتباط با سرور.", Toast.LENGTH_SHORT).show();
 
             binding.progressbar.setVisibility(View.GONE);
         }
@@ -286,12 +340,12 @@ public class CompanyFragment extends Fragment {
                                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                 if (message == 1) {
 
-                                    Bundle bundleMainOrder= new Bundle();
+                                    Bundle bundleMainOrder = new Bundle();
                                     bundleMainOrder.putString("Inv_GUID", "");
                                     bundleMainOrder.putString("Tbl_GUID", "");
                                     bundleMainOrder.putString("Ord_TYPE", "");
 
-                                    MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
                                     mainOrderFragment.setArguments(bundleMainOrder);
                                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -318,9 +372,8 @@ public class CompanyFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        binding=null;
+        binding = null;
     }
-
 
 
     @Override

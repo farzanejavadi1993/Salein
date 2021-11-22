@@ -16,7 +16,6 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.orm.query.Select;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -33,7 +32,7 @@ import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.R;
 
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -80,7 +79,6 @@ public class ApplicationModule {
                     packageName = "ir.kitgroup.salein";
 
                     break;
-
 
 
                 case "ir.kitgroup.saleinbahraman":
@@ -168,22 +166,20 @@ public class ApplicationModule {
                     description = "عرضه کننده بهترین محصولات نر افزاری";
                     paymentLink = "";
 
-
+/*
                     ipLocal = "2.180.28.6:3333";
                     userName = "administrator";
-                    passWord = "123";
+                    passWord = "123";*/
 
-//                    ipLocal = "192.168.20.8:96";
-//                    userName = "admin";
-//                    passWord = "123";
+                   ipLocal = "192.168.20.8:96";
+                    userName = "admin";
+                    passWord = "123";
 
 
                     numberPhone = "05137638311";
                     lat = 36.326805522660464;
                     lng = 59.56450551053102;
                     break;
-
-
 
 
                 case "ir.kitgroup.saleinbahraman":
@@ -287,12 +283,12 @@ public class ApplicationModule {
 
         Company company = new Company();
         company.services = Service;
-        company.ipLocal = ipLocal;
+        company.IP1 = ipLocal;
         company.imageLogo = imageLogo;
         company.imageDialog = imageDialog;
         company.title = title;
         company.Description = description;
-        company.nameCompany = nameCompany;
+        company.N = nameCompany;
         company.mode = mode;
         company.messageWelcome = messageWelcome;
         company.namePackage = namePackage;
@@ -300,116 +296,16 @@ public class ApplicationModule {
         company.passWord = passWord;
         company.linkUpdate = linkUpdate;
         company.paymentLink = paymentLink;
-        company.lat = lat;
-        company.lng = lng;
-        company.baseUrl = "http://" + ipLocal + "/api/REST/";
-        company.numberPhone = numberPhone;
+        company.LAT = String.valueOf(lat);
+        company.LONG =String.valueOf(lng);
+        company.IP1 = "http://" + ipLocal + "/api/REST/";
+        company.T1 = numberPhone;
 
         return company;
 
     }
 
 
-    @Provides
-    @Singleton
-    ArrayList<Company> ListCompany() {
-        ArrayList<Company> arrayList = new ArrayList<>();
-        Company companySalein = new Company();
-        Company companySaleinMeat = new Company();
-        Company companySaleinTop = new Company();
-        Company companySaleinBahraman = new Company();
-
-
-        companySalein.services = "ارائه  خدمات نرم افزاری در مشهد فعالیت میکند.";
-        companySalein.imageLogo = R.drawable.salein;
-        companySalein.imageDialog = R.drawable.saleinicon128;
-        companySalein.nameCompany = "سالین دمو";
-        companySalein.namePackage = "ir.kitgroup.salein";
-        companySalein.title = "سالین دمو";
-        companySalein.messageWelcome = "به سالین دمو خوش آمدید";
-        companySalein.Description = "عرضه کننده بهترین محصولات نرم افزاری";
-
-        companySalein.paymentLink = "";
-
-        companySalein.ipLocal = "2.180.28.6:3333";
-        companySalein.userName = "administrator";
-        companySalein.passWord = "123";
-
-
-//        companySalein.ipLocal = "192.168.20.8:96";
-//        companySalein.userName = "admin";
-//        companySalein.passWord = "123";
-
-
-        companySalein.numberPhone = "05137638311";
-        companySalein.lat = 36.326805522660464;
-        companySalein.lng = 59.56450551053102;
-        companySalein.baseUrl = "http://" + companySalein.ipLocal + "/api/REST/";
-
-
-        companySaleinBahraman.services = " ارائه  زعفران و انواع ادویه در مشهد فعالیت میکند.";
-        companySaleinBahraman.imageLogo = R.drawable.bahraman_icon;
-        companySaleinBahraman.imageDialog = R.drawable.bahraman_png;
-        companySaleinBahraman.nameCompany = "زعفران بهرامن";
-        companySaleinBahraman.namePackage = "ir.kitgroup.saleinbahraman";
-        companySaleinBahraman.title = "زعفران بهرامن";
-        companySaleinBahraman.messageWelcome = "به زعفران بهرامن خوش آمدید";
-        companySaleinBahraman.Description = "عرضه کننده بهترین محصولات";
-        companySaleinBahraman.ipLocal = "89.165.69.94:8085";
-        companySaleinBahraman.paymentLink = "";
-        companySaleinBahraman.userName = "admin";
-        companySaleinBahraman.passWord = "123";
-        companySaleinBahraman.numberPhone = "";
-        companySaleinBahraman.lat = 36.27928293493623;
-        companySaleinBahraman.lng = 59.611608491098615;
-        companySaleinBahraman.baseUrl = "http://" + companySaleinBahraman.ipLocal + "/api/REST/";
-
-
-        companySaleinTop.imageLogo = R.drawable.top_icon;
-        companySaleinTop.imageDialog = R.drawable.top_png;
-        companySaleinTop.nameCompany = "تاپ کباب";
-        companySaleinTop.namePackage = "ir.kitgroup.saleintop";
-        companySaleinTop.services = " ارائه انواع غذا در مشهد فعالیت میکند.";
-        companySaleinTop.title = "رستوران تاپ کباب";
-        companySaleinTop.messageWelcome = "به رستوران تاپ کباب خوش آمدید";
-        companySaleinTop.Description = "عرضه کننده بهترین غذاها";
-        companySaleinTop.ipLocal = "188.158.121.253:9999";
-        companySaleinTop.userName = "topkabab";
-        companySaleinTop.passWord = "9929";
-        companySaleinTop.paymentLink = "http://185.201.49.204:4008/";
-        companySaleinTop.lat = 36.318805483696735;
-        companySaleinTop.lng = 59.555196457006296;
-        companySaleinTop.numberPhone = "05137638311";
-        companySaleinTop.baseUrl = "http://" + companySaleinTop.ipLocal + "/api/REST/";
-
-
-        companySaleinMeat.imageLogo = R.drawable.meat_icon;
-        companySaleinMeat.imageDialog = R.drawable.meat_png;
-        companySaleinMeat.nameCompany = "گوشت دنیوی";
-        companySaleinMeat.namePackage = "ir.kitgroup.saleinmeat";
-        companySaleinMeat.messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
-        companySaleinMeat.services = " ارائه پروتئین و گوشت در مشهد فعالیت میکند.";
-        companySaleinMeat.namePackage = "ir.kitgroup.saleinmeat";
-        companySaleinMeat.title = " هایپر گوشت دنیوی";
-        companySaleinMeat.Description = "عرضه کننده انواع گوشت";
-        companySaleinMeat.ipLocal = "109.125.133.149:9999";
-        companySaleinMeat.userName = "admin";
-        companySaleinMeat.passWord = "0123";
-        companySaleinMeat.numberPhone = "05137335985";
-        companySaleinMeat.lat = 36.31947320471888;
-        companySaleinMeat.lng = 59.605469293071884;
-        companySaleinMeat.baseUrl = "http://" + companySaleinMeat.ipLocal + "/api/REST/";
-
-
-        arrayList.add(companySalein);
-        arrayList.add(companySaleinTop);
-        arrayList.add(companySaleinMeat);
-        arrayList.add(companySaleinBahraman);
-
-        return arrayList;
-
-
-    }
 
 
     @Provides
@@ -452,7 +348,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(getUser(context).baseUrl)
+                .baseUrl(getUser(context).IP1)
                 .client(okHttpClient)
                 .build();
     }

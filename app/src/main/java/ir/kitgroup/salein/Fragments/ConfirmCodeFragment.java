@@ -47,7 +47,7 @@ import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
 
 
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
@@ -353,7 +353,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-             // return;
+              return;
             }
             getInquiryAccount1(company.userName, company.passWord, mobileNumber);
         });

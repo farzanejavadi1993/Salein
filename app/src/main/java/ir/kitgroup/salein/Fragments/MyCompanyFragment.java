@@ -54,7 +54,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentMyCompanyBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelAccount;
 
 import ir.kitgroup.salein.models.ModelLog;
@@ -71,8 +71,7 @@ public class MyCompanyFragment extends Fragment {
     API api;
 
 
-    @Inject
-    ArrayList<Company> companies;
+    ArrayList<Company> companies=new ArrayList<>();
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -133,7 +132,7 @@ public class MyCompanyFragment extends Fragment {
 
                     companySelect=company;
                     Util.RetrofitValue = false;
-                    String nameSave = sharedPreferences.getString(company.nameCompany, "");
+                    String nameSave = sharedPreferences.getString(company.N, "");
                     if (!nameSave.equals("")) {
                         Bundle bundleMainOrder= new Bundle();
                         bundleMainOrder.putString("Inv_GUID", "");
@@ -144,8 +143,8 @@ public class MyCompanyFragment extends Fragment {
                         mainOrderFragment.setArguments(bundleMainOrder);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
-                        api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
-                        getInquiryAccount1(company.nameCompany, company.userName, company.passWord, account.M);
+                        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+                        getInquiryAccount1(company.N, company.userName, company.passWord, account.M);
                     }
                 }
         );

@@ -148,6 +148,7 @@
 
 
         <LinearLayout
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
             android:layout_marginTop="8dp"
@@ -155,7 +156,7 @@
             android:layout_below="@+id/btn_login"
             android:orientation="horizontal"
             android:id="@+id/layoutRule"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content">
             <TextView
                 android:text="آن را می پذیرم."

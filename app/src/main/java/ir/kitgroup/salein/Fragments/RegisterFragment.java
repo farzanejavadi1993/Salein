@@ -41,7 +41,7 @@ import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentRegisterBinding;

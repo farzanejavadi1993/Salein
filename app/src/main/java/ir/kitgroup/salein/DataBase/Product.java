@@ -92,29 +92,11 @@ public class Product extends SugarRecord {
         this.i = i;
     }
 
-    public String getPid1() {
-        return pid1;
-    }
-
-    public void setPid1(String pid1) {
-        this.pid1 = pid1;
-    }
-
-    public String getPid2() {
-        return pid2;
-    }
-
-    public void setPid2(String pid2) {
-        this.pid2 = pid2;
-    }
-
     public String getPid3() {
         return pid3;
     }
 
-    public void setPid3(String pid3) {
-        this.pid3 = pid3;
-    }
+
 
     public String getN() {
         return n;
@@ -124,13 +106,7 @@ public class Product extends SugarRecord {
         this.n = n;
     }
 
-    public String getNip() {
-        return nip;
-    }
 
-    public void setNip(String nip) {
-        this.nip = nip;
-    }
 
 
     public Double getPrice(SharedPreferences sharedPreferences) {
@@ -172,13 +148,6 @@ public class Product extends SugarRecord {
         this.des = des;
     }
 
-    public Boolean getTax() {
-        return tax;
-    }
-
-    public void setTax(Boolean tax) {
-        this.tax = tax;
-    }
 
     public Boolean getSts() {
         return sts;
@@ -204,12 +173,6 @@ public class Product extends SugarRecord {
         this.coef = coef;
     }
 
-    public Integer getKey() {
-        return key;
-    }
 
-    public void setKey(Integer key) {
-        this.key = key;
-    }
 
 }

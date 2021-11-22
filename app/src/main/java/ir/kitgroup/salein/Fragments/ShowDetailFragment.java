@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelProduct;
 
 @AndroidEntryPoint
@@ -78,11 +79,10 @@ public class ShowDetailFragment  extends Fragment {
         compositeDisposable=new CompositeDisposable();
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
             company=null;
             api=null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
         }
 
@@ -92,7 +92,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-        String ip = company.ipLocal;
+        String ip = company.IP1;
 
         getProduct(Id);
         Picasso.get()

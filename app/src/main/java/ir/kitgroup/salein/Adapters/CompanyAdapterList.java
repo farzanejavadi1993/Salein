@@ -20,7 +20,7 @@ import java.util.List;
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
@@ -65,7 +65,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
         if (type==1)
             holder.favoriteCompany.setVisibility(View.GONE);
 
-        holder.tvTitleCompany.setText(company.nameCompany);
+        holder.tvTitleCompany.setText(company.N);
         holder.tvDescriptionCompany.setText(company.Description);
         holder.ivCompany.setImageResource(company.imageLogo);
 

@@ -273,6 +273,23 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:visibility="gone"
+                android:padding="5dp"
+                android:layout_marginLeft="8sp"
+                android:layout_marginRight="8sp"
+                android:inputType="textShortMessage|textMultiLine"
+                android:id="@+id/edt_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_send"
+                android:backgroundTint="@android:color/transparent"
+                android:fontFamily="@font/iransans"
+                android:hint="توضیحات"
+                android:textColor="@color/medium_color"
+                android:textSize="12sp" />
+
             <LinearLayout
 
                 android:background="#eee"

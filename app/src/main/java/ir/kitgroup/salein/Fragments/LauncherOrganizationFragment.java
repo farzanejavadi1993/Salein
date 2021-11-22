@@ -53,7 +53,7 @@ import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.OrderType;
 
 

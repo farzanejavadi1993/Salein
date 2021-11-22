@@ -94,7 +94,7 @@ import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.databinding.FragmentMapBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.ModelLog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -184,11 +184,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
+
             company = null;
             api = null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
         }
 
 

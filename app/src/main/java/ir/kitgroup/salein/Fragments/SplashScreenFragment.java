@@ -28,7 +28,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {

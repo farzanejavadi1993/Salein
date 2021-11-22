@@ -79,7 +79,7 @@ import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.ModelDate;
 import ir.kitgroup.salein.models.ModelTable;
@@ -259,11 +259,11 @@ public class PaymentMobileFragment extends Fragment {
 
             if (!Util.RetrofitValue) {
                 ConfigRetrofit configRetrofit = new ConfigRetrofit();
-                String name = sharedPreferences.getString("CN", "");
+
                 company = null;
                 api = null;
-                company = configRetrofit.getCompany(name);
-                api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+                company =Select.from(Company.class).first();
+                api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
             }
 
@@ -438,7 +438,7 @@ public class PaymentMobileFragment extends Fragment {
 
                         return;
                     }
-                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(company.lat, company.lng));
+                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                     double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                     if (price == -1.0) {
                         Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
@@ -479,7 +479,7 @@ public class PaymentMobileFragment extends Fragment {
                     }
 
 
-                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(company.lat, company.lng));
+                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                     double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                     if (price == -1.0) {
                         Toast.makeText(getActivity(), "سفارش خارج از محدوده است.", Toast.LENGTH_SHORT).show();
@@ -572,7 +572,7 @@ public class PaymentMobileFragment extends Fragment {
                 latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
                 longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
 
-                double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(company.lat, company.lng));
+                double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                 if (price != -1.0) {
                     binding.tvError.setText("");
@@ -595,7 +595,7 @@ public class PaymentMobileFragment extends Fragment {
 
                 latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                 longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(company.lat, company.lng));
+                double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                 if (price != -1.0) {
                     binding.tvError.setText("");
@@ -1246,6 +1246,7 @@ public class PaymentMobileFragment extends Fragment {
                         try {
                             name = company.namePackage.split("ir.kitgroup.")[1];
                             sharedPreferences.edit().putString(name, "").apply();
+                            sharedPreferences.edit().putString(Inv_GUID, "").apply();
                         } catch (Exception ignore) {
 
                         }

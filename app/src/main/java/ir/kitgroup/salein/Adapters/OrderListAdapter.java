@@ -2,26 +2,32 @@ package ir.kitgroup.salein.Adapters;
 
 
 import android.annotation.SuppressLint;
+
+import android.app.AlertDialog;
 import android.content.Context;
+
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 
+
 import java.text.DecimalFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
+import java.util.Objects;
 
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.R;
+
 
 
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.viewHolder> {
@@ -30,23 +36,23 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
     private final List<Invoice> list;
     private final Context context;
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
-    private final int type;
+
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
 
     public interface ClickItem {
-        void onRowClick(int type, String Inv_GUID);
+        void onRowClick(String description,int type, String Inv_GUID);
     }
 
     private ClickItem clickItem;
 
 
-    public OrderListAdapter(Context context, List<Invoice> list, int type) {
+    public OrderListAdapter(Context context, List<Invoice> list) {
         this.context = context;
         this.list = list;
-        this.type = type;
+
 
 
     }
@@ -80,26 +86,43 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         }
 
 
-        holder.tvTotalPrice.setText(format.format((invoice.INV_EXTENDED_AMOUNT)));
+        holder.tvTotalPrice.setText(format.format((invoice.INV_EXTENDED_AMOUNT)) + " ریال ");
 
 
         //تاریخ تحویل
         if (invoice.INV_DUE_DATE_PERSIAN != null)
-            holder.tvDeliveryDateOrder.setText(invoice.INV_DUE_DATE_PERSIAN + "  " + invoice.INV_DUE_TIME);
+            holder.tvDeliveryDateOrder.setText(invoice.INV_DUE_TIME +"_"+invoice.INV_DUE_DATE_PERSIAN );
 
 
         //تاریخ ارسال
         holder.tvDateOrder.setText(invoice.INV_DATE_PERSIAN);
 
 
-        holder.itemView.setOnClickListener(view -> {
-
-            clickItem.onRowClick(type, invoice.INV_UID);
-
-        });
+        Objects.requireNonNull(holder.itemView).setOnClickListener(view -> clickItem.onRowClick("",1, invoice.INV_UID));
 
 
-        holder.btnShow.setOnClickListener(v -> clickItem.onRowClick(type, invoice.INV_UID));
+        holder.ivSend.setOnClickListener(v ->{
+            if (holder.edtDescription.getText().toString().equals(""))
+            {
+                AlertDialog alertDialog=  new AlertDialog.Builder(context)
+                        .setMessage("هیچ نظری موجود نمی باشد")
+                        .setPositiveButton("بستن", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(context.getResources().getColor(R.color.red_table));
+                textView.setTextSize(13);
+
+                return;
+            }
+
+                    clickItem.onRowClick(holder.edtDescription.getText().toString(), 2, invoice.INV_UID);
+
+    });
 
     }
 
@@ -115,7 +138,9 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         private final TextView tvDateOrder;
         private final TextView tvStatus;
         private final TextView tvDeliveryDateOrder;
-        private final MaterialButton btnShow;
+        private final ImageView ivSend;
+        private final EditText edtDescription;
+
 
 
         public viewHolder(View itemView) {
@@ -123,24 +148,21 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
             tvTotalPrice = itemView.findViewById(R.id.tv_total_price);
 
             tvDateOrder = itemView.findViewById(R.id.tv_date_order);
+            edtDescription = itemView.findViewById(R.id.edt_description);
+            ivSend = itemView.findViewById(R.id.iv_send);
             tvDeliveryDateOrder = itemView.findViewById(R.id.tv_date_delivery_order);
             tvStatus = itemView.findViewById(R.id.tv_status);
-            btnShow = itemView.findViewById(R.id.btn_show);
+
 
 
         }
     }
 
-    private Date stringToDate(String aDate) {
 
 
-        if (aDate == null) return null;
-        ParsePosition pos = new ParsePosition(0);
-        SimpleDateFormat simpledateformat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date stringDate = simpledateformat.parse(aDate, pos);
-        return stringDate;
 
-    }
+
+
 
 }
 

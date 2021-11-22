@@ -103,7 +103,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.Company;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.ModelUnit;
 import ir.kitgroup.salein.models.Setting;
@@ -249,7 +249,7 @@ public class MainOrderFragment extends Fragment {
 
 
     private String Transport_GUID = "";
-    private String linkUpdate="";
+    private String linkUpdate = "";
 
     public int counter1 = 0;
 
@@ -286,11 +286,10 @@ public class MainOrderFragment extends Fragment {
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            String name = sharedPreferences.getString("CN", "");
             company = null;
             api = null;
-            company = configRetrofit.getCompany(name);
-            api = configRetrofit.getRetrofit(company.baseUrl).create(API.class);
+            company = Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
         }
 
@@ -349,11 +348,13 @@ public class MainOrderFragment extends Fragment {
 
             name = company.namePackage.split("ir.kitgroup.")[1];
             Inv_GUID = sharedPreferences.getString(name, "");
+
             if (Inv_GUID.equals("")) {
                 Inv_GUID = UUID.randomUUID().toString();
                 sharedPreferences.edit().putString(name, Inv_GUID).apply();
 
             }
+            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
 
 
             if (!Inv_GUID.equals("") && name.equals("saleinOrder")) {
@@ -415,7 +416,7 @@ public class MainOrderFragment extends Fragment {
 
 
         //region Set Icon And Title
-        binding.tvNameStore.setText(company.nameCompany);
+        binding.tvNameStore.setText(company.N);
         //endregion Set Icon And Title
 
 
@@ -1716,12 +1717,12 @@ public class MainOrderFragment extends Fragment {
                                         String Update = settingsList.get(0).UPDATE_APP;
 
                                         try {
-                                            linkUpdate = settingsList.get(0).LINKUPDATE;
-                                            if (linkUpdate==null)
-                                                linkUpdate=company.linkUpdate;
+                                            linkUpdate = settingsList.get(0).LINK_UPDATE;
+                                            if (linkUpdate == null)
+                                                linkUpdate = company.linkUpdate;
 
-                                        }catch (Exception ignored){
-                                            linkUpdate=company.linkUpdate;
+                                        } catch (Exception ignored) {
+                                            linkUpdate = company.linkUpdate;
                                         }
                                         String NewVersion = settingsList.get(0).VERSION_APP;
                                         String AppVersion = "";
@@ -1756,9 +1757,6 @@ public class MainOrderFragment extends Fragment {
                                             dialogUpdate.setCancelable(true);
                                             dialogUpdate.show();
                                         }
-
-
-
 
 
                                     }

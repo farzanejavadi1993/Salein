@@ -37,7 +37,9 @@ public interface API {
 
 
 
-
+    @POST("UpdateInvoiceDesc")
+    Observable<String> sendFeedBack(@Query("userName") String userName, @Query("password") String password,
+                                    @Body() String jsonObject);
 
 
     @GET("SendSms")
@@ -104,6 +106,10 @@ public interface API {
 
     @GET("ProductSearch")
     Observable<String> getSearchProduct(@Query("token") String token,@Query("userName") String userName, @Query("password") String password, @Query("word") String word);
+
+
+    @GET("GetAccount")
+    Observable<String> getCompany(@Query("parentAccountId") String parentAccountId);
 
 
     @POST("CreateAccount")

@@ -30,6 +30,7 @@ import com.orm.query.Select;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.User;
 import ir.kitgroup.salein.Fragments.InVoiceDetailFragment;
 
@@ -107,6 +108,10 @@ public class LauncherActivity extends AppCompatActivity {
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
             int size = getSupportFragmentManager().getBackStackEntryCount();
+            String Inv_GUID1 = sharedPreferences.getString("Inv_GUID", "");
+
+
+            int counter = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID1 + "'").list().size();
 
             if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
                 size = size - 1;
@@ -120,13 +125,13 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.homee:
 
                     loadProfile = true;
-                    if (mainOrderFragment.counter1 == 0)
+                    if (counter== 0)
                         setClearCounterOrder();
                     else
-                        setCounterOrder(mainOrderFragment.counter1);
+                        setCounterOrder(counter);
                     binding.navView.getMenu().getItem(3).setEnabled(false);
                     binding.navView.setVisibility(View.VISIBLE);
-                    if (  size > 0)
+                    if (size > 0)
                         getSupportFragmentManager().popBackStack();
 
 
@@ -135,6 +140,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.search:
                     binding.navView.getMenu().getItem(3).setEnabled(true);
                     loadProfile = true;
+
 
                     if (!bundle.getBoolean("EDIT") && size > 0)
                         getSupportFragmentManager().popBackStack();
@@ -155,10 +161,10 @@ public class LauncherActivity extends AppCompatActivity {
 
                     binding.navView.getMenu().getItem(3).setEnabled(true);
 
-
-                    if (!bundle.getBoolean("EDIT") && size > 0)
+                    if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size).getName().equals("SearchProductF"))
                         getSupportFragmentManager().popBackStack();
-
+                    else if (!bundle.getBoolean("EDIT") && size > 0)
+                        getSupportFragmentManager().popBackStack();
 
 
                     Bundle bundleOrder = new Bundle();
@@ -173,9 +179,9 @@ public class LauncherActivity extends AppCompatActivity {
                     bundleOrder.putBoolean("Seen", bundle.getBoolean("Seen"));
                     bundleOrder.putBoolean("setADR1", bundle.getBoolean("setADR1"));
                     if (!loadProfile) {
-                        String name = bundle.getString("NAME").split("ir.kitgroup.")[1];
-                        String Inv_GUID = sharedPreferences.getString(name, "");
-                        getSupportFragmentManager().popBackStack();
+
+                        String Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+
                         bundleOrder.putBoolean("EDIT", false);
                         bundleOrder.putString("Inv_GUID", Inv_GUID);
                         bundleOrder.putBoolean("setADR1", false);
@@ -213,7 +219,7 @@ public class LauncherActivity extends AppCompatActivity {
 
             return false;
         });
-        FragmentTransaction replaceFragment=null;
+        FragmentTransaction replaceFragment = null;
 
         if (config.mode == 1) {
             //When User Is Login
@@ -228,11 +234,8 @@ public class LauncherActivity extends AppCompatActivity {
             }
 
 
-
-        }
-
-        else {
-            replaceFragment= getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment");
+        } else {
+            replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment");
         }
 
 
@@ -339,6 +342,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         ) {
 
+            setClearCounterOrder();
             getSupportFragmentManager().popBackStack();
             getVisibilityBottomBar(true);
             setInVisibiltyItem(true);
