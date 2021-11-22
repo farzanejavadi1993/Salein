@@ -302,6 +302,7 @@ public class SearchProductFragment extends Fragment {
             if (frg instanceof MainOrderFragment) {
                 MainOrderFragment fgf = (MainOrderFragment) frg;
                 fgf.refreshProductList();
+                fgf.counter1=counter;
             }
 
         });

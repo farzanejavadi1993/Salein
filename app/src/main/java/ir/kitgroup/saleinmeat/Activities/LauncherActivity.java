@@ -178,7 +178,8 @@ public class LauncherActivity extends AppCompatActivity {
                         if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size).getName().equals("SearchProductF"))
                             getSupportFragmentManager().popBackStack();
                     } catch (Exception ignored) {
-
+                        if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size-1).getName().equals("SearchProductF"))
+                            getSupportFragmentManager().popBackStack();
                     }
 
                     if (!bundle.getBoolean("EDIT") && size > 0)
@@ -356,10 +357,11 @@ public class LauncherActivity extends AppCompatActivity {
         ) {
 
             setFistItem(true);
-        } else if (
+        }
+        else if (
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("OrderListF") ||
                         getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("ProfileF") ||
-                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("AboutAuF")
+                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("AboutUsF")
 
 
         ) {

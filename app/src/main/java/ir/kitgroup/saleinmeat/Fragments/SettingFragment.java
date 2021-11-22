@@ -133,7 +133,7 @@ public class SettingFragment extends Fragment {
         binding.tvComment.setTextSize(fontSize);
         binding.tvCredit.setTextSize(fontSize);
         binding.tvOrder.setTextSize(fontSize);
-        binding.btnLogOut.setTextSize(fontSize);
+
 
 
         mobile = Select.from(Account.class).first().M;
@@ -158,7 +158,7 @@ public class SettingFragment extends Fragment {
             }
 
         });
-        binding.btnLogOut.setOnClickListener(v -> {
+        binding.ivPower.setOnClickListener(v -> {
             if (Account.count(Account.class) > 0)
                 Account.deleteAll(Account.class);
 
@@ -227,10 +227,7 @@ public class SettingFragment extends Fragment {
 
         binding.btnOrderList.setOnClickListener(v ->
 
-
                 getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit()
-
-
         );
 
         Account acc = Select.from(Account.class).first();

@@ -52,6 +52,18 @@
 
                     />
 
+                <ImageView
+                    android:id="@+id/iv_power"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_power"
+                    android:layout_marginLeft="16dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+
 
             </RelativeLayout>
 
@@ -318,23 +330,7 @@
         </LinearLayout>
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogOut"
-            android:layout_marginBottom="54dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
-            android:backgroundTint="@color/red_table"
-            android:fontFamily="@font/iransans"
-            android:text="@string/logout"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_xx_large_mobile_size"
-            app:strokeColor="@color/red_table"
-            app:strokeWidth="1dp"
-            tools:targetApi="lollipop" />
+
     </RelativeLayout>
 
 </layout>

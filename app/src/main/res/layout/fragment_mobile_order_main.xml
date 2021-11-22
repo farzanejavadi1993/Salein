@@ -341,7 +341,7 @@
                                     android:layout_marginRight="3dp"
                                     android:layout_weight="0.5"
                                     android:background="@drawable/bookmark_search_layout_background"
-                                    android:padding="1dp">
+                                    >
 
                                     <ImageView
                                         android:id="@+id/iv_address"
@@ -385,8 +385,7 @@
                                     android:layout_marginLeft="3dp"
                                     android:layout_marginRight="3dp"
                                     android:layout_weight="0.5"
-                                    android:background="@drawable/bookmark_search_layout_background"
-                                    android:padding="1dp">
+                                    android:background="@drawable/bookmark_search_layout_background">
 
                                     <TextView
                                         android:layout_marginRight="3dp"

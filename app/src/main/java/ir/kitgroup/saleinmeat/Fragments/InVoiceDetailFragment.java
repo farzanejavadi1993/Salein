@@ -107,7 +107,6 @@ public class InVoiceDetailFragment extends Fragment {
 
     @Inject
     Company company;
-
     @Inject
     API api;
 
@@ -270,6 +269,8 @@ public class InVoiceDetailFragment extends Fragment {
             MaterialButton btnNo = dialogDelete.findViewById(R.id.btn_cancel);
             btnNo.setOnClickListener(v -> dialogDelete.dismiss());
             btnOk.setOnClickListener(v -> {
+
+
                 dialogDelete.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -286,9 +287,13 @@ public class InVoiceDetailFragment extends Fragment {
                 if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
                     fgf.refreshProductList();
+                    fgf.counter1=0;
                 }
 
                 binding.progressBar.setVisibility(View.GONE);
+
+
+
             });
             //endregion Cast Dialog Delete
 
@@ -761,8 +766,23 @@ public class InVoiceDetailFragment extends Fragment {
                 getInvoice();
             else {
                 invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                if (invDetails.size() == 0)
+                if (invDetails.size() == 0) {
                     binding.progressBar.setVisibility(View.GONE);
+
+                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                            .setMessage("هیچ سفارشی وجود ندارد.")
+                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                            .show();
+
+                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                    textView.setTypeface(face);
+                    textView.setTextColor(getResources().getColor(R.color.red_table));
+                    textView.setTextSize(13);
+
+                }
+
+
 
                 else {
                     counter = 0;
