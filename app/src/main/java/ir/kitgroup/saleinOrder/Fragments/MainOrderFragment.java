@@ -590,6 +590,7 @@ public class MainOrderFragment extends Fragment {
 
         //region Configuration Organization Application
         if (company.mode == 1) {
+            ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
             binding.layoutAddressBranch.setVisibility(View.GONE);
             binding.layoutAccount.setVisibility(View.VISIBLE);
 

@@ -115,9 +115,12 @@ public class ApplicationModule {
 
                 default:
 
+                    packageName = "ir.kitgroup.saleinOrder";
                     imageLogo = R.drawable.saleinorder_png;
                     mode = 1;
                     break;
+
+
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

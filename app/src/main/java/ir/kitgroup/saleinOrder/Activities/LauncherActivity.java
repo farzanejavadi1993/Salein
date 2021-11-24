@@ -154,7 +154,7 @@ public class LauncherActivity extends AppCompatActivity {
                     loadProfile = true;
 
 
-                    if (!bundle.getBoolean("EDIT") && size > 0)
+                    if (!bundle.getBoolean("EDIT") && size > 0 && !config.packageName.equals("ir.kitgroup.saleinOrder"))
                         getSupportFragmentManager().popBackStack();
 
 
@@ -181,7 +181,7 @@ public class LauncherActivity extends AppCompatActivity {
                             getSupportFragmentManager().popBackStack();
                     }
 
-                    if (!bundle.getBoolean("EDIT") && size > 0)
+                    if (!bundle.getBoolean("EDIT") && size > 0 && !config.packageName.equals("ir.kitgroup.saleinOrder"))
                         getSupportFragmentManager().popBackStack();
 
 
@@ -355,7 +355,9 @@ public class LauncherActivity extends AppCompatActivity {
                         getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SearchProductF")
         ) {
 
-            setFistItem(true);
+
+                setFistItem(true);
+
         }
         else if (
                 getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("OrderListF") ||
