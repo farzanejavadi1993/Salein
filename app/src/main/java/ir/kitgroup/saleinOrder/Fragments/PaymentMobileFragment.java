@@ -1118,18 +1118,13 @@ public class PaymentMobileFragment extends Fragment {
             btnReturned.setOnClickListener(v -> {
 
                 dialogSendOrder.dismiss();
+                int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                for (int i = 0; i < size; i++) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
                 if (company.mode == 2) {
 
-                    int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-
-                    if (config.packageName.equals("ir.kitgroup.salein"))
-                        size = size - 2;
-
-
-                    for (int i = 0; i < size; i++) {
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
-                    ((LauncherActivity) getActivity()).setFistItem(true);
+                    ((LauncherActivity) getActivity()).setFistItem();
 
                     Bundle bundleMainOrder = new Bundle();
                     bundleMainOrder.putString("Inv_GUID", "");
@@ -1140,13 +1135,12 @@ public class PaymentMobileFragment extends Fragment {
                     FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
 
 
-                    if (config.packageName.equals("ir.kitgroup.salein"))
-                        addFragment.addToBackStack("MainOrderFragment").commit();
-                    else
-                        addFragment.commit();
+                    addFragment.addToBackStack("MainOrderF").commit();
 
 
-                } else {
+                }
+
+                else {
 
                     if (Tbl_GUID.equals("")) {
 
@@ -1170,11 +1164,8 @@ public class PaymentMobileFragment extends Fragment {
                     }
                     Account.deleteAll(Account.class);
 
-                    for (int i = 0; i < 4; i++) {
-                        getFragmentManager().popBackStack();
-                    }
                     LauncherOrganizationFragment launcherFragment = new LauncherOrganizationFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").addToBackStack("LauncherF").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").commit();
 
                 }
 

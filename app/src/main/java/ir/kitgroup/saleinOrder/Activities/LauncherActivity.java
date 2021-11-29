@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinOrder.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -70,7 +71,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     private boolean loadProfile = true;
-    private boolean loadHome = true;
+
 
     //region Parameter Dialog
     private Dialog ExitDialog;
@@ -110,7 +111,17 @@ public class LauncherActivity extends AppCompatActivity {
 
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
-            int size = getSupportFragmentManager().getBackStackEntryCount();
+            final int size = getSupportFragmentManager().getBackStackEntryCount();
+            String name = "";
+            try {
+                name = getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
+            }catch (Exception ignored){
+
+            }
+
+
+
+
 
 
             String Inv_GUID1 = sharedPreferences.getString("Inv_GUID", "");
@@ -118,8 +129,18 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
-            if (config.packageName.equals("ir.kitgroup.salein") && size > 0)
-                size = size - 1;
+            if (!loadProfile) {
+
+                Bundle bundleMain = new Bundle();
+                bundleMain.putString("Inv_GUID", Inv_GUID1);
+                bundleMain.putBoolean("EDIT", false);
+                bundleMain.putBoolean("Seen", false);
+                mainOrderFragment.setBundle(bundleMain);
+
+            }
+
+
+
 
 
             Bundle bundle = mainOrderFragment.getBundle(false);
@@ -143,8 +164,11 @@ public class LauncherActivity extends AppCompatActivity {
                         setCounterOrder(amount);
                     binding.navView.getMenu().getItem(3).setEnabled(false);
                     binding.navView.setVisibility(View.VISIBLE);
-                    if (loadHome && size > 0)
+
+
+                    if (name.equals("SettingF") || name.equals("InVoiceDetailF") || name.equals("SearchProductF"))
                         getSupportFragmentManager().popBackStack();
+
 
 
                     return true;
@@ -154,8 +178,10 @@ public class LauncherActivity extends AppCompatActivity {
                     loadProfile = true;
 
 
-                    if (!bundle.getBoolean("EDIT") && size > 0 && !config.packageName.equals("ir.kitgroup.saleinOrder"))
+
+                    if (name.equals("SettingF"))
                         getSupportFragmentManager().popBackStack();
+
 
 
                     Bundle bundleSearch = new Bundle();
@@ -173,17 +199,8 @@ public class LauncherActivity extends AppCompatActivity {
 
                     binding.navView.getMenu().getItem(3).setEnabled(true);
 
-                    try {
-                        if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size).getName().equals("SearchProductF"))
-                            getSupportFragmentManager().popBackStack();
-                    } catch (Exception ignored) {
-                        if (bundle.getBoolean("EDIT") && size > 0 && getSupportFragmentManager().getBackStackEntryAt(size-1).getName().equals("SearchProductF"))
-                            getSupportFragmentManager().popBackStack();
-                    }
-
-                    if (!bundle.getBoolean("EDIT") && size > 0 && !config.packageName.equals("ir.kitgroup.saleinOrder"))
+                    if (name.equals("SettingF") || name.equals("SearchProductF"))
                         getSupportFragmentManager().popBackStack();
-
 
                     Bundle bundleOrder = new Bundle();
                     bundleOrder.putString("Inv_GUID", bundle.getString("Inv_GUID"));
@@ -222,8 +239,9 @@ public class LauncherActivity extends AppCompatActivity {
 
 
                     if (loadProfile) {
-                        if (size > 0)
+                        if (name.equals("SearchProductF"))
                             getSupportFragmentManager().popBackStack();
+
 
                         getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SettingFragment(), "SettingFragment").addToBackStack("SettingF").commit();
                     }
@@ -332,8 +350,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-    public void setFistItem(boolean loadHome1) {
-        loadHome=loadHome1;
+    public void setFistItem() {
         binding.navView.setSelectedItemId(R.id.homee);
     }
 
@@ -344,25 +361,42 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-
         final int size = getSupportFragmentManager().getBackStackEntryCount();
+        String name="";
+        try {
+            name = getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
+        }catch (Exception ignored){
+
+        }
         if (size == 0) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
-        } else if (
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SettingF") ||
-                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("InVoiceDetailF") ||
-                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("SearchProductF")
-        ) {
+        }   else if (config.mode==1 && getSupportFragmentManager().getBackStackEntryAt(size-1).getName().equals("MainOrderF")){
+            getVisibilityBottomBar(false);
+            getSupportFragmentManager().popBackStack();
 
+            Fragment frg = getSupportFragmentManager().findFragmentByTag("LauncherFragment");
 
-                setFistItem(true);
+            if (frg instanceof LauncherOrganizationFragment) {
+                LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) frg;
+
+                fgf.refreshAdapter();
+            }
 
         }
+
+
         else if (
-                getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("OrderListF") ||
-                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("ProfileF") ||
-                        getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("AboutUsF")
+                name.equals("SettingF") ||
+                        name.equals("InVoiceDetailF") ||
+                        name.equals("SearchProductF")
+        ) {
+
+            setFistItem();
+        } else if (
+                name.equals("OrderListF") ||
+                        name.equals("ProfileF") ||
+                        name.equals("AboutUsF")
 
 
         ) {
@@ -373,12 +407,29 @@ public class LauncherActivity extends AppCompatActivity {
             setInVisibiltyItem(true);
             loadProfile = false;
             binding.navView.setSelectedItemId(R.id.profile);
-
         } else {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }

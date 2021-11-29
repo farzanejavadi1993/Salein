@@ -53,6 +53,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Unit;
+import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.classes.Util;
 
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
@@ -215,11 +216,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
-
-            String ip = company.IP1;
-
-
-
+            String ip="";
+            if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.saleinOrder"))
+               ip= Select.from(User.class).first().ipLocal;
+            else
+             ip = company.ipStatic;
 
 
             Picasso.get()

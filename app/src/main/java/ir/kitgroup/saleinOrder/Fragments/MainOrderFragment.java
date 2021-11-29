@@ -367,6 +367,15 @@ public class MainOrderFragment extends Fragment {
         }
 
 
+        if (company.mode==1)
+            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
+
+
+
+
+
+        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
+
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
 
@@ -393,7 +402,7 @@ public class MainOrderFragment extends Fragment {
 
 
         if (EDIT)
-            ((LauncherActivity) getActivity()).setFistItem(false);
+            ((LauncherActivity) getActivity()).setFistItem();
 
 
         //endregion Get Bundle
@@ -1128,6 +1137,7 @@ public class MainOrderFragment extends Fragment {
                                             return;
                                         }
                                         productLevel1List.addAll(iDs.getProductLevel1());
+                                        CollectionUtils.filter(iDs.getProductLevel1(),i->i.getSts());
                                         if (productLevel1List.size() == 1)
                                             binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                                         productLevel1Adapter.notifyDataSetChanged();
@@ -1197,7 +1207,7 @@ public class MainOrderFragment extends Fragment {
                                         }
 
                                         productLevel2List.clear();
-                                        CollectionUtils.filter(iDs.getProductLevel2(), ProductLevel2::getSts);
+                                        CollectionUtils.filter(iDs.getProductLevel2(), i->i.getSts());
                                         productLevel2List.addAll(iDs.getProductLevel2());
 
 
@@ -1299,7 +1309,7 @@ public class MainOrderFragment extends Fragment {
 
                                         productList.clear();
 
-                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0);
+                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
                                         ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
                                         ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
                                         CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
@@ -1856,5 +1866,13 @@ public class MainOrderFragment extends Fragment {
         compositeDisposable.clear();
     }
 
+
+    public void setBundle(Bundle bundle) {
+
+        this.Inv_GUID = bundle.getString("Inv_GUID");
+        this.EDIT = bundle.getBoolean("EDIT");
+        this.Seen = bundle.getBoolean("Seen");
+
+    }
 
 }

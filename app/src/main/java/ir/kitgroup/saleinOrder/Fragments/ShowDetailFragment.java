@@ -35,6 +35,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Activities.LauncherActivity;
 import ir.kitgroup.saleinOrder.Connect.API;
+import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.Util;
@@ -92,7 +93,11 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-        String ip = company.IP1;
+        String ip="";
+        if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.saleinOrder"))
+            ip= Select.from(User.class).first().ipLocal;
+        else
+            ip = company.IP1;
 
         getProduct(Id);
         Picasso.get()

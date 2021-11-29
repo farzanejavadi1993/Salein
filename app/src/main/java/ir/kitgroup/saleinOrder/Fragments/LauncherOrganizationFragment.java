@@ -301,6 +301,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         tableAdapter.setOnClickItemListener((organization,Name, Reserve, T_GUID, Inv_GUID) -> {
+            Account.deleteAll(Account.class);
             binding.txtError.setText("");
             if (Reserve) {
                 Bundle bundle = new Bundle();
@@ -365,7 +366,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
         getOutOrderAdapter.setOnClickItemListener((name, code, ty) -> {
 
-
+            Account.deleteAll(Account.class);
             if (code == 0 && ty == 0) {
                 filter("whole");
                 binding.txtError.setText("");
@@ -397,10 +398,10 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putBoolean("EDIT", false);
             bundle.putString("Tbl_NAME", name);
 
-//
-//            MainFragment mainFragment = new MainFragment();
-//            mainFragment.setArguments(bundle);
-//            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainFragment").addToBackStack("MainF").commit();
+            MainOrderFragment mainFragment = new MainOrderFragment();
+            mainFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+
 
         });
         //endregion Configuration RecyclerView getOutOrder

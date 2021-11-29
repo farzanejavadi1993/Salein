@@ -315,7 +315,11 @@ public class InVoiceDetailFragment extends Fragment {
             setADR1 = bundle.getBoolean("setADR1");
 
 
-            binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
+
+
+
+                binding.tvNameCustomer.setText("(" + (Acc_NAME!=null?Acc_NAME+ " _ ":"  مشتری روزانه  " )+ Tbl_NAME + ")");
+
 
 
             //endregion Get Bundle
@@ -458,7 +462,7 @@ public class InVoiceDetailFragment extends Fragment {
                 if (company.mode == 1) {
                     Account acc = Select.from(Account.class).first();
                     if (acc != null)
-                        binding.tvNameCustomer.setText("(" + acc.N + " _ " + Tbl_NAME + ")");
+                        binding.tvNameCustomer.setText("(" + (acc.N!=null?acc.N+ " _ ":"  مشتری روزانه  "  )+ Tbl_NAME + ")");
                     else
                         binding.tvNameCustomer.setText("(" + "مشتری پیش فرض" + " _ " + Tbl_NAME + ")");
                 }
@@ -1124,7 +1128,7 @@ public class InVoiceDetailFragment extends Fragment {
                                         }
 
 
-                                        binding.tvNameCustomer.setText("(" + Acc_NAME + " _ " + Tbl_NAME + ")");
+                                        binding.tvNameCustomer.setText("(" + (Acc_NAME!=null?Acc_NAME+ " _ " :"  مشتری روزانه  " )+ Tbl_NAME + ")");
 
                                         if (status != null && (status.equals("*") || invFinal)) {
                                             binding.layoutEditDelete.setVisibility(View.GONE);
