@@ -162,7 +162,7 @@ public class RegisterFragment extends Fragment {
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);
-            addAccount(company.userName, company.passWord, accountsList);
+            addAccount(company.USER, company.PASS, accountsList);
 
         });
         //endregion Action btnRegisterInformation
@@ -222,7 +222,7 @@ public class RegisterFragment extends Fragment {
                                     getActivity().getSupportFragmentManager().popBackStack();
                                     //region Show All Company
 
-                                    if (company.namePackage.equals("ir.kitgroup.salein")) {
+                                    if (company.INSK_ID.equals("ir.kitgroup.salein")) {
                                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment").commit();
                                     }
                                     //endregion Show All Company

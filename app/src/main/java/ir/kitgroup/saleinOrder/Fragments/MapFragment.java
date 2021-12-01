@@ -983,7 +983,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
             }.getType();
 
-            Call<String> call = api.UpdateAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "");
+            Call<String> call = api.UpdateAccount(company.USER, company.PASS, gson.toJson(jsonObjectAcc, typeJsonObject), "");
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnRegisterInformation.setEnabled(false);
 

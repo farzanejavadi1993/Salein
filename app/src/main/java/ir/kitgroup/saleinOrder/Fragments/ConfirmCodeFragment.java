@@ -355,7 +355,7 @@ public class ConfirmCodeFragment extends Fragment {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
              // return;
             }
-            getInquiryAccount1(company.userName, company.passWord, mobileNumber);
+            getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });
         //endregion Action BtnLogin
 
@@ -442,7 +442,7 @@ public class ConfirmCodeFragment extends Fragment {
                                         FragmentTransaction addFragment;
                                         //region Show All Company
 
-                                        if (company.namePackage.equals("ir.kitgroup.salein")) {
+                                        if (company.INSK_ID.equals("ir.kitgroup.salein")) {
                                             addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
 
                                         }

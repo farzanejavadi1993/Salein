@@ -216,11 +216,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
-            String ip="";
-            if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.saleinOrder"))
-               ip= Select.from(User.class).first().ipLocal;
-            else
-             ip = company.ipStatic;
+            String ip = company.IP1;
 
 
             Picasso.get()
@@ -557,7 +553,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         try {
             compositeDisposable.add(
-                    api.getMaxSales(company.userName, company.passWord, Prd_GUID)
+                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -805,7 +801,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
         try {
             compositeDisposable.add(
-                    api.getMaxSales(company.userName, company.passWord, Prd_GUID)
+                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

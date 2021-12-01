@@ -60,8 +60,8 @@ public class SplashScreenFragment extends Fragment {
 
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
-        binding.tvTitle.setText(company.title);
-        binding.tvDescription.setText(company.Description);
+        binding.tvTitle.setText(company.N);
+        binding.tvDescription.setText(company.DESC);
 
 
         try {
@@ -90,7 +90,7 @@ public class SplashScreenFragment extends Fragment {
 
                     if (Select.from(Account.class).list().size() > 0) {
 
-                        if (company.namePackage.equals("ir.kitgroup.salein"))
+                        if (company.INSK_ID.equals("ir.kitgroup.salein"))
                             addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
                         else {
                             Bundle bundleMainOrder = new Bundle();

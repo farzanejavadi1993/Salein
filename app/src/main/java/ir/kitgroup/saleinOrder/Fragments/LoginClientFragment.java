@@ -106,7 +106,7 @@ public class LoginClientFragment extends Fragment {
 
 
             //region Set Icon And Title
-            binding.tvWelcome.setText(company.messageWelcome);
+            binding.tvWelcome.setText("به "+company.N+"خوش آمدید ");
             binding.imageLogo.setImageResource(company.imageLogo);
             //endregion Set Icon And Title
 
@@ -199,7 +199,7 @@ public class LoginClientFragment extends Fragment {
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    api.getSmsLogin(company.userName, company.passWord, message, mobileNumber, 2)
+                    api.getSmsLogin(company.USER, company.PASS, message, mobileNumber, 2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

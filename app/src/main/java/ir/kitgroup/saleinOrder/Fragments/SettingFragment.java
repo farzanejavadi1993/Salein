@@ -117,8 +117,6 @@ public class SettingFragment extends Fragment {
 
         linkPayment=sharedPreferences.getString("payment_link", "");
 
-        if (linkPayment.equals(""))
-            linkPayment=company.paymentLink;
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -246,10 +244,9 @@ public class SettingFragment extends Fragment {
 
 
 
-        if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.saleintop")) {
             getInquiryAccount1(acc.M);
 
-        }
+
 
 
 
@@ -268,7 +265,7 @@ public class SettingFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getInquiryAccount1(company.userName, company.passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(company.USER, company.PASS, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

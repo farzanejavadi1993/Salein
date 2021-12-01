@@ -449,7 +449,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getOrderType1(company.userName, company.passWord)
+                    api.getOrderType1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -552,7 +552,7 @@ public class LauncherOrganizationFragment extends Fragment {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    api.getTable1(company.userName, company.passWord)
+                    api.getTable1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

@@ -811,7 +811,7 @@ public class InVoiceDetailFragment extends Fragment {
         customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", true);
         try {
             compositeDisposable.add(
-                    api.getDescription1(company.userName, company.passWord, id)
+                    api.getDescription1(company.USER, company.PASS, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -868,7 +868,7 @@ public class InVoiceDetailFragment extends Fragment {
         }
         try {
             compositeDisposable.add(
-                    api.getMaxSales(company.userName, company.passWord, Prd_GUID)
+                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -982,7 +982,7 @@ public class InVoiceDetailFragment extends Fragment {
         try {
 
             compositeDisposable.add(
-                    api.getProduct(company.userName, company.passWord, Guid)
+                    api.getProduct(company.USER, company.PASS, Guid)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1075,7 +1075,7 @@ public class InVoiceDetailFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    api.getInvoice1(company.userName, company.passWord, Inv_GUID)
+                    api.getInvoice1(company.USER, company.PASS, Inv_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1094,7 +1094,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                                 if (iDs != null) {
 
-                                    String name = company.namePackage.split("ir.kitgroup.")[1];
+                                    String name = company.INSK_ID.split("ir.kitgroup.")[1];
                                     String invGuid = sharedPreferences.getString(name, "");
 
                                     List<InvoiceDetail> list = Select.from(InvoiceDetail.class).list();
@@ -1186,7 +1186,7 @@ public class InVoiceDetailFragment extends Fragment {
         try {
 
 
-            Call<String> call = api.getDeleteInvoice(company.userName, company.passWord, Inv_GUID);
+            Call<String> call = api.getDeleteInvoice(company.USER, company.PASS, Inv_GUID);
 
             call.enqueue(new Callback<String>() {
                 @Override

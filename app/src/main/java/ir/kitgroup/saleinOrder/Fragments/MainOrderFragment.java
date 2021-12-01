@@ -280,9 +280,12 @@ public class MainOrderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
+        ir.kitgroup.saleinOrder.DataBase.Product.deleteAll(ir.kitgroup.saleinOrder.DataBase.Product.class);
+
 
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
@@ -349,7 +352,10 @@ public class MainOrderFragment extends Fragment {
             String name;
 
 
-            name = company.namePackage.split("ir.kitgroup.")[1];
+            name = company.INSK_ID.split("ir.kitgroup.")[1];
+
+
+            if (!Tbl_GUID.equals("") || company.mode==1)
             Inv_GUID = sharedPreferences.getString(name, "");
 
             if (Inv_GUID.equals("")) {
@@ -360,21 +366,15 @@ public class MainOrderFragment extends Fragment {
             sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
 
 
-            if (!Inv_GUID.equals("") && name.equals("saleinOrder")) {
-                Inv_GUID = UUID.randomUUID().toString();
-            }
+//            if (!Inv_GUID.equals("") && name.equals("saleinOrder")) {
+//                Inv_GUID = UUID.randomUUID().toString();
+//            }
 
+        }else {
+            if (company.mode==1)
+                sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
         }
 
-
-        if (company.mode==1)
-            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
-
-
-
-
-
-        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
 
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
@@ -762,7 +762,7 @@ public class MainOrderFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
 
-            if (company.mode == 2 && !config.packageName.equals("ir.kitgroup.salein"))
+            if (company.mode == 2 && !config.INSKU_ID.equals("ir.kitgroup.salein"))
                 getActivity().finish();
 
             else
@@ -1109,7 +1109,7 @@ public class MainOrderFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getProductLevel1("saleinkit_api", company.userName, company.passWord)
+                    api.getProductLevel1("saleinkit_api", company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1178,7 +1178,7 @@ public class MainOrderFragment extends Fragment {
         try {
             binding.progressbar.setVisibility(View.VISIBLE);
             compositeDisposable.add(
-                    api.getProductLevel2("saleinkit_api", company.userName, company.passWord, GuidPrdLvl1)
+                    api.getProductLevel2("saleinkit_api", company.USER, company.PASS, GuidPrdLvl1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1280,7 +1280,7 @@ public class MainOrderFragment extends Fragment {
         }
         try {
             compositeDisposable.add(
-                    api.getProduct1("saleinkit_api", company.userName, company.passWord, GuidPrdLvl2)
+                    api.getProduct1("saleinkit_api", company.USER, company.PASS, GuidPrdLvl2)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1370,7 +1370,7 @@ public class MainOrderFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getSetting1(company.userName, company.passWord)
+                    api.getSetting1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1417,7 +1417,7 @@ public class MainOrderFragment extends Fragment {
         }
         try {
             compositeDisposable.add(
-                    api.getUnitSync(company.userName, company.passWord)
+                    api.getUnitSync(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1462,7 +1462,7 @@ public class MainOrderFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getDescription1(company.userName, company.passWord, id)
+                    api.getDescription1(company.USER, company.PASS, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1599,7 +1599,7 @@ public class MainOrderFragment extends Fragment {
             }.getType();
 
             compositeDisposable.add(
-                    api.addAccount(company.userName, company.passWord, gson.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount(company.USER, company.PASS, gson.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1648,7 +1648,7 @@ public class MainOrderFragment extends Fragment {
     private void getAccountSearch1(String word, int type) {
         try {
             compositeDisposable.add(
-                    api.getAccountSearch1("saleinkit_api", company.userName, company.passWord, word)
+                    api.getAccountSearch1("saleinkit_api", company.USER, company.PASS, word)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1707,7 +1707,7 @@ public class MainOrderFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getSetting1(company.userName, company.passWord)
+                    api.getSetting1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1739,15 +1739,14 @@ public class MainOrderFragment extends Fragment {
 
                                         try {
                                             linkUpdate = settingsList.get(0).LINK_UPDATE;
-                                            if (linkUpdate == null)
-                                                linkUpdate = company.linkUpdate;
+
 
 
                                             if ( settingsList.get(0).LINK_PAYMENT!=null)
                                             sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
 
                                         } catch (Exception ignored) {
-                                            linkUpdate = company.linkUpdate;
+
                                         }
                                         String NewVersion = settingsList.get(0).VERSION_APP;
                                         String AppVersion = "";
@@ -1822,7 +1821,7 @@ public class MainOrderFragment extends Fragment {
     public Bundle getBundle(boolean SetARD1) {
         Bundle bundle = new Bundle();
         bundle.putString("Inv_GUID", Inv_GUID);
-        bundle.putString("NAME", company.namePackage);
+
         bundle.putString("Tbl_GUID", Tbl_GUID);
         bundle.putString("Tbl_NAME", Tbl_NAME);
         bundle.putString("Ord_TYPE", Ord_TYPE);

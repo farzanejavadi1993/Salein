@@ -330,7 +330,7 @@ public class SearchProductFragment extends Fragment {
     private void getSearchProduct(String s) {
         try {
             compositeDisposable.add(
-                    api.getSearchProduct("saleinkit_api", company.userName, company.passWord, s)
+                    api.getSearchProduct("saleinkit_api", company.USER, company.PASS, s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -388,7 +388,7 @@ public class SearchProductFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getDescription1(company.userName, company.passWord, id)
+                    api.getDescription1(company.USER, company.PASS, id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

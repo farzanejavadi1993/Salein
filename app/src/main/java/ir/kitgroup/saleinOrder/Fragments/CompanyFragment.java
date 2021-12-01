@@ -42,11 +42,12 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Adapters.CompanyAdapterList;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
+import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentCompanyBinding;
-import ir.kitgroup.saleinOrder.DataBase.Company;
+import ir.kitgroup.saleinOrder.models.Config;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
 import ir.kitgroup.saleinOrder.models.ModelCompany;
 import ir.kitgroup.saleinOrder.models.ModelLog;
@@ -55,19 +56,28 @@ import ir.kitgroup.saleinOrder.models.ModelLog;
 @AndroidEntryPoint
 public class CompanyFragment extends Fragment {
 
+    @Inject
+    API api;
+
+    @Inject
+    SharedPreferences sharedPreferences;
+
+
+
+    @Inject
+    Config config;
+
     private FragmentCompanyBinding binding;
 
     private CompositeDisposable compositeDisposable;
 
-    @Inject
-    API api;
+
 
 
     private ArrayList<Company> companies;
     CompanyAdapterList companyAdapterList;
 
-    @Inject
-    SharedPreferences sharedPreferences;
+
 
 
     private Company companySelect;
@@ -99,20 +109,21 @@ public class CompanyFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
         companies = new ArrayList<>();
 
-        companyAdapterList = new CompanyAdapterList(companies, 2);
+        companyAdapterList = new CompanyAdapterList(companies, 2,config);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
         companyAdapterList.setOnClickItemListener((company, check) ->
                 {
-                    Company.deleteAll(Company.class);
-                    Company.saveInTx(company);
+
 
                     compositeDisposable.clear();
                     companySelect = company;
                     Util.RetrofitValue = false;
-                    String nameSave = sharedPreferences.getString(company.I, "");
+                    String nameSave = sharedPreferences.getString(company.N, "");
                     if (!nameSave.equals("")) {
+                        Company.deleteAll(Company.class);
+                        Company.saveInTx(company);
                         Bundle bundleMainOrder = new Bundle();
                         bundleMainOrder.putString("Inv_GUID", "");
                         bundleMainOrder.putString("Tbl_GUID", "");
@@ -122,7 +133,7 @@ public class CompanyFragment extends Fragment {
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
                         api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
-                        getInquiryAccount1(company.N,company.I, company.userName, company.passWord, account.M);
+                        getInquiryAccount1(company.N, company.USER, company.PASS, account.M);
                     }
                 }
         );
@@ -145,7 +156,7 @@ public class CompanyFragment extends Fragment {
             dialog.dismiss();
             ArrayList<Account> AccList = new ArrayList<>();
             AccList.add(account);
-            addAccount(companySelect.userName, companySelect.passWord, AccList);
+            addAccount(companySelect.USER, companySelect.PASS, AccList);
 
 
         });
@@ -154,12 +165,12 @@ public class CompanyFragment extends Fragment {
         account = Select.from(Account.class).first();
 
 
-        getCompany("");
+        getCompany();
     }
 
 
     @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String name,String companyGUID, String userName, String passWord, String mobile) {
+    private void getInquiryAccount1(String name, String userName, String passWord, String mobile) {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -201,7 +212,11 @@ public class CompanyFragment extends Fragment {
                                             Account.saveInTx(iDs.getAccountList());
 
 
-                                            sharedPreferences.edit().putString(companyGUID, "login").apply();
+                                            Company.deleteAll(Company.class);
+                                            Company.saveInTx(companySelect);
+
+
+                                            sharedPreferences.edit().putString(name, "login").apply();
 
 
                                             Bundle bundleMainOrder = new Bundle();
@@ -248,11 +263,11 @@ public class CompanyFragment extends Fragment {
 
 
     @SuppressLint("SetTextI18n")
-    private void getCompany(String parentGuid) {
+    private void getCompany() {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    api.getCompany(parentGuid)
+                    api.getCompany("")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -339,6 +354,10 @@ public class CompanyFragment extends Fragment {
                                 String description = iDs.getLogs().get(0).getDescription();
                                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                 if (message == 1) {
+
+                                    Company.deleteAll(Company.class);
+                                    Company.saveInTx(companySelect);
+
 
                                     Bundle bundleMainOrder = new Bundle();
                                     bundleMainOrder.putString("Inv_GUID", "");

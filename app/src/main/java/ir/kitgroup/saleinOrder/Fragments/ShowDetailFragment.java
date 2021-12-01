@@ -93,11 +93,7 @@ public class ShowDetailFragment  extends Fragment {
 
 
 
-        String ip="";
-        if (company.namePackage!=null && company.namePackage.equals("ir.kitgroup.saleinOrder"))
-            ip= Select.from(User.class).first().ipLocal;
-        else
-            ip = company.IP1;
+        String ip = company.IP1;
 
         getProduct(Id);
         Picasso.get()
@@ -129,7 +125,7 @@ public class ShowDetailFragment  extends Fragment {
         try {
 
             compositeDisposable.add(
-                    api.getProduct(company.userName, company.passWord, Guid)
+                    api.getProduct(company.USER, company.PASS, Guid)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

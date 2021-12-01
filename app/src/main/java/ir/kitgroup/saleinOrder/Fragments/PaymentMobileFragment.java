@@ -262,8 +262,6 @@ public class PaymentMobileFragment extends Fragment {
 
             linkPayment=sharedPreferences.getString("payment_link", "");
 
-            if (linkPayment.equals(""))
-                linkPayment=company.paymentLink;
 
 
 
@@ -334,7 +332,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-            if (Tbl_GUID.equals(""))
+            if (!edit&&Tbl_GUID.equals(""))
                 new_Tbl_GUID = UUID.randomUUID().toString();
             else
                 new_Tbl_GUID = Tbl_GUID;
@@ -1122,9 +1120,10 @@ public class PaymentMobileFragment extends Fragment {
                 for (int i = 0; i < size; i++) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
+                ((LauncherActivity) getActivity()).setFistItem();
+                ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
                 if (company.mode == 2) {
 
-                    ((LauncherActivity) getActivity()).setFistItem();
 
                     Bundle bundleMainOrder = new Bundle();
                     bundleMainOrder.putString("Inv_GUID", "");
@@ -1145,12 +1144,11 @@ public class PaymentMobileFragment extends Fragment {
                     if (Tbl_GUID.equals("")) {
 
                         Tables tables = new Tables();
-
                         tables.N = Tbl_NAME;
                         tables.C = Ord_TYPE;
                         tables.ACT = false;
                         Account account = Select.from(Account.class).first();
-                        tables.GO = account != null ? account.N : "";
+                        tables.GO = account.N != null ? account.N : "مشتری روزانه";
                         tables.RSV = false;
                         tables.I = new_Inv_GUID;
                         tables.INVID = new_Inv_GUID;
@@ -1214,7 +1212,7 @@ public class PaymentMobileFragment extends Fragment {
             }.getType();
 
 
-            Call<String> call = api.PostData(company.userName, company.passWord,
+            Call<String> call = api.PostData(company.USER, company.PASS,
                     gson.toJson(jsonObject, typeJsonObject),
                     "",
                     numberPos);
@@ -1246,13 +1244,14 @@ public class PaymentMobileFragment extends Fragment {
                     if (message == 1) {
 
                         String name;
-                        try {
-                            name = company.namePackage.split("ir.kitgroup.")[1];
+
+                            name = company.INSK_ID.split("ir.kitgroup.")[1];
+                        if (!edit || company.mode==1 ) {
                             sharedPreferences.edit().putString(name, "").apply();
                             sharedPreferences.edit().putString(Inv_GUID, "").apply();
-                        } catch (Exception ignore) {
-
                         }
+
+
                         List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                                 new_Inv_GUID + "'").list();
                         for (int i = 0; i < invoiceDetails.size(); i++) {
@@ -1331,7 +1330,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
         try {
-            if ("ir.kitgroup.saleinmeat".equals(company.namePackage)) {
+            if ("ir.kitgroup.saleinmeat".equals(company.INSK_ID)) {
 
                 if (SumPurePrice > 2000000) {
                     priceTransport = 0.0;
@@ -1369,7 +1368,8 @@ public class PaymentMobileFragment extends Fragment {
                     priceTransport = 400000;
                 }
             }
-        } catch (Exception ignore) {
+        }
+        catch (Exception ignore) {
 
             if (0 < distance && distance <= 1) {
                 priceTransport = 50000;
@@ -1542,7 +1542,7 @@ public class PaymentMobileFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                    api.getSetting1(company.userName, company.passWord)
+                    api.getSetting1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1586,22 +1586,33 @@ public class PaymentMobileFragment extends Fragment {
 
 
 
-                                        if ((company.mode == 2 &&  paymentType == 1)
+                                        if (((company.mode == 2 )
                                                 ||
                                                 (!Ord_TYPE.equals(OrderTypeApp) &&
                                                         Tbl_GUID.equals("") &&
-                                                        company.mode == 1)) {
+                                                        company.mode == 1))
+                                                &&
+                                                paymentType == 1) {
 
                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
                                             binding.layoutPaymentOnline.setVisibility(View.GONE);
 
-                                        } else if ((company.mode == 2 && paymentType == 2) ||
+                                        }
+
+
+                                        else if (((company.mode == 2 )
+                                                ||
                                                 (!Ord_TYPE.equals(OrderTypeApp) &&
                                                         Tbl_GUID.equals("") &&
-                                                        company.mode == 1)) {
+                                                        company.mode == 1))
+                                                &&
+                                                paymentType == 2) {
                                             binding.btnPaymentPlace.setVisibility(View.GONE);
                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                        } else {
+                                        }
+
+
+                                        else {
                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
                                         }
@@ -1688,7 +1699,7 @@ public class PaymentMobileFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getOrderType1(company.userName, company.passWord)
+                    api.getOrderType1(company.USER, company.PASS)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -1753,13 +1764,12 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-                                            if (!OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
-                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
-                                            else if (OnceSee && !company.namePackage.equals("ir.kitgroup.saleinmeat"))
+                                            if (!OnceSee )
+                                                getInquiryAccount1(company.USER, company.PASS, acc.M);
+                                            else if (OnceSee )
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
-                                            if (acc != null)
-                                                getInquiryAccount1(company.userName, company.passWord, acc.M);
+
                                         }
 
 
@@ -1790,7 +1800,7 @@ public class PaymentMobileFragment extends Fragment {
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         try {
-            compositeDisposable.add(api.getTable1(company.userName, company.passWord)
+            compositeDisposable.add(api.getTable1(company.USER, company.PASS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {

@@ -248,7 +248,7 @@ public class OrderListFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                    api.getAllInvoice1(company.userName, company.passWord, AccGuid, date)
+                    api.getAllInvoice1(company.USER, company.PASS, AccGuid, date)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -373,7 +373,7 @@ public class OrderListFragment extends Fragment {
             Type typeJsonObject = new TypeToken<JsonObject>() {
             }.getType();
             compositeDisposable.add(
-                    api.sendFeedBack(company.userName, company.passWord, gson.toJson(jsonObject, typeJsonObject))
+                    api.sendFeedBack(company.USER, company.PASS, gson.toJson(jsonObject, typeJsonObject))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

@@ -43,23 +43,18 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
 import ir.kitgroup.saleinOrder.Adapters.CompanyAdapterList;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
-
+import ir.kitgroup.saleinOrder.DataBase.Company;
+import ir.kitgroup.saleinOrder.Fragments.MainOrderFragment;
 import ir.kitgroup.saleinOrder.R;
-
-
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentMyCompanyBinding;
-import ir.kitgroup.saleinOrder.DataBase.Company;
+import ir.kitgroup.saleinOrder.models.Config;
 import ir.kitgroup.saleinOrder.models.ModelAccount;
-
 import ir.kitgroup.saleinOrder.models.ModelLog;
-
-
 
 @AndroidEntryPoint
 public class MyCompanyFragment extends Fragment {
@@ -69,6 +64,9 @@ public class MyCompanyFragment extends Fragment {
 
     @Inject
     API api;
+
+    @Inject
+    Config config;
 
 
     ArrayList<Company> companies=new ArrayList<>();
@@ -111,7 +109,7 @@ public class MyCompanyFragment extends Fragment {
 
         ArrayList<Company> listCompany = new ArrayList<>();
         for (int i = 0; i < companies.size(); i++) {
-            boolean check = sharedPreferences.getBoolean(companies.get(i).namePackage, false);
+            boolean check = sharedPreferences.getBoolean(companies.get(i).INSK_ID, false);
             if (check)
                 listCompany.add(companies.get(i));
         }
@@ -121,11 +119,11 @@ public class MyCompanyFragment extends Fragment {
 
         else
             binding.txtError.setText("");
-        CompanyAdapterList companyAdapterList = new CompanyAdapterList(listCompany, 1);
+        CompanyAdapterList companyAdapterList = new CompanyAdapterList(listCompany, 1,config);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
-      companyAdapterList.setOnClickItemListener((company, check) ->
+        companyAdapterList.setOnClickItemListener((company, check) ->
                 {
 
                     compositeDisposable.clear();
@@ -144,7 +142,7 @@ public class MyCompanyFragment extends Fragment {
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
                         api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
-                        getInquiryAccount1(company.N, company.userName, company.passWord, account.M);
+                        getInquiryAccount1(company.N, company.USER, company.PASS, account.M);
                     }
                 }
         );
@@ -160,7 +158,7 @@ public class MyCompanyFragment extends Fragment {
         dialog.setCancelable(false);
 
         textExit = dialog.findViewById(R.id.tv_message);
-         ivIcon = dialog.findViewById(R.id.iv_icon);
+        ivIcon = dialog.findViewById(R.id.iv_icon);
 
 
 
@@ -171,7 +169,7 @@ public class MyCompanyFragment extends Fragment {
             dialog.dismiss();
             ArrayList<Account> AccList = new ArrayList<>();
             AccList.add(account);
-            addAccount(companySelect.userName, companySelect.passWord, AccList);
+            addAccount(companySelect.USER, companySelect.PASS, AccList);
 
 
         });
@@ -188,7 +186,7 @@ public class MyCompanyFragment extends Fragment {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
-                api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
+                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -285,7 +283,7 @@ public class MyCompanyFragment extends Fragment {
 
         try {
             compositeDisposable.add(
-                 api.addAccount1(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount1(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

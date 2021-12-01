@@ -1,6 +1,8 @@
 package ir.kitgroup.saleinOrder.di;
 
 
+
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,12 +29,11 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import dagger.hilt.components.SingletonComponent;
-import ir.kitgroup.saleinOrder.Connect.API;
 
+import ir.kitgroup.saleinOrder.Connect.API;
+import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.DataBase.User;
 import ir.kitgroup.saleinOrder.R;
-
-import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.models.Config;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -64,8 +65,8 @@ public class ApplicationModule {
 
         int mode = 2;
         int imageLogo = 0;
-        String name = "";
         String packageName = "";
+        String IP1 = "";
 
 
         try {
@@ -75,52 +76,39 @@ public class ApplicationModule {
 
                 case "ir.kitgroup.salein":
                     imageLogo = R.drawable.saleinicon128;
-                    name = "سالین ";
                     packageName = "ir.kitgroup.salein";
+                    IP1 = "192.168.20.8:96";
 
                     break;
 
+
                 case "ir.kitgroup.saleindemo":
                     imageLogo = R.drawable.saleinicon128;
-                    name = "سالین دمو";
                     packageName = "ir.kitgroup.saleindemo";
 
                     break;
 
                 case "ir.kitgroup.saleinbahraman":
                     imageLogo = R.drawable.bahraman_png;
-                    name = "زعفران بهرامن";
                     packageName = "ir.kitgroup.saleinbahraman";
 
                     break;
 
                 case "ir.kitgroup.saleintop":
                     imageLogo = R.drawable.top_png;
-                    name = "تاپ کباب";
                     packageName = "ir.kitgroup.saleintop";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
                     imageLogo = R.drawable.meat_png;
-                    name = "گوشت دنیوی";
                     packageName = "ir.kitgroup.saleinmeat";
                     break;
 
-                case "ir.kitgroup.saleinnoon":
-                    imageLogo = R.drawable.noon;
-                    packageName = "ir.kitgroup.saleinnoon";
-                    name = "کافه نون";
-                    break;
-
                 default:
-
-                    packageName = "ir.kitgroup.saleinOrder";
                     imageLogo = R.drawable.saleinorder_png;
                     mode = 1;
                     break;
-
-
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -129,8 +117,8 @@ public class ApplicationModule {
         Config config = new Config();
         config.imageLogo = imageLogo;
         config.mode = mode;
-        config.name = name;
-        config.packageName = packageName;
+        config.IP1 = IP1;
+        config.INSKU_ID = packageName;
 
         return config;
 
@@ -141,23 +129,20 @@ public class ApplicationModule {
     @Singleton
     Company getUser(@ApplicationContext Context context) {
 
-        String nameCompany = "";
-        String linkUpdate = "";
-        String paymentLink = "";
-        String namePackage = "";
-        String title = "";
-        String Service = "";
-        String description = "";
-        String messageWelcome = "";
-        String ipLocal = "";
+        String N = "";
+        String DESC = "";
+        String IP1 = "";
+        String USER = "";
+        String PASS = "";
+        String SaleinId = "";
+        String T1 = "";
+        double LAT = 0.0;
+        double LONG = 0.0;
+        String city="";
         int mode = 2;
         int imageLogo = 0;
         int imageDialog = 0;
-        String userName = "";
-        String passWord = "";
-        double lat = 0.0;
-        double lng = 0.0;
-        String numberPhone = "";
+
 
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -165,142 +150,127 @@ public class ApplicationModule {
             switch (pInfo.packageName) {
 
                 case "ir.kitgroup.salein":
-                    Service = "ارائه  خدمات نرم افزاری در مشهد فعالیت میکند.";
+                    N = "سالین";
+                    DESC = "محصولات نرم افزاری";
+                    city="ایران";
                     imageLogo = R.drawable.salein;
                     imageDialog = R.drawable.saleinicon128;
-                    nameCompany = "سالین دمو";
-                    namePackage = "ir.kitgroup.salein";
-                    title = "سالین دمو";
-                    messageWelcome = "به سالین دمو خوش آمدید";
-                    description = "عرضه کننده بهترین محصولات نر افزاری";
-                    paymentLink = "";
-
-/*
-                    ipLocal = "2.180.28.6:3333";
-                    userName = "administrator";
-                    passWord = "123";*/
-
-                    ipLocal = "192.168.20.8:96";
-                    userName = "admin";
-                    passWord = "123";
+                    IP1 = "192.168.20.8:96";
+                    USER = "admin";
+                    PASS = "123";
 
 
-                    numberPhone = "05137638311";
-                    lat = 36.326805522660464;
-                    lng = 59.56450551053102;
+//                   IP1 = "2.180.28.6:3333";
+//                    USER = "administrator";
+//                    PASS = "123";
+
+
+                    SaleinId = "ir.kitgroup.salein";
+                    LAT = 36.326805522660464;
+                    LONG = 59.56450551053102;
+
+
+
+                    T1 = "05137638311";
+
                     break;
 
 
                 case "ir.kitgroup.saleindemo":
-                    Service = "راهنمای استفاده از اپلیکیشن";
+                    N = "سالین دمو";
+                    DESC = "محصولات نرم افزاری";
+                    city="ایران";
                     imageLogo = R.drawable.salein;
                     imageDialog = R.drawable.saleinicon128;
-                    nameCompany = "سالین دمو";
-                    namePackage = "ir.kitgroup.saleindemo";
-                    title = "سالین دمو";
-                    messageWelcome = "به سالین دمو خوش آمدید";
-                    description = "عرضه کننده بهترین محصولات نرم افزاری";
-                    paymentLink = "";
-                    ipLocal = "2.180.28.6:3333";
-                    userName = "administrator";
-                    passWord = "123";
-                    numberPhone = "05137638311";
-                    lat = 36.326805522660464;
-                    lng = 59.56450551053102;
+                    IP1 = "2.180.28.6:3333";
+                    USER = "administrator";
+                    PASS = "123";
+                    SaleinId = "ir.kitgroup.salein";
+                    LAT = 36.326805522660464;
+                    LONG = 59.56450551053102;
+
+
+
+                    T1 = "05137638311";
+
                     break;
 
-
                 case "ir.kitgroup.saleinbahraman":
-                    Service = " ارائه  زعفران و انواع ادویه در مشهد فعالیت میکند.";
+
+
+                    N = "زعفران بهرامن";
+                    DESC = "زعفران و انواع ادویه";
+                    city="ایران";
                     imageLogo = R.drawable.bahraman_icon;
                     imageDialog = R.drawable.bahraman_png;
-                    nameCompany = "زعفران بهرامن";
-                    namePackage = "ir.kitgroup.saleinbahraman";
-                    title = "زعفران بهرامن";
-                    messageWelcome = "به زعفران بهرامن خوش آمدید";
-                    description = "عرضه کننده بهترین محصولات";
-                    ipLocal = "89.165.69.94:8085";
-                    paymentLink = "";
-                    userName = "admin";
-                    passWord = "123";
-                    numberPhone = "";
-                    lat = 36.27928293493623;
-                    lng = 59.611608491098615;
+                    IP1 = "89.165.69.94:8085";
+                    USER = "admin";
+                    PASS = "123";
+                    SaleinId = "ir.kitgroup.saleinbahraman";
+                    LAT = 36.27928293493623;
+                    LONG = 59.611608491098615;
+
+
+
                     break;
 
                 case "ir.kitgroup.saleintop":
+
+                    N = "تاپ کباب";
+                    DESC = "بهترین غذاها";
+                    city="مشهد";
                     imageLogo = R.drawable.top_icon;
                     imageDialog = R.drawable.top_png;
-                    nameCompany = "تاپ کباب";
-                    namePackage = "ir.kitgroup.saleintop";
-                    Service = " ارائه انواع غذا در مشهد فعالیت میکند.";
-                    title = "رستوران تاپ کباب";
-                    messageWelcome = "به رستوران تاپ کباب خوش آمدید";
-                    description = "عرضه کننده بهترین غذاها";
-                    ipLocal = "188.158.121.253:9999";
-                    userName = "topkabab";
-                    passWord = "9929";
-                    paymentLink = "http://185.201.49.204:4008/";
-                    lat = 36.318805483696735;
-                    lng = 59.555196457006296;
-                    numberPhone = "05137638311";
+                    SaleinId = "ir.kitgroup.saleintop";
+                    IP1 = "188.158.121.253:9999";
+                    USER = "topkabab";
+                    PASS = "9929";
+                    LAT = 36.318805483696735;
+                    LONG = 59.555196457006296;
+                    // paymentLink = "http://185.201.49.204:4008/";
+                    T1 = "05137638311";
                     break;
 
 
                 case "ir.kitgroup.saleinmeat":
+
+                    N = "گوشت دنیوی";
+                    SaleinId = "ir.kitgroup.saleinmeat";
+                    DESC = "پروتئین و گوشت";
+                    city="مشهد";
                     imageLogo = R.drawable.meat_icon;
                     imageDialog = R.drawable.meat_png;
-                    nameCompany = "گوشت دنیوی";
-                    namePackage = "ir.kitgroup.saleinmeat";
-                    messageWelcome = "به هایپر گوشت دنیوی خوش آمدید";
-                    Service = " ارائه پروتئین و گوشت در مشهد فعالیت میکند.";
-                    namePackage = "ir.kitgroup.saleinmeat";
-                    title = " هایپر گوشت دنیوی";
-                    description = "عرضه کننده انواع گوشت";
+                    IP1 = "109.125.133.149:9999";
+                    USER = "admin";
+                    PASS = "0123";
+                    LAT = 36.31947320471888;
+                    LONG = 59.605469293071884;
 
-                    ipLocal = "109.125.133.149:9999";
-                    userName = "admin";
-                    passWord = "0123";
+                    T1 = "05137335985";
 
-                    linkUpdate = "https://cafebazaar.ir/app/ir.kitgroup.saleinmeat";
-
-
-                    numberPhone = "05137335985";
-                    lat = 36.31947320471888;
-                    lng = 59.605469293071884;
 
                     break;
 
-                case "ir.kitgroup.saleinnoon":
-                    imageLogo = R.drawable.noon;
-                    imageDialog = R.drawable.noon;
-                    nameCompany = "کافه نون";
-                    Service = " ارائه انواع نوشیدنی های گرم و سرد در مشهد فعالیت میکند.";
-                    namePackage = "ir.kitgroup.saleinnoon";
-                    messageWelcome = "به کافه نون دنیوی خوش آمدید";
-                    title = "کافه نون";
-                    description = "متنوع ترین محصولات";
-                    break;
 
                 default:
 
                     imageLogo = R.drawable.saleinorder_icon;
                     imageDialog = R.drawable.saleinorder_png;
-                    nameCompany = "سالین سفارش گیر";
-                    namePackage = "ir.kitgroup.saleinOrder";
-                    title = "SaleIn Order";
-                    description = "اپلیکیشن سفارش گیر مشتریان سالین";
+                    N = "سالین سفارش گیر";
+                    SaleinId = "ir.kitgroup.saleinOrder";
+
+                    DESC = "اپلیکیشن سفارش گیر مشتریان سالین";
                     mode = 1;
-                    ipLocal = "";
+                    IP1 = "";
                     if (Select.from(User.class).list().size() > 0) {
-                        userName = Select.from(User.class).first().userName;
-                        passWord = Select.from(User.class).first().passWord;
-                        ipLocal = Select.from(User.class).first().ipLocal;
+                        USER = Select.from(User.class).first().userName;
+                        PASS = Select.from(User.class).first().passWord;
+                        IP1 = Select.from(User.class).first().ipLocal;
                     }
 
 
-                    lat = 36.318805483696735;
-                    lng = 59.555196457006296;
+                    LAT = 36.318805483696735;
+                    LONG = 59.555196457006296;
 
                     break;
             }
@@ -310,24 +280,22 @@ public class ApplicationModule {
 
 
         Company company = new Company();
-        company.services = Service;
-        company.IP1 = ipLocal;
+        company.N = N;
+        company.DESC = DESC;
+        company.IP1 = IP1 ;
+        company.USER = USER;
+        company.PASS = PASS;
+        company.LAT = String.valueOf(LAT);
+        company.LONG = String.valueOf(LONG);
+        company.CITY = city;
         company.imageLogo = imageLogo;
         company.imageDialog = imageDialog;
-        company.title = title;
-        company.Description = description;
-        company.N = nameCompany;
         company.mode = mode;
-        company.messageWelcome = messageWelcome;
-        company.namePackage = namePackage;
-        company.userName = userName;
-        company.passWord = passWord;
-        company.linkUpdate = linkUpdate;
-        company.paymentLink = paymentLink;
-        company.LAT = String.valueOf(lat);
-        company.LONG = String.valueOf(lng);
-        company.IP1 = "http://" + ipLocal + "/api/REST/";
-        company.T1 = numberPhone;
+        company.INSK_ID = SaleinId;
+        company.T1 = T1;
+
+
+
 
         return company;
 
@@ -374,7 +342,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(getUser(context).IP1)
+                .baseUrl( "http://" + getUser(context).IP1 + "/api/REST/")
                 .client(okHttpClient)
                 .build();
     }

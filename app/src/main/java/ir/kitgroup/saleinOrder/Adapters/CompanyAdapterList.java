@@ -1,6 +1,9 @@
 package ir.kitgroup.saleinOrder.Adapters;
 
 
+
+
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.github.siyamed.shapeimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.Util;
-import ir.kitgroup.saleinOrder.DataBase.Company;
+import ir.kitgroup.saleinOrder.models.Config;
 
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
@@ -28,6 +33,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
     private final List<Company> list ;
     private int fontSize = 0;
     private final int type;
+    private final Config config;
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
@@ -40,9 +46,10 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
     private ClickItem clickItem;
 
 
-    public CompanyAdapterList( List<Company> list,int type) {
+    public CompanyAdapterList(List<Company> list, int type, Config config) {
         this.list = list;
         this.type=type;
+        this.config=config;
 
     }
 
@@ -66,16 +73,22 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             holder.favoriteCompany.setVisibility(View.GONE);
 
         holder.tvTitleCompany.setText(company.N);
-        holder.tvDescriptionCompany.setText(company.Description);
-        holder.ivCompany.setImageResource(company.imageLogo);
+        holder.tvDescriptionCompany.setText(company.DESC);
 
+
+        Picasso.get()
+                .load("http://" + config.IP1 + "/GetCompanyImage?id=" +
+                        company.I+"&width=100&height=100")
+                .error(R.drawable.loading)
+                .placeholder(R.drawable.loading)
+                .into(holder.ivCompany);
 
 
 
 
         holder.itemView.setOnClickListener(v -> {
 
-                clickItem.onRowClick(company,true);
+            clickItem.onRowClick(company,true);
         });
 
 
