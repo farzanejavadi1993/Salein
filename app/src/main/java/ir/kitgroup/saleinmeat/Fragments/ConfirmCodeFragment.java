@@ -24,9 +24,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.query.Select;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +48,7 @@ import ir.kitgroup.saleinmeat.DataBase.Account;
 
 
 import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
 import ir.kitgroup.saleinmeat.models.ModelAccount;
 import ir.kitgroup.saleinmeat.models.ModelLog;
 import ir.kitgroup.saleinmeat.R;
@@ -59,20 +60,12 @@ import ir.kitgroup.saleinmeat.databinding.FragmentConfirmCodeBinding;
 public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
-
-    @Inject
-    Company company;
-
-
-    @Inject
-    API api;
-
-
-    private  CompositeDisposable compositeDisposable ;
+    private ConfigRetrofit configRetrofit;
+    private Company company;
+    private API api;
+    private CompositeDisposable compositeDisposable;
     private FragmentConfirmCodeBinding binding;
     private int code;
-
-
     //endregion Parameter
 
     @Nullable
@@ -90,14 +83,19 @@ public class ConfirmCodeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        compositeDisposable = new CompositeDisposable();
-        //region Get Bundle And Set Data
 
+
+        configRetrofit = new ConfigRetrofit();
+        company= Select.from(Company.class).first();
+        api = configRetrofit.getRetrofit(company.IP1).create(API.class);
+
+        compositeDisposable = new CompositeDisposable();
+
+
+        //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         code = bundle.getInt("code");
         String mobileNumber = bundle.getString("mobileNumber");
-
-
         //endregion Get Bundle And Set Data
 
 
@@ -353,7 +351,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-             // return;
+                // return;
             }
             getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });
@@ -510,5 +508,21 @@ public class ConfirmCodeFragment extends Fragment {
     }
     //endregion Method
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        configRetrofit=null;
+        binding = null;
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
 
 }

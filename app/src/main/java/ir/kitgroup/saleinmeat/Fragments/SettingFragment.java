@@ -44,7 +44,6 @@ import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinmeat.DataBase.Product;
 import ir.kitgroup.saleinmeat.DataBase.Tables;
 import ir.kitgroup.saleinmeat.DataBase.Unit;
-import ir.kitgroup.saleinmeat.DataBase.User;
 
 import ir.kitgroup.saleinmeat.R;
 
@@ -179,10 +178,6 @@ public class SettingFragment extends Fragment {
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
-            if (company.mode == 1) {
-                if (User.count(User.class) > 0)
-                    User.deleteAll(User.class);
-            }
 
 
             if (Tables.count(Tables.class) > 0)

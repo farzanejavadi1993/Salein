@@ -136,19 +136,16 @@ public class MainOrderFragment extends Fragment {
 
 
     //region Parameter
-
-    @Inject
-    Company company;
-
     @Inject
     Config config;
-
-
-    @Inject
-    API api;
-
     @Inject
     SharedPreferences sharedPreferences;
+
+
+    private ConfigRetrofit configRetrofit;
+    private Company company;
+    private API api;
+    private CompositeDisposable compositeDisposable;
 
 
     private FragmentMobileOrderMainBinding binding;
@@ -183,7 +180,6 @@ public class MainOrderFragment extends Fragment {
     private int totalPage;
 
 
-    private CompositeDisposable compositeDisposable;
     private String error = "";
 
 
@@ -280,26 +276,20 @@ public class MainOrderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
         ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
 
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
-            company = null;
-            api = null;
-            company = Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        configRetrofit = new ConfigRetrofit();
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
 
-        }
 
         getUnit();
-
-
-
 
 
         //region First Value Parameter
@@ -355,8 +345,8 @@ public class MainOrderFragment extends Fragment {
             name = company.INSK_ID.split("ir.kitgroup.")[1];
 
 
-            if (!Tbl_GUID.equals("") || company.mode==1)
-            Inv_GUID = sharedPreferences.getString(name, "");
+            if (!Tbl_GUID.equals("") || company.mode == 1)
+                Inv_GUID = sharedPreferences.getString(name, "");
 
             if (Inv_GUID.equals("")) {
                 Inv_GUID = UUID.randomUUID().toString();
@@ -370,8 +360,8 @@ public class MainOrderFragment extends Fragment {
 //                Inv_GUID = UUID.randomUUID().toString();
 //            }
 
-        }else {
-            if (company.mode==1)
+        } else {
+            if (company.mode == 1)
                 sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
         }
 
@@ -771,9 +761,6 @@ public class MainOrderFragment extends Fragment {
         });
 
 
-
-
-
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
             getProductLevel1();
@@ -1017,7 +1004,7 @@ public class MainOrderFragment extends Fragment {
 
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID,config);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID, config);
         // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
@@ -1137,7 +1124,7 @@ public class MainOrderFragment extends Fragment {
                                             return;
                                         }
                                         productLevel1List.addAll(iDs.getProductLevel1());
-                                        CollectionUtils.filter(iDs.getProductLevel1(),i->i.getSts());
+                                        CollectionUtils.filter(iDs.getProductLevel1(), i -> i.getSts());
                                         if (productLevel1List.size() == 1)
                                             binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                                         productLevel1Adapter.notifyDataSetChanged();
@@ -1207,7 +1194,7 @@ public class MainOrderFragment extends Fragment {
                                         }
 
                                         productLevel2List.clear();
-                                        CollectionUtils.filter(iDs.getProductLevel2(), i->i.getSts());
+                                        CollectionUtils.filter(iDs.getProductLevel2(), i -> i.getSts());
                                         productLevel2List.addAll(iDs.getProductLevel2());
 
 
@@ -1741,9 +1728,8 @@ public class MainOrderFragment extends Fragment {
                                             linkUpdate = settingsList.get(0).LINK_UPDATE;
 
 
-
-                                            if ( settingsList.get(0).LINK_PAYMENT!=null)
-                                            sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
+                                            if (settingsList.get(0).LINK_PAYMENT != null)
+                                                sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
 
                                         } catch (Exception ignored) {
 
@@ -1759,7 +1745,6 @@ public class MainOrderFragment extends Fragment {
 
                                         sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
                                         sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
-
 
 
                                         if (company.mode == 1) {
@@ -1815,9 +1800,6 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-
-
-
     public Bundle getBundle(boolean SetARD1) {
         Bundle bundle = new Bundle();
         bundle.putString("Inv_GUID", Inv_GUID);
@@ -1854,6 +1836,7 @@ public class MainOrderFragment extends Fragment {
 
         EDIT = false;
         compositeDisposable.dispose();
+        configRetrofit=null;
         binding = null;
 
 

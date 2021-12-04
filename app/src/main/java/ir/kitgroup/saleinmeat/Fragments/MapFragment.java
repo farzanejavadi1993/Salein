@@ -109,13 +109,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     //region Parameter
-
-    @Inject
-    API api;
-    @Inject
-    Company company;
     @Inject
     SharedPreferences sharedPreferences;
+
+    private ConfigRetrofit configRetrofit;
+    private Company company;
+    private API api;
 
 
     private FragmentMapBinding binding;
@@ -150,7 +149,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private CircleManager circleManager;
 
 
-    private String edit_address="";
+    private String edit_address = "";
 
     private enum State {
         MAP,
@@ -175,21 +174,19 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        configRetrofit = new ConfigRetrofit();
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+
+
         customProgress = CustomProgress.getInstance();
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
-
-            company = null;
-            api = null;
-            company = Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
-        }
 
 
         //region Configuration Text Size
@@ -387,8 +384,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     linearButtons.setVisibility(View.VISIBLE);
                 } else
                     linearButtons.setVisibility(View.GONE);
-
-
 
 
                 if (edit_address.equals("2"))
@@ -881,8 +876,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding.mapView.onDestroy();
+        configRetrofit=null;
+        binding = null;
         if (edit_address.equals("3"))
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+            ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
     }
 
     @Override
@@ -1099,6 +1096,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     }
+
+
+
+
+
+
 
 
 }

@@ -31,8 +31,9 @@ import com.orm.query.Select;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
-import ir.kitgroup.saleinmeat.DataBase.User;
+
 import ir.kitgroup.saleinmeat.Fragments.InVoiceDetailFragment;
 
 import ir.kitgroup.saleinmeat.Fragments.LauncherOrganizationFragment;
@@ -260,7 +261,7 @@ public class LauncherActivity extends AppCompatActivity {
         if (config.mode == 1) {
             //When User Is Login
 
-            if (Select.from(User.class).list().size() > 0) {
+            if (Select.from(Company.class).list().size() > 0) {
                 replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment");
             }
 

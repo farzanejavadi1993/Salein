@@ -95,7 +95,7 @@ import ir.kitgroup.saleinmeat.models.Invoice;
 import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinmeat.models.OrderType;
 
-import ir.kitgroup.saleinmeat.DataBase.User;
+
 
 
 import ir.kitgroup.saleinmeat.models.ModelLog;
@@ -300,7 +300,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             if (company.mode == 1) {
-                numberPos = Select.from(User.class).first().numberPos;
+                numberPos = Select.from(Company.class).first().numberPos;
                 if (numberPos != null && numberPos.equals(""))
                     numberPos = "0";
             }

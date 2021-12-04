@@ -23,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.orm.query.Select;
+
 import org.jetbrains.annotations.NotNull;
 
 
@@ -39,9 +41,11 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Connect.API;
 
 import ir.kitgroup.saleinmeat.R;
+import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.databinding.FragmentLoginMobileBinding;
 import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
 
 @AndroidEntryPoint
 public class LoginClientFragment extends Fragment {
@@ -49,14 +53,10 @@ public class LoginClientFragment extends Fragment {
 
     //region PARAMETER
 
-    @Inject
-    Company company;
-
-    @Inject
-    API api;
-
-
-    private  CompositeDisposable compositeDisposable;
+    private ConfigRetrofit configRetrofit;
+    private Company company;
+    private API api;
+    private CompositeDisposable compositeDisposable;
     private FragmentLoginMobileBinding binding;
     private Boolean acceptRule = true;
 
@@ -80,8 +80,11 @@ public class LoginClientFragment extends Fragment {
 
         try {
 
-            compositeDisposable = new CompositeDisposable();
+            configRetrofit = new ConfigRetrofit();
+            company= Select.from(Company.class).first();
+            api = configRetrofit.getRetrofit(company.IP1).create(API.class);
 
+            compositeDisposable = new CompositeDisposable();
             //region Configuration Text Size
             int fontSize;
             if (Util.screenSize >= 7) {
@@ -104,13 +107,10 @@ public class LoginClientFragment extends Fragment {
             binding.loginTvRules.setText("با ثبت نام در " + company.N);
 
 
-
             //region Set Icon And Title
-            binding.tvWelcome.setText("به "+company.N+"خوش آمدید ");
+            binding.tvWelcome.setText("به " + company.N + "خوش آمدید ");
             binding.imageLogo.setImageResource(company.imageLogo);
             //endregion Set Icon And Title
-
-
 
 
             //region TextWatcher edtMobile
@@ -143,10 +143,6 @@ public class LoginClientFragment extends Fragment {
             //endregion TextWatcher edtMobile
 
 
-
-
-
-
             //region Action btnLogin
             binding.btnLogin.setOnClickListener(v -> {
                 if (acceptRule) {
@@ -161,14 +157,9 @@ public class LoginClientFragment extends Fragment {
             //endregion Action btnLogin
 
 
-
-
-
-
             //region Action btnLogin
             binding.loginTvRules1.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new RulesFragment(), "RulesFragment").addToBackStack("RulesF").commit());
             //endregion Action btnLogin
-
 
 
             //region Action CheckBox
@@ -182,9 +173,6 @@ public class LoginClientFragment extends Fragment {
                 }
             });
             //endregion Action CheckBox
-
-
-
 
 
         } catch (Exception ignored) {
@@ -211,18 +199,12 @@ public class LoginClientFragment extends Fragment {
 
 
                                 Bundle bundleOrder = new Bundle();
-                                bundleOrder.putString("mobileNumber",mobileNumber);
+                                bundleOrder.putString("mobileNumber", mobileNumber);
                                 bundleOrder.putInt("code", code);
 
-                                ConfirmCodeFragment inVoiceDetailFragment=new ConfirmCodeFragment();
+                                ConfirmCodeFragment inVoiceDetailFragment = new ConfirmCodeFragment();
                                 inVoiceDetailFragment.setArguments(bundleOrder);
                                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
-
-
-
-
-
-
 
 
                             }, throwable -> {
@@ -247,5 +229,21 @@ public class LoginClientFragment extends Fragment {
     }
     //endregion Method
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        configRetrofit = null;
+        binding = null;
+
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
 
 }

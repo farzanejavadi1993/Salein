@@ -57,9 +57,6 @@ import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.models.OrderType;
 
 
-import ir.kitgroup.saleinmeat.DataBase.User;
-
-
 import ir.kitgroup.saleinmeat.models.ModelTable;
 import ir.kitgroup.saleinmeat.models.ModelTypeOrder;
 import ir.kitgroup.saleinmeat.R;
@@ -160,8 +157,7 @@ public class LauncherOrganizationFragment extends Fragment {
                         Tables.deleteAll(Tables.class);
 
 
-                    if (User.count(User.class) > 0)
-                        User.deleteAll(User.class);
+
 
 
                     System.exit(0);

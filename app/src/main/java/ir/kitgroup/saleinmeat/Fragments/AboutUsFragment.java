@@ -31,8 +31,8 @@ import ir.kitgroup.saleinmeat.DataBase.Company;
 public class AboutUsFragment extends Fragment {
 
 
-    @Inject
-    Company company;
+
+    private Company company;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -70,11 +70,8 @@ public class AboutUsFragment extends Fragment {
         //region Set Icon And Title
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         if (!Util.RetrofitValue) {
-
             company=null;
             company = Select.from(Company.class).first();
-
-
         }
 
             binding.imageView.setImageResource(company.imageDialog);

@@ -15,9 +15,10 @@ public class Company extends SugarRecord {
     public String DESC;
     public String INSK_ID;
     public String CITY;
-    public int mode=2;
+    public int mode = 2;
     public int imageLogo;
     public int imageDialog;
+    public String numberPos="";
 
 
 }

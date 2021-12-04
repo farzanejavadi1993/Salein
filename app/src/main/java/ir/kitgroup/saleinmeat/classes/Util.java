@@ -25,7 +25,7 @@ public class Util {
     public static double height = 0.0;
     public static double screenSize = 0.0;
 
-    public static boolean RetrofitValue=true;
+
 
     public static void ScreenSize(Activity activity) {
         if (width == 0.0) {

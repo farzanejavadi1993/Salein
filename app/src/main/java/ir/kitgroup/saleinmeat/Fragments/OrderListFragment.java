@@ -78,11 +78,10 @@ import ir.kitgroup.saleinmeat.models.PaymentRecieptDetail;
 @AndroidEntryPoint
 public class OrderListFragment extends Fragment {
 
-    @Inject
-    API api;
 
-    @Inject
-    Company company;
+    private API api;
+
+    private Company company;
 
 
     @Inject
@@ -133,7 +132,6 @@ public class OrderListFragment extends Fragment {
         String accGUID = Select.from(Account.class).list().get(0).I;
         if (!Util.RetrofitValue) {
             ConfigRetrofit configRetrofit = new ConfigRetrofit();
-
             company = null;
             api = null;
             company = Select.from(Company.class).first();
@@ -192,9 +190,9 @@ public class OrderListFragment extends Fragment {
         binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recycler.setAdapter(orderListAdapter);
         binding.recycler.setHasFixedSize(false);
-        orderListAdapter.setOnClickItemListener((description,type, Inv_GUID) -> {
+        orderListAdapter.setOnClickItemListener((description, type, Inv_GUID) -> {
 
-            if (type==1){
+            if (type == 1) {
                 Bundle bundleOrder = new Bundle();
                 bundleOrder.putString("Inv_GUID", Inv_GUID);
                 bundleOrder.putString("Tbl_GUID", "");
@@ -207,10 +205,10 @@ public class OrderListFragment extends Fragment {
                 InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
                 inVoiceDetailFragment.setArguments(bundleOrder);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
-            }else {
+            } else {
                 Invoice invoice = new Invoice();
                 invoice.INV_UID = Inv_GUID;
-                invoice.INV_DESCRIBTION =description;
+                invoice.INV_DESCRIBTION = description;
                 List<Invoice> listInvoice = new ArrayList<>();
                 listInvoice.add(invoice);
 
@@ -221,20 +219,16 @@ public class OrderListFragment extends Fragment {
             }
 
 
-
         });
 
 
-
         binding.ivBack.setOnClickListener(v -> {
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+                    ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
         );
 
         getAllInvoice1(accGUID, datVip);
-
-
 
 
     }
@@ -394,25 +388,22 @@ public class OrderListFragment extends Fragment {
                                 }
                                 if (message == 1) {
 
-                                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                                             .setMessage("نظر شما با موفقیت ارسال شد.")
-                                          .setPositiveButton("بستن", (dialog, which) -> {
-                                               dialog.dismiss();
+                                            .setPositiveButton("بستن", (dialog, which) -> {
+                                                dialog.dismiss();
                                             })
-                                          .show();
+                                            .show();
 
                                     TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                                     textView.setTypeface(face);
                                     textView.setTextColor(getResources().getColor(R.color.green_table));
                                     textView.setTextSize(13);
 
 
-
-
-
                                 } else {
-                                    AlertDialog alertDialog=  new AlertDialog.Builder(getActivity())
+                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                                             .setMessage("خطا در ارسال نظر")
                                             .setPositiveButton("بستن", (dialog, which) -> {
                                                 dialog.dismiss();
@@ -420,7 +411,7 @@ public class OrderListFragment extends Fragment {
                                             .show();
 
                                     TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                    Typeface face=Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                                     textView.setTypeface(face);
                                     textView.setTextColor(getResources().getColor(R.color.red_table));
                                     textView.setTextSize(13);

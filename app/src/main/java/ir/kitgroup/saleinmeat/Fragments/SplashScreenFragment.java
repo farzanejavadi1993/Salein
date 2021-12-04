@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,30 +17,49 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+
+import java.lang.reflect.Type;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import ir.kitgroup.saleinmeat.Connect.API;
 import ir.kitgroup.saleinmeat.DataBase.Account;
 import ir.kitgroup.saleinmeat.R;
 
+import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
+import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
+import ir.kitgroup.saleinmeat.models.ModelCompany;
 
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
 
 
     //region Parameter
-    private FragmentSplashScreenBinding binding;
-    //endregion Parameter
-
     @Inject
-    Company company;
+    Config config;
+
+    private ConfigRetrofit configRetrofit;
+    private  Company company;
+    private API api;
+    private CompositeDisposable compositeDisposable;
+    private FragmentSplashScreenBinding binding;
+    private String appVersion;
+
+    //endregion Parameter
 
 
     //region Override Method
@@ -58,83 +78,29 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        configRetrofit = new ConfigRetrofit();
+
+        company=Select.from(Company.class).first();
+        api = configRetrofit.getRetrofit("http://2.180.28.6:3333/api/REST/").create(API.class);
+        compositeDisposable = new CompositeDisposable();
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
-        binding.tvTitle.setText(company.N);
-        binding.tvDescription.setText(company.DESC);
+        binding.tvTitle.setText(company!=null && company.N!=null ? company.N:config.N);
+        binding.tvDescription.setText(company!=null && company.DESC!=null ?company.DESC:config.DESC);
 
 
         try {
-            String appVersion = appVersion();
+            appVersion = appVersion();
             binding.tvversion.setText(" نسخه " + appVersion);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
 
-        //region Thread
-
-        Thread thread = new Thread(() -> {
-            try {
-
-                Thread.sleep(2000);
 
 
-                FragmentTransaction addFragment = null;
-
-
-                //regionClient Application
-                if (company.mode == 2) {
-
-                    //region Account Is Login & Register
-
-                    if (Select.from(Account.class).list().size() > 0) {
-
-                        if (company.INSK_ID.equals("ir.kitgroup.salein"))
-                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
-                        else {
-                            Bundle bundleMainOrder = new Bundle();
-                            bundleMainOrder.putString("Inv_GUID", "");
-                            bundleMainOrder.putString("Tbl_GUID", "");
-                            bundleMainOrder.putString("Ord_TYPE", "");
-                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
-                            mainOrderFragment.setArguments(bundleMainOrder);
-                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
-
-                        }
-
-
-                    }
-
-
-                    //endregion Account Is Login & Register
-
-
-
-
-                    else {
-                       addFragment= getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment");
-                    }
-
-
-
-
-
-
-                }
-                //endregionClient Application
-
-                addFragment.commit();
-
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-        //endregion Thread
+        getCompany();
     }
-
     //endregion Override Method
 
 
@@ -143,7 +109,144 @@ public class SplashScreenFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
+
+
+    @SuppressLint("SetTextI18n")
+    private void getCompany() {
+        try {
+            compositeDisposable.add(
+                    api.getCompany("")
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelCompany>() {
+                                }.getType();
+                                ModelCompany iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از شرکت ها نامعتبر است.", Toast.LENGTH_SHORT).show();
+
+                                    return;
+                                }
+
+
+                                if (iDs != null) {
+                                    if (iDs.getCompany() != null) {
+                                        /* CollectionUtils.filter(iDs.getCompany(), i -> i.INSK_ID!=null && i.INSK_ID.equals(appVersion));*/
+                                        CollectionUtils.filter(iDs.getCompany(), i -> i.N.equals("گوشت دنیوی"));
+                                        if (iDs.getCompany().size() == 1) {
+
+                                            Company.deleteAll(Company.class);
+                                            Company.saveInTx(iDs.getCompany().size());
+
+                                            FragmentTransaction addFragment;
+
+                                            //region Account Is Login & Register
+                                            if (Select.from(Account.class).list().size() > 0) {
+
+                                                if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                                                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
+
+                                                else {
+                                                    Bundle bundleMainOrder = new Bundle();
+                                                    bundleMainOrder.putString("Inv_GUID", "");
+                                                    bundleMainOrder.putString("Tbl_GUID", "");
+                                                    bundleMainOrder.putString("Ord_TYPE", "");
+                                                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                                                    mainOrderFragment.setArguments(bundleMainOrder);
+                                                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                                                }
+
+
+                                            }
+                                            //endregion Account Is Login & Register
+
+                                            else {
+                                                addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment");
+                                            }
+
+
+                                            addFragment.commit();
+
+
+                                        }
+
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+
+                                }
+
+
+                            }, throwable -> {
+
+                                if (Select.from(Company.class).list().size() == 0)
+                                    Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+                                else {
+                                    FragmentTransaction addFragment;
+
+                                    //region Account Is Login & Register
+                                    if (Select.from(Account.class).list().size() > 0) {
+
+                                        if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
+
+                                        else {
+                                            Bundle bundleMainOrder = new Bundle();
+                                            bundleMainOrder.putString("Inv_GUID", "");
+                                            bundleMainOrder.putString("Tbl_GUID", "");
+                                            bundleMainOrder.putString("Ord_TYPE", "");
+                                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                                            mainOrderFragment.setArguments(bundleMainOrder);
+                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                                        }
+
+
+                                    }
+                                    //endregion Account Is Login & Register
+
+                                    else {
+                                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment");
+                                    }
+
+                                    addFragment.commit();
+                                }
+
+                            })
+            );
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "خطا در ارتباط با سرور.", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
     //endregion Custom Method
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        configRetrofit = null;
+        binding = null;
+
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
 
 
 }

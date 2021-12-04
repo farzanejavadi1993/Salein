@@ -17,9 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Connect.API;
 import ir.kitgroup.saleinmeat.DataBase.Account;
 
+import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.models.ModelLog;
@@ -50,18 +51,13 @@ import ir.kitgroup.saleinmeat.databinding.FragmentRegisterBinding;
 public class RegisterFragment extends Fragment {
     //region  Parameter
 
-
-    @Inject
-    Company company;
-
-    @Inject
-    API api;
+    private ConfigRetrofit configRetrofit;
+    private Company company;
+    private API api;
+    private CompositeDisposable compositeDisposable;
 
 
 
-
-
-    private  CompositeDisposable compositeDisposable ;
     private FragmentRegisterBinding binding;
     private final List<Account> accountsList = new ArrayList<>();
 
@@ -82,17 +78,18 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        configRetrofit = new ConfigRetrofit();
+        company= Select.from(Company.class).first();
+        api = configRetrofit.getRetrofit(company.IP1).create(API.class);
         compositeDisposable = new CompositeDisposable();
         //region Get Bundle And Set Data
 
-        Bundle bundle=getArguments();
+        Bundle bundle = getArguments();
         String mobileNumber = bundle.getString("mobileNumber");
         String address2 = bundle.getString("address2");
-        double latitude=bundle.getDouble("lat");
-        double longitude= bundle.getDouble("lng");
-
-
-
+        double latitude = bundle.getDouble("lat");
+        double longitude = bundle.getDouble("lng");
 
 
         binding.edtAddressCustomerComplete.setText(address2);
@@ -230,12 +227,12 @@ public class RegisterFragment extends Fragment {
 
                                     //region Go To MainOrderFragment Because Account Is Register
                                     else {
-                                        Bundle bundleMainOrder= new Bundle();
+                                        Bundle bundleMainOrder = new Bundle();
                                         bundleMainOrder.putString("Inv_GUID", "");
                                         bundleMainOrder.putString("Tbl_GUID", "");
                                         bundleMainOrder.putString("Ord_TYPE", "");
 
-                                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                        MainOrderFragment mainOrderFragment = new MainOrderFragment();
                                         mainOrderFragment.setArguments(bundleMainOrder);
                                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").commit();
 
@@ -277,4 +274,22 @@ public class RegisterFragment extends Fragment {
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.dispose();
+        configRetrofit=null;
+        binding = null;
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
+
 }

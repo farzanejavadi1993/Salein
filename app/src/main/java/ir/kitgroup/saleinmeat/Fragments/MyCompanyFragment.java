@@ -57,29 +57,26 @@ import ir.kitgroup.saleinmeat.models.ModelLog;
 
 @AndroidEntryPoint
 public class MyCompanyFragment extends Fragment {
-    private CompositeDisposable compositeDisposable ;
+    private CompositeDisposable compositeDisposable;
     private FragmentMyCompanyBinding binding;
-
-
-    @Inject
-    API api;
 
     @Inject
     Config config;
-
-
-    ArrayList<Company> companies=new ArrayList<>();
-
     @Inject
     SharedPreferences sharedPreferences;
 
 
+    private API api;
+    private ConfigRetrofit configRetrofit;
+
+
+    ArrayList<Company> companies = new ArrayList<>();
 
 
     private Company companySelect;
 
 
-    private ConfigRetrofit configRetrofit;
+
     private Account account;
 
 
@@ -101,8 +98,6 @@ public class MyCompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         configRetrofit = new ConfigRetrofit();
         compositeDisposable = new CompositeDisposable();
 
@@ -118,7 +113,7 @@ public class MyCompanyFragment extends Fragment {
 
         else
             binding.txtError.setText("");
-        CompanyAdapterList companyAdapterList = new CompanyAdapterList(listCompany, 1,config);
+        CompanyAdapterList companyAdapterList = new CompanyAdapterList(listCompany, 1, config);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
@@ -127,16 +122,15 @@ public class MyCompanyFragment extends Fragment {
 
                     compositeDisposable.clear();
 
-                    companySelect=company;
-                    Util.RetrofitValue = false;
+                    companySelect = company;
                     String nameSave = sharedPreferences.getString(company.N, "");
                     if (!nameSave.equals("")) {
-                        Bundle bundleMainOrder= new Bundle();
+                        Bundle bundleMainOrder = new Bundle();
                         bundleMainOrder.putString("Inv_GUID", "");
                         bundleMainOrder.putString("Tbl_GUID", "");
                         bundleMainOrder.putString("Ord_TYPE", "");
 
-                        MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                        MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
@@ -147,9 +141,6 @@ public class MyCompanyFragment extends Fragment {
         );
 
 
-
-
-
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -158,7 +149,6 @@ public class MyCompanyFragment extends Fragment {
 
         textExit = dialog.findViewById(R.id.tv_message);
         ivIcon = dialog.findViewById(R.id.iv_icon);
-
 
 
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
@@ -221,12 +211,12 @@ public class MyCompanyFragment extends Fragment {
                                         if (iDs.getAccountList().size() > 0) {
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
-                                            Bundle bundleMainOrder= new Bundle();
+                                            Bundle bundleMainOrder = new Bundle();
                                             bundleMainOrder.putString("Inv_GUID", "");
                                             bundleMainOrder.putString("Tbl_GUID", "");
                                             bundleMainOrder.putString("Ord_TYPE", "");
 
-                                            MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
                                             mainOrderFragment.setArguments(bundleMainOrder);
                                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -300,12 +290,12 @@ public class MyCompanyFragment extends Fragment {
                                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                 if (message == 1) {
 
-                                    Bundle bundleMainOrder= new Bundle();
+                                    Bundle bundleMainOrder = new Bundle();
                                     bundleMainOrder.putString("Inv_GUID", "");
                                     bundleMainOrder.putString("Tbl_GUID", "");
                                     bundleMainOrder.putString("Ord_TYPE", "");
 
-                                    MainOrderFragment mainOrderFragment=new MainOrderFragment();
+                                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
                                     mainOrderFragment.setArguments(bundleMainOrder);
                                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -328,15 +318,13 @@ public class MyCompanyFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        binding=null;
+        configRetrofit=null;
+        binding = null;
     }
-
 
 
     @Override

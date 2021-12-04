@@ -57,33 +57,28 @@ import ir.kitgroup.saleinmeat.models.ModelLog;
 public class CompanyFragment extends Fragment {
 
     @Inject
-    API api;
-
-    @Inject
     SharedPreferences sharedPreferences;
-
-
 
     @Inject
     Config config;
+
+
+    private ConfigRetrofit configRetrofit;
+    private API api;
 
     private FragmentCompanyBinding binding;
 
     private CompositeDisposable compositeDisposable;
 
 
-
-
     private ArrayList<Company> companies;
     CompanyAdapterList companyAdapterList;
-
-
 
 
     private Company companySelect;
 
 
-    private ConfigRetrofit configRetrofit;
+
     private Account account;
 
 
@@ -109,7 +104,7 @@ public class CompanyFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
         companies = new ArrayList<>();
 
-        companyAdapterList = new CompanyAdapterList(companies, 2,config);
+        companyAdapterList = new CompanyAdapterList(companies, 2, config);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
@@ -119,7 +114,7 @@ public class CompanyFragment extends Fragment {
 
                     compositeDisposable.clear();
                     companySelect = company;
-                    Util.RetrofitValue = false;
+
                     String nameSave = sharedPreferences.getString(company.N, "");
                     if (!nameSave.equals("")) {
                         Company.deleteAll(Company.class);
@@ -391,6 +386,7 @@ public class CompanyFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
+        configRetrofit=null;
         binding = null;
     }
 

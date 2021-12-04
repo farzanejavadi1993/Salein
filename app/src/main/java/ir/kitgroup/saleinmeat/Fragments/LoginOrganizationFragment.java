@@ -44,11 +44,12 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinmeat.Connect.API;
 
+import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.classes.Util;
 
 
 
-import ir.kitgroup.saleinmeat.DataBase.User;
+
 
 
 import ir.kitgroup.saleinmeat.R;
@@ -154,21 +155,19 @@ public class LoginOrganizationFragment extends Fragment {
                                     Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
                                 } else {
 
-                                    if (User.count(User.class) > 0)
-                                        User.deleteAll(User.class);
 
-                                    User user = new User();
-
-                                    user.ipLocal = ipOrganization;
-                                    user.numberPos=saleCode;
-                                    user.userName=userName;
-                                    user.passWord=passWord;
-                                    user.save();
+                                    Company.deleteAll(Company.class);
+                                    Company company=new Company();
+                                    company.IP1 = ipOrganization;
+                                    company.numberPos=saleCode;
+                                    company.USER=userName;
+                                    company.PASS=passWord;
+                                    company.save();
 
 
                                     getActivity().getSupportFragmentManager().popBackStack();
 
-                                    if (Select.from(User.class).list().size()>0) {
+                                    if (Select.from(Company.class).list().size()>0) {
                                          getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
                                     }
 
