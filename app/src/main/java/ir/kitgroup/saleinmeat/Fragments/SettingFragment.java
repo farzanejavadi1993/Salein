@@ -59,16 +59,15 @@ import ir.kitgroup.saleinmeat.models.ModelLog;
 public class SettingFragment extends Fragment {
 
 
-    @Inject
-    Company company;
 
-    @Inject
-    API api;
+
+    private API api;
 
     @Inject
     SharedPreferences sharedPreferences;
 
 
+    private Company company;
 
     //region Parameter
     private boolean Seen = true;
@@ -93,9 +92,6 @@ public class SettingFragment extends Fragment {
 
 
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
-
-
-
         return binding.getRoot();
 
 

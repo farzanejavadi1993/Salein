@@ -11,12 +11,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -65,9 +70,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -140,7 +148,6 @@ public class MainOrderFragment extends Fragment {
     Config config;
     @Inject
     SharedPreferences sharedPreferences;
-
 
 
     private Company company;
@@ -249,6 +256,7 @@ public class MainOrderFragment extends Fragment {
 
     public int counter1 = 0;
 
+
     //  private List<InvoiceDetail> invoiceDetails;
 
 
@@ -282,17 +290,18 @@ public class MainOrderFragment extends Fragment {
         ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
 
-
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
 
         getUnit();
 
 
         //region First Value Parameter
+
+
 
         counter1 = 0;
 

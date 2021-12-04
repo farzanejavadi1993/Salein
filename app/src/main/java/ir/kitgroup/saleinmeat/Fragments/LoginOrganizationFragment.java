@@ -65,12 +65,12 @@ public class LoginOrganizationFragment extends Fragment {
 
 
     //region Parameter
-
+/*
     @Inject
     OkHttpClient okHttpClient;
 
     @Inject
-    Gson gson;
+    Gson gson;*/
 
     private FragmentOrganizationLoginBinding binding;
 
@@ -128,62 +128,62 @@ public class LoginOrganizationFragment extends Fragment {
 
         String baseUrl = "http://" + Util.toEnglishNumber(ipOrganization) + "/api/REST/";
         try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
-                    .build();
-
-            API api = retrofit.create(API.class);
+//            Retrofit retrofit = new Retrofit.Builder()
+//                    .baseUrl(baseUrl)
+//                    .addConverterFactory(GsonConverterFactory.create(gson))
+//                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                    .client(okHttpClient)
+//                    .build();
+//
+//            API api = retrofit.create(API.class);
 
 
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
             binding.btnLogin.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
-            compositeDisposable.add(
-                  api.Login(userName, passWord)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                binding.btnLogin.setEnabled(true);
-                                if (jsonElement == null || !jsonElement.isEmpty()) {
-
-                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
-                                } else {
-
-
-                                    Company.deleteAll(Company.class);
-                                    Company company=new Company();
-                                    company.IP1 = ipOrganization;
-                                    company.numberPos=saleCode;
-                                    company.USER=userName;
-                                    company.PASS=passWord;
-                                    company.save();
-
-
-                                    getActivity().getSupportFragmentManager().popBackStack();
-
-                                    if (Select.from(Company.class).list().size()>0) {
-                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
-                                    }
-
-                                }
-                                binding.progressBar.setVisibility(View.GONE);
-
-
-                            }, throwable -> {
-                                binding.btnLogin.setEnabled(true);
-                                Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
-                                binding.progressBar.setVisibility(View.GONE);
-
-
-                            })
-            );
-
+//            compositeDisposable.add(
+//                  api.Login(userName, passWord)
+//                            .subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .doOnSubscribe(disposable -> {
+//                            })
+//                            .subscribe(jsonElement -> {
+//
+//                                binding.btnLogin.setEnabled(true);
+//                                if (jsonElement == null || !jsonElement.isEmpty()) {
+//
+//                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
+//                                } else {
+//
+//
+//                                    Company.deleteAll(Company.class);
+//                                    Company company=new Company();
+//                                    company.IP1 = ipOrganization;
+//                                    company.numberPos=saleCode;
+//                                    company.USER=userName;
+//                                    company.PASS=passWord;
+//                                    company.save();
+//
+//
+//                                    getActivity().getSupportFragmentManager().popBackStack();
+//
+//                                    if (Select.from(Company.class).list().size()>0) {
+//                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+//                                    }
+//
+//                                }
+//                                binding.progressBar.setVisibility(View.GONE);
+//
+//
+//                            }, throwable -> {
+//                                binding.btnLogin.setEnabled(true);
+//                                Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
+//                                binding.progressBar.setVisibility(View.GONE);
+//
+//
+//                            })
+//            );
+//
 
         } catch (NetworkOnMainThreadException ex) {
             binding.btnLogin.setEnabled(true);

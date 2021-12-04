@@ -49,6 +49,7 @@ import ir.kitgroup.saleinmeat.DataBase.Account;
 
 import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
+import ir.kitgroup.saleinmeat.models.Config;
 import ir.kitgroup.saleinmeat.models.ModelAccount;
 import ir.kitgroup.saleinmeat.models.ModelLog;
 import ir.kitgroup.saleinmeat.R;
@@ -60,6 +61,8 @@ import ir.kitgroup.saleinmeat.databinding.FragmentConfirmCodeBinding;
 public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
+    @Inject
+     Config config;
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -113,7 +116,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Set Icon And Title
-        binding.imageLogo.setImageResource(company.imageLogo);
+        binding.imageLogo.setImageResource(config.imageLogo);
         //endregion Set Icon And Title
 
 
@@ -349,7 +352,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-                // return;
+                 return;
             }
             getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });

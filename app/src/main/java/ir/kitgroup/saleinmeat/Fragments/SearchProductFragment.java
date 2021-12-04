@@ -5,10 +5,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,7 +44,10 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,11 +78,8 @@ import ir.kitgroup.saleinmeat.models.Product;
 public class SearchProductFragment extends Fragment {
 
 
-    @Inject
-    API api;
 
-    @Inject
-    Company company;
+    private API api;
 
     @Inject
     Config config;
@@ -82,27 +87,28 @@ public class SearchProductFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
+    private Company company;
 
     private String Transport_GUID = "";
 
-    private  FragmentSearchProductBinding binding;
+    private FragmentSearchProductBinding binding;
     private ProductAdapter1 productAdapter;
-    private String Inv_GUID="";
+    private String Inv_GUID = "";
 
 
     private ArrayList<Product> productList;
-    private String maxSales="0";
-    private Boolean  emptySearch=false;
+    private String maxSales = "0";
+    private Boolean emptySearch = false;
 
     private CustomProgress customProgress;
 
-    private  CompositeDisposable compositeDisposable ;
+    private CompositeDisposable compositeDisposable;
 
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
-    private final ArrayList<Description> descriptionList=new ArrayList<>();
+    private final ArrayList<Description> descriptionList = new ArrayList<>();
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv;
     //endregion Variable Dialog Description
@@ -111,8 +117,8 @@ public class SearchProductFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-       binding=FragmentSearchProductBinding.inflate(getLayoutInflater());
-       return  binding.getRoot();
+        binding = FragmentSearchProductBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
     }
 
     @SuppressLint("SetTextI18n")
@@ -120,31 +126,27 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        customProgress=CustomProgress.getInstance();
+        customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
 
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
-        Bundle bundle=getArguments();
+        Bundle bundle = getArguments();
         Boolean seen = bundle.getBoolean("Seen");
-        Inv_GUID=bundle.getString("Inv_GUID");
+        Inv_GUID = bundle.getString("Inv_GUID");
         String tbl_GUID = bundle.getString("Tbl_GUID");
         maxSales = sharedPreferences.getString("maxSale", "0");
 
 
+        productList = new ArrayList<>();
 
 
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
-        productList=new ArrayList<>();
-
-
-
-
-            company=null;
-            api=null;
-            company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
 
 
@@ -273,8 +275,8 @@ public class SearchProductFragment extends Fragment {
 
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences,Inv_GUID,config);
-       // productAdapter.setInv_GUID(Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID,config);
+        // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(tbl_GUID);
         productAdapter.setType(seen);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -287,17 +289,16 @@ public class SearchProductFragment extends Fragment {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
 
-            CollectionUtils.filter(invDetails,i->!i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-            int counter=0;
+            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
+            int counter = 0;
             if (invDetails.size() > 0) {
                 counter = invDetails.size();
             }
 
-           if (counter == 0)
-               ((LauncherActivity) getActivity()).setClearCounterOrder();
-           else
-               ((LauncherActivity) getActivity()).setCounterOrder(counter);
-
+            if (counter == 0)
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
+            else
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
             Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
@@ -305,7 +306,7 @@ public class SearchProductFragment extends Fragment {
             if (frg instanceof MainOrderFragment) {
                 MainOrderFragment fgf = (MainOrderFragment) frg;
                 fgf.refreshProductList();
-                fgf.counter1=counter;
+                fgf.counter1 = counter;
             }
 
         });
@@ -329,6 +330,7 @@ public class SearchProductFragment extends Fragment {
         });
 
     }
+
     @SuppressLint("SetTextI18n")
     private void getSearchProduct(String s) {
         try {
@@ -357,13 +359,13 @@ public class SearchProductFragment extends Fragment {
                                         if (!emptySearch) {
                                             productList.clear();
 
-                                            CollectionUtils.filter(iDs.getProductList(),i->i.getPrice(sharedPreferences)>0);
+                                            CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0);
                                             if (iDs.getProductList().size() > 0)
                                                 for (int i = 0; i < 18; i++) {
                                                     if (iDs.getProductList().size() > i)
                                                         productList.add(iDs.getProductList().get(i));
                                                 }
-                                            if (productList.size()>0)
+                                            if (productList.size() > 0)
                                                 binding.txtError.setText("");
                                             else
                                                 binding.txtError.setText("کالایی یافت نشد");
@@ -463,7 +465,6 @@ public class SearchProductFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
-
 
 
 }

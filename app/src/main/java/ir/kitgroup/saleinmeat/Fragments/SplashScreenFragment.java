@@ -57,7 +57,7 @@ public class SplashScreenFragment extends Fragment {
     private API api;
     private CompositeDisposable compositeDisposable;
     private FragmentSplashScreenBinding binding;
-    private String appVersion;
+    private PackageInfo appId;
 
     //endregion Parameter
 
@@ -89,12 +89,18 @@ public class SplashScreenFragment extends Fragment {
 
 
         try {
-            appVersion = appVersion();
+          String  appVersion = appVersion();
             binding.tvversion.setText(" نسخه " + appVersion);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
+        try {
+             appId = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -136,12 +142,13 @@ public class SplashScreenFragment extends Fragment {
 
                                 if (iDs != null) {
                                     if (iDs.getCompany() != null) {
-                                        /* CollectionUtils.filter(iDs.getCompany(), i -> i.INSK_ID!=null && i.INSK_ID.equals(appVersion));*/
-                                        CollectionUtils.filter(iDs.getCompany(), i -> i.N.equals("گوشت دنیوی"));
+                                        CollectionUtils.filter(iDs.getCompany(), i -> i.INSK_ID!=null && i.INSK_ID.equals(appId.packageName.toString()));
+
                                         if (iDs.getCompany().size() == 1) {
 
                                             Company.deleteAll(Company.class);
-                                            Company.saveInTx(iDs.getCompany().size());
+                                            Company.saveInTx(iDs.getCompany().get(0));
+                                            ConfigRetrofit.getRetrofit("http://"+iDs.getCompany().get(0).IP1+"/api/REST/",true);
 
                                             FragmentTransaction addFragment;
 
@@ -189,10 +196,12 @@ public class SplashScreenFragment extends Fragment {
                                 if (Select.from(Company.class).list().size() == 0)
                                     Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                 else {
+                                    ConfigRetrofit.getRetrofit("http://"+Select.from(Company.class).first().IP1+"/api/REST/",true);
                                     FragmentTransaction addFragment;
 
                                     //region Account Is Login & Register
                                     if (Select.from(Account.class).list().size() > 0) {
+
 
                                         if (config.INSKU_ID.equals("ir.kitgroup.salein"))
                                             addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");

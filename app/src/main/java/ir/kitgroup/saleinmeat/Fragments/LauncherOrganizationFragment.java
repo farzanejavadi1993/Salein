@@ -69,11 +69,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     //region Parameter
-    @Inject
-    API api;
 
-    @Inject
-    Company company;
+    private API api;
+
+
+    private Company company;
 
     private FragmentLauncherOrganizationBinding binding;
 
@@ -112,6 +112,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
 
+        company = Select.from(Company.class).first();
 
         tablesList = new ArrayList<>();
         AllTable = new ArrayList<>();
@@ -155,9 +156,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
                     if (Tables.count(Tables.class) > 0)
                         Tables.deleteAll(Tables.class);
-
-
-
 
 
                     System.exit(0);
@@ -296,7 +294,7 @@ public class LauncherOrganizationFragment extends Fragment {
         });
 
 
-        tableAdapter.setOnClickItemListener((organization,Name, Reserve, T_GUID, Inv_GUID) -> {
+        tableAdapter.setOnClickItemListener((organization, Name, Reserve, T_GUID, Inv_GUID) -> {
             Account.deleteAll(Account.class);
             binding.txtError.setText("");
             if (Reserve) {
@@ -306,9 +304,9 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Ord_TYPE", "");
                 bundle.putString("Tbl_GUID", T_GUID);
                 if (organization)
-                bundle.putString("Tbl_NAME", "میز " + Name);
+                    bundle.putString("Tbl_NAME", "میز " + Name);
                 else
-                    bundle.putString("Tbl_NAME",  Name);
+                    bundle.putString("Tbl_NAME", Name);
                 bundle.putBoolean("EDIT", true);
 
 
@@ -332,15 +330,15 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putString("Acc_NAME", "");
                 bundle.putString("Acc_GUID", "");
                 if (organization)
-                bundle.putString("Tbl_NAME", "میز " + Name);
+                    bundle.putString("Tbl_NAME", "میز " + Name);
                 else
-                    bundle.putString("Tbl_NAME",  Name);
+                    bundle.putString("Tbl_NAME", Name);
                 bundle.putBoolean("EDIT", false);
 
 
-               MainOrderFragment mainFragment = new MainOrderFragment();
-               mainFragment.setArguments(bundle);
-               requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+                MainOrderFragment mainFragment = new MainOrderFragment();
+                mainFragment.setArguments(bundle);
+                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
 
             }
@@ -403,7 +401,6 @@ public class LauncherOrganizationFragment extends Fragment {
         //endregion Configuration RecyclerView getOutOrder
 
 
-       
         //region Action btnLogOut
         binding.btnLogout.setOnClickListener(v -> {
             TypeClickButtonDialog = "logOut";

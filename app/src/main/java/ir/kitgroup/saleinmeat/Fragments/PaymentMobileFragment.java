@@ -114,21 +114,23 @@ import static java.lang.Math.toRadians;
 public class PaymentMobileFragment extends Fragment {
 
 
-    @Inject
-    Company company;
+
 
     @Inject
     Config config;
 
-    @Inject
-    API api;
 
+   private API api;
+
+    private CompositeDisposable compositeDisposable;
+    private Company company;
     private String linkPayment = "";
+
 
 
     //region Parameter
     private FragmentPaymentMobileBinding binding;
-    private CompositeDisposable compositeDisposable;
+
 
     private final Boolean Seen = false;
 
@@ -265,10 +267,12 @@ public class PaymentMobileFragment extends Fragment {
             api = null;
             company = Select.from(Company.class).first();
             api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+            compositeDisposable = new CompositeDisposable();
+
 
 
             customProgress = CustomProgress.getInstance();
-            compositeDisposable = new CompositeDisposable();
+
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
 

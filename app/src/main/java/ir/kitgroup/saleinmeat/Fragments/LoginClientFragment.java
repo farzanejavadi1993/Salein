@@ -53,6 +53,8 @@ public class LoginClientFragment extends Fragment {
 
     //region PARAMETER
 
+    @Inject
+    Config config;
 
     private Company company;
     private API api;
@@ -107,8 +109,8 @@ public class LoginClientFragment extends Fragment {
 
 
             //region Set Icon And Title
-            binding.tvWelcome.setText("به " + company.N + "خوش آمدید ");
-            binding.imageLogo.setImageResource(company.imageLogo);
+            binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
+            binding.imageLogo.setImageResource(config.imageLogo);
             //endregion Set Icon And Title
 
 

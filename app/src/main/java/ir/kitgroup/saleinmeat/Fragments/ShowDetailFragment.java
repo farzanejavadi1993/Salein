@@ -40,21 +40,26 @@ import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.databinding.ActivityDetailBinding;
 import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
 import ir.kitgroup.saleinmeat.models.ModelProduct;
 
 @AndroidEntryPoint
 public class ShowDetailFragment  extends Fragment {
-    @Inject
-    Company company;
 
 
     @Inject
-    API api;
+    Config config;
+
+
+
+   private API api;
 
 
     @Inject
     SharedPreferences sharedPreferences;
 
+
+    private Company company;
 
 
     private ActivityDetailBinding binding;
@@ -97,7 +102,7 @@ public class ShowDetailFragment  extends Fragment {
         getProduct(Id);
         Picasso.get()
                 .load("http://" + ip + "/GetImage?productId=" + Id+"&width="+(int)Util.width+"&height="+(int)Util.height/2)
-                .error(company.imageLogo)
+                .error(config.imageLogo)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
 

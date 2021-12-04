@@ -26,10 +26,10 @@ import ir.kitgroup.saleinmeat.Activities.LauncherActivity;
 import ir.kitgroup.saleinmeat.classes.Util;
 import ir.kitgroup.saleinmeat.databinding.AboutUsFragmentBinding;
 import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
 
 @AndroidEntryPoint
 public class AboutUsFragment extends Fragment {
-
 
 
     private Company company;
@@ -37,16 +37,14 @@ public class AboutUsFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-
+    @Inject
+    Config config;
 
 
     //region Parameter
     private AboutUsFragmentBinding binding;
 
     //endregion Parameter
-
-
-
 
 
     @Nullable
@@ -69,15 +67,16 @@ public class AboutUsFragment extends Fragment {
 
         //region Set Icon And Title
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-        if (!Util.RetrofitValue) {
-            company=null;
-            company = Select.from(Company.class).first();
-        }
 
-            binding.imageView.setImageResource(company.imageDialog);
+        company = null;
+        company = Select.from(Company.class).first();
+
+
+        binding.imageView.setImageResource(config.imageDialog);
         binding.title.setText(company.N);
         binding.description.setText(company.DESC);
         binding.textView4.setText(company.T1);
+
 
 
         //endregion Set Icon And Title
@@ -92,8 +91,8 @@ public class AboutUsFragment extends Fragment {
         binding.Call1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+company.T1));
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + company.T1));
                 startActivity(intent);
             }
         });

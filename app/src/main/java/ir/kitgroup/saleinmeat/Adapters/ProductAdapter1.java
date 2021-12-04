@@ -6,7 +6,12 @@ import android.app.Activity;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -37,7 +42,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
@@ -218,30 +226,18 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
-          /*  URL url = null;
-            Bitmap bitmap = null;
-            Drawable image = context.getResources().getDrawable(R.drawable.white);
-            try {
-                url = new URL("http://" + config.IP1 + "/GetCompanyImage?id=" +
-                        company.I+"&width=100&height=100");
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                 image = new BitmapDrawable(context.getResources(), bitmap);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException ignored) {
-                ignored.printStackTrace();
-            }
-*/
-
             String ip = company.IP1;
+
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
-                    .error(company.imageLogo)
+                    .error(config.imageLogo)
                     .placeholder(R.drawable.loading)
                     .into(holder.productImage);
+
+
+
 
 
             holder.productOldPrice.setTextSize(13);
