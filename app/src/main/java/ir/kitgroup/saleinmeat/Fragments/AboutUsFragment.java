@@ -72,7 +72,7 @@ public class AboutUsFragment extends Fragment {
         company = Select.from(Company.class).first();
 
 
-        binding.imageView.setImageResource(config.imageDialog);
+        binding.imageView.setImageResource(config.imageLogo);
         binding.title.setText(company.N);
         binding.description.setText(company.DESC);
         binding.textView4.setText(company.T1);

@@ -181,16 +181,21 @@ public class SettingFragment extends Fragment {
             if (Unit.count(Unit.class) > 0)
                 Unit.deleteAll(Unit.class);
 
+            if (Company.count(Company.class) > 0)
+                Company.deleteAll(Company.class);
+
 
 
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+            ((LauncherActivity) getActivity()).setFistItem();
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
             for (int i=0;i<size;i++){
                 getActivity().getSupportFragmentManager().popBackStack();
             }
 
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment").commit();
+            
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
 
 
 

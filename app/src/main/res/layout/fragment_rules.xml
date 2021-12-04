@@ -37,7 +37,7 @@
             android:layout_height="match_parent">
             <TextView
                 android:lineSpacingExtra="10sp"
-                android:text="@string/app_name_saleinmeat"
+
                 android:id="@+id/tvRule"
                 android:layout_margin="16dp"
                 android:textColor="@color/medium_color"

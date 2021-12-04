@@ -63,7 +63,6 @@ public class ApplicationModule {
         int mode = 2;
         int imageLogo = 0;
         String packageName = "";
-        String IP1 = "";
         String N = "";
         String DESC = "";
 
@@ -76,7 +75,6 @@ public class ApplicationModule {
                 case "ir.kitgroup.salein":
                     imageLogo = R.drawable.saleinicon128;
                     packageName = "ir.kitgroup.salein";
-                    IP1 = "2.180.28.6:3333";
                     N = "سالین";
                     DESC = "محصولات نرم افزاری";
 
@@ -126,9 +124,9 @@ public class ApplicationModule {
         Config config = new Config();
         config.imageLogo = imageLogo;
         config.mode = mode;
-        config.IP1 = IP1;
+
         config.N = N;
-        config.DESC = IP1;
+        config.DESC = DESC;
         config.INSKU_ID = packageName;
 
         return config;
