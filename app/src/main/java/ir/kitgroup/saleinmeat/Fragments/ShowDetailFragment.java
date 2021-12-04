@@ -77,14 +77,14 @@ public class ShowDetailFragment  extends Fragment {
 
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         compositeDisposable=new CompositeDisposable();
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+
+
             company=null;
             api=null;
             company = Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
-        }
+
 
 
         Bundle bundle = getArguments();

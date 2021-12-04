@@ -51,7 +51,7 @@ import ir.kitgroup.saleinmeat.databinding.FragmentRegisterBinding;
 public class RegisterFragment extends Fragment {
     //region  Parameter
 
-    private ConfigRetrofit configRetrofit;
+
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -79,9 +79,8 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        configRetrofit = new ConfigRetrofit();
         company= Select.from(Company.class).first();
-        api = configRetrofit.getRetrofit(company.IP1).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
         compositeDisposable = new CompositeDisposable();
         //region Get Bundle And Set Data
 
@@ -280,7 +279,7 @@ public class RegisterFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        configRetrofit=null;
+
         binding = null;
 
 

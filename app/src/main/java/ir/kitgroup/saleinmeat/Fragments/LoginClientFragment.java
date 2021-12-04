@@ -53,7 +53,7 @@ public class LoginClientFragment extends Fragment {
 
     //region PARAMETER
 
-    private ConfigRetrofit configRetrofit;
+
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -80,10 +80,9 @@ public class LoginClientFragment extends Fragment {
 
         try {
 
-            configRetrofit = new ConfigRetrofit();
-            company= Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit(company.IP1).create(API.class);
 
+            company= Select.from(Company.class).first();
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
             compositeDisposable = new CompositeDisposable();
             //region Configuration Text Size
             int fontSize;
@@ -233,7 +232,6 @@ public class LoginClientFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        configRetrofit = null;
         binding = null;
 
 

@@ -60,7 +60,6 @@ import ir.kitgroup.saleinmeat.databinding.FragmentConfirmCodeBinding;
 public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
-    private ConfigRetrofit configRetrofit;
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -85,9 +84,8 @@ public class ConfirmCodeFragment extends Fragment {
 
 
 
-        configRetrofit = new ConfigRetrofit();
         company= Select.from(Company.class).first();
-        api = configRetrofit.getRetrofit(company.IP1).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
         compositeDisposable = new CompositeDisposable();
 
@@ -513,7 +511,6 @@ public class ConfirmCodeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        configRetrofit=null;
         binding = null;
 
 

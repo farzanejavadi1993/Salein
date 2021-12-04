@@ -112,7 +112,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private ConfigRetrofit configRetrofit;
+
     private Company company;
     private API api;
 
@@ -175,11 +175,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onViewCreated(view, savedInstanceState);
 
 
-        configRetrofit = new ConfigRetrofit();
+
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+
+
 
 
         customProgress = CustomProgress.getInstance();
@@ -876,7 +878,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding.mapView.onDestroy();
-        configRetrofit=null;
+
         binding = null;
         if (edit_address.equals("3"))
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);

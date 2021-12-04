@@ -117,15 +117,14 @@ public class SettingFragment extends Fragment {
         linkPayment=sharedPreferences.getString("payment_link", "");
 
 
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+
 
             company=null;
             api=null;
             company = Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
-        }
+
 
         if (Util.screenSize >= 7)
             fontSize = 14;

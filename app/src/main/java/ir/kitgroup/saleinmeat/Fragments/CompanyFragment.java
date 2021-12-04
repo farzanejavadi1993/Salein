@@ -63,7 +63,7 @@ public class CompanyFragment extends Fragment {
     Config config;
 
 
-    private ConfigRetrofit configRetrofit;
+
     private API api;
 
     private FragmentCompanyBinding binding;
@@ -100,7 +100,6 @@ public class CompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        configRetrofit = new ConfigRetrofit();
         compositeDisposable = new CompositeDisposable();
         companies = new ArrayList<>();
 
@@ -127,7 +126,8 @@ public class CompanyFragment extends Fragment {
                         mainOrderFragment.setArguments(bundleMainOrder);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
-                        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+
+                        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",true).create(API.class);
                         getInquiryAccount1(company.N, company.USER, company.PASS, account.M);
                     }
                 }
@@ -386,7 +386,7 @@ public class CompanyFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        configRetrofit=null;
+
         binding = null;
     }
 

@@ -139,15 +139,14 @@ public class SearchProductFragment extends Fragment {
         productList=new ArrayList<>();
 
 
-        if (!Util.RetrofitValue) {
-            ConfigRetrofit configRetrofit = new ConfigRetrofit();
+
 
             company=null;
             api=null;
             company = Select.from(Company.class).first();
-            api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
-        }
+
 
 
         //region Cast DialogDescription

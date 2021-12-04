@@ -142,7 +142,7 @@ public class MainOrderFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-    private ConfigRetrofit configRetrofit;
+
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -282,11 +282,11 @@ public class MainOrderFragment extends Fragment {
         ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
 
-        configRetrofit = new ConfigRetrofit();
+
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
 
         getUnit();
@@ -1836,7 +1836,6 @@ public class MainOrderFragment extends Fragment {
 
         EDIT = false;
         compositeDisposable.dispose();
-        configRetrofit=null;
         binding = null;
 
 

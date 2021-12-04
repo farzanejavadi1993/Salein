@@ -38,7 +38,7 @@ import ir.kitgroup.saleinmeat.DataBase.Account;
 import ir.kitgroup.saleinmeat.R;
 
 import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
-import ir.kitgroup.saleinmeat.classes.Util;
+
 import ir.kitgroup.saleinmeat.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.saleinmeat.DataBase.Company;
 import ir.kitgroup.saleinmeat.models.Config;
@@ -52,7 +52,7 @@ public class SplashScreenFragment extends Fragment {
     @Inject
     Config config;
 
-    private ConfigRetrofit configRetrofit;
+
     private  Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -78,10 +78,9 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        configRetrofit = new ConfigRetrofit();
 
         company=Select.from(Company.class).first();
-        api = configRetrofit.getRetrofit("http://2.180.28.6:3333/api/REST/").create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://2.180.28.6:3333/api/REST/",true).create(API.class);
         compositeDisposable = new CompositeDisposable();
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
@@ -235,7 +234,6 @@ public class SplashScreenFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-        configRetrofit = null;
         binding = null;
 
 

@@ -96,8 +96,6 @@ import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinmeat.models.OrderType;
 
 
-
-
 import ir.kitgroup.saleinmeat.models.ModelLog;
 import ir.kitgroup.saleinmeat.R;
 
@@ -125,7 +123,7 @@ public class PaymentMobileFragment extends Fragment {
     @Inject
     API api;
 
-      private String linkPayment="";
+    private String linkPayment = "";
 
 
     //region Parameter
@@ -260,29 +258,18 @@ public class PaymentMobileFragment extends Fragment {
         try {
 
 
-            linkPayment=sharedPreferences.getString("payment_link", "");
+            linkPayment = sharedPreferences.getString("payment_link", "");
 
 
-
-
-
-
-            if (!Util.RetrofitValue) {
-                ConfigRetrofit configRetrofit = new ConfigRetrofit();
-
-                company = null;
-                api = null;
-                company =Select.from(Company.class).first();
-                api = configRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/").create(API.class);
-
-            }
-
+            company = null;
+            api = null;
+            company = Select.from(Company.class).first();
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
 
             customProgress = CustomProgress.getInstance();
             compositeDisposable = new CompositeDisposable();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-
 
 
             OrdTList = new ArrayList<>();
@@ -293,10 +280,8 @@ public class PaymentMobileFragment extends Fragment {
             dateList = new ArrayList<>();
 
 
-
             Date dateNow = Calendar.getInstance().getTime();
             dateChoose = dateNow;
-
 
 
             if (company.mode == 1) {
@@ -304,7 +289,6 @@ public class PaymentMobileFragment extends Fragment {
                 if (numberPos != null && numberPos.equals(""))
                     numberPos = "0";
             }
-
 
 
             //region get Bundle
@@ -319,11 +303,8 @@ public class PaymentMobileFragment extends Fragment {
             setADR1 = bundle.getBoolean("setADR");
 
 
-
-
             if (!setADR1)
                 setADR1 = bundle.getBoolean("setADR1");
-
 
 
             String ord_type = bundle.getString("Ord_TYPE");
@@ -331,12 +312,10 @@ public class PaymentMobileFragment extends Fragment {
                 Ord_TYPE = Integer.parseInt(ord_type);
 
 
-
-            if (!edit&&Tbl_GUID.equals(""))
+            if (!edit && Tbl_GUID.equals(""))
                 new_Tbl_GUID = UUID.randomUUID().toString();
             else
                 new_Tbl_GUID = Tbl_GUID;
-
 
 
             if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
@@ -347,8 +326,6 @@ public class PaymentMobileFragment extends Fragment {
 
 
             //endregion get Bundle
-
-
 
 
             if (company.mode == 1) {
@@ -433,7 +410,6 @@ public class PaymentMobileFragment extends Fragment {
             MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
 
 
-
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     try {
@@ -474,12 +450,10 @@ public class PaymentMobileFragment extends Fragment {
                     try {
                         latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
                         longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         latitude2 = 0.0;
                         longitude2 = 0.0;
                     }
-
 
 
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
@@ -512,9 +486,6 @@ public class PaymentMobileFragment extends Fragment {
                     dialogAddress.dismiss();
                 }
             });
-
-
-
 
 
             btnNewAddress.setOnClickListener(v -> {
@@ -1137,9 +1108,7 @@ public class PaymentMobileFragment extends Fragment {
                     addFragment.addToBackStack("MainOrderF").commit();
 
 
-                }
-
-                else {
+                } else {
 
                     if (Tbl_GUID.equals("")) {
 
@@ -1245,8 +1214,8 @@ public class PaymentMobileFragment extends Fragment {
 
                         String name;
 
-                            name = company.INSK_ID.split("ir.kitgroup.")[1];
-                        if (!edit || company.mode==1 ) {
+                        name = company.INSK_ID.split("ir.kitgroup.")[1];
+                        if (!edit || company.mode == 1) {
                             sharedPreferences.edit().putString(name, "").apply();
                             sharedPreferences.edit().putString(Inv_GUID, "").apply();
                         }
@@ -1368,8 +1337,7 @@ public class PaymentMobileFragment extends Fragment {
                     priceTransport = 400000;
                 }
             }
-        }
-        catch (Exception ignore) {
+        } catch (Exception ignore) {
 
             if (0 < distance && distance <= 1) {
                 priceTransport = 50000;
@@ -1418,16 +1386,16 @@ public class PaymentMobileFragment extends Fragment {
         FragmentManager ft = getActivity().getSupportFragmentManager();
 
         try {
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-            ft.beginTransaction().detach(frg).commitNow();
-            ft.beginTransaction().attach(frg).commitNow();
+                ft.beginTransaction().detach(frg).commitNow();
+                ft.beginTransaction().attach(frg).commitNow();
 
-        } else {
-            ft.beginTransaction().detach(frg).attach(frg).commit();
-        }
+            } else {
+                ft.beginTransaction().detach(frg).attach(frg).commit();
+            }
 
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             ft.beginTransaction().detach(frg).attach(frg).commit();
         }
 
@@ -1577,16 +1545,14 @@ public class PaymentMobileFragment extends Fragment {
 
                                         sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
                                         OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                                       try {
-                                           paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
-                                       }catch (Exception ignored){
-                                           paymentType=3;
-                                       }
+                                        try {
+                                            paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
+                                        } catch (Exception ignored) {
+                                            paymentType = 3;
+                                        }
 
 
-
-
-                                        if (((company.mode == 2 )
+                                        if (((company.mode == 2)
                                                 ||
                                                 (!Ord_TYPE.equals(OrderTypeApp) &&
                                                         Tbl_GUID.equals("") &&
@@ -1597,10 +1563,7 @@ public class PaymentMobileFragment extends Fragment {
                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
                                             binding.layoutPaymentOnline.setVisibility(View.GONE);
 
-                                        }
-
-
-                                        else if (((company.mode == 2 )
+                                        } else if (((company.mode == 2)
                                                 ||
                                                 (!Ord_TYPE.equals(OrderTypeApp) &&
                                                         Tbl_GUID.equals("") &&
@@ -1609,10 +1572,7 @@ public class PaymentMobileFragment extends Fragment {
                                                 paymentType == 2) {
                                             binding.btnPaymentPlace.setVisibility(View.GONE);
                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                        }
-
-
-                                        else {
+                                        } else {
                                             binding.btnPaymentPlace.setVisibility(View.VISIBLE);
                                             binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
                                         }
@@ -1764,9 +1724,9 @@ public class PaymentMobileFragment extends Fragment {
 
                                         try {
 
-                                            if (!OnceSee )
+                                            if (!OnceSee)
                                                 getInquiryAccount1(company.USER, company.PASS, acc.M);
-                                            else if (OnceSee )
+                                            else if (OnceSee)
                                                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                                         } catch (Exception ignore) {
 
