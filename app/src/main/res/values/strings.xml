@@ -20,7 +20,7 @@
     <string name="order_saleIn_application">اپلیکیشن سفارش گیر سالین</string>
     <string name="user_name_text">نام کاربری</string>
     <string name="pass_word_text">رمز عبور</string>
-    <string name="ip_local_text">آی پی سازمان</string>
+    <string name="ip_local_text">آی پی داخلی سازمان</string>
     <string name="sale_code_text">کد سامانه فروش</string>
     <string name="register">ثبت نام</string>
     <string name="version">1.0.0.8</string>

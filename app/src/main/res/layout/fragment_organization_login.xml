@@ -1,205 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
-        android:layout_marginRight="22dp"
-        android:layout_marginLeft="22dp"
-    android:layout_centerHorizontal="true"
-    android:layout_width="360dp"
-    android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="@dimen/logo_size"
-            android:layout_height="@dimen/logo_size"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin10"
-            android:src="@drawable/saleinorder_png"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/order_saleIn_application"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_normal_tablet_size" />
+        <RelativeLayout
+            android:layout_width="360dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp">
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginTop="12dp"
-                android:id="@+id/inputUserName"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_left_right_margin"
-                android:layout_marginRight="@dimen/normal_left_right_margin"
-                android:layout_marginBottom="@dimen/margin4">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_user"
+                <ImageView
+                    android:layout_width="@dimen/logo_size"
+                    android:layout_height="@dimen/logo_size"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin10"
+                    android:src="@drawable/saleinorder_png"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/iransans"
-                    android:hint="@string/user_name_text"
-                    android:textAlignment="textStart"
-                    android:textDirection="firstStrongRtl"
-                    android:textSize="@dimen/text_normal_mobile_size" />
+                    android:gravity="center"
+                    android:text="@string/order_saleIn_application"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal_tablet_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-
-                android:id="@+id/inputPassWord"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_left_right_margin"
-                android:layout_marginRight="@dimen/normal_left_right_margin"
-                android:layout_marginBottom="@dimen/margin4">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_password"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputUserName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/iransans"
-                    android:hint="@string/pass_word_text"
-                    android:inputType="textPassword"
-                    android:textDirection="firstStrongRtl"
-                    android:textSize="@dimen/text_normal_mobile_size" />
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="@string/user_name_text"
+                        android:textAlignment="textStart"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputPassWord"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="@string/pass_word_text"
+                        android:inputType="textPassword"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/register_client"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="@string/register"
+                    android:textColor="@color/blue600"
+                    android:textSize="@dimen/text_normal_tablet_size"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputIp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_ip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="@string/ip_local_text"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputIp2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_ip2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="آی پی خارجی سازمان"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputLng"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_lng"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="عرض جغرافیایی"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputLong"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_long"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="طول جغرافیایی"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/inputSaleCode"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_left_right_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="@dimen/normal_left_right_margin"
+                    android:layout_marginBottom="@dimen/margin4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_sale_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:hint="@string/sale_code_text"
+                        android:inputType="number"
+                        android:textDirection="firstStrongRtl"
+                        android:textSize="@dimen/text_normal_mobile_size" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/linearLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin10"
+                    android:visibility="gone"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </LinearLayout>
+
 
             <TextView
-                android:id="@+id/register_client"
-                android:layout_width="fill_parent"
+                android:id="@+id/tv_develop"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_above="@+id/loginVersionNumber"
                 android:layout_marginBottom="5dp"
                 android:gravity="center"
-                android:text="@string/register"
+                android:text="@string/link_KitGroup"
                 android:textColor="@color/blue600"
-                android:textSize="@dimen/text_normal_tablet_size"
-                android:visibility="gone" />
+                android:textSize="14sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
 
-                android:id="@+id/inputIp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/loginVersionNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/layoutLoginBtn"
+                android:gravity="center"
+
+                android:textColor="@color/blue600"
+                android:textSize="@dimen/text_normal_mobile_size" />
+
+            <RelativeLayout
+                android:id="@+id/layoutLoginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_left_right_margin"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="@dimen/normal_left_right_margin"
-                android:layout_marginBottom="@dimen/margin4">
+                android:layout_alignParentBottom="true">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_ip"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginBottom="22dp"
+                    android:background="@drawable/background_return"
                     android:fontFamily="@font/iransans"
-                    android:hint="@string/ip_local_text"
-                    android:textDirection="firstStrongRtl"
+                    android:text="@string/login"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal_mobile_size" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                android:id="@+id/inputSaleCode"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_left_right_margin"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="@dimen/normal_left_right_margin"
-                android:layout_marginBottom="@dimen/margin4">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_sale_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/iransans"
-                    android:hint="@string/sale_code_text"
-                    android:inputType="number"
-                    android:textDirection="firstStrongRtl"
-                    android:textSize="@dimen/text_normal_mobile_size" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        <ProgressBar
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_above="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </LinearLayout>
+            </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/tv_develop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/loginVersionNumber"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:text="@string/link_KitGroup"
-        android:textColor="@color/blue600"
-        android:textSize="14sp" />
+        </RelativeLayout>
 
-    <TextView
-
-        android:id="@+id/loginVersionNumber"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutLoginBtn"
-        android:gravity="center"
-
-        android:textColor="@color/blue600"
-        android:textSize="@dimen/text_normal_mobile_size" />
-    <RelativeLayout
-        android:id="@+id/layoutLoginBtn"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.button.MaterialButton
-            android:layout_centerInParent="true"
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="22dp"
-            android:layout_marginBottom="22dp"
-            android:background="@drawable/background_return"
-            android:fontFamily="@font/iransans"
-            android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_normal_mobile_size" />
     </RelativeLayout>
-
-
-
-</RelativeLayout>
-
-</RelativeLayout>
 </layout>
