@@ -1,4 +1,4 @@
-package ir.kitgroup.salein.Fragments;
+package ir.kitgroup.saleinmeat.Fragments;
 
 
 import android.annotation.SuppressLint;
@@ -83,50 +83,50 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Adapters.AccountAdapter;
-import ir.kitgroup.salein.Adapters.DescriptionAdapter;
+import ir.kitgroup.saleinmeat.Activities.LauncherActivity;
+import ir.kitgroup.saleinmeat.Adapters.AccountAdapter;
+import ir.kitgroup.saleinmeat.Adapters.DescriptionAdapter;
 
-import ir.kitgroup.salein.Adapters.ProductAdapter1;
-import ir.kitgroup.salein.Adapters.ProductLevel1Adapter;
-import ir.kitgroup.salein.Adapters.ProductLevel2Adapter;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.saleinmeat.Adapters.ProductAdapter1;
+import ir.kitgroup.saleinmeat.Adapters.ProductLevel1Adapter;
+import ir.kitgroup.saleinmeat.Adapters.ProductLevel2Adapter;
+import ir.kitgroup.saleinmeat.Connect.API;
 
-import ir.kitgroup.salein.DataBase.Unit;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
-import ir.kitgroup.salein.classes.CustomProgress;
-
-
-import ir.kitgroup.salein.DataBase.Account;
-
-import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.saleinmeat.DataBase.Unit;
+import ir.kitgroup.saleinmeat.classes.ConfigRetrofit;
+import ir.kitgroup.saleinmeat.classes.CustomProgress;
 
 
-import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.Config;
-import ir.kitgroup.salein.models.ModelUnit;
-import ir.kitgroup.salein.models.Setting;
+import ir.kitgroup.saleinmeat.DataBase.Account;
 
-import ir.kitgroup.salein.classes.PaginationScrollListener;
-
-import ir.kitgroup.salein.models.Description;
-
-import ir.kitgroup.salein.models.ModelAccount;
-import ir.kitgroup.salein.models.ModelDesc;
-import ir.kitgroup.salein.models.ModelLog;
-import ir.kitgroup.salein.models.ModelProduct;
-import ir.kitgroup.salein.models.ModelProductLevel1;
-import ir.kitgroup.salein.models.ModelProductLevel2;
-import ir.kitgroup.salein.models.Product;
-import ir.kitgroup.salein.models.ProductLevel1;
-import ir.kitgroup.salein.models.ModelSetting;
-import ir.kitgroup.salein.R;
-
-import ir.kitgroup.salein.databinding.FragmentMobileOrderMainBinding;
+import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 
 
-import ir.kitgroup.salein.models.ProductLevel2;
+import ir.kitgroup.saleinmeat.classes.Util;
+import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
+import ir.kitgroup.saleinmeat.models.ModelUnit;
+import ir.kitgroup.saleinmeat.models.Setting;
+
+import ir.kitgroup.saleinmeat.classes.PaginationScrollListener;
+
+import ir.kitgroup.saleinmeat.models.Description;
+
+import ir.kitgroup.saleinmeat.models.ModelAccount;
+import ir.kitgroup.saleinmeat.models.ModelDesc;
+import ir.kitgroup.saleinmeat.models.ModelLog;
+import ir.kitgroup.saleinmeat.models.ModelProduct;
+import ir.kitgroup.saleinmeat.models.ModelProductLevel1;
+import ir.kitgroup.saleinmeat.models.ModelProductLevel2;
+import ir.kitgroup.saleinmeat.models.Product;
+import ir.kitgroup.saleinmeat.models.ProductLevel1;
+import ir.kitgroup.saleinmeat.models.ModelSetting;
+import ir.kitgroup.saleinmeat.R;
+
+import ir.kitgroup.saleinmeat.databinding.FragmentMobileOrderMainBinding;
+
+
+import ir.kitgroup.saleinmeat.models.ProductLevel2;
 
 
 import static java.lang.Math.min;
@@ -279,7 +279,7 @@ public class MainOrderFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
-        ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
+        ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
 
         company = null;

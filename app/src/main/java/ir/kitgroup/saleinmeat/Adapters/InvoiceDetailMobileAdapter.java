@@ -1,4 +1,4 @@
-package ir.kitgroup.salein.Adapters;
+package ir.kitgroup.saleinmeat.Adapters;
 
 
 import android.annotation.SuppressLint;
@@ -34,13 +34,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 
 
-import ir.kitgroup.salein.Fragments.MainOrderFragment;
-import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.Product;
+import ir.kitgroup.saleinmeat.Fragments.MainOrderFragment;
+import ir.kitgroup.saleinmeat.R;
+import ir.kitgroup.saleinmeat.classes.Util;
+import ir.kitgroup.saleinmeat.models.Product;
 
 
 public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDetailMobileAdapter.viewHolder> {

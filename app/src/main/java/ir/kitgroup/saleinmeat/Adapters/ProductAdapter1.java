@@ -1,4 +1,4 @@
-package ir.kitgroup.salein.Adapters;
+package ir.kitgroup.saleinmeat.Adapters;
 
 
 import android.annotation.SuppressLint;
@@ -49,19 +49,19 @@ import java.util.UUID;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Connect.API;
-import ir.kitgroup.salein.DataBase.Unit;
-import ir.kitgroup.salein.classes.Util;
+import ir.kitgroup.saleinmeat.Connect.API;
+import ir.kitgroup.saleinmeat.DataBase.Unit;
+import ir.kitgroup.saleinmeat.classes.Util;
 
-import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.saleinmeat.DataBase.InvoiceDetail;
 
-import ir.kitgroup.salein.Fragments.ShowDetailFragment;
+import ir.kitgroup.saleinmeat.Fragments.ShowDetailFragment;
 
-import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.Config;
-import ir.kitgroup.salein.models.ModelLog;
-import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.models.Product;
+import ir.kitgroup.saleinmeat.DataBase.Company;
+import ir.kitgroup.saleinmeat.models.Config;
+import ir.kitgroup.saleinmeat.models.ModelLog;
+import ir.kitgroup.saleinmeat.R;
+import ir.kitgroup.saleinmeat.models.Product;
 
 
 public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHolder> {
