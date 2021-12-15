@@ -59,8 +59,6 @@ import ir.kitgroup.saleinmeat.models.ModelLog;
 public class SettingFragment extends Fragment {
 
 
-
-
     private API api;
 
     @Inject
@@ -76,13 +74,13 @@ public class SettingFragment extends Fragment {
     //endregion Parameter
 
 
-    private  CompositeDisposable compositeDisposable;
+    private CompositeDisposable compositeDisposable;
 
     private int fontSize;
 
     private String mobile;
 
-    private String linkPayment="";
+    private String linkPayment = "";
 
 
     @Nullable
@@ -103,23 +101,18 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
         compositeDisposable = new CompositeDisposable();
 
 
-        linkPayment=sharedPreferences.getString("payment_link", "");
+        linkPayment = sharedPreferences.getString("payment_link", "");
 
 
-
-
-            company=null;
-            api=null;
-            company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
-
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
 
         if (Util.screenSize >= 7)
@@ -128,11 +121,11 @@ public class SettingFragment extends Fragment {
             fontSize = 12;
 
 
+
         binding.tvProfile.setTextSize(fontSize);
         binding.tvComment.setTextSize(fontSize);
         binding.tvCredit.setTextSize(fontSize);
         binding.tvOrder.setTextSize(fontSize);
-
 
 
         mobile = Select.from(Account.class).first().M;
@@ -174,7 +167,6 @@ public class SettingFragment extends Fragment {
                 Tables.deleteAll(Tables.class);
 
 
-
             if (Tables.count(Tables.class) > 0)
                 Tables.deleteAll(Tables.class);
 
@@ -187,20 +179,18 @@ public class SettingFragment extends Fragment {
 
 
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-            ((LauncherActivity) getActivity()).setFistItem();
+
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-            for (int i=0;i<size;i++){
+            for (int i = 0; i < size; i++) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
 
-            
+
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
 
 
-
-          //reload loginFragment
-
+            //reload loginFragment
 
 
         });
@@ -213,21 +203,20 @@ public class SettingFragment extends Fragment {
 
 
         binding.lProfile.setOnClickListener(v ->
-                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit()
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit()
         );
 
         binding.btnSupport.setOnClickListener(v ->
 
 
-                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
-
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
 
 
         );
 
         binding.btnOrderList.setOnClickListener(v ->
 
-                getActivity(). getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit()
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit()
         );
 
         Account acc = Select.from(Account.class).first();
@@ -238,12 +227,7 @@ public class SettingFragment extends Fragment {
         }
 
 
-
-            getInquiryAccount1(acc.M);
-
-
-
-
+        getInquiryAccount1(acc.M);
 
 
     }
@@ -351,7 +335,6 @@ public class SettingFragment extends Fragment {
     }
 
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -367,7 +350,6 @@ public class SettingFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
-
 
 
 }

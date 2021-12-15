@@ -80,7 +80,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         company=Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://2.180.28.6:3333/api/REST/",true).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true).create(API.class);
         compositeDisposable = new CompositeDisposable();
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);

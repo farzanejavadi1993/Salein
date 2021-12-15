@@ -6,8 +6,10 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/t1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/iv_icon"
             android:layout_width="100dp"
@@ -17,11 +19,12 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_below="@+id/t1"
         android:layout_width="wrap_content"
-        android:layout_height="300sp"
-        android:layout_marginBottom="@dimen/margin10"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin10"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="@dimen/margin10">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -38,17 +41,14 @@
                 android:layout_height="match_parent">
 
 
-
-                    <TextView
-
-                       android:layout_margin="@dimen/margin10"
-                        android:id="@+id/tv_message"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="#2f2f2f"
-                        android:textSize="12sp" />
-
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin10"
+                    android:gravity="center"
+                    android:textColor="#2f2f2f"
+                    android:textSize="12sp" />
 
 
                 <RelativeLayout
@@ -65,15 +65,15 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_cancel"
                         android:layout_width="100sp"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/iransans"
                         android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_margin="8sp"
                         android:layout_marginBottom="30dp"
                         android:backgroundTint="@color/white"
+                        android:fontFamily="@font/iransans"
                         android:text="@string/no"
                         android:textColor="@color/invite_friend_color"
+                        android:textSize="12sp"
                         app:cornerRadius="15dp"
                         app:strokeColor="@color/invite_friend_color"
                         app:strokeWidth="1dp"
@@ -81,16 +81,16 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_ok"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/iransans"
                         android:layout_width="100sp"
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
                         android:layout_margin="8sp"
                         android:layout_marginBottom="30dp"
                         android:backgroundTint="@color/white"
+                        android:fontFamily="@font/iransans"
                         android:text="@string/ok"
                         android:textColor="@color/colorGreenLight"
+                        android:textSize="12sp"
                         app:cornerRadius="15dp"
                         app:strokeColor="@color/colorGreenLight"
                         app:strokeWidth="1dp"

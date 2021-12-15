@@ -195,6 +195,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         try {
 
+            ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
             customProgress = CustomProgress.getInstance();
             compositeDisposable = new CompositeDisposable();
 
@@ -356,6 +357,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                     else {
                         counter = 0;
+
 
                         for (int i = 0; i < invDetails.size(); i++) {
                             getProduct(invDetails.get(i).PRD_UID);
@@ -995,12 +997,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                                     ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
                                     if (list1.size() > 0) {
-                                        ir.kitgroup.saleinmeat.DataBase.Product product = Select.from(ir.kitgroup.saleinmeat.DataBase.Product.class).where("I ='" + list1.get(0).getI() + "'").first();
-
-                                        if (product != null)
-                                            product.update();
-                                        else
-                                            ir.kitgroup.saleinmeat.DataBase.Product.saveInTx(list1.get(0));
+                                        ir.kitgroup.saleinmeat.DataBase.Product.saveInTx(list1.get(0));
 
                                     }
 

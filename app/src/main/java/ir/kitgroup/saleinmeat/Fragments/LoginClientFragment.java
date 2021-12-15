@@ -110,7 +110,7 @@ public class LoginClientFragment extends Fragment {
 
             //region Set Icon And Title
             binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
-            binding.imageLogo.setImageResource(config.imageLogo);
+            binding.imageLogo.setImageResource(config.imageIcon);
             //endregion Set Icon And Title
 
 

@@ -224,7 +224,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
-                    .error(config.imageLogo)
+                    .error(config.imageIcon)
                     .placeholder(R.drawable.loading)
                     .into(holder.productImage);
 
@@ -316,7 +316,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         }
                     } else {
                         if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
-
                             holder.productDiscountPercent.setVisibility(View.GONE);
                             holder.layoutDiscount.setVisibility(View.GONE);
                             holder.productOldPrice.setVisibility(View.GONE);

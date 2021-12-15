@@ -254,31 +254,7 @@
 
             </LinearLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btn_register_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="@dimen/margin10"
-                android:backgroundTint="@color/purple_700"
-                app:cardCornerRadius="20dp">
 
-                <TextView
-                    android:id="@+id/order_list_tv_register"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="@dimen/margin10"
-                    android:fontFamily="@font/iransans"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/margin10"
-                    android:paddingRight="@dimen/margin10"
-                    android:text="@string/complete_order"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-
-            </com.google.android.material.card.MaterialCardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/accountRecyclerView"

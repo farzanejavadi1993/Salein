@@ -279,7 +279,7 @@ public class MainOrderFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
-        ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
+        //ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
 
         company = null;
@@ -346,7 +346,7 @@ public class MainOrderFragment extends Fragment {
             name = company.INSK_ID.split("ir.kitgroup.")[1];
 
 
-            if (!Tbl_GUID.equals("") || company.mode == 1)
+            if (!Tbl_GUID.equals("") ||company.mode==2)
                 Inv_GUID = sharedPreferences.getString(name, "");
 
             if (Inv_GUID.equals("")) {
@@ -1763,10 +1763,14 @@ public class MainOrderFragment extends Fragment {
                                             btnNo.setVisibility(View.GONE);
                                             dialogUpdate.setCancelable(false);
                                             dialogUpdate.show();
+                                            ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
+                                            InvoiceDetail.deleteAll(InvoiceDetail.class);
                                         } else if (Update.equals("2") && !AppVersion.equals(NewVersion)) {
                                             textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                                             btnNo.setVisibility(View.VISIBLE);
                                             dialogUpdate.setCancelable(true);
+                                            ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
+                                            InvoiceDetail.deleteAll(InvoiceDetail.class);
                                             dialogUpdate.show();
                                         }
 

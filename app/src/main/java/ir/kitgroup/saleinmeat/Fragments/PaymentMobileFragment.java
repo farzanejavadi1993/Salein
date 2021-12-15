@@ -114,18 +114,15 @@ import static java.lang.Math.toRadians;
 public class PaymentMobileFragment extends Fragment {
 
 
-
-
     @Inject
     Config config;
 
 
-   private API api;
+    private API api;
 
     private CompositeDisposable compositeDisposable;
     private Company company;
     private String linkPayment = "";
-
 
 
     //region Parameter
@@ -268,7 +265,6 @@ public class PaymentMobileFragment extends Fragment {
             company = Select.from(Company.class).first();
             api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
             compositeDisposable = new CompositeDisposable();
-
 
 
             customProgress = CustomProgress.getInstance();
@@ -1049,6 +1045,7 @@ public class PaymentMobileFragment extends Fragment {
                     return;
                 }
                 invoice.ACC_CLB_UID = Select.from(Account.class).first().I;
+
                 invoice.TBL_UID = Tbl_GUID;
                 invoice.INV_TYPE_ORDER = Ord_TYPE;
 
@@ -1203,9 +1200,11 @@ public class PaymentMobileFragment extends Fragment {
                     }.getType();
                     ModelLog iDs = gson.fromJson(response.body(), typeIDs);
                     int message = 0;
+                    String description = "";
 
                     if (iDs != null) {
                         message = iDs.getLogs().get(0).getMessage();
+                        description = iDs.getLogs().get(0).getDescription();
 
                     }
 
@@ -1258,7 +1257,7 @@ public class PaymentMobileFragment extends Fragment {
                         }
 
                         Product.deleteAll(Product.class);
-                        tvMessage.setText("خطا در ارسال ،" + "این سفارش ذخیره می شود با مراجعه به پروفایل خود سفارش را مجددارسال کنید");
+                        tvMessage.setText("خطا در ارسال ،" + "\n" + description);
 
                     }
                     dialogSendOrder.show();

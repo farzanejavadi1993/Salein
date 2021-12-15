@@ -116,7 +116,7 @@ public class ConfirmCodeFragment extends Fragment {
 
 
         //region Set Icon And Title
-        binding.imageLogo.setImageResource(config.imageLogo);
+        binding.imageLogo.setImageResource(config.imageIcon);
         //endregion Set Icon And Title
 
 
@@ -352,7 +352,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-                // return;
+                return;
             }
             getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });
