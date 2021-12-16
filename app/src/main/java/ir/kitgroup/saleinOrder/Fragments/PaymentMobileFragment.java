@@ -77,6 +77,7 @@ import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -263,7 +264,8 @@ public class PaymentMobileFragment extends Fragment {
             company = null;
             api = null;
             company = Select.from(Company.class).first();
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+            ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
+            api = ConfigRetrofit.getRetrofit("http://" + srv.URL + "/api/REST/", false).create(API.class);
             compositeDisposable = new CompositeDisposable();
 
 
@@ -1492,8 +1494,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
                             }, throwable -> {
-
-                                Toast.makeText(getActivity(), "خطا در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
+                                binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
                                 binding.progressBar.setVisibility(View.GONE);
 
                             })

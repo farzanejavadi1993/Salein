@@ -106,7 +106,7 @@
                     android:layout_marginBottom="@dimen/margin4">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_ip"
+                        android:id="@+id/edt_ip_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/iransans"
@@ -133,57 +133,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/iransans"
-                        android:hint="آی پی خارجی سازمان"
+                        android:hint="آی پی داخلی سازمان"
                         android:textDirection="firstStrongRtl"
                         android:textSize="@dimen/text_normal_mobile_size" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
 
-                    android:id="@+id/inputLng"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/normal_left_right_margin"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="@dimen/normal_left_right_margin"
-                    android:layout_marginBottom="@dimen/margin4">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_lng"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/iransans"
-                        android:hint="عرض جغرافیایی"
-                        android:textDirection="firstStrongRtl"
-                        android:textSize="@dimen/text_normal_mobile_size" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-
-                    android:id="@+id/inputLong"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/normal_left_right_margin"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="@dimen/normal_left_right_margin"
-                    android:layout_marginBottom="@dimen/margin4">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_long"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/iransans"
-                        android:hint="طول جغرافیایی"
-                        android:textDirection="firstStrongRtl"
-                        android:textSize="@dimen/text_normal_mobile_size" />
-
-                </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
 
                     android:id="@+id/inputSaleCode"

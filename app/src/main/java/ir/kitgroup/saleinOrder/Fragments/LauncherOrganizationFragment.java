@@ -53,6 +53,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.models.OrderType;
 
 
@@ -111,8 +112,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
 
+
+
         company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1+ "/api/REST/",true).create(API.class);
+        ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
+        api = ConfigRetrofit.getRetrofit("http://" + srv.URL+ "/api/REST/",true).create(API.class);
         tablesList = new ArrayList<>();
         AllTable = new ArrayList<>();
 

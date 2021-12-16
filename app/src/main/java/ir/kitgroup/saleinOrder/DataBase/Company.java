@@ -6,7 +6,8 @@ public class Company extends SugarRecord {
     public String I;
     public String N;
     public String USER;
-    public String IP1;
+    public String IP1;//آی پی خارجی
+    public String IP2;//آی پی داخلی
 
     public String T1;
     public String PASS;

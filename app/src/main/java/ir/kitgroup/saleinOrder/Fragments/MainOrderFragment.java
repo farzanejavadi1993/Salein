@@ -102,6 +102,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.models.Config;
@@ -285,7 +286,8 @@ public class MainOrderFragment extends Fragment {
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+        ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
+        api = ConfigRetrofit.getRetrofit("http://" + srv.URL  + "/api/REST/", false).create(API.class);
 
 
         getUnit();

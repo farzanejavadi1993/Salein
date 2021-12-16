@@ -41,13 +41,13 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="241" />
+            android:value="244" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.saleinmeat.DataBase" />
+            android:value="ir.kitgroup.saleinOrder.DataBase" />
         <!--
  <meta-data
             android:name="com.google.android.geo.API_KEY"

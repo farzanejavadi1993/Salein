@@ -85,12 +85,17 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinOrder.Activities.LauncherActivity;
 import ir.kitgroup.saleinOrder.Adapters.SearchViewAdapter;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
+import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 import ir.kitgroup.saleinOrder.databinding.FragmentMapBinding;
@@ -111,6 +116,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
+
+    private  CompositeDisposable compositeDisposable ;
 
 
     private Company company;
@@ -150,6 +157,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     private String edit_address = "";
+    private String userName = "";
+    private String pasWord = "";
+    private String numberPos = "";
+    private String IP1 = "";
+    private String IP2 = "";
+
 
     private enum State {
         MAP,
@@ -176,12 +189,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
 
-        company = null;
-        api = null;
-        company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
 
 
+
+        compositeDisposable = new CompositeDisposable();
 
 
         customProgress = CustomProgress.getInstance();
@@ -210,6 +221,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
         String mobileNumber = bundle.getString("mobileNumber");
         String type = bundle.getString("type");
         edit_address = bundle.getString("edit_address");
+        try {
+            IP1 = bundle.getString("IP1");
+            IP2 = bundle.getString("IP2");
+            userName = bundle.getString("userName");
+            pasWord = bundle.getString("passWord");
+            numberPos = bundle.getString("numberPos");
+            binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
+
+        }catch (Exception ignored){
+            company = null;
+            api = null;
+            company = Select.from(Company.class).first();
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        }
+
+
         //endregion Get Bundle
 
 
@@ -246,6 +273,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
 
 
+
         btnRegisterAddress.setOnClickListener(v -> {
             Account accountORG = Select.from(Account.class).first();
 
@@ -255,7 +283,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     edtPlaque.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "تمام فبلد ها را پر کنید.", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (edit_address.equals("1") && accountORG != null && accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("") && !ChooseAddress) {
+            }
+            else if (edit_address.equals("1") && accountORG != null && accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("") && !ChooseAddress) {
                 Toast.makeText(getActivity(), "لطفا مشخص کنید، کدام آدرس را ویرایش میکنید؟", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -371,16 +400,33 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         });
-
         //endregion Cast DialogSetADR
 
 
         //region Action btnRegisterInformation
 
-
         binding.btnRegisterInformation.setOnClickListener(v -> {
             Account accountORG = Select.from(Account.class).first();
-            if (edit_address != null && (edit_address.equals("1") || edit_address.equals("2") || edit_address.equals("3"))) {
+
+            if (edit_address != null && (edit_address.equals("10"))){
+
+                ServerConfig srv = new ServerConfig(IP1,IP2);
+                if (srv.URL.equals("")) {
+                    Toast.makeText(getActivity(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String baseUrl = "http://" +srv.URL + "/api/REST/";
+                api = ConfigRetrofit.getRetrofit(baseUrl,true).create(API.class);
+                Login(userName,pasWord,IP1,IP2,numberPos,String.valueOf(latitude),String.valueOf(latitude));
+                return;
+            }
+
+
+
+
+            if (edit_address != null && (edit_address.equals("1") ||
+                    edit_address.equals("2") ||
+                    edit_address.equals("3"))) {
 
                 if (accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("")) {
                     linearButtons.setVisibility(View.VISIBLE);
@@ -853,6 +899,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onStop() {
         super.onStop();
         binding.mapView.onStop();
+        compositeDisposable.clear();
 
     }
 
@@ -879,6 +926,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onDestroyView();
         binding.mapView.onDestroy();
 
+        compositeDisposable.dispose();
         binding = null;
         if (edit_address.equals("3"))
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
@@ -1097,6 +1145,72 @@ public class MapFragment extends Fragment implements PermissionsListener {
         }
 
 
+    }
+
+
+
+
+    private void Login(String userName, String passWord, String IP1, String IP2,String saleCode,String lat,String lng) {
+        try {
+
+            customProgress.showProgress(getContext(),"در حال دریافت اطلاعات",false);
+            compositeDisposable.add(
+                    api.Login(userName, passWord)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+
+                                if (jsonElement == null || !jsonElement.isEmpty()) {
+
+                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
+                                } else {
+
+
+                                    Company.deleteAll(Company.class);
+                                    Company company=new Company();
+                                    company.IP1 = IP1;
+                                    company.IP2 = IP2;
+                                    company.numberPos=saleCode;
+                                    company.USER=userName;
+                                    company.PASS=passWord;
+                                    company.mode=1;
+                                    company.INSK_ID="ir.kitgroup.saleinOrder";
+                                    company.LAT=lat;
+                                    company.LONG=lng;
+                                    company.save();
+
+
+                                    getActivity().getSupportFragmentManager().popBackStack();
+
+                                    if (Select.from(Company.class).list().size()>0) {
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                                    }
+
+                                }
+                          customProgress.hideProgress();
+
+
+                            }, throwable -> {
+
+
+                                Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
+                             customProgress.hideProgress();
+
+
+
+
+
+                            })
+            );
+
+
+        } catch (NetworkOnMainThreadException ex) {
+           customProgress.hideProgress();
+            Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 

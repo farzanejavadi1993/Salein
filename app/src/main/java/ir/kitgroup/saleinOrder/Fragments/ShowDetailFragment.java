@@ -37,6 +37,7 @@ import ir.kitgroup.saleinOrder.Activities.LauncherActivity;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.ActivityDetailBinding;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -44,15 +45,14 @@ import ir.kitgroup.saleinOrder.models.Config;
 import ir.kitgroup.saleinOrder.models.ModelProduct;
 
 @AndroidEntryPoint
-public class ShowDetailFragment  extends Fragment {
+public class ShowDetailFragment extends Fragment {
 
 
     @Inject
     Config config;
 
 
-
-   private API api;
+    private API api;
 
 
     @Inject
@@ -64,13 +64,14 @@ public class ShowDetailFragment  extends Fragment {
 
     private ActivityDetailBinding binding;
 
-    private  CompositeDisposable compositeDisposable;
+    private CompositeDisposable compositeDisposable;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        binding=ActivityDetailBinding.inflate(getLayoutInflater());
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
         return binding.getRoot();
 
     }
@@ -81,32 +82,28 @@ public class ShowDetailFragment  extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-        compositeDisposable=new CompositeDisposable();
+        compositeDisposable = new CompositeDisposable();
 
 
-            company=null;
-            api=null;
-            company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
-
-
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+        ServerConfig srv = new ServerConfig(company.IP1, company.IP2);
+        api = ConfigRetrofit.getRetrofit("http://" + srv.URL + "/api/REST/", false).create(API.class);
 
 
         Bundle bundle = getArguments();
         String Id = bundle.getString("Id");
 
 
-
         String ip = company.IP1;
 
         getProduct(Id);
         Picasso.get()
-                .load("http://" + ip + "/GetImage?productId=" + Id+"&width="+(int)Util.width+"&height="+(int)Util.height/2)
+                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
                 .error(config.imageLogo)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
-
-
 
 
     }
@@ -143,18 +140,15 @@ public class ShowDetailFragment  extends Fragment {
                                 ModelProduct iDs = null;
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                }
-                                catch (Exception ignore) {
+                                } catch (Exception ignore) {
                                     Toast.makeText(getActivity(), "مدل دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
                                     binding.progressBar.setVisibility(View.GONE);
                                 }
 
 
-                                if (iDs != null && iDs.getProductList().size()>0) {
+                                if (iDs != null && iDs.getProductList().size() > 0) {
                                     binding.tvDescriptionProduct.setText(iDs.getProductList().get(0).getDes());
-                                }
-
-                                else {
+                                } else {
                                     Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
 
                                 }
@@ -163,7 +157,7 @@ public class ShowDetailFragment  extends Fragment {
 
                             }, throwable -> {
 
-                                Toast.makeText(getActivity(),"خطا در ارتباط با سرور",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                 binding.progressBar.setVisibility(View.GONE);
                             })
             );
@@ -173,8 +167,6 @@ public class ShowDetailFragment  extends Fragment {
         }
 
     }
-
-
 
 
     @Override
