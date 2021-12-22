@@ -32,6 +32,7 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.models.OrderType;
 
 
@@ -100,6 +101,8 @@ public class LauncherOrganizationFragment extends Fragment {
     //endregion Dialog
 
 
+
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     //endregion Parameter
 
@@ -113,10 +116,11 @@ public class LauncherOrganizationFragment extends Fragment {
         binding = FragmentLauncherOrganizationBinding.inflate(getLayoutInflater());
 
 
-
         company = Select.from(Company.class).first();
-        ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
-        api = ConfigRetrofit.getRetrofit("http://" + srv.URL+ "/api/REST/",true).create(API.class);
+
+
+
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", true).create(API.class);
         tablesList = new ArrayList<>();
         AllTable = new ArrayList<>();
 
@@ -162,8 +166,6 @@ public class LauncherOrganizationFragment extends Fragment {
 
                     if (Company.count(Company.class) > 0)
                         Company.deleteAll(Company.class);
-
-
 
 
                     dialog.dismiss();

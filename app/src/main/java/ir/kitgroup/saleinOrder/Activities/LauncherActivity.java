@@ -90,11 +90,11 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
+
         //region Set Layout to LauncherActivity class
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //endregion Set Layout to LauncherActivity class
-
 
 
 

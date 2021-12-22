@@ -76,7 +76,7 @@ import ir.kitgroup.saleinOrder.DataBase.Tables;
 
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 
@@ -206,10 +206,7 @@ public class InVoiceDetailFragment extends Fragment {
             company = Select.from(Company.class).first();
 
 
-            ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
-            api = ConfigRetrofit.getRetrofit("http://" + srv.URL + "/api/REST/",false).create(API.class);
-
-
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
             descriptionList = new ArrayList<>();
@@ -315,7 +312,7 @@ public class InVoiceDetailFragment extends Fragment {
             setADR1 = bundle.getBoolean("setADR1");
 
 
-            binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  مشتری روزانه  ") + Tbl_NAME + ")");
+            binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
 
 
             //endregion Get Bundle
@@ -459,9 +456,9 @@ public class InVoiceDetailFragment extends Fragment {
                 if (company.mode == 1) {
                     Account acc = Select.from(Account.class).first();
                     if (acc != null)
-                        binding.tvNameCustomer.setText("(" + (acc.N != null ? acc.N + " _ " : "  مشتری روزانه  ") + Tbl_NAME + ")");
+                        binding.tvNameCustomer.setText("(" + (acc.N != null ? acc.N + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
                     else
-                        binding.tvNameCustomer.setText("(" + "مشتری پیش فرض" + " _ " + Tbl_NAME + ")");
+                        binding.tvNameCustomer.setText("(" + "فروش پیش فرض" + " _ " + Tbl_NAME + ")");
                 }
 
             }
@@ -1113,7 +1110,7 @@ public class InVoiceDetailFragment extends Fragment {
                                         }
 
 
-                                        binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  مشتری روزانه  ") + Tbl_NAME + ")");
+                                        binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
 
                                         if (status != null && (status.equals("*") || invFinal)) {
                                             binding.layoutEditDelete.setVisibility(View.GONE);

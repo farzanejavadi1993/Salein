@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 
@@ -39,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import ir.kitgroup.saleinOrder.R;
 
+
 import ir.kitgroup.saleinOrder.databinding.FragmentOrganizationLoginBinding;
 
 
@@ -72,6 +74,11 @@ public class LoginOrganizationFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
+
+
+
         binding.btnLogin.setOnClickListener(v -> {
 
 
@@ -100,7 +107,6 @@ public class LoginOrganizationFragment extends Fragment {
 
 
 
-            binding.btnLogin.setEnabled(false);
 
 
         });

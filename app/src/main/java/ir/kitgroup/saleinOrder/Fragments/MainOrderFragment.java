@@ -65,6 +65,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 
@@ -102,7 +103,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.models.Config;
@@ -262,6 +263,7 @@ public class MainOrderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
+
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
@@ -277,6 +279,10 @@ public class MainOrderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
+        ir.kitgroup.saleinOrder.DataBase.Product.deleteAll(ir.kitgroup.saleinOrder.DataBase.Product.class);
+
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
@@ -286,8 +292,11 @@ public class MainOrderFragment extends Fragment {
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
-        api = ConfigRetrofit.getRetrofit("http://" + srv.URL  + "/api/REST/", false).create(API.class);
+        if (company.mode==1)
+            Account.deleteAll(Account.class);
+
+
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
 
         getUnit();
@@ -522,7 +531,7 @@ public class MainOrderFragment extends Fragment {
 
         btnNewAddress.setOnClickListener(v -> {
             if (acc == null) {
-                Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "فروش نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             }
             dialogAddress.dismiss();
@@ -674,7 +683,7 @@ public class MainOrderFragment extends Fragment {
 
                         binding.edtNameCustomer.setHint("جستجو مشتری");
                     } else if (s.toString().length() > 3) {
-                        getAccountSearch1(s.toString(), 0);
+                        getAccountSearch1( Util.toEnglishNumber(s.toString()), 0);
                     }
 
 
@@ -1756,7 +1765,7 @@ public class MainOrderFragment extends Fragment {
                                             account.I = Acc_GUID;
                                             Account.saveInTx(account);
                                             if (!EDIT)
-                                                binding.edtNameCustomer.setHint("مشتری پیش فرض");
+                                                binding.edtNameCustomer.setHint("فروش روزانه");
                                         }
 
 

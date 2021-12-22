@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -76,6 +77,7 @@ import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -92,10 +94,9 @@ import ir.kitgroup.saleinOrder.Activities.LauncherActivity;
 import ir.kitgroup.saleinOrder.Adapters.SearchViewAdapter;
 import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Account;
-import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 import ir.kitgroup.saleinOrder.databinding.FragmentMapBinding;
@@ -117,7 +118,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private  CompositeDisposable compositeDisposable ;
+    private CompositeDisposable compositeDisposable;
 
 
     private Company company;
@@ -188,10 +189,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onViewCreated(view, savedInstanceState);
 
 
-
-
-
-
         compositeDisposable = new CompositeDisposable();
 
 
@@ -202,7 +199,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
-        //region Configuration Text Size
+
+
+
+
+
+
+    //region Configuration Text Size
         int fontSize;
         if (Util.screenSize >= 7) {
 
@@ -221,21 +224,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
         String mobileNumber = bundle.getString("mobileNumber");
         String type = bundle.getString("type");
         edit_address = bundle.getString("edit_address");
-        try {
-            IP1 = bundle.getString("IP1");
-            IP2 = bundle.getString("IP2");
-            userName = bundle.getString("userName");
-            pasWord = bundle.getString("passWord");
-            numberPos = bundle.getString("numberPos");
-            binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
+        IP1 = bundle.getString("IP1");
+        IP2 = bundle.getString("IP2");
+        userName = bundle.getString("userName");
+        pasWord = bundle.getString("passWord");
+        numberPos = bundle.getString("numberPos");
 
-        }catch (Exception ignored){
+
+        if (IP1==null)
+        {
             company = null;
             api = null;
             company = Select.from(Company.class).first();
             api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        }else {
+            binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
         }
-
 
         //endregion Get Bundle
 
@@ -273,7 +277,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
 
 
-
         btnRegisterAddress.setOnClickListener(v -> {
             Account accountORG = Select.from(Account.class).first();
 
@@ -283,8 +286,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     edtPlaque.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "تمام فبلد ها را پر کنید.", Toast.LENGTH_SHORT).show();
                 return;
-            }
-            else if (edit_address.equals("1") && accountORG != null && accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("") && !ChooseAddress) {
+            } else if (edit_address.equals("1") && accountORG != null && accountORG.ADR != null && accountORG.ADR2 != null && !accountORG.ADR.equals("") && !accountORG.ADR2.equals("") && !ChooseAddress) {
                 Toast.makeText(getActivity(), "لطفا مشخص کنید، کدام آدرس را ویرایش میکنید؟", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -408,20 +410,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
         binding.btnRegisterInformation.setOnClickListener(v -> {
             Account accountORG = Select.from(Account.class).first();
 
-            if (edit_address != null && (edit_address.equals("10"))){
+            if (edit_address != null && (edit_address.equals("10"))) {
 
-                ServerConfig srv = new ServerConfig(IP1,IP2);
-                if (srv.URL.equals("")) {
-                    Toast.makeText(getActivity(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String baseUrl = "http://" +srv.URL + "/api/REST/";
-                api = ConfigRetrofit.getRetrofit(baseUrl,true).create(API.class);
-                Login(userName,pasWord,IP1,IP2,numberPos,String.valueOf(latitude),String.valueOf(latitude));
+                String baseUrl = "http://" + IP1 + "/api/REST/";
+                api = ConfigRetrofit.getRetrofit(baseUrl, true).create(API.class);
+                Login(userName, pasWord, IP1, IP2, numberPos, String.valueOf(latitude), String.valueOf(latitude));
                 return;
             }
-
-
 
 
             if (edit_address != null && (edit_address.equals("1") ||
@@ -1148,12 +1143,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-
-
-    private void Login(String userName, String passWord, String IP1, String IP2,String saleCode,String lat,String lng) {
+    private void Login(String userName, String passWord, String IP1, String IP2, String saleCode, String lat, String lng) {
         try {
 
-            customProgress.showProgress(getContext(),"در حال دریافت اطلاعات",false);
+            customProgress.showProgress(getContext(), "در حال دریافت اطلاعات", false);
             compositeDisposable.add(
                     api.Login(userName, passWord)
                             .subscribeOn(Schedulers.io())
@@ -1170,37 +1163,34 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
                                     Company.deleteAll(Company.class);
-                                    Company company=new Company();
+                                    Company company = new Company();
                                     company.IP1 = IP1;
                                     company.IP2 = IP2;
-                                    company.numberPos=saleCode;
-                                    company.USER=userName;
-                                    company.PASS=passWord;
-                                    company.mode=1;
-                                    company.INSK_ID="ir.kitgroup.saleinOrder";
-                                    company.LAT=lat;
-                                    company.LONG=lng;
+                                    company.numberPos = saleCode;
+                                    company.USER = userName;
+                                    company.PASS = passWord;
+                                    company.mode = 1;
+                                    company.INSK_ID = "ir.kitgroup.saleinOrder";
+                                    company.LAT = lat;
+                                    company.LONG = lng;
                                     company.save();
 
 
                                     getActivity().getSupportFragmentManager().popBackStack();
 
-                                    if (Select.from(Company.class).list().size()>0) {
+                                    if (Select.from(Company.class).list().size() > 0) {
                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
                                     }
 
                                 }
-                          customProgress.hideProgress();
+                                customProgress.hideProgress();
 
 
                             }, throwable -> {
 
 
-                                Toast.makeText(getContext(), "خطا در دریافت اطلاعات", Toast.LENGTH_SHORT).show();
-                             customProgress.hideProgress();
-
-
-
+                                Toast.makeText(getContext(), "آی پی سازمان اشتباه است", Toast.LENGTH_SHORT).show();
+                                customProgress.hideProgress();
 
 
                             })
@@ -1208,16 +1198,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         } catch (NetworkOnMainThreadException ex) {
-           customProgress.hideProgress();
+            customProgress.hideProgress();
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
-
-
 
 
 }

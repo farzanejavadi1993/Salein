@@ -77,7 +77,7 @@ import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -264,8 +264,8 @@ public class PaymentMobileFragment extends Fragment {
             company = null;
             api = null;
             company = Select.from(Company.class).first();
-            ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
-            api = ConfigRetrofit.getRetrofit("http://" + srv.URL + "/api/REST/", false).create(API.class);
+
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1  + "/api/REST/", false).create(API.class);
             compositeDisposable = new CompositeDisposable();
 
 
@@ -1123,7 +1123,7 @@ public class PaymentMobileFragment extends Fragment {
                         tables.C = Ord_TYPE;
                         tables.ACT = false;
                         Account account = Select.from(Account.class).first();
-                        tables.GO = account.N != null ? account.N : "مشتری روزانه";
+                        tables.GO = account.N != null ? account.N : "فروش روزانه";
                         tables.RSV = false;
                         tables.I = new_Inv_GUID;
                         tables.INVID = new_Inv_GUID;

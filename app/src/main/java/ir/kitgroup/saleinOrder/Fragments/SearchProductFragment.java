@@ -39,6 +39,7 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
-import ir.kitgroup.saleinOrder.classes.ServerConfig;
+
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentSearchProductBinding;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -69,7 +70,6 @@ import ir.kitgroup.saleinOrder.models.Product;
 
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {
-
 
 
     private API api;
@@ -138,11 +138,8 @@ public class SearchProductFragment extends Fragment {
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        ServerConfig srv = new ServerConfig(company.IP1 ,company.IP2);
-        api = ConfigRetrofit.getRetrofit("http://" + srv.URL + "/api/REST/", false).create(API.class);
 
-
-
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1+ "/api/REST/", false).create(API.class);
 
 
         //region Cast DialogDescription
@@ -269,7 +266,7 @@ public class SearchProductFragment extends Fragment {
 
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID,config);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID, config);
         // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(tbl_GUID);
         productAdapter.setType(seen);
