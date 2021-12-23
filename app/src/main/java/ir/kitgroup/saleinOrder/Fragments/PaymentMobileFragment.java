@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -78,6 +79,7 @@ import ir.kitgroup.saleinOrder.DataBase.Product;
 import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -234,6 +236,7 @@ public class PaymentMobileFragment extends Fragment {
 
     private String Transport_GUID;
 
+    private ServerConfig serverConfig;
 
     //end region Parameter
 
@@ -259,13 +262,12 @@ public class PaymentMobileFragment extends Fragment {
 
 
             linkPayment = sharedPreferences.getString("payment_link", "");
-
-
             company = null;
             api = null;
             company = Select.from(Company.class).first();
-
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1  + "/api/REST/", false).create(API.class);
+            if (company.mode==2) {
+                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+            }
             compositeDisposable = new CompositeDisposable();
 
 
@@ -1152,8 +1154,33 @@ public class PaymentMobileFragment extends Fragment {
             binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
+            if (company.mode==2)
             getSetting1();
 
+            else {
+                new AsyncTask() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/",false).create(API.class);
+
+                    }
+
+                    @Override
+                    protected Object doInBackground(Object[] params) {
+
+                        serverConfig=new ServerConfig(company.IP1,company.IP2);
+
+                        return 0;
+                    }
+                }.execute(0);
+            }
 
         } catch (Exception ignore) {
         }

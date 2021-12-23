@@ -92,7 +92,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     private int fontLargeSize = 0;
 
 
-    private final API api;
+    private API api;
 
     private List<Unit> unitList;
 
@@ -126,7 +126,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    public ProductAdapter1(Activity context, List<Product> productsList, Company company, API api, SharedPreferences sharedPreferences, String Inv_GUID, Config config) {
+    public ProductAdapter1(Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences, String Inv_GUID, Config config) {
         this.context = context;
         this.Inv_GUID = Inv_GUID;
 
@@ -134,7 +134,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.productsList = productsList;
         this.company = company;
         this.sharedPreferences = sharedPreferences;
-        this.api = api;
+
 
         df = new DecimalFormat();
         compositeDisposable = new CompositeDisposable();
@@ -149,6 +149,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     public void setType(Boolean Seen) {
         this.Seen = Seen;
+    }
+
+    public void setApi(API api) {
+        this.api = api;
     }
 
 

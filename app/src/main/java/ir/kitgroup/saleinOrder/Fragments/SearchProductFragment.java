@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -59,6 +60,7 @@ import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentSearchProductBinding;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -106,6 +108,9 @@ public class SearchProductFragment extends Fragment {
     private String GuidInv;
     //endregion Variable Dialog Description
 
+
+    private ServerConfig serverConfig;
+
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -139,8 +144,36 @@ public class SearchProductFragment extends Fragment {
         api = null;
         company = Select.from(Company.class).first();
 
+        if (company.mode==2)
         api = ConfigRetrofit.getRetrofit("http://" + company.IP1+ "/api/REST/", false).create(API.class);
 
+        else {
+            new AsyncTask() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    int p=0;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+                    productAdapter.setApi(api);
+                    productAdapter.notifyDataSetChanged();
+
+
+                }
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+
+                    serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                    return 0;
+                }
+            }.execute(0);
+        }
 
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
@@ -266,10 +299,11 @@ public class SearchProductFragment extends Fragment {
 
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID, config);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, sharedPreferences, Inv_GUID, config);
         // productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setTbl_GUID(tbl_GUID);
         productAdapter.setType(seen);
+        productAdapter.setApi(api);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);

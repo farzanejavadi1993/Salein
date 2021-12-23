@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -77,6 +78,7 @@ import ir.kitgroup.saleinOrder.DataBase.Tables;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.Utilities;
 
@@ -177,6 +179,11 @@ public class InVoiceDetailFragment extends Fragment {
     private int counter = 0;
 
 
+
+
+    private ServerConfig serverConfig;
+
+
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -206,7 +213,9 @@ public class InVoiceDetailFragment extends Fragment {
             company = Select.from(Company.class).first();
 
 
+            if (company.mode==2)
             api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
             descriptionList = new ArrayList<>();
@@ -760,8 +769,38 @@ public class InVoiceDetailFragment extends Fragment {
             });
 
 
-            if (type.equals("1"))
+            if (type.equals("1")) {
+
+                if (company.mode==2)
                 getInvoice();
+                 else {
+                new AsyncTask() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        int p=0;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+                        getInvoice();
+                    }
+
+                    @Override
+                    protected Object doInBackground(Object[] params) {
+
+                        serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                        return 0;
+                    }
+                }.execute(0);
+            }
+            }
+
+
+
             else {
                 invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 if (invDetails.size() == 0) {
@@ -780,9 +819,40 @@ public class InVoiceDetailFragment extends Fragment {
 
                 } else {
                     counter = 0;
-                    for (int i = 0; i < invDetails.size(); i++) {
-                        getProduct(invDetails.get(i).PRD_UID);
+                    if (company.mode==2) {
+                        for (int i = 0; i < invDetails.size(); i++) {
+
+                            getProduct(invDetails.get(i).PRD_UID);
+                        }
                     }
+                            else {
+                new AsyncTask() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        int p=0;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+                       for (int i = 0; i < invDetails.size(); i++) {
+
+                            getProduct(invDetails.get(i).PRD_UID);
+                        }
+                    }
+
+                    @Override
+                    protected Object doInBackground(Object[] params) {
+
+                        serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                        return 0;
+                    }
+                }.execute(0);
+            }
+
                 }
             }
 

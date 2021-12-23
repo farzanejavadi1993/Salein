@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import ir.kitgroup.saleinOrder.Connect.API;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.ActivityDetailBinding;
 import ir.kitgroup.saleinOrder.DataBase.Company;
@@ -67,6 +69,8 @@ public class ShowDetailFragment extends Fragment {
 
     private CompositeDisposable compositeDisposable;
 
+    private ServerConfig serverConfig;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +93,8 @@ public class ShowDetailFragment extends Fragment {
         company = null;
         api = null;
         company = Select.from(Company.class).first();
+
+        if (company.mode==2)
         api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
 
 
@@ -96,14 +102,48 @@ public class ShowDetailFragment extends Fragment {
         String Id = bundle.getString("Id");
 
 
-        String ip = company.IP1;
 
-        getProduct(Id);
-        Picasso.get()
-                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
-                .error(config.imageLogo)
-                .placeholder(R.drawable.loading)
-                .into(binding.ivProduct);
+        if (company.mode==2){
+            String ip = company.IP1;
+            getProduct(Id);
+            Picasso.get()
+                    .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
+                    .error(config.imageLogo)
+                    .placeholder(R.drawable.loading)
+                    .into(binding.ivProduct);
+        }else {
+            new AsyncTask() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    int p=0;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+
+
+                    String ip = serverConfig.URL1 ;
+                    getProduct(Id);
+                    Picasso.get()
+                            .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
+                            .error(config.imageLogo)
+                            .placeholder(R.drawable.loading)
+                            .into(binding.ivProduct);
+                }
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+
+                    serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                    return 0;
+                }
+            }.execute(0);
+        }
+
 
 
     }

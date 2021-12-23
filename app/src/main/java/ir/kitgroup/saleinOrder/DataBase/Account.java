@@ -54,26 +54,28 @@ public class Account extends SugarRecord {
     @Expose
     private String CCD;
 
-   /* @SerializedName("LAT")
+
+
+
+    @SerializedName("LAT")
     @Expose
     public Double LAT;
-
 
 
     @SerializedName("LNG")
     @Expose
     public Double LNG;
 
+
+
     @SerializedName("LAT1")
     @Expose
     public Double LAT1;
 
 
-
     @SerializedName("LNG1")
     @Expose
-    public Double LNG1;*/
-
+    public Double LNG1;
 
 
     public String getM() {
@@ -130,7 +132,6 @@ public class Account extends SugarRecord {
     }
 
 
-
     public String getACCCLBNAME() {
         return N;
     }
@@ -138,8 +139,6 @@ public class Account extends SugarRecord {
     public String getACCCLBCODE() {
         return C;
     }
-
-
 
 
 }

@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -103,7 +104,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 
 
-
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.models.Config;
@@ -250,6 +251,8 @@ public class MainOrderFragment extends Fragment {
 
     public int counter1 = 0;
 
+    private ServerConfig serverConfig;
+
 
     //  private List<InvoiceDetail> invoiceDetails;
 
@@ -267,6 +270,7 @@ public class MainOrderFragment extends Fragment {
         binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
+
 
 
     }
@@ -292,14 +296,12 @@ public class MainOrderFragment extends Fragment {
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        if (company.mode==1)
-            Account.deleteAll(Account.class);
+
+        if (company.mode==2) {
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+        }
 
 
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
-
-
-        getUnit();
 
 
         //region First Value Parameter
@@ -895,9 +897,41 @@ public class MainOrderFragment extends Fragment {
         });
         //endregion Cast Dialog Update
 
+        if (company.mode==2) {
+            getUnit();
+            getProductLevel1();
+            getSetting();
+        }else {
+            new AsyncTask() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    int p=0;
+                }
 
-        getProductLevel1();
-        getSetting();
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+                    productAdapter.setApi(api);
+                    productAdapter.notifyDataSetChanged();
+
+                    getUnit();
+                    getProductLevel1();
+                    getSetting();
+                }
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+
+                    serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                    return 0;
+                }
+            }.execute(0);
+
+        }
+
 
         //region CONFIGURATION DATA PRODUCT_LEVEL1
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
@@ -1016,10 +1050,10 @@ public class MainOrderFragment extends Fragment {
 
         //endregion Cast Product Configuration
 
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, api, sharedPreferences, Inv_GUID, config);
-        // productAdapter.setInv_GUID(Inv_GUID);
+        productAdapter = new ProductAdapter1(getActivity(), productList, company, sharedPreferences, Inv_GUID, config);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setType(Seen);
+        productAdapter.setApi(api);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -1761,9 +1795,13 @@ public class MainOrderFragment extends Fragment {
 
                                         if (company.mode == 1) {
                                             Acc_GUID = settingsList.get(0).DEFAULT_CUSTOMER;
+                                            accList.clear();
                                             Account account = new Account();
                                             account.I = Acc_GUID;
-                                            Account.saveInTx(account);
+                                            accList.add(account);
+                                            Account.saveInTx(accList);
+                                            accList.clear();
+
                                             if (!EDIT)
                                                 binding.edtNameCustomer.setHint("فروش روزانه");
                                         }

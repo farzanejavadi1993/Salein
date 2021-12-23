@@ -97,6 +97,7 @@ import ir.kitgroup.saleinOrder.DataBase.Account;
 import ir.kitgroup.saleinOrder.R;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.classes.CustomProgress;
 import ir.kitgroup.saleinOrder.databinding.FragmentMapBinding;
@@ -172,6 +173,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         RESULTS
     }
 
+    private ServerConfig serverConfig ;
 
     //endregion Parameter
     @Nullable
@@ -231,15 +233,50 @@ public class MapFragment extends Fragment implements PermissionsListener {
         numberPos = bundle.getString("numberPos");
 
 
-        if (IP1==null)
-        {
-            company = null;
-            api = null;
-            company = Select.from(Company.class).first();
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
-        }else {
+        company = null;
+        api = null;
+        company = Select.from(Company.class).first();
+
+       if((company!=null && company.mode==1) || IP1!=null) {
+
+
             binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
+
+            new AsyncTask() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/",false).create(API.class);
+
+                }
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+                    if (company==null)
+                    {
+                        serverConfig=new ServerConfig(IP1,IP2);
+
+                    }else {
+                        serverConfig=new ServerConfig(company.IP1,company.IP2);
+                    }
+
+
+                    return 0;
+                }
+            }.execute(0);
+
         }
+         else if (IP1==null)
+        {
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        }
+
 
         //endregion Get Bundle
 
@@ -412,9 +449,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             if (edit_address != null && (edit_address.equals("10"))) {
 
-                String baseUrl = "http://" + IP1 + "/api/REST/";
-                api = ConfigRetrofit.getRetrofit(baseUrl, true).create(API.class);
-                Login(userName, pasWord, IP1, IP2, numberPos, String.valueOf(latitude), String.valueOf(latitude));
+
+
+
+                Login(userName, pasWord, numberPos, String.valueOf(latitude), String.valueOf(latitude));
                 return;
             }
 
@@ -1143,10 +1181,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-    private void Login(String userName, String passWord, String IP1, String IP2, String saleCode, String lat, String lng) {
+    private void Login(String userName, String passWord, String saleCode, String lat, String lng) {
+
+
+
+
         try {
 
-            customProgress.showProgress(getContext(), "در حال دریافت اطلاعات", false);
             compositeDisposable.add(
                     api.Login(userName, passWord)
                             .subscribeOn(Schedulers.io())
@@ -1197,10 +1238,18 @@ public class MapFragment extends Fragment implements PermissionsListener {
             );
 
 
-        } catch (NetworkOnMainThreadException ex) {
+        }
+        catch (NetworkOnMainThreadException ex) {
             customProgress.hideProgress();
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
+
+
+
+
+
+
+
     }
 
 

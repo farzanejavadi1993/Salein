@@ -89,13 +89,11 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
     public InvoiceDetailMobileAdapter(Activity context, List<InvoiceDetail> orderDetailList, String type,boolean Seen,SharedPreferences sharedPreferences) {
-
         this.sharedPreferences=sharedPreferences;
         this.orderDetailList = orderDetailList;
         this.type = type;
         this.Seen = Seen;
         this.contex = context;
-
         df = new DecimalFormat();
 
 

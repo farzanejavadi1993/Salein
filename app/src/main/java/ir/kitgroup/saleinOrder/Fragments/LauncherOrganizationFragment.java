@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.google.android.flexbox.AlignItems;
@@ -55,6 +57,7 @@ import ir.kitgroup.saleinOrder.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.classes.ConfigRetrofit;
 
+import ir.kitgroup.saleinOrder.classes.ServerConfig;
 import ir.kitgroup.saleinOrder.models.OrderType;
 
 
@@ -73,6 +76,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
     private API api;
 
+    ServerConfig serverConfig ;
 
     private Company company;
 
@@ -120,7 +124,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
 
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", true).create(API.class);
+
+
         tablesList = new ArrayList<>();
         AllTable = new ArrayList<>();
 
@@ -141,9 +146,13 @@ public class LauncherOrganizationFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> dialog.dismiss());
 
 
-        binding.refreshLayout.setOnRefreshListener(this::getTable1);
 
-
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getTable1(serverConfig.URL1);
+            }
+        });
         btnOkDialog.setOnClickListener(v -> {
             dialog.dismiss();
             switch (TypeClickButtonDialog) {
@@ -177,8 +186,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
                 case "error":
-                    getTypeOrder();
-                    getTable1();
+                    getTypeOrder(serverConfig.URL1);
+                    getTable1(serverConfig.URL1);
                     break;
 
 
@@ -423,7 +432,29 @@ public class LauncherOrganizationFragment extends Fragment {
         //endregion Action btnLogOut
 
 
-        getTable1();
+
+        new AsyncTask() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                int p=0;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                getTable1(serverConfig.URL1);
+
+            }
+
+            @Override
+            protected Object doInBackground(Object[] params) {
+
+                serverConfig =new ServerConfig(company.IP1,company.IP2);
+
+                return 0;
+            }
+        }.execute(0);
 
 
         return binding.getRoot();
@@ -448,8 +479,8 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-    private void getTypeOrder() {
-
+    private void getTypeOrder(String ip) {
+        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true).create(API.class);
         try {
             compositeDisposable.add(
                     api.getOrderType1(company.USER, company.PASS)
@@ -551,7 +582,8 @@ public class LauncherOrganizationFragment extends Fragment {
     }
 
 
-    private void getTable1() {
+    private void getTable1(String ip) {
+        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true).create(API.class);
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
@@ -588,7 +620,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                     tableAdapter.notifyDataSetChanged();
 
-                                    getTypeOrder();
+                                    getTypeOrder(serverConfig.URL1);
 
                                 } else {
 
@@ -620,8 +652,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
     public void refreshAdapter() {
         filter("whole");
-        getTable1();
-        getTypeOrder();
+        getTable1(serverConfig.URL1);
+        getTypeOrder(serverConfig.URL1);
     }
 }
 

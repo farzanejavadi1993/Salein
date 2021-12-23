@@ -33,19 +33,38 @@ public class ServerConfig {
             URLConnection connection1 = myUrl1.openConnection();
             connection1.setConnectTimeout(timeout);
             connection1.connect();
-            if (((HttpURLConnection) connection1).getResponseCode() != 404)
+            if (((HttpURLConnection) connection1).getResponseCode() != 404 && ((HttpURLConnection) connection1).getResponseCode() != 401 )
                 return IP1;
             else {
                 URL myUrl2 = new URL("http://" + IP2 + "/api/REST/getWelcome");
                 URLConnection connection2 = myUrl2.openConnection();
                 connection2.setConnectTimeout(timeout);
                 connection2.connect();
-                if (((HttpURLConnection) connection1).getResponseCode() != 404);
+                if (((HttpURLConnection) connection2).getResponseCode() != 404 && ((HttpURLConnection) connection2).getResponseCode() != 401)
                 return IP2;
+                else {
+                    return IP1;
+                }
+
+
             }
 
         } catch (Exception ignored) {
-            return IP1;
+            try {
+                URL myUrl2 = new URL("http://" + IP2 + "/api/REST/getWelcome");
+                URLConnection connection2 = myUrl2.openConnection();
+                connection2.setConnectTimeout(timeout);
+                connection2.connect();
+                if (((HttpURLConnection) connection2).getResponseCode() != 404 && ((HttpURLConnection) connection2).getResponseCode() != 401)
+                    return IP2;
+                else {
+                    return IP1;
+                }
+            }catch (Exception ignored1){
+                return IP1;
+            }
+
+
         }
     }
 }
