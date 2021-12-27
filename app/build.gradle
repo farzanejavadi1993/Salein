@@ -10,11 +10,11 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinOrder"
+        applicationId "ir.kitgroup.saleinmeat"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 4
-        versionName "1.3.8.0"
+        versionName "1.3.8.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
