@@ -287,6 +287,7 @@ public class MainOrderFragment extends Fragment {
         ir.kitgroup.saleinOrder.DataBase.Product.deleteAll(ir.kitgroup.saleinOrder.DataBase.Product.class);
 
 
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
@@ -299,6 +300,8 @@ public class MainOrderFragment extends Fragment {
 
         if (company.mode==2) {
             api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+        }else {
+            Account.deleteAll(Account.class);
         }
 
 

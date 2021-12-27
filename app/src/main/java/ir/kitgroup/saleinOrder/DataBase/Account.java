@@ -18,6 +18,18 @@ public class Account extends SugarRecord {
     @SerializedName("C")
     @Expose
     private String C;
+
+    public String getC() {
+        String c="";
+        if (C!=null)
+            c=C;
+        return c;
+    }
+
+    public void setC(String c) {
+        C = c;
+    }
+
     @SerializedName("M")
     @Expose
     public String M;
@@ -59,23 +71,23 @@ public class Account extends SugarRecord {
 
     @SerializedName("LAT")
     @Expose
-    public Double LAT;
+    public String LAT;
 
 
     @SerializedName("LNG")
     @Expose
-    public Double LNG;
+    public String LNG;
 
 
 
     @SerializedName("LAT1")
     @Expose
-    public Double LAT1;
+    public String LAT1;
 
 
     @SerializedName("LNG1")
     @Expose
-    public Double LNG1;
+    public String LNG1;
 
 
     public String getM() {

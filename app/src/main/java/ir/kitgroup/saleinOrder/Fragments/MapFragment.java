@@ -173,7 +173,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         RESULTS
     }
 
-    private ServerConfig serverConfig ;
+    private ServerConfig serverConfig;
 
     //endregion Parameter
     @Nullable
@@ -201,13 +201,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
-
-
-
-
-
-
-    //region Configuration Text Size
+        //region Configuration Text Size
         int fontSize;
         if (Util.screenSize >= 7) {
 
@@ -237,10 +231,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
         api = null;
         company = Select.from(Company.class).first();
 
-       if((company!=null && company.mode==1) || IP1!=null) {
-
-
+        if (IP1!=null)
             binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
+
+
+        if ((company != null && company.mode == 1) || IP1 != null) {
+
 
             new AsyncTask() {
                 @Override
@@ -252,18 +248,17 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 @Override
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
-                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/",false).create(API.class);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
 
                 }
 
                 @Override
                 protected Object doInBackground(Object[] params) {
-                    if (company==null)
-                    {
-                        serverConfig=new ServerConfig(IP1,IP2);
+                    if (company == null) {
+                        serverConfig = new ServerConfig(IP1, IP2);
 
-                    }else {
-                        serverConfig=new ServerConfig(company.IP1,company.IP2);
+                    } else {
+                        serverConfig = new ServerConfig(company.IP1, company.IP2);
                     }
 
 
@@ -271,10 +266,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
             }.execute(0);
 
-        }
-         else if (IP1==null)
-        {
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        } else if (IP1 == null) {
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
         }
 
 
@@ -346,18 +339,26 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (account.ADR == null) {
                     setADR1 = false;
-                    account.ADR = longitude + "longitude" + " " + ADDRESS + "latitude" + latitude;
+                    account.ADR = ADDRESS;
+                    account.LAT = String.valueOf(latitude);
+                    account.LNG = String.valueOf(longitude);
 
                 } else if (account.ADR2 == null) {
                     setADR1 = true;
-                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    account.ADR2 = ADDRESS;
+                    account.LAT1 = String.valueOf(latitude);
+                    account.LNG1 = String.valueOf(longitude);
 
                 } else {
-                    if (setADR1)
-                        account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
-
-                    else
-                        account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    if (setADR1) {
+                        account.ADR2 = ADDRESS;
+                        account.LAT1 = String.valueOf(latitude);
+                        account.LNG1 = String.valueOf(longitude);
+                    } else {
+                        account.ADR = ADDRESS;
+                        account.LAT = String.valueOf(latitude);
+                        account.LNG = String.valueOf(longitude);
+                    }
                 }
 
 
@@ -382,11 +383,15 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (type.equals("1")) {
                     account.ADR2 = accountORG.ADR2;
-                    account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    account.ADR = ADDRESS;
+                    account.LAT = String.valueOf(latitude);
+                    account.LNG = String.valueOf(longitude);
 
                 } else {
                     account.ADR = accountORG.ADR;
-                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    account.ADR2 = ADDRESS;
+                    account.LAT1 = String.valueOf(latitude);
+                    account.LNG1 = String.valueOf(longitude);
 
                 }
 
@@ -413,19 +418,28 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (account.ADR == null) {
                     setADR1 = false;
-                    account.ADR = longitude + "longitude" + " " + ADDRESS + "latitude" + latitude;
-
+                    account.ADR =ADDRESS;
+                    account.LAT = String.valueOf(latitude);
+                    account.LNG = String.valueOf(longitude);
                 } else if (account.ADR2 == null) {
                     setADR1 = true;
-                    account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
-
+                    account.ADR2 =  ADDRESS ;
+                    account.LAT1 = String.valueOf(latitude);
+                    account.LNG1 = String.valueOf(longitude);
                 } else {
 
-                    if (setADR1)
-                        account.ADR2 = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    if (setADR1) {
+                        account.ADR2 =  ADDRESS ;
+                        account.LAT1 = String.valueOf(latitude);
+                        account.LNG1 = String.valueOf(longitude);
 
+                    }
                     else
-                        account.ADR = longitude + "longitude" + ADDRESS + "latitude" + latitude;
+                    {
+                        account.ADR =ADDRESS ;
+                        account.LAT = String.valueOf(latitude);
+                        account.LNG = String.valueOf(longitude);
+                    }
                 }
 
 
@@ -448,8 +462,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
             Account accountORG = Select.from(Account.class).first();
 
             if (edit_address != null && (edit_address.equals("10"))) {
-
-
 
 
                 Login(userName, pasWord, numberPos, String.valueOf(latitude), String.valueOf(latitude));
@@ -1184,8 +1196,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private void Login(String userName, String passWord, String saleCode, String lat, String lng) {
 
 
-
-
         try {
 
             compositeDisposable.add(
@@ -1238,16 +1248,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
             );
 
 
-        }
-        catch (NetworkOnMainThreadException ex) {
+        } catch (NetworkOnMainThreadException ex) {
             customProgress.hideProgress();
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
-
-
-
-
-
 
 
     }

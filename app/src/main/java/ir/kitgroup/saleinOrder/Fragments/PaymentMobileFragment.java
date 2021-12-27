@@ -262,10 +262,11 @@ public class PaymentMobileFragment extends Fragment {
 
 
             linkPayment = sharedPreferences.getString("payment_link", "");
+
             company = null;
             api = null;
             company = Select.from(Company.class).first();
-            if (company.mode==2) {
+            if (company.mode == 2) {
                 api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
             }
             compositeDisposable = new CompositeDisposable();
@@ -416,16 +417,12 @@ public class PaymentMobileFragment extends Fragment {
 
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    try {
-                        latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                        longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                    } catch (Exception e) {
-                        latitude1 = 0.0;
-                        longitude1 = 0.0;
-                    }
+
+                    latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
+                    longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
+
                     if (latitude1 == 0.0 && longitude1 == 0.0) {
                         Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
-
                         return;
                     }
                     double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
@@ -451,13 +448,9 @@ public class PaymentMobileFragment extends Fragment {
             });
             radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    try {
-                        latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
-                        longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                    } catch (Exception e) {
-                        latitude2 = 0.0;
-                        longitude2 = 0.0;
-                    }
+
+                    latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
+                    longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
 
 
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
@@ -517,34 +510,38 @@ public class PaymentMobileFragment extends Fragment {
 
             //region SetAddress
             acc = Select.from(Account.class).first();
+            if (!linkPayment.equals(""))
+                linkPayment=linkPayment+"/pay?s="+acc.getC();
 
 
             if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
                 String address;
-                try {
-                    latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                    longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                    address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
 
-                } catch (Exception e) {
-                    address = acc.ADR + "( نامعتبر )";
-                    latitude1 = 0.0;
-                    longitude1 = 0.0;
+                latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
+                longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
+
+                try {
+                    address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+                } catch (Exception ignored) {
+                    address = acc.ADR+"(نا معتبر)";
                 }
+
+
                 radioAddress1.setText(address);
 
             }
             if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
                 String address;
-                try {
-                    latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
-                    longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                    address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
 
-                } catch (Exception e) {
-                    address = acc.ADR2 + "( نامعتبر )";
-                    latitude2 = 0.0;
-                    longitude2 = 0.0;
+                latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
+                longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
+
+
+
+                try {
+                    address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
+                } catch (Exception ignored) {
+                    address = acc.ADR2+"(نا معتبر)";
                 }
                 radioAddress2.setText(address);
 
@@ -554,8 +551,8 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
 
 
-                latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
+                latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
+                longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
 
                 double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
@@ -565,10 +562,11 @@ public class PaymentMobileFragment extends Fragment {
                     calculateTransport = price;
                 }
                 String address;
+
                 try {
                     address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
-                } catch (Exception e) {
-                    address = acc.ADR;
+                }catch (Exception ignored){
+                    address=acc.ADR+"(نا معتبر)";
                 }
 
 
@@ -578,8 +576,9 @@ public class PaymentMobileFragment extends Fragment {
 
             } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") && latitude2 != 0.0 && longitude2 != 0.0) {
 
-                latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
-                longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
+                latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
+                longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
+
                 double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
                 if (price != -1.0) {
@@ -591,10 +590,11 @@ public class PaymentMobileFragment extends Fragment {
                 String address;
                 try {
                     address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
-                } catch (Exception e) {
-                    address = acc.ADR2;
+                }catch (Exception ignored){
+                    address=acc.ADR2+"(نا معتبر)";
 
                 }
+
 
 
                 binding.edtAddress.setText(address);
@@ -1111,7 +1111,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
                     if (config.INSKU_ID.equals("ir.kitgroup.salein"))
-                    addFragment.addToBackStack("MainOrderF").commit();
+                        addFragment.addToBackStack("MainOrderF").commit();
                     else
                         addFragment.commit();
 
@@ -1154,8 +1154,8 @@ public class PaymentMobileFragment extends Fragment {
             binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
 
 
-            if (company.mode==2)
-            getSetting1();
+            if (company.mode == 2)
+                getSetting1();
 
             else {
                 new AsyncTask() {
@@ -1168,14 +1168,14 @@ public class PaymentMobileFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/",false).create(API.class);
-
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false).create(API.class);
+                        getSetting1();
                     }
 
                     @Override
                     protected Object doInBackground(Object[] params) {
 
-                        serverConfig=new ServerConfig(company.IP1,company.IP2);
+                        serverConfig = new ServerConfig(company.IP1, company.IP2);
 
                         return 0;
                     }

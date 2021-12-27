@@ -105,6 +105,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         getCompany();
+
     }
     //endregion Override Method
 

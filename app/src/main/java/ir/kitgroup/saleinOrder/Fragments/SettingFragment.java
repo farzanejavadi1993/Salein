@@ -109,6 +109,8 @@ public class SettingFragment extends Fragment {
         linkPayment = sharedPreferences.getString("payment_link", "");
 
 
+
+
         company = null;
         api = null;
         company = Select.from(Company.class).first();
@@ -220,6 +222,11 @@ public class SettingFragment extends Fragment {
         );
 
         Account acc = Select.from(Account.class).first();
+        if (!linkPayment.equals(""))
+            linkPayment=linkPayment+"/pay?s="+acc.getC();
+
+
+
         if (acc != null && acc.CRDT != null) {
             binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
         } else {
