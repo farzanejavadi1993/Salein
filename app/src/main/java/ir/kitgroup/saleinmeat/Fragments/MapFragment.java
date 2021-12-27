@@ -248,7 +248,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 @Override
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
-                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true).create(API.class);
+                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
                    binding.btnRegisterInformation.setVisibility(View.VISIBLE);
 
                 }
@@ -268,7 +268,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             }.execute(0);
 
         } else if (IP1 == null) {
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false).create(API.class);
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false,30).create(API.class);
         }
 
 

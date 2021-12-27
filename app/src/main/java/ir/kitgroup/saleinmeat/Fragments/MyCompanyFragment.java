@@ -133,7 +133,7 @@ public class MyCompanyFragment extends Fragment {
                         mainOrderFragment.setArguments(bundleMainOrder);
                         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                     } else {
-                        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",true).create(API.class);
+                        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",true,30).create(API.class);
                         getInquiryAccount1(company.N, company.USER, company.PASS, account.M);
                     }
                 }

@@ -14,10 +14,12 @@ public class ConfigRetrofit {
     public static Retrofit retrofit;
     public static GsonBuilder gsonBuilder;
     public static OkHttpClient.Builder client;
+    public  static   int time=30;
 
 
-    public static Retrofit getRetrofit(String baseUrl, Boolean Nullable) {
+    public static Retrofit getRetrofit(String baseUrl, Boolean Nullable,int time1) {
 
+        time=time1;
 
         if (Nullable) {
             gsonBuilder = null;
@@ -33,8 +35,8 @@ public class ConfigRetrofit {
 
 
                 client = new OkHttpClient.Builder();
-                client.readTimeout(30, TimeUnit.SECONDS);
-                client.connectTimeout(30, TimeUnit.SECONDS);
+                client.readTimeout(time, TimeUnit.SECONDS);
+                client.connectTimeout(time, TimeUnit.SECONDS);
 
 
                 retrofit = new Retrofit.Builder()

@@ -135,7 +135,7 @@ public class OrderListFragment extends Fragment {
             company = null;
             api = null;
             company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
 
 
 

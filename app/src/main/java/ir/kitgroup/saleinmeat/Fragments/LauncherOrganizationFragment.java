@@ -479,7 +479,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     private void getTypeOrder(String ip) {
-        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true,30).create(API.class);
         try {
             compositeDisposable.add(
                     api.getOrderType1(company.USER, company.PASS)
@@ -582,7 +582,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
     private void getTable1(String ip) {
-        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + ip + "/api/REST/", true,30).create(API.class);
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(

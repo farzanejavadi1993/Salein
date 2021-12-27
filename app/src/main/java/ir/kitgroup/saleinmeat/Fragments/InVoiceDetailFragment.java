@@ -214,7 +214,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
             if (company.mode==2)
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false).create(API.class);
+            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
 
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
@@ -784,7 +784,7 @@ public class InVoiceDetailFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true).create(API.class);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
                         getInvoice();
                     }
 
@@ -836,7 +836,7 @@ public class InVoiceDetailFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true).create(API.class);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
                        for (int i = 0; i < invDetails.size(); i++) {
 
                             getProduct(invDetails.get(i).PRD_UID);

@@ -80,7 +80,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         company=Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true,30).create(API.class);
         compositeDisposable = new CompositeDisposable();
 
         Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
@@ -150,7 +150,7 @@ public class SplashScreenFragment extends Fragment {
                                             Company.deleteAll(Company.class);
                                             Company.saveInTx(iDs.getCompany().get(0));
 
-                                            ConfigRetrofit.getRetrofit("http://"+iDs.getCompany().get(0).IP1+"/api/REST/",true);
+                                            ConfigRetrofit.getRetrofit("http://"+iDs.getCompany().get(0).IP1+"/api/REST/",true,30);
 
                                             FragmentTransaction addFragment;
 
@@ -198,7 +198,7 @@ public class SplashScreenFragment extends Fragment {
                                 if (Select.from(Company.class).list().size() == 0)
                                     Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                 else {
-                                    ConfigRetrofit.getRetrofit("http://"+Select.from(Company.class).first().IP1+"/api/REST/",true);
+                                    ConfigRetrofit.getRetrofit("http://"+Select.from(Company.class).first().IP1+"/api/REST/",true,5);
                                     FragmentTransaction addFragment;
 
                                     //region Account Is Login & Register
