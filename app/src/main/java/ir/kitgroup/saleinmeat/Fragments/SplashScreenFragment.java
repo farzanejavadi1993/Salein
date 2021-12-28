@@ -80,10 +80,15 @@ public class SplashScreenFragment extends Fragment {
 
 
         company=Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true,30).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true,5).create(API.class);
         compositeDisposable = new CompositeDisposable();
 
-        Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
+        if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
+            Glide.with(this).load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
+            binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+
+        }else
+            Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
         binding.tvTitle.setText(company!=null && company.N!=null ? company.N:config.N);
         binding.tvDescription.setText(company!=null && company.DESC!=null ?company.DESC:config.DESC);
 
@@ -102,9 +107,23 @@ public class SplashScreenFragment extends Fragment {
             e.printStackTrace();
         }
 
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                        sleep(5000);
+                    getCompany();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
 
 
-        getCompany();
 
     }
     //endregion Override Method
@@ -134,7 +153,8 @@ public class SplashScreenFragment extends Fragment {
                                 ModelCompany iDs;
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception e) {
+                                }
+                                catch (Exception e) {
                                     Toast.makeText(getActivity(), "مدل دریافت شده از شرکت ها نامعتبر است.", Toast.LENGTH_SHORT).show();
 
                                     return;
@@ -187,7 +207,8 @@ public class SplashScreenFragment extends Fragment {
                                     }
 
 
-                                } else {
+                                }
+                                else {
                                     Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
 
                                 }
@@ -198,7 +219,7 @@ public class SplashScreenFragment extends Fragment {
                                 if (Select.from(Company.class).list().size() == 0)
                                     Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                 else {
-                                    ConfigRetrofit.getRetrofit("http://"+Select.from(Company.class).first().IP1+"/api/REST/",true,5);
+                                    ConfigRetrofit.getRetrofit("http://"+Select.from(Company.class).first().IP1+"/api/REST/",true,30);
                                     FragmentTransaction addFragment;
 
                                     //region Account Is Login & Register

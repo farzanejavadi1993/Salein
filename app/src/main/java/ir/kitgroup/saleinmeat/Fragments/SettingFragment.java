@@ -179,8 +179,9 @@ public class SettingFragment extends Fragment {
                 Company.deleteAll(Company.class);
 
 
-
+            ((LauncherActivity) getActivity()).setFistItem();
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
 
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();

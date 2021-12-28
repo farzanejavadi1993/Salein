@@ -48,7 +48,7 @@ public class ConfigRetrofit {
             }
 
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return retrofit;
