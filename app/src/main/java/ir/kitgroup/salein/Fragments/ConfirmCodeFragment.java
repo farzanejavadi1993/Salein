@@ -352,7 +352,7 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
                 Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-                return;
+               // return;
             }
             getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });

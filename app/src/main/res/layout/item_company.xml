@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardSalein"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="13dp"
+    android:layout_marginRight="13dp"
     android:layout_marginBottom="6dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="@dimen/margin4"
@@ -32,6 +31,7 @@
             app:siBorderColor="#eee" />
 
         <TextView
+
             android:id="@+id/tvTitleCompany"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,14 +46,13 @@
             android:id="@+id/tvDescriptionCompany"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin10"
             android:layout_marginRight="5dp"
             android:gravity="right"
             android:textColor="@color/medium_color"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/ivCompany"
             app:layout_constraintEnd_toStartOf="@+id/ivCompany"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/flesh"
             app:layout_constraintTop_toBottomOf="@+id/tvTitleCompany"
             tools:text="سالین دمو ، راهنمای استفاده از اپلیکیشن" />
 
@@ -66,6 +65,18 @@
             android:src="@drawable/ic_favorite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/flesh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_fi_rr_angle_small_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 

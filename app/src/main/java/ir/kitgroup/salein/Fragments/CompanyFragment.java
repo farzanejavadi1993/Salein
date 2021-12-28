@@ -106,6 +106,9 @@ public class CompanyFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
+        Company company1=Select.from(Company.class).first();
+        api = ConfigRetrofit.getRetrofit("http://" + company1.IP1 + "/api/REST/",false,30).create(API.class);
+
         companyAdapterList.setOnClickItemListener((company, check) ->
                 {
 

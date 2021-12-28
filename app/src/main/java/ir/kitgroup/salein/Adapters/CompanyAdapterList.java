@@ -15,11 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.github.siyamed.shapeimageview.CircularImageView;
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import ir.kitgroup.salein.DataBase.Company;
@@ -84,6 +89,27 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
                 .into(holder.ivCompany);
 
 
+       ArrayList<Company> companies=new ArrayList<>(list);
+       CollectionUtils.filter(companies, r -> company.I.equals(r.PI));
+       if (companies.size()>0)
+           holder.flesh.setVisibility(View.VISIBLE);
+
+
+        ArrayList<Company> companies1=new ArrayList<>(list);
+        CollectionUtils.filter(companies1, r -> !r.PI.equals("") && r.PI.equals(company.I));
+        if (companies1.size()>0)
+            holder.cardSalein.setVisibility(View.GONE);
+
+
+//        ArrayList<Company> companies1=new ArrayList<>(list);
+//        CollectionUtils.filter(companies1, r -> company.PI.equals(r.I));
+//        if (companies1.size()>0)
+//            holder.itemView.setVisibility(View.GONE);
+
+
+
+
+
 
 
         holder.itemView.setOnClickListener(v -> {
@@ -107,17 +133,22 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
         private final  TextView tvDescriptionCompany;
         private final  CircularImageView ivCompany;
         private final ImageView favoriteCompany;
+        private final ImageView flesh;
+        private final MaterialCardView cardSalein;
 
 
         public viewHolder(View itemView) {
             super(itemView);
 
             tvTitleCompany = itemView.findViewById(R.id.tvTitleCompany);
+            cardSalein = itemView.findViewById(R.id.cardSalein);
             tvDescriptionCompany = itemView.findViewById(R.id.tvDescriptionCompany);
             ivCompany= itemView.findViewById(R.id.ivCompany);
             favoriteCompany = itemView.findViewById(R.id.favoriteCompany);
+            flesh = itemView.findViewById(R.id.flesh);
             tvTitleCompany.setTextSize(fontSize);
             tvDescriptionCompany.setTextSize(fontSize);
+
 
 
 

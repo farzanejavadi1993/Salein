@@ -12,6 +12,7 @@ public class Company extends SugarRecord {
     public String T1;
     public String PASS;
     public String M1;
+    public String PI;
     public String LAT;
     public String LONG;
     public String DESC;

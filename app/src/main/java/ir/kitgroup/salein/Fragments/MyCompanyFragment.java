@@ -101,11 +101,11 @@ public class MyCompanyFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
 
         ArrayList<Company> listCompany = new ArrayList<>();
-        for (int i = 0; i < companies.size(); i++) {
+       /* for (int i = 0; i < companies.size(); i++) {
             boolean check = sharedPreferences.getBoolean(companies.get(i).INSK_ID, false);
             if (check)
                 listCompany.add(companies.get(i));
-        }
+        }*/
 
         if (listCompany.size() == 0)
             binding.txtError.setText("لیست  علاقه مندی های شما خالی می باشد با مراجعه به تب فروشگاه ها ،فروشگاه  مورد نظر خود را به لیست علاقه مندی ها اضافه کنید کنید");
