@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/splash_background.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_company.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_mobile_order_main.xml" value="0.22" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_payment_mobile.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_splash_screen.xml" value="0.1" />
-        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_company.xml" value="0.2" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_stories.xml" value="0.12363387978142076" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_company.xml" value="0.5" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.1" />
       </map>
     </option>

@@ -8,7 +8,8 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="13dp"
     android:layout_marginRight="13dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="@dimen/margin4"
     tools:ignore="UnusedAttribute">
@@ -69,16 +70,28 @@
 
 
         <ImageView
-            android:visibility="gone"
+            android:layout_marginLeft="@dimen/margin6"
+          android:rotation="90"
             android:id="@+id/flesh"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="8dp"
+            android:padding="10dp"
             android:src="@drawable/ic_fi_rr_angle_small_left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:visibility="gone"
+            android:background="@color/light_background"
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

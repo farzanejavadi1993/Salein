@@ -172,6 +172,7 @@
                             </RelativeLayout>
 
                             <RelativeLayout
+                                android:id="@+id/btnStore"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="3dp"
@@ -194,13 +195,13 @@
                                     android:textSize="11sp" />
 
                                 <TextView
-                                    android:layout_toRightOf="@+id/iv_store_left"
                                     android:id="@+id/tvNameStore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTitleStore"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerHorizontal="true"
+                                    android:layout_toRightOf="@+id/iv_store_left"
                                     android:singleLine="true"
                                     android:text="گوشت دنیوی"
                                     android:textColor="@color/purple_700"

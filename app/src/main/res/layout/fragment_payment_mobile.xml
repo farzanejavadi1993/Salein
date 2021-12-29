@@ -48,11 +48,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:lineSpacingExtra="16dp"
+                android:text="@string/confirm_pay"
                 android:textColor="@color/medium_color"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="@string/confirm_pay"
-              />
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
