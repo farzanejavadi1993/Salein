@@ -418,8 +418,8 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
 
-                    latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
-                    longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
+                    latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
+                    longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-")? acc.LNG : "0.0");
 
                     if (latitude1 == 0.0 && longitude1 == 0.0) {
                         Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
@@ -449,8 +449,8 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
 
-                    latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
-                    longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
+                    latitude2 = Double.parseDouble(acc.LAT1 != null  && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
+                    longitude2 = Double.parseDouble(acc.LNG1 != null  && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
 
 
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
@@ -511,14 +511,14 @@ public class PaymentMobileFragment extends Fragment {
             //region SetAddress
             acc = Select.from(Account.class).first();
             if (!linkPayment.equals(""))
-                linkPayment = linkPayment + "/pay?s=" + acc.getC();
+                linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
 
             if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
                 String address = "";
 
-                latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
-                longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
+                latitude1 = Double.parseDouble(acc.LAT != null  && !acc.LAT.equals("") && !acc.LAT.equals("-")? acc.LAT : "0.0");
+                longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
 
 
                 if (latitude1 != 0.0)
@@ -530,8 +530,8 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
                 String address = "";
 
-                latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
-                longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
+                latitude2 = Double.parseDouble(acc.LAT1 != null  && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
+                longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
 
 
                 if (latitude2 != 0.0)
@@ -545,8 +545,8 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
 
 
-                latitude1 = Double.parseDouble(acc.LAT != null ? acc.LAT : "0.0");
-                longitude1 = Double.parseDouble(acc.LNG != null ? acc.LNG : "0.0");
+                latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-")? acc.LAT : "0.0");
+                longitude1 = Double.parseDouble(acc.LNG != null&& !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
 
                 double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
@@ -568,8 +568,8 @@ public class PaymentMobileFragment extends Fragment {
 
             } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") && latitude2 != 0.0 && longitude2 != 0.0) {
 
-                latitude2 = Double.parseDouble(acc.LAT1 != null ? acc.LAT1 : "0.0");
-                longitude2 = Double.parseDouble(acc.LNG1 != null ? acc.LNG1 : "0.0");
+                latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
+                longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
 
                 double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
@@ -1488,8 +1488,7 @@ public class PaymentMobileFragment extends Fragment {
                                             Account.saveInTx(iDs.getAccountList());
 
 
-                                            acc = Select.from(Account.class).first();
-                                            if (acc != null && acc.CRDT != null)
+                                            acc = Select.from(Account.class).first();if (acc != null && acc.CRDT != null)
                                                 binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
                                             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");

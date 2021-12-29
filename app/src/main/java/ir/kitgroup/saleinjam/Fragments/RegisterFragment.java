@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class RegisterFragment extends Fragment {
     private int gender = 0;
 
 
+    private DecimalFormat df;
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -76,17 +78,24 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        df = new DecimalFormat();
+        df.setMaximumFractionDigits(4);
+
 
         company= Select.from(Company.class).first();
         api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
         compositeDisposable = new CompositeDisposable();
         //region Get Bundle And Set Data
 
+
         Bundle bundle = getArguments();
         String mobileNumber = bundle.getString("mobileNumber");
         String address2 = bundle.getString("address2");
         double latitude = bundle.getDouble("lat");
         double longitude = bundle.getDouble("lng");
+
+
+
 
 
         binding.edtAddressCustomerComplete.setText(address2);
@@ -152,7 +161,9 @@ public class RegisterFragment extends Fragment {
             account.N = binding.edtFLNameCustomer.getText().toString();
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
             account.PSW = binding.edtNumberPhoneCustomer.getText().toString();
-            account.ADR = longitude + "longitude" + binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString() + "latitude" + latitude;
+            account.ADR =  binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString() ;
+            account.LAT=df.format(latitude);
+            account.LNG=df.format(longitude);
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);

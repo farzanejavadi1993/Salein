@@ -224,7 +224,7 @@ public class SettingFragment extends Fragment {
 
         Account acc = Select.from(Account.class).first();
         if (!linkPayment.equals(""))
-            linkPayment=linkPayment+"/pay?s="+acc.getC();
+            linkPayment=linkPayment+"/ChargeClub?c="+acc.getC();
 
 
 

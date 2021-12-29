@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
 
                 String address = "";
                 try {
-                    address = account.ADR.replace(account.ADR.split("latitude")[1], "").replace("latitude", "").replace(account.ADR.split("longitude")[0], "").replace("longitude", "");
+                    address = account.ADR;
                 } catch (Exception e) {
                     address = account.ADR;
                 }
@@ -102,11 +102,9 @@ public class ProfileFragment extends Fragment {
 
 
                 String address = "";
-                try {
-                    address = account.ADR2.replace(account.ADR2.split("latitude")[1], "").replace("latitude", "").replace(account.ADR2.split("longitude")[0], "").replace("longitude", "");
-                } catch (Exception e) {
+
                     address = account.ADR2;
-                }
+
 
                 binding.txtAddress2.setText(address);
 

@@ -458,33 +458,24 @@ public class MainOrderFragment extends Fragment {
         MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
-            String address;
-            try {
-                latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setARD1) {
+            String address="ناموجود";
 
-            } catch (Exception e) {
-                address = acc.ADR + "( نامعتبر )";
-                latitude1 = 0.0;
-                longitude1 = 0.0;
-            }
-            radioAddress1.setText(address);
+                latitude1 = Double.parseDouble(acc.LAT!=null && !acc.LAT.equals("") && !acc.LAT.equals("-")?acc.LAT:"0.0");
+                longitude1 = Double.parseDouble(acc.LNG!=null&& !acc.LNG.equals("") && !acc.LNG.equals("-")?acc.LNG:"0.0");
+                if (latitude1 != 0.0)
+                    address = acc.ADR;
+                radioAddress1.setText(address);
 
         }
         if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
-            String address;
-            try {
-                latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
-                longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
+            String address="ناموجود";
 
-            } catch (Exception e) {
-                address = acc.ADR2 + "( نامعتبر )";
-                latitude2 = 0.0;
-                longitude2 = 0.0;
-            }
+                latitude2 = Double.parseDouble(acc.LAT1!=null && !acc.LAT1.equals("") && !acc.LAT1.equals("-")?acc.LAT1:"0.0");
+                longitude2 = Double.parseDouble(acc.LNG1!=null&& !acc.LNG1.equals("") && !acc.LNG1.equals("-")?acc.LNG1:"0.0");
+                if (latitude2!=0.0)
+                address = acc.ADR2;
+
             radioAddress2.setText(address);
 
         }
@@ -492,11 +483,10 @@ public class MainOrderFragment extends Fragment {
 
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                try {
-                    latitude1 = Double.parseDouble(acc.ADR.split("latitude")[1]);
-                    longitude1 = Double.parseDouble(acc.ADR.split("longitude")[0]);
-                } catch (Exception ignored) {
-                }
+
+                    latitude1 = Double.parseDouble(acc.LAT!=null && !acc.LAT.equals("") && !acc.LAT.equals("-")?acc.LAT:"0.0");
+                    longitude1 = Double.parseDouble(acc.LNG!=null && !acc.LNG.equals("") && !acc.LNG.equals("-")?acc.LNG:"0.0");
+
 
                 if (latitude1 == 0.0 && longitude1 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
@@ -514,11 +504,10 @@ public class MainOrderFragment extends Fragment {
         radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
 
-                try {
-                    latitude2 = Double.parseDouble(acc.ADR2.split("latitude")[1]);
-                    longitude2 = Double.parseDouble(acc.ADR2.split("longitude")[0]);
-                } catch (Exception ignored) {
-                }
+
+                    latitude2 = Double.parseDouble(acc.LAT1!=null && !acc.LAT1.equals("") && !acc.LAT1.equals("-")?acc.LAT1:"0.0");
+                    longitude2 = Double.parseDouble(acc.LNG1!=null && !acc.LNG1.equals("") && !acc.LNG1.equals("-")?acc.LNG1:"0.0");
+
                 if (latitude2 == 0.0 || longitude2 == 0.0) {
                     Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
                     return;
@@ -559,22 +548,19 @@ public class MainOrderFragment extends Fragment {
         //region SetAddress
 
 
-        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setARD1) {
-            String address = "نامشخص";
-            try {
-                typeAddress = 1;
-                address = acc.ADR.replace(acc.ADR.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR.split("longitude")[0], "").replace("longitude", "");
-            } catch (Exception ignored) {
-            }
-            binding.tvAddress.setText(address);
-        } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
-            String address = "نامشخص";
-            try {
-                typeAddress = 2;
-                address = acc.ADR2.replace(acc.ADR2.split("latitude")[1], "").replace("latitude", "").replace(acc.ADR2.split("longitude")[0], "").replace("longitude", "");
-            } catch (Exception ignored) {
+        if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setARD1 && latitude1!=0.0) {
+            String address ;
 
-            }
+                typeAddress = 1;
+                address = acc.ADR;
+
+            binding.tvAddress.setText(address);
+        } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") && latitude2!=0.0) {
+            String address ;
+
+                typeAddress = 2;
+                address = acc.ADR2;
+
             binding.tvAddress.setText(address);
         } else {
             typeAddress = 0;

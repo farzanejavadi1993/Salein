@@ -79,6 +79,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -120,7 +121,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private CompositeDisposable compositeDisposable;
 
-
+    private DecimalFormat df;
     private Company company;
     private API api;
 
@@ -189,7 +190,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        df = new DecimalFormat();
+        df.setMaximumFractionDigits(4);
         compositeDisposable = new CompositeDisposable();
 
 
@@ -336,29 +338,33 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
+                account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
+                account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
+                account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
+                account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
 
 
                 if (account.ADR == null) {
                     setADR1 = false;
                     account.ADR = ADDRESS;
-                    account.LAT = String.valueOf(latitude);
-                    account.LNG = String.valueOf(longitude);
+                    account.LAT = df.format(latitude);
+                    account.LNG = df.format(longitude);
 
                 } else if (account.ADR2 == null) {
                     setADR1 = true;
                     account.ADR2 = ADDRESS;
-                    account.LAT1 = String.valueOf(latitude);
-                    account.LNG1 = String.valueOf(longitude);
+                    account.LAT1 = df.format(latitude);
+                    account.LNG1 = df.format(longitude);
 
                 } else {
                     if (setADR1) {
                         account.ADR2 = ADDRESS;
-                        account.LAT1 = String.valueOf(latitude);
-                        account.LNG1 = String.valueOf(longitude);
+                        account.LAT1 = df.format(latitude);
+                        account.LNG1 = df.format(longitude);
                     } else {
                         account.ADR = ADDRESS;
-                        account.LAT = String.valueOf(latitude);
-                        account.LNG = String.valueOf(longitude);
+                        account.LAT = df.format(latitude);
+                        account.LNG = df.format(longitude);
                     }
                 }
 
@@ -382,17 +388,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.CRDT = accountORG.CRDT;
 
+
                 if (type.equals("1")) {
                     account.ADR2 = accountORG.ADR2;
+                    account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
+                    account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
                     account.ADR = ADDRESS;
-                    account.LAT = String.valueOf(latitude);
-                    account.LNG = String.valueOf(longitude);
+                    account.LAT = df.format(latitude);
+                    account.LNG = df.format(longitude);
 
                 } else {
                     account.ADR = accountORG.ADR;
+                    account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
+                    account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
                     account.ADR2 = ADDRESS;
-                    account.LAT1 = String.valueOf(latitude);
-                    account.LNG1 = String.valueOf(longitude);
+                    account.LAT1 = df.format(latitude);
+                    account.LNG1 = df.format(longitude);
 
                 }
 
@@ -416,30 +427,34 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
+                account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
+                account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
+                account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
+                account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
 
                 if (account.ADR == null) {
                     setADR1 = false;
                     account.ADR =ADDRESS;
-                    account.LAT = String.valueOf(latitude);
-                    account.LNG = String.valueOf(longitude);
+                    account.LAT = df.format(latitude);
+                    account.LNG = df.format(longitude);
                 } else if (account.ADR2 == null) {
                     setADR1 = true;
                     account.ADR2 =  ADDRESS ;
-                    account.LAT1 = String.valueOf(latitude);
-                    account.LNG1 = String.valueOf(longitude);
+                    account.LAT1 = df.format(latitude);
+                    account.LNG1 = df.format(longitude);
                 } else {
 
                     if (setADR1) {
                         account.ADR2 =  ADDRESS ;
-                        account.LAT1 = String.valueOf(latitude);
-                        account.LNG1 = String.valueOf(longitude);
+                        account.LAT1 = df.format(latitude);
+                        account.LNG1 = df.format(longitude);
 
                     }
                     else
                     {
                         account.ADR =ADDRESS ;
-                        account.LAT = String.valueOf(latitude);
-                        account.LNG = String.valueOf(longitude);
+                        account.LAT = df.format(latitude);
+                        account.LNG = df.format(longitude);
                     }
                 }
 
@@ -465,7 +480,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             if (edit_address != null && (edit_address.equals("10"))) {
 
 
-                Login(userName, pasWord, numberPos, String.valueOf(latitude), String.valueOf(longitude));
+                Login(userName, pasWord, numberPos, df.format(latitude), df.format(longitude));
                 return;
             }
 
