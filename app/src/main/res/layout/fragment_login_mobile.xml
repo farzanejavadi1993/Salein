@@ -148,6 +148,7 @@
 
 
         <LinearLayout
+
             android:layout_marginRight="@dimen/margin2"
             android:layout_marginLeft="@dimen/margin2"
             android:id="@+id/layoutRule"
@@ -156,7 +157,7 @@
             android:layout_below="@+id/btn_login"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:gravity="right|center_vertical"
+            android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
             <TextView
