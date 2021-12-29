@@ -148,14 +148,14 @@
 
 
         <LinearLayout
+            android:layout_marginRight="@dimen/margin2"
+            android:layout_marginLeft="@dimen/margin2"
             android:id="@+id/layoutRule"
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_login"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="12dp"
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:text="آن را می پذیرم."
                 android:textColor="@color/medium_color"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/login_tv_rules1"
@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:text="  قوانین و مقررات "
                 android:textColor="@color/purple_700"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/login_tv_rules"
@@ -184,8 +184,8 @@
 
             <CheckBox
                 android:id="@+id/checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginLeft="1dp"
                 android:checked="true" />
         </LinearLayout>

@@ -63,7 +63,6 @@ public class RegisterFragment extends Fragment {
     private int gender = 0;
 
 
-    private DecimalFormat df;
     //endregion Parameter
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -78,8 +77,6 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        df = new DecimalFormat();
-        df.setMaximumFractionDigits(4);
 
 
         company= Select.from(Company.class).first();
@@ -162,8 +159,8 @@ public class RegisterFragment extends Fragment {
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
             account.PSW = binding.edtNumberPhoneCustomer.getText().toString();
             account.ADR =  binding.edtAddressCustomerComplete.getText().toString() + " پلاک " + binding.edtPlaqueCustomer.getText().toString() ;
-            account.LAT=df.format(latitude);
-            account.LNG=df.format(longitude);
+            account.LAT=String.valueOf(latitude);
+            account.LNG=String.valueOf(longitude);
             account.S = String.valueOf(gender);
             accountsList.clear();
             accountsList.add(account);

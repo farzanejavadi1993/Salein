@@ -74,7 +74,7 @@ public class ApplicationModule {
                     imageLogo = R.drawable.jam_png;
                     packageName = "ir.kitgroup.saleinjam";
                     imgProduct = R.drawable.jam_icon;
-                    N = "گروه بازرگانی جم پارت قطعه";
+                    N = " بازرگانی جم پارت قطعه";
                     DESC = "لوازم یدکی";
 
                     break;

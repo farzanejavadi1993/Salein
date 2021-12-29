@@ -357,36 +357,46 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
-            holder.ivMax.setOnClickListener(view -> doAction(
-                    productsList.get(holder.getAdapterPosition()).getAmount(),
-                    holder.getAdapterPosition(),
-                    holder.error,
-                    holder.progressBar,
-                    holder.textWatcher,
-                    holder.ProductAmountTxt,
-                    holder.ivMinus,
-                    company,
-                    maxSale,
-                    productsList.get(holder.getAdapterPosition()).getI(),
-                    "",
-                    1
-            ));
+            holder.ivMax.setOnClickListener(view ->
+                    {
+                        if (holder.getAdapterPosition()<productsList.size())
+                        doAction(
+                                productsList.get(holder.getAdapterPosition()).getAmount(),
+                                holder.getAdapterPosition(),
+                                holder.error,
+                                holder.progressBar,
+                                holder.textWatcher,
+                                holder.ProductAmountTxt,
+                                holder.ivMinus,
+                                company,
+                                maxSale,
+                                productsList.get(holder.getAdapterPosition()).getI(),
+                                "",
+                                1
+                        )  ;
+                    }
+                );
 
 
-            holder.ivMinus.setOnClickListener(v -> doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
-                    holder.getAdapterPosition(),
-                    holder.error,
-                    holder.progressBar,
-                    holder.textWatcher,
-                    holder.ProductAmountTxt,
-                    holder.ivMinus,
-                    company,
-                    maxSale,
-                    productsList.get(holder.getAdapterPosition()).getI(),
-                    "",
-                    2
+            holder.ivMinus.setOnClickListener(v ->
+                    {
+                        if (holder.getAdapterPosition()<productsList.size())
+                        doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                                holder.getAdapterPosition(),
+                                holder.error,
+                                holder.progressBar,
+                                holder.textWatcher,
+                                holder.ProductAmountTxt,
+                                holder.ivMinus,
+                                company,
+                                maxSale,
+                                productsList.get(holder.getAdapterPosition()).getI(),
+                                "",
+                                2
 
-            ));
+                        );
+                    }
+                   );
 
 
             if (holder.textWatcher == null) {
@@ -411,6 +421,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             }
                         }
 
+                        if (holder.getAdapterPosition()<productsList.size())
                         doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
                                 holder.getAdapterPosition(),
                                 holder.error,

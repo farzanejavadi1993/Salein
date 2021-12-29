@@ -107,6 +107,7 @@ public class SplashScreenFragment extends Fragment {
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+
         }
 
         Thread thread = new Thread() {
@@ -204,6 +205,9 @@ public class SplashScreenFragment extends Fragment {
                                             addFragment.commit();
 
 
+                                        }
+                                        else {
+                                            Toast.makeText(getActivity(), "اظلاعات شرکت در سرور موجود نمی باشد.", Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
