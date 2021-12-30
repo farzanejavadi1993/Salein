@@ -10,7 +10,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinOrder"
+        applicationId "ir.kitgroup.saleinmeat"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 5
