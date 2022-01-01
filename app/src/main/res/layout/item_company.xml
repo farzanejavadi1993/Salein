@@ -71,7 +71,7 @@
 
         <ImageView
             android:layout_marginLeft="@dimen/margin6"
-          android:rotation="90"
+            android:rotation="90"
             android:id="@+id/flesh"
             android:layout_width="30dp"
             android:layout_height="30dp"
