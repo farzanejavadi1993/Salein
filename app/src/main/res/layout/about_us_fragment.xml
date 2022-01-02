@@ -115,7 +115,6 @@
 
             <RelativeLayout
                 android:id="@+id/relativeLayout2"
-
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/call_shape"

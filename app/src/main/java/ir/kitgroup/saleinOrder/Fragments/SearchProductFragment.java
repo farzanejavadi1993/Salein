@@ -384,8 +384,10 @@ public class SearchProductFragment extends Fragment {
                                             productList.clear();
 
                                             CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0);
-                                            if (iDs!=null && iDs.getProductList().size() > 0)
+                                            if (iDs!=null && iDs.getProductList()!=null &&  iDs.getProductList().size() > 0) {
+                                                CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
                                                 productList.addAll(iDs.getProductList());
+                                            }
 
 
 
