@@ -90,12 +90,10 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
         //region Set Layout to LauncherActivity class
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //endregion Set Layout to LauncherActivity class
-
 
 
         Util.ScreenSize(this);
@@ -116,18 +114,13 @@ public class LauncherActivity extends AppCompatActivity {
             String name = "";
             try {
                 name = getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
 
             }
 
 
-
-
-
-
             String Inv_GUID1 = sharedPreferences.getString("Inv_GUID", "");
             int counter = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID1 + "'").list().size();
-
 
 
             if (!loadProfile) {
@@ -141,9 +134,6 @@ public class LauncherActivity extends AppCompatActivity {
             }
 
 
-
-
-
             Bundle bundle = mainOrderFragment.getBundle(false);
 
 
@@ -153,11 +143,11 @@ public class LauncherActivity extends AppCompatActivity {
 
                     loadProfile = true;
 
-                    int amount=0;
+                    int amount = 0;
                     if (bundle.getBoolean("EDIT"))
-                        amount=mainOrderFragment.counter1;
+                        amount = mainOrderFragment.counter1;
                     else
-                        amount=counter;
+                        amount = counter;
 
                     if (amount == 0)
                         setClearCounterOrder();
@@ -171,7 +161,6 @@ public class LauncherActivity extends AppCompatActivity {
                         getSupportFragmentManager().popBackStack();
 
 
-
                     return true;
 
                 case R.id.search:
@@ -179,10 +168,8 @@ public class LauncherActivity extends AppCompatActivity {
                     loadProfile = true;
 
 
-
                     if (name.equals("SettingF"))
                         getSupportFragmentManager().popBackStack();
-
 
 
                     Bundle bundleSearch = new Bundle();
@@ -356,23 +343,21 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-
-
     //region Override Method
     @Override
     public void onBackPressed() {
 
         final int size = getSupportFragmentManager().getBackStackEntryCount();
-        String name="";
+        String name = "";
         try {
             name = getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         if (size == 0) {
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
-        }   else if (config.mode==1 && getSupportFragmentManager().getBackStackEntryAt(size-1).getName().equals("MainOrderF")){
+        } else if (config.mode == 1 && getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderF")) {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
 
@@ -384,12 +369,9 @@ public class LauncherActivity extends AppCompatActivity {
                 fgf.refreshAdapter();
             }
 
-        }
-
-
-        else if (
+        }  else if (
                 name.equals("SettingF") ||
-                        name.equals("InVoiceDetailF") ||
+                        name.equals("InVoiceDetailF")||
                         name.equals("SearchProductF")
         ) {
 
@@ -413,24 +395,6 @@ public class LauncherActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

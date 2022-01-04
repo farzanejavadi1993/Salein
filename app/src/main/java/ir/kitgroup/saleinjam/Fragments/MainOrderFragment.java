@@ -177,6 +177,7 @@ public class MainOrderFragment extends Fragment {
     private ProductLevel2Adapter productLevel2Adapter;
 
 
+    private ArrayList<Product> productDelete;
     private ArrayList<Product> productList;
     private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
@@ -321,6 +322,7 @@ public class MainOrderFragment extends Fragment {
         accountsList = new ArrayList<>();
         productLevel1List = new ArrayList<>();
         productLevel2List = new ArrayList<>();
+        productDelete = new ArrayList<>();
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
 
@@ -1100,7 +1102,12 @@ public class MainOrderFragment extends Fragment {
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
 
-        productAdapter.setOnClickListener(() -> {
+        productAdapter.setOnClickListener((Prd_UID) -> {
+            /*List<Product> arrayList=new ArrayList<>(productList);
+            CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
+            if (arrayList.size()>0)
+                productDelete.remove(productList.get(productList.indexOf(arrayList.get(0))));*/
+
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
 
@@ -1116,6 +1123,23 @@ public class MainOrderFragment extends Fragment {
 
 
         });
+
+
+        productAdapter.setOnDeleteListener((Prd_UID) -> {
+//           try {
+//               List<Product> arrayList=new ArrayList<>(productList);
+//               CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
+//               if (arrayList.size()>0)
+//                   productDelete.add(productList.get(productList.indexOf(arrayList.get(0))));
+//           }catch (Exception ignored){}
+//
+//           counter1 = counter1-1;
+//                ((LauncherActivity) getActivity()).setCounterOrder(counter1);
+
+
+
+        });
+
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
@@ -1912,6 +1936,9 @@ public class MainOrderFragment extends Fragment {
     }
 
 
+    public List<Product> getList() {
+        return  productDelete;
+    }
     @Override
     public void onDestroyView() {
         //setADR1 = false;

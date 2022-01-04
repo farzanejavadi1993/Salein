@@ -241,8 +241,9 @@
 
 
                 <EditText
-
-                    android:ellipsize="end"
+                    android:textCursorDrawable="@null"
+                    android:textDirection="ltr"
+                    android:cursorVisible="true"
                     android:id="@+id/order_recycle_item_product_txt_amount"
                     android:layout_width="60dp"
                     android:layout_height="30dp"

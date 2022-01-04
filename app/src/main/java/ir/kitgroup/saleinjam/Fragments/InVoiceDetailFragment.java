@@ -203,6 +203,15 @@ public class InVoiceDetailFragment extends Fragment {
 
         try {
 
+
+
+
+
+
+
+
+
+
             ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
             customProgress = CustomProgress.getInstance();
             compositeDisposable = new CompositeDisposable();
@@ -322,6 +331,18 @@ public class InVoiceDetailFragment extends Fragment {
 
 
             binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
+
+
+           /*  Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+              if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    fgf.getList();
+                    for (int i=0;i<fgf.getList().size();i++){
+                        InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + fgf.getList().get(i).getI() + "'").first();
+                        if (invoiceDetail != null)
+                                invoiceDetail.delete();
+                    }
+                }*/
 
 
             //endregion Get Bundle

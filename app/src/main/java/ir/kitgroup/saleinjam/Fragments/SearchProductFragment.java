@@ -309,7 +309,11 @@ public class SearchProductFragment extends Fragment {
         binding.recyclerView.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.recyclerView.setAdapter(productAdapter);
 
-        productAdapter.setOnClickListener(() -> {
+
+
+
+
+        productAdapter.setOnClickListener((Prd_UID) -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
 
@@ -332,6 +336,14 @@ public class SearchProductFragment extends Fragment {
                 fgf.refreshProductList();
                 fgf.counter1 = counter;
             }
+
+        });
+
+        productAdapter.setOnDeleteListener((Prd_UID) -> {
+            /*List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+            if (invDetails.size()>0)
+            ((LauncherActivity) getActivity()).setCounterOrder(invDetails.size()-1);*/
 
         });
 
