@@ -340,10 +340,10 @@ public class SearchProductFragment extends Fragment {
         });
 
         productAdapter.setOnDeleteListener((Prd_UID) -> {
-            /*List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+           List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             if (invDetails.size()>0)
-            ((LauncherActivity) getActivity()).setCounterOrder(invDetails.size()-1);*/
+            ((LauncherActivity) getActivity()).setCounterOrder(invDetails.size()-1);
 
         });
 

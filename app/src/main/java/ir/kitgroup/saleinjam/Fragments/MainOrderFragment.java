@@ -71,6 +71,8 @@ import java.lang.reflect.Type;
 
 import java.util.ArrayList;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import java.util.UUID;
@@ -1103,10 +1105,10 @@ public class MainOrderFragment extends Fragment {
 
 
         productAdapter.setOnClickListener((Prd_UID) -> {
-            /*List<Product> arrayList=new ArrayList<>(productList);
+            List<Product> arrayList=new ArrayList<>(productDelete);
             CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
             if (arrayList.size()>0)
-                productDelete.remove(productList.get(productList.indexOf(arrayList.get(0))));*/
+                productDelete.remove(productDelete.get(productDelete.indexOf(arrayList.get(0))));
 
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
@@ -1126,15 +1128,15 @@ public class MainOrderFragment extends Fragment {
 
 
         productAdapter.setOnDeleteListener((Prd_UID) -> {
-//           try {
-//               List<Product> arrayList=new ArrayList<>(productList);
-//               CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
-//               if (arrayList.size()>0)
-//                   productDelete.add(productList.get(productList.indexOf(arrayList.get(0))));
-//           }catch (Exception ignored){}
-//
-//           counter1 = counter1-1;
-//                ((LauncherActivity) getActivity()).setCounterOrder(counter1);
+          try {
+              List<Product> arrayList=new ArrayList<>(productList);
+              CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
+              if (arrayList.size()>0)
+                  productDelete.add(productList.get(productList.indexOf(arrayList.get(0))));
+          }catch (Exception ignored){}
+
+          counter1 = counter1-1;
+               ((LauncherActivity) getActivity()).setCounterOrder(counter1);
 
 
 
@@ -1423,6 +1425,7 @@ public class MainOrderFragment extends Fragment {
                                         binding.orderTxtError.setVisibility(View.VISIBLE);
                                         binding.orderTxtError.setText("هیچ کالایی موجود نیست");
                                     }
+
 
 
                                     productAdapter.setMaxSale(maxSales);

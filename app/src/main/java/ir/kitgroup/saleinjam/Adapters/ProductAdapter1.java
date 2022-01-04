@@ -22,7 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +53,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinjam.Connect.API;
 import ir.kitgroup.saleinjam.DataBase.Unit;
+import ir.kitgroup.saleinjam.Fragments.MainOrderFragment;
 import ir.kitgroup.saleinjam.classes.Util;
 
 import ir.kitgroup.saleinjam.DataBase.InvoiceDetail;
@@ -368,6 +371,28 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMax.setOnClickListener(view ->
                     {
+                       /* try {
+                            Fragment frg =((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                            if (frg instanceof MainOrderFragment) {
+                                MainOrderFragment fgf = (MainOrderFragment) frg;
+                                fgf.getList();
+
+                                   List<Product> prdList=new ArrayList<>(fgf.getList());
+                                   CollectionUtils.filter(prdList,p->p.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
+                                   if (prdList.size()>0) {
+                                       InvoiceDetail invoiceDetail1 =
+                                               Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
+                                       if (invoiceDetail1!=null) {
+                                           invoiceDetail1.INV_DET_QUANTITY = 0.0;
+                                           productsList.get(holder.getAdapterPosition()).setAmount(0.0);
+                                           invoiceDetail1.update();
+                                       }
+                                   }
+                            }
+                        } catch (Exception ignored) {
+
+                        }*/
+
 
                         holder.ProductAmountTxt.setCursorVisible(false);
 
@@ -392,6 +417,28 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v ->
                     {
+                       /* try {
+                            Fragment frg =((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                            if (frg instanceof MainOrderFragment) {
+                                MainOrderFragment fgf = (MainOrderFragment) frg;
+                                fgf.getList();
+
+                                List<Product> prdList=new ArrayList<>(fgf.getList());
+                                CollectionUtils.filter(prdList,p->p.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
+                                if (prdList.size()>0) {
+                                    InvoiceDetail invoiceDetail1 =
+                                            Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
+                                    if (invoiceDetail1!=null) {
+                                        invoiceDetail1.INV_DET_QUANTITY = 0.0;
+                                        productsList.get(holder.getAdapterPosition()).setAmount(0.0);
+                                        invoiceDetail1.update();
+                                    }
+                                }
+                            }
+                        } catch (Exception ignored) {
+
+                        }*/
+
                         holder.ProductAmountTxt.setCursorVisible(false);
                         if (holder.getAdapterPosition() < productsList.size())
                             doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
@@ -456,6 +503,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 );
                         } else {
                             deleteItem.onDelete(productsList.get(holder.getAdapterPosition()).getI());
+                            productsList.get(holder.getAdapterPosition()).setAmount(0.0);
                         }
 
 
@@ -973,7 +1021,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     ProductAmountTxt.setText(df.format(amount));
                     ProductAmountTxt.addTextChangedListener(textWatcher);
                 }
-                //clickItem.onClick(Prd_GUID);
+                clickItem.onClick(Prd_GUID);
             }
 
             //Create

@@ -369,7 +369,8 @@ public class LauncherActivity extends AppCompatActivity {
                 fgf.refreshAdapter();
             }
 
-        }  else if (
+        }
+        else if (
                 name.equals("SettingF") ||
                         name.equals("InVoiceDetailF")||
                         name.equals("SearchProductF")

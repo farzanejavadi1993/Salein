@@ -110,7 +110,6 @@ public class InVoiceDetailFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-
     private Company company;
     private API api;
 
@@ -179,8 +178,6 @@ public class InVoiceDetailFragment extends Fragment {
     private int counter = 0;
 
 
-
-
     private ServerConfig serverConfig;
 
 
@@ -204,14 +201,6 @@ public class InVoiceDetailFragment extends Fragment {
         try {
 
 
-
-
-
-
-
-
-
-
             ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
             customProgress = CustomProgress.getInstance();
             compositeDisposable = new CompositeDisposable();
@@ -222,8 +211,8 @@ public class InVoiceDetailFragment extends Fragment {
             company = Select.from(Company.class).first();
 
 
-            if (company.mode==2)
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
+            if (company.mode == 2)
+                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
 
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
@@ -332,17 +321,20 @@ public class InVoiceDetailFragment extends Fragment {
 
             binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
 
-
-           /*  Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-              if (frg instanceof MainOrderFragment) {
+            try {
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
                     fgf.getList();
-                    for (int i=0;i<fgf.getList().size();i++){
+                    for (int i = 0; i < fgf.getList().size(); i++) {
                         InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + fgf.getList().get(i).getI() + "'").first();
                         if (invoiceDetail != null)
-                                invoiceDetail.delete();
+                            invoiceDetail.delete();
                     }
-                }*/
+                }
+            } catch (Exception ignored) {
+
+            }
 
 
             //endregion Get Bundle
@@ -792,37 +784,33 @@ public class InVoiceDetailFragment extends Fragment {
 
             if (type.equals("1")) {
 
-                if (company.mode==2)
-                getInvoice();
-                 else {
-                new AsyncTask() {
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        int p=0;
-                    }
+                if (company.mode == 2)
+                    getInvoice();
+                else {
+                    new AsyncTask() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            int p = 0;
+                        }
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-                        super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
-                        getInvoice();
-                    }
+                        @Override
+                        protected void onPostExecute(Object o) {
+                            super.onPostExecute(o);
+                            api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
+                            getInvoice();
+                        }
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
+                        @Override
+                        protected Object doInBackground(Object[] params) {
 
-                        serverConfig =new ServerConfig(company.IP1,company.IP2);
+                            serverConfig = new ServerConfig(company.IP1, company.IP2);
 
-                        return 0;
-                    }
-                }.execute(0);
-            }
-            }
-
-
-
-            else {
+                            return 0;
+                        }
+                    }.execute(0);
+                }
+            } else {
                 invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 if (invDetails.size() == 0) {
                     binding.progressBar.setVisibility(View.GONE);
@@ -840,39 +828,38 @@ public class InVoiceDetailFragment extends Fragment {
 
                 } else {
                     counter = 0;
-                    if (company.mode==2) {
+                    if (company.mode == 2) {
                         for (int i = 0; i < invDetails.size(); i++) {
 
                             getProduct(invDetails.get(i).PRD_UID);
                         }
+                    } else {
+                        new AsyncTask() {
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                int p = 0;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Object o) {
+                                super.onPostExecute(o);
+                                api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
+                                for (int i = 0; i < invDetails.size(); i++) {
+
+                                    getProduct(invDetails.get(i).PRD_UID);
+                                }
+                            }
+
+                            @Override
+                            protected Object doInBackground(Object[] params) {
+
+                                serverConfig = new ServerConfig(company.IP1, company.IP2);
+
+                                return 0;
+                            }
+                        }.execute(0);
                     }
-                            else {
-                new AsyncTask() {
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        int p=0;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-                        super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
-                       for (int i = 0; i < invDetails.size(); i++) {
-
-                            getProduct(invDetails.get(i).PRD_UID);
-                        }
-                    }
-
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-
-                        serverConfig =new ServerConfig(company.IP1,company.IP2);
-
-                        return 0;
-                    }
-                }.execute(0);
-            }
 
                 }
             }
