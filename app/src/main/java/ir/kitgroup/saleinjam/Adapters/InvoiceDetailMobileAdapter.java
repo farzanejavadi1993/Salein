@@ -184,6 +184,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                  /*   List<Product> prd1=Select.from(Product.class).where("I ='"+orderDetailList.get(position).PRD_UID+"'").list();*/
                     String s = Util.toEnglishNumber(charSequence.toString());
                     s = s.contains("٫") ? s.replace("٫", ".") : s;
+                    s = s.contains(",") ? s.replace(",", "") : s;
 
                     if (!s.isEmpty()) {
                         if (s.contains(".") &&
@@ -193,10 +194,10 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 s.indexOf("٫") == s.length() - 1) {
                             return;
                         }
-
                     }
                     double amount = 0.0;
                     if (!s.equals("")) {
+
                          amount = Double.parseDouble(s);
 
                         ArrayList<Product> resultPrd1 = new ArrayList<>(prd1);

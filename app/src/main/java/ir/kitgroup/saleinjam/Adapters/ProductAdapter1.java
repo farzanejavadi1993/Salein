@@ -357,8 +357,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
+
             holder.ivMax.setOnClickListener(view ->
                     {
+
+                        holder.ProductAmountTxt.setCursorVisible(false);
+
                         if (holder.getAdapterPosition()<productsList.size())
                         doAction(
                                 productsList.get(holder.getAdapterPosition()).getAmount(),
@@ -380,6 +384,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v ->
                     {
+                        holder.ProductAmountTxt.setCursorVisible(false);
                         if (holder.getAdapterPosition()<productsList.size())
                         doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
                                 holder.getAdapterPosition(),
@@ -399,6 +404,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                    );
 
 
+            holder.ProductAmountTxt.setOnClickListener(v -> {
+                        holder.ProductAmountTxt.setCursorVisible(true);
+                    }
+            );
             if (holder.textWatcher == null) {
                 holder.textWatcher = new TextWatcher() {
                     @Override
@@ -408,8 +417,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
                         String s = Util.toEnglishNumber(charSequence.toString());
                         s = s.contains("٫") ? s.replace("٫", ".") : s;
+                        s = s.contains(",") ? s.replace(",", "") : s;
 
                         if (!s.isEmpty()) {
                             if (s.contains(".") &&
@@ -420,6 +431,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                 return;
                             }
                         }
+
+
 
                         if (holder.getAdapterPosition()<productsList.size())
                         doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
@@ -450,9 +463,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
             holder.ProductAmountTxt.setText(df.format(amount));
-
-
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
+
 
 
             holder.cardEdit.setOnClickListener(v -> {
@@ -930,15 +942,19 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         invoiceDetail.delete();
 
-                    if (MinOrPlus != 3) {
-
-                        ProductAmountTxt.removeTextChangedListener(textWatcher);
-                        ProductAmountTxt.setText("0");
-
-                        ProductAmountTxt.addTextChangedListener(textWatcher);
+            //  if (MinOrPlus != 3) {
+                  ProductAmountTxt.removeTextChangedListener(textWatcher);
+                  ProductAmountTxt.setText("");
+                  ProductAmountTxt.addTextChangedListener(textWatcher);
+                  ProductAmountTxt.setCursorVisible(false);
                         ivMinus.setVisibility(View.GONE);
                         ProductAmountTxt.setVisibility(View.GONE);
-                    }
+                  /* }else {
+
+
+
+              }*/
+
 
                     clickItem.onClick();
                     return;
@@ -954,7 +970,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     ProductAmountTxt.removeTextChangedListener(textWatcher);
                     ProductAmountTxt.setText(df.format(amount));
-
                     ProductAmountTxt.addTextChangedListener(textWatcher);
                 }
             }

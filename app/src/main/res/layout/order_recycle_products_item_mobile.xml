@@ -241,6 +241,8 @@
 
 
                 <EditText
+
+                    android:ellipsize="end"
                     android:id="@+id/order_recycle_item_product_txt_amount"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
@@ -250,6 +252,7 @@
                     android:background="@drawable/background_edittext"
                     android:fontFamily="@font/iransans"
                     android:gravity="center"
+
                     android:inputType="numberDecimal"
                     android:text="0"
                     android:textColor="@color/medium_color"
