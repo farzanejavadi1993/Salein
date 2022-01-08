@@ -433,8 +433,15 @@ public class PaymentMobileFragment extends Fragment {
                         return;
                     } else {
                         calculateTransport = price;
-                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
-                        binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
+                      if (Ord_TYPE.equals(OrderTypeApp)) {
+                            sumTransport = 0;
+                            binding.tvTransport.setText("0 ریال");
+                            binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
+                        } else {
+                            sumTransport = calculateTransport;
+                            binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
+                            binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
+                        }
                     }
 
 
@@ -469,9 +476,15 @@ public class PaymentMobileFragment extends Fragment {
                             binding.tvTypeOrder.setVisibility(View.GONE);
                         return;
                     } else {
-                        calculateTransport = price;
-                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
-                        binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
+                        if (Ord_TYPE.equals(OrderTypeApp)) {
+                            sumTransport = 0;
+                            binding.tvTransport.setText("0 ریال");
+                            binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
+                        } else {
+                            sumTransport = calculateTransport;
+                            binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
+                            binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
+                        }
                     }
 
 

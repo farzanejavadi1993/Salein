@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 
 import android.view.LayoutInflater;
@@ -371,27 +372,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMax.setOnClickListener(view ->
                     {
-                       /* try {
-                            Fragment frg =((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                            if (frg instanceof MainOrderFragment) {
-                                MainOrderFragment fgf = (MainOrderFragment) frg;
-                                fgf.getList();
 
-                                   List<Product> prdList=new ArrayList<>(fgf.getList());
-                                   CollectionUtils.filter(prdList,p->p.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
-                                   if (prdList.size()>0) {
-                                       InvoiceDetail invoiceDetail1 =
-                                               Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
-                                       if (invoiceDetail1!=null) {
-                                           invoiceDetail1.INV_DET_QUANTITY = 0.0;
-                                           productsList.get(holder.getAdapterPosition()).setAmount(0.0);
-                                           invoiceDetail1.update();
-                                       }
-                                   }
-                            }
-                        } catch (Exception ignored) {
-
-                        }*/
 
 
                         holder.ProductAmountTxt.setCursorVisible(false);
@@ -417,27 +398,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v ->
                     {
-                       /* try {
-                            Fragment frg =((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                            if (frg instanceof MainOrderFragment) {
-                                MainOrderFragment fgf = (MainOrderFragment) frg;
-                                fgf.getList();
-
-                                List<Product> prdList=new ArrayList<>(fgf.getList());
-                                CollectionUtils.filter(prdList,p->p.getI().equals(productsList.get(holder.getAdapterPosition()).getI()));
-                                if (prdList.size()>0) {
-                                    InvoiceDetail invoiceDetail1 =
-                                            Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
-                                    if (invoiceDetail1!=null) {
-                                        invoiceDetail1.INV_DET_QUANTITY = 0.0;
-                                        productsList.get(holder.getAdapterPosition()).setAmount(0.0);
-                                        invoiceDetail1.update();
-                                    }
-                                }
-                            }
-                        } catch (Exception ignored) {
-
-                        }*/
 
                         holder.ProductAmountTxt.setCursorVisible(false);
                         if (holder.getAdapterPosition() < productsList.size())
@@ -473,6 +433,16 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
+                       // Selection.setSelection(holder.ProductAmountTxt.getText(), holder.ProductAmountTxt.getText().length());
+
+
+
+                        if (!charSequence.toString().isEmpty())
+                        holder.ProductAmountTxt.setSelectAllOnFocus(false);
+
+
+
+
                         String s = Util.toEnglishNumber(charSequence.toString());
                         s = s.contains("٫") ? s.replace("٫", ".") : s;
                         s = s.contains(",") ? s.replace(",", "") : s;
@@ -485,6 +455,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     s.indexOf("٫") == s.length() - 1) {
                                 return;
                             }
+                        }
 
                             if (holder.getAdapterPosition() < productsList.size())
                                 doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
@@ -501,10 +472,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         3
 
                                 );
-                        } else {
-                            deleteItem.onDelete(productsList.get(holder.getAdapterPosition()).getI());
-                            productsList.get(holder.getAdapterPosition()).setAmount(0.0);
-                        }
+
 
 
                     }

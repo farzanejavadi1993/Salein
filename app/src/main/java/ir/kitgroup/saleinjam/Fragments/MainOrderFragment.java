@@ -1105,10 +1105,10 @@ public class MainOrderFragment extends Fragment {
 
 
         productAdapter.setOnClickListener((Prd_UID) -> {
-            List<Product> arrayList=new ArrayList<>(productDelete);
-            CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
-            if (arrayList.size()>0)
-                productDelete.remove(productDelete.get(productDelete.indexOf(arrayList.get(0))));
+//            List<Product> arrayList=new ArrayList<>(productDelete);
+//            CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
+//            if (arrayList.size()>0)
+//                productDelete.remove(productDelete.get(productDelete.indexOf(arrayList.get(0))));
 
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
@@ -1126,7 +1126,7 @@ public class MainOrderFragment extends Fragment {
 
         });
 
-
+/*
         productAdapter.setOnDeleteListener((Prd_UID) -> {
           try {
               List<Product> arrayList=new ArrayList<>(productList);
@@ -1140,7 +1140,7 @@ public class MainOrderFragment extends Fragment {
 
 
 
-        });
+        });*/
 
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
@@ -1939,9 +1939,9 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    public List<Product> getList() {
-        return  productDelete;
-    }
+//    public List<Product> getList() {
+//        return productDelete;
+//    }
     @Override
     public void onDestroyView() {
         //setADR1 = false;

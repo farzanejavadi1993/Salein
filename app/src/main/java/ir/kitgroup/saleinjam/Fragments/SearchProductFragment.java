@@ -91,6 +91,7 @@ public class SearchProductFragment extends Fragment {
 
 
     private ArrayList<Product> productList;
+
     private String maxSales = "0";
     private Boolean emptySearch = false;
 
@@ -123,6 +124,10 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
+
+
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
 
@@ -135,8 +140,29 @@ public class SearchProductFragment extends Fragment {
         String tbl_GUID = bundle.getString("Tbl_GUID");
         maxSales = sharedPreferences.getString("maxSale", "0");
 
-
         productList = new ArrayList<>();
+
+        /*try {
+            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+            if (frg instanceof MainOrderFragment) {
+                MainOrderFragment fgf = (MainOrderFragment) frg;
+                fgf.getList();
+                for (int i = 0; i < fgf.getList().size(); i++) {
+                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + fgf.getList().get(i).getI() + "'").first();
+                    if (invoiceDetail != null) {
+                        invoiceDetail.delete();
+                        if (fgf.getList().size()==1)
+                        fgf.getList().clear();
+                    }
+                }
+            }
+
+
+
+        } catch (Exception ignored) {
+
+        }*/
+
 
 
         company = null;
@@ -314,6 +340,24 @@ public class SearchProductFragment extends Fragment {
 
 
         productAdapter.setOnClickListener((Prd_UID) -> {
+
+
+
+          /*  try {
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    ArrayList<Product> result = new ArrayList<>(fgf.getList());
+                    CollectionUtils.filter(result,a->a.getI().equals(Prd_UID));
+                    if (result.size() > 0)
+                        fgf.getList().remove(fgf.getList().get(fgf.getList().indexOf(result.get(0))));
+
+                }
+            }catch (Exception ignored){
+
+            }*/
+
+
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
 
@@ -339,13 +383,37 @@ public class SearchProductFragment extends Fragment {
 
         });
 
-        productAdapter.setOnDeleteListener((Prd_UID) -> {
+      /*  productAdapter.setOnDeleteListener((Prd_UID) -> {
+            try {
+                List<Product> arrayList=new ArrayList<>(productList);
+                CollectionUtils.filter(arrayList,a->a.getI().equals(Prd_UID));
+                if (arrayList.size()>0)
+                {
+
+                    Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                    if (frg instanceof MainOrderFragment) {
+                        MainOrderFragment fgf = (MainOrderFragment) frg;
+
+                        ArrayList<Product> result = new ArrayList<>(fgf.getList());
+                        CollectionUtils.filter(result, r -> r.getI().equals(arrayList.get(0).getI()));
+                            if (result.size() == 0)
+                                fgf.getList().add(arrayList.get(0));
+
+                    }
+
+                }
+
+
+
+
+
+            }catch (Exception ignored){}
            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             if (invDetails.size()>0)
             ((LauncherActivity) getActivity()).setCounterOrder(invDetails.size()-1);
 
-        });
+        });*/
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
@@ -503,6 +571,7 @@ public class SearchProductFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
+
 
 
 }
