@@ -423,7 +423,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 holder.textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                        int p=0;
                     }
 
                     @Override
@@ -451,8 +451,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     s.indexOf("٫") == s.length() - 1) {
                                 return;
                             }
-                        }
-
                             if (holder.getAdapterPosition() < productsList.size())
                                 doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
                                         holder.getAdapterPosition(),
@@ -468,6 +466,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         3
 
                                 );
+                        }
+
+
 
 
 
