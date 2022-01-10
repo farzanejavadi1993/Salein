@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/mainBackground"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/splash_background">
 
@@ -38,18 +38,56 @@
 
             <ImageView
                 android:id="@+id/animation_view"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 tools:ignore="ContentDescription" />
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/animation_view1"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                app:lottie_autoPlay="true"
+             android:src="@drawable/warning"/>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_marginTop="15dp"
+                android:id="@+id/lnr_Error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/animation_view1">
+
+                <ImageView
+                    android:layout_toRightOf="@+id/txtErrorr"
+                    android:id="@+id/ivResend"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_resend" />
+
+                <TextView
+
+                    android:layout_centerInParent="true"
+                    android:id="@+id/txtErrorr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8sp"
+                    android:gravity="right"
+                    android:padding="2sp"
+                    android:textColor="#FF0E0E"
+                    android:textSize="12sp" />
+            </RelativeLayout>
 
 
         </RelativeLayout>
-
-
 
 
         <TextView
