@@ -115,7 +115,7 @@ public class SplashScreenFragment extends Fragment {
             public void run() {
                 try {
 
-                        sleep(4000);
+                        sleep(2000);
                     getCompany();
 
                 } catch (InterruptedException e) {

@@ -265,8 +265,9 @@
 
 
         </RelativeLayout>
-        <RelativeLayout
 
+        <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/layoutTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -424,35 +425,41 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="8sp">
 
-                <TextView
-                    android:id="@+id/order_list_transport_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="8dp"
-                    android:text="هزینه ارسال"
-                    android:textColor="@color/black_l"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    tools:ignore="RelativeOverlap" />
+              <RelativeLayout
+                  android:visibility="gone"
+                  android:id="@+id/layout_peyk"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+                  <TextView
+                      android:id="@+id/order_list_transport_tv"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentRight="true"
+                      android:layout_marginRight="8dp"
+                      android:text="هزینه ارسال"
+                      android:textColor="@color/black_l"
+                      android:textSize="@dimen/text_medium_mobile_size"
+                      tools:ignore="RelativeOverlap" />
 
-                <TextView
-                    android:id="@+id/tv_transport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/margin8"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
-                    android:textSize="@dimen/text_medium_mobile_size"
-                    android:textStyle="bold" />
+                  <TextView
+                      android:id="@+id/tv_transport"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentLeft="true"
+                      android:layout_marginLeft="@dimen/margin8"
+                      android:layout_marginRight="8dp"
+                      android:text="@string/rial_0"
+                      android:textColor="@color/black_light"
+                      android:textSize="@dimen/text_medium_mobile_size"
+                      android:textStyle="bold" />
+              </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/order_list_purePrice_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/order_list_transport_tv"
-
+                    android:layout_below="@+id/layout_peyk"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/margin8"
                     android:layout_marginRight="8dp"
@@ -466,7 +473,7 @@
                     android:id="@+id/tvSumPurePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/order_list_transport_tv"
+                    android:layout_below="@+id/layout_peyk"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="8dp"
                     android:text="@string/rial_0"

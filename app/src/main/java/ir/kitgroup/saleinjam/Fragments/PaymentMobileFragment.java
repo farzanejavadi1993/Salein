@@ -125,7 +125,7 @@ public class PaymentMobileFragment extends Fragment {
 
     private CompositeDisposable compositeDisposable;
     private Company company;
-    private String linkPayment = "http://185.201.49.204:4008/";
+    private String linkPayment = "";
 
 
     //region Parameter
@@ -435,10 +435,12 @@ public class PaymentMobileFragment extends Fragment {
                         calculateTransport = price;
                       if (Ord_TYPE.equals(OrderTypeApp)) {
                             sumTransport = 0;
+                          binding.layoutPeyk.setVisibility(View.GONE);
                             binding.tvTransport.setText("0 ریال");
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                         } else {
                             sumTransport = calculateTransport;
+                          binding.layoutPeyk.setVisibility(View.VISIBLE);
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
                             binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
                         }
@@ -478,10 +480,12 @@ public class PaymentMobileFragment extends Fragment {
                     } else {
                         if (Ord_TYPE.equals(OrderTypeApp)) {
                             sumTransport = 0;
+                            binding.layoutPeyk.setVisibility(View.GONE);
                             binding.tvTransport.setText("0 ریال");
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                         } else {
                             sumTransport = calculateTransport;
+                            binding.layoutPeyk.setVisibility(View.VISIBLE);
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
                             binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
                         }
@@ -737,7 +741,7 @@ public class PaymentMobileFragment extends Fragment {
                 dateAdapter.notifyDataSetChanged();
                 timesList.clear();
 
-                if (allTime.size() == 0) {
+                if (allTime.size() == 0 || allTime.get(0).equals("")) {
                     Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
                 } else {
                     Date date = Calendar.getInstance().getTime();
@@ -808,10 +812,12 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (Ord_TYPE.equals(OrderTypeApp)) {
                     sumTransport = 0;
+                    binding.layoutPeyk.setVisibility(View.GONE);
                     binding.tvTransport.setText("0 ریال");
                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                 } else {
                     sumTransport = calculateTransport;
+                    binding.layoutPeyk.setVisibility(View.VISIBLE);
                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
                 }
@@ -909,7 +915,7 @@ public class PaymentMobileFragment extends Fragment {
                 } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                     Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (allTime.size()>0 && timeChoose.equals("") && (company.mode == 2 || (company.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
+                } else if (allTime.size()>0 &&  !allTime.get(0).equals("") && timeChoose.equals("") && (company.mode == 2 || (company.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                     Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
@@ -1629,6 +1635,8 @@ public class PaymentMobileFragment extends Fragment {
                                         allDate.add(modelDate);
 
                                     }
+
+
                                     for (int i = 0; i < SERVICE_DAY; i++) {
                                         Date date = Calendar.getInstance().getTime();
                                         date.setDate(date.getDate() + i);
@@ -1660,6 +1668,9 @@ public class PaymentMobileFragment extends Fragment {
                                     }
 
 
+
+                                    if (allTime.size()>0 && !allTime.get(0).equals(""))
+                                        binding.layoutTime.setVisibility(View.VISIBLE);
                                     getTypeOrder1();
 
 
@@ -1738,11 +1749,13 @@ public class PaymentMobileFragment extends Fragment {
 
                                             if (Ord_TYPE.equals(OrderTypeApp)) {
                                                 sumTransport = 0;
+                                                binding.layoutPeyk.setVisibility(View.GONE);
                                                 binding.tvTransport.setText("0 ریال");
                                                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                                             } else {
                                                 if ((OrdTList.size() == 1 && company.mode == 2) || (company.mode == 1)) {
                                                     sumTransport = calculateTransport;
+                                                    binding.layoutPeyk.setVisibility(View.VISIBLE);
                                                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
                                                     binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
                                                 }
