@@ -40,7 +40,12 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_list_item_mobile.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.18" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/drawable/ic_filter.xml" value="0.165234375" />
+        <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/filter_fragment.xml" value="0.11748633879781421" />
+        <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/fragment_mobile_order_main.xml" value="0.11748633879781421" />
         <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/fragment_payment_mobile.xml" value="0.21" />
+        <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/item_company.xml" value="0.153125" />
+        <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.15" />
       </map>
     </option>
   </component>

@@ -276,30 +276,39 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         holder.imgDelete.setOnClickListener(view -> {
 
-            holder.progressBar.setVisibility(View.VISIBLE);
-            holder.imgDelete.setVisibility(View.GONE);
-            holder.imgDelete.setEnabled(false);
+            try {
+                if (orderDetailList.size() > holder.getAdapterPosition()){
 
-            ArrayList<InvoiceDetail> result = new ArrayList<>(orderDetailList);
-            CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
-            if (result.size() > 0) {
 
-                notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    holder.imgDelete.setVisibility(View.GONE);
+                    holder.imgDelete.setEnabled(false);
 
-                Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
-                    fgf.refreshProductList();
-                    fgf.counter1 = fgf.counter1 - 1;
+
+                    ArrayList<InvoiceDetail> result = new ArrayList<>(orderDetailList);
+                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
+                    if (result.size() > 0) {
+
+                        notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
+
+                        Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                        if (frg instanceof MainOrderFragment) {
+                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                            fgf.refreshProductList();
+                            fgf.counter1 = fgf.counter1 - 1;
+                            holder.imgDelete.setEnabled(true);
+                            holder.imgDelete.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+
+                    holder.progressBar.setVisibility(View.GONE);
+
                 }
-            }
-
-
-            holder.imgDelete.setEnabled(true);
-            holder.imgDelete.setVisibility(View.VISIBLE);
-            holder.progressBar.setVisibility(View.GONE);
+            }catch (Exception ignored){}
 
         });
+
 
 
         holder.ivMax.setOnClickListener(v -> {

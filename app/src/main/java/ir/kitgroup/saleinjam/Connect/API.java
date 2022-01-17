@@ -116,4 +116,9 @@ public interface API {
     Observable<String> addAccount1(@Query("userName") String userName, @Query("password") String password
             , @Body() String jsonObject, @Query("virtualParam") String virtualParam);
 
+
+
+    @GET("ProductDiscountSync")
+    Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);
+
 }

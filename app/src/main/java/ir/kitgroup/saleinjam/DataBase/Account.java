@@ -33,6 +33,10 @@ public class Account extends SugarRecord {
     @SerializedName("M")
     @Expose
     public String M;
+
+    @SerializedName("STS")
+    @Expose
+    public boolean STS;
     @SerializedName("M2")
     @Expose
     private String M2;

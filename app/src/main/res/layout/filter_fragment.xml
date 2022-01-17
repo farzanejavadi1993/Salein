@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        android:focusable="true"
+        android:clickable="true"
+        android:background="#F6F6F6"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="فیلترها"
+                    android:textColor="@color/medium_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:id="@+id/tvDeleteFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp"
+                    android:lineSpacingExtra="12dp"
+                    android:text="حذف فیلتر ها"
+                    android:textColor="#A19E9E"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:id="@+id/tvType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="دسته بندی"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    />
+
+
+                <ImageView
+                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    android:layout_alignParentLeft="true"
+
+                    android:layout_width="24dp"
+                    android:padding="5dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp" />
+
+
+
+
+            </RelativeLayout>
+            <View
+                android:background="#eee"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="محدوده قیمت"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    />
+
+
+                <ImageView
+                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="24dp"
+                    android:padding="5dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp" />
+
+
+
+
+            </RelativeLayout>
+            <View
+                android:background="#eee"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="فقط کالاهای موجود"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp"
+                    />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:enabled="false"
+                    android:id="@+id/switchRemain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+
+
+
+
+            </RelativeLayout>
+            <View
+                android:background="#eee"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="فقط کالاهای تخفیف دار"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp" />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+
+
+
+
+            </RelativeLayout>
+            <View
+                android:background="#eee"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:lineSpacingExtra="16dp"
+                    android:text="کالاهای جدید"
+                    android:textColor="@color/medium_color"
+                    android:textSize="12sp" />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchNew"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+
+
+
+
+            </RelativeLayout>
+            <View
+                android:background="#eee"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/btnFilter"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="اعمال فیلتر"
+                android:textColor="@color/purple_700"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

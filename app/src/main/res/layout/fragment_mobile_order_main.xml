@@ -124,6 +124,22 @@
                             android:layout_marginBottom="@dimen/margin2"
                             android:orientation="horizontal">
 
+                            <RelativeLayout
+                                android:layout_weight="0.15"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/iv_filter"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_centerInParent="true"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:clickable="true"
+
+                                    android:focusable="true"
+                                    android:src="@drawable/ic_filter" />
+                            </RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/btn_add_address"
@@ -131,7 +147,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="3dp"
                                 android:layout_marginRight="3dp"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.45"
                                 android:background="@drawable/bookmark_search_layout_background"
                                 >
 
@@ -146,11 +162,12 @@
                                     android:src="@drawable/ic_left_icon" />
 
                                 <TextView
+
                                     android:id="@+id/tvTitleaddress"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:layout_marginRight="3dp"
+                                    android:layout_marginRight="5dp"
                                     android:layout_toRightOf="@+id/iv_address"
                                     android:singleLine="true"
                                     android:text="ارسال به"
@@ -158,17 +175,17 @@
                                     android:textSize="11sp" />
 
                                 <TextView
-                                    android:layout_toRightOf="@+id/iv_address"
                                     android:id="@+id/tvAddress"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTitleaddress"
                                     android:layout_alignParentRight="true"
-                                    android:layout_marginRight="3dp"
+                                    android:layout_marginRight="5dp"
+                                    android:layout_toRightOf="@+id/iv_address"
                                     android:singleLine="true"
-                                    android:text="مشهد خیابان یاس انتهای یاس 8"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp" />
+                                    android:textSize="11sp"
+                                    tools:text="مشهد خیابان یاس انتهای یاس 8" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -177,24 +194,25 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="3dp"
                                 android:layout_marginRight="3dp"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.4"
                                 android:background="@drawable/bookmark_search_layout_background"
-                               >
+                                >
 
                                 <TextView
-
+                                    android:layout_marginRight="5dp"
                                     android:id="@+id/tvTitleStore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerHorizontal="true"
-                                    android:singleLine="true"
                                     android:layout_toRightOf="@+id/iv_store_left"
+                                    android:singleLine="true"
                                     android:text="خرید از فروشگاه"
                                     android:textColor="@color/medium_color"
                                     android:textSize="11sp" />
 
                                 <TextView
+                                    android:layout_marginRight="5dp"
                                     android:id="@+id/tvNameStore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -203,7 +221,7 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_toRightOf="@+id/iv_store_left"
                                     android:singleLine="true"
-                                    android:text="گوشت دنیوی"
+                                    tools:text="گوشت دنیوی"
                                     android:textColor="@color/purple_700"
                                     android:textSize="11sp" />
 
@@ -219,6 +237,7 @@
 
                             </RelativeLayout>
                         </LinearLayout>
+
 
 
                     </RelativeLayout>

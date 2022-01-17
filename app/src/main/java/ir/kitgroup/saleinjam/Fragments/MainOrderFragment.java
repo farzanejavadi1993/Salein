@@ -177,7 +177,7 @@ public class MainOrderFragment extends Fragment {
     private ProductLevel2Adapter productLevel2Adapter;
 
 
-    private ArrayList<Product> productDelete;
+
     private ArrayList<Product> productList;
     private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
@@ -322,7 +322,7 @@ public class MainOrderFragment extends Fragment {
         accountsList = new ArrayList<>();
         productLevel1List = new ArrayList<>();
         productLevel2List = new ArrayList<>();
-        productDelete = new ArrayList<>();
+
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
 
@@ -792,6 +792,13 @@ public class MainOrderFragment extends Fragment {
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+            productListData.clear();
+            productLevel1List.clear();
+            productLevel2List.clear();
+            productAdapter.notifyDataSetChanged();
+
             getProductLevel1();
         });
 
@@ -1163,6 +1170,22 @@ public class MainOrderFragment extends Fragment {
         //endregion CONFIGURATION DATA PRODUCT
 
 
+        binding.ivFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterFragment filterFragment = new FilterFragment();
+                if (binding.orderRecyclerViewProductLevel2.getVisibility()==View.GONE)
+                {
+                    Bundle bundle1=new Bundle();
+                    bundle1.putBoolean("filter",true);
+
+                    filterFragment.setArguments(bundle1);
+                }
+
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, filterFragment, "FilterFragment").addToBackStack("FilterF").commit();
+            }
+        });
+
     }
 
     @Override
@@ -1172,8 +1195,10 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    private void getProductLevel1() {
-
+    public void getProductLevel1() {
+        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+        binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
+        binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
         if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
@@ -1189,50 +1214,47 @@ public class MainOrderFragment extends Fragment {
                             .subscribe(jsonElement -> {
 
 
-                                    Gson gson = new Gson();
-                                    Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
-                                    }.getType();
-                                    ModelProductLevel1 iDs;
+                                        Gson gson = new Gson();
+                                        Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
+                                        }.getType();
+                                        ModelProductLevel1 iDs;
 
-                                    try {
-                                        iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
-                                    }
-                                    catch (Exception e) {
-                                        error = "مدل دریافت شده از  گروه کالاها نا معتبر است";
-                                        showError(error);
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        return;
-                                    }
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
+                                        } catch (Exception e) {
+                                            error = "مدل دریافت شده از  گروه کالاها نا معتبر است";
+                                            showError(error,1);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
 
-                                    if (iDs == null) {
-                                        error = "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
-                                        showError(error);
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        return;
-                                    }
-                                    productLevel1List.addAll(iDs.getProductLevel1());
-                                    CollectionUtils.filter(iDs.getProductLevel1(), i -> i.getSts());
-                                    if (productLevel1List.size() == 1)
-                                        binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-                                    productLevel1Adapter.notifyDataSetChanged();
-
-
-                                    if (productLevel1List.size() > 0) {
-                                        productLevel1List.get(0).Click = true;
-                                        getProductLevel2(productLevel1List.get(0).getI());
-                                    } else {
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
-                                        binding.orderTxtError.setVisibility(View.VISIBLE);
-                                    }
+                                        if (iDs == null) {
+                                            error = "لیست دریافت شده از  گروه کالاها نا معتبر می باشد";
+                                            showError(error,1);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+                                        productLevel1List.addAll(iDs.getProductLevel1());
+                                        CollectionUtils.filter(iDs.getProductLevel1(), i -> i.getSts());
+                                        if (productLevel1List.size() == 1)
+                                            binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                                        productLevel1Adapter.notifyDataSetChanged();
 
 
+                                        if (productLevel1List.size() > 0) {
+                                            productLevel1List.get(0).Click = true;
+                                            getProductLevel2(productLevel1List.get(0).getI());
+                                        } else {
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                        }
 
 
                                     }
                                     , throwable -> {
                                         error = "فروشگاه تعطیل می باشد.";
-                                        showError(error);
+                                        showError(error,1);
                                         binding.progressbar.setVisibility(View.GONE);
 
 
@@ -1240,7 +1262,7 @@ public class MainOrderFragment extends Fragment {
             );
         } catch (Exception e) {
             error = "خطا در اتصال به سرور برای دریافت گروه کالاها";
-            showError(error);
+            showError(error,1);
             binding.progressbar.setVisibility(View.GONE);
         }
 
@@ -1263,82 +1285,81 @@ public class MainOrderFragment extends Fragment {
                             .subscribe(jsonElement -> {
 
 
-                                    Gson gson = new Gson();
-                                    Type typeModelProduct2 = new TypeToken<ModelProductLevel2>() {
-                                    }.getType();
-                                    ModelProductLevel2 iDs;
+                                        Gson gson = new Gson();
+                                        Type typeModelProduct2 = new TypeToken<ModelProductLevel2>() {
+                                        }.getType();
+                                        ModelProductLevel2 iDs;
 
 
-                                    try {
-                                        iDs = gson.fromJson(jsonElement, typeModelProduct2);
-                                    } catch (Exception e) {
-                                        error = "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
-                                        showError(error);
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        return;
-                                    }
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProduct2);
+                                        } catch (Exception e) {
+                                            error = "مدل دریافت شده از زیر گروه کالاها نا معتبر است";
+                                            showError(error,1);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
 
-                                    if (iDs == null) {
-                                        error = "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد";
-                                        showError(error);
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        return;
-                                    }
+                                        if (iDs == null) {
+                                            error = "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد";
+                                            showError(error,1);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
 
-                                    productLevel2List.clear();
-                                    CollectionUtils.filter(iDs.getProductLevel2(), i -> i.getSts());
-                                    productLevel2List.addAll(iDs.getProductLevel2());
+                                        productLevel2List.clear();
+                                        CollectionUtils.filter(iDs.getProductLevel2(), i -> i.getSts());
+                                        productLevel2List.addAll(iDs.getProductLevel2());
 
-
-                                    if (productLevel2List.size() > 0) {
-                                        ArrayList<ProductLevel2> list = new ArrayList<>(productLevel2List);
-                                        CollectionUtils.filter(list, l -> l.getTkn() != 0);
-                                        if (list.size() > 0)
-                                            for (int i = 0; i < list.size(); i++) {
-                                                int position = list.get(i).getTkn() - 1;//new position
-                                                int index = productLevel2List.indexOf(list.get(i));//old position
-                                                if (productLevel2List.size() > position) {
-                                                    ProductLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
-                                                    if (index != position) {
-                                                        productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
-                                                        productLevel2List.set(index, itemProductGroupLevel2);
-
-                                                    }
-                                                }
-
-                                            }
 
                                         if (productLevel2List.size() > 0) {
-                                            productLevel2List.get(0).Click = true;
+                                            ArrayList<ProductLevel2> list = new ArrayList<>(productLevel2List);
+                                            CollectionUtils.filter(list, l -> l.getTkn() != 0);
+                                            if (list.size() > 0)
+                                                for (int i = 0; i < list.size(); i++) {
+                                                    int position = list.get(i).getTkn() - 1;//new position
+                                                    int index = productLevel2List.indexOf(list.get(i));//old position
+                                                    if (productLevel2List.size() > position) {
+                                                        ProductLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
+                                                        if (index != position) {
+                                                            productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
+                                                            productLevel2List.set(index, itemProductGroupLevel2);
+
+                                                        }
+                                                    }
+
+                                                }
+
+                                            if (productLevel2List.size() > 0) {
+                                                productLevel2List.get(0).Click = true;
+                                            }
+
+                                            productLevel2Adapter.notifyDataSetChanged();
+
+
+                                            //region Full ProductList Because First Item ProductLevel2 Is True
+                                            getSettingPrice(productLevel2List.get(0).getI());
+                                            //endregion Full ProductList Because First Item ProductLevel2 Is True
+
+                                        } else {
+
+
+                                            binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            productList.clear();
+                                            productAdapter.notifyDataSetChanged();
+                                            productLevel2List.clear();
+                                            productLevel2Adapter.notifyDataSetChanged();
                                         }
 
                                         productLevel2Adapter.notifyDataSetChanged();
 
 
-                                        //region Full ProductList Because First Item ProductLevel2 Is True
-                                        getSettingPrice(productLevel2List.get(0).getI());
-                                        //endregion Full ProductList Because First Item ProductLevel2 Is True
-
-                                    } else {
-
-
-                                        binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
-                                        binding.orderTxtError.setVisibility(View.VISIBLE);
-                                        binding.progressbar.setVisibility(View.GONE);
-                                        productList.clear();
-                                        productAdapter.notifyDataSetChanged();
-                                        productLevel2List.clear();
-                                        productLevel2Adapter.notifyDataSetChanged();
-                                    }
-
-                                    productLevel2Adapter.notifyDataSetChanged();
-
-
-
                                     }
                                     , throwable -> {
                                         error = "فروشگاه تعطیل می باشد.";
-                                        showError(error);
+                                        showError(error,1);
                                         binding.progressbar.setVisibility(View.GONE);
 
 
@@ -1346,13 +1367,121 @@ public class MainOrderFragment extends Fragment {
             );
         } catch (Exception e) {
             error = "خطا در اتصال به سرور برای دریافت زیر گروه کالاها.";
-            showError(error);
+            showError(error,1);
             binding.progressbar.setVisibility(View.GONE);
         }
 
 
     }
 
+
+    public void getDiscountProduct() {
+
+        final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        String name = "";
+        try {
+            name = getActivity().getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
+            if (name.equals("FilterF"))
+                getActivity().getSupportFragmentManager().popBackStack();
+            binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
+        } catch (Exception ignored) {
+
+        }
+        try {
+            compositeDisposable.add(
+                    api.getProductDiscountSync("saleinkit_api", company.USER, company.PASS)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                        Gson gson = new Gson();
+                                        Type typeModelProduct = new TypeToken<ModelProduct>() {
+                                        }.getType();
+                                        ModelProduct iDs;
+
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                        } catch (Exception e) {
+                                            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                            error = "مدل دریافت شده از کالاها نا معتبر است ، دوباره تلاش کنید.";
+                                            showError(error,0);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        if (iDs == null) {
+                                            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                            error = "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.";
+                                            showError(error,0);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                                        binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
+                                        productList.clear();
+
+                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
+                                        ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
+                                        ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
+                                        CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
+                                        if (listPrd.size() > 0)
+                                            for (int i = 0; i < listPrd.size(); i++) {
+                                                int position = listPrd.get(i).getKey() - 1;//new position
+                                                int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                                                if (resultPrd_.size() > position) {
+                                                    Product itemProduct = resultPrd_.get(position);
+                                                    if (index != position) {
+                                                        resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                                                        resultPrd_.set(index, itemProduct);
+
+                                                    }
+                                                }
+                                            }
+
+
+                                        productListData.clear();
+                                        productListData.addAll(resultPrd_);
+                                        if (resultPrd_.size() > 0)
+                                            for (int i = 0; i < 18; i++) {
+                                                if (resultPrd_.size() > i)
+                                                    productList.add(resultPrd_.get(i));
+                                            }
+
+
+                                        if (productList.size() == 0) {
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                        }
+
+
+                                        productAdapter.setMaxSale(maxSales);
+                                        productAdapter.notifyDataSetChanged();
+
+
+                                        binding.progressbar.setVisibility(View.GONE);
+
+
+                                    }
+                                    , throwable -> {
+                                binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید";
+                                        showError(error,0);
+
+                                        binding.progressbar.setVisibility(View.GONE);
+
+                                    })
+            );
+        } catch (Exception e) {
+            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+            error = "خطا در اعمال فیلتر ، دوباره تلاش کنید.";
+            showError(error,0);
+        }
+
+
+    }
 
     private void getProduct1(String GuidPrdLvl2) {
         if (!networkAvailable(getActivity())) {
@@ -1377,14 +1506,14 @@ public class MainOrderFragment extends Fragment {
                                         iDs = gson.fromJson(jsonElement, typeModelProduct);
                                     } catch (Exception e) {
                                         error = "مدل دریافت شده از کالاها نا معتبر است";
-                                        showError(error);
+                                        showError(error,1);
                                         binding.progressbar.setVisibility(View.GONE);
                                         return;
                                     }
 
                                     if (iDs == null) {
                                         error = "لیست دریافت شده از کالاها نا معتبر می باشد";
-                                        showError(error);
+                                        showError(error,1);
                                         binding.progressbar.setVisibility(View.GONE);
                                         return;
                                     }
@@ -1439,14 +1568,14 @@ public class MainOrderFragment extends Fragment {
                                     }
                                     , throwable -> {
                                         error = "فروشگاه تعطیل می باشد.";
-                                        showError(error);
+                                        showError(error,1);
                                         binding.progressbar.setVisibility(View.GONE);
 
                                     })
             );
         } catch (Exception e) {
             error = "خطا در اتصال به سرور برای دریافت کالاها";
-            showError(error);
+            showError(error,1);
         }
 
     }
@@ -1598,13 +1727,18 @@ public class MainOrderFragment extends Fragment {
     }
 
 
-    private void showError(String error) {
+    private void showError(String error,int type) {
 
         ivIconSync.setImageResource(company.imageDialog);
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");
         dialogSync.dismiss();
+        if (type==0)
+            btnOkDialog.setVisibility(View.GONE);
+        else
+            btnOkDialog.setVisibility(View.VISIBLE);
+
         dialogSync.show();
         customProgress.hideProgress();
 
@@ -1809,13 +1943,13 @@ public class MainOrderFragment extends Fragment {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
                                     error = "مدل دریافت شده از تنظیمات نا معتبر است";
-                                    showError(error);
+                                    showError(error,1);
                                     return;
                                 }
 
                                 if (iDs == null) {
                                     error = "لیست دریافت شده از تنظیمات نا معتبر می باشد";
-                                    showError(error);
+                                    showError(error,1);
                                 } else {
 
 

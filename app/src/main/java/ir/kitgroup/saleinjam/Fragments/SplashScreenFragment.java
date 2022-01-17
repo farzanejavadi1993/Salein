@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinjam.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -42,7 +44,9 @@ import ir.kitgroup.saleinjam.classes.ConfigRetrofit;
 import ir.kitgroup.saleinjam.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.models.Config;
+import ir.kitgroup.saleinjam.models.ModelAccount;
 import ir.kitgroup.saleinjam.models.ModelCompany;
+import ir.kitgroup.saleinjam.models.ModelLog;
 
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
@@ -51,6 +55,9 @@ public class SplashScreenFragment extends Fragment {
     //region Parameter
     @Inject
     Config config;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
 
     private  Company company;
@@ -127,15 +134,12 @@ public class SplashScreenFragment extends Fragment {
         thread.start();
 
 
-        binding.lnrError.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.lnrError.setOnClickListener(v -> {
 
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.animationView1.setVisibility(View.GONE);
-                binding.lnrError.setVisibility(View.GONE);
-                getCompany();
-            }
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.animationView1.setVisibility(View.GONE);
+            binding.lnrError.setVisibility(View.GONE);
+            getCompany();
         });
 
 
@@ -200,6 +204,7 @@ public class SplashScreenFragment extends Fragment {
                                                     addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
 
                                                 else {
+
                                                     Bundle bundleMainOrder = new Bundle();
                                                     bundleMainOrder.putString("Inv_GUID", "");
                                                     bundleMainOrder.putString("Tbl_GUID", "");
@@ -312,6 +317,8 @@ public class SplashScreenFragment extends Fragment {
         }
 
     }
+
+
 
     //endregion Custom Method
 
