@@ -2,10 +2,13 @@ package ir.kitgroup.saleinjam.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -22,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
@@ -67,6 +74,14 @@ public class SettingFragment extends Fragment {
 
     private Company company;
 
+    //region Dialog Sync
+    private Dialog dialogSync;
+    private TextView textMessageDialog;
+    private ImageView ivIconSync;
+    private MaterialButton btnOkDialog;
+    private MaterialButton btnNoDialog;
+    //endregion Dialog Sync
+
     //region Parameter
     private boolean Seen = true;
     private FragmentSettingBinding binding;
@@ -101,20 +116,24 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
+
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
         compositeDisposable = new CompositeDisposable();
 
 
+       boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+        if (disableAccount)
+            showError("حساب کاربری شما غیر فعال شده است.");
+
         linkPayment = sharedPreferences.getString("payment_link", "");
-
-
 
 
         company = null;
         api = null;
         company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false,30).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
 
 
         if (Util.screenSize >= 7)
@@ -122,6 +141,55 @@ public class SettingFragment extends Fragment {
         else
             fontSize = 12;
 
+
+        //region Cast Variable Dialog Sync
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
+
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+
+            if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
+                ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
+
+            if (Tables.count(Tables.class) > 0)
+                Tables.deleteAll(Tables.class);
+
+            if (Unit.count(Unit.class) > 0)
+                Unit.deleteAll(Unit.class);
+
+            if (Company.count(Company.class) > 0)
+                Company.deleteAll(Company.class);
+
+            if (Account.count(Account.class) > 0)
+                Account.deleteAll(Account.class);
+
+            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                InvoiceDetail.deleteAll(InvoiceDetail.class);
+
+            ((LauncherActivity) getActivity()).setFistItem();
+            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+
+            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+            for (int i = 0; i < size; i++) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
+        });
+
+
+        //endregion Cast Variable Dialog Sync
 
 
         binding.tvProfile.setTextSize(fontSize);
@@ -169,9 +237,6 @@ public class SettingFragment extends Fragment {
                 Tables.deleteAll(Tables.class);
 
 
-            if (Tables.count(Tables.class) > 0)
-                Tables.deleteAll(Tables.class);
-
             if (Unit.count(Unit.class) > 0)
                 Unit.deleteAll(Unit.class);
 
@@ -181,7 +246,6 @@ public class SettingFragment extends Fragment {
 
             ((LauncherActivity) getActivity()).setFistItem();
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
 
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
@@ -224,8 +288,7 @@ public class SettingFragment extends Fragment {
 
         Account acc = Select.from(Account.class).first();
         if (!linkPayment.equals(""))
-            linkPayment=linkPayment+"/ChargeClub?c="+acc.getC();
-
+            linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
 
         if (acc != null && acc.CRDT != null) {
@@ -262,11 +325,25 @@ public class SettingFragment extends Fragment {
                                 Type typeIDs = new TypeToken<ModelAccount>() {
                                 }.getType();
                                 ModelAccount iDs;
+                                Type typeLog = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDsLog;
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+
+                                    iDsLog = gson.fromJson(jsonElement, typeLog);
+                                    assert iDsLog != null;
+                                    int message = iDsLog.getLogs().get(0).getMessage();
+                                    String description = iDsLog.getLogs().get(0).getDescription();
+                                    if (message == 3) {
+
+                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                        showError(description);
+                                    }
                                     return;
+
+
                                 }
 
 
@@ -342,6 +419,17 @@ public class SettingFragment extends Fragment {
 
     }
 
+
+    private void showError(String error) {
+
+        textMessageDialog.setText(error);
+        btnNoDialog.setText("بستن");
+        dialogSync.dismiss();
+        btnOkDialog.setVisibility(View.GONE);
+        dialogSync.setCancelable(false);
+        dialogSync.show();
+
+    }
 
     @Override
     public void onDestroyView() {

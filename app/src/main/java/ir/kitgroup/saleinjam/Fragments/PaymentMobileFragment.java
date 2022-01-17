@@ -77,6 +77,7 @@ import ir.kitgroup.saleinjam.Adapters.TimeAdapter;
 import ir.kitgroup.saleinjam.Connect.API;
 import ir.kitgroup.saleinjam.DataBase.Product;
 import ir.kitgroup.saleinjam.DataBase.Tables;
+import ir.kitgroup.saleinjam.DataBase.Unit;
 import ir.kitgroup.saleinjam.classes.ConfigRetrofit;
 
 import ir.kitgroup.saleinjam.classes.ServerConfig;
@@ -213,6 +214,7 @@ public class PaymentMobileFragment extends Fragment {
     private String timeChoose = "";
 
 
+    private  boolean disableAccount=false;
     private double sumTransport = 0.0;
 
 
@@ -271,6 +273,10 @@ public class PaymentMobileFragment extends Fragment {
             }
             compositeDisposable = new CompositeDisposable();
 
+
+            disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+            if (disableAccount)
+                showError("حساب کاربری شما غیر فعال شده است.");
 
             customProgress = CustomProgress.getInstance();
 
@@ -390,7 +396,43 @@ public class PaymentMobileFragment extends Fragment {
 
             btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
             btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
-            btnNoDialog.setOnClickListener(v -> dialogSync.dismiss());
+            btnNoDialog.setOnClickListener(v -> {
+                        dialogSync.dismiss();
+
+                        if (disableAccount)
+                        {  dialogSync.dismiss();
+
+                            if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
+                                ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
+
+                            if (Tables.count(Tables.class) > 0)
+                                Tables.deleteAll(Tables.class);
+
+                            if (Unit.count(Unit.class) > 0)
+                                Unit.deleteAll(Unit.class);
+
+                            if (Company.count(Company.class) > 0)
+                                Company.deleteAll(Company.class);
+
+                            if (Account.count(Account.class) > 0)
+                                Account.deleteAll(Account.class);
+
+                            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                                InvoiceDetail.deleteAll(InvoiceDetail.class);
+
+                            ((LauncherActivity) getActivity()).setFistItem();
+                            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+
+                            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                            for (int i = 0; i < size; i++) {
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
+
+
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();}
+                    }
+                    );
 
 
             btnOkDialog.setOnClickListener(v -> {
@@ -1479,12 +1521,27 @@ public class PaymentMobileFragment extends Fragment {
                                 Type typeIDs = new TypeToken<ModelAccount>() {
                                 }.getType();
                                 ModelAccount iDs;
+
+                                Type typeLog = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDsLog;
                                 try {
+                                    disableAccount=false;
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+
                                     binding.progressBar.setVisibility(View.GONE);
+                                    iDsLog = gson.fromJson(jsonElement, typeLog);
+                                    assert iDsLog != null;
+                                    int message = iDsLog.getLogs().get(0).getMessage();
+                                    String description = iDsLog.getLogs().get(0).getDescription();
+                                    if (message == 3) {
+                                        disableAccount = true;
+                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                        showError(description);
+                                    }
                                     return;
+
                                 }
 
 
@@ -1864,6 +1921,18 @@ public class PaymentMobileFragment extends Fragment {
         dialogSync.dismiss();
         dialogSync.show();
         customProgress.hideProgress();
+
+    }
+
+
+    private void showError(String error) {
+
+        textMessageDialog.setText(error);
+        btnNoDialog.setText("بستن");
+        dialogSync.dismiss();
+        btnOkDialog.setVisibility(View.GONE);
+        dialogSync.setCancelable(false);
+        dialogSync.show();
 
     }
 

@@ -6,7 +6,7 @@ import com.orm.dsl.Unique;
 
 import java.util.Date;
 
-public class Invoice  {
+public class Invoice {
 
 
     @Unique
@@ -18,7 +18,6 @@ public class Invoice  {
     @SerializedName("TBL_UID")//ای دی میز
     @Expose
     public String TBL_UID;
-
 
 
     @SerializedName("ACC_UID")
@@ -50,11 +49,9 @@ public class Invoice  {
     public Double INV_TOTAL_COST;
 
 
-
     @SerializedName("INV_STATUS")//حذف نشدهtrue و حذف شده false
     @Expose
     public Boolean INV_STATUS;
-
 
 
     @SerializedName("INV_SYNC")//وضعیت
@@ -85,11 +82,9 @@ public class Invoice  {
     public String ACC_CLB_ADDRESS;
 
 
-
     @SerializedName("ACC_CLB_ADDRESS2")//آدرس2
     @Expose
     public String ACC_CLB_ADDRESS2;
-
 
 
     @SerializedName("ACC_CLB_DEFAULT_ADDRESS")//آدرس پیش فرض
@@ -195,7 +190,6 @@ public class Invoice  {
     public Object cstUid;
 
 
-
     @SerializedName("INV_APPLICANT_UID")
     @Expose
     public String invApplicantUid;
@@ -229,59 +223,8 @@ public class Invoice  {
     @SerializedName("INV_PRINT")
     @Expose
     public Boolean invPrint;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   public String Acc_name ;
-    public Boolean SendStatus=false ;
-
-
-
-
+    public String Acc_name;
+    public Boolean SendStatus = false;
 
 
 }

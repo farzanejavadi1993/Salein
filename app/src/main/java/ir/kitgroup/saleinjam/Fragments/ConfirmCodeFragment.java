@@ -4,6 +4,7 @@ package ir.kitgroup.saleinjam.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -63,6 +64,9 @@ public class ConfirmCodeFragment extends Fragment {
     //region  Parameter
     @Inject
      Config config;
+
+    @Inject
+    SharedPreferences sharedPreferences;
     private Company company;
     private API api;
     private CompositeDisposable compositeDisposable;
@@ -406,14 +410,29 @@ public class ConfirmCodeFragment extends Fragment {
                                 Type typeIDs = new TypeToken<ModelAccount>() {
                                 }.getType();
                                 ModelAccount iDs;
+
+                                Type typeLog = new TypeToken<ModelLog>() {
+                                }.getType();
+                                ModelLog iDsLog;
+
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+
                                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                                     binding.btnLogin.setEnabled(true);
                                     binding.progressBar.setVisibility(View.GONE);
+                                    iDsLog = gson.fromJson(jsonElement, typeLog);
+                                    assert iDsLog != null;
+                                    int message = iDsLog.getLogs().get(0).getMessage();
+                                    String description = iDsLog.getLogs().get(0).getDescription();
+                                    if (message == 3) {
+
+                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                        Toast.makeText(getActivity(),description, Toast.LENGTH_SHORT).show();
+                                    }
                                     return;
+
                                 }
 
 
