@@ -34,6 +34,10 @@ public class Account extends SugarRecord {
     @Expose
     public String M;
 
+    @SerializedName("STAPP")
+    @Expose
+    public Boolean STAPP;
+
     @SerializedName("STS")
     @Expose
     public boolean STS;

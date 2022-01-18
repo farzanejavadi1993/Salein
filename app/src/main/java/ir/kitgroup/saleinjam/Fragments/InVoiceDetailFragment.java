@@ -165,8 +165,8 @@ public class InVoiceDetailFragment extends Fragment {
     //endregion Variable Dialog Description
 
 
-    private String status;
-    private Boolean invFinal;
+    private Integer status;
+
     private double sumTransport = 0.0;
     private String maxSales = "0";
     private String Transport_GUID;
@@ -685,7 +685,7 @@ public class InVoiceDetailFragment extends Fragment {
             //region Action BtnDelete
             binding.btnDelete.setOnClickListener(v -> {
 
-                if (status.equals("-"))
+                if (status==1)
                     getDeleteInvoice(Inv_GUID);
             });
 
@@ -1198,8 +1198,8 @@ public class InVoiceDetailFragment extends Fragment {
                                     } else {
 
 
-                                        status = iDs.getInvoice().get(0).INV_SYNC;
-                                        invFinal = iDs.getInvoice().get(0).invFinalStatusControl;
+                                        status = iDs.getInvoice().get(0).INV_STEP;
+
                                         Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
                                         if (iDs.getInvoice().get(0).INV_DESCRIBTION != null && !iDs.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
                                             binding.edtDescription.setHint("توضیحات : " + iDs.getInvoice().get(0).INV_DESCRIBTION);
@@ -1217,10 +1217,10 @@ public class InVoiceDetailFragment extends Fragment {
 
                                         binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
 
-                                        if (status != null && (status.equals("*") || invFinal)) {
-                                            binding.layoutEditDelete.setVisibility(View.GONE);
-                                        } else if (status != null && status.equals("-")) {
+                                        if (status != null && status==1) {
                                             binding.layoutEditDelete.setVisibility(View.VISIBLE);
+                                        } else {
+                                            binding.layoutEditDelete.setVisibility(View.GONE);
 
                                         }
 

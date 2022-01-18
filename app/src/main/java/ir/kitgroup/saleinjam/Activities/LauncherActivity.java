@@ -72,6 +72,7 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     private boolean loadProfile = true;
+    private boolean loadSearch = true;
 
 
     //region Parameter Dialog
@@ -142,7 +143,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.homee:
 
                     loadProfile = true;
-
+                    loadSearch=true;
                     int amount = 0;
                     if (bundle.getBoolean("EDIT"))
                         amount = mainOrderFragment.counter1;
@@ -167,24 +168,27 @@ public class LauncherActivity extends AppCompatActivity {
                     binding.navView.getMenu().getItem(3).setEnabled(true);
                     loadProfile = true;
 
+                    if (loadSearch){
+                        if (name.equals("SettingF"))
+                            getSupportFragmentManager().popBackStack();
 
-                    if (name.equals("SettingF"))
-                        getSupportFragmentManager().popBackStack();
+
+                        Bundle bundleSearch = new Bundle();
+                        bundleSearch.putString("Inv_GUID", bundle.getString("Inv_GUID"));
+                        bundleSearch.putString("Tbl_GUID", bundle.getString("Tbl_GUID"));
+                        bundleSearch.putBoolean("Seen", bundle.getBoolean("Seen"));
+                        SearchProductFragment searchProductFragment = new SearchProductFragment();
+                        searchProductFragment.setArguments(bundleSearch);
+                        getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
+                    }
 
 
-                    Bundle bundleSearch = new Bundle();
-                    bundleSearch.putString("Inv_GUID", bundle.getString("Inv_GUID"));
-                    bundleSearch.putString("Tbl_GUID", bundle.getString("Tbl_GUID"));
-                    bundleSearch.putBoolean("Seen", bundle.getBoolean("Seen"));
-                    SearchProductFragment searchProductFragment = new SearchProductFragment();
-                    searchProductFragment.setArguments(bundleSearch);
-                    getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, searchProductFragment, "SearchProductFragment").addToBackStack("SearchProductF").commit();
-
+                    loadSearch=false;
                     return true;
 
 
                 case R.id.orders:
-
+                    loadSearch=true;
                     binding.navView.getMenu().getItem(3).setEnabled(true);
 
                     if (name.equals("SettingF") || name.equals("SearchProductF"))
@@ -225,7 +229,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     binding.navView.getMenu().getItem(3).setEnabled(true);
 
-
+                    loadSearch=true;
                     if (loadProfile) {
                         if (name.equals("SearchProductF"))
                             getSupportFragmentManager().popBackStack();
@@ -234,6 +238,7 @@ public class LauncherActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SettingFragment(), "SettingFragment").addToBackStack("SettingF").commit();
                     }
 
+                    loadProfile=false;
 
                     return true;
 

@@ -123,9 +123,7 @@ public class SettingFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
 
 
-       boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
-        if (disableAccount)
-            showError("حساب کاربری شما غیر فعال شده است.");
+
 
         linkPayment = sharedPreferences.getString("payment_link", "");
 
@@ -156,36 +154,8 @@ public class SettingFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
+            getActivity().finish();
 
-            if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
-                ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
-
-            if (Tables.count(Tables.class) > 0)
-                Tables.deleteAll(Tables.class);
-
-            if (Unit.count(Unit.class) > 0)
-                Unit.deleteAll(Unit.class);
-
-            if (Company.count(Company.class) > 0)
-                Company.deleteAll(Company.class);
-
-            if (Account.count(Account.class) > 0)
-                Account.deleteAll(Account.class);
-
-            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-            ((LauncherActivity) getActivity()).setFistItem();
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-
-            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-            for (int i = 0; i < size; i++) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-
-
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
         });
 
 
@@ -223,6 +193,8 @@ public class SettingFragment extends Fragment {
         binding.ivPower.setOnClickListener(v -> {
             if (Account.count(Account.class) > 0)
                 Account.deleteAll(Account.class);
+
+            sharedPreferences.edit().clear();
 
 
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
@@ -325,22 +297,12 @@ public class SettingFragment extends Fragment {
                                 Type typeIDs = new TypeToken<ModelAccount>() {
                                 }.getType();
                                 ModelAccount iDs;
-                                Type typeLog = new TypeToken<ModelLog>() {
-                                }.getType();
-                                ModelLog iDsLog;
+
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
 
-                                    iDsLog = gson.fromJson(jsonElement, typeLog);
-                                    assert iDsLog != null;
-                                    int message = iDsLog.getLogs().get(0).getMessage();
-                                    String description = iDsLog.getLogs().get(0).getDescription();
-                                    if (message == 3) {
-
-                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                        showError(description);
-                                    }
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
                                     return;
 
 
@@ -353,15 +315,22 @@ public class SettingFragment extends Fragment {
                                         }.getType();
                                         ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
+
                                         if (iDs0.getLogs() != null) {
                                             String description = iDs0.getLogs().get(0).getDescription();
-                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                            int  message = iDs0.getLogs().get(0).getMessage();
+                                            if (message == 3) {
+
+                                                sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                                showError(description);
+                                            }
                                         }
 
                                     } else {
-
+                                        sharedPreferences.edit().putBoolean("disableAccount", false).apply();
                                         //user is register
                                         try {
+
                                             if (iDs.getAccountList().size() > 0) {
                                                 Account.deleteAll(Account.class);
                                                 Account.saveInTx(iDs.getAccountList());
@@ -378,6 +347,9 @@ public class SettingFragment extends Fragment {
 
                                                 binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
                                                 binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
+                                               boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+                                                if (disableAccount)
+                                                    showError("حساب کاربری شما غیر فعال شده است.");
 
                                             }
                                         } catch (Exception ignored) {

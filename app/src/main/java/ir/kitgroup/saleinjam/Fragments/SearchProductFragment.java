@@ -304,13 +304,14 @@ public class SearchProductFragment extends Fragment {
                 if (s.toString().isEmpty()) {
 
                     productList.clear();
+
                     productAdapter.notifyDataSetChanged();
                     emptySearch = true;
                     binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
 
 
                 } else {
-
+                    compositeDisposable.clear();
                     emptySearch = true;
                    if (s.toString().length()>=2)
                     getSearchProduct(Util.toEnglishNumber(s.toString()),s.toString().length());

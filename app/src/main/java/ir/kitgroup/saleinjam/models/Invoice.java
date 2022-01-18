@@ -196,6 +196,13 @@ public class Invoice {
     @SerializedName("ACC_NAME")
     @Expose
     public Object accName;
+    @SerializedName("INV_STEP")
+    @Expose
+    //1 در انتظار تایید
+//2 تایید شده
+//3 در حال ارسال
+//4 تحویل شده
+    public Integer INV_STEP=1;
     @SerializedName("ACC_CLB_NAME")
     @Expose
     public String accClbName;

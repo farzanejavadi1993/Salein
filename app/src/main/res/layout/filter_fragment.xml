@@ -31,18 +31,18 @@
 
 
                 <TextView
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:focusable="true"
-                    android:clickable="true"
                     android:id="@+id/tvDeleteFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="22dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:lineSpacingExtra="12dp"
                     android:text="حذف فیلتر ها"
-                    android:textColor="#A19E9E"
+                    android:textColor="@color/purple_700"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -143,20 +143,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="22dp"
                     android:lineSpacingExtra="16dp"
-                    android:text="فقط کالاهای موجود"
+                    android:text="منوی همیشگی"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp" />
 
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:enabled="false"
-                    android:id="@+id/switchRemain"
+                    android:id="@+id/switchVip"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="22dp"
+
                     android:padding="5dp"
                     android:src="@drawable/ic_fi_rr_angle_small_left" />
 

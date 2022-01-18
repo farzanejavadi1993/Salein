@@ -411,9 +411,7 @@ public class ConfirmCodeFragment extends Fragment {
                                 }.getType();
                                 ModelAccount iDs;
 
-                                Type typeLog = new TypeToken<ModelLog>() {
-                                }.getType();
-                                ModelLog iDsLog;
+
 
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
@@ -422,15 +420,7 @@ public class ConfirmCodeFragment extends Fragment {
                                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
                                     binding.btnLogin.setEnabled(true);
                                     binding.progressBar.setVisibility(View.GONE);
-                                    iDsLog = gson.fromJson(jsonElement, typeLog);
-                                    assert iDsLog != null;
-                                    int message = iDsLog.getLogs().get(0).getMessage();
-                                    String description = iDsLog.getLogs().get(0).getDescription();
-                                    if (message == 3) {
-
-                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                        Toast.makeText(getActivity(),description, Toast.LENGTH_SHORT).show();
-                                    }
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
                                     return;
 
                                 }
@@ -438,17 +428,33 @@ public class ConfirmCodeFragment extends Fragment {
 
                                 assert iDs != null;
                                 if (iDs.getAccountList() == null) {
+
+                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                                    binding.btnLogin.setEnabled(true);
+                                    binding.progressBar.setVisibility(View.GONE);
                                     Type typeIDs0 = new TypeToken<ModelLog>() {
                                     }.getType();
                                     ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
                                     if (iDs0.getLogs() != null) {
                                         String description = iDs0.getLogs().get(0).getDescription();
-                                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                        int message = iDs0.getLogs().get(0).getMessage();
+
+                                        if (message == 3) {
+                                            sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                            Toast.makeText(getActivity(),description, Toast.LENGTH_SHORT).show();
+                                        }
+
                                     }
 
-                                } else {
 
+
+
+
+                                }
+                                else {
+
+                                    sharedPreferences.edit().putBoolean("disableAccount", false).apply();
                                     //region Account Is Register
                                     if (iDs.getAccountList().size() > 0) {
                                         Account.deleteAll(Account.class);

@@ -295,10 +295,10 @@ public class MainOrderFragment extends Fragment {
         compositeDisposable = new CompositeDisposable();
         //ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
 
-        disableAccount=sharedPreferences.getBoolean("disableAccount",false);
-        if (disableAccount)
-            showError("حساب کاربری شما غیر فعال شده است.",2);
+
 
         company = null;
         api = null;
@@ -778,35 +778,9 @@ public class MainOrderFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
             if (disableAccount) {
-                if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
-                    ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
 
-                if (Tables.count(Tables.class) > 0)
-                    Tables.deleteAll(Tables.class);
+                getActivity().finish();
 
-                if (Unit.count(Unit.class) > 0)
-                    Unit.deleteAll(Unit.class);
-
-                if (Company.count(Company.class) > 0)
-                    Company.deleteAll(Company.class);
-
-                if (Account.count(Account.class) > 0)
-                    Account.deleteAll(Account.class);
-
-                if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-                ((LauncherActivity) getActivity()).setFistItem();
-                ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-
-                final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i = 0; i < size; i++) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-
-
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
                 return;
             }
             else if (filterError)
@@ -1220,6 +1194,8 @@ public class MainOrderFragment extends Fragment {
 
         getInquiryAccount1(company.USER,company.PASS,Select.from(Account.class).first().getM());
 
+
+
     }
 
     @Override
@@ -1350,32 +1326,43 @@ public class MainOrderFragment extends Fragment {
                                             ArrayList<ProductLevel2> list = new ArrayList<>(productLevel2List);
                                             CollectionUtils.filter(list, l -> l.getTkn() != 0);
                                             if (list.size() > 0)
-                                                for (int i = 0; i < list.size(); i++) {
-                                                    int position = list.get(i).getTkn() - 1;//new position
-                                                    int index = productLevel2List.indexOf(list.get(i));//old position
-                                                    if (productLevel2List.size() > position) {
-                                                        ProductLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
-                                                        if (index != position) {
-                                                            productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(list.get(i))));
-                                                            productLevel2List.set(index, itemProductGroupLevel2);
-
+                                            {
+                                                try {
+                                                    ArrayList<ProductLevel2> fulList=new ArrayList<>(list);
+                                                    for (int i = 0; i < fulList.size(); i++) {
+                                                        for (int j=0;j<list.size();j++){
+                                                            ArrayList<ProductLevel2> res=new ArrayList<>(list);
+                                                            int finalJ = j;
+                                                            CollectionUtils.filter(res, r->r.getTkn()<list.get(finalJ).getTkn());
+                                                            if (res.size()==1){
+                                                                j=list.size();
+                                                                int position = i;//new position
+                                                                int index = productLevel2List.indexOf(res.get(0));//old position
+                                                                if (productLevel2List.size() > position) {
+                                                                    ProductLevel2 itemProductGroupLevel2 = productLevel2List.get(position);
+                                                                    if (index != position) {
+                                                                        productLevel2List.set(position, productLevel2List.get(productLevel2List.indexOf(res.get(0))));
+                                                                        productLevel2List.set(index, itemProductGroupLevel2);
+                                                                    }
+                                                                }
+                                                                list.remove(list.indexOf(res.get(0)));
+                                                            }
                                                         }
+
                                                     }
+                                                }catch (Exception ignored){}
 
-                                                }
-
+                                            }
                                             if (productLevel2List.size() > 0) {
                                                 productLevel2List.get(0).Click = true;
                                             }
-
-                                            productLevel2Adapter.notifyDataSetChanged();
-
 
                                             //region Full ProductList Because First Item ProductLevel2 Is True
                                             getSettingPrice(productLevel2List.get(0).getI());
                                             //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-                                        } else {
+                                        }
+                                        else {
 
 
                                             binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
@@ -1384,7 +1371,7 @@ public class MainOrderFragment extends Fragment {
                                             productList.clear();
                                             productAdapter.notifyDataSetChanged();
                                             productLevel2List.clear();
-                                            productLevel2Adapter.notifyDataSetChanged();
+
                                         }
 
                                         productLevel2Adapter.notifyDataSetChanged();
@@ -1439,6 +1426,7 @@ public class MainOrderFragment extends Fragment {
                                             iDs = gson.fromJson(jsonElement, typeModelProduct);
                                         } catch (Exception e) {
                                             filterError = true;
+                                            sharedPreferences.edit().putBoolean("discount", false).apply();
                                             binding.ivFilter.setImageResource(R.drawable.ic_filter);
                                             error = "مدل دریافت شده از کالاها نا معتبر است ، دوباره تلاش کنید.";
                                             showError(error, 0);
@@ -1448,6 +1436,7 @@ public class MainOrderFragment extends Fragment {
 
                                         if (iDs == null) {
                                             filterError = true;
+                                            sharedPreferences.edit().putBoolean("discount", false).apply();
                                             binding.ivFilter.setImageResource(R.drawable.ic_filter);
                                             error = "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.";
                                             showError(error, 0);
@@ -1455,36 +1444,23 @@ public class MainOrderFragment extends Fragment {
                                             return;
                                         }
 
+                                        sharedPreferences.edit().putBoolean("discount", true).apply();
                                         filterError = false;
                                         binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                                         binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
                                         productList.clear();
 
-                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
-                                        ArrayList<Product> resultPrd_ = new ArrayList<>(iDs.getProductList());
-                                        ArrayList<Product> listPrd = new ArrayList<>(resultPrd_);
-                                        CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
-                                        if (listPrd.size() > 0)
-                                            for (int i = 0; i < listPrd.size(); i++) {
-                                                int position = listPrd.get(i).getKey() - 1;//new position
-                                                int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                                                if (resultPrd_.size() > position) {
-                                                    Product itemProduct = resultPrd_.get(position);
-                                                    if (index != position) {
-                                                        resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                                                        resultPrd_.set(index, itemProduct);
+                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() &&
+                                                !i.getI().toLowerCase().equals(Transport_GUID.toLowerCase()));
 
-                                                    }
-                                                }
-                                            }
 
 
                                         productListData.clear();
-                                        productListData.addAll(resultPrd_);
-                                        if (resultPrd_.size() > 0)
+                                        productListData.addAll(iDs.getProductList());
+                                        if (iDs.getProductList().size() > 0)
                                             for (int i = 0; i < 18; i++) {
-                                                if (resultPrd_.size() > i)
-                                                    productList.add(resultPrd_.get(i));
+                                                if (iDs.getProductList().size() > i)
+                                                    productList.add(iDs.getProductList().get(i));
                                             }
 
 
@@ -1503,6 +1479,7 @@ public class MainOrderFragment extends Fragment {
 
                                     }
                                     , throwable -> {
+                                        sharedPreferences.edit().putBoolean("discount", false).apply();
                                         filterError = true;
                                         binding.ivFilter.setImageResource(R.drawable.ic_filter);
                                         error = "خطا در اعمال فیلتر ، دوباره تلاش کنید";
@@ -1513,6 +1490,110 @@ public class MainOrderFragment extends Fragment {
                                     })
             );
         } catch (Exception e) {
+            sharedPreferences.edit().putBoolean("discount", false).apply();
+            filterError = true;
+            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+            error = "خطا در اعمال فیلتر ، دوباره تلاش کنید.";
+            showError(error, 0);
+        }
+
+
+    }
+
+    public void getProductVipSync() {
+
+        final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        String name = "";
+        try {
+            name = getActivity().getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
+            if (name.equals("FilterF"))
+                getActivity().getSupportFragmentManager().popBackStack();
+            binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
+        } catch (Exception ignored) {
+
+        }
+        try {
+            compositeDisposable.add(
+                    api.getProductVipSync("saleinkit_api", company.USER, company.PASS,Select.from(Account.class).first().I)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                        Gson gson = new Gson();
+                                        Type typeModelProduct = new TypeToken<ModelProduct>() {
+                                        }.getType();
+                                        ModelProduct iDs;
+
+                                        try {
+                                            iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                        } catch (Exception e) {
+                                            filterError = true;
+                                            sharedPreferences.edit().putBoolean("vip", false).apply();
+                                            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                            error = "مدل دریافت شده از کالاها نا معتبر است ، دوباره تلاش کنید.";
+                                            showError(error, 0);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        if (iDs == null) {
+                                            filterError = true;
+                                            sharedPreferences.edit().putBoolean("vip", false).apply();
+                                            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                            error = "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.";
+                                            showError(error, 0);
+                                            binding.progressbar.setVisibility(View.GONE);
+                                            return;
+                                        }
+
+                                        sharedPreferences.edit().putBoolean("vip", true).apply();
+                                        filterError = false;
+                                        binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                                        binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
+                                        productList.clear();
+
+                                        CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() && !i.getI().toLowerCase().equals(Transport_GUID.toLowerCase()));
+
+
+
+                                        productListData.clear();
+                                        productListData.addAll(iDs.getProductList());
+                                        if (iDs.getProductList().size() > 0)
+                                            for (int i = 0; i < 18; i++) {
+                                                if (iDs.getProductList().size() > i)
+                                                    productList.add(iDs.getProductList().get(i));
+                                            }
+
+
+                                        if (productList.size() == 0) {
+                                            binding.orderTxtError.setVisibility(View.VISIBLE);
+                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                        }
+
+
+                                        productAdapter.setMaxSale(maxSales);
+                                        productAdapter.notifyDataSetChanged();
+
+
+                                        binding.progressbar.setVisibility(View.GONE);
+
+
+                                    }
+                                    , throwable -> {
+                                        sharedPreferences.edit().putBoolean("vip", false).apply();
+                                        filterError = true;
+                                        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید";
+                                        showError(error, 0);
+
+                                        binding.progressbar.setVisibility(View.GONE);
+
+                                    })
+            );
+        } catch (Exception e) {
+            sharedPreferences.edit().putBoolean("vip", false).apply();
             filterError = true;
             binding.ivFilter.setImageResource(R.drawable.ic_filter);
             error = "خطا در اعمال فیلتر ، دوباره تلاش کنید.";
@@ -1619,7 +1700,7 @@ public class MainOrderFragment extends Fragment {
 
 
     private void getSettingPrice(String GUID) {
-
+        compositeDisposable.clear();
         stopLoad = false;
         try {
             compositeDisposable.add(
@@ -1647,6 +1728,7 @@ public class MainOrderFragment extends Fragment {
                                     sharedPreferences.edit().putString("maxSale", maxSales).apply();
 
                                 }
+
                                 getProduct1(GUID);
 
 
@@ -2071,14 +2153,20 @@ public class MainOrderFragment extends Fragment {
                                 Type typeIDs = new TypeToken<ModelAccount>() {
                                 }.getType();
                                 ModelAccount iDs;
-                                Type typeLog = new TypeToken<ModelLog>() {
-                                }.getType();
-                                ModelLog iDsLog;
+
 
                                 try {
                                     disableAccount=false;
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                if (iDs.getAccountList()==null){
+                                    Type typeLog = new TypeToken<ModelLog>() {
+                                    }.getType();
+                                    ModelLog iDsLog;
                                     iDsLog = gson.fromJson(jsonElement, typeLog);
                                     assert iDsLog != null;
                                     int message = iDsLog.getLogs().get(0).getMessage();
@@ -2088,9 +2176,11 @@ public class MainOrderFragment extends Fragment {
                                         sharedPreferences.edit().putBoolean("disableAccount", true).apply();
                                         showError(description, 2);
                                     }
-                                    return;
                                 }
                             }, throwable -> {
+                                disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+                                if (disableAccount)
+                                    showError("حساب کاربری شما غیر فعال شده است.",2);
                             }));
         } catch (Exception e) {
         }

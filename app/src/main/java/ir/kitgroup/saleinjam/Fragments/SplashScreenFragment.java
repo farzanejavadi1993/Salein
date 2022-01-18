@@ -87,7 +87,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         company=Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true,5).create(API.class);
+        api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/",true,10).create(API.class);
         compositeDisposable = new CompositeDisposable();
 
         if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
@@ -122,7 +122,7 @@ public class SplashScreenFragment extends Fragment {
             public void run() {
                 try {
 
-                        sleep(2000);
+                        sleep(1000);
                     getCompany();
 
                 } catch (InterruptedException e) {

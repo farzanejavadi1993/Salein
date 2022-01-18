@@ -69,20 +69,24 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
 
 
         Invoice invoice = list.get(holder.getAdapterPosition());
+//1 در انتظار تایید
+//2 تایید شده
+//3 در حال ارسال
+//4 تحویل شده
 
-        if (invoice.invFinalStatusControl) {
+        if (invoice.INV_STEP==3) {
             holder.tvStatus.setText("آماده سازی برای ارسال");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.orange));
         }
-       else if (invoice.INV_SYNC.equals("*")) {
+       else if (invoice.INV_STEP==4) {
             holder.tvStatus.setText("ارسال شده");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.green_table));
-        } else if (invoice.INV_SYNC.equals("-")) {
+        } else if (invoice.INV_STEP==1) {
             holder.tvStatus.setText("در انتظار بررسی اپراتور");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.blue600));
-        } else {
-            holder.tvStatus.setText("ناموفق");
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.red_table));
+        } else if (invoice.INV_STEP==2){
+            holder.tvStatus.setText("تایید شده");
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.pink_table));
         }
 
 

@@ -4,6 +4,7 @@ package ir.kitgroup.saleinjam.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -38,12 +39,15 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleinjam.Connect.API;
 import ir.kitgroup.saleinjam.DataBase.Account;
 
+import ir.kitgroup.saleinjam.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinjam.classes.ConfigRetrofit;
 import ir.kitgroup.saleinjam.classes.Util;
 import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.models.ModelLog;
 import ir.kitgroup.saleinjam.R;
 import ir.kitgroup.saleinjam.databinding.FragmentRegisterBinding;
+import ir.kitgroup.saleinjam.models.ModelSetting;
+import ir.kitgroup.saleinjam.models.Setting;
 
 @AndroidEntryPoint
 public class RegisterFragment extends Fragment {
@@ -60,6 +64,9 @@ public class RegisterFragment extends Fragment {
     private final List<Account> accountsList = new ArrayList<>();
 
     private int gender = 0;
+
+    private boolean ACCSTP=true;
+
 
 
     //endregion Parameter
@@ -161,10 +168,12 @@ public class RegisterFragment extends Fragment {
             account.LAT=String.valueOf(latitude);
             account.LNG=String.valueOf(longitude);
             account.S = String.valueOf(gender);
+            account.STAPP=ACCSTP;
             accountsList.clear();
             accountsList.add(account);
-            addAccount(company.USER, company.PASS, accountsList);
 
+
+            getSetting();
         });
         //endregion Action btnRegisterInformation
 
@@ -266,6 +275,7 @@ public class RegisterFragment extends Fragment {
         }
 
 
+
     }
 
 
@@ -295,5 +305,53 @@ public class RegisterFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
+
+
+    private void getSetting() {
+        try {
+            compositeDisposable.add(
+                    api.getSetting1(company.USER, company.PASS)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+                                Gson gson = new Gson();
+                                Type typeIDs = new TypeToken<ModelSetting>() {
+                                }.getType();
+
+                                ModelSetting iDs;
+                                try {
+                                    iDs = gson.fromJson(jsonElement, typeIDs);
+                                } catch (Exception e) {
+                                    Toast.makeText(getContext(), "خطا در ارتباط باسرور.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (iDs == null) {
+                                    Toast.makeText(getContext(), "خطا در ارتباط باسرور.", Toast.LENGTH_SHORT).show();
+                               return;
+                                } else {
+                                    List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
+
+                                    if (settingsList.size() > 0) {
+                                       String accStp=settingsList.get(0).ACC_STATUS_APP;
+                                      if (accStp.equals("0")){
+                                          ACCSTP=false;
+                                      }else {
+                                          ACCSTP=true;
+                                      }
+
+                                      accountsList.get(0).STAPP=ACCSTP;
+                                        addAccount(company.USER, company.PASS, accountsList);
+                                    }
+                                }
+                            }, throwable -> {
+
+                            }));
+        } catch (Exception e) {
+
+        }
+    }
+
 
 }

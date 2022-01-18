@@ -214,7 +214,7 @@ public class PaymentMobileFragment extends Fragment {
     private String timeChoose = "";
 
 
-    private  boolean disableAccount=false;
+    private boolean disableAccount = false;
     private double sumTransport = 0.0;
 
 
@@ -263,20 +263,17 @@ public class PaymentMobileFragment extends Fragment {
         try {
 
 
-          //  linkPayment = sharedPreferences.getString("payment_link", "");
+            //  linkPayment = sharedPreferences.getString("payment_link", "");
 
             company = null;
             api = null;
             company = Select.from(Company.class).first();
             if (company.mode == 2) {
-                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false,30).create(API.class);
+                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
             }
             compositeDisposable = new CompositeDisposable();
 
 
-            disableAccount=sharedPreferences.getBoolean("disableAccount",false);
-            if (disableAccount)
-                showError("حساب کاربری شما غیر فعال شده است.");
 
             customProgress = CustomProgress.getInstance();
 
@@ -399,45 +396,18 @@ public class PaymentMobileFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                         dialogSync.dismiss();
 
-                        if (disableAccount)
-                        {  dialogSync.dismiss();
+                        if (disableAccount) {
 
-                            if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
-                                ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
-
-                            if (Tables.count(Tables.class) > 0)
-                                Tables.deleteAll(Tables.class);
-
-                            if (Unit.count(Unit.class) > 0)
-                                Unit.deleteAll(Unit.class);
-
-                            if (Company.count(Company.class) > 0)
-                                Company.deleteAll(Company.class);
-
-                            if (Account.count(Account.class) > 0)
-                                Account.deleteAll(Account.class);
-
-                            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                                InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-                            ((LauncherActivity) getActivity()).setFistItem();
-                            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-
-                            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                            for (int i = 0; i < size; i++) {
-                                getActivity().getSupportFragmentManager().popBackStack();
-                            }
-
-
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();}
+                            getActivity().finish();
+                        }
                     }
-                    );
+            );
 
 
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 getSetting1();
+                getInquiryAccount1(company.USER,company.PASS,acc.getM());
 
             });
 
@@ -461,7 +431,7 @@ public class PaymentMobileFragment extends Fragment {
                 if (isChecked) {
 
                     latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
-                    longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-")? acc.LNG : "0.0");
+                    longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
 
                     if (latitude1 == 0.0 && longitude1 == 0.0) {
                         Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
@@ -475,14 +445,14 @@ public class PaymentMobileFragment extends Fragment {
                         return;
                     } else {
                         calculateTransport = price;
-                      if (Ord_TYPE.equals(OrderTypeApp)) {
+                        if (Ord_TYPE.equals(OrderTypeApp)) {
                             sumTransport = 0;
-                          binding.layoutPeyk.setVisibility(View.GONE);
+                            binding.layoutPeyk.setVisibility(View.GONE);
                             binding.tvTransport.setText("0 ریال");
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
                         } else {
                             sumTransport = calculateTransport;
-                          binding.layoutPeyk.setVisibility(View.VISIBLE);
+                            binding.layoutPeyk.setVisibility(View.VISIBLE);
                             binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + calculateTransport) + "ریال");
                             binding.tvTransport.setText(format.format(calculateTransport) + " ریال ");
                         }
@@ -500,8 +470,8 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
 
-                    latitude2 = Double.parseDouble(acc.LAT1 != null  && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
-                    longitude2 = Double.parseDouble(acc.LNG1 != null  && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
+                    latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
+                    longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
 
 
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
@@ -576,7 +546,7 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
                 String address = "";
 
-                latitude1 = Double.parseDouble(acc.LAT != null  && !acc.LAT.equals("") && !acc.LAT.equals("-")? acc.LAT : "0.0");
+                latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
                 longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
 
 
@@ -589,7 +559,7 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
                 String address = "";
 
-                latitude2 = Double.parseDouble(acc.LAT1 != null  && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
+                latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
                 longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
 
 
@@ -604,8 +574,8 @@ public class PaymentMobileFragment extends Fragment {
             if (acc != null && acc.ADR != null && !acc.ADR.equals("") && latitude1 != 0.0 && longitude1 != 0.0 && !setADR1) {
 
 
-                latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-")? acc.LAT : "0.0");
-                longitude1 = Double.parseDouble(acc.LNG != null&& !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
+                latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
+                longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
 
                 double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
                 double price = PriceTransport(distance / 1000, Double.parseDouble(Sum_PURE_PRICE));
@@ -948,6 +918,7 @@ public class PaymentMobileFragment extends Fragment {
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
 
+                getInquiryAccount1(company.USER,company.PASS,acc.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                     return;
@@ -957,12 +928,14 @@ public class PaymentMobileFragment extends Fragment {
                 } else if (Ord_TYPE == null || Ord_TYPE == -1) {
                     Toast.makeText(getActivity(), "نوع سفارش را انتخاب کنید", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (allTime.size()>0 &&  !allTime.get(0).equals("") && timeChoose.equals("") && (company.mode == 2 || (company.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
+                } else if (allTime.size() > 0 && !allTime.get(0).equals("") && timeChoose.equals("") && (company.mode == 2 || (company.mode == 1 && Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp)))) {
                     Toast.makeText(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     tvMessage.setText("از ارسال سفارش اطمینان دارید ؟");
                 }
+
+
                 rlButtons.setVisibility(View.VISIBLE);
                 btnReturned.setVisibility(View.GONE);
 
@@ -978,6 +951,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             btnOk.setOnClickListener(v -> {
+
 
                 dialogSendOrder.dismiss();
                 Date date = Calendar.getInstance().getTime();
@@ -1217,7 +1191,7 @@ public class PaymentMobileFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
+                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
                         getSetting1();
                     }
 
@@ -1526,20 +1500,13 @@ public class PaymentMobileFragment extends Fragment {
                                 }.getType();
                                 ModelLog iDsLog;
                                 try {
-                                    disableAccount=false;
+                                    disableAccount = false;
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
 
                                     binding.progressBar.setVisibility(View.GONE);
-                                    iDsLog = gson.fromJson(jsonElement, typeLog);
-                                    assert iDsLog != null;
-                                    int message = iDsLog.getLogs().get(0).getMessage();
-                                    String description = iDsLog.getLogs().get(0).getDescription();
-                                    if (message == 3) {
-                                        disableAccount = true;
-                                        sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                        showError(description);
-                                    }
+                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
+
                                     return;
 
                                 }
@@ -1552,11 +1519,21 @@ public class PaymentMobileFragment extends Fragment {
                                         ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
 
                                         if (iDs0.getLogs() != null) {
+                                            disableAccount = true;
                                             String description = iDs0.getLogs().get(0).getDescription();
-                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+
+                                            int message = iDs0.getLogs().get(0).getMessage();
+                                            if (message == 3) {
+
+                                                sharedPreferences.edit().putBoolean("disableAccount", true).apply();
+                                                showError(description);
+                                            }
+
+
                                         }
 
                                     } else {
+                                        sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
                                         //user is register
                                         if (iDs.getAccountList().size() > 0) {
@@ -1564,7 +1541,8 @@ public class PaymentMobileFragment extends Fragment {
                                             Account.saveInTx(iDs.getAccountList());
 
 
-                                            acc = Select.from(Account.class).first();if (acc != null && acc.CRDT != null)
+                                            acc = Select.from(Account.class).first();
+                                            if (acc != null && acc.CRDT != null)
                                                 binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
                                             binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
@@ -1586,6 +1564,9 @@ public class PaymentMobileFragment extends Fragment {
                             }, throwable -> {
                                 binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
                                 binding.progressBar.setVisibility(View.GONE);
+                                boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+                                if (disableAccount)
+                                    showError("حساب کاربری شما غیر فعال شده است.");
 
                             })
             );
@@ -1725,8 +1706,7 @@ public class PaymentMobileFragment extends Fragment {
                                     }
 
 
-
-                                    if (allTime.size()>0 && !allTime.get(0).equals(""))
+                                    if (allTime.size() > 0 && !allTime.get(0).equals(""))
                                         binding.layoutTime.setVisibility(View.VISIBLE);
                                     getTypeOrder1();
 

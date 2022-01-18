@@ -121,4 +121,8 @@ public interface API {
     @GET("ProductDiscountSync")
     Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);
 
+    @GET("ProductVipSync")
+    Observable<String> getProductVipSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password ,@Query("customerId") String customerId);
+
+
 }
