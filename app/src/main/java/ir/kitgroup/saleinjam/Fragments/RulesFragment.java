@@ -7,27 +7,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-
 import com.orm.query.Select;
-
 import org.jetbrains.annotations.NotNull;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.classes.Util;
 import ir.kitgroup.saleinjam.databinding.FragmentRulesBinding;
 
-
 @AndroidEntryPoint
 public class RulesFragment extends Fragment {
-
-
-    private Company company;
     private FragmentRulesBinding binding;
 
     @Nullable
@@ -37,34 +29,24 @@ public class RulesFragment extends Fragment {
         binding = FragmentRulesBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        company = Select.from(Company.class).first();
-
+        Company company = Select.from(Company.class).first();
         int fontSize;
         if (Util.screenSize >= 7)
             fontSize = 12;
         else
             fontSize = 14;
-
-
         binding.tvTitle.setTextSize(fontSize);
         binding.tvRule.setTextSize(fontSize);
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.tvRule.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
-
         }
-
-
-
-        if (company!=null)
+        if (company !=null)
         binding.tvRule.setText("۱_ تعاریف واصطلاحات\n" +
                 "۱.۱ " +
                 company.N +
@@ -127,8 +109,5 @@ public class RulesFragment extends Fragment {
                 "۵ قطع خدمات\n" +
                 " درصورتیکه کاربر به هرنحوی از سیستم سوء استفاده کند" +
                 company.N +
-                " حق دارد حساب کاربری شخص را مسدود وادامه خدمات به کاربر مورد نظر راقطع کند.");
-
-
-    }
+                " حق دارد حساب کاربری شخص را مسدود وادامه خدمات به کاربر مورد نظر راقطع کند."); }
 }

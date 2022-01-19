@@ -58,10 +58,6 @@ public interface API {
     Observable<String> getInquiryAccount1(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task, @Query("isShowPassWord") int isShowPassWord);
 
 
-    @GET("GetImage")
-    Observable<String> getImage(@Query("productId") String productId, @Query("width") Integer width ,@Query("height") Integer height);
-
-
     @GET("SettingSync")
     Observable<String> getSetting1(@Query("userName") String userName, @Query("password") String password);
 
@@ -110,13 +106,6 @@ public interface API {
 
     @GET("GetAccount")
     Observable<String> getCompany(@Query("parentAccountId") String parentAccountId);
-
-
-    @POST("CreateAccount")
-    Observable<String> addAccount1(@Query("userName") String userName, @Query("password") String password
-            , @Body() String jsonObject, @Query("virtualParam") String virtualParam);
-
-
 
     @GET("ProductDiscountSync")
     Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);

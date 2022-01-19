@@ -1,60 +1,40 @@
 package ir.kitgroup.saleinjam.Adapters;
 
-
-
-
-
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
-
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
-
 import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.R;
 import ir.kitgroup.saleinjam.classes.Util;
-import ir.kitgroup.saleinjam.models.Config;
+
 
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
-
     private final List<Company> list ;
     private int fontSize = 0;
-    private final int type;
-    private final Config config;
-    private final Activity activity;
+    private final int type;//1 from Company    2 from MyCompany
 
+    //region Interface
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
-
     public interface ClickItem {
         void onRowClick(Company modelCompany,Boolean parent,int index,boolean delete);
     }
-
     private ClickItem clickItem;
+    //endregion Interface
 
-
-    public CompanyAdapterList(List<Company> list, int type, Config config,Activity activity) {
+    public CompanyAdapterList(List<Company> list, int type) {
         this.list = list;
         this.type=type;
-        this.config=config;
-        this.activity=activity;
-
     }
 
     @Override
@@ -64,7 +44,6 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
         } else {
             fontSize = 12;
         }
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_company, parent, false);
         return new viewHolder(view);
     }
@@ -72,13 +51,8 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
     @Override
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
         final Company company = list.get(position);
-
         if (type==1)
             holder.favoriteCompany.setVisibility(View.GONE);
-
-        holder.tvTitleCompany.setText(company.N);
-        holder.tvDescriptionCompany.setText(company.DESC);
-
 
         Picasso.get()
                 .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
@@ -87,13 +61,13 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
                 .placeholder(R.drawable.loading)
                 .into(holder.ivCompany);
 
+        holder.tvTitleCompany.setText(company.N);
+        holder.tvDescriptionCompany.setText(company.DESC);
 
         if (company.Parent!=null && company.Parent)
             holder.flesh.setVisibility(View.VISIBLE);
         else
             holder.flesh.setVisibility(View.GONE);
-
-
 
         if (!company.PI.equals("")) {
             holder.cardSalein.setRadius(0);
@@ -101,25 +75,14 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             ViewGroup.MarginLayoutParams layoutParams =
                     (ViewGroup.MarginLayoutParams) holder.cardSalein.getLayoutParams();
             layoutParams.setMargins(0, 0, 0, 0);
-            holder.cardSalein.requestLayout();
         }else {
             holder.cardSalein.setRadius(50);
             holder.view.setVisibility(View.GONE);
             ViewGroup.MarginLayoutParams layoutParams =
                     (ViewGroup.MarginLayoutParams) holder.cardSalein.getLayoutParams();
             layoutParams.setMargins(50, 15, 50, 15);
-            holder.cardSalein.requestLayout();
         }
-
-
-
-
-
-//        ArrayList<Company> companies1=new ArrayList<>(list);
-//        CollectionUtils.filter(companies1, r -> company.PI.equals(r.I));
-//        if (companies1.size()>0)
-//            holder.itemView.setVisibility(View.GONE);
-
+        holder.cardSalein.requestLayout();
 
         if (company.Open)
             holder.flesh.setRotation(270);
@@ -127,11 +90,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             holder.flesh.setRotation(90);
 
 
-
-
-
         holder.itemView.setOnClickListener(v -> {
-
             if (!company.Open){
                 company.Open=true;
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),false);
@@ -141,12 +100,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),true);
                 holder.flesh.setRotation(90);
             }
-
-
         });
-
-
-
     }
 
     @Override
@@ -155,8 +109,6 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
     }
 
     class viewHolder extends RecyclerView.ViewHolder {
-
-
         private final  TextView tvTitleCompany;
         private final  TextView tvDescriptionCompany;
         private final  CircularImageView ivCompany;
@@ -165,10 +117,8 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
         private final MaterialCardView cardSalein;
         private final View view;
 
-
         public viewHolder(View itemView) {
             super(itemView);
-
             tvTitleCompany = itemView.findViewById(R.id.tvTitleCompany);
             cardSalein = itemView.findViewById(R.id.cardSalein);
             view = itemView.findViewById(R.id.view);
@@ -178,16 +128,8 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             flesh = itemView.findViewById(R.id.flesh);
             tvTitleCompany.setTextSize(fontSize);
             tvDescriptionCompany.setTextSize(fontSize);
-
-
-
-
-
-
         }
     }
-
-
 }
 
 

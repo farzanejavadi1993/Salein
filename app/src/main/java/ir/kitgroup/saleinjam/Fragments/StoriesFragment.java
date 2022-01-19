@@ -1,6 +1,5 @@
 package ir.kitgroup.saleinjam.Fragments;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,72 +7,51 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
-
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinjam.databinding.FragmentStoriesBinding;
+
 @AndroidEntryPoint
 public class StoriesFragment extends Fragment {
 
     @Inject
     Typeface typeface;
-
     public FragmentStoriesBinding binding;
-
-
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+
        binding=FragmentStoriesBinding.inflate(getLayoutInflater());
-
-
-
-        getActivity().getWindow().setSoftInputMode(
+       getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        return binding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-
-
-
-       CompanyFragment companyFragment= new CompanyFragment();
+        CompanyFragment companyFragment= new CompanyFragment();
         companyFragment.setStoriesFragment(this);
 
-        PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), getActivity());
+        PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
         pagerAdapter.addFragment(new MyCompanyFragment(), "فروشگاه های من");
         pagerAdapter.addFragment(companyFragment, "فروشگاه ها");
-
-
-
 
         binding.viewPager.setAdapter(pagerAdapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         binding.viewPager.setCurrentItem(1);
         setCustomFontToTabLayout();
-
-
     }
 
     public void setCustomFontToTabLayout() {
@@ -92,20 +70,18 @@ public class StoriesFragment extends Fragment {
         }
     }
 
-    private class PagerAdapter extends FragmentPagerAdapter {
+    private static class PagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> myFragments = new ArrayList<>();
         private final List<String> myFragmentTitles = new ArrayList<>();
-        private Context context;
-        public PagerAdapter(FragmentManager fm, Context context) {
-            super(fm);
-            this.context = context;
-        }
 
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
         public void addFragment(Fragment fragment, String title) {
             myFragments.add(fragment);
             myFragmentTitles.add(title);
         }
-
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return myFragments.get(position);
@@ -121,6 +97,4 @@ public class StoriesFragment extends Fragment {
             return myFragmentTitles.get(position);
         }
     }
-
-
 }

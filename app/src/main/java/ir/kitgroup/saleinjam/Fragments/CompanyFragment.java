@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +13,20 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -48,11 +39,9 @@ import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.R;
 import ir.kitgroup.saleinjam.classes.ConfigRetrofit;
 import ir.kitgroup.saleinjam.databinding.FragmentCompanyBinding;
-import ir.kitgroup.saleinjam.models.Config;
 import ir.kitgroup.saleinjam.models.ModelAccount;
 import ir.kitgroup.saleinjam.models.ModelCompany;
 import ir.kitgroup.saleinjam.models.ModelLog;
-
 
 @AndroidEntryPoint
 public class CompanyFragment extends Fragment {
@@ -60,37 +49,19 @@ public class CompanyFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    @Inject
-    Config config;
-
-    private Company companyDemo;
-
-    private  StoriesFragment storiesFragment;
-
-
-    private API api;
-
-
     private FragmentCompanyBinding binding;
-
-    private CompositeDisposable compositeDisposable;
-
-
-    private ArrayList<Company> companies;
-    CompanyAdapterList companyAdapterList;
-
-
+    private Company companyDemo;
     private Company companySelect;
-
-
+    private API api;
+    private StoriesFragment storiesFragment;
+    private CompositeDisposable compositeDisposable;
+    private ArrayList<Company> companies;
+    private CompanyAdapterList companyAdapterList;
     private Account account;
-
-
-    private Dialog dialog;
-    private TextView textExit;
     private ImageView ivIcon;
     private String ParentId = "";
-
+    private Dialog dialog;
+    private TextView textExitDialog;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -106,27 +77,25 @@ public class CompanyFragment extends Fragment {
 
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
-
         compositeDisposable = new CompositeDisposable();
-        companies = new ArrayList<>();
 
-        companyAdapterList = new CompanyAdapterList(companies, 2, config, getActivity());
+        companies = new ArrayList<>();
+        companyAdapterList = new CompanyAdapterList(companies, 2);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
 
-
-
         api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/", true, 30).create(API.class);
 
-
-
-        if (storiesFragment!=null) {
+        if (storiesFragment != null) {
             storiesFragment.binding.tvDemo.setOnClickListener(v -> {
+                binding.progressbar.setVisibility(View.GONE);
                 compositeDisposable.clear();
                 companySelect = companyDemo;
 
                 api = ConfigRetrofit.getRetrofit("http://" + companyDemo.IP1 + "/api/REST/", true, 30).create(API.class);
+
                 String nameSave = sharedPreferences.getString(companyDemo.N, "");
+
                 if (!nameSave.equals("")) {
                     Company.deleteAll(Company.class);
                     Company.saveInTx(companyDemo);
@@ -136,28 +105,24 @@ public class CompanyFragment extends Fragment {
                     bundleMainOrder.putString("Ord_TYPE", "");
                     MainOrderFragment mainOrderFragment = new MainOrderFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
-                    if (!ParentId.equals("")) {
-                        getActivity().getSupportFragmentManager().popBackStack();
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
+
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                 } else {
                     getInquiryAccount1(companyDemo.N, companyDemo.USER, companyDemo.PASS, account.M);
                 }
             });
         }
+
         companyAdapterList.setOnClickItemListener((company, parent, index, delete) ->
                 {
-
-
                     if (parent) {
                         api = ConfigRetrofit.getRetrofit("http://api.kitgroup.ir/api/REST/", true, 30).create(API.class);
                         getCompany(company.I, index, delete);
                         return;
                     }
+
                     compositeDisposable.clear();
                     companySelect = company;
-
                     api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", true, 30).create(API.class);
                     String nameSave = sharedPreferences.getString(company.N, "");
                     if (!nameSave.equals("")) {
@@ -177,20 +142,16 @@ public class CompanyFragment extends Fragment {
                     } else {
                         getInquiryAccount1(company.N, company.USER, company.PASS, account.M);
                     }
-                }
-        );
+                });
 
-
+        //region Cast Dialog
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
-
-        textExit = dialog.findViewById(R.id.tv_message);
+        textExitDialog = dialog.findViewById(R.id.tv_message);
         ivIcon = dialog.findViewById(R.id.iv_icon);
-
-
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
         btnNo.setOnClickListener(v -> dialog.dismiss());
@@ -199,15 +160,11 @@ public class CompanyFragment extends Fragment {
             ArrayList<Account> AccList = new ArrayList<>();
             AccList.add(account);
             addAccount(companySelect.USER, companySelect.PASS, AccList);
-
-
         });
-
+        //endregion Cast Dialog
 
         account = Select.from(Account.class).first();
-
         binding.ivBack.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
-
         try {
             ParentId = getArguments().getString("ParentId");
             if (!ParentId.equals("")) {
@@ -215,14 +172,10 @@ public class CompanyFragment extends Fragment {
                 binding.mainLayout.setRotationY(0);
                 getCompany(ParentId, -1, false);
             }
-
         } catch (Exception ignored) {
             getCompany("", 0, false);
         }
-
     }
-
-
     @SuppressLint("SetTextI18n")
     private void getInquiryAccount1(String name, String userName, String passWord, String mobile) {
         binding.progressbar.setVisibility(View.VISIBLE);
@@ -245,33 +198,26 @@ public class CompanyFragment extends Fragment {
                                     binding.progressbar.setVisibility(View.GONE);
                                     return;
                                 }
-
-
                                 if (iDs != null) {
                                     if (iDs.getAccountList() == null) {
                                         Type typeIDs0 = new TypeToken<ModelLog>() {
                                         }.getType();
                                         ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
-
                                         if (iDs0.getLogs() != null) {
                                             String description = iDs0.getLogs().get(0).getDescription();
                                             Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                                         }
-
-                                    } else {
-
+                                    }
+                                    else {
                                         //user is register
                                         if (iDs.getAccountList().size() > 0) {
                                             Account.deleteAll(Account.class);
                                             Account.saveInTx(iDs.getAccountList());
 
-
                                             Company.deleteAll(Company.class);
                                             Company.saveInTx(companySelect);
 
-
                                             sharedPreferences.edit().putString(name, "login").apply();
-
 
                                             Bundle bundleMainOrder = new Bundle();
                                             bundleMainOrder.putString("Inv_GUID", "");
@@ -285,42 +231,31 @@ public class CompanyFragment extends Fragment {
                                                 getActivity().getSupportFragmentManager().popBackStack();
                                             }
                                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
-
                                         }
 
                                         //user not register
                                         else {
-                                            textExit.setText(" شما مشترک " + name + " نیستید.آیا مشترک میشوید؟ ");
+                                            textExitDialog.setText(" شما مشترک " + name + " نیستید.آیا مشترک میشوید؟ ");
                                             ivIcon.setImageResource(companySelect.imageDialog);
                                             dialog.show();
                                         }
                                         binding.progressbar.setVisibility(View.GONE);
-
-
                                     }
                                 } else {
                                     Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                     binding.progressbar.setVisibility(View.GONE);
                                 }
-
-
-                            }, throwable -> {
-
+                                }, throwable -> {
                                 Toast.makeText(getContext(), "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
-
                             })
             );
         } catch (Exception e) {
             Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
-
             binding.progressbar.setVisibility(View.GONE);
         }
-
     }
-
-
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void getCompany(String ParentId, int index, boolean delete) {
         binding.progressbar.setVisibility(View.VISIBLE);
         try {
@@ -331,7 +266,6 @@ public class CompanyFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-
                                 Gson gson = new Gson();
                                 Type typeIDs = new TypeToken<ModelCompany>() {
                                 }.getType();
@@ -343,11 +277,8 @@ public class CompanyFragment extends Fragment {
                                     binding.progressbar.setVisibility(View.GONE);
                                     return;
                                 }
-
-
                                 if (iDs != null) {
                                     if (iDs.getCompany() != null) {
-
                                         if (ParentId.equals("")) {
                                             companies.clear();
                                             for (int i = 0; i < iDs.getCompany().size(); i++) {
@@ -359,82 +290,63 @@ public class CompanyFragment extends Fragment {
                                             }
 
                                             CollectionUtils.filter(iDs.getCompany(), r -> r.PI.equals(""));
-
-                                            ArrayList<Company> demo=new ArrayList<>(iDs.getCompany());
+                                            ArrayList<Company> demo = new ArrayList<>(iDs.getCompany());
                                             CollectionUtils.filter(demo, r -> r.INSK_ID.equals("ir.kitgroup.salein"));
-                                            if (demo.size()>0 && storiesFragment!=null) {
-                                                companyDemo=demo.get(0);
+                                            if (demo.size() > 0 && storiesFragment != null) {
+                                                companyDemo = demo.get(0);
                                                 storiesFragment.binding.tvDemo.setVisibility(View.VISIBLE);
                                             }
                                             CollectionUtils.filter(iDs.getCompany(), r -> !r.INSK_ID.equals("ir.kitgroup.salein"));
                                             companies.addAll(iDs.getCompany());
-
-                                        } else {
+                                        }
+                                        else {
                                             for (int i = 0; i < iDs.getCompany().size(); i++) {
                                                 if (delete) {
                                                     ArrayList<Company> list = new ArrayList<>(companies);
                                                     int finalI = i;
                                                     CollectionUtils.filter(list, l -> l.I.equals(iDs.getCompany().get(finalI).I));
-                                                    if(list.size()>0)
-                                                companies.remove(companies.indexOf(list.get(0)));
-                                                }else
+                                                    if (list.size() > 0)
+                                                        companies.remove(list.get(0));
+                                                } else
                                                     companies.add(index + 1, iDs.getCompany().get(i));
-
                                             }
-
                                         }
                                         companyAdapterList.notifyDataSetChanged();
                                     }
-
-
-                                } else {
+                                }
+                                else {
                                     Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
-
                                 }
                                 binding.progressbar.setVisibility(View.GONE);
-
-
-                            }, throwable -> {
-
+                                }, throwable -> {
                                 Toast.makeText(getContext(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
 
-                            })
-            );
+                            }));
         } catch (Exception e) {
             Toast.makeText(getContext(), "خطا در ارتباط با سرور.", Toast.LENGTH_SHORT).show();
-
             binding.progressbar.setVisibility(View.GONE);
         }
-
     }
 
-
     private static class JsonObjectAccount {
-
         public List<Account> Account;
-
     }
 
     private void addAccount(String userName, String pass, List<Account> accounts) {
-
-
         JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
         jsonObjectAcc.Account = accounts;
-
         Gson gson1 = new Gson();
         Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
         }.getType();
-
         try {
             compositeDisposable.add(
-                    api.addAccount1(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
+                    api.addAccount(userName, pass, gson1.toJson(jsonObjectAcc, typeJsonObject), "")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-
                                 Gson gson = new Gson();
                                 Type typeIDs = new TypeToken<ModelLog>() {
                                 }.getType();
@@ -448,7 +360,6 @@ public class CompanyFragment extends Fragment {
 
                                     Company.deleteAll(Company.class);
                                     Company.saveInTx(companySelect);
-
 
                                     Bundle bundleMainOrder = new Bundle();
                                     bundleMainOrder.putString("Inv_GUID", "");
@@ -467,7 +378,6 @@ public class CompanyFragment extends Fragment {
                                 binding.progressbar.setVisibility(View.GONE);
 
                             }, throwable -> {
-
                                 Toast.makeText(getContext(), "خطای تایم اوت در ثبت اطلاعات مشتری.", Toast.LENGTH_SHORT).show();
                                 binding.progressbar.setVisibility(View.GONE);
 
@@ -477,28 +387,20 @@ public class CompanyFragment extends Fragment {
             Toast.makeText(getContext(), "خطا در ثبت اطلاعات مشتری.", Toast.LENGTH_SHORT).show();
             binding.progressbar.setVisibility(View.GONE);
         }
-
-
     }
 
-
+    public void setStoriesFragment(StoriesFragment storiesFragment) {
+        this.storiesFragment = storiesFragment;
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-
         binding = null;
     }
-
-
     @Override
     public void onStop() {
         super.onStop();
         compositeDisposable.clear();
     }
-
-    public  void  setStoriesFragment(StoriesFragment storiesFragment){
-        this.storiesFragment=storiesFragment;
-    }
-
 }
