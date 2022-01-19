@@ -1206,6 +1206,7 @@ public class MainOrderFragment extends Fragment {
 
 
     public void getProductLevel1() {
+        binding.orderTxtError.setText("");
         binding.ivFilter.setImageResource(R.drawable.ic_filter);
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
@@ -1244,6 +1245,7 @@ public class MainOrderFragment extends Fragment {
                                             binding.progressbar.setVisibility(View.GONE);
                                             return;
                                         }
+                                        productLevel1List.clear();
                                         productLevel1List.addAll(iDs.getProductLevel1());
                                         CollectionUtils.filter(iDs.getProductLevel1(), i -> i.getSts());
                                         if (productLevel1List.size() == 1)
@@ -1466,7 +1468,7 @@ public class MainOrderFragment extends Fragment {
 
                                         if (productList.size() == 0) {
                                             binding.orderTxtError.setVisibility(View.VISIBLE);
-                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
                                         }
 
 
@@ -1482,7 +1484,7 @@ public class MainOrderFragment extends Fragment {
                                         sharedPreferences.edit().putBoolean("discount", false).apply();
                                         filterError = true;
                                         binding.ivFilter.setImageResource(R.drawable.ic_filter);
-                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید";
+                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید.";
                                         showError(error, 0);
 
                                         binding.progressbar.setVisibility(View.GONE);
@@ -1569,7 +1571,7 @@ public class MainOrderFragment extends Fragment {
 
                                         if (productList.size() == 0) {
                                             binding.orderTxtError.setVisibility(View.VISIBLE);
-                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+                                            binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
                                         }
 
 
@@ -1585,7 +1587,7 @@ public class MainOrderFragment extends Fragment {
                                         sharedPreferences.edit().putBoolean("vip", false).apply();
                                         filterError = true;
                                         binding.ivFilter.setImageResource(R.drawable.ic_filter);
-                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید";
+                                        error = "خطا در اعمال فیلتر ، دوباره تلاش کنید.";
                                         showError(error, 0);
 
                                         binding.progressbar.setVisibility(View.GONE);

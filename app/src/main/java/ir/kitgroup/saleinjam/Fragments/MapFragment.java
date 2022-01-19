@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -546,7 +547,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                                 circleManager = new CircleManager(binding.mapView, mMapboxMap, style);
                                 setupCurrentLocationButton();
-                                if (!PermissionsManager.areLocationPermissionsGranted(getActivity())) {
+                                if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
                                     enableLocationComponent(style);
                                 }
                             });
@@ -564,7 +565,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             this.mMapboxMap.setCameraPosition(
                     new CameraPosition.Builder()
                             .target(Util.VANAK_SQUARE)
-                            .zoom(15)
+                            .zoom(12)
                             .build());
 
 
@@ -761,6 +762,29 @@ public class MapFragment extends Fragment implements PermissionsListener {
         alert.show();
     }
 
+
+
+    private void AlertPermission() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setMessage("برای استفاده از gps ، نرم افزار نیاز به دسترسی دارد.لطفا دسترسی لازم را با فشردن دکمه<<دسترسی دادن>> بدهید.")
+                .setCancelable(false)
+                .setPositiveButton("دسترسی دادن", (dialog, id) ->
+    {
+        PermissionsManager permissionsManager = new PermissionsManager(this);
+        permissionsManager.requestLocationPermissions(getActivity());
+    }
+                ).setNegativeButton("بستن", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -803,8 +827,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             initializeLocationEngine();
         } else {
-            PermissionsManager permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(getActivity());
+            AlertPermission();
         }
     }
 
@@ -836,6 +859,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         if (mMapboxMap.getStyle() != null) {
+
             enableLocationComponent(mMapboxMap.getStyle());
         }
         toggleCurrentLocationButton();
@@ -867,7 +891,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private void animateToCoordinate(LatLng coordinate) {
         CameraPosition position = new CameraPosition.Builder()
                 .target(coordinate)
-                .zoom(16)
+                .zoom(15)
                 .build();
         mMapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }

@@ -48,6 +48,10 @@
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="ir.kitgroup.saleinjam.DataBase" />
+
+<!--        <meta-data-->
+<!--            android:name="pushe_token"-->
+<!--            android:value="NWRuNnEzNHozb3FubDRqZUBveHNAODgxNDUxODMxNDY0"/>-->
         <!--
  <meta-data
             android:name="com.google.android.geo.API_KEY"

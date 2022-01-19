@@ -51,11 +51,13 @@
 
             </RelativeLayout>
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
 
                 <TextView
+                    android:textStyle="bold"
                     android:id="@+id/tvType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,8 +67,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="دسته بندی"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp" />
 
 
                 <ImageView
@@ -91,11 +92,13 @@
                 android:layout_height="0.5dp"/>
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
 
                 <TextView
+                    android:textStyle="bold"
                     android:id="@+id/tvPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,8 +108,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="محدوده قیمت"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp" />
 
 
                 <ImageView
@@ -137,6 +139,7 @@
 
                 <TextView
 
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -185,7 +188,8 @@
                     android:lineSpacingExtra="16dp"
                     android:text="فقط کالاهای تخفیف دار"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -210,12 +214,13 @@
                 android:layout_height="0.5dp"/>
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
 
                 <TextView
-
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -257,14 +262,14 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
-            android:background="#FFFFFF">
+            android:background="@color/purple_700">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="اعمال فیلتر"
-                android:textColor="@color/purple_700"
+                android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
