@@ -10,11 +10,11 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinjam"
+        applicationId "ir.kitgroup.saleinkonj"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 5
-        versionName "1.4.0.1"
+        versionName "1.4.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
