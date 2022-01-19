@@ -48,24 +48,9 @@ public class FilterFragment extends Fragment {
 
         if (filterDiscount) {
             binding.switchDiscount.setChecked(true);
-            binding.btnFilter.setVisibility(View.VISIBLE);
         } else if (filterVip) {
             binding.switchVip.setChecked(true);
-            binding.btnFilter.setVisibility(View.VISIBLE);
         }
-
-
-        binding.btnFilter.setOnClickListener(v -> {
-
-            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-            if (frg instanceof MainOrderFragment) {
-                MainOrderFragment fgf = (MainOrderFragment) frg;
-                if (filterDiscount)
-                    fgf.getDiscountProduct();
-                else if (filterVip)
-                    fgf.getProductVipSync();
-            }
-        });
 
 
         binding.tvDeleteFilter.setOnClickListener(v -> {
@@ -73,13 +58,8 @@ public class FilterFragment extends Fragment {
             sharedPreferences.edit().putBoolean("discount", false).apply();
             if (filterDiscount || filterVip) {
                 binding.switchDiscount.setChecked(false);
+                binding.switchVip.setChecked(false);
                 Toast.makeText(getActivity(), "با موفقیت حذف شد.", Toast.LENGTH_SHORT).show();
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
-                    fgf.getProductLevel1();
-
-                }
             } else
                 Toast.makeText(getActivity(), "هیچ فیلتری وجود ندارد", Toast.LENGTH_SHORT).show();
         });
@@ -90,15 +70,16 @@ public class FilterFragment extends Fragment {
                 filterDiscount = true;
                 filterVip = false;
                 binding.switchVip.setChecked(false);
-                binding.btnFilter.setVisibility(View.VISIBLE);
+                reloadSpecialMethod();
+
             } else {
                 binding.switchVip.setChecked(false);
                 filterDiscount = false;
                 filterVip = false;
-                binding.btnFilter.setVisibility(View.GONE);
+                reloadMainMethod();
+                sharedPreferences.edit().putBoolean("discount", false).apply();
             }
         });
-
 
 
         binding.switchVip.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -106,12 +87,13 @@ public class FilterFragment extends Fragment {
                 filterDiscount = false;
                 filterVip = true;
                 binding.switchDiscount.setChecked(false);
-                binding.btnFilter.setVisibility(View.VISIBLE);
+                reloadSpecialMethod();
             } else {
                 binding.switchDiscount.setChecked(false);
                 filterDiscount = false;
                 filterVip = false;
-                binding.btnFilter.setVisibility(View.GONE);
+                reloadMainMethod();
+                sharedPreferences.edit().putBoolean("vip", false).apply();
             }
         });
     }
@@ -122,4 +104,22 @@ public class FilterFragment extends Fragment {
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
     }
 
+    private void reloadSpecialMethod() {
+        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+        if (frg instanceof MainOrderFragment) {
+            MainOrderFragment fgf = (MainOrderFragment) frg;
+            if (filterDiscount)
+                fgf.getDiscountProduct();
+            else if (filterVip)
+                fgf.getProductVipSync();
+        }
+    }
+
+    private void reloadMainMethod() {
+        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+        if (frg instanceof MainOrderFragment) {
+            MainOrderFragment fgf = (MainOrderFragment) frg;
+            fgf.getProductLevel1();
+        }
+    }
 }

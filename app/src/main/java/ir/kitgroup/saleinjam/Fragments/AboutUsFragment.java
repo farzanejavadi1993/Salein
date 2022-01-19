@@ -1,7 +1,9 @@
 package ir.kitgroup.saleinjam.Fragments;
 
 import android.content.Intent;
+import android.graphics.text.LineBreaker;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,9 +45,11 @@ public class AboutUsFragment extends Fragment {
 
         company = Select.from(Company.class).first();
 
-        binding.imageView.setImageResource(config.imageLogo);
+
         binding.title.setText(company.N);
-        binding.description.setText(company.DESC);
+        String Title=company.DESC.split("&&")[0];
+        String description=company.DESC.split("&&")[1];
+        binding.description.setText(Title);
         binding.textView4.setText(company.T1);
 
         binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
@@ -55,6 +59,15 @@ public class AboutUsFragment extends Fragment {
             intent.setData(Uri.parse("tel:" + company.T1));
             startActivity(intent);
         });
+
+
+        binding.description.setText(description);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            binding.description.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+
+        }
     }
 }
 

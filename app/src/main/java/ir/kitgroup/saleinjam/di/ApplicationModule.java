@@ -70,6 +70,15 @@ public class ApplicationModule {
                     break;
 
 
+                case "ir.kitgroup.saleinkong":
+                    imageLogo = R.drawable.konj_png;
+                    packageName = "ir.kitgroup.saleinkonj";
+                    imgProduct = R.drawable.konj_icon;
+                    N = "پیتزا کنج";
+                    DESC = "یک فست فود عالی";
+
+                    break;
+
                 case "ir.kitgroup.saleinjam":
                     imageLogo = R.drawable.jam_png;
                     packageName = "ir.kitgroup.saleinjam";

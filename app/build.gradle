@@ -14,7 +14,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 5
-        versionName "1.4.0.0"
+        versionName "1.4.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -56,7 +56,17 @@ android {
         checkReleaseBuilds false
     }
 }
-
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            def libraryGroup = "{artifact}"
+            def forceVersion = "{version}"
+            if (details.requested.group == libraryGroup) {
+                details.useVersion forceVersion
+            }
+        }
+    }
+}
 dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/commons-collections4-4.4.jar')
@@ -71,10 +81,6 @@ dependencies {
     implementation 'org.jetbrains:annotations:15.0'
     implementation "com.airbnb.android:lottie:+"
     implementation "com.airbnb.android:lottie:+"
-
-
-
-    //implementation("co.pushe.plus:base:2.5.1")
 
 
     //Retrofit Library

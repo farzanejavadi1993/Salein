@@ -17,7 +17,7 @@ public class Company extends SugarRecord {
     public Boolean Parent;
     public String LAT;
     public String LONG;
-    public String DESC;
+    public String DESC="";
     public String INSK_ID;
     public String CITY;
     public int mode = 2;

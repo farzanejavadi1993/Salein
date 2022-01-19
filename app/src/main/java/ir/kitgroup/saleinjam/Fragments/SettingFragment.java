@@ -108,7 +108,36 @@ public class SettingFragment extends Fragment {
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            getActivity().finish();
+            sharedPreferences.edit().clear();
+
+            if (Account.count(Account.class) > 0)
+                Account.deleteAll(Account.class);
+
+            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                InvoiceDetail.deleteAll(InvoiceDetail.class);
+
+            if (Product.count(Product.class) > 0)
+                Product.deleteAll(Product.class);
+
+            if (Tables.count(Tables.class) > 0)
+                Tables.deleteAll(Tables.class);
+
+            if (Unit.count(Unit.class) > 0)
+                Unit.deleteAll(Unit.class);
+
+            if (Company.count(Company.class) > 0)
+                Company.deleteAll(Company.class);
+
+            ((LauncherActivity) getActivity()).setFistItem();
+            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+            for (int i = 0; i < size; i++) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
+            //reload loginFragment
 
         });
         //endregion Cast Variable Dialog Sync
@@ -142,10 +171,11 @@ public class SettingFragment extends Fragment {
         });
 
         binding.ivPower.setOnClickListener(v -> {
+            sharedPreferences.edit().clear();
+
             if (Account.count(Account.class) > 0)
                 Account.deleteAll(Account.class);
 
-            sharedPreferences.edit().clear();
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                 InvoiceDetail.deleteAll(InvoiceDetail.class);
 

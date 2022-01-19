@@ -3,6 +3,7 @@ package ir.kitgroup.saleinjam.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -13,9 +14,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinjam.DataBase.Company;
 import ir.kitgroup.saleinjam.DataBase.InvoiceDetail;
@@ -256,14 +260,26 @@ public class LauncherActivity extends AppCompatActivity {
         String name = "";
         try {
             name = getSupportFragmentManager().getBackStackEntryAt(size - 1).getName();
-        } catch (Exception ignored) {}
-
-        if (size == 0) {
-            messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
-            ExitDialog.show();
+        } catch (Exception ignored) {
         }
 
-        else if (config.mode == 1 && getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderF")) {
+        if (size == 0) {
+            boolean vip = sharedPreferences.getBoolean("vip", false);
+            boolean discount = sharedPreferences.getBoolean("discount", false);
+
+            if (vip || discount){
+                Fragment frg =getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    fgf.getProductLevel1();
+                }
+            }else {
+                messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
+                ExitDialog.show();
+            }
+
+
+        } else if (config.mode == 1 && getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderF")) {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
 
@@ -272,15 +288,12 @@ public class LauncherActivity extends AppCompatActivity {
                 LauncherOrganizationFragment fgf = (LauncherOrganizationFragment) frg;
                 fgf.refreshAdapter();
             }
-        }
-
-        else if (
+        } else if (
                 name.equals("SettingF") ||
                         name.equals("InVoiceDetailF") ||
                         name.equals("SearchProductF")) {
             setFistItem();
-        }
-        else if (
+        } else if (
                 name.equals("OrderListF") ||
                         name.equals("ProfileF") ||
                         name.equals("AboutUsF")) {
@@ -290,8 +303,7 @@ public class LauncherActivity extends AppCompatActivity {
             setInVisibiltyItem(true);
             loadProfile = false;
             binding.navView.setSelectedItemId(R.id.profile);
-        }
-        else {
+        } else {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
         }

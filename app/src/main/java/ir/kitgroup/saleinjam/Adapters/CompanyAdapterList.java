@@ -62,7 +62,8 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
                 .into(holder.ivCompany);
 
         holder.tvTitleCompany.setText(company.N);
-        holder.tvDescriptionCompany.setText(company.DESC);
+        String Title=company.DESC.split("&&")[0];
+        holder.tvDescriptionCompany.setText(Title);
 
         if (company.Parent!=null && company.Parent)
             holder.flesh.setVisibility(View.VISIBLE);

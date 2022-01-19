@@ -355,8 +355,8 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV4.getText().toString() +
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
-             //  Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-             // return;
+           Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+            return;
             }
             getInquiryAccount1(company.USER, company.PASS, mobileNumber);
         });
@@ -455,13 +455,12 @@ public class ConfirmCodeFragment extends Fragment {
                                 else {
 
                                     sharedPreferences.edit().putBoolean("disableAccount", false).apply();
+                                    getActivity().getSupportFragmentManager().popBackStack();
                                     //region Account Is Register
                                     if (iDs.getAccountList().size() > 0) {
                                         Account.deleteAll(Account.class);
                                         Account.saveInTx(iDs.getAccountList());
 
-
-                                        getActivity().getSupportFragmentManager().popBackStack();
 
                                         FragmentTransaction addFragment;
                                         //region Show All Company
@@ -471,7 +470,6 @@ public class ConfirmCodeFragment extends Fragment {
 
                                         }
                                         //endregion Show All Company
-
 
                                         //region Go To MainOrderFragment Because Account Is Register
                                         else {
