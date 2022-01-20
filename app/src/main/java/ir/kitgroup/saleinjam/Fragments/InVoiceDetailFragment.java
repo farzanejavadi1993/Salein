@@ -614,17 +614,17 @@ public class InVoiceDetailFragment extends Fragment {
 
                     invoiceDetailList.remove(invoiceDetailList.get(positionStart));
 
-
-                    for (int i = 0; i < invoiceDetailList.size(); i++) {
+                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                    for (int i = 0; i < invoiceDetails.size(); i++) {
 
 
                         ir.kitgroup.saleinjam.DataBase.Product product = Select.from(ir.kitgroup.saleinjam.DataBase.Product.class).where("I ='" + invoiceDetailList.get(i).PRD_UID + "'").first();
                         if (product != null) {
-                            double sumprice = (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
+                            double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
                             double discountPrice = sumprice * (product.getPercDis() / 100);
                             double totalPrice = sumprice - discountPrice;
 
-                            sumPrice = sumPrice + (invoiceDetailList.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
+                            sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
                             sumPurePrice = sumPurePrice + totalPrice;
                             sumDiscounts = sumDiscounts + discountPrice;
 
