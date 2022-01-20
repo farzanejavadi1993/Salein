@@ -149,7 +149,7 @@ public class MainOrderFragment extends Fragment {
 
     private Boolean disableAccount = false;
     private Boolean filterError = false;
-    private Boolean stopLoad = false;
+
 
     private Company company;
     private API api;
@@ -1059,7 +1059,7 @@ public class MainOrderFragment extends Fragment {
         //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
 
-            stopLoad = true;
+
             binding.progressbar.setVisibility(View.VISIBLE);
             productList.clear();
 
@@ -1631,7 +1631,7 @@ public class MainOrderFragment extends Fragment {
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                                        if (!stopLoad) {
+
                                             Gson gson = new Gson();
                                             Type typeModelProduct = new TypeToken<ModelProduct>() {
                                             }.getType();
@@ -1695,7 +1695,7 @@ public class MainOrderFragment extends Fragment {
 
                                             binding.progressbar.setVisibility(View.GONE);
 
-                                        }
+
 
 
                                     }
@@ -1716,7 +1716,7 @@ public class MainOrderFragment extends Fragment {
 
     private void getSettingPrice(String GUID) {
         compositeDisposable.clear();
-        stopLoad = false;
+
         try {
             compositeDisposable.add(
                     api.getSetting1(company.USER, company.PASS)
@@ -1899,7 +1899,7 @@ public class MainOrderFragment extends Fragment {
     private void loadMore() {
 
 
-        int pageSize = 18;
+        int pageSize = 16;
         isLoading = true;
 
         final ArrayList<Product> items = new ArrayList<>();

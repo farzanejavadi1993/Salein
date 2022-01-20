@@ -94,7 +94,7 @@ public class SplashScreenFragment extends Fragment {
         }else
             Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
 
-        String Title=company!=null&& company.DESC!=null ?company.DESC.split("&&")[0]:"";
+        String Title=company!=null&& company.DESC!=null ?company.DESC:"";
 
         binding.tvTitle.setText(company!=null && company.N!=null && !config.INSKU_ID.equals("ir.kitgroup.salein") ? company.N:config.N);
         binding.tvDescription.setText(company!=null && company.DESC!=null && !config.INSKU_ID.equals("ir.kitgroup.salein") ?Title:config.DESC);

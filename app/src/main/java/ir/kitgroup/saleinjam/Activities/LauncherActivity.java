@@ -296,7 +296,7 @@ public class LauncherActivity extends AppCompatActivity {
         } else if (
                 name.equals("OrderListF") ||
                         name.equals("ProfileF") ||
-                        name.equals("AboutUsF")) {
+                        name.equals("AboutUsF")  ) {
             setClearCounterOrder();
             getSupportFragmentManager().popBackStack();
             getVisibilityBottomBar(true);

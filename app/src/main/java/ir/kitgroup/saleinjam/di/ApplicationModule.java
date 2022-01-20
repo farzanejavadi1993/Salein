@@ -53,6 +53,9 @@ public class ApplicationModule {
         String packageName = "";
         String N = "";
         String DESC = "";
+        String watsApp = "";
+        String instagram = "";
+        String aboutUs = "";
 
 
         try {
@@ -85,6 +88,10 @@ public class ApplicationModule {
                     imgProduct = R.drawable.jam_icon;
                     N = " بازرگانی جم پارت قطعه";
                     DESC = "لوازم یدکی";
+                    watsApp = "https://chat.whatsapp.com/IOK5rOpFt37CBcrLBVhifa";
+                    instagram = "https://instagram.com/jampartgheteh?utm_medium=copy_link";
+                    aboutUs=context.getResources().getString(R.string.app_description_jam);
+
 
                     break;
 
@@ -136,11 +143,14 @@ public class ApplicationModule {
         Config config = new Config();
         config.imageLogo = imageLogo;
         config.mode = mode;
+        config.watsApp = watsApp;
+        config.Instagram = instagram;
 
         config.N = N;
         config.DESC = DESC;
         config.INSKU_ID = packageName;
         config.imageIcon = imgProduct;
+        config.Aboutus = aboutUs;
 
         return config;
 

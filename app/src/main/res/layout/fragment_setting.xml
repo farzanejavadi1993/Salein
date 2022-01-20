@@ -151,14 +151,12 @@
                     android:textStyle="bold" />
 
 
-
-
                 <ImageView
-                    android:layout_centerVertical="true"
                     android:id="@+id/iv_credit"
-                    android:layout_alignParentRight="true"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/club"
                     tools:ignore="ContentDescription" />
@@ -302,7 +300,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
-                    android:text="پشتیبانی"
+                    android:text="تماس با ما"
                     android:textColor="@color/medium_color"
                     android:textSize="@dimen/text_normal_mobile_size"
                     android:textStyle="bold" />
@@ -320,6 +318,52 @@
             </LinearLayout>
 
             <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="@dimen/normal_left_right_margin"
+                android:layout_marginRight="@dimen/normal_left_right_margin"
+                android:background="#ccc" />
+
+            <LinearLayout
+
+                android:id="@+id/btn_about_us"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_marginRight="16dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tv_about_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:text="درباره ما"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_normal_mobile_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_about_us"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_aboutus"
+                    tools:ignore="ContentDescription" />
+
+
+            </LinearLayout>
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="@dimen/normal_left_right_margin"

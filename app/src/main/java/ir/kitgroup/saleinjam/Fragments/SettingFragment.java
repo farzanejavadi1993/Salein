@@ -46,6 +46,7 @@ import ir.kitgroup.saleinjam.classes.ConfigRetrofit;
 import ir.kitgroup.saleinjam.classes.Util;
 import ir.kitgroup.saleinjam.databinding.FragmentSettingBinding;
 import ir.kitgroup.saleinjam.DataBase.Company;
+import ir.kitgroup.saleinjam.models.Config;
 import ir.kitgroup.saleinjam.models.ModelAccount;
 import ir.kitgroup.saleinjam.models.ModelLog;
 
@@ -54,6 +55,9 @@ public class SettingFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+    @Inject
+    Config config;
 
     private FragmentSettingBinding binding;
     private API api;
@@ -70,6 +74,7 @@ public class SettingFragment extends Fragment {
     private String mobile;
     private String linkPayment = "";
 
+   private  Boolean disableAccount=false;
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -96,6 +101,10 @@ public class SettingFragment extends Fragment {
         if (!linkPayment.equals(""))
             linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
+        if (!config.Aboutus.equals("")){
+            binding.view.setVisibility(View.VISIBLE);
+            binding.btnAboutUs.setVisibility(View.VISIBLE);
+        }
         //region Cast Variable Dialog Sync
         dialogSync = new Dialog(getActivity());
         dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -107,6 +116,45 @@ public class SettingFragment extends Fragment {
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
         btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+
+            if (disableAccount){
+                sharedPreferences.edit().clear();
+
+                if (Account.count(Account.class) > 0)
+                    Account.deleteAll(Account.class);
+
+                if (InvoiceDetail.count(InvoiceDetail.class) > 0)
+                    InvoiceDetail.deleteAll(InvoiceDetail.class);
+
+                if (Product.count(Product.class) > 0)
+                    Product.deleteAll(Product.class);
+
+                if (Tables.count(Tables.class) > 0)
+                    Tables.deleteAll(Tables.class);
+
+                if (Unit.count(Unit.class) > 0)
+                    Unit.deleteAll(Unit.class);
+
+                if (Company.count(Company.class) > 0)
+                    Company.deleteAll(Company.class);
+
+                ((LauncherActivity) getActivity()).setFistItem();
+                ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
+                final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                for (int i = 0; i < size; i++) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
+                //reload loginFragment
+
+            }
+
+        });
+
+        btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
             sharedPreferences.edit().clear();
 
@@ -138,7 +186,6 @@ public class SettingFragment extends Fragment {
 
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
             //reload loginFragment
-
         });
         //endregion Cast Variable Dialog Sync
 
@@ -171,36 +218,7 @@ public class SettingFragment extends Fragment {
         });
 
         binding.ivPower.setOnClickListener(v -> {
-            sharedPreferences.edit().clear();
-
-            if (Account.count(Account.class) > 0)
-                Account.deleteAll(Account.class);
-
-            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-            if (Product.count(Product.class) > 0)
-                Product.deleteAll(Product.class);
-
-            if (Tables.count(Tables.class) > 0)
-                Tables.deleteAll(Tables.class);
-
-            if (Unit.count(Unit.class) > 0)
-                Unit.deleteAll(Unit.class);
-
-            if (Company.count(Company.class) > 0)
-                Company.deleteAll(Company.class);
-
-            ((LauncherActivity) getActivity()).setFistItem();
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-            for (int i = 0; i < size; i++) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
-            //reload loginFragment
+        showError( "آیا مایل به خروج از برنامه هستید؟",1);
         });
 
         try {
@@ -213,9 +231,13 @@ public class SettingFragment extends Fragment {
 
 
         binding.btnSupport.setOnClickListener(v ->
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ContactUsFragment(), "ContactUsFragment").addToBackStack("AboutUsF").commit()
         );
 
+
+        binding.btnAboutUs.setOnClickListener(v ->
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
+        );
         binding.btnOrderList.setOnClickListener(v ->
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit());
 
@@ -266,11 +288,13 @@ public class SettingFragment extends Fragment {
                                             String description = iDs0.getLogs().get(0).getDescription();
                                             int  message = iDs0.getLogs().get(0).getMessage();
                                             if (message == 3) {
+                                                disableAccount=true;
                                                 sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                                showError(description);
+                                                showError(description,2);
                                             }
                                         }
                                     } else {
+                                        disableAccount=false;
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
                                         //user is register
                                         try {
@@ -286,9 +310,9 @@ public class SettingFragment extends Fragment {
                                             } else {
                                                 binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
                                                 binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
-                                               boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
+                                                disableAccount=sharedPreferences.getBoolean("disableAccount",false);
                                                 if (disableAccount)
-                                                    showError("حساب کاربری شما غیر فعال شده است.");
+                                                    showError("حساب کاربری شما غیر فعال شده است.",2);
                                             }
                                         } catch (Exception ignored) {}
                                     }
@@ -303,11 +327,20 @@ public class SettingFragment extends Fragment {
         @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-    private void showError(String error) {
+    private void showError(String error, int type) {
         textMessageDialog.setText(error);
-        btnNoDialog.setText("بستن");
+
         dialogSync.dismiss();
-        btnOkDialog.setVisibility(View.GONE);
+        if (type==2) {
+            btnOkDialog.setVisibility(View.GONE);
+            btnNoDialog.setText("بستن");
+
+        }
+        else {
+            btnOkDialog.setVisibility(View.VISIBLE);
+            btnNoDialog.setText("خیر");
+            btnOkDialog.setText("بله");
+        }
         dialogSync.setCancelable(false);
         dialogSync.show();
     }

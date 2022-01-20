@@ -8,4 +8,7 @@ public class Config {
     public  String IP1;
     public  String N;
     public  String DESC;
+    public  String watsApp="";
+    public  String Instagram="";
+    public  String Aboutus="";
 }

@@ -43,7 +43,7 @@ public class RulesFragment extends Fragment {
         binding.tvTitle.setTextSize(fontSize);
         binding.tvRule.setTextSize(fontSize);
 
-        String Title=company.DESC.split("&&")[0];
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.tvRule.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
@@ -52,7 +52,7 @@ public class RulesFragment extends Fragment {
                 "۱.۱ " +
                 company.N +
                 ": سیستم نرم افزاری فروش بصورت حضوری و آنلاین است که به منظور ارائه " +
-                Title +
+                company.DESC +
                 " در " +
                company.CITY +
 

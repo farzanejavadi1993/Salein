@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius= "@dimen/order_toolbar_button_user_corner" />
-    <gradient android:angle="270" android:startColor="@color/blue600"  android:centerColor="@color/blue500" android:endColor="@color/blue300"/>
-
-</shape>
