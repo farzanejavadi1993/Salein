@@ -74,22 +74,22 @@ public class ContactUsFragment extends Fragment {
       binding.watsapp.setOnClickListener(v -> {
 
           if (!config.watsApp.equals("")){
-              PackageManager pm = getActivity().getPackageManager();
 
-              try
-              {
-                  PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                  Intent waIntent = new Intent(Intent.ACTION_SEND);
-                  waIntent.setType("text/plain");
-                  waIntent.setPackage("com.whatsapp");
-                  waIntent.putExtra(Intent.EXTRA_TEXT, config.watsApp);
-                  startActivity(waIntent);
-              }
-              catch (PackageManager.NameNotFoundException e)
-              {
-                  Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
-                          .show();
-              }
+             boolean install= appInstallOrNot("com.whatsapp");
+
+             if (install){
+
+
+                 Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
+                         Uri.parse(config.watsApp);
+                 intentWhatsAppGroup.setData(uri);
+                 intentWhatsAppGroup.setPackage("com.whatsapp");
+                 startActivity(intentWhatsAppGroup);
+             }else {
+                 Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
+                         .show();
+             }
+
           }else {
               Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
           }
@@ -116,6 +116,19 @@ public class ContactUsFragment extends Fragment {
       });
 
 
+    }
+
+    private  boolean appInstallOrNot(String url){
+        PackageManager packageManager= getActivity().getPackageManager();
+
+        boolean app_install;
+        try {
+            packageManager.getPackageInfo(url,PackageManager.GET_ACTIVITIES);
+            app_install=true;
+        }catch (Exception ignored){
+            app_install=false;
+        }
+        return app_install;
     }
 }
 

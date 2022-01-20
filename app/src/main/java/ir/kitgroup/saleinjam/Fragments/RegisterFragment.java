@@ -254,7 +254,12 @@ public class RegisterFragment extends Fragment {
                                     List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
                                     if (settingsList.size() > 0) {
                                         String accStp = settingsList.get(0).ACC_STATUS_APP;
-                                        ACCSTP = !accStp.equals("0");
+
+                                        if (accStp.equals("0")){
+                                            ACCSTP=false;
+                                        }else {
+                                            ACCSTP=true;
+                                        }
                                         accountsList.get(0).STAPP = ACCSTP;
                                         addAccount(company.USER, company.PASS, accountsList);
                                     }
