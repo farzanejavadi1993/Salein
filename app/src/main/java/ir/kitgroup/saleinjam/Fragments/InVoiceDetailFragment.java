@@ -523,7 +523,9 @@ public class InVoiceDetailFragment extends Fragment {
                 if (maxSales.equals("1")) {
                     getMaxSales(Prd_GUID, s);
                 } else {
-                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+
+                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
                     CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
                     if (result.size() > 0) {
                         InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
@@ -534,6 +536,7 @@ public class InVoiceDetailFragment extends Fragment {
                         if (invoiceDetail != null) {
                             invoiceDetail.INV_DET_QUANTITY = amount;
                             invoiceDetail.update();
+
                         }
 
                         invoiceDetailAdapter.notifyDataSetChanged();
@@ -569,7 +572,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                     for (int i = 0; i < invoiceDetails.size(); i++) {
-                        ir.kitgroup.saleinjam.DataBase.Product product = Select.from(ir.kitgroup.saleinjam.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
+                        ir.kitgroup.saleinjam.DataBase.Product product = Select.from(ir.kitgroup.saleinjam.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
                         if (product != null) {
                             double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
 
