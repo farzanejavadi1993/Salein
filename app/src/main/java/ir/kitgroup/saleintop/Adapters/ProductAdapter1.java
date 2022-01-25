@@ -230,8 +230,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             // holder.error.setText("");
 
 
-            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
-
+            InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
             String ip = company.IP1;
@@ -241,7 +240,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
                     .error(config.imageIcon)
-                    .placeholder(config.INSKU_ID.equals("ir.kitgroup.saleinmeat") ?R.drawable.donyavilaoding:R.drawable.loading)
+                    .placeholder(config.INSKU_ID.equals("ir.kitgroup.saleinmeat") ? R.drawable.donyavilaoding : R.drawable.loading)
                     .into(holder.productImage);
 
 
@@ -309,21 +308,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             double amount;
             String description;
 
-            if (invoiceDetail != null && invoiceDetail.INV_DET_QUANTITY != null) {
-                amount = invoiceDetail.INV_DET_QUANTITY;
+            if (ivDetail != null && ivDetail.INV_DET_QUANTITY != null) {
+                amount = ivDetail.INV_DET_QUANTITY;
 
                 if (amount > 0 && Seen) {
-                    if (invoiceDetail.INV_DET_PERCENT_DISCOUNT != null && invoiceDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
+                    if (ivDetail.INV_DET_PERCENT_DISCOUNT != null && ivDetail.INV_DET_PERCENT_DISCOUNT != 0.0) {
                         if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
                             holder.productOldPrice.setVisibility(View.VISIBLE);
                             holder.Line.setVisibility(View.VISIBLE);
 
-                            holder.productDiscountPercent.setText(format.format(invoiceDetail.INV_DET_PERCENT_DISCOUNT) + "%");
+                            holder.productDiscountPercent.setText(format.format(ivDetail.INV_DET_PERCENT_DISCOUNT) + "%");
                             holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
                             holder.Line.setText("------------");
-                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (invoiceDetail.INV_DET_PERCENT_DISCOUNT / 100);
+                            double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (ivDetail.INV_DET_PERCENT_DISCOUNT / 100);
                             double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
                         }
@@ -345,8 +344,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 getMaxSale(holder.layoutAmount, holder.error, productsList.get(holder.getAdapterPosition()).getI(), amount);
 
 
-            if (invoiceDetail != null && invoiceDetail.INV_DET_DESCRIBTION != null)
-                description = invoiceDetail.INV_DET_DESCRIBTION;
+            if (ivDetail != null && ivDetail.INV_DET_DESCRIBTION != null)
+                description = ivDetail.INV_DET_DESCRIBTION;
             else
                 description = "";
 
@@ -368,7 +367,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMax.setOnClickListener(view ->
                     {
-
 
 
                         holder.ProductAmountTxt.setCursorVisible(false);
@@ -423,20 +421,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 holder.textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        int p=0;
+                        int p = 0;
                     }
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
-                       // Selection.setSelection(holder.ProductAmountTxt.getText(), holder.ProductAmountTxt.getText().length());
-
-
 
                         if (!charSequence.toString().isEmpty())
-                        holder.ProductAmountTxt.setSelectAllOnFocus(false);
-
-
+                            holder.ProductAmountTxt.setCursorVisible(true);
 
 
                         String s = Util.toEnglishNumber(charSequence.toString());
@@ -451,25 +444,23 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     s.indexOf("٫") == s.length() - 1) {
                                 return;
                             }
-                            if (holder.getAdapterPosition() < productsList.size())
-                                doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
-                                        holder.getAdapterPosition(),
-                                        holder.error,
-                                        holder.progressBar,
-                                        holder.textWatcher,
-                                        holder.ProductAmountTxt,
-                                        holder.ivMinus,
-                                        company,
-                                        maxSale,
-                                        productsList.get(holder.getAdapterPosition()).getI(),
-                                        s,
-                                        3
 
-                                );
                         }
 
-
-
+                        if (holder.getAdapterPosition() < productsList.size())
+                            doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                                    holder.getAdapterPosition(),
+                                    holder.error,
+                                    holder.progressBar,
+                                    holder.textWatcher,
+                                    holder.ProductAmountTxt,
+                                    holder.ivMinus,
+                                    company,
+                                    maxSale,
+                                    productsList.get(holder.getAdapterPosition()).getI(),
+                                    s,
+                                    3
+                            );
 
 
                     }
@@ -575,12 +566,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
     private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, Company company, String Prd_GUID, String s, int MinOrPlus) {
+        Gson gson = new Gson();
+        Type typeIDs = new TypeToken<ModelLog>() {
+        }.getType();
+
 
         progressBar.setVisibility(View.VISIBLE);
-        double aPlus = productsList.get(position).getCoef1();
-        if (aPlus == 0)
-            aPlus = 1;
-        double finalAPlus = aPlus;
+
+
 
         try {
             compositeDisposable.add(
@@ -592,194 +585,195 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                             .subscribe(jsonElement -> {
                                         progressBar.setVisibility(View.GONE);
 
-                                        double remain = -1000000000;
+                                        double remain;
                                         try {
                                             assert jsonElement != null;
                                             remain = Integer.parseInt(jsonElement);
                                         } catch (Exception e) {
-                                            Gson gson = new Gson();
-                                            Type typeIDs = new TypeToken<ModelLog>() {
-                                            }.getType();
                                             ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
-
                                             assert iDs != null;
-                                            int message = iDs.getLogs().get(0).getMessage();
                                             String description = iDs.getLogs().get(0).getDescription();
-                                            if (message != 1)
-                                                Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
 
+
+                                        List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+                                        ArrayList<InvoiceDetail> resultInvoice = new ArrayList<>(invDetails);
+                                        CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
+
+
+
+                                        double mainCoef1 = productsList.get(position).getCoef1();
+                                        double coef1 = productsList.get(position).getCoef1();
+                                        double coef2 = productsList.get(position).getCoef2();
+                                        double amount = 0;
+
+                                        if (remain <= 0) {
+                                            productsList.get(position).setAmount(0.0);
+                                            if (MinOrPlus != 3) {
+                                                ProductAmountTxt.removeTextChangedListener(textWatcher);
+                                                ProductAmountTxt.setText("");
+
+                                                ProductAmountTxt.addTextChangedListener(textWatcher);
+                                                ivMinus.setVisibility(View.GONE);
+                                                ProductAmountTxt.setVisibility(View.GONE);
+                                            }
+
+
+
+                                            error.setText("این کالا موجود نمی باشد");
+                                            progressBar.setVisibility(View.GONE);
+                                            amount=0.0;
 
                                         }
 
-                                        if (remain != -1000000000) {
-
-                                            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-                                            ArrayList<InvoiceDetail> resultInvoice = new ArrayList<>(invDetails);
-                                            CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
 
 
-                                            if (remain <= 0) {
-                                                productsList.get(position).setAmount(0.0);
+                                        if (MinOrPlus == 1) {
+                                            if (amount1 > 0.0 && coef2 != 0.0)
+                                                coef1 = coef2;
+                                            amount = amount1 + coef1;
+                                        }
+
+                                        else if (MinOrPlus == 2) {
+                                            if (amount1 > coef1 && coef2 != 0.0 && amount1<coef1+coef2){
+                                                amount = 0.0;
+                                            }
+                                            else if (amount1 > coef1 && coef2 != 0.0)
+                                                amount = amount1 - coef2;
+                                            else if (amount1 >= coef1)
+                                                amount = amount1 - coef1;
+
+                                            else
+                                                return;
+                                        }
+
+                                        else {
+                                            try {
+                                                amount = Float.parseFloat(s);
+                                                if (
+                                                        (coef2 != 0.0 && amount < coef1)
+                                                                || (coef2 == 0 && amount % coef1 != 0)
+                                                                || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                                                ) {
+
+
+                                                    AlertDialog alertDialog = new AlertDialog.Builder(context)
+                                                            .setMessage(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ")
+                                                            .setPositiveButton("بستن", (dialog, which) -> {
+                                                                dialog.dismiss();
+                                                            })
+                                                            .show();
+
+                                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                                    Typeface face = Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                                                    textView.setTypeface(face);
+                                                    textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+                                                    textView.setTextSize(13);
+
+
+                                                    ProductAmountTxt.removeTextChangedListener(textWatcher);
+                                                    ProductAmountTxt.setText("");
+                                                    ProductAmountTxt.addTextChangedListener(textWatcher);
+
+                                                    ivMinus.setVisibility(View.GONE);
+                                                    ProductAmountTxt.setVisibility(View.GONE);
+                                                    productsList.get(position).setAmount(0.0);
+                                                    amount=0.0;
+
+                                                }
+
+
+                                            } catch (Exception ignored) {}
+                                        }
+
+
+                                        productsList.get(position).setAmount(amount);
+
+                                        if (Integer.parseInt(jsonElement) - amount < 0) {
+                                            AlertDialog alertDialog = new AlertDialog.Builder(context)
+                                                    .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
+                                                    .setPositiveButton("بستن", (dialog, which) -> {
+                                                        dialog.dismiss();
+                                                    })
+                                                    .show();
+
+                                            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                            Typeface face = Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
+                                            textView.setTypeface(face);
+                                            textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+                                            textView.setTextSize(13);
+
+                                            if (remain % mainCoef1 != 0)
+                                                remain = 0.0;
+
+
+                                            productsList.get(position).setAmount(remain);
+                                            ProductAmountTxt.removeTextChangedListener(textWatcher);
+                                            ProductAmountTxt.setText(df.format(remain));
+                                            ProductAmountTxt.addTextChangedListener(textWatcher);
+                                            ProductAmountTxt.setCursorVisible(false);
+
+
+                                            if (resultInvoice.size() > 0) {
+                                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
+                                                if (invoiceDetail != null) {
+                                                    invoiceDetail.INV_DET_QUANTITY = remain;
+                                                    if (remain!=0.0)
+                                                        invoiceDetail.update();
+                                                    else
+                                                        invoiceDetail.delete();
+
+                                                    clickItem.onClick(Prd_GUID);
+                                                }
+
+
+                                            }
+
+                                            progressBar.setVisibility(View.GONE);
+
+                                           return;
+                                        }
+
+
+                                        //edit row
+                                        if (resultInvoice.size() > 0) {
+                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
+                                            if (amount == 0) {
+                                                if (invoiceDetail != null)
+                                                    invoiceDetail.delete();
+
                                                 if (MinOrPlus != 3) {
                                                     ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                    ProductAmountTxt.setText("0");
-
+                                                    ProductAmountTxt.setText("");
                                                     ProductAmountTxt.addTextChangedListener(textWatcher);
                                                     ivMinus.setVisibility(View.GONE);
                                                     ProductAmountTxt.setVisibility(View.GONE);
                                                 }
-                                                if (resultInvoice.size() > 0) {
-                                                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
-                                                    if (invoiceDetail != null) {
-                                                        invoiceDetail.delete();
-                                                        clickItem.onClick(Prd_GUID);
-                                                    }
-                                                }
 
-                                                error.setText("این کالا موجود نمی باشد");
-                                                progressBar.setVisibility(View.GONE);
+
+                                                clickItem.onClick(Prd_GUID);
                                                 return;
                                             }
 
 
-                                            double amount = 0;
-                                            if (MinOrPlus == 1)
-                                                amount = amount1 + finalAPlus;
-
-
-                                            else if (MinOrPlus == 2) {
-                                                if (amount1 >= finalAPlus)
-                                                    amount = amount1 - finalAPlus;
-                                                else
-                                                    return;
-
-
-                                            } else {
-                                                try {
-                                                    amount = Float.parseFloat(s);
-                                                    if (amount % finalAPlus != 0) {
-
-
-                                                        AlertDialog alertDialog = new AlertDialog.Builder(context)
-                                                                .setMessage(" مقدار وارد شده باید ضریبی از " + finalAPlus + " باشد ")
-                                                                .setPositiveButton("بستن", (dialog, which) -> {
-                                                                    dialog.dismiss();
-                                                                })
-                                                                .show();
-
-                                                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                                        Typeface face = Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
-                                                        textView.setTypeface(face);
-                                                        textView.setTextColor(context.getResources().getColor(R.color.medium_color));
-                                                        textView.setTextSize(13);
-
-
-                                                        ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                        ProductAmountTxt.setText("0");
-
-                                                        ProductAmountTxt.addTextChangedListener(textWatcher);
-                                                        ivMinus.setVisibility(View.GONE);
-                                                        ProductAmountTxt.setVisibility(View.GONE);
-                                                        productsList.get(position).setAmount(0.0);
-                                                        return;
-                                                    }
-
-
-                                                } catch (Exception ignored) {
-
-                                                }
+                                            if (invoiceDetail != null) {
+                                                invoiceDetail.INV_DET_QUANTITY = amount;
+                                                invoiceDetail.update();
                                             }
 
-
-                                            productsList.get(position).setAmount(amount);
-
-                                            if (Integer.parseInt(jsonElement) - amount < 0) {
-
-
-                                                AlertDialog alertDialog = new AlertDialog.Builder(context)
-                                                        .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
-                                                        .setPositiveButton("بستن", (dialog, which) -> {
-                                                            dialog.dismiss();
-                                                        })
-                                                        .show();
-
-                                                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                                Typeface face = Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
-                                                textView.setTypeface(face);
-                                                textView.setTextColor(context.getResources().getColor(R.color.medium_color));
-                                                textView.setTextSize(13);
-
-                                                if (remain % finalAPlus != 0) {
-
-                                                    remain = (int) (remain / finalAPlus) * finalAPlus;
-
-                                                }
-
-                                                productsList.get(position).setAmount(remain);
-
-
+                                            if (MinOrPlus != 3) {
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                ProductAmountTxt.setText(df.format(remain));
-
+                                                ProductAmountTxt.setText(df.format(amount));
 
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
-
-
-                                                if (resultInvoice.size() > 0) {
-                                                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
-                                                    if (invoiceDetail != null) {
-                                                        invoiceDetail.INV_DET_QUANTITY = remain;
-                                                        invoiceDetail.update();
-                                                        clickItem.onClick(Prd_GUID);
-                                                    }
-
-
-                                                }
-
-                                                progressBar.setVisibility(View.GONE);
-
-                                                return;
                                             }
 
-
-                                            //edit row
-                                            if (resultInvoice.size() > 0) {
-                                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
-                                                if (amount == 0) {
-                                                    if (invoiceDetail != null)
-                                                        invoiceDetail.delete();
-
-
-                                                    if (MinOrPlus != 3) {
-                                                        ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                        ProductAmountTxt.setText("0");
-
-                                                        ProductAmountTxt.addTextChangedListener(textWatcher);
-                                                        ivMinus.setVisibility(View.GONE);
-                                                        ProductAmountTxt.setVisibility(View.GONE);
-                                                    }
-
-
-                                                    clickItem.onClick(Prd_GUID);
-                                                    return;
-                                                }
-
-
-                                                if (invoiceDetail != null) {
-                                                    invoiceDetail.INV_DET_QUANTITY = amount;
-                                                    invoiceDetail.update();
-                                                }
-
-                                                if (MinOrPlus != 3) {
-                                                    ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                    ProductAmountTxt.setText(df.format(amount));
-
-                                                    ProductAmountTxt.addTextChangedListener(textWatcher);
-                                                }
-
-                                            }
-                                            //create row
-                                            else {
+                                        }
+                                        //create row
+                                        else {
+                                            if(amount!=0.0){
                                                 InvoiceDetail invoicedetail = new InvoiceDetail();
                                                 invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
                                                 invoicedetail.INV_UID = Inv_GUID;
@@ -788,22 +782,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 if (company.mode == 1)
                                                     invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
+                                            }
 
-
+                                            if (MinOrPlus!=3) {
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(amount));
-
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);
 
                                             }
-                                            ivMinus.setVisibility(View.VISIBLE);
-                                            ProductAmountTxt.setVisibility(View.VISIBLE);
-
-
-                                            clickItem.onClick(Prd_GUID);
-
-
                                         }
+                                        ivMinus.setVisibility(View.VISIBLE);
+                                        ProductAmountTxt.setVisibility(View.VISIBLE);
+
+
+                                        clickItem.onClick(Prd_GUID);
+
 
                                     }
                                     , throwable -> {
@@ -898,24 +891,22 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, ivMinus, company, Prd_GUID, s, MinOrPlus);
         } else {
             double amount = 0.0;
+            double mainCoef1 = productsList.get(position).getCoef1();
             double coef1 = productsList.get(position).getCoef1();
             double coef2 = productsList.get(position).getCoef2();
 
 
-
-
-
             //region PlusAmount
             if (MinOrPlus == 1) {
-                if (amount1>0.0 && coef2!=0.0)
-                    coef1=coef2;
+                if (amount1 > 0.0 && coef2 != 0.0)
+                    coef1 = coef2;
                 amount = amount1 + coef1;
             }
             //endregion PlusAmount
 
             //region MinAmount
             else if (MinOrPlus == 2) {
-                if (amount1 > coef1 && coef2!=0.0)
+                if (amount1 > coef1 && coef2 != 0.0)
                     amount = amount1 - coef2;
                 else if (amount1 >= coef1)
                     amount = amount1 - coef1;
@@ -930,11 +921,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             else {
                 try {
                     amount = Float.parseFloat(s);
-                    if (amount % coef1 != 0) {
+                    if (
+                            (coef2 != 0.0 && amount < coef1)
+                                    || (coef2 == 0 && amount % coef1 != 0)
+                                    || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                    ) {
 
 
                         AlertDialog alertDialog = new AlertDialog.Builder(context)
-                                .setMessage(" مقدار وارد شده باید ضریبی از " + coef1 + " باشد.")
+                                .setMessage(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.")
                                 .setPositiveButton("بستن", (dialog, which) -> {
                                     dialog.dismiss();
                                 })
@@ -948,14 +943,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                         amount = 0;
                         ProductAmountTxt.removeTextChangedListener(textWatcher);
-                        ProductAmountTxt.setText("0");
+                        ProductAmountTxt.setText("");
 
                         ProductAmountTxt.addTextChangedListener(textWatcher);
                         ivMinus.setVisibility(View.GONE);
                         ProductAmountTxt.setVisibility(View.GONE);
                     }
                 } catch (Exception ignored) {
-
                 }
             }
             //endregion EditAmount
@@ -974,7 +968,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 if (amount == 0) {
 
                     if (invoiceDetail != null)
-
                         invoiceDetail.delete();
 
                     if (MinOrPlus != 3) {
@@ -985,6 +978,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         ivMinus.setVisibility(View.GONE);
                         ProductAmountTxt.setVisibility(View.GONE);
                     }
+                    ProductAmountTxt.setCursorVisible(false);
                     clickItem.onClick(Prd_GUID);
                     return;
                 }
@@ -1007,17 +1001,21 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             //Create
             else {
 
-                InvoiceDetail invoicedetail = new InvoiceDetail();
-                invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
-                invoicedetail.INV_UID = Inv_GUID;
-                invoicedetail.INV_DET_QUANTITY = amount;
-                invoicedetail.PRD_UID = Prd_GUID;
+                if (amount != 0.0) {
+                    InvoiceDetail invoicedetail = new InvoiceDetail();
+                    invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
+                    invoicedetail.INV_UID = Inv_GUID;
+                    invoicedetail.INV_DET_QUANTITY = amount;
+                    invoicedetail.PRD_UID = Prd_GUID;
+                    invoicedetail.save();
+                }
+                if (MinOrPlus != 3) {
+                    ProductAmountTxt.removeTextChangedListener(textWatcher);
+                    ProductAmountTxt.setText(df.format(amount));
+                    ProductAmountTxt.addTextChangedListener(textWatcher);
 
-                invoicedetail.save();
-                ProductAmountTxt.removeTextChangedListener(textWatcher);
-                ProductAmountTxt.setText(df.format(amount));
+                }
 
-                ProductAmountTxt.addTextChangedListener(textWatcher);
                 clickItem.onClick(Prd_GUID);
             }
 

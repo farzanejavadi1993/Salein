@@ -182,12 +182,13 @@ public class PaymentMobileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             company = Select.from(Company.class).first();
+
             if (company.mode == 2) {
                 api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
             }
             compositeDisposable = new CompositeDisposable();
-
             customProgress = CustomProgress.getInstance();
+
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
             OrdTList = new ArrayList<>();
@@ -205,6 +206,7 @@ public class PaymentMobileFragment extends Fragment {
                 if (numberPos != null && numberPos.equals(""))
                     numberPos = "0";
             }
+
             //region get Bundle
             Bundle bundle = getArguments();
             Inv_GUID = bundle.getString("Inv_GUID");
@@ -222,6 +224,7 @@ public class PaymentMobileFragment extends Fragment {
                 new_Tbl_GUID = UUID.randomUUID().toString();
             else
                 new_Tbl_GUID = Tbl_GUID;
+
 
             if (company.mode == 2 || (company.mode == 1 && edit) || (company.mode == 1 && Tbl_GUID.equals("")))
                 new_Inv_GUID = Inv_GUID;
@@ -261,6 +264,7 @@ public class PaymentMobileFragment extends Fragment {
             binding.tvTransport.setTextSize(fontBigSize);
             binding.btnRegisterOrder.setTextSize(fontSize);
             //endregion Configuration Size
+
 
 
             //region Cast Variable Dialog Sync
@@ -309,10 +313,11 @@ public class PaymentMobileFragment extends Fragment {
                             //reload loginFragment
                         }
                     });
+
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 getSetting1();
-                getInquiryAccount1(company.USER,company.PASS,acc.getM());
+
             });
 
             //endregion Cast Variable Dialog Sync
@@ -328,6 +333,7 @@ public class PaymentMobileFragment extends Fragment {
             radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
             radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
             MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
+
 
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
@@ -432,6 +438,7 @@ public class PaymentMobileFragment extends Fragment {
                     address = acc.ADR;
                 radioAddress1.setText(address);
             }
+
             if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
                 String address = "";
                 latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
@@ -485,6 +492,7 @@ public class PaymentMobileFragment extends Fragment {
                 typeAddress = 0;
                 ValidAddress = "ناموجود";
             }
+
             binding.layoutAddress.setOnClickListener(v -> {
 
                 if (latitude1 != 0.0 && latitude2 != 0.0) {
@@ -504,6 +512,7 @@ public class PaymentMobileFragment extends Fragment {
             });
 
             //endregion SetAddress
+
             //region Configuration Time
             times.addAll(timesList);
             dialogTime = new Dialog(getActivity());
@@ -623,6 +632,10 @@ public class PaymentMobileFragment extends Fragment {
             binding.recyclerViewOrderType.setAdapter(orderTypePaymentAdapter);
 
             orderTypePaymentAdapter.setOnClickListener((GUID, code) -> {
+                typePayment = "";
+                binding.tvSuccessFullPayOnline.setText("");
+                binding.ivOkPaymentOnline.setVisibility(View.GONE);
+                binding.ivPaymentPlace.setVisibility(View.GONE);
                 Ord_TYPE = code;
                 //region UnClick Old Item
                 ArrayList<OrderType> list = new ArrayList<>(OrdTList);

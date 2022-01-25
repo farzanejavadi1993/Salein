@@ -252,7 +252,7 @@
                     android:background="@drawable/background_edittext"
                     android:fontFamily="@font/iransans"
                     android:gravity="center"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:text="0"
                     android:textColor="@color/medium_color"
                     android:textSize="11sp"
