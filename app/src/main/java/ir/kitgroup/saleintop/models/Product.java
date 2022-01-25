@@ -58,6 +58,11 @@ public class Product {
     @SerializedName("COEF")
     @Expose
     private Double coef;
+
+    @SerializedName("COEF2")
+    @Expose
+    private Double coef2;
+
     @SerializedName("KEY")
     @Expose
     private Integer key;
@@ -193,9 +198,6 @@ public class Product {
         return discount;
     }
 
-    public void setPercDis(Double percDis) {
-        this.percDis = percDis;
-    }
 
     public Double getCoef1() {
         double co =1.0;
@@ -205,7 +207,10 @@ public class Product {
     }
 
     public Double getCoef2() {
-        return 0.5;
+        double co =0.0;
+        if (coef2 != null && coef2>0.0)
+            co = coef2;
+        return co;
     }
 
 

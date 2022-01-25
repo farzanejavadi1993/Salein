@@ -319,8 +319,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                     CollectionUtils.filter(result, r -> r.PRD_UID.equals(orderDetailList.get(holder.getAdapterPosition()).PRD_UID));
                     if (result.size() > 0) {
 
-                        notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
 
+                        notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
+                        orderDetailList.remove(orderDetailList.indexOf(result.get(0)));
                         Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
                         if (frg instanceof MainOrderFragment) {
                             MainOrderFragment fgf = (MainOrderFragment) frg;

@@ -467,7 +467,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
+                        int t=0;
                     }
                 };
             }

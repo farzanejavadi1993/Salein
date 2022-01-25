@@ -69,6 +69,9 @@ public class Product extends SugarRecord {
     @SerializedName("UM1")
     @Expose
     public String UM1;
+    @SerializedName("COEF2")
+    @Expose
+    private Double coef2;
 
 
     private Double Amount;
