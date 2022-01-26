@@ -62,17 +62,16 @@
                 android:textSize="@dimen/text_medium_mobile_size" />
 
 
-
             <TextView
-                android:layout_centerVertical="true"
-                android:text="حذف همه"
-                android:layout_alignParentLeft="true"
                 android:id="@+id/txt_deleteAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin10"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
+                android:text="حذف همه"
                 android:textColor="@color/purple_700"
                 android:textSize="@dimen/text_medium_mobile_size" />
 

@@ -25,28 +25,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.saleintop.DataBase.InvoiceDetail;
 
 
 import ir.kitgroup.saleintop.Fragments.MainOrderFragment;
 import ir.kitgroup.saleintop.R;
 import ir.kitgroup.saleintop.classes.Util;
-import ir.kitgroup.saleintop.models.ModelLog;
 import ir.kitgroup.saleintop.models.Product;
 
 
@@ -188,6 +182,7 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                    holder.edtAmount.setCursorVisible(true);
                     String s = Util.toEnglishNumber(charSequence.toString());
                     s = s.contains("٫") ? s.replace("٫", ".") : s;
                     s = s.contains(",") ? s.replace(",", "") : s;
@@ -244,13 +239,12 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 textView.setTextSize(13);
 
 
-                                holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+                               /* holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                                 holder.edtAmount.setText("");
-
                                 holder.edtAmount.addTextChangedListener(holder.textWatcher);
-                                double sumprice = (0 * resultPrd1.getPrice(sharedPreferences));
 
-                                holder.sumPrice.setText(format.format(sumprice));
+                                double sumprice = (0 * resultPrd1.getPrice(sharedPreferences));
+                                holder.sumPrice.setText(format.format(sumprice));*/
 
                                 double discountPercent ;
                                 if (type.equals("1") || Seen)
@@ -261,8 +255,8 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
                                 return;
                             }
                         }
-                        double sumprice = (amount * resultPrd1.getPrice(sharedPreferences));
-                        holder.sumPrice.setText(format.format(sumprice));
+                       /* double sumprice = (amount * resultPrd1.getPrice(sharedPreferences));
+                        holder.sumPrice.setText(format.format(sumprice));*/
 
                         double discountPercent ;
                         if (type.equals("1") || Seen)
@@ -331,14 +325,15 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
 
                         notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
-                      Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof MainOrderFragment) {
-                            MainOrderFragment fgf = (MainOrderFragment) frg;
-                            fgf.refreshProductList();
-                            fgf.counter1 = fgf.counter1 - 1;
-                            holder.imgDelete.setEnabled(true);
-                            holder.imgDelete.setVisibility(View.VISIBLE);
-                        }
+                     Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                       if (frg instanceof MainOrderFragment) {
+                           MainOrderFragment fgf = (MainOrderFragment) frg;
+                           fgf.refreshProductList();
+                           fgf.counter1 = fgf.counter1 - 1;
+
+                       }
+                        holder.imgDelete.setEnabled(true);
+                        holder.imgDelete.setVisibility(View.VISIBLE);
                     }
 
                     holder.progressBar.setVisibility(View.GONE);
@@ -348,91 +343,106 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
 
         });
 
+            holder.edtAmount.setOnClickListener(v -> {
+
+                        holder.edtAmount.setCursorVisible(true);
+
+
+                    }
+            );
+
         holder.ivMax.setOnClickListener(v -> {
-            if (holder.getAdapterPosition() < orderDetailList.size()){
+            try {
+                if (holder.getAdapterPosition() < orderDetailList.size()){
 
-                holder.ivMax.setEnabled(false);
+                    holder.edtAmount.setCursorVisible(false);
+                    holder.ivMax.setEnabled(false);
+                    InvoiceDetail invDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
 
-                InvoiceDetail invDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
-
-                Product resultPrd1= Select.from(Product.class).where("I ='" + orderDetailList.get(holder.getAdapterPosition()).PRD_UID + "'").first();
+                    Product resultPrd1= Select.from(Product.class).where("I ='" + orderDetailList.get(holder.getAdapterPosition()).PRD_UID + "'").first();
 
 
-                double coef1 = 1.0;
-                double coef2;
-                if (resultPrd1!=null) {
-                    coef1 = resultPrd1.getCoef1();
-                    coef2 = resultPrd1.getCoef2();
-                    if (invDtl.INV_DET_QUANTITY>0.0 &&  coef2 != 0.0)
-                        coef1 = coef2;
-                }
-                double amount = invDtl.INV_DET_QUANTITY + coef1;
-                holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+                    double coef1 = 1.0;
+                    double coef2;
+                    if (resultPrd1!=null) {
+                        coef1 = resultPrd1.getCoef1();
+                        coef2 = resultPrd1.getCoef2();
+                        if (invDtl.INV_DET_QUANTITY>0.0 &&  coef2 != 0.0)
+                            coef1 = coef2;
+                    }
+                    double amount = invDtl.INV_DET_QUANTITY + coef1;
+                /*holder.edtAmount.removeTextChangedListener(holder.textWatcher);
                 holder.edtAmount.setText(format.format(amount));
                 holder.edtAmount.addTextChangedListener(holder.textWatcher);
 
                 double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
-                holder.sumPrice.setText(format.format(sumprice));
+                holder.sumPrice.setText(format.format(sumprice));*/
 
-                double discountPercent;
-                if (type.equals("1") || Seen)
-                    discountPercent = invDtl.INV_DET_PERCENT_DISCOUNT;
-                else
-                    discountPercent = resultPrd1.getPercDis();
+                    double discountPercent;
+                    if (type.equals("1") || Seen)
+                        discountPercent = invDtl.INV_DET_PERCENT_DISCOUNT;
+                    else
+                        discountPercent = resultPrd1.getPercDis();
 
 
-                editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), resultPrd1.getPrice(sharedPreferences), discountPercent / 100);
-                holder.ivMax.setEnabled(true);
-            }
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), resultPrd1.getPrice(sharedPreferences), discountPercent / 100);
+                    holder.ivMax.setEnabled(true);
+                }
+            }catch (Exception ignored){}
+
 
         });
 
         holder.ivMinus.setOnClickListener(v -> {
-            if (holder.getAdapterPosition() < orderDetailList.size()){
-                holder.ivMinus.setEnabled(false);
+            try {
+                if (holder.getAdapterPosition() < orderDetailList.size()){
+                    holder.ivMinus.setEnabled(false);
+                    holder.edtAmount.setCursorVisible(false);
+                    Product resultPrd1= Select.from(Product.class).where("I ='" + orderDetailList.get(holder.getAdapterPosition()).PRD_UID + "'").first();
 
-                Product resultPrd1= Select.from(Product.class).where("I ='" + orderDetailList.get(holder.getAdapterPosition()).PRD_UID + "'").first();
+                    InvoiceDetail ivDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
 
-                InvoiceDetail ivDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + orderDetailList.get(holder.getAdapterPosition()).INV_DET_UID + "'").first();
+                    double coef1 = 1;
+                    double coef2 = 0.0;
+                    if (resultPrd1!=null) {
+                        coef1 = resultPrd1.getCoef1();
+                        coef2 = resultPrd1.getCoef2();
 
-                double coef1 = 1;
-                double coef2 = 0.0;
-                if (resultPrd1!=null) {
-                    coef1 = resultPrd1.getCoef1();
-                    coef2 = resultPrd1.getCoef2();
+                    }
 
+
+
+                    double amount = 0.0;
+
+                    if (ivDtl.INV_DET_QUANTITY > coef1 && coef2 != 0.0 && ivDtl.INV_DET_QUANTITY<coef1+coef2){
+                        amount = 0.0;
+                    }
+                    else if (ivDtl.INV_DET_QUANTITY > coef1 && coef2 != 0.0)
+                        amount = ivDtl.INV_DET_QUANTITY - coef2;
+                    else if (ivDtl.INV_DET_QUANTITY >= coef1)
+                        amount = ivDtl.INV_DET_QUANTITY - coef1;
+
+
+
+
+
+//                holder.edtAmount.removeTextChangedListener(holder.textWatcher);
+//                holder.edtAmount.setText(format.format(amount));
+//                holder.edtAmount.addTextChangedListener(holder.textWatcher);
+//                double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
+//                holder.sumPrice.setText(format.format(sumprice));
+                    double discountPercent;
+                    if (type.equals("1") || Seen)
+                        discountPercent = ivDtl.INV_DET_PERCENT_DISCOUNT;
+                    else
+                        discountPercent = resultPrd1.getPercDis();
+
+                    editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), resultPrd1.getPrice(sharedPreferences), discountPercent / 100);
+
+                    holder.ivMinus.setEnabled(true);
                 }
+            }catch (Exception ignored){}
 
-
-
-                double amount = 0.0;
-
-                if (ivDtl.INV_DET_QUANTITY > coef1 && coef2 != 0.0 && ivDtl.INV_DET_QUANTITY<coef1+coef2){
-                    amount = 0.0;
-                }
-               else if (ivDtl.INV_DET_QUANTITY > coef1 && coef2 != 0.0)
-                    amount = ivDtl.INV_DET_QUANTITY - coef2;
-                else if (ivDtl.INV_DET_QUANTITY >= coef1)
-                    amount = ivDtl.INV_DET_QUANTITY - coef1;
-
-
-
-
-
-                holder.edtAmount.setText(format.format(amount));
-                holder.edtAmount.addTextChangedListener(holder.textWatcher);
-                double sumprice = (amount * prd1.get(0).getPrice(sharedPreferences));
-                holder.sumPrice.setText(format.format(sumprice));
-                double discountPercent;
-                if (type.equals("1") || Seen)
-                    discountPercent = ivDtl.INV_DET_PERCENT_DISCOUNT;
-                else
-                    discountPercent = resultPrd1.getPercDis();
-
-                editAmountItem.onEditAmountRow(orderDetailList.get(holder.getAdapterPosition()).PRD_UID, String.valueOf(amount), resultPrd1.getPrice(sharedPreferences), discountPercent / 100);
-
-                holder.ivMinus.setEnabled(true);
-            }
 
 
 
@@ -492,181 +502,9 @@ public class InvoiceDetailMobileAdapter extends RecyclerView.Adapter<InvoiceDeta
     }
 
 
-    public void doACtion(){
-        if (maxSales.equals("1")) {
-            getMaxSales(Prd_GUID, s);
-        }
-        else {
-
-            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
-            CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-            if (result.size() > 0) {
-                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-                double amount = 0.0;
-                if (!s.equals(""))
-                    amount = Double.parseDouble(s);
-
-                if (invoiceDetail != null) {
-                    invoiceDetail.INV_DET_QUANTITY = amount;
-                    invoiceDetail.update();
-
-                }
-
-                //  invoiceDetailAdapter.notifyDataSetChanged();
-
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
-                    fgf.refreshProductList();
-                }
 
 
-            }
-        }
-    }
 
-    private void getMaxSales(String Prd_GUID, String s) {
-
-
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        try {
-            Gson gson = new Gson();
-            Type typeIDs = new TypeToken<ModelLog>() {
-            }.getType();
-
-            compositeDisposable.add(
-                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                        int remain;
-                                        try {
-                                            remain = Integer.parseInt(jsonElement);
-                                        } catch (Exception e) {
-                                            ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
-                                            String description = iDs.getLogs().get(0).getDescription();
-                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-
-                                        ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                                        CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-
-                                        if (result.size() > 0) {
-                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-                                            double amount = 0.0;
-                                            if (!s.equals("")) {
-                                                amount = Double.parseDouble(s);
-                                                if (remain - amount < 0) {
-
-
-                                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                                            .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
-                                                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                                                            .show();
-
-                                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                                    textView.setTypeface(face);
-                                                    textView.setTextColor(getResources().getColor(R.color.medium_color));
-                                                    textView.setTextSize(13);
-
-                                                    if (invoiceDetail != null) {
-                                                        invoiceDetail.INV_DET_QUANTITY = 0.0;
-                                                        invoiceDetail.update();
-
-                                                    }
-
-                                                    invoiceDetailAdapter.notifyDataSetChanged();
-
-                                                    Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                                    if (frg instanceof MainOrderFragment) {
-                                                        MainOrderFragment fgf = (MainOrderFragment) frg;
-                                                        fgf.refreshProductList();
-                                                    }
-
-
-                                                    return;
-                                                }
-                                            }
-
-                                            if (invoiceDetail != null) {
-                                                invoiceDetail.INV_DET_QUANTITY = amount;
-                                                ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invoiceDetailList);
-                                                CollectionUtils.filter(invDtls, i -> i.INV_DET_UID.equals(invoiceDetail.INV_DET_UID));
-                                                if (invDtls.size() > 0)
-                                                    invoiceDetailList.get(invoiceDetailList.indexOf(invDtls.get(0))).INV_DET_QUANTITY = amount;
-
-                                                invoiceDetail.update();
-
-
-                                            }
-
-
-                                            sumPrice = 0;
-                                            sumPurePrice = 0;
-                                            sumDiscounts = 0;
-
-                                            List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                                            if (invoiceDetails.size() > 0) {
-                                                CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-                                            }
-
-
-                                            for (int i = 0; i < invoiceDetails.size(); i++) {
-                                                ir.kitgroup.saleintop.DataBase.Product product = Select.from(ir.kitgroup.saleintop.DataBase.Product.class).where("I ='" + invoiceDetails.get(i).PRD_UID + "'").first();
-                                                if (product != null) {
-                                                    double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
-
-                                                    double discountPrice;
-                                                    if (type.equals("1") || Seen)
-                                                        discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT / 100);
-
-                                                    else
-                                                        discountPrice = sumprice * (product.getPercDis() / 100);
-                                                    double totalPrice = sumprice - discountPrice;
-
-                                                    sumPrice = sumPrice + (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
-                                                    sumPurePrice = sumPurePrice + totalPrice;
-                                                    sumDiscounts = sumDiscounts + discountPrice;
-
-                                                }
-
-                                            }
-
-
-                                            binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + " ریال ");
-                                            binding.tvSumPrice.setText(format.format(sumPrice) + " ریال ");
-                                            binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
-
-                                            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                            if (frg instanceof MainOrderFragment) {
-                                                MainOrderFragment fgf = (MainOrderFragment) frg;
-                                                fgf.refreshProductList();
-                                            }
-
-                                        }
-
-
-                                    }
-                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا از سرور", Toast.LENGTH_SHORT).show())
-            );
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }
 
 
 }

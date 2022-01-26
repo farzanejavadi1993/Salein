@@ -289,12 +289,11 @@ public class MainOrderFragment extends Fragment {
 
         ir.kitgroup.saleintop.DataBase.Product.deleteAll(ir.kitgroup.saleintop.DataBase.Product.class);
 
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         customProgress = CustomProgress.getInstance();
         compositeDisposable = new CompositeDisposable();
-        //ir.kitgroup.saleinmeat.DataBase.Product.deleteAll(ir.kitgroup.saleinmeat.DataBase.Product.class);
 
+        sharedPreferences.edit().putString("FNM","main").apply();
         sharedPreferences.edit().putBoolean("vip", false).apply();
         sharedPreferences.edit().putBoolean("discount", false).apply();
 
@@ -2280,7 +2279,7 @@ public class MainOrderFragment extends Fragment {
         this.Inv_GUID = bundle.getString("Inv_GUID");
         this.EDIT = bundle.getBoolean("EDIT");
         this.Seen = bundle.getBoolean("Seen");
-
     }
+
 
 }

@@ -96,6 +96,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private List<Unit> unitList;
 
+    private String fragmentName = "main";
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -108,14 +109,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-
     private ClickItem clickItem;
 
 
     public void setOnClickListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
-
 
 
     public interface Descriptions {
@@ -164,9 +163,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.Tbl_GUID = Tbl_GUID;
     }
 
-    public void Add(ArrayList<Product> arrayList) {
-        productsList.addAll(arrayList);
-    }
 
     public void addLoadingView() {
         new Handler().post(() -> {
@@ -220,14 +216,17 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
         if (productsList.get(position) != null) {
-            // holder.error.setText("");
+            holder.error.setText("");
 
 
-            if (sharedPreferences.getString("NMP","").equals("InVoiceDetailF"))
-                holder.ProductAmountTxt.setEnabled(false);
 
-            else
-                holder.ProductAmountTxt.setEnabled(true);
+            fragmentName=sharedPreferences.getString("FNM","main");
+
+            if (!fragmentName.equals("main"))
+                holder.ProductAmountTxt.clearFocus();
+
+
+
             InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
@@ -411,13 +410,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             );
 
 
-            holder.ProductAmountTxt.setOnClickListener(v -> {
+            holder.ProductAmountTxt.setOnFocusChangeListener((view1, b) -> {
 
-                        holder.ProductAmountTxt.setCursorVisible(true);
+                holder.ProductAmountTxt.setCursorVisible(true);
+            });
 
 
-                    }
-            );
+
             if (holder.textWatcher1 == null) {
                 holder.textWatcher1 = new TextWatcher() {
                     @Override
@@ -428,9 +427,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
-                            if (!charSequence.toString().isEmpty())
-                                holder.ProductAmountTxt.setCursorVisible(true);
 
+                        if (!charSequence.toString().isEmpty())
+                            holder.ProductAmountTxt.setCursorVisible(true);
 
                             String s = Util.toEnglishNumber(charSequence.toString());
                             s = s.contains("٫") ? s.replace("٫", ".") : s;
@@ -464,12 +463,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
 
-
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        int t=0;
+                        int t = 0;
                     }
                 };
             }
@@ -478,7 +476,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher1);
             holder.ProductAmountTxt.setText(df.format(amount));
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher1);
-
 
 
             holder.cardEdit.setOnClickListener(v -> {
@@ -507,7 +504,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-        class  viewHolder extends RecyclerView.ViewHolder {
+    class viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
 
@@ -533,8 +530,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final RelativeLayout layoutDiscount;
 
 
-
-     public viewHolder(View itemView) {
+        public viewHolder(View itemView) {
             super(itemView);
 
 
@@ -578,7 +574,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         progressBar.setVisibility(View.VISIBLE);
 
 
-
         try {
             compositeDisposable.add(
                     api.getMaxSales(company.USER, company.PASS, Prd_GUID)
@@ -607,7 +602,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
 
 
-
                                         double mainCoef1 = productsList.get(position).getCoef1();
                                         double coef1 = productsList.get(position).getCoef1();
                                         double coef2 = productsList.get(position).getCoef2();
@@ -625,35 +619,28 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                             }
 
 
-
                                             error.setText("این کالا موجود نمی باشد");
                                             progressBar.setVisibility(View.GONE);
-                                            amount=0.0;
+                                            amount = 0.0;
 
                                         }
-
 
 
                                         if (MinOrPlus == 1) {
                                             if (amount1 > 0.0 && coef2 != 0.0)
                                                 coef1 = coef2;
                                             amount = amount1 + coef1;
-                                        }
-
-                                        else if (MinOrPlus == 2) {
-                                            if (amount1 > coef1 && coef2 != 0.0 && amount1<coef1+coef2){
+                                        } else if (MinOrPlus == 2) {
+                                            if (amount1 > coef1 && coef2 != 0.0 && amount1 < coef1 + coef2) {
                                                 amount = 0.0;
-                                            }
-                                            else if (amount1 > coef1 && coef2 != 0.0)
+                                            } else if (amount1 > coef1 && coef2 != 0.0)
                                                 amount = amount1 - coef2;
                                             else if (amount1 >= coef1)
                                                 amount = amount1 - coef1;
 
                                             else
                                                 return;
-                                        }
-
-                                        else {
+                                        } else {
                                             try {
                                                 amount = Float.parseFloat(s);
                                                 if (
@@ -683,12 +670,13 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                     ivMinus.setVisibility(View.GONE);
                                                     ProductAmountTxt.setVisibility(View.GONE);
                                                     productsList.get(position).setAmount(0.0);
-                                                    amount=0.0;
+                                                    amount = 0.0;
 
                                                 }
 
 
-                                            } catch (Exception ignored) {}
+                                            } catch (Exception ignored) {
+                                            }
                                         }
 
 
@@ -723,7 +711,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
                                                 if (invoiceDetail != null) {
                                                     invoiceDetail.INV_DET_QUANTITY = remain;
-                                                    if (remain!=0.0)
+                                                    if (remain != 0.0)
                                                         invoiceDetail.update();
                                                     else
                                                         invoiceDetail.delete();
@@ -736,7 +724,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
                                             progressBar.setVisibility(View.GONE);
 
-                                           return;
+                                            return;
                                         }
 
 
@@ -776,7 +764,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                         }
                                         //create row
                                         else {
-                                            if(amount!=0.0){
+                                            if (amount != 0.0) {
                                                 InvoiceDetail invoicedetail = new InvoiceDetail();
                                                 invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
                                                 invoicedetail.INV_UID = Inv_GUID;
@@ -787,7 +775,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                 invoicedetail.save();
                                             }
 
-                                            if (MinOrPlus!=3) {
+                                            if (MinOrPlus != 3) {
                                                 ProductAmountTxt.removeTextChangedListener(textWatcher);
                                                 ProductAmountTxt.setText(df.format(amount));
                                                 ProductAmountTxt.addTextChangedListener(textWatcher);

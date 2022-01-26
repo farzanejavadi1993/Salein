@@ -90,7 +90,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
-            sharedPreferences.edit().putString("NMP","").apply();
+            sharedPreferences.edit().putString("FNM","main").apply();
             final int size = getSupportFragmentManager().getBackStackEntryCount();
             String name = "";
             try {
@@ -120,6 +120,14 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.homee:
                     loadProfile = true;
                     loadSearch = true;
+
+
+                    binding.navView.getMenu().getItem(3).setEnabled(false);
+                    binding.navView.setVisibility(View.VISIBLE);
+
+                    if (name.equals("SettingF") || name.equals("InVoiceDetailF") || name.equals("SearchProductF"))
+                        getSupportFragmentManager().popBackStack();
+
                     int amount;
                     if (bundle.getBoolean("EDIT"))
                         amount = mainOrderFragment.counter1;
@@ -130,12 +138,6 @@ public class LauncherActivity extends AppCompatActivity {
                         setClearCounterOrder();
                     else
                         setCounterOrder(amount);
-
-                    binding.navView.getMenu().getItem(3).setEnabled(false);
-                    binding.navView.setVisibility(View.VISIBLE);
-
-                    if (name.equals("SettingF") || name.equals("InVoiceDetailF") || name.equals("SearchProductF"))
-                        getSupportFragmentManager().popBackStack();
                     return true;
 
                 case R.id.search:
@@ -187,7 +189,7 @@ public class LauncherActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
                     loadProfile = true;
 
-                    sharedPreferences.edit().putString("NMP","InVoiceDetailF").apply();
+
                     return true;
 
                 case R.id.profile:

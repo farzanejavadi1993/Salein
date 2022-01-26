@@ -173,11 +173,11 @@ public class SearchProductFragment extends Fragment {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
                 invDetail.update(); }
             productAdapter.notifyDataSetChanged();
-            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-            if (frg instanceof MainOrderFragment) {
-                MainOrderFragment fgf = (MainOrderFragment) frg;
-                fgf.refreshProductList();
-            }
+//            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+//            if (frg instanceof MainOrderFragment) {
+//                MainOrderFragment fgf = (MainOrderFragment) frg;
+//                fgf.refreshProductList();
+//            }
             dialogDescription.dismiss();
         });
 
@@ -249,13 +249,13 @@ public class SearchProductFragment extends Fragment {
             else
                 ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
-            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-
-            if (frg instanceof MainOrderFragment) {
-                MainOrderFragment fgf = (MainOrderFragment) frg;
-                fgf.refreshProductList();
-                fgf.counter1 = counter;
-            }
+//            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+//
+//            if (frg instanceof MainOrderFragment) {
+//                MainOrderFragment fgf = (MainOrderFragment) frg;
+//                fgf.refreshProductList();
+//                fgf.counter1 = counter;
+//            }
         });
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {

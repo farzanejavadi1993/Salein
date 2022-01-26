@@ -192,6 +192,8 @@ public class InVoiceDetailFragment extends Fragment {
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
             ir.kitgroup.saleintop.DataBase.Product.deleteAll(ir.kitgroup.saleintop.DataBase.Product.class);
 
+
+            sharedPreferences.edit().putString("FNM","invoice").apply();
             customProgress = CustomProgress.getInstance();
             compositeDisposable = new CompositeDisposable();
             company = Select.from(Company.class).first();
@@ -261,6 +263,7 @@ public class InVoiceDetailFragment extends Fragment {
                 }
                 invoiceDetailList.clear();
                 invoiceDetailAdapter.notifyDataSetChanged();
+
 
 
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
@@ -408,7 +411,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                 invoiceDetailAdapter.notifyDataSetChanged();
 
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+               Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
                 if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
                     fgf.refreshProductList();
@@ -477,12 +480,36 @@ public class InVoiceDetailFragment extends Fragment {
             binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
 
 
-//            invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
-//
-//
-//
-//
-//            });
+            invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
+
+                if (maxSales.equals("1")) {
+                    getMaxSales(Prd_GUID, s);
+                } else {
+
+                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
+                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+                    if (result.size() > 0) {
+                        InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                        double amount = 0.0;
+                        if (!s.equals(""))
+                            amount = Double.parseDouble(s);
+
+                        if (invoiceDetail != null) {
+                            invoiceDetail.INV_DET_QUANTITY = amount;
+                            invoiceDetail.update();
+
+                        }
+
+                        invoiceDetailAdapter.notifyDataSetChanged();
+                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");if (frg instanceof MainOrderFragment) { MainOrderFragment fgf = (MainOrderFragment) frg;                         fgf.refreshProductList(); }
+
+
+                    }
+                }
+
+
+            });
 
 
             invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -885,7 +912,112 @@ public class InVoiceDetailFragment extends Fragment {
     }
 
 
+    private void getMaxSales(String Prd_GUID, String s) {
 
+
+        if (!networkAvailable(getActivity())) {
+            ShowErrorConnection();
+            return;
+        }
+        try {
+            Gson gson = new Gson();
+            Type typeIDs = new TypeToken<ModelLog>() {
+            }.getType();
+
+            compositeDisposable.add(
+                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> {
+                            })
+                            .subscribe(jsonElement -> {
+
+                                        int remain;
+                                        try {
+                                            remain = Integer.parseInt(jsonElement);
+                                        } catch (Exception e) {
+                                            ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
+                                            String description = iDs.getLogs().get(0).getDescription();
+                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+
+                                        ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+                                        CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+
+                                        if (result.size() > 0) {
+                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                                            double amount = 0.0;
+                                            if (!s.equals("")) {
+                                                amount = Double.parseDouble(s);
+                                                if (remain - amount < 0) {
+
+
+                                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                                                            .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
+                                                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                                                            .show();
+
+                                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                                                    textView.setTypeface(face);
+                                                    textView.setTextColor(getResources().getColor(R.color.medium_color));
+                                                    textView.setTextSize(13);
+
+                                                    if (invoiceDetail != null) {
+                                                        invoiceDetail.INV_DET_QUANTITY = 0.0;
+                                                        invoiceDetail.update();
+
+                                                    }
+
+                                                    invoiceDetailAdapter.notifyDataSetChanged();
+
+                                                   Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                                                   if (frg instanceof MainOrderFragment) {
+                                                       MainOrderFragment fgf = (MainOrderFragment) frg;
+                                                       fgf.refreshProductList();
+                                                   }
+
+
+                                                    return;
+                                                }
+                                            }
+
+                                            if (invoiceDetail != null) {
+                                                invoiceDetail.INV_DET_QUANTITY = amount;
+                                                ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invoiceDetailList);
+                                                CollectionUtils.filter(invDtls, i -> i.INV_DET_UID.equals(invoiceDetail.INV_DET_UID));
+                                                if (invDtls.size() > 0)
+                                                    invoiceDetailList.get(invoiceDetailList.indexOf(invDtls.get(0))).INV_DET_QUANTITY = amount;
+
+                                                invoiceDetail.update();
+
+
+                                            }
+
+
+                                          invoiceDetailAdapter.notifyDataSetChanged();
+
+                                           Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                                           if (frg instanceof MainOrderFragment) {
+                                               MainOrderFragment fgf = (MainOrderFragment) frg;
+                                               fgf.refreshProductList();
+                                           }
+
+                                        }
+
+
+                                    }
+                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا از سرور", Toast.LENGTH_SHORT).show())
+            );
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
 
 
     @SuppressLint("SetTextI18n")
