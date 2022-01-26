@@ -2097,6 +2097,7 @@ public class MainOrderFragment extends Fragment {
 
                                             if (settingsList.get(0).LINK_PAYMENT != null)
                                                 sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
+                                                sharedPreferences.edit().putString("update_link", settingsList.get(0).LINK_UPDATE).apply();
 
                                         } catch (Exception ignored) {
                                         }
@@ -2252,6 +2253,7 @@ public class MainOrderFragment extends Fragment {
 
     public void refreshProductList() {
         productAdapter.notifyDataSetChanged();
+
     }
 
 

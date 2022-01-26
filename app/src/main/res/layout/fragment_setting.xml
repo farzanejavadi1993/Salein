@@ -158,7 +158,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/club"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_cradit"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -197,7 +198,7 @@
                 android:background="#ccc" />
 
             <LinearLayout
-                android:id="@+id/btnComment"
+                android:id="@+id/btn_share"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:layout_marginLeft="16dp"
@@ -215,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
-                    android:text="@string/my_comment"
+                    android:text="دعوت از دوستان"
                     android:textColor="#474747"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -225,7 +226,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_comment"
+                    android:src="@drawable/ic_share"
                     tools:ignore="ContentDescription" />
 
 
@@ -325,7 +326,7 @@
                 android:background="#ccc" />
 
             <LinearLayout
-
+                android:visibility="gone"
                 android:id="@+id/btn_about_us"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
@@ -355,7 +356,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_aboutus"
+                    android:src="@drawable/ic_aboout_us"
                     tools:ignore="ContentDescription" />
 
 

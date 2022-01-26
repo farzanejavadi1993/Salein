@@ -477,41 +477,12 @@ public class InVoiceDetailFragment extends Fragment {
             binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
 
 
-            invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
-
-                if (maxSales.equals("1")) {
-                    getMaxSales(Prd_GUID, s);
-                } else {
-
-                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
-                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-                    if (result.size() > 0) {
-                        InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-                        double amount = 0.0;
-                        if (!s.equals(""))
-                            amount = Double.parseDouble(s);
-
-                        if (invoiceDetail != null) {
-                            invoiceDetail.INV_DET_QUANTITY = amount;
-                            invoiceDetail.update();
-
-                        }
-
-                        invoiceDetailAdapter.notifyDataSetChanged();
-
-                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof MainOrderFragment) {
-                            MainOrderFragment fgf = (MainOrderFragment) frg;
-                            fgf.refreshProductList();
-                        }
-
-
-                    }
-                }
-
-
-            });
+//            invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
+//
+//
+//
+//
+//            });
 
 
             invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -574,7 +545,7 @@ public class InVoiceDetailFragment extends Fragment {
                             invoiceDetail.delete();
                     }
 
-                    invoiceDetailList.remove(invoiceDetailList.get(positionStart));
+                   invoiceDetailList.remove(invoiceDetailList.get(positionStart));
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                     for (int i = 0; i < invoiceDetails.size(); i++) {
@@ -699,8 +670,9 @@ public class InVoiceDetailFragment extends Fragment {
             //region Action BtnContinue
             binding.btnContinue.setOnClickListener(v -> {
 
-                ArrayList<InvoiceDetail> invoiceDetails = new ArrayList<>(invoiceDetailList);
+                ArrayList<InvoiceDetail> invoiceDetails = new ArrayList<>( Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'" ).list());
                 CollectionUtils.filter(invoiceDetails, i -> i.INV_DET_QUANTITY == 0.0);
+
 
 
                 if (invoiceDetailList.size() == 0) {
@@ -715,7 +687,8 @@ public class InVoiceDetailFragment extends Fragment {
                     textView.setTextColor(getResources().getColor(R.color.red_table));
                     textView.setTextSize(13);
                     return;
-                } else if (invoiceDetails.size() > 0) {
+                }
+                else if (invoiceDetails.size() > 0) {
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                             .setMessage("برای ردیف های سفارش مقدار وارد کنید و یا ردیف با مقدار صفر را حذف کنید .")
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
@@ -912,112 +885,7 @@ public class InVoiceDetailFragment extends Fragment {
     }
 
 
-    private void getMaxSales(String Prd_GUID, String s) {
 
-
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        try {
-            Gson gson = new Gson();
-            Type typeIDs = new TypeToken<ModelLog>() {
-            }.getType();
-
-            compositeDisposable.add(
-                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                        int remain;
-                                        try {
-                                            remain = Integer.parseInt(jsonElement);
-                                        } catch (Exception e) {
-                                            ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
-                                            String description = iDs.getLogs().get(0).getDescription();
-                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-
-                                        ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                                        CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-
-                                        if (result.size() > 0) {
-                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-                                            double amount = 0.0;
-                                            if (!s.equals("")) {
-                                                amount = Double.parseDouble(s);
-                                                if (remain - amount < 0) {
-
-
-                                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                                            .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
-                                                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                                                            .show();
-
-                                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                                    textView.setTypeface(face);
-                                                    textView.setTextColor(getResources().getColor(R.color.medium_color));
-                                                    textView.setTextSize(13);
-
-                                                    if (invoiceDetail != null) {
-                                                        invoiceDetail.INV_DET_QUANTITY = 0.0;
-                                                        invoiceDetail.update();
-
-                                                    }
-
-                                                    invoiceDetailAdapter.notifyDataSetChanged();
-
-                                                    Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                                    if (frg instanceof MainOrderFragment) {
-                                                        MainOrderFragment fgf = (MainOrderFragment) frg;
-                                                        fgf.refreshProductList();
-                                                    }
-
-
-                                                    return;
-                                                }
-                                            }
-
-                                            if (invoiceDetail != null) {
-                                                invoiceDetail.INV_DET_QUANTITY = amount;
-                                                ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invoiceDetailList);
-                                                CollectionUtils.filter(invDtls, i -> i.INV_DET_UID.equals(invoiceDetail.INV_DET_UID));
-                                                if (invDtls.size() > 0)
-                                                    invoiceDetailList.get(invoiceDetailList.indexOf(invDtls.get(0))).INV_DET_QUANTITY = amount;
-
-                                                invoiceDetail.update();
-
-
-                                            }
-
-
-                                            invoiceDetailAdapter.notifyDataSetChanged();
-
-                                            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                            if (frg instanceof MainOrderFragment) {
-                                                MainOrderFragment fgf = (MainOrderFragment) frg;
-                                                fgf.refreshProductList();
-                                            }
-
-                                        }
-
-
-                                    }
-                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا از سرور", Toast.LENGTH_SHORT).show())
-            );
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }
 
 
     @SuppressLint("SetTextI18n")

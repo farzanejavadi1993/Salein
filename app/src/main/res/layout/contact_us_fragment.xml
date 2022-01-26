@@ -125,9 +125,12 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:id="@+id/image"
                         android:layout_centerInParent="true"
-
-                        android:layout_margin="@dimen/margin8"
+                        android:layout_marginStart="@dimen/margin8"
+                        android:layout_marginTop="@dimen/margin8"
+                        android:layout_marginEnd="@dimen/margin8"
+                        android:layout_marginBottom="@dimen/margin8"
                         android:src="@drawable/ic_support" />
                 </RelativeLayout>
 
@@ -173,7 +176,7 @@
                 android:layout_marginEnd="22dp"
                 android:layout_marginBottom="15dp"
                 android:gravity="right"
-                android:text="ما را در صفحات مجازی دنبال کنید."
+                android:text="ما را در شبکه های جتماعی دنبال کنید."
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
                 android:textStyle="bold" />

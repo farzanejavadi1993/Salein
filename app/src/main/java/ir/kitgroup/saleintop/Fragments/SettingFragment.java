@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import javax.inject.Inject;
@@ -59,6 +60,7 @@ public class SettingFragment extends Fragment {
     @Inject
     Config config;
 
+
     private FragmentSettingBinding binding;
     private API api;
     private Company company;
@@ -73,6 +75,8 @@ public class SettingFragment extends Fragment {
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
     private String mobile;
     private String linkPayment = "";
+
+    private Account acc;
 
    private  Boolean disableAccount=false;
     @Nullable
@@ -96,8 +100,9 @@ public class SettingFragment extends Fragment {
         company = Select.from(Company.class).first();
         api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
 
+
         linkPayment = sharedPreferences.getString("payment_link", "");
-        Account acc = Select.from(Account.class).first();
+         acc = Select.from(Account.class).first();
         if (!linkPayment.equals(""))
             linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
@@ -201,7 +206,15 @@ public class SettingFragment extends Fragment {
 
 
         mobile = Select.from(Account.class).first().M;
-        binding.btnComment.setOnClickListener(v -> Toast.makeText(getActivity(), "به زودی", Toast.LENGTH_SHORT).show());
+        binding.btnShare.setOnClickListener(v -> {
+            Bundle bundle=new Bundle();
+            bundle.putInt("type",2);
+            ContactUsFragment contactUsFragment=new ContactUsFragment();
+            contactUsFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();
+
+
+        });
 
         binding.btnCredit.setOnClickListener(v -> {
             if (!linkPayment.equals("")) {
@@ -230,8 +243,14 @@ public class SettingFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit());
 
 
-        binding.btnSupport.setOnClickListener(v ->
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ContactUsFragment(), "ContactUsFragment").addToBackStack("AboutUsF").commit()
+        binding.btnSupport.setOnClickListener(v ->{
+            Bundle bundle=new Bundle();
+            bundle.putInt("type",1);
+                    ContactUsFragment contactUsFragment=new ContactUsFragment();
+                    contactUsFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();
+                }
+
         );
 
 
@@ -360,4 +379,8 @@ public class SettingFragment extends Fragment {
     public void onStop() {
         super.onStop();
         compositeDisposable.clear();
-    }}
+    }
+
+
+
+}

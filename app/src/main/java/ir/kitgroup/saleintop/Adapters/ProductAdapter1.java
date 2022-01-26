@@ -107,22 +107,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         //3     Edit AMOUNT
     }
 
-    public interface DeleteItem {
-        void onDelete(String Prd_UID);
 
-    }
 
     private ClickItem clickItem;
-    private DeleteItem deleteItem;
 
 
     public void setOnClickListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
 
-    public void setOnDeleteListener(DeleteItem deleteItem) {
-        this.deleteItem = deleteItem;
-    }
 
 
     public interface Descriptions {
@@ -230,6 +223,11 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             // holder.error.setText("");
 
 
+            if (sharedPreferences.getString("NMP","").equals("InVoiceDetailF"))
+                holder.ProductAmountTxt.setEnabled(false);
+
+            else
+                holder.ProductAmountTxt.setEnabled(true);
             InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
@@ -377,7 +375,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     holder.getAdapterPosition(),
                                     holder.error,
                                     holder.progressBar,
-                                    holder.textWatcher,
+                                    holder.textWatcher1,
                                     holder.ProductAmountTxt,
                                     holder.ivMinus,
                                     company,
@@ -399,7 +397,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                     holder.getAdapterPosition(),
                                     holder.error,
                                     holder.progressBar,
-                                    holder.textWatcher,
+                                    holder.textWatcher1,
                                     holder.ProductAmountTxt,
                                     holder.ivMinus,
                                     company,
@@ -414,11 +412,14 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
 
             holder.ProductAmountTxt.setOnClickListener(v -> {
+
                         holder.ProductAmountTxt.setCursorVisible(true);
+
+
                     }
             );
-            if (holder.textWatcher == null) {
-                holder.textWatcher = new TextWatcher() {
+            if (holder.textWatcher1 == null) {
+                holder.textWatcher1 = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                         int p = 0;
@@ -427,40 +428,41 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
+                            if (!charSequence.toString().isEmpty())
+                                holder.ProductAmountTxt.setCursorVisible(true);
 
-                        if (!charSequence.toString().isEmpty())
-                            holder.ProductAmountTxt.setCursorVisible(true);
 
+                            String s = Util.toEnglishNumber(charSequence.toString());
+                            s = s.contains("٫") ? s.replace("٫", ".") : s;
+                            s = s.contains(",") ? s.replace(",", "") : s;
 
-                        String s = Util.toEnglishNumber(charSequence.toString());
-                        s = s.contains("٫") ? s.replace("٫", ".") : s;
-                        s = s.contains(",") ? s.replace(",", "") : s;
+                            if (!s.isEmpty()) {
+                                if (s.contains(".") &&
+                                        s.indexOf(".") == s.length() - 1) {
+                                    return;
+                                } else if (s.contains("٫") &&
+                                        s.indexOf("٫") == s.length() - 1) {
+                                    return;
+                                }
 
-                        if (!s.isEmpty()) {
-                            if (s.contains(".") &&
-                                    s.indexOf(".") == s.length() - 1) {
-                                return;
-                            } else if (s.contains("٫") &&
-                                    s.indexOf("٫") == s.length() - 1) {
-                                return;
                             }
 
-                        }
+                            if (holder.getAdapterPosition() < productsList.size())
+                                doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                                        holder.getAdapterPosition(),
+                                        holder.error,
+                                        holder.progressBar,
+                                        holder.textWatcher1,
+                                        holder.ProductAmountTxt,
+                                        holder.ivMinus,
+                                        company,
+                                        maxSale,
+                                        productsList.get(holder.getAdapterPosition()).getI(),
+                                        s,
+                                        3
+                                );
 
-                        if (holder.getAdapterPosition() < productsList.size())
-                            doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
-                                    holder.getAdapterPosition(),
-                                    holder.error,
-                                    holder.progressBar,
-                                    holder.textWatcher,
-                                    holder.ProductAmountTxt,
-                                    holder.ivMinus,
-                                    company,
-                                    maxSale,
-                                    productsList.get(holder.getAdapterPosition()).getI(),
-                                    s,
-                                    3
-                            );
+
 
 
                     }
@@ -473,9 +475,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             }
 
 
-            holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher);
+            holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher1);
             holder.ProductAmountTxt.setText(df.format(amount));
-            holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher);
+            holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher1);
+
 
 
             holder.cardEdit.setOnClickListener(v -> {
@@ -504,7 +507,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
     }
 
 
-    static class viewHolder extends RecyclerView.ViewHolder {
+        class  viewHolder extends RecyclerView.ViewHolder {
 
         private int tab = 0;
 
@@ -526,11 +529,12 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         private final ImageView ivMinus;
         private final ImageView ivMax;
         private final ProgressBar progressBar;
-        private TextWatcher textWatcher;
+        private TextWatcher textWatcher1;
         private final RelativeLayout layoutDiscount;
 
 
-        public viewHolder(View itemView) {
+
+     public viewHolder(View itemView) {
             super(itemView);
 
 
@@ -657,7 +661,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                                                                 || (coef2 == 0 && amount % coef1 != 0)
                                                                 || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
                                                 ) {
-
 
                                                     AlertDialog alertDialog = new AlertDialog.Builder(context)
                                                             .setMessage(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ")

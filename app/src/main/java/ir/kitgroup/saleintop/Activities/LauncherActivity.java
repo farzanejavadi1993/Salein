@@ -90,6 +90,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
+            sharedPreferences.edit().putString("NMP","").apply();
             final int size = getSupportFragmentManager().getBackStackEntryCount();
             String name = "";
             try {
@@ -185,6 +186,8 @@ public class LauncherActivity extends AppCompatActivity {
                     inVoiceDetailFragment.setArguments(bundleOrder);
                     getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailF").commit();
                     loadProfile = true;
+
+                    sharedPreferences.edit().putString("NMP","InVoiceDetailF").apply();
                     return true;
 
                 case R.id.profile:
