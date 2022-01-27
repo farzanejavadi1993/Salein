@@ -160,7 +160,7 @@
 
 
         <RelativeLayout
-            android:visibility="gone"
+
             android:id="@+id/layoutSocial"
             android:layout_marginTop="@dimen/margin10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -180,28 +180,32 @@
                 android:textColor="@color/purple_700"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+
+
             <ImageView
+
+                android:id="@+id/website"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_below="@+id/socialcommunicate"
+                android:layout_marginLeft="@dimen/margin10"
+                android:layout_toRightOf="@+id/watsapp"
+                android:src="@drawable/ic_chorome" />
+            <ImageView
+                android:layout_marginRight="@dimen/margin10"
                 android:layout_below="@+id/socialcommunicate"
                 android:id="@+id/instagram"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="@dimen/margin10"
-                android:layout_toLeftOf="@+id/view"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+               android:layout_toLeftOf="@+id/watsapp"
                 android:src="@drawable/ic_instagram" />
-            <View
-                android:layout_below="@+id/socialcommunicate"
-                android:id="@+id/view"
-                android:layout_centerInParent="true"
-                android:layout_width="1dp"
-                android:layout_height="20dp"/>
 
             <ImageView
                 android:layout_below="@+id/socialcommunicate"
                 android:id="@+id/watsapp"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_toRightOf="@+id/view"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_centerInParent="true"
                 android:src="@drawable/ic_watsapp" />
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
