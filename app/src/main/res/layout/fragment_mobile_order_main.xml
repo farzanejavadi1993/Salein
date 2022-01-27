@@ -175,6 +175,7 @@
                                     android:textSize="11sp" />
 
                                 <TextView
+                                    android:gravity="right"
                                     android:id="@+id/tvAddress"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
