@@ -10,7 +10,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinjam"
+        applicationId "ir.kitgroup.saleinOrder"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 3
