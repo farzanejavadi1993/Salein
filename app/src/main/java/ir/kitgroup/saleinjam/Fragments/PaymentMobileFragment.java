@@ -281,38 +281,7 @@ public class PaymentMobileFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                         dialogSync.dismiss();
                         if (disableAccount) {
-                            sharedPreferences.edit().clear();
-
-                            if (Account.count(Account.class) > 0)
-                                Account.deleteAll(Account.class);
-
-                            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                                InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-                            if (Product.count(Product.class) > 0)
-                                Product.deleteAll(Product.class);
-
-                            if (Tables.count(Tables.class) > 0)
-                                Tables.deleteAll(Tables.class);
-
-                            if (Unit.count(Unit.class) > 0)
-                                Unit.deleteAll(Unit.class);
-
-                            if (Company.count(Company.class) > 0)
-                                Company.deleteAll(Company.class);
-
-                            ((LauncherActivity) getActivity()).setFistItem();
-                            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-                            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                            for (int i = 0; i < size; i++) {
-                                getActivity().getSupportFragmentManager().popBackStack();
-                            }
-
-                            getActivity().finish();
-                            startActivity(getActivity().getIntent());
-                          //  getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
-                            //reload loginFragment
+                          getActivity().finish();
                         }
                     });
 
@@ -1238,7 +1207,7 @@ public class PaymentMobileFragment extends Fragment {
                                 binding.progressBar.setVisibility(View.GONE);
                                 boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
                                 if (disableAccount)
-                                    showError("حساب کاربری شما غیر فعال شده است.");
+                                    showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس جم پارت قطعه فعال میگردد.");
                             }));
         } catch (Exception e) {
             Toast.makeText(getActivity(), "خطا در ارتباط با سرور در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();

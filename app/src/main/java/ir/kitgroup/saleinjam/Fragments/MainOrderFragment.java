@@ -779,38 +779,7 @@ public class MainOrderFragment extends Fragment {
             dialogSync.dismiss();
             if (disableAccount) {
 
-                sharedPreferences.edit().clear();
-
-                if (Account.count(Account.class) > 0)
-                    Account.deleteAll(Account.class);
-
-                if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-
-                if (ir.kitgroup.saleinjam.DataBase.Product.count(ir.kitgroup.saleinjam.DataBase.Product.class) > 0)
-                    ir.kitgroup.saleinjam.DataBase.Product.deleteAll(ir.kitgroup.saleinjam.DataBase.Product.class);
-
-                if (Tables.count(Tables.class) > 0)
-                    Tables.deleteAll(Tables.class);
-
-                if (Unit.count(Unit.class) > 0)
-                    Unit.deleteAll(Unit.class);
-
-                if (Company.count(Company.class) > 0)
-                    Company.deleteAll(Company.class);
-
-                ((LauncherActivity) getActivity()).setFistItem();
-                ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-                final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                for (int i = 0; i < size; i++) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-
-                getActivity().finish();
-                startActivity(getActivity().getIntent());
-                //  getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new SplashScreenFragment(), "SplashScreenFragment").commit();
-                //reload loginFragment
+              getActivity().finish();
 
                 return;
             } else if (filterError)
@@ -2259,7 +2228,7 @@ public class MainOrderFragment extends Fragment {
                                 productLevel2Adapter.notifyDataSetChanged();
                                 disableAccount = sharedPreferences.getBoolean("disableAccount", false);
                                 if (disableAccount)
-                                    showError("حساب کاربری شما غیر فعال شده است.", 2);
+                                    showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس جم پارت قطعه فعال میگردد.", 2);
                             }));
         } catch (Exception ignored) {
         }

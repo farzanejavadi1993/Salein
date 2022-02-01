@@ -45,7 +45,10 @@
                     android:id="@+id/tv_message"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_margin="@dimen/margin10"
+                    android:layout_marginStart="@dimen/margin10"
+                    android:layout_marginTop="@dimen/margin10"
+                    android:layout_marginEnd="@dimen/margin10"
+                    android:layout_marginBottom="@dimen/margin10"
                     android:gravity="center"
                     android:textColor="#2f2f2f"
                     android:textSize="12sp" />

@@ -160,7 +160,7 @@
 
 
         <RelativeLayout
-
+            android:visibility="gone"
             android:id="@+id/layoutSocial"
             android:layout_marginTop="@dimen/margin10"
             app:layout_constraintEnd_toEndOf="parent"
