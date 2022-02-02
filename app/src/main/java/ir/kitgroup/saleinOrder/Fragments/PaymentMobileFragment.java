@@ -1330,13 +1330,17 @@ public class PaymentMobileFragment extends Fragment {
                                         allDate.add(modelDate); }
                                     if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
                                         binding.layoutAddress.setVisibility(View.VISIBLE);
-                                        binding.layoutTime.setVisibility(View.VISIBLE);
+
                                     } else if (company.mode == 1) {
                                         binding.layoutTypeOrder.setVisibility(View.GONE);
                                         binding.layoutAddress.setVisibility(View.GONE);
                                         binding.layoutTime.setVisibility(View.GONE);
                                         binding.layoutPayment.setVisibility(View.VISIBLE);
                                     }
+
+
+
+
                                     Transport_GUID = settingsList.get(0).PEYK;
                                     sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
                                     try {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <RelativeLayout
         android:id="@+id/mainBackground"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EEEEF1"
@@ -64,9 +64,9 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="2dp"
                             android:layout_marginRight="12dp"
-
                             android:background="@drawable/background_edittext"
                             android:visibility="gone"
+
 
                             >
 
@@ -92,6 +92,14 @@
                                     tools:ignore="ContentDescription" />
                             </RelativeLayout>
 
+                            <ProgressBar
+                                android:id="@+id/pro"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/btn_filter_add"
+                                android:visibility="gone" />
+
 
                             <EditText
                                 android:id="@+id/edt_name_customer"
@@ -113,7 +121,6 @@
                         </RelativeLayout>
 
 
-
                         <LinearLayout
                             android:id="@+id/layout_address_branch"
                             android:layout_width="match_parent"
@@ -125,9 +132,9 @@
                             android:orientation="horizontal">
 
                             <RelativeLayout
-                                android:layout_weight="0.15"
                                 android:layout_width="0dp"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.15">
 
                                 <ImageView
                                     android:id="@+id/iv_filter"
@@ -135,8 +142,8 @@
                                     android:layout_height="25dp"
                                     android:layout_centerInParent="true"
                                     android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:clickable="true"
 
+                                    android:clickable="true"
                                     android:focusable="true"
                                     android:src="@drawable/ic_filter" />
                             </RelativeLayout>
@@ -148,8 +155,7 @@
                                 android:layout_marginLeft="3dp"
                                 android:layout_marginRight="3dp"
                                 android:layout_weight="0.45"
-                                android:background="@drawable/bookmark_search_layout_background"
-                                >
+                                android:background="@drawable/bookmark_search_layout_background">
 
                                 <ImageView
                                     android:id="@+id/iv_address"
@@ -175,7 +181,6 @@
                                     android:textSize="11sp" />
 
                                 <TextView
-                                    android:gravity="right"
                                     android:id="@+id/tvAddress"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -183,6 +188,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="5dp"
                                     android:layout_toRightOf="@+id/iv_address"
+                                    android:gravity="right"
                                     android:singleLine="true"
                                     android:textColor="@color/purple_700"
                                     android:textSize="11sp"
@@ -196,16 +202,15 @@
                                 android:layout_marginLeft="3dp"
                                 android:layout_marginRight="3dp"
                                 android:layout_weight="0.4"
-                                android:background="@drawable/bookmark_search_layout_background"
-                                >
+                                android:background="@drawable/bookmark_search_layout_background">
 
                                 <TextView
-                                    android:layout_marginRight="5dp"
                                     android:id="@+id/tvTitleStore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerHorizontal="true"
+                                    android:layout_marginRight="5dp"
                                     android:layout_toRightOf="@+id/iv_store_left"
                                     android:singleLine="true"
                                     android:text="خرید از فروشگاه"
@@ -213,18 +218,18 @@
                                     android:textSize="11sp" />
 
                                 <TextView
-                                    android:layout_marginRight="5dp"
                                     android:id="@+id/tvNameStore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTitleStore"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerHorizontal="true"
+                                    android:layout_marginRight="5dp"
                                     android:layout_toRightOf="@+id/iv_store_left"
                                     android:singleLine="true"
-                                    tools:text="گوشت دنیوی"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp" />
+                                    android:textSize="11sp"
+                                    tools:text="گوشت دنیوی" />
 
                                 <ImageView
                                     android:id="@+id/iv_store_left"
@@ -238,7 +243,6 @@
 
                             </RelativeLayout>
                         </LinearLayout>
-
 
 
                     </RelativeLayout>
@@ -263,18 +267,17 @@
                     android:layoutDirection="rtl" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginBottom="54dp"
                     android:id="@+id/order_recyclerView_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="54dp"
                     android:layoutDirection="rtl"
 
                     />
 
 
             </LinearLayout>
-
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -309,9 +312,6 @@
 
 
     </RelativeLayout>
-
-
-
 
 
 </layout>

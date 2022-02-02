@@ -691,12 +691,15 @@ public class MainOrderFragment extends Fragment {
 
                     Acc_GUID = "";
                     Acc_NAME = "";
-
-                    if (s.toString().isEmpty()) {
+                    compositeDisposable.clear();
+                    accList.clear();
+                    accAdapter.notifyDataSetChanged();
+                    if (s.toString().isEmpty() || s.toString().trim().equals("")) {
                         binding.accountRecyclerView.setVisibility(View.GONE);
+                        binding.pro.setVisibility(View.GONE);
                         binding.edtNameCustomer.setHint("جستجو مشتری");
+
                     } else if (s.toString().length() > 2) {
-                        compositeDisposable.clear();
                         getAccountSearch1(Util.toEnglishNumber(s.toString()), 0);
                     }
 
@@ -2053,6 +2056,7 @@ public class MainOrderFragment extends Fragment {
     }
 
     private void getAccountSearch1(String word, int type) {
+        binding.pro.setVisibility(View.VISIBLE);
         try {
             compositeDisposable.add(
                     api.getAccountSearch1("saleinkit_api", company.USER, company.PASS, word)
@@ -2069,6 +2073,7 @@ public class MainOrderFragment extends Fragment {
                                 try {
                                     iDs = gson.fromJson(jsonElement, typeIDs);
                                 } catch (Exception e) {
+                                    binding.pro.setVisibility(View.GONE);
                                     return;
 
                                 }
@@ -2089,15 +2094,16 @@ public class MainOrderFragment extends Fragment {
                                 }
                                 accAdapter.notifyDataSetChanged();
 
+                                binding.pro.setVisibility(View.GONE);
                                 customProgress.hideProgress();
 
                             }, throwable -> {
-
+                                binding.pro.setVisibility(View.GONE);
 
                             })
             );
         } catch (Exception ignored) {
-
+            binding.pro.setVisibility(View.GONE);
         }
     }
 

@@ -264,9 +264,10 @@ public class LauncherOrganizationFragment extends Fragment {
             binding.txtError.setText("");
             filter("whole");
             tablesList.clear();
-            ArrayList<Tables> arrayList = new ArrayList<>(AllTable);
-            CollectionUtils.filter(arrayList, t -> t.C == null);
-            LauncherOrganizationFragment.this.tablesList.addAll(arrayList);
+
+           List<Tables> tb=Select.from(Tables.class).list();
+           CollectionUtils.filter(tb,t->t.N!=null);
+            LauncherOrganizationFragment.this.tablesList.addAll(tb);
             if (tablesList.size() == 0)
                 binding.txtError.setText("هیچ میزی موجود نمی باشد.");
             tableAdapter.notifyDataSetChanged();
@@ -609,7 +610,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
                                 if (iDs != null) {
                                     tablesList.clear();
+
+                                    List<Tables> tb=Select.from(Tables.class).list();
+                                    CollectionUtils.filter(tb,t->t.N!=null);
                                     tablesList.addAll(iDs.getTables());
+                                    tablesList.addAll(tb);
                                     AllTable.clear();
                                     AllTable.addAll(iDs.getTables());
 

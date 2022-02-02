@@ -211,13 +211,14 @@ public class SearchProductFragment extends Fragment {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().isEmpty()) {
-                    productList.clear();
-                    productAdapter.notifyDataSetChanged();
+                productList.clear();
+                productAdapter.notifyDataSetChanged();
+                compositeDisposable.clear();
+                if (s.toString().isEmpty() || s.toString().trim().equals("")) {
+                    binding.pro.setVisibility(View.GONE);
                     binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
                 } else {
-                    compositeDisposable.clear();
-                   if (s.toString().length()>=2)
+                    if (s.toString().length()>=2)
                     getSearchProduct(Util.toEnglishNumber(s.toString()),s.toString().length());
                 }
             }
@@ -279,6 +280,7 @@ public class SearchProductFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getSearchProduct(String s,int length) {
         try {
+            binding.pro.setVisibility(View.VISIBLE);
             compositeDisposable.add(
                     api.getSearchProduct("saleinkit_api", company.USER, company.PASS, s)
                             .subscribeOn(Schedulers.io())
@@ -294,9 +296,11 @@ public class SearchProductFragment extends Fragment {
                                         try {
                                             iDs = gson.fromJson(jsonElement, typeModelProduct);
                                         } catch (Exception e) {
+                                            binding.pro.setVisibility(View.GONE);
                                             return;
                                         }
                                         if (iDs == null) {
+                                            binding.pro.setVisibility(View.GONE);
                                             return;
                                         }
                                         if (s.length()==length) {
@@ -312,10 +316,15 @@ public class SearchProductFragment extends Fragment {
                                                 binding.txtError.setText("کالایی یافت نشد");
                                             productAdapter.setMaxSale(maxSales);
                                             productAdapter.notifyDataSetChanged();
+                                            binding.pro.setVisibility(View.GONE);
                                         }
                                         }
-                                    , throwable -> {}));
-        } catch (Exception ignored) {}
+                                    , throwable -> {
+                                        binding.pro.setVisibility(View.GONE);
+                                    }));
+        } catch (Exception ignored) {
+            binding.pro.setVisibility(View.GONE);
+        }
     }
     private void getDescription(String id) {
         if (!networkAvailable(getActivity())) {

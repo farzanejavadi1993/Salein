@@ -255,7 +255,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                 holder.unit.setText("");
 
 
-            holder.productName.setText(holder.getAdapterPosition()+1 + "_" +productsList.get(holder.getAdapterPosition()).getN());
+            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
 
 
             if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {

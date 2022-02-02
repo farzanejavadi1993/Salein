@@ -84,12 +84,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
         holder.tvCapacity.setText("تعداد صندلی میز : " + table.CC);
 
 
-        if (table.ACT) {
+        if (table.ACT!=null && table.ACT) {
             holder.tvStatus.setText("میز مشغول است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.red_table));
             holder.ivDelete.setVisibility(View.GONE);
 
-        } else if (table.RSV) {
+        } else if (table.RSV!=null && table.RSV) {
             holder.tvStatus.setText("میز رزرو شده است.");
             holder.rlTable.setBackgroundColor(context.getResources().getColor(R.color.blue_table));
             holder.ivDelete.setVisibility(View.GONE);
@@ -101,7 +101,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.viewHolder> 
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.ivDelete.setImageResource(R.drawable.ic_delete);
 
-        } else if (!table.ACT && !table.RSV && table.GO == null) {
+        } else if (table.ACT!=null && table.RSV!=null && !table.ACT && !table.RSV && table.GO == null) {
             Tables tb = Select.from(Tables.class).where("I ='" + table.I + "'").first();
             if (tb != null)
                 Tables.delete(tb);
