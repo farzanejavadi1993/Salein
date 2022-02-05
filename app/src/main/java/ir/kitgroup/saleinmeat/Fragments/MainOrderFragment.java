@@ -1463,6 +1463,7 @@ public class MainOrderFragment extends Fragment {
 
     public void getDiscountProduct() {
         binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
+        compositeDisposable.clear();
         try {
             compositeDisposable.add(
                     api.getProductDiscountSync("saleinkit_api", company.USER, company.PASS)
@@ -1559,6 +1560,7 @@ public class MainOrderFragment extends Fragment {
     }
 
     public void getProductVipSync() {
+        compositeDisposable.clear();
         binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
         try {
             compositeDisposable.add(
@@ -1651,6 +1653,7 @@ public class MainOrderFragment extends Fragment {
     }
 
     private void getProduct1(String GuidPrdLvl2) {
+
         if (!networkAvailable(getActivity())) {
             ShowErrorConnection();
             return;
