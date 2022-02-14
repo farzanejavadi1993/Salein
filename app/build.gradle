@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
     implementation 'org.jetbrains:annotations:15.0'
     implementation "com.airbnb.android:lottie:+"
-    implementation "com.airbnb.android:lottie:+"
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
 
 
     //Retrofit Library

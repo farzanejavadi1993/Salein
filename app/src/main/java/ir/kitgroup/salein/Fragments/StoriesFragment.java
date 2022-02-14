@@ -7,15 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.databinding.FragmentStoriesBinding;
 
@@ -24,24 +29,25 @@ public class StoriesFragment extends Fragment {
 
     @Inject
     Typeface typeface;
+
+
     public FragmentStoriesBinding binding;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-
-       binding=FragmentStoriesBinding.inflate(getLayoutInflater());
-       getActivity().getWindow().setSoftInputMode(
+        binding = FragmentStoriesBinding.inflate(getLayoutInflater());
+        getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-       return binding.getRoot();
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        CompanyFragment companyFragment= new CompanyFragment();
+        CompanyFragment companyFragment = new CompanyFragment();
         companyFragment.setStoriesFragment(this);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
@@ -77,10 +83,12 @@ public class StoriesFragment extends Fragment {
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         public void addFragment(Fragment fragment, String title) {
             myFragments.add(fragment);
             myFragmentTitles.add(title);
         }
+
         @NonNull
         @Override
         public Fragment getItem(int position) {

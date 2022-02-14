@@ -1,15 +1,8 @@
 package ir.kitgroup.salein.Fragments;
 
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,42 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import androidx.lifecycle.ViewModelProvider;
 import com.orm.query.Select;
-
-
 import org.jetbrains.annotations.NotNull;
-
-
-import java.lang.reflect.Type;
-
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-
-import ir.kitgroup.salein.Connect.API;
-
+import es.dmoral.toasty.Toasty;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
-
-
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.models.Config;
-import ir.kitgroup.salein.models.ModelAccount;
-import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentConfirmCodeBinding;
@@ -63,16 +34,19 @@ public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
     @Inject
-     Config config;
+    Config config;
 
     @Inject
     SharedPreferences sharedPreferences;
+
+
+    private MyViewModel myViewModel;
     private Company company;
-    private API api;
-    private CompositeDisposable compositeDisposable;
     private FragmentConfirmCodeBinding binding;
     private int code;
+    private String mobileNumber = "";
     //endregion Parameter
+
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -80,7 +54,6 @@ public class ConfirmCodeFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentConfirmCodeBinding.inflate(getLayoutInflater());
         return binding.getRoot();
-
     }
 
 
@@ -89,23 +62,15 @@ public class ConfirmCodeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-        company= Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
-
-        compositeDisposable = new CompositeDisposable();
-
+        company = Select.from(Company.class).first();
 
         //region Get Bundle And Set Data
         Bundle bundle = getArguments();
         code = bundle.getInt("code");
-        String mobileNumber = bundle.getString("mobileNumber");
+        mobileNumber = bundle.getString("mobileNumber");
         //endregion Get Bundle And Set Data
 
-
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobileNumber + " " + getString(R.string.send_code_part2));
-
 
         //region Configuration Text Size
         int fontSize;
@@ -118,23 +83,18 @@ public class ConfirmCodeFragment extends Fragment {
         binding.btnLogin.setTextSize(fontSize);
         //endregion Configuration Text Size
 
-
         //region Set Icon And Title
         binding.imageLogo.setImageResource(config.imageIcon);
         //endregion Set Icon And Title
 
-
         //region TextWatcher Code
-
         binding.edtV1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -158,15 +118,14 @@ public class ConfirmCodeFragment extends Fragment {
 
             }
         });
+
         binding.edtV2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -197,12 +156,10 @@ public class ConfirmCodeFragment extends Fragment {
         binding.edtV3.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -210,9 +167,7 @@ public class ConfirmCodeFragment extends Fragment {
                 if (editable.length() == 1) {
                     binding.edtV4.requestFocus();
                 } else {
-
                     binding.edtV2.requestFocus();
-
                 }
                 String code = binding.edtV1.getText().toString() +
                         binding.edtV2.getText().toString() +
@@ -233,13 +188,10 @@ public class ConfirmCodeFragment extends Fragment {
         binding.edtV4.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-
             }
 
             @Override
@@ -268,19 +220,14 @@ public class ConfirmCodeFragment extends Fragment {
         binding.edtV5.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
                 if (editable.length() == 1) {
                     Util.hideKeyBoard(getActivity(), binding.edtV5);
                 } else {
@@ -299,8 +246,6 @@ public class ConfirmCodeFragment extends Fragment {
                     binding.btnLogin.setEnabled(false);
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 }
-
-
             }
         });
 
@@ -339,12 +284,9 @@ public class ConfirmCodeFragment extends Fragment {
             } else {
                 setEditBackground(R.drawable.rounded_edittext_gray, (EditText) view1);
             }
-
-
         });
 
         //endregion TextWatcher Code
-
 
         //region Action BtnLogin
         binding.btnLogin.setOnClickListener(v -> {
@@ -355,18 +297,94 @@ public class ConfirmCodeFragment extends Fragment {
                             binding.edtV4.getText().toString() +
                             binding.edtV5.getText().toString();
             if (Integer.parseInt(codeInput) != code) {
-        Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
-          return;
+                Toast.makeText(getActivity(), "کد وارد شده صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+                return;
             }
-            getInquiryAccount1(company.USER, company.PASS, mobileNumber);
+
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+            binding.btnLogin.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            myViewModel.getInquiryAccount(company.USER,company.PASS,mobileNumber);
         });
         //endregion Action BtnLogin
-
 
         //region Action ivBackFragment
         binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
         //endregion Action ivBackFragment
 
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null) return;
+            if (result.getCode() == -1)
+                Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+            myViewModel.getResultSmsLogin().setValue(null);
+
+        });
+
+
+        myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null)
+                return;
+            sharedPreferences.edit().putBoolean("disableAccount", false).apply();
+            getActivity().getSupportFragmentManager().popBackStack();
+
+            //region Account Is Register
+            if (result.size() > 0) {
+                Account.deleteAll(Account.class);
+                Account.saveInTx(result);
+
+                FragmentTransaction addFragment;
+                //region Show All Company
+                if (company.INSK_ID.equals("ir.kitgroup.salein")) {
+                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
+                }
+                //endregion Show All Company
+
+
+                //region Go To MainOrderFragment Because Account Is Register
+                else {
+                    Bundle bundleMain = new Bundle();
+                    bundleMain.putString("Inv_GUID", "");
+                    bundleMain.putString("Tbl_GUID", "");
+                    bundleMain.putString("Ord_TYPE", "");
+                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                    mainOrderFragment.setArguments(bundleMain);
+                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                }
+                //endregion Go To MainOrderFragment Because Account Is Register
+                addFragment.commit();
+            }
+            //endregion Account Is Register
+
+
+            //region Account Is Not Register
+            else {
+                Bundle bundleMap = new Bundle();
+                bundleMap.putString("mobileNumber",mobileNumber );
+                bundleMap.putString("edit_address", "");
+                bundleMap.putString("type", "");
+                MapFragment mapFragment = new MapFragment();
+                mapFragment.setArguments(bundleMap);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
+            }
+            //endregion Account Is Not Register
+
+
+        });
 
     }
 
@@ -378,174 +396,12 @@ public class ConfirmCodeFragment extends Fragment {
         view.setBackground(getResources().getDrawable(drawable));
     }
 
-    private boolean isNetworkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String userName, String passWord, String mobileNumber) {
-
-        if (!isNetworkAvailable(getActivity())) {
-
-            Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnLogin.setEnabled(false);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            compositeDisposable.add(
-                    api.getInquiryAccount1(userName, passWord, mobileNumber, "", "", 1, 1)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelAccount>() {
-                                }.getType();
-                                ModelAccount iDs;
-
-
-
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception e) {
-
-                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                    binding.btnLogin.setEnabled(true);
-                                    binding.progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
-                                    return;
-
-                                }
-
-
-                                assert iDs != null;
-                                if (iDs.getAccountList() == null) {
-
-                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                    binding.btnLogin.setEnabled(true);
-                                    binding.progressBar.setVisibility(View.GONE);
-                                    Type typeIDs0 = new TypeToken<ModelLog>() {
-                                    }.getType();
-                                    ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
-
-                                    if (iDs0.getLogs() != null) {
-                                        String description = iDs0.getLogs().get(0).getDescription();
-                                        int message = iDs0.getLogs().get(0).getMessage();
-
-                                        if (message == 3) {
-                                            sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                            Toast.makeText(getActivity(),description, Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-
-
-
-
-
-                                }
-                                else {
-
-                                    sharedPreferences.edit().putBoolean("disableAccount", false).apply();
-                                    getActivity().getSupportFragmentManager().popBackStack();
-                                    //region Account Is Register
-                                    if (iDs.getAccountList().size() > 0) {
-                                        Account.deleteAll(Account.class);
-                                        Account.saveInTx(iDs.getAccountList());
-
-
-                                        FragmentTransaction addFragment;
-                                        //region Show All Company
-
-                                        if (company.INSK_ID.equals("ir.kitgroup.salein")) {
-                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
-
-                                        }
-                                        //endregion Show All Company
-
-                                        //region Go To MainOrderFragment Because Account Is Register
-                                        else {
-                                            Bundle bundleMain = new Bundle();
-                                            bundleMain.putString("Inv_GUID", "");
-                                            bundleMain.putString("Tbl_GUID", "");
-                                            bundleMain.putString("Ord_TYPE", "");
-                                            MainOrderFragment mainOrderFragment = new MainOrderFragment();
-                                            mainOrderFragment.setArguments(bundleMain);
-                                            addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
-                                        }
-
-                                        //endregion Go To MainOrderFragment Because Account Is Register
-
-
-                                        addFragment.commit();
-                                    }
-                                    //endregion Account Is Register
-
-
-                                    //region Account Is Not Register
-                                    else {
-                                        Bundle bundleMap = new Bundle();
-                                        bundleMap.putString("mobileNumber", mobileNumber);
-                                        bundleMap.putString("edit_address", "");
-                                        bundleMap.putString("type", "");
-                                        MapFragment mapFragment = new MapFragment();
-                                        mapFragment.setArguments(bundleMap);
-                                        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").commit();
-
-                                    }
-                                    //endregion Account Is Not Register
-
-
-                                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                    binding.btnLogin.setEnabled(true);
-                                    binding.progressBar.setVisibility(View.GONE);
-
-                                }
-
-
-                            }, throwable -> {
-
-                                Toast.makeText(getContext(), "خطای تایم اوت در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
-                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                binding.btnLogin.setEnabled(true);
-                                binding.progressBar.setVisibility(View.GONE);
-
-
-                            })
-            );
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات مشتریان.", Toast.LENGTH_SHORT).show();
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            binding.progressBar.setVisibility(View.GONE);
-
-        }
-
-    }
     //endregion Method
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compositeDisposable.dispose();
         binding = null;
-
-
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear();
-    }
-
 }

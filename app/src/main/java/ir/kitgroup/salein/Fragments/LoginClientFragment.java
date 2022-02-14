@@ -4,9 +4,6 @@ package ir.kitgroup.salein.Fragments;
 import android.annotation.SuppressLint;
 
 import android.os.Bundle;
-
-
-import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import com.orm.query.Select;
@@ -35,13 +33,10 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Connect.API;
+import es.dmoral.toasty.Toasty;
 
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentLoginMobileBinding;
 import ir.kitgroup.salein.DataBase.Company;
@@ -49,20 +44,56 @@ import ir.kitgroup.salein.models.Config;
 
 @AndroidEntryPoint
 public class LoginClientFragment extends Fragment {
-
-
     //region PARAMETER
 
     @Inject
     Config config;
 
-    private Company company;
-    private API api;
-    private CompositeDisposable compositeDisposable;
+
+    private MyViewModel myViewModel;
+    private String mobileNumber = "";
+    private int code = 0;
     private FragmentLoginMobileBinding binding;
     private Boolean acceptRule = true;
-
+    private  Company company;
     //endregion PARAMETER
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null) return;
+            if (result.getCode() == -1)
+                Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+            myViewModel.getResultSmsLogin().setValue(null);
+
+        });
+        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null)
+                return;
+            if (result.equals("")) {
+                myViewModel.getResultSmsLogin().setValue(null);
+                Bundle bundleOrder = new Bundle();
+                bundleOrder.putString("mobileNumber", mobileNumber);
+                bundleOrder.putInt("code", code);
+                ConfirmCodeFragment inVoiceDetailFragment = new ConfirmCodeFragment();
+                inVoiceDetailFragment.setArguments(bundleOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
+            }
+
+        });
+
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -70,7 +101,6 @@ public class LoginClientFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentLoginMobileBinding.inflate(getLayoutInflater());
-
         return binding.getRoot();
     }
 
@@ -83,9 +113,8 @@ public class LoginClientFragment extends Fragment {
         try {
 
 
-            company= Select.from(Company.class).first();
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
-            compositeDisposable = new CompositeDisposable();
+             company = Select.from(Company.class).first();
+
             //region Configuration Text Size
             int fontSize;
             if (Util.screenSize >= 7) {
@@ -107,7 +136,6 @@ public class LoginClientFragment extends Fragment {
 
             binding.loginTvRules.setText("با ثبت نام در " + company.N);
 
-
             //region Set Icon And Title
             binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
             binding.imageLogo.setImageResource(config.imageIcon);
@@ -123,8 +151,6 @@ public class LoginClientFragment extends Fragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
                 }
 
                 @Override
@@ -147,13 +173,15 @@ public class LoginClientFragment extends Fragment {
             //region Action btnLogin
             binding.btnLogin.setOnClickListener(v -> {
                 if (acceptRule) {
-                    int code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+
+                    code = new Random(System.nanoTime()).nextInt(89000) + 10000;
                     String messageCode = String.valueOf(code);
-                    String mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
-                    login(mobileNumber, code, messageCode);
+                    mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                    binding.btnLogin.setEnabled(false);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    myViewModel.getSmsLogin(company.USER,company.PASS,messageCode, mobileNumber);
                 }
-
-
             });
             //endregion Action btnLogin
 
@@ -181,61 +209,11 @@ public class LoginClientFragment extends Fragment {
     }
 
 
-    //region Method
-    private void login(String mobileNumber, int code, String message) {
-        try {
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnLogin.setEnabled(false);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            compositeDisposable.add(
-                    api.getSmsLogin(company.USER, company.PASS, message, mobileNumber, 2)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                binding.progressBar.setVisibility(View.GONE);
-                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                binding.btnLogin.setEnabled(true);
-
-
-                                Bundle bundleOrder = new Bundle();
-                                bundleOrder.putString("mobileNumber", mobileNumber);
-                                bundleOrder.putInt("code", code);
-
-                                ConfirmCodeFragment inVoiceDetailFragment = new ConfirmCodeFragment();
-                                inVoiceDetailFragment.setArguments(bundleOrder);
-                                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
-
-
-                            }, throwable -> {
-
-                                Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
-                                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                binding.btnLogin.setEnabled(true);
-                                binding.progressBar.setVisibility(View.GONE);
-
-
-                            })
-            );
-        } catch (NetworkOnMainThreadException ex) {
-            Toast.makeText(getActivity(), "خطا در ارسال پیامک", Toast.LENGTH_SHORT).show();
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            binding.progressBar.setVisibility(View.GONE);
-
-
-        }
-
-    }
-    //endregion Method
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compositeDisposable.dispose();
         binding = null;
-
 
 
     }
@@ -243,7 +221,6 @@ public class LoginClientFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        compositeDisposable.clear();
     }
 
 }
