@@ -1178,17 +1178,17 @@ public class MainOrderFragment extends Fragment {
             sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
             maxSales = result.get(0).MAX_SALE;
             sharedPreferences.edit().putString("maxSale", maxSales).apply();
-            myViewModel.getProduct(company.USER, company.PASS, GuidProductLvl2);
+            myViewModel.getListProduct(company.USER, company.PASS, GuidProductLvl2);
 
         });
-        myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultListProduct().observe(getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
             customProgress.hideProgress();
             if (result == null)
                 return;
 
-            myViewModel.getResultProduct().setValue(null);
+            myViewModel.getResultListProduct().setValue(null);
             productList.clear();
 
             CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
@@ -1456,6 +1456,23 @@ public class MainOrderFragment extends Fragment {
         binding = null;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public  void setFilter(int type) {
+        binding.animationView.setVisibility(View.VISIBLE);
+        binding.progressbar.setVisibility(View.VISIBLE);
+        productList.clear();
+        productListData.clear();
+        productLevel1List.clear();
+        productLevel2List.clear();
+        productAdapter.notifyDataSetChanged();
+        if (type == 1)
+            myViewModel.getDiscountProduct(company.USER, company.PASS);
+        else if (type == 2)
+            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(Account.class).first().I);
+        else
+            myViewModel.getProductLevel1(company.USER, company.PASS);
+
+    }
     public void setBundle(Bundle bundle) {
         this.Inv_GUID = bundle.getString("Inv_GUID");
         this.EDIT = bundle.getBoolean("EDIT");

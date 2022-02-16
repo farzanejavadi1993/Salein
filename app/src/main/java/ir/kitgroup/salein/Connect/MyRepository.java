@@ -16,8 +16,12 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.Fragments.CompanyFragment;
+import ir.kitgroup.salein.Fragments.OrderListFragment;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
+import ir.kitgroup.salein.models.Invoice;
+import ir.kitgroup.salein.models.PaymentRecieptDetail;
 
 
 public class MyRepository {
@@ -73,8 +77,12 @@ public class MyRepository {
     public Observable<String> getProductLevel2(String user,String passWord,String prd1Id) {
         return api.getProductLevel2("saleinkit_api",user,passWord,prd1Id);
     }
-    public Observable<String> getProduct1(String user,String passWord,String prd2Id) {
+    public Observable<String> getListProduct(String user, String passWord, String prd2Id) {
         return api.getProduct1("saleinkit_api",user,passWord,prd2Id);
+    }
+
+    public Observable<String> getProduct(String user,String passWord,String prdId) {
+        return api.getProduct(user,passWord,prdId);
     }
 
     public Observable<String> getDiscountPercent(String user,String passWord) {
@@ -104,4 +112,25 @@ public class MyRepository {
     public Observable<String> getMaxSales(String user,String passWord,String PrdId) {
         return api.getMaxSales(user,passWord,PrdId);
     }
+
+    public Observable<String> getSearchProduct(String user,String passWord,String word) {
+        return api.getSearchProduct("saleinkit_api",user,passWord,word);
+    }
+
+    public Observable<String> getAllInvoice(String user,String passWord,String accId,String date) {
+        return api.getAllInvoice1(user,passWord,accId,date);
+    }
+
+    public Observable<String> sendFeedBack(String user, String passWord,List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+        OrderListFragment.JsonObject jsonObject = new OrderListFragment.JsonObject();
+        jsonObject.Invoice = invoice;
+        jsonObject.InvoiceDetail = invoiceDetail;
+        jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
+
+        Gson gson = new Gson();
+        Type typeJsonObject = new TypeToken<OrderListFragment.JsonObject>() {
+        }.getType();
+        return api.sendFeedBack(user,passWord,gson.toJson(jsonObject, typeJsonObject));
+    }
+
 }

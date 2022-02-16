@@ -325,10 +325,9 @@ public class ConfirmCodeFragment extends Fragment {
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
-            if (result.getCode() == -1)
-                Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
-            myViewModel.getResultSmsLogin().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            myViewModel.getResultMessage().setValue(null);
 
         });
 

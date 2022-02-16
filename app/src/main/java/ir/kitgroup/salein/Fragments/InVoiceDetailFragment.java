@@ -286,8 +286,8 @@ public class InVoiceDetailFragment extends Fragment {
             dialogSync.setContentView(R.layout.custom_dialog);
             dialogSync.setCancelable(false);
 
-//            TextView textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-//            ImageView ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+//           TextView textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+//           ImageView ivIconSync = dialogSync.findViewById(R.id.iv_icon);
 
             MaterialButton btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
             MaterialButton btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
@@ -319,7 +319,7 @@ public class InVoiceDetailFragment extends Fragment {
                         counter = 0;
                         ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
                         for (int i = 0; i < invDetails.size(); i++) {
-                            myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                            myViewModel.getListProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
                         }
                     }
                 }
@@ -776,7 +776,7 @@ public class InVoiceDetailFragment extends Fragment {
                 counter = 0;
                     ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
                     for (int i = 0; i < invDetails.size(); i++) {
-                       myViewModel. getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                       myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
                     }
             }
         }
@@ -868,7 +868,7 @@ public class InVoiceDetailFragment extends Fragment {
             } else {
                 ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
                 for (int i = 0; i < invDetails.size(); i++) {
-                    myViewModel.getProduct(company.USER, company.PASS, invDetails.get(i).PRD_UID);
+                    myViewModel.getListProduct(company.USER, company.PASS, invDetails.get(i).PRD_UID);
                 }
             }
             binding.progressBar.setVisibility(View.GONE);
@@ -878,7 +878,7 @@ public class InVoiceDetailFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultProduct().setValue(null);
+            myViewModel.getResultListProduct().setValue(null);
 
             counter = counter + 1;
 

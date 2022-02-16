@@ -107,10 +107,10 @@ public class FilterFragment extends Fragment {
         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
         if (frg instanceof MainOrderFragment) {
             MainOrderFragment fgf = (MainOrderFragment) frg;
-           // if (filterDiscount)
-               // fgf.getDiscountProduct();
-           // else if (filterVip)
-              //  fgf.getProductVipSync();
+            if (filterDiscount)
+               fgf.setFilter(1);
+           else if (filterVip)
+               fgf.setFilter(2);
         }
     }
 
@@ -118,7 +118,7 @@ public class FilterFragment extends Fragment {
         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
         if (frg instanceof MainOrderFragment) {
             MainOrderFragment fgf = (MainOrderFragment) frg;
-          //  fgf.getProductLevel1();
+            fgf.setFilter(3);
         }
     }
 }

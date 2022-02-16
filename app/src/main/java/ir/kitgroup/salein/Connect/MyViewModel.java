@@ -1,29 +1,18 @@
 package ir.kitgroup.salein.Connect;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.os.Build;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,14 +24,10 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.Unit;
-import ir.kitgroup.salein.Fragments.LoginClientFragment;
-import ir.kitgroup.salein.Fragments.MainOrderFragment;
-import ir.kitgroup.salein.Fragments.StoriesFragment;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.models.Description;
+import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelCompany;
@@ -54,6 +39,7 @@ import ir.kitgroup.salein.models.ModelProductLevel1;
 import ir.kitgroup.salein.models.ModelProductLevel2;
 import ir.kitgroup.salein.models.ModelSetting;
 import ir.kitgroup.salein.models.ModelUnit;
+import ir.kitgroup.salein.models.PaymentRecieptDetail;
 import ir.kitgroup.salein.models.Product;
 import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ProductLevel2;
@@ -74,10 +60,15 @@ public class MyViewModel extends ViewModel {
     private MutableLiveData<List<ProductLevel2>> resultProductLevel2 = new MutableLiveData<>();
     private MutableLiveData<List<Product>> resultDiscountProduct = new MutableLiveData<>();
     private MutableLiveData<List<Product>> resultVipProduct = new MutableLiveData<>();
+    private MutableLiveData<List<Product>> resultListProduct = new MutableLiveData<>();
     private MutableLiveData<List<Product>> resultProduct = new MutableLiveData<>();
+    private MutableLiveData<List<Product>> resultSearchProduct = new MutableLiveData<>();
     private MutableLiveData<List<Description>> resultDescription = new MutableLiveData<>();
     private MutableLiveData<List<Setting>> resultSetting = new MutableLiveData<>();
     private MutableLiveData<List<Setting>> resultSettingPrice = new MutableLiveData<>();
+    private MutableLiveData<List<Invoice>> resultAllInvoice = new MutableLiveData<>();
+    private MutableLiveData<ModelLog> resultSendFeedBack = new MutableLiveData<>();
+
     private MutableLiveData<ModelInvoice> resultInvoice = new MutableLiveData<>();
     private MutableLiveData<ModelLog> resultLog = new MutableLiveData<>();
     private MutableLiveData<Integer> resultMaxSale = new MutableLiveData<>();
@@ -91,10 +82,10 @@ public class MyViewModel extends ViewModel {
     }
 
 
-    public void getSmsLogin(String user,String passWord,String message, String mobile) {
+    public void getSmsLogin(String user, String passWord, String message, String mobile) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getSmsLogin(user,passWord,message, mobile)
+                myRepository.getSmsLogin(user, passWord, message, mobile)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -106,11 +97,10 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در ارسال پیامک", ""));
                         }));
     }
+
     public MutableLiveData<String> getResultSmsLogin() {
         return resultSendSms;
     }
-
-
 
 
     public void getCompany(String parentAccountId) {
@@ -139,17 +129,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""));
                         }));
     }
+
     public MutableLiveData<List<Company>> getResultCompany() {
         return resultCompanies;
     }
 
 
-
-
-    public void getInquiryAccount(String user,String passWord,String mobile) {
+    public void getInquiryAccount(String user, String passWord, String mobile) {
 
         compositeDisposable.add(
-                myRepository.getInquiryAccount(user,passWord,mobile)
+                myRepository.getInquiryAccount(user, passWord, mobile)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -194,17 +183,16 @@ public class MyViewModel extends ViewModel {
 
 
     }
+
     public MutableLiveData<List<Account>> getResultInquiryAccount() {
         return resultInquiryAccount;
     }
 
 
-
-
-    public void addAccount(String user,String passWord,List<Account> accounts) {
+    public void addAccount(String user, String passWord, List<Account> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.addAccount(user,passWord,accounts)
+                myRepository.addAccount(user, passWord, accounts)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -232,17 +220,16 @@ public class MyViewModel extends ViewModel {
 
                         }));
     }
+
     public MutableLiveData<Boolean> getResultAddAccount() {
         return resultAddAccount;
     }
 
 
-
-
-    public void getAccountSearch(String user,String passWord,String word) {
+    public void getAccountSearch(String user, String passWord, String word) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getAccountSearch(user,passWord,word)
+                myRepository.getAccountSearch(user, passWord, word)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -273,17 +260,16 @@ public class MyViewModel extends ViewModel {
 
                         }));
     }
+
     public MutableLiveData<List<Account>> getResultSearchAccount() {
         return resultSearchAccount;
     }
 
 
-
-
-    public void getProductLevel1(String user,String passWord) {
+    public void getProductLevel1(String user, String passWord) {
 
         compositeDisposable.add(
-                myRepository.getProductLevel1(user,passWord)
+                myRepository.getProductLevel1(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -311,17 +297,16 @@ public class MyViewModel extends ViewModel {
 
                         }));
     }
+
     public MutableLiveData<List<ProductLevel1>> getResultProductLevel1() {
         return resultProductLevel1;
     }
 
 
-
-
-    public void getProductLevel2(String user,String passWord,String prd1Id) {
+    public void getProductLevel2(String user, String passWord, String prd1Id) {
 
         compositeDisposable.add(
-                myRepository.getProductLevel2(user,passWord,prd1Id)
+                myRepository.getProductLevel2(user, passWord, prd1Id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -349,15 +334,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "", ""));
                         }));
     }
+
     public MutableLiveData<List<ProductLevel2>> getResultProductLevel2() {
         return resultProductLevel2;
     }
 
 
-    public void getProduct(String user,String passWord,String prd2) {
+    public void getListProduct(String user, String passWord, String prd2) {
 
         compositeDisposable.add(
-                myRepository.getProduct1(user,passWord,prd2)
+                myRepository.getListProduct(user, passWord, prd2)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -370,7 +356,48 @@ public class MyViewModel extends ViewModel {
 
 
                             try {
-                                ModelProduct  iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                if (iDs == null) {
+                                    eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاها", ""));
+
+                                }
+
+                                CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
+                                resultListProduct.setValue(iDs.getProductList());
+
+                            } catch (Exception e) {
+                                eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاها", ""));
+
+                            }
+
+
+                        }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در دریافت کالاها", ""));
+                        }));
+    }
+
+    public MutableLiveData<List<Product>> getResultListProduct() {
+        return resultListProduct;
+    }
+
+
+    public void getProduct(String user, String passWord, String prdId) {
+
+        compositeDisposable.add(
+                myRepository.getProduct(user, passWord, prdId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+                            Gson gson = new Gson();
+                            Type typeModelProduct = new TypeToken<ModelProduct>() {
+                            }.getType();
+
+
+                            try {
+                                ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاها", ""));
 
@@ -389,15 +416,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت کالاها", ""));
                         }));
     }
+
     public MutableLiveData<List<Product>> getResultProduct() {
         return resultProduct;
     }
 
 
-    public void getDiscountProduct(String user,String passWord) {
+    public void getDiscountProduct(String user, String passWord) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getDiscountPercent(user,passWord)
+                myRepository.getDiscountPercent(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -425,15 +453,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت کالاهای تخفیف دار", ""));
                         }));
     }
+
     public MutableLiveData<List<Product>> getResultDiscountProduct() {
         return resultDiscountProduct;
     }
 
 
-    public void getVipProduct(String user,String passWord,String accountId) {
+    public void getVipProduct(String user, String passWord, String accountId) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getProductVipSync(user,passWord,accountId)
+                myRepository.getProductVipSync(user, passWord, accountId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -465,13 +494,14 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت کالاهای تخفیف دار", ""));
                         }));
     }
+
     public MutableLiveData<List<Product>> getResultVipProduct() {
         return resultVipProduct;
     }
 
-    public void getUnit(String user,String passWord) {
+    public void getUnit(String user, String passWord) {
         compositeDisposable.add(
-                myRepository.getUnit(user,passWord)
+                myRepository.getUnit(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -487,17 +517,18 @@ public class MyViewModel extends ViewModel {
                                     Unit.deleteAll(Unit.class);
                                     Unit.saveInTx(iDs.getUnit());
                                 }
-                            } catch (Exception ignore) { }
-                            }, throwable -> {
+                            } catch (Exception ignore) {
+                            }
+                        }, throwable -> {
 
                         }));
     }
 
 
-    public void getDescription(String user,String passWord,String id) {
+    public void getDescription(String user, String passWord, String id) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getDescription(user,passWord,id)
+                myRepository.getDescription(user, passWord, id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -509,7 +540,7 @@ public class MyViewModel extends ViewModel {
                             }.getType();
 
                             try {
-                                ModelDesc   iDs = gson.fromJson(jsonElement, typeIDs);
+                                ModelDesc iDs = gson.fromJson(jsonElement, typeIDs);
                                 if (iDs != null)
                                     resultDescription.setValue(iDs.getDescriptions());
 
@@ -522,15 +553,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت توضیحات", ""));
                         }));
     }
+
     public MutableLiveData<List<Description>> getResultDescription() {
         return resultDescription;
     }
 
 
-    public void getSetting(String user,String passWord) {
+    public void getSetting(String user, String passWord) {
 
         compositeDisposable.add(
-                myRepository.getSetting(user,passWord)
+                myRepository.getSetting(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -549,18 +581,19 @@ public class MyViewModel extends ViewModel {
                             } catch (Exception ignored) {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت تنظیمات", ""));
                             }
-                            }, throwable -> {
+                        }, throwable -> {
                             eMessage.setValue(new Message(-1, "خطا در دریافت تنظیمات", ""));
                         }));
     }
+
     public MutableLiveData<List<Setting>> getResultSetting() {
         return resultSetting;
     }
 
-    public void getSettingPrice(String user,String passWord) {
+    public void getSettingPrice(String user, String passWord) {
 
         compositeDisposable.add(
-                myRepository.getSetting(user,passWord)
+                myRepository.getSetting(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -582,16 +615,16 @@ public class MyViewModel extends ViewModel {
                             eMessage.setValue(new Message(-1, "خطا در دریافت مبلغ کالا", ""));
                         }));
     }
+
     public MutableLiveData<List<Setting>> getResultSettingPrice() {
         return resultSettingPrice;
     }
 
 
-
-    public void getInvoice(String user,String passWord,String Inv_GUID) {
+    public void getInvoice(String user, String passWord, String Inv_GUID) {
 
         compositeDisposable.add(
-                myRepository.getInvoice(user,passWord,Inv_GUID)
+                myRepository.getInvoice(user, passWord, Inv_GUID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -603,11 +636,10 @@ public class MyViewModel extends ViewModel {
                             }.getType();
 
                             try {
-                                ModelInvoice  iDs = gson.fromJson(jsonElement, typeIDs);
+                                ModelInvoice iDs = gson.fromJson(jsonElement, typeIDs);
                                 if (iDs != null) {
                                     resultInvoice.setValue(iDs);
-                                }
-                                else {
+                                } else {
                                     eMessage.setValue(new Message(-1, "دریافت سفارش ناموفق", ""));
 
                                 }
@@ -615,18 +647,19 @@ public class MyViewModel extends ViewModel {
                                 eMessage.setValue(new Message(-1, "دریافت سفارش ناموفق", ""));
 
                             }
-                            }, throwable -> {
+                        }, throwable -> {
                             eMessage.setValue(new Message(-1, "خطا در دریافت سفارش", ""));
                         }));
     }
+
     public MutableLiveData<ModelInvoice> getResultInvoice() {
         return resultInvoice;
     }
 
-    public void getDeleteInvoice(String user,String passWord,String Inv_GUID) {
+    public void getDeleteInvoice(String user, String passWord, String Inv_GUID) {
 
         compositeDisposable.add(
-                myRepository.deleteInvoice(user,passWord,Inv_GUID)
+                myRepository.deleteInvoice(user, passWord, Inv_GUID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -640,27 +673,26 @@ public class MyViewModel extends ViewModel {
 
                             if (iDs != null) {
                                 resultLog.setValue(iDs);
-                            }
-                            else {
+                            } else {
                                 eMessage.setValue(new Message(-1, "خطا در حذف سفارش رخ داده است", ""));
 
                             }
-
 
 
                         }, throwable -> {
                             eMessage.setValue(new Message(-1, "خطا در حذف سفارش", ""));
                         }));
     }
+
     public MutableLiveData<ModelLog> getResultLog() {
         return resultLog;
     }
 
 
-    public void getMaxSale(String user,String passWord,String Prd_prd) {
+    public void getMaxSale(String user, String passWord, String Prd_prd) {
 
         compositeDisposable.add(
-                myRepository.getMaxSales(user,passWord,Prd_prd)
+                myRepository.getMaxSales(user, passWord, Prd_prd)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -675,16 +707,116 @@ public class MyViewModel extends ViewModel {
                                 resultMaxSale.setValue(remain);
                             } catch (Exception e) {
                                 ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
-                               resultLog.setValue(iDs);
+                                resultLog.setValue(iDs);
                                 return;
                             }
 
-                            }, throwable -> {
+                        }, throwable -> {
                             eMessage.setValue(new Message(-1, "خطا در دریافت مانده کالا", ""));
                         }));
     }
+
     public MutableLiveData<Integer> getResultMaxSale() {
         return resultMaxSale;
+    }
+
+
+    public void getAllInvoice(String user, String passWord, String accId, String date) {
+
+        compositeDisposable.add(
+                myRepository.getAllInvoice(user, passWord, accId, date)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+                            Gson gson = new Gson();
+                            Type typeIDs = new TypeToken<ModelInvoice>() {
+                            }.getType();
+
+                            try {
+                                ModelInvoice iDs = gson.fromJson(jsonElement, typeIDs);
+                                if (iDs != null) {
+                                    resultAllInvoice.setValue(iDs.getInvoice());
+                                } else {
+                                    eMessage.setValue(new Message(-1, "دریافت آخرین اطلاعات ناموفق", ""));
+                                }
+                            } catch (Exception ignored) {
+                                eMessage.setValue(new Message(-1, "دریافت آخرین اطلاعات ناموفق", ""));
+
+                            }
+                        }, throwable -> {
+                            eMessage.setValue(new Message(-1, "دریافت آخرین اطلاعات ناموفق", ""));
+                        }));
+    }
+
+    public MutableLiveData<List<Invoice>> getResultAllInvoice() {
+        return resultAllInvoice;
+    }
+
+
+    public void sendFeedBack(String user, String passWord, List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
+
+        compositeDisposable.add(
+                myRepository.sendFeedBack(user, passWord, invoice, invoiceDetail, clsPaymentRecieptDetail)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+
+                            Gson gson1 = new Gson();
+                            Type typeIDs = new TypeToken<ModelLog>() {
+                            }.getType();
+                            ModelLog iDs = gson1.fromJson(jsonElement, typeIDs);
+                            if (iDs != null)
+                                resultSendFeedBack.setValue(iDs);
+                            else
+                                eMessage.setValue(new Message(-1, "خطا در ارسال پیام", ""));
+
+
+                        }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در ارسال پیام", ""));
+                        }));
+    }
+
+    public MutableLiveData<ModelLog> getResultFeedBack() {
+        return resultSendFeedBack;
+    }
+
+    public void getSearchProduct(String user, String passWord, String word) {
+        compositeDisposable.clear();
+        compositeDisposable.add(
+                myRepository.getSearchProduct(user, passWord, word)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+                            Gson gson = new Gson();
+                            Type typeModelProduct = new TypeToken<ModelProduct>() {
+                            }.getType();
+                            ModelProduct iDs;
+                            try {
+                                iDs = gson.fromJson(jsonElement, typeModelProduct);
+                                if (iDs == null) {
+                                    eMessage.setValue(new Message(-1, "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.", ""));
+                                }
+                                sharedPreferences.edit().putBoolean("vip", true).apply();
+                                resultSearchProduct.setValue(iDs.getProductList());
+
+                            } catch (Exception e) {
+                                eMessage.setValue(new Message(-1, "مدل دریافت شده از کالاها نا معتبر است ، دوباره تلاش کنید.", ""));
+                            }
+                        }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در دریافت کالاهای تخفیف دار", ""));
+                        }));
+    }
+
+    public MutableLiveData<List<Product>> getResultSearchProduct() {
+        return resultSearchProduct;
     }
 
     public MutableLiveData<Message> getResultMessage() {

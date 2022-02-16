@@ -2,16 +2,12 @@ package ir.kitgroup.salein.Fragments;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -27,17 +23,15 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,17 +42,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.OrderListAdapter;
-
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Invoice;
@@ -69,20 +58,11 @@ import ir.kitgroup.salein.classes.Util;
 
 import ir.kitgroup.salein.classes.DateConverter;
 import ir.kitgroup.salein.databinding.FragmentOrderListBinding;
-import ir.kitgroup.salein.models.ModelInvoice;
-
-import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 
 
 @AndroidEntryPoint
 public class OrderListFragment extends Fragment {
-
-
-    private API api;
-
-    private Company company;
-
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -90,11 +70,13 @@ public class OrderListFragment extends Fragment {
     @Inject
     Typeface typeface;
 
+    private Company company;
+
+
     //region Parameter
     private CustomProgress customProgress;
-    private CompositeDisposable compositeDisposable;
-
     private FragmentOrderListBinding binding;
+
 
     //region Dialog Sync
     private Dialog dialogSync;
@@ -104,11 +86,13 @@ public class OrderListFragment extends Fragment {
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
 
-
     //endregion Parameter
 
     public OrderListAdapter orderListAdapter;
     private final ArrayList<Invoice> list = new ArrayList<>();
+    private String datVip = "";
+    private String accGUID = "";
+    private MyViewModel myViewModel;
 
 
     @Nullable
@@ -126,23 +110,13 @@ public class OrderListFragment extends Fragment {
 
 
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-        compositeDisposable = new CompositeDisposable();
         customProgress = CustomProgress.getInstance();
 
-        String accGUID = Select.from(Account.class).list().get(0).I;
-
-
-            company = null;
-            api = null;
-            company = Select.from(Company.class).first();
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/",false,30).create(API.class);
-
-
+        accGUID = Select.from(Account.class).list().get(0).I;
+        company = Select.from(Company.class).first();
 
 
         //region Calculate Date Always Product
-
-
         int dayAlways = 100;
         try {
             dayAlways = Integer.parseInt("700");
@@ -155,7 +129,7 @@ public class OrderListFragment extends Fragment {
         String d = dateFormats.format(newDate);
         String[] da = d.split("/");
         DateConverter converter = new DateConverter();
-        String datVip = converter.gregorianToPersian(Integer.parseInt(da[2]), Integer.parseInt(da[1]), Integer.parseInt(da[0]));
+        datVip = converter.gregorianToPersian(Integer.parseInt(da[2]), Integer.parseInt(da[1]), Integer.parseInt(da[0]));
         //endregion Calculate Date Always Product
 
 
@@ -176,7 +150,8 @@ public class OrderListFragment extends Fragment {
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            getAllInvoice1(accGUID, datVip);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            myViewModel.getAllInvoice(company.USER, company.PASS, accGUID, datVip);
 
         });
 
@@ -215,7 +190,8 @@ public class OrderListFragment extends Fragment {
 
                 List<InvoiceDetail> invoiceDetailList = new ArrayList<>();
                 List<PaymentRecieptDetail> clsPaymentRecieptDetails = new ArrayList<>();
-                sendFeedBack(listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
+                customProgress.showProgress(getActivity(), "در حال ارسال پیام", false);
+                myViewModel.sendFeedBack(company.USER, company.PASS, listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
             }
 
 
@@ -228,92 +204,101 @@ public class OrderListFragment extends Fragment {
                 }
         );
 
-        getAllInvoice1(accGUID, datVip);
-
 
     }
 
 
-    private void getAllInvoice1(String AccGuid, String date) {
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
-        try {
-            compositeDisposable.add(
-                    api.getAllInvoice1(company.USER, company.PASS, AccGuid, date)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelInvoice>() {
-                                }.getType();
-                                ModelInvoice iDs = null;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception ignored) {
-                                    binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                    binding.txtError.setText("دریافت آخرین اطلاعات ناموفق");
-                                    binding.progressBar.setVisibility(View.GONE);
-                                }
+        myViewModel.getAllInvoice(company.USER, company.PASS, accGUID, datVip);
+        myViewModel.getResultAllInvoice().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) {
+                customProgress.hideProgress();
+                binding.progressBar.setVisibility(View.GONE);
+                return;
 
-                                if (iDs != null) {
+            }
 
-                                    list.clear();
+            myViewModel.getResultAllInvoice().setValue(null);
+            list.clear();
+            list.addAll(result);
+            if (list.size() == 0) {
+                binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
+                binding.txtError.setVisibility(View.VISIBLE);
+                binding.txtError.setText("هیچ سفارشی وجود ندارد");
+            }
+            orderListAdapter.notifyDataSetChanged();
 
-                                    list.addAll(iDs.getInvoice());
-                                    if (list.size() == 0) {
-                                        binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
-                                        binding.txtError.setVisibility(View.VISIBLE);
-                                        binding.txtError.setText("هیچ سفارشی وجود ندارد");
-                                    }
-                                    orderListAdapter.notifyDataSetChanged();
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
 
+        });
+        myViewModel.getResultFeedBack().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) {
+                customProgress.hideProgress();
+                binding.progressBar.setVisibility(View.GONE);
+                return;
 
-                                    // InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
+            }
 
-                                } else {
+            myViewModel.getResultFeedBack().setValue(null);
+            customProgress.hideProgress();
 
-                                    binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                    binding.txtError.setText("دریافت آخرین اطلاعات ناموفق");
-                                    binding.progressBar.setVisibility(View.GONE);
+            int message;
 
 
-                                }
-                                binding.progressBar.setVisibility(View.GONE);
+            message = result.getLogs().get(0).getMessage();
+            if (message == 1) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("نظر شما با موفقیت ارسال شد.")
+                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                        .show();
 
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(getResources().getColor(R.color.green_table));
+                textView.setTextSize(13);
 
-                            }, throwable -> {
+                orderListAdapter.notifyDataSetChanged();
 
-                                binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
-                                binding.txtError.setVisibility(View.VISIBLE);
-                                binding.txtError.setText("خطا در دریافت اطلاعات فاکتور...");
-                                binding.progressBar.setVisibility(View.GONE);
+            } else {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("خطا در ارسال نظر")
+                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                        .show();
 
-                            })
-            );
-        } catch (Exception e) {
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(getResources().getColor(R.color.red_table));
+                textView.setTextSize(13);
 
+            }
 
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
+
+        });
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             binding.txtError.setTextColor(getResources().getColor(R.color.medium_color));
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText("خطا در دریافت اطلاعات فاکتور...");
             binding.progressBar.setVisibility(View.GONE);
-        }
+            if (result == null)
+                return;
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+
+        });
 
     }
 
-    private boolean isNetworkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     private void ShowErrorConnection() {
         binding.progressBar.setVisibility(View.GONE);
@@ -323,122 +308,20 @@ public class OrderListFragment extends Fragment {
         btnOkDialog.setText("سینک مجدد");
         dialogSync.dismiss();
         dialogSync.show();
-
-
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compositeDisposable.dispose();
         binding = null;
     }
 
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear();
-    }
-
-
-    private class JsonObject {
+    public static class JsonObject {
         public List<Invoice> Invoice;
         public List<ir.kitgroup.salein.DataBase.InvoiceDetail> InvoiceDetail;
         public List<ir.kitgroup.salein.models.PaymentRecieptDetail> PaymentRecieptDetail;
-    }
-
-    private void sendFeedBack(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
-
-        if (!isNetworkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        try {
-            customProgress.showProgress(getActivity(), "در حال ارسال سفارش", true);
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.Invoice = invoice;
-            jsonObject.InvoiceDetail = invoiceDetail;
-            jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
-
-
-            Gson gson = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObject>() {
-            }.getType();
-            compositeDisposable.add(
-                    api.sendFeedBack(company.USER, company.PASS, gson.toJson(jsonObject, typeJsonObject))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                customProgress.hideProgress();
-
-                                Gson gson1 = new Gson();
-                                Type typeIDs = new TypeToken<ModelLog>() {
-                                }.getType();
-                                ModelLog iDs = gson1.fromJson(jsonElement, typeIDs);
-                                int message = 0;
-
-                                if (iDs != null) {
-                                    message = iDs.getLogs().get(0).getMessage();
-
-                                }
-                                if (message == 1) {
-
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                            .setMessage("نظر شما با موفقیت ارسال شد.")
-                                            .setPositiveButton("بستن", (dialog, which) -> {
-                                                dialog.dismiss();
-                                            })
-                                            .show();
-
-                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                    textView.setTypeface(face);
-                                    textView.setTextColor(getResources().getColor(R.color.green_table));
-                                    textView.setTextSize(13);
-
-                                    orderListAdapter.notifyDataSetChanged();
-
-                                } else {
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                            .setMessage("خطا در ارسال نظر")
-                                            .setPositiveButton("بستن", (dialog, which) -> {
-                                                dialog.dismiss();
-                                            })
-                                            .show();
-
-                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                    textView.setTypeface(face);
-                                    textView.setTextColor(getResources().getColor(R.color.red_table));
-                                    textView.setTextSize(13);
-
-                                }
-
-
-                            }, throwable -> {
-
-                                customProgress.hideProgress();
-
-                                if (customProgress.isShow)
-                                    customProgress.hideProgress();
-                                Toast.makeText(getActivity(), "خطا در ارسال توضیحات", Toast.LENGTH_SHORT).show();
-
-
-                            })
-            );
-        } catch (Exception e) {
-            customProgress.hideProgress();
-
-            if (customProgress.isShow)
-                customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در ارسال توضیحات", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
 

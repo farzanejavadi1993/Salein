@@ -129,10 +129,8 @@ public class SplashScreenFragment extends Fragment {
             binding.animationView.setVisibility(View.GONE);
             binding.lnrError.setVisibility(View.VISIBLE);
             if (result == null) return;
-            if (result.getCode() == -1)
-                Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-
-            myViewModel.getResultSmsLogin().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            myViewModel.getResultMessage().setValue(null);
 
         });
 

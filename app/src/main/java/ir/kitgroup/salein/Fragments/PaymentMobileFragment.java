@@ -1236,7 +1236,7 @@ public class PaymentMobileFragment extends Fragment {
                                 binding.progressBar.setVisibility(View.GONE);
                                 boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
                                 if (disableAccount)
-                                    showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس جم پارت قطعه فعال میگردد.");
+                                    showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد.");
                             }));
         } catch (Exception e) {
             Toast.makeText(getActivity(), "خطا در ارتباط با سرور در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();

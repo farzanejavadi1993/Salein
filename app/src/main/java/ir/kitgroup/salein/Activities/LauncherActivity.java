@@ -272,7 +272,7 @@ public class LauncherActivity extends AppCompatActivity {
                 Fragment frg =getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
                 if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
-                  //  fgf.getProductLevel1();
+                    fgf.setFilter(3);
                 }
             }else {
                 messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");

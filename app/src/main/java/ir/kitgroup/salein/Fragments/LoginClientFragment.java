@@ -68,10 +68,9 @@ public class LoginClientFragment extends Fragment {
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
-            if (result.getCode() == -1)
-                Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
-            myViewModel.getResultSmsLogin().setValue(null);
+            myViewModel.getResultMessage().setValue(null);
 
         });
         myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {

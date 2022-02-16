@@ -1,15 +1,10 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,30 +15,31 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
@@ -51,16 +47,12 @@ import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
-import ir.kitgroup.salein.classes.ServerConfig;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSearchProductBinding;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.Description;
-import ir.kitgroup.salein.models.ModelDesc;
-import ir.kitgroup.salein.models.ModelProduct;
 import ir.kitgroup.salein.models.Product;
 
 @AndroidEntryPoint
@@ -74,10 +66,7 @@ public class SearchProductFragment extends Fragment {
 
     @Inject
     API api;
-
-
     private MyViewModel myViewModel;
-
     private FragmentSearchProductBinding binding;
     private Company company;
     private String Transport_GUID = "";
@@ -86,6 +75,7 @@ public class SearchProductFragment extends Fragment {
     private ArrayList<Product> productList;
     private String maxSales = "0";
     private CustomProgress customProgress;
+
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
@@ -102,14 +92,15 @@ public class SearchProductFragment extends Fragment {
         binding = FragmentSearchProductBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
-    @SuppressLint("SetTextI18n")
+
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         customProgress = CustomProgress.getInstance();
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-
         Bundle bundle = getArguments();
         Boolean seen = bundle.getBoolean("Seen");
         Inv_GUID = bundle.getString("Inv_GUID");
@@ -154,13 +145,9 @@ public class SearchProductFragment extends Fragment {
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
             if (invDetail != null) {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
-                invDetail.update(); }
+                invDetail.update();
+            }
             productAdapter.notifyDataSetChanged();
-//            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-//            if (frg instanceof MainOrderFragment) {
-//                MainOrderFragment fgf = (MainOrderFragment) frg;
-//                fgf.refreshProductList();
-//            }
             dialogDescription.dismiss();
         });
 
@@ -169,6 +156,7 @@ public class SearchProductFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().isEmpty()) {
@@ -176,9 +164,12 @@ public class SearchProductFragment extends Fragment {
                         descriptionList.get(i).Click = false;
                     }
                     descriptionAdapter.notifyDataSetChanged();
-                } }
-                @Override
-            public void afterTextChanged(Editable s) {}
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
         //endregion Cast DialogDescription
 
@@ -192,6 +183,8 @@ public class SearchProductFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 productList.clear();
@@ -201,10 +194,12 @@ public class SearchProductFragment extends Fragment {
                     binding.pro.setVisibility(View.GONE);
                     binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
                 } else {
-                    if (s.toString().length()>=2)
-                    getSearchProduct(Util.toEnglishNumber(s.toString()),s.toString().length());
+                    if (s.toString().length() >= 2)
+                        binding.pro.setVisibility(View.VISIBLE);
+                        myViewModel.getSearchProduct(company.USER, company.PASS, Util.toEnglishNumber(s.toString()));
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -225,7 +220,7 @@ public class SearchProductFragment extends Fragment {
         productAdapter.setOnClickListener((Prd_UID) -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
+            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
             int counter = 0;
             if (invDetails.size() > 0) {
                 counter = invDetails.size();
@@ -235,13 +230,7 @@ public class SearchProductFragment extends Fragment {
             else
                 ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
-//            Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-//
-//            if (frg instanceof MainOrderFragment) {
-//                MainOrderFragment fgf = (MainOrderFragment) frg;
-//                fgf.refreshProductList();
-//                fgf.counter1 = counter;
-//            }
+
         });
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
@@ -252,7 +241,8 @@ public class SearchProductFragment extends Fragment {
                     edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
-                    getDescription(GUID);
+                   customProgress.showProgress(getActivity(),"در حال دریافت اطلاعات از سرور",false);
+                    myViewModel.getDescription(company.USER, company.PASS, GUID);
                 }
             } else {
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
@@ -260,103 +250,79 @@ public class SearchProductFragment extends Fragment {
         });
     }
 
-    @SuppressLint("SetTextI18n")
-    private void getSearchProduct(String s,int length) {
-        try {
-            binding.pro.setVisibility(View.VISIBLE);
-            compositeDisposable.add(
-                    api.getSearchProduct("saleinkit_api", company.USER, company.PASS, s)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                        productList.clear();
-                                        Gson gson = new Gson();
-                                        Type typeModelProduct = new TypeToken<ModelProduct>() {
-                                        }.getType();
-                                        ModelProduct iDs;
-                                        try {
-                                            iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                        } catch (Exception e) {
-                                            binding.pro.setVisibility(View.GONE);
-                                            return;
-                                        }
-                                        if (iDs == null) {
-                                            binding.pro.setVisibility(View.GONE);
-                                            return;
-                                        }
-                                        if (s.length()==length) {
-                                            productList.clear();
-                                            CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0);
-                                            if (iDs!=null && iDs.getProductList()!=null &&  iDs.getProductList().size() > 0) {
-                                                CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
-                                                productList.addAll(iDs.getProductList());
-                                            }
-                                            if (productList.size() > 0)
-                                                binding.txtError.setText("");
-                                            else
-                                                binding.txtError.setText("کالایی یافت نشد");
-                                            productAdapter.setMaxSale(maxSales);
-                                            productAdapter.notifyDataSetChanged();
-                                            binding.pro.setVisibility(View.GONE);
-                                        }
-                                        }
-                                    , throwable -> {
-                                        binding.pro.setVisibility(View.GONE);
-                                    }));
-        } catch (Exception ignored) {
-            binding.pro.setVisibility(View.GONE);
-        }
-    }
-    private void getDescription(String id) {
-        if (!networkAvailable(getActivity())) {
-            Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", false);
-        try {
-            compositeDisposable.add(
-                    api.getDescription1(company.USER, company.PASS, id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelDesc>() {
-                                }.getType();
-                                ModelDesc iDs = null;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception ignored) {
 
-                                }
-                                descriptionList.clear();
-                                if (iDs != null)
-                                    descriptionList.addAll(iDs.getDescriptions());
-                                for (int i = 0; i < descriptionList.size(); i++) {
-                                    if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
-                                        descriptionList.get(i).Click = true;
-                                    }
-                                }
-                                descriptionAdapter.notifyDataSetChanged();
-                                customProgress.hideProgress();
-                                dialogDescription.show();
-                                }, throwable -> {
-                                customProgress.hideProgress();
-                                Toast.makeText(getActivity(), "خطای تایم اوت در دریافت توضیحات", Toast.LENGTH_SHORT).show();
-                            }));
-        } catch (Exception e) {
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
+        myViewModel.getResultSearchProduct().observe(getViewLifecycleOwner(), result -> {
+
+
+            if (result == null) {
+                binding.pro.setVisibility(View.GONE);
+                return;
+
+            }
+            myViewModel.getResultSearchProduct().setValue(null);
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+
+            productList.clear();
+
+            if (result != null && result.size() > 0) {
+                CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
+                productList.addAll(result);
+            }
+            if (productList.size() > 0)
+                binding.txtError.setText("");
+            else
+                binding.txtError.setText("کالایی یافت نشد");
+            productAdapter.setMaxSale(maxSales);
+            productAdapter.notifyDataSetChanged();
+            binding.pro.setVisibility(View.GONE);
+
+        });
+
+
+        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) {
+                binding.pro.setVisibility(View.GONE);
+                customProgress.hideProgress();
+                return;
+
+            }
+            myViewModel.getResultDescription().setValue(null);
+            descriptionList.clear();
+            descriptionList.addAll(result);
+            for (int i = 0; i < descriptionList.size(); i++) {
+                if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                    descriptionList.get(i).Click = true;
+                }
+            }
+            descriptionAdapter.notifyDataSetChanged();
             customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در دریافت توضیحات", Toast.LENGTH_SHORT).show(); }
+            dialogDescription.show();
+            binding.pro.setVisibility(View.GONE);
+        });
+
+
+
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+            binding.pro.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
+
     }
-    private Boolean networkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
 
     @Override
     public void onDestroyView() {
