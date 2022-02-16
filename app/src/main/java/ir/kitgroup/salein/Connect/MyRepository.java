@@ -92,4 +92,16 @@ public class MyRepository {
     public Observable<String> getDescription(String user,String passWord,String Id) {
         return api.getDescription1(user,passWord,Id);
     }
+
+    public Observable<String> getInvoice(String user,String passWord,String Inv_GUID) {
+        return api.getInvoice1(user,passWord,Inv_GUID);
+    }
+
+    public Observable<String> deleteInvoice(String user,String passWord,String Inv_GUID) {
+        return api.getDeleteInvoice(user,passWord,Inv_GUID);
+    }
+
+    public Observable<String> getMaxSales(String user,String passWord,String PrdId) {
+        return api.getMaxSales(user,passWord,PrdId);
+    }
 }

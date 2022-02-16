@@ -1,11 +1,17 @@
 package ir.kitgroup.salein.Connect;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -28,6 +34,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.Fragments.LoginClientFragment;
 import ir.kitgroup.salein.Fragments.MainOrderFragment;
@@ -39,6 +47,7 @@ import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelCompany;
 import ir.kitgroup.salein.models.ModelDesc;
+import ir.kitgroup.salein.models.ModelInvoice;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.models.ModelProduct;
 import ir.kitgroup.salein.models.ModelProductLevel1;
@@ -69,6 +78,9 @@ public class MyViewModel extends ViewModel {
     private MutableLiveData<List<Description>> resultDescription = new MutableLiveData<>();
     private MutableLiveData<List<Setting>> resultSetting = new MutableLiveData<>();
     private MutableLiveData<List<Setting>> resultSettingPrice = new MutableLiveData<>();
+    private MutableLiveData<ModelInvoice> resultInvoice = new MutableLiveData<>();
+    private MutableLiveData<ModelLog> resultLog = new MutableLiveData<>();
+    private MutableLiveData<Integer> resultMaxSale = new MutableLiveData<>();
     private MutableLiveData<Boolean> resultAddAccount = new MutableLiveData<>();
     private MutableLiveData<Message> eMessage = new MutableLiveData<>();
 
@@ -253,7 +265,7 @@ public class MyViewModel extends ViewModel {
 
                             } catch (Exception e) {
                                 eMessage.setValue(new Message(-2, "خطا در جستجوی مشتری", ""));
-                                return;
+
                             }
 
                         }, throwable -> {
@@ -286,12 +298,12 @@ public class MyViewModel extends ViewModel {
                                 ModelProductLevel1 iDs = gson.fromJson(jsonElement, typeModelProductLevel1);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "لیست دریافت شده از گروه کالاها نا معتبر می باشد", ""));
-                                    return;
+
                                 }
                                 resultProductLevel1.setValue(iDs.getProductLevel1());
                             } catch (Exception e) {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت گروه کالاها", ""));
-                                return;
+
                             }
 
                         }, throwable -> {
@@ -302,6 +314,7 @@ public class MyViewModel extends ViewModel {
     public MutableLiveData<List<ProductLevel1>> getResultProductLevel1() {
         return resultProductLevel1;
     }
+
 
 
 
@@ -323,13 +336,13 @@ public class MyViewModel extends ViewModel {
                                 ModelProductLevel2 iDs = gson.fromJson(jsonElement, typeModelProduct2);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "لیست دریافت شده از زیر گروه کالاها نا معتبر می باشد", ""));
-                                    return;
+
                                 }
 
                                 resultProductLevel2.setValue(iDs.getProductLevel2());
                             } catch (Exception e) {
                                 eMessage.setValue(new Message(-1, "لیست دریافت شده از زیرگروه گروه کالاها نا معتبر می باشد", ""));
-                                return;
+
                             }
 
                         }, throwable -> {
@@ -360,7 +373,7 @@ public class MyViewModel extends ViewModel {
                                 ModelProduct  iDs = gson.fromJson(jsonElement, typeModelProduct);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاها", ""));
-                                    return;
+
                                 }
 
                                 CollectionUtils.filter(iDs.getProductList(), i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
@@ -368,7 +381,7 @@ public class MyViewModel extends ViewModel {
 
                             } catch (Exception e) {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاها", ""));
-                                return;
+
                             }
 
 
@@ -379,7 +392,6 @@ public class MyViewModel extends ViewModel {
     public MutableLiveData<List<Product>> getResultProduct() {
         return resultProduct;
     }
-
 
 
     public void getDiscountProduct(String user,String passWord) {
@@ -399,14 +411,14 @@ public class MyViewModel extends ViewModel {
                                 ModelProduct iDs = gson.fromJson(jsonElement, typeModelProduct);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاهای تخفیف دار", ""));
-                                    return;
+
                                 }
                                 sharedPreferences.edit().putBoolean("discount", true).apply();
                                 resultDiscountProduct.setValue(iDs.getProductList());
 
                             } catch (Exception e) {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت لیست کالاهای تخفیف دار", ""));
-                                return;
+
                             }
 
                         }, throwable -> {
@@ -436,7 +448,7 @@ public class MyViewModel extends ViewModel {
                                 iDs = gson.fromJson(jsonElement, typeModelProduct);
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.", ""));
-                                    return;
+
                                 }
 
                                 sharedPreferences.edit().putBoolean("vip", true).apply();
@@ -445,7 +457,7 @@ public class MyViewModel extends ViewModel {
                             } catch (Exception e) {
 
                                 eMessage.setValue(new Message(-1, "مدل دریافت شده از کالاها نا معتبر است ، دوباره تلاش کنید.", ""));
-                                return;
+
                             }
 
 
@@ -485,7 +497,7 @@ public class MyViewModel extends ViewModel {
     public void getDescription(String user,String passWord,String id) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getProductVipSync(user,passWord,id)
+                myRepository.getDescription(user,passWord,id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -573,6 +585,108 @@ public class MyViewModel extends ViewModel {
     public MutableLiveData<List<Setting>> getResultSettingPrice() {
         return resultSettingPrice;
     }
+
+
+
+    public void getInvoice(String user,String passWord,String Inv_GUID) {
+
+        compositeDisposable.add(
+                myRepository.getInvoice(user,passWord,Inv_GUID)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+                            Gson gson = new Gson();
+                            Type typeIDs = new TypeToken<ModelInvoice>() {
+                            }.getType();
+
+                            try {
+                                ModelInvoice  iDs = gson.fromJson(jsonElement, typeIDs);
+                                if (iDs != null) {
+                                    resultInvoice.setValue(iDs);
+                                }
+                                else {
+                                    eMessage.setValue(new Message(-1, "دریافت سفارش ناموفق", ""));
+
+                                }
+                            } catch (Exception ignored) {
+                                eMessage.setValue(new Message(-1, "دریافت سفارش ناموفق", ""));
+
+                            }
+                            }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در دریافت سفارش", ""));
+                        }));
+    }
+    public MutableLiveData<ModelInvoice> getResultInvoice() {
+        return resultInvoice;
+    }
+
+    public void getDeleteInvoice(String user,String passWord,String Inv_GUID) {
+
+        compositeDisposable.add(
+                myRepository.deleteInvoice(user,passWord,Inv_GUID)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+
+                            Gson gson = new Gson();
+                            Type typeIDs = new TypeToken<ModelLog>() {
+                            }.getType();
+                            ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
+
+                            if (iDs != null) {
+                                resultLog.setValue(iDs);
+                            }
+                            else {
+                                eMessage.setValue(new Message(-1, "خطا در حذف سفارش رخ داده است", ""));
+
+                            }
+
+
+
+                        }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در حذف سفارش", ""));
+                        }));
+    }
+    public MutableLiveData<ModelLog> getResultLog() {
+        return resultLog;
+    }
+
+
+    public void getMaxSale(String user,String passWord,String Prd_prd) {
+
+        compositeDisposable.add(
+                myRepository.getMaxSales(user,passWord,Prd_prd)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+                            Gson gson = new Gson();
+                            Type typeIDs = new TypeToken<ModelLog>() {
+                            }.getType();
+                            int remain;
+                            try {
+                                remain = Integer.parseInt(jsonElement);
+                                resultMaxSale.setValue(remain);
+                            } catch (Exception e) {
+                                ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
+                               resultLog.setValue(iDs);
+                                return;
+                            }
+
+                            }, throwable -> {
+                            eMessage.setValue(new Message(-1, "خطا در دریافت مانده کالا", ""));
+                        }));
+    }
+    public MutableLiveData<Integer> getResultMaxSale() {
+        return resultMaxSale;
+    }
+
     public MutableLiveData<Message> getResultMessage() {
         return eMessage;
     }

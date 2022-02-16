@@ -48,6 +48,7 @@ import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.ProductAdapter1;
 import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.ConfigRetrofit;
@@ -70,8 +71,14 @@ public class SearchProductFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+    @Inject
+    API api;
+
+
+    private MyViewModel myViewModel;
+
     private FragmentSearchProductBinding binding;
-    private API api;
     private Company company;
     private String Transport_GUID = "";
     private ProductAdapter1 productAdapter;
@@ -79,7 +86,6 @@ public class SearchProductFragment extends Fragment {
     private ArrayList<Product> productList;
     private String maxSales = "0";
     private CustomProgress customProgress;
-    private CompositeDisposable compositeDisposable;
     //region Variable Dialog Description
     private Dialog dialogDescription;
     private EditText edtDescriptionItem;
@@ -87,7 +93,7 @@ public class SearchProductFragment extends Fragment {
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv;
     //endregion Variable Dialog Description
-    private ServerConfig serverConfig;
+
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -101,7 +107,7 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         customProgress = CustomProgress.getInstance();
-        compositeDisposable = new CompositeDisposable();
+
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
         Bundle bundle = getArguments();
@@ -112,30 +118,7 @@ public class SearchProductFragment extends Fragment {
         productList = new ArrayList<>();
 
         company = Select.from(Company.class).first();
-        if (company.mode == 2)
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
-        else {
-         new AsyncTask() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                }
-                @SuppressLint("StaticFieldLeak")
-                @Override
-                protected void onPostExecute(Object o) {
-                    super.onPostExecute(o);
-                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", false, 30).create(API.class);
-                    productAdapter.setApi(api);
-                    productAdapter.notifyDataSetChanged();
-                }
-                @SuppressLint("StaticFieldLeak")
-                @Override
-                protected Object doInBackground(Object[] params) {
-                    serverConfig = new ServerConfig(company.IP1, company.IP2);
-                    return 0;
-                }
-            }.execute(0);
-        }
+
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
         dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -213,7 +196,7 @@ public class SearchProductFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 productList.clear();
                 productAdapter.notifyDataSetChanged();
-                compositeDisposable.clear();
+
                 if (s.toString().isEmpty() || s.toString().trim().equals("")) {
                     binding.pro.setVisibility(View.GONE);
                     binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
@@ -378,12 +361,7 @@ public class SearchProductFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compositeDisposable.dispose();
         binding = null;
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear(); }
 }

@@ -1,21 +1,14 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.NetworkOnMainThreadException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -35,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import androidx.fragment.app.FragmentManager;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,14 +38,10 @@ import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,22 +52,16 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DescriptionAdapter;
 import ir.kitgroup.salein.Adapters.InvoiceDetailMobileAdapter;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.Tables;
-
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.CustomProgress;
-
-import ir.kitgroup.salein.classes.ServerConfig;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
 
@@ -86,19 +70,10 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Description;
-
-import ir.kitgroup.salein.models.ModelDesc;
-
-import ir.kitgroup.salein.models.ModelInvoice;
-import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.databinding.FragmentInvoiceDetailMobileBinding;
-import ir.kitgroup.salein.models.ModelProduct;
 import ir.kitgroup.salein.models.Product;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @AndroidEntryPoint
 
@@ -108,11 +83,12 @@ public class InVoiceDetailFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private FragmentInvoiceDetailMobileBinding binding;
-    private CompositeDisposable compositeDisposable;
-    private Company company;
-    private API api;
 
+
+    private FragmentInvoiceDetailMobileBinding binding;
+    private Company company;
+    private String Prd_UID;
+    private String sWord;
 
     private CustomProgress customProgress;
     private String type = "";
@@ -140,10 +116,6 @@ public class InVoiceDetailFragment extends Fragment {
 
     //region Dialog Sync
     private Dialog dialogSync;
-    private TextView textMessageDialog;
-    private ImageView ivIconSync;
-    private MaterialButton btnOkDialog;
-    private MaterialButton btnNoDialog;
     //endregion Dialog Sync
 
 
@@ -168,7 +140,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
     private int counter = 0;
-    private ServerConfig serverConfig;
+    private MyViewModel myViewModel;
 
 
     //endregion Parameter
@@ -192,12 +164,9 @@ public class InVoiceDetailFragment extends Fragment {
             ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
 
 
-            sharedPreferences.edit().putString("FNM","invoice").apply();
+            sharedPreferences.edit().putString("FNM", "invoice").apply();
             customProgress = CustomProgress.getInstance();
-            compositeDisposable = new CompositeDisposable();
             company = Select.from(Company.class).first();
-            if (company.mode == 2)
-                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
 
 
             invDetails = new ArrayList<>();
@@ -264,7 +233,6 @@ public class InVoiceDetailFragment extends Fragment {
                 invoiceDetailAdapter.notifyDataSetChanged();
 
 
-
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
                 if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
@@ -318,11 +286,11 @@ public class InVoiceDetailFragment extends Fragment {
             dialogSync.setContentView(R.layout.custom_dialog);
             dialogSync.setCancelable(false);
 
-            textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-            ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+//            TextView textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+//            ImageView ivIconSync = dialogSync.findViewById(R.id.iv_icon);
 
-            btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
-            btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+            MaterialButton btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+            MaterialButton btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
             btnNoDialog.setOnClickListener(v -> dialogSync.dismiss());
 
 
@@ -330,7 +298,7 @@ public class InVoiceDetailFragment extends Fragment {
                 dialogSync.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
                 if (type.equals("1"))
-                    getInvoice();
+                    myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
                 else {
                     invDetails.clear();
                     invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -351,7 +319,7 @@ public class InVoiceDetailFragment extends Fragment {
                         counter = 0;
                         ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
                         for (int i = 0; i < invDetails.size(); i++) {
-                            getProduct(invDetails.get(i).PRD_UID);
+                            myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
                         }
                     }
                 }
@@ -410,7 +378,7 @@ public class InVoiceDetailFragment extends Fragment {
 
                 invoiceDetailAdapter.notifyDataSetChanged();
 
-               Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
                 if (frg instanceof MainOrderFragment) {
                     MainOrderFragment fgf = (MainOrderFragment) frg;
                     fgf.refreshProductList();
@@ -482,7 +450,9 @@ public class InVoiceDetailFragment extends Fragment {
             invoiceDetailAdapter.editAmountItemListener((Prd_GUID, s, Price, discountPercent) -> {
 
                 if (maxSales.equals("1")) {
-                    getMaxSales(Prd_GUID, s);
+                    Prd_UID = Prd_GUID;
+                    sWord=s;
+                    myViewModel.getMaxSale(company.USER, company.PASS, Prd_GUID);
                 } else {
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -501,7 +471,11 @@ public class InVoiceDetailFragment extends Fragment {
                         }
 
                         invoiceDetailAdapter.notifyDataSetChanged();
-                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");if (frg instanceof MainOrderFragment) { MainOrderFragment fgf = (MainOrderFragment) frg;                         fgf.refreshProductList(); }
+                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                        if (frg instanceof MainOrderFragment) {
+                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                            fgf.refreshProductList();
+                        }
 
 
                     }
@@ -523,7 +497,7 @@ public class InVoiceDetailFragment extends Fragment {
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                     if (invoiceDetails.size() > 0) {
-                        CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
+                        CollectionUtils.filter(invoiceDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
                     }
 
 
@@ -571,7 +545,7 @@ public class InVoiceDetailFragment extends Fragment {
                             invoiceDetail.delete();
                     }
 
-                   invoiceDetailList.remove(invoiceDetailList.get(positionStart));
+                    invoiceDetailList.remove(invoiceDetailList.get(positionStart));
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                     for (int i = 0; i < invoiceDetails.size(); i++) {
@@ -608,12 +582,12 @@ public class InVoiceDetailFragment extends Fragment {
             });
 
 
-
             invoiceDetailAdapter.onDescriptionItem((GUIDPrd, GUIDInv, description) -> {
                 edtDescriptionItem.setText(description);
                 descriptionList.clear();
                 GuidInv = GUIDInv;
-                getDescription(GUIDPrd);
+                customProgress.showProgress(getActivity(),"در حال دریافت تضیحات",true);
+                myViewModel.getDescription(company.USER,company.PASS,GUIDPrd);
             });
 
 
@@ -643,9 +617,11 @@ public class InVoiceDetailFragment extends Fragment {
 
             //region Action BtnDelete
             binding.btnDelete.setOnClickListener(v -> {
-                if (status == 1)
-                    getDeleteInvoice(Inv_GUID);
-            });
+                if (status == 1) {
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    myViewModel.getDeleteInvoice(company.USER, company.PASS, Inv_GUID);
+                }
+                });
 
             //endregion Action BtnDelete
 
@@ -673,9 +649,8 @@ public class InVoiceDetailFragment extends Fragment {
                     tblGuid = Tbl_GUID;
 
 
-
                 Bundle bundleMainOrder = new Bundle();
-              /*  bundleMainOrder.putSerializable("key", (Serializable) invoiceDetailList);*/
+                /*  bundleMainOrder.putSerializable("key", (Serializable) invoiceDetailList);*/
                 bundleMainOrder.putString("Inv_GUID", Inv_GUID);
                 bundleMainOrder.putString("Tbl_GUID", tblGuid);
                 bundleMainOrder.putString("Tbl_NAME", Tbl_NAME);
@@ -696,9 +671,8 @@ public class InVoiceDetailFragment extends Fragment {
             //region Action BtnContinue
             binding.btnContinue.setOnClickListener(v -> {
 
-                ArrayList<InvoiceDetail> invoiceDetails = new ArrayList<>( Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'" ).list());
+                ArrayList<InvoiceDetail> invoiceDetails = new ArrayList<>(Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list());
                 CollectionUtils.filter(invoiceDetails, i -> i.INV_DET_QUANTITY == 0.0);
-
 
 
                 if (invoiceDetailList.size() == 0) {
@@ -713,8 +687,7 @@ public class InVoiceDetailFragment extends Fragment {
                     textView.setTextColor(getResources().getColor(R.color.red_table));
                     textView.setTextSize(13);
                     return;
-                }
-                else if (invoiceDetails.size() > 0) {
+                } else if (invoiceDetails.size() > 0) {
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                             .setMessage("برای ردیف های سفارش مقدار وارد کنید و یا ردیف با مقدار صفر را حذف کنید .")
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
@@ -764,89 +737,6 @@ public class InVoiceDetailFragment extends Fragment {
             });
 
 
-            if (type.equals("1")) {
-
-                if (company.mode == 2)
-                    getInvoice();
-                else {
-                    new AsyncTask() {
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-                            int p = 0;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Object o) {
-                            super.onPostExecute(o);
-                            api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
-                            getInvoice();
-                        }
-
-                        @Override
-                        protected Object doInBackground(Object[] params) {
-
-                            serverConfig = new ServerConfig(company.IP1, company.IP2);
-
-                            return 0;
-                        }
-                    }.execute(0);
-                }
-            }
-            else {
-                invDetails.clear();
-                invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                if (invDetails.size() == 0) {
-                    binding.progressBar.setVisibility(View.GONE);
-
-                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                            .setMessage("هیچ سفارشی وجود ندارد.")
-                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                            .show();
-
-                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                    textView.setTypeface(face);
-                    textView.setTextColor(getResources().getColor(R.color.red_table));
-                    textView.setTextSize(13);
-
-                } else {
-                    counter = 0;
-                    if (company.mode == 2) {
-                        ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
-                        for (int i = 0; i < invDetails.size(); i++) {
-                            getProduct(invDetails.get(i).PRD_UID);
-                        }
-                    } else {
-                        new AsyncTask() {
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                                int p = 0;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Object o) {
-                                super.onPostExecute(o);
-                                api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
-                                ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
-                                for (int i = 0; i < invDetails.size(); i++) {
-                                    getProduct(invDetails.get(i).PRD_UID);
-                                }
-                            }
-
-                            @Override
-                            protected Object doInBackground(Object[] params) {
-
-                                serverConfig = new ServerConfig(company.IP1, company.IP2);
-
-                                return 0;
-                            }
-                        }.execute(0);
-                    }
-
-                }
-            }
 
 
         } catch (Exception ignore) {
@@ -854,506 +744,333 @@ public class InVoiceDetailFragment extends Fragment {
         }
     }
 
-    private void getDescription(String id) {
 
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
+        if (type.equals("1")) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+                myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
         }
-        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات...", true);
-        try {
-            compositeDisposable.add(
-                    api.getDescription1(company.USER, company.PASS, id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelDesc>() {
-                                }.getType();
-                                ModelDesc iDs = null;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception ignored) {
-                                }
-
-                                descriptionList.clear();
-                                if (iDs != null)
-                                    descriptionList.addAll(iDs.getDescriptions());
-
-
-                                for (int i = 0; i < descriptionList.size(); i++) {
-                                    if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
-                                        descriptionList.get(i).Click = true;
-                                    }
-
-                                }
-
-                                descriptionAdapter.notifyDataSetChanged();
-                                customProgress.hideProgress();
-
-                                dialogDescription.show();
-
-
-                            }, throwable -> {
-                                customProgress.hideProgress();
-                                Toast.makeText(getActivity(), "خطا در دریافت توضیحات از سرور", Toast.LENGTH_SHORT).show();
-
-                            })
-            );
-        } catch (Exception e) {
-            customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در دریافت توضیحات", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-
-    private void getMaxSales(String Prd_GUID, String s) {
-
-
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        try {
-            Gson gson = new Gson();
-            Type typeIDs = new TypeToken<ModelLog>() {
-            }.getType();
-
-            compositeDisposable.add(
-                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                        int remain;
-                                        try {
-                                            remain = Integer.parseInt(jsonElement);
-                                        } catch (Exception e) {
-                                            ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
-                                            String description = iDs.getLogs().get(0).getDescription();
-                                            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-
-                                        ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
-                                        CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
-
-                                        if (result.size() > 0) {
-                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-                                            double amount = 0.0;
-                                            if (!s.equals("")) {
-                                                amount = Double.parseDouble(s);
-                                                if (remain - amount < 0) {
-
-
-                                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                                            .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + jsonElement)
-                                                            .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                                                            .show();
-
-                                                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                                    textView.setTypeface(face);
-                                                    textView.setTextColor(getResources().getColor(R.color.medium_color));
-                                                    textView.setTextSize(13);
-
-                                                    if (invoiceDetail != null) {
-                                                        invoiceDetail.INV_DET_QUANTITY = 0.0;
-                                                        invoiceDetail.update();
-
-                                                    }
-
-                                                    invoiceDetailAdapter.notifyDataSetChanged();
-
-                                                   Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                                   if (frg instanceof MainOrderFragment) {
-                                                       MainOrderFragment fgf = (MainOrderFragment) frg;
-                                                       fgf.refreshProductList();
-                                                   }
-
-
-                                                    return;
-                                                }
-                                            }
-
-                                            if (invoiceDetail != null) {
-                                                invoiceDetail.INV_DET_QUANTITY = amount;
-                                                ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invoiceDetailList);
-                                                CollectionUtils.filter(invDtls, i -> i.INV_DET_UID.equals(invoiceDetail.INV_DET_UID));
-                                                if (invDtls.size() > 0)
-                                                    invoiceDetailList.get(invoiceDetailList.indexOf(invDtls.get(0))).INV_DET_QUANTITY = amount;
-
-                                                invoiceDetail.update();
-
-
-                                            }
-
-
-                                          invoiceDetailAdapter.notifyDataSetChanged();
-
-                                           Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                                           if (frg instanceof MainOrderFragment) {
-                                               MainOrderFragment fgf = (MainOrderFragment) frg;
-                                               fgf.refreshProductList();
-                                           }
-
-                                        }
-
-
-                                    }
-                                    , throwable -> Toast.makeText(getContext(), "خطا در دریافت مانده کالا از سرور", Toast.LENGTH_SHORT).show())
-            );
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "خطا در دریافت مانده کالا", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private void getProduct(String Guid) {
-
-
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-
-            compositeDisposable.add(
-                    api.getProduct(company.USER, company.PASS, Guid)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-
-                                counter = counter + 1;
-                                Gson gson = new Gson();
-                                Type typeModelProduct = new TypeToken<ModelProduct>() {
-                                }.getType();
-
-
-                                ModelProduct iDs = null;
-
-
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                } catch (Exception ignore) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-                                }
-
-
-                                if (iDs != null) {
-
-
-                                    ArrayList<Product> list1 = new ArrayList<>(iDs.getProductList());
-                                    if (list1.size() > 0) {
-                                        ir.kitgroup.salein.DataBase.Product.saveInTx(list1.get(0));
-
-                                    }
-
-                                    if (counter == invDetails.size()) {
-                                        invoiceDetailList.clear();
-
-
-                                        if (invDetails.size() > 0) {
-                                            ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
-                                            CollectionUtils.filter(invDtls, i -> i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-                                            if (invDtls.size() > 0) {
-                                                if (type.equals("1")) {
-                                                    sumTransport = Double.parseDouble(invDtls.get(0).INV_DET_TOTAL_AMOUNT);
-                                                    binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
-                                                    binding.layoutTransport.setVisibility(View.VISIBLE);
-                                                }
-                                            }
-
-                                            CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-                                        }
-
-                                        invoiceDetailList.clear();
-                                        invoiceDetailList.addAll(invDetails);
-                                        invDetails.clear();
-                                        invoiceDetailAdapter.notifyDataSetChanged();
-
-                                        binding.progressBar.setVisibility(View.GONE);
-                                        counter = 0;
-                                    }
-                                } else {
-                                    Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-                                }
-
-                            }, throwable -> {
-
-
-                            })
-            );
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
-            binding.progressBar.setVisibility(View.GONE);
-        }
-
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private void getInvoice() {
-
-        if (!networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(
-                    api.getInvoice1(company.USER, company.PASS, Inv_GUID)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelInvoice>() {
-                                }.getType();
-                                ModelInvoice iDs = null;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception ignored) {
-                                    Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-                                }
-
-
-                                if (iDs != null) {
-
-                                    if (iDs.getInvoice().size() == 0) {
-                                        invDetails.clear();
-                                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                                .setMessage("این سفارش در سرور وجود ندارد.")
-                                                .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                                                .show();
-
-                                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                        textView.setTypeface(face);
-                                        textView.setTextColor(getResources().getColor(R.color.red_table));
-                                        textView.setTextSize(13);
-                                    } else {
-
-                                        String name = company.INSK_ID.split("ir.kitgroup.")[1];
-                                        String invGuid = sharedPreferences.getString(name, "");
-
-                                        List<InvoiceDetail> list = Select.from(InvoiceDetail.class).list();
-                                        CollectionUtils.filter(list, l -> l.INV_UID != null && !l.INV_UID.equals(invGuid));
-                                        for (int i = 0; i < list.size(); i++) {
-                                            InvoiceDetail.deleteInTx(list.get(i));
-                                        }
-
-
-                                        InvoiceDetail.saveInTx(iDs.getInvoiceDetail());
-
-                                        status = iDs.getInvoice().get(0).INV_STEP;
-                                        Ord_TYPE = String.valueOf(iDs.getInvoice().get(0).INV_TYPE_ORDER);
-
-
-                                        if (iDs.getInvoice().get(0).INV_DESCRIBTION != null && !iDs.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
-                                            binding.edtDescription.setHint("توضیحات : " + iDs.getInvoice().get(0).INV_DESCRIBTION);
-                                            binding.edtDescription.setVisibility(View.VISIBLE);
-
-                                        } else {
-                                            binding.edtDescription.setVisibility(View.GONE);
-                                        }
-
-
-                                        if (company.mode == 1) {
-                                            Acc_NAME = iDs.getInvoice().get(0).ACC_CLB_NAME;
-                                            Acc_GUID = iDs.getInvoice().get(0).ACC_CLB_UID;
-                                        }
-
-
-
-                                        binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
-
-
-                                        if (status != null && status == 1) {
-                                            binding.layoutEditDelete.setVisibility(View.VISIBLE);
-                                        } else {
-                                            binding.layoutEditDelete.setVisibility(View.GONE);
-                                        }
-
-
-
-                                        if (iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN != null)
-                                            binding.txtDate.setText(iDs.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
-
-
-                                        CollectionUtils.filter(iDs.getInvoiceDetail(), i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
-                                        invDetails.clear();
-                                        invDetails.addAll(iDs.getInvoiceDetail());
-
-
-                                    }
-
-
-                                    if (invDetails.size() == 0){
-                                        binding.progressBar.setVisibility(View.GONE);
-                                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                                .setMessage("این سفارش در سرور وجود ندارد.")
-                                                .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                                                .show();
-
-                                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                                        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                                        textView.setTypeface(face);
-                                        textView.setTextColor(getResources().getColor(R.color.red_table));
-                                        textView.setTextSize(13);
-                                    }
-
-                                    else{
-                                        ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
-                                         for (int i = 0; i < invDetails.size(); i++) {
-                                            getProduct(invDetails.get(i).PRD_UID);
-                                        }
-                                    }
-
-
-
-                                } else {
-                                    invDetails.clear();
-                                    Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-
-
-                                }
-                                binding.progressBar.setVisibility(View.GONE);
-
-                            }, throwable -> {
-                                invDetails.clear();
-                                Toast.makeText(getActivity(), "دریافت سفارش ناموفق", Toast.LENGTH_SHORT).show();
-                                binding.progressBar.setVisibility(View.GONE);
-
-                            })
-            );
-        } catch (Exception e) {
+        else {
             invDetails.clear();
-            Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
-            binding.progressBar.setVisibility(View.GONE);
+            invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+            if (invDetails.size() == 0) {
+                binding.progressBar.setVisibility(View.GONE);
+
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("هیچ سفارشی وجود ندارد.")
+                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                        .show();
+
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(getResources().getColor(R.color.red_table));
+                textView.setTextSize(13);
+
+            } else {
+                counter = 0;
+                    ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
+                    for (int i = 0; i < invDetails.size(); i++) {
+                       myViewModel. getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                    }
+            }
         }
 
-    }
+        myViewModel.getResultInvoice().observe(getViewLifecycleOwner(), result -> {
 
-    private void getDeleteInvoice(String Inv_GUID) {
+            if (result == null)
+                return;
+            myViewModel.getResultInvoice().setValue(null);
 
-        customProgress.showProgress(getActivity(), "در حال دریافت تغییرات فاکتور...", false);
+            if (result.getInvoice().size() == 0) {
+                invDetails.clear();
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("این سفارش در سرور وجود ندارد.")
+                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                        .show();
 
-        try {
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(getResources().getColor(R.color.red_table));
+                textView.setTextSize(13);
+            } else {
 
+                String name = company.INSK_ID.split("ir.kitgroup.")[1];
+                String invGuid = sharedPreferences.getString(name, "");
 
-            Call<String> call = api.getDeleteInvoice(company.USER, company.PASS, Inv_GUID);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
-
-                    if (iDs != null) {
-                        int message = iDs.getLogs().get(0).getMessage();
-                        if (message == 4) {
-                            List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                            ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
-                            for (int i = 0; i < invoiceDetail.size(); i++) {
-                                InvoiceDetail.deleteInTx(invoiceDetail.get(i));
-                            }
-                            Fragment frg;
-                            if (company.mode == 2) {
-                                getActivity().getSupportFragmentManager().popBackStack();
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
-
-                            } else {
-                                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                                if (tb != null && tb.GO != null)
-                                    Tables.delete(tb);
-
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                            }
+                List<InvoiceDetail> list = Select.from(InvoiceDetail.class).list();
+                CollectionUtils.filter(list, l -> l.INV_UID != null && !l.INV_UID.equals(invGuid));
+                for (int i = 0; i < list.size(); i++) {
+                    InvoiceDetail.deleteInTx(list.get(i));
+                }
 
 
-                            FragmentManager ft = getActivity().getSupportFragmentManager();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                InvoiceDetail.saveInTx(result.getInvoiceDetail());
 
-                                ft.beginTransaction().detach(frg).commitNow();
-                                ft.beginTransaction().attach(frg).commitNow();
-
-                            } else {
-
-                                ft.beginTransaction().detach(frg).attach(frg).commit();
-                            }
+                status = result.getInvoice().get(0).INV_STEP;
+                Ord_TYPE = String.valueOf(result.getInvoice().get(0).INV_TYPE_ORDER);
 
 
+                if (result.getInvoice().get(0).INV_DESCRIBTION != null && !result.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
+                    binding.edtDescription.setHint("توضیحات : " + result.getInvoice().get(0).INV_DESCRIBTION);
+                    binding.edtDescription.setVisibility(View.VISIBLE);
+
+                } else {
+                    binding.edtDescription.setVisibility(View.GONE);
+                }
+
+
+                if (company.mode == 1) {
+                    Acc_NAME = result.getInvoice().get(0).ACC_CLB_NAME;
+                    Acc_GUID = result.getInvoice().get(0).ACC_CLB_UID;
+                }
+
+
+                binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
+
+
+                if (status != null && status == 1) {
+                    binding.layoutEditDelete.setVisibility(View.VISIBLE);
+                } else {
+                    binding.layoutEditDelete.setVisibility(View.GONE);
+                }
+
+
+                if (result.getInvoice().get(0).INV_DUE_DATE_PERSIAN != null)
+                    binding.txtDate.setText(result.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
+
+
+                CollectionUtils.filter(result.getInvoiceDetail(), i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+                invDetails.clear();
+                invDetails.addAll(result.getInvoiceDetail());
+
+            }
+
+
+            if (invDetails.size() == 0) {
+                binding.progressBar.setVisibility(View.GONE);
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("این سفارش در سرور وجود ندارد.")
+                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                        .show();
+
+                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                textView.setTypeface(face);
+                textView.setTextColor(getResources().getColor(R.color.red_table));
+                textView.setTextSize(13);
+            } else {
+                ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
+                for (int i = 0; i < invDetails.size(); i++) {
+                    myViewModel.getProduct(company.USER, company.PASS, invDetails.get(i).PRD_UID);
+                }
+            }
+            binding.progressBar.setVisibility(View.GONE);
+        });
+        myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {
+
+            binding.progressBar.setVisibility(View.GONE);
+            if (result == null)
+                return;
+            myViewModel.getResultProduct().setValue(null);
+
+            counter = counter + 1;
+
+
+            ArrayList<Product> list1 = new ArrayList<>(result);
+            if (list1.size() > 0) {
+                ir.kitgroup.salein.DataBase.Product.saveInTx(list1.get(0));
+
+            }
+
+            if (counter == invDetails.size()) {
+                invoiceDetailList.clear();
+                if (invDetails.size() > 0) {
+                    ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
+                    CollectionUtils.filter(invDtls, i -> i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+                    if (invDtls.size() > 0) {
+                        if (type.equals("1")) {
+                            sumTransport = Double.parseDouble(invDtls.get(0).INV_DET_TOTAL_AMOUNT);
+                            binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
+                            binding.layoutTransport.setVisibility(View.VISIBLE);
                         }
+                    }
+
+                    CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+                }
+
+                invoiceDetailList.clear();
+                invoiceDetailList.addAll(invDetails);
+                invDetails.clear();
+                invoiceDetailAdapter.notifyDataSetChanged();
+
+                binding.progressBar.setVisibility(View.GONE);
+                counter = 0;
+            }
+
+        });
+        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
+
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+            myViewModel.getResultDescription().setValue(null);
+
+
+            descriptionList.clear();
+            descriptionList.addAll(result);
+
+
+            for (int i = 0; i < descriptionList.size(); i++) {
+                if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                    descriptionList.get(i).Click = true;
+                }
+
+            }
+
+            descriptionAdapter.notifyDataSetChanged();
+            customProgress.hideProgress();
+
+            dialogDescription.show();
+
+
+        });
+        myViewModel.getResultLog().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+            myViewModel.getResultLog().setValue(null);
+
+            int message = result.getLogs().get(0).getMessage();
+                if (message == 4) {
+                    List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                    ir.kitgroup.salein.DataBase.Product.deleteAll(ir.kitgroup.salein.DataBase.Product.class);
+                    for (int i = 0; i < invoiceDetail.size(); i++) {
+                        InvoiceDetail.deleteInTx(invoiceDetail.get(i));
+                    }
+                    Fragment frg;
+                    if (company.mode == 2) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
+
                     } else {
-                        Toast.makeText(getActivity(), "خطایی در سرور رخ داد", Toast.LENGTH_SHORT).show();
+                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                        if (tb != null && tb.GO != null)
+                            Tables.delete(tb);
+
+                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
                     }
 
 
-                    customProgress.hideProgress();
+                    FragmentManager ft = getActivity().getSupportFragmentManager();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                }
+                        ft.beginTransaction().detach(frg).commitNow();
+                        ft.beginTransaction().attach(frg).commitNow();
 
-                @Override
-                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
-                    customProgress.hideProgress();
-                    Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + t.toString(), Toast.LENGTH_SHORT).show();
+                    } else {
 
-                }
-            });
+                        ft.beginTransaction().detach(frg).attach(frg).commit();
+                    } }
 
 
-        } catch (
-                NetworkOnMainThreadException ex) {
+
             customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در دریافت اطلاعات فاکتور..." + ex.toString(), Toast.LENGTH_SHORT).show();
 
-        }
 
+        });
+        myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), res -> {
+
+            if (res == null)
+                return;
+
+            myViewModel.getResultMaxSale().setValue(null);
+
+            int remain = res;
+            ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetailList);
+            CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_UID));
+
+
+            if (result.size() > 0) {
+                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                double amount = 0.0;
+                if (!sWord.equals("")) {
+                    amount = Double.parseDouble(sWord);
+                    if (remain - amount < 0) {
+
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                                .setMessage("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + remain)
+                                .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                                .show();
+
+                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                        textView.setTypeface(face);
+                        textView.setTextColor(getResources().getColor(R.color.medium_color));
+                        textView.setTextSize(13);
+
+                        if (invoiceDetail != null) {
+                            invoiceDetail.INV_DET_QUANTITY = 0.0;
+                            invoiceDetail.update();
+
+                        }
+
+                        invoiceDetailAdapter.notifyDataSetChanged();
+
+                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                        if (frg instanceof MainOrderFragment) {
+                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                            fgf.refreshProductList();
+                        }
+                        return;
+                    }
+                }
+
+                if (invoiceDetail != null) {
+                    invoiceDetail.INV_DET_QUANTITY = amount;
+                    ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invoiceDetailList);
+                    CollectionUtils.filter(invDtls, i -> i.INV_DET_UID.equals(invoiceDetail.INV_DET_UID));
+                    if (invDtls.size() > 0)
+                        invoiceDetailList.get(invoiceDetailList.indexOf(invDtls.get(0))).INV_DET_QUANTITY = amount;
+
+                    invoiceDetail.update();
+
+
+                }
+
+
+                invoiceDetailAdapter.notifyDataSetChanged();
+
+                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+                if (frg instanceof MainOrderFragment) {
+                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                    fgf.refreshProductList();
+                }
+
+            }
+
+        });
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
 
     }
 
 
-    private Boolean networkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
-    private void ShowErrorConnection() {
-        binding.progressBar.setVisibility(View.GONE);
-        textMessageDialog.setText("خطا در اتصال به اینترنت");
-        ivIconSync.setImageResource(R.drawable.ic_wifi);
-        btnNoDialog.setText("بستن");
-        btnOkDialog.setText("سینک مجدد");
-        dialogSync.dismiss();
-        dialogSync.show();
-        customProgress.hideProgress();
 
-    }
+
 
 
     @Override
@@ -1366,16 +1083,7 @@ public class InVoiceDetailFragment extends Fragment {
                 InvoiceDetail.delete(invoiceDetails.get(i));
             }
         }
-
-        compositeDisposable.dispose();
         binding = null;
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear();
     }
 
 

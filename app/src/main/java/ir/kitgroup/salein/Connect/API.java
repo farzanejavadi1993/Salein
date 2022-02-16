@@ -19,7 +19,7 @@ public interface API {
 
 
     @GET("DeleteInvoice")
-    Call<String> getDeleteInvoice(@Query("userName") String userName, @Query("passWord") String passWord, @Query("InvoiceId") String InvoiceId);
+    Observable<String> getDeleteInvoice(@Query("userName") String userName, @Query("passWord") String passWord, @Query("InvoiceId") String InvoiceId);
 
 
 
