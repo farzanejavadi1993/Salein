@@ -1,38 +1,25 @@
 package ir.kitgroup.salein.Connect;
-
-import android.content.SharedPreferences;
-
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orm.query.Select;
-
 import java.lang.reflect.Type;
 import java.util.List;
-
 import javax.inject.Inject;
-
-
 import io.reactivex.Observable;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.Fragments.CompanyFragment;
+import ir.kitgroup.salein.Fragments.MapFragment;
 import ir.kitgroup.salein.Fragments.OrderListFragment;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
+import ir.kitgroup.salein.Fragments.PaymentMobileFragment;
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 
 
 public class MyRepository {
-    private API api;
-    private SharedPreferences sharedPreferences;
-
+    private final API api;
 
     @Inject
-    public MyRepository(API api,SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
-
+    public MyRepository(API api) {
         this.api = api;
     }
 
@@ -132,5 +119,44 @@ public class MyRepository {
         }.getType();
         return api.sendFeedBack(user,passWord,gson.toJson(jsonObject, typeJsonObject));
     }
+
+
+    public Observable<String> sendOrder(String user,String passWord,List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail,String numberPos) {
+        PaymentMobileFragment.JsonObject jsonObject = new PaymentMobileFragment.JsonObject();
+        jsonObject.Invoice = invoice;
+        jsonObject.InvoiceDetail = invoiceDetail;
+        jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
+
+        Gson gson = new Gson();
+        Type typeJsonObject = new TypeToken<PaymentMobileFragment.JsonObject>() {
+        }.getType();
+        return api.sendOrder(user,passWord, gson.toJson(jsonObject, typeJsonObject),"",numberPos);
+    }
+
+
+
+
+    public Observable<String> getTable(String user,String passWord) {
+        return api.getTable1(user,passWord); }
+
+
+    public Observable<String> getTypeOrder(String user,String passWord) {
+        return api.getOrderType1(user,passWord); }
+
+
+    public Observable<String> updateAccount(String user,String passWord,List<Account> accounts) {
+        MapFragment.JsonObjectAccount jsonObjectAcc = new MapFragment.JsonObjectAccount();
+        jsonObjectAcc.Account = accounts;
+
+        Gson gson = new Gson();
+        Type typeJsonObject = new TypeToken<MapFragment.JsonObjectAccount>() {
+        }.getType();
+        return api.updateAccount(user,passWord,gson.toJson(jsonObjectAcc, typeJsonObject),"");
+    }
+
+    public Observable<String> login(String user,String passWord) {
+        return api.Login(user,passWord); }
+
+
 
 }

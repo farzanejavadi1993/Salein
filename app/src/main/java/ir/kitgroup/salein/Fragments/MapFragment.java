@@ -4,9 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.content.res.ColorStateList;
@@ -16,10 +14,8 @@ import android.graphics.drawable.ColorDrawable;
 
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.NetworkOnMainThreadException;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +36,7 @@ import androidx.fragment.app.Fragment;
 
 import androidx.fragment.app.FragmentManager;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -52,8 +49,6 @@ import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
 import com.cedarstudios.cedarmapssdk.model.geocoder.forward.ForwardGeocode;
 import com.cedarstudios.cedarmapssdk.model.geocoder.reverse.ReverseGeocode;
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -79,52 +74,35 @@ import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.SearchViewAdapter;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
-
-import ir.kitgroup.salein.classes.ServerConfig;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.databinding.FragmentMapBinding;
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.ModelLog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
-
-@AndroidEntryPoint
 
 public class MapFragment extends Fragment implements PermissionsListener {
 
 
     //region Parameter
-    @Inject
-    SharedPreferences sharedPreferences;
+    private MyViewModel myViewModel;
 
-    private CompositeDisposable compositeDisposable;
-
-    private DecimalFormat df;
+    private int flag;
+    private String type;
+    private final List<Account> accounts = new ArrayList<>();
     private Company company;
-    private API api;
 
 
     private FragmentMapBinding binding;
@@ -174,7 +152,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         RESULTS
     }
 
-    private ServerConfig serverConfig;
 
     //endregion Parameter
     @Nullable
@@ -191,10 +168,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        df = new DecimalFormat();
+        DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(4);
-        compositeDisposable = new CompositeDisposable();
-
 
         customProgress = CustomProgress.getInstance();
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
@@ -220,7 +195,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //region Get Bundle
         Bundle bundle = getArguments();
         String mobileNumber = bundle.getString("mobileNumber");
-        String type = bundle.getString("type");
+        type = bundle.getString("type");
         edit_address = bundle.getString("edit_address");
         IP1 = bundle.getString("IP1");
         IP2 = bundle.getString("IP2");
@@ -230,48 +205,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         company = null;
-        api = null;
+
         company = Select.from(Company.class).first();
 
-        if (IP1!=null) {
+        if (IP1 != null) {
             binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
             binding.btnRegisterInformation.setVisibility(View.GONE);
-        }
-
-        if ((company != null && company.mode == 1) || IP1 != null) {
-
-
-            new AsyncTask() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-
-                }
-
-                @Override
-                protected void onPostExecute(Object o) {
-                    super.onPostExecute(o);
-                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
-                   binding.btnRegisterInformation.setVisibility(View.VISIBLE);
-
-                }
-
-                @Override
-                protected Object doInBackground(Object[] params) {
-                    if (company == null) {
-                        serverConfig = new ServerConfig(IP1, IP2);
-
-                    } else {
-                        serverConfig = new ServerConfig(company.IP1, company.IP2);
-                    }
-
-
-                    return 0;
-                }
-            }.execute(0);
-
-        } else if (IP1 == null) {
-            api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false,30).create(API.class);
         }
 
 
@@ -339,10 +278,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
-                account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
-                account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
-                account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
-                account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
+                account.LAT = accountORG.LAT != null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-") ? accountORG.LAT : "0.0";
+                account.LNG = accountORG.LNG != null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-") ? accountORG.LNG : "0.0";
+                account.LAT1 = accountORG.LAT1 != null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-") ? accountORG.LAT1 : "0.0";
+                account.LNG1 = accountORG.LNG1 != null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-") ? accountORG.LNG1 : "0.0";
 
 
                 if (account.ADR == null) {
@@ -373,7 +312,14 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
 
-                UpdateAccount(list, 1, "");
+
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnRegisterInformation.setEnabled(false);
+
+                flag = 1;
+                accounts.clear();
+                accounts.addAll(list);
+                myViewModel.updateAccount(company.USER, company.PASS, list);
 
 
             }
@@ -392,16 +338,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 if (type.equals("1")) {
                     account.ADR2 = accountORG.ADR2;
-                    account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
-                    account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
+                    account.LAT1 = accountORG.LAT1 != null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-") ? accountORG.LAT1 : "0.0";
+                    account.LNG1 = accountORG.LNG1 != null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-") ? accountORG.LNG1 : "0.0";
                     account.ADR = ADDRESS;
                     account.LAT = String.valueOf(latitude);
                     account.LNG = String.valueOf(longitude);
 
                 } else {
                     account.ADR = accountORG.ADR;
-                    account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
-                    account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
+                    account.LAT = accountORG.LAT != null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-") ? accountORG.LAT : "0.0";
+                    account.LNG = accountORG.LNG != null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-") ? accountORG.LNG : "0.0";
                     account.ADR2 = ADDRESS;
                     account.LAT1 = String.valueOf(latitude);
                     account.LNG1 = String.valueOf(longitude);
@@ -411,7 +357,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
-                UpdateAccount(list, 2, type);
+
+
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnRegisterInformation.setEnabled(false);
+
+                flag = 2;
+                accounts.clear();
+                accounts.addAll(list);
+                myViewModel.updateAccount(company.USER, company.PASS, list);
+
             }
 
 
@@ -428,32 +383,30 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
                 account.CRDT = accountORG.CRDT;
-                account.LAT = accountORG.LAT!=null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-")?accountORG.LAT:"0.0";
-                account.LNG = accountORG.LNG!=null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-")?accountORG.LNG:"0.0";
-                account.LAT1 = accountORG.LAT1!=null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-")?accountORG.LAT1:"0.0";
-                account.LNG1 = accountORG.LNG1!=null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-")?accountORG.LNG1:"0.0";
+                account.LAT = accountORG.LAT != null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-") ? accountORG.LAT : "0.0";
+                account.LNG = accountORG.LNG != null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-") ? accountORG.LNG : "0.0";
+                account.LAT1 = accountORG.LAT1 != null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-") ? accountORG.LAT1 : "0.0";
+                account.LNG1 = accountORG.LNG1 != null && !accountORG.LNG1.equals("") && !accountORG.LNG1.equals("-") ? accountORG.LNG1 : "0.0";
 
                 if (account.ADR == null) {
                     setADR1 = false;
-                    account.ADR =ADDRESS;
+                    account.ADR = ADDRESS;
                     account.LAT = String.valueOf(latitude);
                     account.LNG = String.valueOf(longitude);
                 } else if (account.ADR2 == null) {
                     setADR1 = true;
-                    account.ADR2 =  ADDRESS ;
-                    account.LAT1 =String.valueOf(latitude);
-                    account.LNG1 =String.valueOf(longitude);
+                    account.ADR2 = ADDRESS;
+                    account.LAT1 = String.valueOf(latitude);
+                    account.LNG1 = String.valueOf(longitude);
                 } else {
 
                     if (setADR1) {
-                        account.ADR2 =  ADDRESS ;
+                        account.ADR2 = ADDRESS;
                         account.LAT1 = String.valueOf(latitude);
                         account.LNG1 = String.valueOf(longitude);
 
-                    }
-                    else
-                    {
-                        account.ADR =ADDRESS ;
+                    } else {
+                        account.ADR = ADDRESS;
                         account.LAT = String.valueOf(latitude);
                         account.LNG = String.valueOf(longitude);
                     }
@@ -462,7 +415,17 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 ArrayList<Account> list = new ArrayList<>();
                 list.add(account);
-                UpdateAccount(list, 3, "");
+
+
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnRegisterInformation.setEnabled(false);
+
+                flag = 3;
+                accounts.clear();
+                accounts.addAll(list);
+                myViewModel.updateAccount(company.USER, company.PASS, list);
+
+
             }
 
 
@@ -480,8 +443,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             if (edit_address != null && (edit_address.equals("10"))) {
 
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnRegisterInformation.setEnabled(false);
+               myViewModel.getLogin(userName, pasWord);
 
-                Login(userName, pasWord, numberPos,String.valueOf(latitude), String.valueOf(longitude));
+
                 return;
             }
 
@@ -670,6 +636,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 } else {
                     setState(State.SEARCHING);
                     CedarMaps.getInstance().forwardGeocode(newText, new ForwardGeocodeResultsListener() {
+                        @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void onSuccess(@NonNull List<ForwardGeocode> results) {
                             setState(State.RESULTS);
@@ -694,6 +661,161 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         mRecyclerAdapter.setOnClickItemListener(this::showItemOnMap);
+
+    }
+
+
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                binding.btnRegisterInformation.setEnabled(true);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultUpdateAccount().setValue(null);
+            if (result != null) {
+                int message = result.getLogs().get(0).getMessage();
+                String description = result.getLogs().get(0).getDescription();
+
+                Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                if (message == 1) {
+                    if (customProgress.isShow)
+                        customProgress.hideProgress();
+                    customProgress.hideProgress();
+                    Account.deleteAll(Account.class);
+                    Account.saveInTx(accounts);
+
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    Fragment frg;
+
+
+                    if (flag == 1) {
+                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentMobileFragment");
+
+                        if (frg instanceof PaymentMobileFragment) {
+                            PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
+                            Bundle bundle = fgf.getBundle(setADR1);
+                            frg.setArguments(bundle);
+                        }
+
+                    } else if (flag == 2) {
+
+                        Bundle bundleProfile = new Bundle();
+                        bundleProfile.putString("address", ADDRESS);
+                        bundleProfile.putString("type", type);
+
+                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
+                        frg.setArguments(bundleProfile);
+                    } else {
+
+                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
+
+                        if (frg instanceof MainOrderFragment) {
+                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                            Bundle bundle = fgf.getBundle(setADR1);
+                            frg.setArguments(bundle);
+                        }
+
+                    }
+
+
+                    FragmentManager ft = getActivity().getSupportFragmentManager();
+                    if (frg != null) {
+
+
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                                ft.beginTransaction().detach(frg).commitNow();
+                                ft.beginTransaction().attach(frg).commitNow();
+
+                            } else {
+                                ft.beginTransaction().detach(frg).attach(frg).commit();
+                            }
+                        } catch (Exception ignored) {
+
+                        }
+
+                    }
+
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
+            }
+
+
+            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnRegisterInformation.setEnabled(true);
+            customProgress.hideProgress();
+
+        });
+        myViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                binding.btnRegisterInformation.setEnabled(true);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultUpdateAccount().setValue(null);
+            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnRegisterInformation.setEnabled(true);
+
+            if (!result.equals("")) {
+                Company.deleteAll(Company.class);
+                Company company = new Company();
+                company.IP1 = IP1;
+                company.IP2 = IP2;
+                company.numberPos = numberPos;
+                company.USER = userName;
+                company.PASS = pasWord;
+                company.mode = 1;
+                company.INSK_ID = "ir.kitgroup.saleinOrder";
+                company.LAT =  String.valueOf(latitude);
+                company.LONG =String.valueOf(longitude);
+                company.save();
+
+
+                getActivity().getSupportFragmentManager().popBackStack();
+
+                if (Select.from(Company.class).list().size() > 0) {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                }
+
+            }
+
+
+            customProgress.hideProgress();
+
+
+            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnRegisterInformation.setEnabled(true);
+            customProgress.hideProgress();
+
+        });
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+
+
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+
+        });
 
     }
 
@@ -763,7 +885,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-
     private void AlertPermission() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -771,16 +892,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
         builder.setMessage("برای استفاده از gps ، نرم افزار نیاز به دسترسی دارد.لطفا دسترسی لازم را با فشردن دکمه<<دسترسی دادن>> بدهید.")
                 .setCancelable(false)
                 .setPositiveButton("دسترسی دادن", (dialog, id) ->
-    {
-        PermissionsManager permissionsManager = new PermissionsManager(this);
-        permissionsManager.requestLocationPermissions(getActivity());
-    }
-                ).setNegativeButton("بستن", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+                        {
+                            PermissionsManager permissionsManager = new PermissionsManager(this);
+                            permissionsManager.requestLocationPermissions(getActivity());
+                        }
+                ).setNegativeButton("بستن", (dialog, which) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -984,7 +1100,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onStop() {
         super.onStop();
         binding.mapView.onStop();
-        compositeDisposable.clear();
 
     }
 
@@ -1010,8 +1125,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding.mapView.onDestroy();
-
-        compositeDisposable.dispose();
         binding = null;
         if (edit_address.equals("3"))
             ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
@@ -1096,216 +1209,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
-    private static class JsonObjectAccount {
+    public static class JsonObjectAccount {
 
         public List<Account> Account;
 
     }
 
-    private void UpdateAccount(List<Account> accounts, int flag, String locationAddress) {
-
-
-        try {
-            customProgress.showProgress(getContext(), "در حال ویرایش اطلاعات", false);
-            JsonObjectAccount jsonObjectAcc = new JsonObjectAccount();
-            jsonObjectAcc.Account = accounts;
-
-
-            Gson gson = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObjectAccount>() {
-            }.getType();
-
-            Call<String> call = api.UpdateAccount(company.USER, company.PASS, gson.toJson(jsonObjectAcc, typeJsonObject), "");
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-            binding.btnRegisterInformation.setEnabled(false);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
-
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
-
-                    if (iDs != null) {
-                        int message = iDs.getLogs().get(0).getMessage();
-                        String description = iDs.getLogs().get(0).getDescription();
-
-                        Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-                        if (message == 1) {
-                            if (customProgress.isShow)
-                                customProgress.hideProgress();
-                            customProgress.hideProgress();
-                            Account.deleteAll(Account.class);
-                            Account.saveInTx(accounts);
-
-
-                            getActivity().getSupportFragmentManager().popBackStack();
-                            Fragment frg;
-
-
-                            if (flag == 1) {
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("PaymentMobileFragment");
-
-                                if (frg instanceof PaymentMobileFragment) {
-                                    PaymentMobileFragment fgf = (PaymentMobileFragment) frg;
-                                    Bundle bundle = fgf.getBundle(setADR1);
-                                    frg.setArguments(bundle);
-                                }
-
-                            } else if (flag == 2) {
-
-                                Bundle bundleProfile = new Bundle();
-                                bundleProfile.putString("address", ADDRESS);
-                                bundleProfile.putString("type", locationAddress);
-
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("ProfileFragment");
-                                frg.setArguments(bundleProfile);
-                            } else {
-
-                                frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-
-                                if (frg instanceof MainOrderFragment) {
-                                    MainOrderFragment fgf = (MainOrderFragment) frg;
-                                    Bundle bundle = fgf.getBundle(setADR1);
-                                    frg.setArguments(bundle);
-                                }
-
-                            }
-
-
-                            FragmentManager ft = getActivity().getSupportFragmentManager();
-                            if (frg != null) {
-
-
-                                try {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                                        ft.beginTransaction().detach(frg).commitNow();
-                                        ft.beginTransaction().attach(frg).commitNow();
-
-                                    } else {
-                                        ft.beginTransaction().detach(frg).attach(frg).commit();
-                                    }
-                                } catch (Exception ignored) {
-
-                                }
-
-                            }
-
-                        }
-
-                    } else {
-                        Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
-                    }
-
-
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    customProgress.hideProgress();
-                }
-
-
-                @Override
-                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
-                    Toast.makeText(getContext(), "خطای تایم اوت در ثبت مشتری" + t.toString(), Toast.LENGTH_SHORT).show();
-
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                    binding.btnRegisterInformation.setEnabled(true);
-                    customProgress.hideProgress();
-
-
-                }
-            });
-
-
-        } catch (NetworkOnMainThreadException ex) {
-
-            Toast.makeText(getContext(), "خطا در ثبت مشتری" + ex.toString(), Toast.LENGTH_SHORT).show();
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnRegisterInformation.setEnabled(true);
-            customProgress.hideProgress();
-
-        }
-
-
-    }
-
-
-    private void Login(String userName, String passWord, String saleCode, String lat, String lng) {
-
-        binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-        binding.btnRegisterInformation.setEnabled(false);
-
-        if (api==null) {
-            Toast.makeText(getActivity(), "لظفا تا دریافت آی پی منتظر بمانبد...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        try {
-            compositeDisposable.add(
-                    api.Login(userName, passWord)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                binding.btnRegisterInformation.setEnabled(true);
-
-                                if (jsonElement == null || !jsonElement.isEmpty()) {
-
-                                    Toast.makeText(getActivity(), "نام کاربری یا رمز عبور اشتباه است.", Toast.LENGTH_SHORT).show();
-                                } else {
-
-
-                                    Company.deleteAll(Company.class);
-                                    Company company = new Company();
-                                    company.IP1 = IP1;
-                                    company.IP2 = IP2;
-                                    company.numberPos = saleCode;
-                                    company.USER = userName;
-                                    company.PASS = passWord;
-                                    company.mode = 1;
-                                    company.INSK_ID = "ir.kitgroup.saleinOrder";
-                                    company.LAT = lat;
-                                    company.LONG = lng;
-                                    company.save();
-
-
-                                    getActivity().getSupportFragmentManager().popBackStack();
-
-                                    if (Select.from(Company.class).list().size() > 0) {
-                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
-                                    }
-
-
-
-                                }
-                                customProgress.hideProgress();
-
-
-                            }, throwable -> {
-                                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                                binding.btnRegisterInformation.setEnabled(true);
-
-                                Toast.makeText(getContext(), "آی پی سازمان اشتباه است", Toast.LENGTH_SHORT).show();
-                                customProgress.hideProgress();
-
-
-                            })
-            );
-
-
-        } catch (NetworkOnMainThreadException ex) {
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnRegisterInformation.setEnabled(true);
-            customProgress.hideProgress();
-            Toast.makeText(getContext(), "خطا در دریافت اطلاعات" + ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
 
 
 }

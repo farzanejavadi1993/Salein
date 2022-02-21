@@ -1,12 +1,6 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,40 +9,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import androidx.lifecycle.ViewModelProvider;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
-import java.lang.reflect.Type;
+
 import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
-import ir.kitgroup.salein.classes.ServerConfig;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
-import ir.kitgroup.salein.models.ModelProduct;
 
 @AndroidEntryPoint
 public class ShowDetailFragment extends Fragment {
     @Inject
     Config config;
-    @Inject
-    SharedPreferences sharedPreferences;
 
     private ActivityDetailBinding binding;
-    private CompositeDisposable compositeDisposable;
-    private API api;
     private Company company;
-    private ServerConfig serverConfig;
+    private  String Id;
+
+    private MyViewModel myViewModel;
 
     @Nullable
     @Override
@@ -61,109 +47,66 @@ public class ShowDetailFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-        compositeDisposable = new CompositeDisposable();
+
         company = Select.from(Company.class).first();
-        if (company.mode==2)
-        api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false,30).create(API.class);
-
         Bundle bundle = getArguments();
-        String Id = bundle.getString("Id");
+        Id = bundle.getString("Id");
 
-        if (company.mode==2){
-            String ip = company.IP1;
-            getProduct(Id);
-            Picasso.get()
-                    .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
-                    .error(config.imageLogo)
-                    .placeholder(R.drawable.loading)
-                    .into(binding.ivProduct);
-        }
-        else {
-            AsyncTask asyncTask= new AsyncTask() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                }
 
-                @Override
-                protected void onPostExecute(Object o) {
-                    super.onPostExecute(o);
-                    api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true,30).create(API.class);
-                    String ip = serverConfig.URL1 ;
-                    getProduct(Id);
-                    Picasso.get()
-                            .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
-                            .error(config.imageLogo)
-                            .placeholder(R.drawable.loading)
-                            .into(binding.ivProduct);
-                }
-                @SuppressLint("StaticFieldLeak")
-                @Override
-                protected Object doInBackground(Object[] params) {
-                    serverConfig =new ServerConfig(company.IP1,company.IP2);
-                    return 0;
-                }
-            };
-     asyncTask.execute(0);
-        }
+        String ip = company.IP1;
+
+        Picasso.get()
+                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
+                .error(config.imageLogo)
+                .placeholder(R.drawable.loading)
+                .into(binding.ivProduct);
+
+
     }
-    private Boolean networkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-    @SuppressLint("SetTextI18n")
-    private void getProduct(String Guid) {
-        if (!networkAvailable(getActivity())) {
-            Toast.makeText(getActivity(), "خطا در اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(
-                    api.getProduct(company.USER, company.PASS, Guid)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeModelProduct = new TypeToken<ModelProduct>() {
-                                }.getType();
-                                ModelProduct iDs = null;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeModelProduct);
-                                } catch (Exception ignore) {
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-                                }
-                                if (iDs != null && iDs.getProductList().size() > 0) {
-                                    binding.tvDescriptionProduct.setText(iDs.getProductList().get(0).getDes());
-                                } else {
-                                    Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
-                                }
-                                binding.progressBar.setVisibility(View.GONE);
 
-                            }, throwable -> {
-                                Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
-                                binding.progressBar.setVisibility(View.GONE);
-                            })
-            );
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "خطا در ارتباط با سرور", Toast.LENGTH_SHORT).show();
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel.getProduct(company.USER,company.PASS,Id);
+
+        myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {
+
+
+            if (result == null) {
+             binding.progressBar.setVisibility(View.GONE);
+                return;
+            }
+
+            myViewModel.getResultProduct().setValue(null);
+
+            if (result.size() > 0) {
+                binding.tvDescriptionProduct.setText(result.get(0).getDes());
+            } else {
+                Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
+            }
             binding.progressBar.setVisibility(View.GONE);
-        }
+
+        });
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+
+            binding.progressBar.setVisibility(View.GONE);
+
+            if (result == null)
+                return;
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-        compositeDisposable.dispose();
         binding = null;
     }
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear(); }
+
 }

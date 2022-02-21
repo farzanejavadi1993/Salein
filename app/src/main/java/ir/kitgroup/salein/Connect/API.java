@@ -1,26 +1,21 @@
 package ir.kitgroup.salein.Connect;
-
 import io.reactivex.Observable;
-
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
+
 
 public interface API {
 
     @POST("SyncData")
-    Call<String> PostData(@Query("userName") String userName, @Query("password") String password,
+    Observable<String>  sendOrder(@Query("userName") String userName, @Query("password") String password,
                           @Body() String jsonObject,
                           @Query("virtualParam") String virtualParam,
                           @Query("numberPos") String numberPos);
 
-
     @GET("DeleteInvoice")
     Observable<String> getDeleteInvoice(@Query("userName") String userName, @Query("passWord") String passWord, @Query("InvoiceId") String InvoiceId);
-
 
 
 
@@ -48,8 +43,7 @@ public interface API {
 
 
     @POST("UpdateAccount")
-    Call<String> UpdateAccount(@Query("userName") String userName, @Query("passWord") String passWord, @Body() String jsonAccount,
-                               @Query("virtualParam") String virtualParam);
+    Observable<String> updateAccount(@Query("userName") String userName, @Query("passWord") String passWord, @Body() String jsonAccount,@Query("virtualParam") String virtualParam);
 
     @GET("productSync")
     Observable<String> getProduct(@Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);

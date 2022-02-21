@@ -30,7 +30,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
                 android:text="@string/login_register_text"
                 android:textColor="@color/medium_color"
                 android:textSize="@dimen/text_normal_mobile_size"
@@ -67,9 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayout"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="22dp"
             android:layout_marginTop="220dp"
             android:layout_marginEnd="22dp"
-            android:layout_marginStart="22dp"
             android:gravity="right"
             android:text="@string/enter_number"
             android:textColor="@color/medium_color"
@@ -122,17 +121,11 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
-
-
-
-
         <com.google.android.material.button.MaterialButton
-            android:layout_below="@+id/layout_editText"
             android:id="@+id/btn_login"
             android:layout_width="360dp"
             android:layout_height="@dimen/bottom_height_size"
+            android:layout_below="@+id/layout_editText"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="22dp"
             android:layout_marginTop="8dp"

@@ -1,20 +1,14 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.NetworkOnMainThreadException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +18,22 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.orm.query.Select;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -49,42 +44,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Adapters.DateAdapter;
 import ir.kitgroup.salein.Adapters.OrderTypePaymentAdapter1;
 import ir.kitgroup.salein.Adapters.TimeAdapter;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Tables;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
-import ir.kitgroup.salein.classes.ServerConfig;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
 import ir.kitgroup.salein.models.ModelDate;
-import ir.kitgroup.salein.models.ModelTable;
 import ir.kitgroup.salein.models.Setting;
-import ir.kitgroup.salein.models.ModelAccount;
-import ir.kitgroup.salein.models.ModelSetting;
-import ir.kitgroup.salein.models.ModelTypeOrder;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.models.OrderType;
-import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentPaymentMobileBinding;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -98,16 +84,15 @@ public class PaymentMobileFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
+    private MyViewModel myViewModel;
     private FragmentPaymentMobileBinding binding;
-    private API api;
-    private CompositeDisposable compositeDisposable;
+
     private Company company;
     private String linkPayment = "";
     private final Boolean Seen = false;
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-    private ImageView ivIconSync;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
@@ -130,7 +115,7 @@ public class PaymentMobileFragment extends Fragment {
     private String typePayment = "-1";
     private CustomProgress customProgress;
     private String numberPos = "";
-    private String error = "";
+
     private Dialog dialogSendOrder;
     private RelativeLayout rlButtons;
     private MaterialButton btnReturned;
@@ -164,7 +149,10 @@ public class PaymentMobileFragment extends Fragment {
     private List<OrderType> OrdTList;
     private Boolean OnceSee = false;
     private String Transport_GUID;
-    private ServerConfig serverConfig;
+
+
+    public PaymentMobileFragment() {
+    }
 
     @Nullable
     @Override
@@ -180,14 +168,9 @@ public class PaymentMobileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
+
             company = Select.from(Company.class).first();
-
-            if (company.mode == 2) {
-                api = ConfigRetrofit.getRetrofit("http://" + company.IP1 + "/api/REST/", false, 30).create(API.class);
-            }
-            compositeDisposable = new CompositeDisposable();
             customProgress = CustomProgress.getInstance();
-
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
             OrdTList = new ArrayList<>();
@@ -265,7 +248,6 @@ public class PaymentMobileFragment extends Fragment {
             //endregion Configuration Size
 
 
-
             //region Cast Variable Dialog Sync
             dialogSync = new Dialog(getActivity());
             dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -274,48 +256,19 @@ public class PaymentMobileFragment extends Fragment {
             dialogSync.setCancelable(false);
 
             textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-            ivIconSync = dialogSync.findViewById(R.id.iv_icon);
             btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
             btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
             btnNoDialog.setOnClickListener(v -> {
-                        dialogSync.dismiss();
-                        if (disableAccount) {
-//                            sharedPreferences.edit().clear();
-//
-//                            if (Account.count(Account.class) > 0)
-//                                Account.deleteAll(Account.class);
-//
-//                            if (InvoiceDetail.count(InvoiceDetail.class) > 0)
-//                                InvoiceDetail.deleteAll(InvoiceDetail.class);
-//
-//                            if (Product.count(Product.class) > 0)
-//                                Product.deleteAll(Product.class);
-//
-//                            if (Tables.count(Tables.class) > 0)
-//                                Tables.deleteAll(Tables.class);
-//
-//                            if (Unit.count(Unit.class) > 0)
-//                                Unit.deleteAll(Unit.class);
-//
-//                            if (Company.count(Company.class) > 0)
-//                                Company.deleteAll(Company.class);
-//
-//                            ((LauncherActivity) getActivity()).setFistItem();
-//                            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-//
-//                            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-//                            for (int i = 0; i < size; i++) {
-//                                getActivity().getSupportFragmentManager().popBackStack();
-//                            }
-
-                            getActivity().finish();
-                           // startActivity(getActivity().getIntent());
-                        }
-                    });
+                dialogSync.dismiss();
+                if (disableAccount) {
+                    getActivity().finish();
+                }
+            });
 
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
-                getSetting1();
+                binding.progressBar.setVisibility(View.VISIBLE);
+                myViewModel.getSetting(company.USER,company.PASS);
 
             });
 
@@ -543,7 +496,8 @@ public class PaymentMobileFragment extends Fragment {
                                 if ((hour - date1.getHours() != 1) || date1.getMinutes() <= 45) {
                                     timesList.add(allTime.get(i));
                                 }
-                        } catch (Exception ignore) {}
+                        } catch (Exception ignore) {
+                        }
                     }
 
                 } else {
@@ -569,7 +523,8 @@ public class PaymentMobileFragment extends Fragment {
                         return;
                     }
 
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
                 dialogTime.dismiss();
                 timeChoose = time;
                 Utilities util = new Utilities();
@@ -595,8 +550,7 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (allTime.size() == 0 || allTime.get(0).equals("")) {
                     Toast.makeText(getActivity(), "زمان ارسال سفارش از سرور تعیین نشده است.", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Date date = Calendar.getInstance().getTime();
                     for (int i = 0; i < allTime.size(); i++) {
                         int hour;
@@ -606,7 +560,8 @@ public class PaymentMobileFragment extends Fragment {
                                 if ((hour - date.getHours() != 1) || date.getMinutes() <= 45) {
                                     timesList.add(allTime.get(i));
                                 }
-                        } catch (Exception ignore) {}
+                        } catch (Exception ignore) {
+                        }
 
                     }
                     times.clear();
@@ -731,8 +686,7 @@ public class PaymentMobileFragment extends Fragment {
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
 
-                compositeDisposable.clear();
-                getInquiryAccount1(company.USER,company.PASS,acc.getM());
+               myViewModel.getInquiryAccount(company.USER, company.PASS, acc.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                     return;
@@ -754,8 +708,10 @@ public class PaymentMobileFragment extends Fragment {
 
                 if (company.mode == 2)
                     dialogSendOrder.show();
-                else
-                    getTable1();
+                else {
+                    myViewModel.getTable(company.USER, company.PASS);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                }
             });
 
             btnNo.setOnClickListener(v -> dialogSendOrder.dismiss());
@@ -802,7 +758,7 @@ public class PaymentMobileFragment extends Fragment {
                     else
                         InvoiceDetail.delete(invoiceDetailTransport);
                 }
-                CollectionUtils.filter(invDetails, i -> !i.PRD_UID.toLowerCase().equals(Transport_GUID.toLowerCase()));
+                CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
                 for (int i = 0; i < invDetails.size(); i++) {
                     ir.kitgroup.salein.DataBase.Product product = Select.from(ir.kitgroup.salein.DataBase.Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
                     InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
@@ -844,7 +800,8 @@ public class PaymentMobileFragment extends Fragment {
                 try {
                     hour = Integer.parseInt(timeChoose.split("-")[0]);
 
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 invoice.INV_DUE_DATE = dateChoose;
                 invoice.INV_DUE_TIME = hour + ":" + "00";
                 invoice.INV_STATUS = true;
@@ -876,7 +833,10 @@ public class PaymentMobileFragment extends Fragment {
                     cl.PAY_RCIPT_DET_TYPE = typePayment;
                     clsPaymentRecieptDetails.add(cl);
                 }
-                SendOrder(listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
+
+                customProgress.showProgress(getActivity(), "در حال ارسال سفارش...", false);
+                myViewModel.sendOrder(company.USER, company.PASS, listInvoice, invoiceDetailList, clsPaymentRecieptDetails, numberPos);
+
 
             });
 
@@ -900,8 +860,7 @@ public class PaymentMobileFragment extends Fragment {
                         addFragment.addToBackStack("MainOrderF").commit();
                     else
                         addFragment.commit();
-                }
-                else {
+                } else {
                     if (Tbl_GUID.equals("")) {
                         Tables tables = new Tables();
                         tables.N = Tbl_NAME;
@@ -922,133 +881,391 @@ public class PaymentMobileFragment extends Fragment {
                     LauncherOrganizationFragment launcherFragment = new LauncherOrganizationFragment();
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").commit();
                 }
-            });//endregion  Configuration Send Order
-
+            });
+            //endregion  Configuration Send Order
             binding.ivBack.setOnClickListener(v -> getFragmentManager().popBackStack());
-            if (company.mode == 2)
-                getSetting1();
-            else {
-                new AsyncTask() {
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                    }
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-                        super.onPostExecute(o);
-                        api = ConfigRetrofit.getRetrofit("http://" + serverConfig.URL1 + "/api/REST/", true, 30).create(API.class);
-                        getSetting1();
-                    }
-
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-                        serverConfig = new ServerConfig(company.IP1, company.IP2);
-                        return 0;
-                    }
-                }.execute(0);
-            }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
 
-    private static class JsonObject {
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
+        myViewModel.getSetting(company.USER, company.PASS);
+
+
+        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            myViewModel.getResultSetting().setValue(null);
+
+            timesList.clear();
+            List<Setting> settingsList = new ArrayList<>(result);
+            if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
+                sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
+                OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                try {
+                    paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
+                } catch (Exception ignored) {
+                    paymentType = 3;
+                }
+                if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 1) {
+
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.GONE);
+
+                } else if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 2) {
+                    binding.btnPaymentPlace.setVisibility(View.GONE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                } else {
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                }
+            }
+            if (!settingsList.get(0).SERVICE_DAY.equals(""))
+                SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
+
+            allDate.clear();
+            Date dateNow = Calendar.getInstance().getTime();
+            if (SERVICE_DAY == 0) {
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = dateNow;
+                modelDate.Click = true;
+                allDate.add(modelDate);
+            }
+            for (int i = 0; i < SERVICE_DAY; i++) {
+                Date date = Calendar.getInstance().getTime();
+                date.setDate(date.getDate() + i);
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = date;
+                modelDate.Click = i == 0;
+                allDate.add(modelDate);
+            }
+            if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
+                binding.layoutAddress.setVisibility(View.VISIBLE);
+
+            } else if (company.mode == 1) {
+                binding.layoutTypeOrder.setVisibility(View.GONE);
+                binding.layoutAddress.setVisibility(View.GONE);
+                binding.layoutTime.setVisibility(View.GONE);
+                binding.layoutPayment.setVisibility(View.VISIBLE);
+            }
+
+
+            Transport_GUID = settingsList.get(0).PEYK;
+            sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+            try {
+                allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
+
+            } catch (Exception ignore) {
+            }
+            if (allTime.size() > 0 && !allTime.get(0).equals("") && (company.mode == 2 || (!Ord_TYPE.equals(OrderTypeApp) &&
+                    Tbl_GUID.equals("") &&
+                    company.mode == 1)))
+                binding.layoutTime.setVisibility(View.VISIBLE);
+
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+            myViewModel.getTypeOrder(company.USER,company.PASS);
+
+
+        });
+        myViewModel.getResultSendOrder().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultSendOrder().setValue(null);
+            int message = 0;
+            String description = "";
+            if (result != null) {
+                message = result.getLogs().get(0).getMessage();
+                description = result.getLogs().get(0).getDescription();
+            }
+            rlButtons.setVisibility(View.GONE);
+            btnReturned.setVisibility(View.VISIBLE);
+            if (message == 1) {
+                String name;
+                name = company.INSK_ID.split("ir.kitgroup.")[1];
+                if (!edit || company.mode == 1) {
+                    sharedPreferences.edit().putString(name, "").apply();
+                    sharedPreferences.edit().putString(Inv_GUID, "").apply();
+                }
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
+                        new_Inv_GUID + "'").list();
+                for (int i = 0; i < invoiceDetails.size(); i++) {
+                    InvoiceDetail.delete(invoiceDetails.get(i));
+                }
+                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                if (tb == null) {
+                    tb = new Tables();
+                    tb.I = new_Tbl_GUID;
+                } else {
+                    tb.I = Tbl_GUID;
+                }
+                tb.INVID = new_Inv_GUID;
+                tb.save();
+                tvMessage.setText("سفارش با موفقیت ارسال شد");
+
+            } else {
+                if (company.mode == 1) {
+                    List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
+                    for (int i = 0; i < invDetails.size(); i++) {
+                        InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
+                        invoiceDtl.INV_UID = Inv_GUID;
+                        invoiceDtl.update();
+                    }
+                }
+
+                Product.deleteAll(Product.class);
+                tvMessage.setText("خطا در ارسال ،" + "\n" + description);
+
+            }
+            customProgress.hideProgress();
+            dialogSendOrder.show();
+
+        });
+        myViewModel.getResultTable().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultTable().setValue(null);
+
+            if (result != null) {
+                ArrayList<Tables> Tables = new ArrayList<>(result.getTables());
+                CollectionUtils.filter(Tables, t -> t.I.equals(Tbl_GUID));
+                if (Tables.size() > 0 && Tables.get(0).RSV) {
+                    Toast.makeText(getActivity(), "این میز رزرو شده", Toast.LENGTH_SHORT).show();
+                    binding.progressBar.setVisibility(View.GONE);
+                    return;
+                }
+            }
+
+            binding.progressBar.setVisibility(View.GONE);
+            dialogSendOrder.show();
+        });
+        myViewModel.getResultTypeOrder().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultTypeOrder().setValue(null);
+
+
+                CollectionUtils.filter(result.getOrderTypes(), i -> i.getTy() == 2);
+                OrdTList.addAll(result.getOrderTypes());
+
+                if (OrdTList.size() == 1 && company.mode==2) {
+                    OrdTList.get(0).Click = true;
+                    Ord_TYPE = OrdTList.get(0).getC();
+                    binding.tvTypeOrder.setVisibility(View.GONE);
+                    binding.recyclerViewOrderType.setVisibility(View.GONE);
+
+                }
+
+
+                orderTypePaymentAdapter.notifyDataSetChanged();
+                if (Ord_TYPE.equals(OrderTypeApp)) {
+                    sumTransport = 0;
+                    binding.layoutPeyk.setVisibility(View.GONE);
+                    binding.tvTransport.setText("0 ریال");
+                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
+                } else {
+                    if ((OrdTList.size() == 1 && (company.mode == 2) || (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1))) {
+                        sumTransport = calculateTransport;
+                        binding.layoutPeyk.setVisibility(View.VISIBLE);
+                        binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
+                        binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
+                    }
+                }
+
+            binding.progressBar.setVisibility(View.GONE);
+            //region Get Credit Club
+            try {
+                if (!OnceSee)
+                    myViewModel.getInquiryAccount(company.USER, company.PASS, acc.M);
+                else if (OnceSee)
+                    binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+            } catch (Exception ignore) {}
+            //endregion Get Credit Club
+
+        });
+        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            myViewModel.getResultSetting().setValue(null);
+
+            timesList.clear();
+            List<Setting> settingsList = new ArrayList<>(result);
+            if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
+                sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
+                OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                try {
+                    paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
+                } catch (Exception ignored) {
+                    paymentType = 3;
+                }
+                if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 1) {
+
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.GONE);
+
+                } else if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 2) {
+                    binding.btnPaymentPlace.setVisibility(View.GONE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                } else {
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                }
+            }
+            if (!settingsList.get(0).SERVICE_DAY.equals(""))
+                SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
+
+            allDate.clear();
+            Date dateNow = Calendar.getInstance().getTime();
+            if (SERVICE_DAY == 0) {
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = dateNow;
+                modelDate.Click = true;
+                allDate.add(modelDate);
+            }
+            for (int i = 0; i < SERVICE_DAY; i++) {
+                Date date = Calendar.getInstance().getTime();
+                date.setDate(date.getDate() + i);
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = date;
+                modelDate.Click = i == 0;
+                allDate.add(modelDate);
+            }
+            if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
+                binding.layoutAddress.setVisibility(View.VISIBLE);
+
+            } else if (company.mode == 1) {
+                binding.layoutTypeOrder.setVisibility(View.GONE);
+                binding.layoutAddress.setVisibility(View.GONE);
+                binding.layoutTime.setVisibility(View.GONE);
+                binding.layoutPayment.setVisibility(View.VISIBLE);
+            }
+
+
+            Transport_GUID = settingsList.get(0).PEYK;
+            sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+            try {
+                allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
+
+            } catch (Exception ignore) {
+            }
+            if (allTime.size() > 0 && !allTime.get(0).equals("") && (company.mode == 2 || (!Ord_TYPE.equals(OrderTypeApp) &&
+                    Tbl_GUID.equals("") &&
+                    company.mode == 1)))
+                binding.layoutTime.setVisibility(View.VISIBLE);
+
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+            myViewModel.getTypeOrder(company.USER,company.PASS);
+
+
+        });
+        myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
+
+                return;
+            }
+
+            myViewModel.getResultInquiryAccount().setValue(null);
+            disableAccount = false;
+            sharedPreferences.edit().putBoolean("disableAccount", false).apply();
+                    //user is register
+                    if (result.size() > 0) {
+                        Account.deleteAll(Account.class);
+                        Account.saveInTx(result);
+                        acc = Select.from(Account.class).first();
+                        if (acc != null && acc.CRDT != null)
+                            binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                        binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                    } else {
+                        binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                        binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
+                    }
+
+            OnceSee = true;
+            binding.progressBar.setVisibility(View.GONE);
+
+        });
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+
+            myViewModel.getResultMessage().setValue(null);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            disableAccount = sharedPreferences.getBoolean("disableAccount", false);
+            if (disableAccount)
+                showError(result.getName());
+
+
+        });
+
+    }
+
+    public static class JsonObject {
         public List<Invoice> Invoice;
         public List<InvoiceDetail> InvoiceDetail;
         public List<PaymentRecieptDetail> PaymentRecieptDetail;
     }
-    private void SendOrder(List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail) {
-        if (networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        try {
-            customProgress.showProgress(getActivity(), "در حال ارسال سفارش", false);
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.Invoice = invoice;
-            jsonObject.InvoiceDetail = invoiceDetail;
-            jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
-
-            Gson gson = new Gson();
-            Type typeJsonObject = new TypeToken<JsonObject>() {
-            }.getType();
-
-            Call<String> call = api.PostData(company.USER, company.PASS,
-                    gson.toJson(jsonObject, typeJsonObject),
-                    "",
-                    numberPos);
-            call.enqueue(new Callback<String>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(@NotNull Call<String> call, final @NotNull Response<String> response) {
-                    customProgress.hideProgress();
-                    Gson gson = new Gson();
-                    Type typeIDs = new TypeToken<ModelLog>() {
-                    }.getType();
-                    ModelLog iDs = gson.fromJson(response.body(), typeIDs);
-                    int message = 0;
-                    String description = "";
-                    if (iDs != null) {
-                        message = iDs.getLogs().get(0).getMessage();
-                        description = iDs.getLogs().get(0).getDescription();
-                    }
-                    rlButtons.setVisibility(View.GONE);
-                    btnReturned.setVisibility(View.VISIBLE);
-                    if (message == 1) {
-                        String name;
-                        name = company.INSK_ID.split("ir.kitgroup.")[1];
-                        if (!edit || company.mode == 1) {
-                            sharedPreferences.edit().putString(name, "").apply();
-                            sharedPreferences.edit().putString(Inv_GUID, "").apply();
-                        }
-                        List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
-                                new_Inv_GUID + "'").list();
-                        for (int i = 0; i < invoiceDetails.size(); i++) {
-                            InvoiceDetail.delete(invoiceDetails.get(i));
-                        }
-                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                        if (tb == null) {
-                            tb = new Tables();
-                            tb.I = new_Tbl_GUID;
-                        } else {
-                            tb.I = Tbl_GUID;
-                        }
-                        tb.INVID = new_Inv_GUID;
-                        tb.save();
-                        tvMessage.setText("سفارش با موفقیت ارسال شد");
-
-                    }
-                    else {
-                        if (company.mode == 1) {
-                            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + new_Inv_GUID + "'").list();
-                            for (int i = 0; i < invDetails.size(); i++) {
-                                InvoiceDetail invoiceDtl = Select.from(InvoiceDetail.class).where("INVDETUID ='" + invDetails.get(i).INV_DET_UID + "'").first();
-                                invoiceDtl.INV_UID = Inv_GUID;
-                                invoiceDtl.update();
-                            }
-                        }
-
-                        Product.deleteAll(Product.class);
-                        tvMessage.setText("خطا در ارسال ،" + "\n" + description);
-
-                    }
-                    dialogSendOrder.show();
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
-                    customProgress.hideProgress();
-                    Toast.makeText(getActivity(), "خطا در ارتباط" + t.toString(), Toast.LENGTH_SHORT).show();
 
 
-                }
-            });
-        } catch (NetworkOnMainThreadException ex) {
-            customProgress.hideProgress();
-            Toast.makeText(getActivity(), "خطا در ارتباط" + ex.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-    }
     private long getDistanceMeters(LatLng StartP, LatLng EndP) {
         double l1 = toRadians(StartP.getLatitude());
         double l2 = toRadians(EndP.getLatitude());
@@ -1072,7 +1289,7 @@ public class PaymentMobileFragment extends Fragment {
                     priceTransport = 100000;
                 }
             } else {
-                if ((distance==0 || 0< distance) && distance <= 1) {
+                if ((distance == 0 || 0 < distance) && distance <= 1) {
                     priceTransport = 50000;
                 } else if (1 < distance && distance <= 1.5) {
                     priceTransport = 70000;
@@ -1158,8 +1375,10 @@ public class PaymentMobileFragment extends Fragment {
 
         } catch (Exception ignored) {
             ft.beginTransaction().detach(frg).attach(frg).commit();
-        } }
-        private void reloadFragment(Boolean setAddress) {
+        }
+    }
+
+    private void reloadFragment(Boolean setAddress) {
         Bundle bundle = getArguments();
         bundle.putString("Inv_GUID", Inv_GUID);
         bundle.putString("Tbl_GUID", Tbl_GUID);
@@ -1169,342 +1388,17 @@ public class PaymentMobileFragment extends Fragment {
         bundle.putString("Sum_PURE_PRICE", Sum_PURE_PRICE);
         bundle.putBoolean("edit", edit);
         bundle.putBoolean("setADR1", setAddress);
-        }
-    @SuppressLint("SetTextI18n")
-    private void getInquiryAccount1(String userName, String passWord, String mobile) {
-        if (networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(
-                    api.getInquiryAccount1(userName, passWord, mobile, "", "", 1, 1)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelAccount>() {
-                                }.getType();
-                                ModelAccount iDs;
-                                try {
-                                    disableAccount = false;
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception e) {
-                                    binding.progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(getActivity(), "مدل دریافت شده از مشتریان نامعتبر است.", Toast.LENGTH_SHORT).show();
-                                    return;
-
-                                }
-                                if (iDs != null)
-                                    if (iDs.getAccountList() == null) {
-                                        Type typeIDs0 = new TypeToken<ModelLog>() {
-                                        }.getType();
-                                        ModelLog iDs0 = gson.fromJson(jsonElement, typeIDs0);
-                                        if (iDs0.getLogs() != null) {
-                                            disableAccount = true;
-                                            String description = iDs0.getLogs().get(0).getDescription();
-                                            int message = iDs0.getLogs().get(0).getMessage();
-                                            if (message == 3) {
-                                                disableAccount=true;
-                                                sharedPreferences.edit().putBoolean("disableAccount", true).apply();
-                                                showError(description);
-                                            }
-                                        }
-                                    } else {
-                                        sharedPreferences.edit().putBoolean("disableAccount", false).apply();
-                                        //user is register
-                                        if (iDs.getAccountList().size() > 0) {
-                                            Account.deleteAll(Account.class);
-                                            Account.saveInTx(iDs.getAccountList());
-                                            acc = Select.from(Account.class).first();
-                                            if (acc != null && acc.CRDT != null)
-                                                binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                                            binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-                                        } else {
-                                            binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
-                                            binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
-
-                                        }
-                                        OnceSee = true;
-                                    }
-                                binding.progressBar.setVisibility(View.GONE);
-                                    }, throwable -> {
-                                binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
-                                binding.progressBar.setVisibility(View.GONE);
-                                boolean disableAccount=sharedPreferences.getBoolean("disableAccount",false);
-                                if (disableAccount)
-                                    showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد.");
-                            }));
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "خطا در ارتباط با سرور در بروز رسانی موجودی باشگاه", Toast.LENGTH_SHORT).show();
-            binding.progressBar.setVisibility(View.GONE);
-        } }
-        private void getSetting1() {
-        if (networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(
-                    api.getSetting1(company.USER, company.PASS)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                Gson gson = new Gson();
-                                Type typeIDs = new TypeToken<ModelSetting>() {
-                                }.getType();
-                                ModelSetting iDs;
-                                try {
-                                    iDs = gson.fromJson(jsonElement, typeIDs);
-                                } catch (Exception e) {
-                                    error = error + "\n" + "مدل دریافت شده از تنظیمات نا معتبر است";
-                                    Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-                                    return;
-                                }
-
-                                if (iDs == null) {
-                                    error = error + "\n" + "لیست دریافت شده از تنظیمات نا معتبر می باشد";
-                                    Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                                    binding.progressBar.setVisibility(View.GONE);
-
-                                } else {
-                                    timesList.clear();
-                                    List<Setting> settingsList = new ArrayList<>(iDs.getSettings());
-                                    if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
-                                        sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
-                                        OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                                        try {
-                                            paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
-                                        } catch (Exception ignored) {
-                                            paymentType = 3;
-                                        }
-                                        if (((company.mode == 2)
-                                                ||
-                                                (!Ord_TYPE.equals(OrderTypeApp) &&
-                                                        Tbl_GUID.equals("") &&
-                                                        company.mode == 1))
-                                                &&
-                                                paymentType == 1) {
-
-                                            binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                                            binding.layoutPaymentOnline.setVisibility(View.GONE);
-
-                                        } else if (((company.mode == 2)
-                                                ||
-                                                (!Ord_TYPE.equals(OrderTypeApp) &&
-                                                        Tbl_GUID.equals("") &&
-                                                        company.mode == 1))
-                                                &&
-                                                paymentType == 2) {
-                                            binding.btnPaymentPlace.setVisibility(View.GONE);
-                                            binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                        } else {
-                                            binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                                            binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                    if (!settingsList.get(0).SERVICE_DAY.equals(""))
-                                        SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
-
-                                    allDate.clear();
-                                    Date dateNow = Calendar.getInstance().getTime();
-                                    if (SERVICE_DAY == 0) {
-                                        ModelDate modelDate = new ModelDate();
-                                        modelDate.date = dateNow;
-                                        modelDate.Click = true;
-                                        allDate.add(modelDate);
-                                    }
-                                    for (int i = 0; i < SERVICE_DAY; i++) {
-                                        Date date = Calendar.getInstance().getTime();
-                                        date.setDate(date.getDate() + i);
-                                        ModelDate modelDate = new ModelDate();
-                                        modelDate.date = date;
-                                        modelDate.Click = i == 0;
-                                        allDate.add(modelDate); }
-                                    if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
-                                        binding.layoutAddress.setVisibility(View.VISIBLE);
-
-                                    } else if (company.mode == 1) {
-                                        binding.layoutTypeOrder.setVisibility(View.GONE);
-                                        binding.layoutAddress.setVisibility(View.GONE);
-                                        binding.layoutTime.setVisibility(View.GONE);
-                                        binding.layoutPayment.setVisibility(View.VISIBLE);
-                                    }
-
-
-
-
-                                    Transport_GUID = settingsList.get(0).PEYK;
-                                    sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
-                                    try {
-                                        allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
-
-                                    } catch (Exception ignore) {}
-                                    if (allTime.size() > 0 && !allTime.get(0).equals("") && (company.mode==2 || (!Ord_TYPE.equals(OrderTypeApp) &&
-                                            Tbl_GUID.equals("") &&
-                                            company.mode == 1)))
-                                        binding.layoutTime.setVisibility(View.VISIBLE);
-
-
-                                    getTypeOrder1();
-                                }
-                                }, throwable -> {
-                                error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
-                                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                                binding.progressBar.setVisibility(View.GONE);
-                            }));
-        } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت تنطیمات";
-            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-            binding.progressBar.setVisibility(View.GONE);
-        }
-    }
-    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
-    private void getTypeOrder1() {
-        if (networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(
-                    api.getOrderType1(company.USER, company.PASS)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(disposable -> {
-                            })
-                            .subscribe(jsonElement -> {
-                                        Gson gson = new Gson();
-                                        Type typeIDs = new TypeToken<ModelTypeOrder>() {
-                                        }.getType();
-
-                                        ModelTypeOrder iDs;
-                                        try {
-                                            iDs = gson.fromJson(jsonElement, typeIDs);
-                                        } catch (Exception e) {
-                                            error = error + "\n" + "مدل دریافت شده از نوع سفارش نا معتبر است";
-                                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                                            binding.progressBar.setVisibility(View.GONE);
-                                            return; }
-                                        if (iDs == null) {
-                                            error = error + "\n" + "لیست دریافت شده از نوع سفارش نا معتبر می باشد";
-                                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                                            binding.progressBar.setVisibility(View.GONE);
-                                            return;
-                                        } else {
-                                            CollectionUtils.filter(iDs.getOrderTypes(), i -> i.getTy() == 2);
-                                            OrdTList.addAll(iDs.getOrderTypes());
-
-                                            if (OrdTList.size() == 1 && company.mode==2) {
-                                                OrdTList.get(0).Click = true;
-                                                Ord_TYPE = OrdTList.get(0).getC();
-                                                binding.tvTypeOrder.setVisibility(View.GONE);
-                                                binding.recyclerViewOrderType.setVisibility(View.GONE);
-
-                                            }
-
-
-                                            orderTypePaymentAdapter.notifyDataSetChanged();
-                                            if (Ord_TYPE.equals(OrderTypeApp)) {
-                                                sumTransport = 0;
-                                                binding.layoutPeyk.setVisibility(View.GONE);
-                                                binding.tvTransport.setText("0 ریال");
-                                                binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
-                                            } else {
-                                                if ((OrdTList.size() == 1 && (company.mode == 2) || (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1))) {
-                                                    sumTransport = calculateTransport;
-                                                    binding.layoutPeyk.setVisibility(View.VISIBLE);
-                                                    binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
-                                                    binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE) + sumTransport) + "ریال");
-                                                }
-                                            }
-                                        }
-                                        binding.progressBar.setVisibility(View.GONE);
-                                        //region Get Credit Club
-                                        try {
-                                            if (!OnceSee)
-                                                getInquiryAccount1(company.USER, company.PASS, acc.M);
-                                            else if (OnceSee)
-                                                binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-                                        } catch (Exception ignore) {}
-                                        //endregion Get Credit Club
-                                    }
-                                    , throwable -> {
-                                        binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
-                                        binding.progressBar.setVisibility(View.GONE); }));
-        } catch (Exception e) {
-            error = error + "\n" + "خطا در اتصال به سرور برای دریافت نوع سفارش";
-            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-            binding.progressBar.setVisibility(View.GONE); } }
-
-    private void getTable1() {
-        if (networkAvailable(getActivity())) {
-            ShowErrorConnection();
-            return;
-        }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        try {
-            compositeDisposable.add(api.getTable1(company.USER, company.PASS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> {
-                    })
-                    .subscribe(jsonElement -> {
-                        Gson gson = new Gson();
-                        Type typeIDs = new TypeToken<ModelTable>() {
-                        }.getType();
-                        ModelTable iDs = null;
-                        try {
-                            iDs = gson.fromJson(jsonElement, typeIDs);
-                        } catch (Exception ignore) {
-                        }
-                        if (iDs != null) {
-                            ArrayList<Tables> Tables = new ArrayList<>(iDs.getTables());
-                            CollectionUtils.filter(Tables, t -> t.I.equals(Tbl_GUID));
-                            if (Tables.size() > 0 && Tables.get(0).RSV) {
-                                Toast.makeText(getActivity(), "این میز رزرو شده", Toast.LENGTH_SHORT).show();
-                                binding.progressBar.setVisibility(View.GONE);
-                                return;
-                            }
-                        }binding.progressBar.setVisibility(View.GONE);
-                        dialogSendOrder.show();
-
-                    }, throwable -> {
-                        binding.progressBar.setVisibility(View.GONE);
-                        dialogSendOrder.show();
-                    })
-            );
-        } catch (Exception e) {
-            binding.progressBar.setVisibility(View.GONE);
-            dialogSendOrder.show();
-        }
-
     }
 
-    public boolean networkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo == null || !activeNetworkInfo.isConnected();
-    }
-    private void ShowErrorConnection() {
-        binding.progressBar.setVisibility(View.GONE);
-        textMessageDialog.setText("خطا در اتصال به اینترنت");
-        ivIconSync.setImageResource(R.drawable.ic_wifi);
-        btnNoDialog.setText("بستن");
-        btnOkDialog.setText("سینک مجدد");
-        dialogSync.dismiss();
-        dialogSync.show();
-        customProgress.hideProgress();
 
-    }
+
+
+
+
+
+
+
+
     private void showError(String error) {
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
@@ -1528,14 +1422,12 @@ public class PaymentMobileFragment extends Fragment {
             bundle.putBoolean("setADR", SetARD1);
         return bundle;
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compositeDisposable.dispose();
-        binding = null; }
-        @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear();
+
+        binding = null;
     }
+
 }

@@ -1,18 +1,12 @@
 package ir.kitgroup.salein.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,21 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -49,13 +35,10 @@ import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Tables;
 import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ConfigRetrofit;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSettingBinding;
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.Config;
-import ir.kitgroup.salein.models.ModelAccount;
-import ir.kitgroup.salein.models.ModelLog;
+
 
 @AndroidEntryPoint
 public class SettingFragment extends Fragment {
@@ -63,8 +46,6 @@ public class SettingFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    @Inject
-    Config config;
 
 
     private FragmentSettingBinding binding;
@@ -205,9 +186,7 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        binding.ivPower.setOnClickListener(v -> {
-        showError( "آیا مایل به خروج از برنامه هستید؟",1);
-        });
+        binding.ivPower.setOnClickListener(v -> showError( "آیا مایل به خروج از برنامه هستید؟",1));
 
         try {
             binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
@@ -248,7 +227,7 @@ public class SettingFragment extends Fragment {
 
 
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
