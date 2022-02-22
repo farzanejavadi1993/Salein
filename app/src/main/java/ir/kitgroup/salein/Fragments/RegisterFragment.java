@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +39,7 @@ public class RegisterFragment extends Fragment {
     private final List<Account> accountsList = new ArrayList<>();
     private int gender = 0;
     private boolean ACCSTP = true;
+
 
     //endregion Parameter
     @Nullable
@@ -142,6 +147,7 @@ public class RegisterFragment extends Fragment {
             myViewModel.getResultAddAccount().setValue(null);
 
             if (result) {
+                accountsList.get(0).Token= FirebaseInstanceId.getInstance().getToken();
                 Account.deleteAll(Account.class);
                 Account.saveInTx(accountsList);
                 accountsList.clear();

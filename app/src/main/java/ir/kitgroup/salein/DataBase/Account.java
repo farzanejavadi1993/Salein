@@ -19,6 +19,7 @@ public class Account extends SugarRecord {
     @Expose
     private String C;
 
+    public String Token;
     public String getC() {
         String c="";
         if (C!=null)
