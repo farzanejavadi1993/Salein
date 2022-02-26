@@ -324,10 +324,10 @@ public class ConfirmCodeFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
-            if (result == null) return;
-
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
             myViewModel.getResultMessage().setValue(null);
+            if (result == null) return;
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
 
         });
 

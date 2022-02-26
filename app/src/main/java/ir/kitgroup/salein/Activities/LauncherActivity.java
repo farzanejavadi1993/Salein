@@ -68,8 +68,7 @@ public class LauncherActivity extends AppCompatActivity {
         ExitDialog.setCancelable(false);
         messageTextExitDialog = ExitDialog.findViewById(R.id.tv_message);
 
-        ImageView imageIconExitDialog = ExitDialog.findViewById(R.id.iv_icon);
-        imageIconExitDialog.setImageResource(config.imageLogo);
+
 
         MaterialButton btnYesExitDialog = ExitDialog.findViewById(R.id.btn_ok);
         MaterialButton btnNoExitDialog = ExitDialog.findViewById(R.id.btn_cancel);

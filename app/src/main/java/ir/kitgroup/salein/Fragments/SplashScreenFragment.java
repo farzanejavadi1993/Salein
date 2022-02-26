@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
@@ -76,9 +74,10 @@ public class SplashScreenFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Company company = Select.from(Company.class).first();
-
         sharedPreferences.edit().putBoolean("status", false).apply();
         hostSelectionInterceptor.setHostBaseUrl();
+
+
 
         if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
             try {
@@ -90,9 +89,11 @@ public class SplashScreenFragment extends Fragment {
             Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
 
 
-        String Title = company != null && company.DESC != null ? company.DESC : "";
-        binding.tvTitle.setText(company != null && company.N != null && !config.INSKU_ID.equals("ir.kitgroup.salein") ? company.N : config.N);
-        binding.tvDescription.setText(company != null && company.DESC != null && !config.INSKU_ID.equals("ir.kitgroup.salein") ? Title : config.DESC);
+
+        String description = company != null && company.DESC != null ? company.DESC : "";
+        String title = company != null && company.N != null ? company.N : "";
+        binding.tvTitle.setText(title);
+        binding.tvDescription.setText(description);
 
         try {
             binding.tvversion.setText(" نسخه " + appVersion());
@@ -126,14 +127,46 @@ public class SplashScreenFragment extends Fragment {
         thread.start();
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            binding.animationView1.setImageResource(R.drawable.warning);
-            binding.animationView1.setVisibility(View.VISIBLE);
-            binding.animationView.setVisibility(View.GONE);
-            binding.lnrError.setVisibility(View.VISIBLE);
-            if (result == null) return;
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-            myViewModel.getResultMessage().setValue(null);
 
+            if (result == null)
+                return;
+            myViewModel.getResultMessage().setValue(null);
+            if (Select.from(Company.class).list().size() > 0) {
+                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                sharedPreferences.edit().putBoolean("status", true).apply();
+                hostSelectionInterceptor.setHostBaseUrl();
+                FragmentTransaction addFragment;
+                //region Account Is Login & Register
+                if (Select.from(Account.class).list().size() > 0) {
+                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
+                    else {
+                        Bundle bundleMainOrder = new Bundle();
+                        bundleMainOrder.putString("Inv_GUID", "");
+                        bundleMainOrder.putString("Tbl_GUID", "");
+                        bundleMainOrder.putString("Ord_TYPE", "");
+                        MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                        mainOrderFragment.setArguments(bundleMainOrder);
+                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                    }
+                }
+                //endregion Account Is Login & Register
+                else {
+                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginClientFragment(), "LoginClientFragment");
+                }
+                addFragment.commit();
+
+
+            }else {
+                binding.animationView1.setImageResource(R.drawable.warning);
+                binding.animationView1.setVisibility(View.VISIBLE);
+                binding.animationView.setVisibility(View.GONE);
+                binding.lnrError.setVisibility(View.VISIBLE);
+                binding.txtErrorr.setText(result.getName());
+                BuildConfig1.PRODUCTION_BASE_URL="";
+                sharedPreferences.edit().putBoolean("status", false).apply();
+                hostSelectionInterceptor.setHostBaseUrl();
+            }
         });
 
 
@@ -149,8 +182,10 @@ public class SplashScreenFragment extends Fragment {
                     Company.deleteAll(Company.class);
                     Company.saveInTx(result.get(0));
                 } else {
-                    binding.txtErrorr.setVisibility(View.VISIBLE);
-                    binding.txtErrorr.setText("اطلاعات شرکت در سرور وجود ندارد");
+                    binding.txtErrorr.setText("اطلاعات شرکت در سرور وجود ندارد.");
+                    binding.animationView.setVisibility(View.GONE);
+                    binding.animationView1.setVisibility(View.VISIBLE);
+                    binding.lnrError.setVisibility(View.VISIBLE);
                     return;
                 }
                 BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
@@ -182,9 +217,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         binding.lnrError.setOnClickListener(v -> {
-            if (Select.from(Company.class).list().size() > 0) {
 
-            }
             binding.animationView.setVisibility(View.VISIBLE);
             binding.animationView1.setVisibility(View.GONE);
             binding.lnrError.setVisibility(View.GONE);

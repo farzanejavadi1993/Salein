@@ -58,19 +58,19 @@
             android:value="@string/api_key" />
         -->
 
-        <service
-            android:name=".Firebase.OnTokenRefresh">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".Firebase.OnTokenRefresh">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
-        <service
-            android:name=".Firebase.MyGetMessage">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".Firebase.MyGetMessage">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
     </application>
 
 </manifest>

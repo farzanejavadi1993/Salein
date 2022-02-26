@@ -59,7 +59,7 @@ public class CompanyFragment extends Fragment {
     private ArrayList<Company> companies;
     private CompanyAdapterList companyAdapterList;
     private Account account;
-    private ImageView ivIcon;
+
     private String ParentId = "";
     private Dialog dialog;
     private TextView textExitDialog;
@@ -172,7 +172,6 @@ public class CompanyFragment extends Fragment {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
         textExitDialog = dialog.findViewById(R.id.tv_message);
-        ivIcon = dialog.findViewById(R.id.iv_icon);
         MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
         MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
         btnNo.setOnClickListener(v -> dialog.dismiss());
@@ -305,7 +304,7 @@ public class CompanyFragment extends Fragment {
             //user not register
             else {
                 textExitDialog.setText(" شما مشترک " + NAME + " نیستید.آیا مشترک میشوید؟ ");
-                ivIcon.setImageResource(companySelect.imageDialog);
+
                 dialog.show();
             }
         });

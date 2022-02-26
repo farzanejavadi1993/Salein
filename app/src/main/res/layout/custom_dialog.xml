@@ -5,21 +5,9 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/t1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="100dp"
-            android:layout_height="92dp"
-            android:layout_centerHorizontal="true"
-            tools:ignore="ContentDescription" />
-    </RelativeLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/t1"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin10"

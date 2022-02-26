@@ -137,8 +137,7 @@ public class LauncherOrganizationFragment extends Fragment {
         dialog.setCancelable(false);
 
         textMessageDialog = dialog.findViewById(R.id.tv_message);
-        ImageView ivIconDialog = dialog.findViewById(R.id.iv_icon);
-        ivIconDialog.setImageResource(R.drawable.saleinorder_png);
+
 
         btnOkDialog = dialog.findViewById(R.id.btn_ok);
         btnNoDialog = dialog.findViewById(R.id.btn_cancel);

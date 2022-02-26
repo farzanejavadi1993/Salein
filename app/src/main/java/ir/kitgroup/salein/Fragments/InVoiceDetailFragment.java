@@ -215,8 +215,7 @@ public class InVoiceDetailFragment extends Fragment {
 
             TextView textExit = dialogDelete.findViewById(R.id.tv_message);
             textExit.setText("آیا مایل به حذف کامل سبد خرید هستید؟");
-            ImageView ivIcon = dialogDelete.findViewById(R.id.iv_icon);
-            ivIcon.setImageResource(company.imageDialog);
+
 
             MaterialButton btnOk = dialogDelete.findViewById(R.id.btn_ok);
             MaterialButton btnNo = dialogDelete.findViewById(R.id.btn_cancel);

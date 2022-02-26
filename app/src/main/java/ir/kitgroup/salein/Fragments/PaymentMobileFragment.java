@@ -676,9 +676,6 @@ public class PaymentMobileFragment extends Fragment {
             dialogSendOrder.setContentView(R.layout.custom_dialog);
             dialogSendOrder.setCancelable(false);
             tvMessage = dialogSendOrder.findViewById(R.id.tv_message);
-            ImageView ivIcon = dialogSendOrder.findViewById(R.id.iv_icon);
-
-            ivIcon.setImageResource(company.imageDialog);
             rlButtons = dialogSendOrder.findViewById(R.id.layoutButtons);
             btnReturned = dialogSendOrder.findViewById(R.id.btn_returned);
             MaterialButton btnOk = dialogSendOrder.findViewById(R.id.btn_ok);

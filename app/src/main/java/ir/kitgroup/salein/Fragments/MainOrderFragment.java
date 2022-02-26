@@ -139,7 +139,7 @@ public class MainOrderFragment extends Fragment {
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-    private ImageView ivIconSync;
+
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
@@ -622,7 +622,6 @@ public class MainOrderFragment extends Fragment {
         dialogSync.setCancelable(false);
 
         textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
 
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
@@ -735,8 +734,7 @@ public class MainOrderFragment extends Fragment {
         dialogUpdate.setCancelable(false);
 
         textUpdate = dialogUpdate.findViewById(R.id.tv_message);
-        ImageView ivIcon = dialogUpdate.findViewById(R.id.iv_icon);
-        ivIcon.setImageResource(company.imageDialog);
+
 
         MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
         btnOk.setText("آپدیت");
@@ -1346,7 +1344,7 @@ public class MainOrderFragment extends Fragment {
 
     private void showError(String error, int type) {
 
-        ivIconSync.setImageResource(company.imageDialog);
+
         textMessageDialog.setText(error);
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");

@@ -1,3 +1,4 @@
+/*
 package ir.kitgroup.salein.Firebase;
 
 import android.app.NotificationManager;
@@ -96,4 +97,4 @@ public class MyGetMessage extends FirebaseMessagingService {
 
         return result;
     }
-}
+}*/

@@ -64,23 +64,22 @@ public class LoginClientFragment extends Fragment {
 
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            myViewModel.getResultMessage().setValue(null);
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-
-            myViewModel.getResultMessage().setValue(null);
-
         });
+
         myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);
             if (result == null)
                 return;
+            myViewModel.getResultSmsLogin().setValue(null);
             if (result.equals("")) {
-                myViewModel.getResultSmsLogin().setValue(null);
                 Bundle bundleOrder = new Bundle();
                 bundleOrder.putString("mobileNumber", mobileNumber);
                 bundleOrder.putInt("code", code);

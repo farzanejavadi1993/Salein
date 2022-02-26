@@ -81,7 +81,6 @@ public class OrderListFragment extends Fragment {
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-    private ImageView ivIconSync;
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
@@ -141,7 +140,6 @@ public class OrderListFragment extends Fragment {
         dialogSync.setCancelable(false);
 
         textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-        ivIconSync = dialogSync.findViewById(R.id.iv_icon);
 
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
@@ -303,7 +301,7 @@ public class OrderListFragment extends Fragment {
     private void ShowErrorConnection() {
         binding.progressBar.setVisibility(View.GONE);
         textMessageDialog.setText("خطا در اتصال به اینترنت");
-        ivIconSync.setImageResource(R.drawable.ic_wifi);
+
         btnNoDialog.setText("بستن");
         btnOkDialog.setText("سینک مجدد");
         dialogSync.dismiss();

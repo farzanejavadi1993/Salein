@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -122,7 +122,7 @@ public class RegisterFragment extends Fragment {
             account.STAPP = ACCSTP;
             accountsList.clear();
             accountsList.add(account);
-            myViewModel.getSetting(company.USER,company.PASS);
+            myViewModel.getSetting(company.USER, company.PASS);
         });
         //endregion Action btnRegisterInformation
     }
@@ -135,18 +135,18 @@ public class RegisterFragment extends Fragment {
 
 
         myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
-                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                binding.btnRegisterInformation.setEnabled(true);
-                binding.progressBar.setVisibility(View.GONE);
-                return;
+            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnRegisterInformation.setEnabled(true);
+            binding.progressBar.setVisibility(View.GONE);
 
-            }
+            if (result == null)
+                return;
 
             myViewModel.getResultAddAccount().setValue(null);
 
             if (result) {
-                accountsList.get(0).Token= FirebaseInstanceId.getInstance().getToken();
+
+
                 Account.deleteAll(Account.class);
                 Account.saveInTx(accountsList);
                 accountsList.clear();
@@ -171,35 +171,25 @@ public class RegisterFragment extends Fragment {
                 }
                 //endregion Go To MainOrderFragment Because Account Is Register
             }
-            binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnRegisterInformation.setEnabled(true);
-            binding.progressBar.setVisibility(View.GONE);
-
         });
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
 
+            if (result == null)
                 return;
-
+            myViewModel.getResultSetting().setValue(null);
+            List<Setting> settingsList = new ArrayList<>(result);
+            if (settingsList.size() > 0) {
+                String accStp = settingsList.get(0).ACC_STATUS_APP;
+                ACCSTP = !accStp.equals("0");
+                accountsList.get(0).STAPP = ACCSTP;
+                binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnRegisterInformation.setEnabled(false);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                myViewModel.addAccount(company.USER, company.PASS, accountsList);
             }
 
 
-            myViewModel.getResultSetting().setValue(null);
-            List<Setting> settingsList = new ArrayList<>(result);
-                if (settingsList.size() > 0) {
-                    String accStp = settingsList.get(0).ACC_STATUS_APP;
-                    ACCSTP = !accStp.equals("0");
-                    accountsList.get(0).STAPP = ACCSTP;
-                    binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-                    binding.btnRegisterInformation.setEnabled(false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.addAccount(company.USER, company.PASS, accountsList);
-                }
-
-
         });
-
-
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
@@ -212,7 +202,6 @@ public class RegisterFragment extends Fragment {
         });
 
     }
-
 
 
     @Override
