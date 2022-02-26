@@ -48,39 +48,38 @@
                 tools:ignore="ContentDescription" />
 
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/animation_view1"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
-                app:lottie_autoPlay="true"
-             android:src="@drawable/warning"/>
+                android:src="@drawable/warning"
+                android:visibility="gone"
+                app:lottie_autoPlay="true" />
 
             <RelativeLayout
-                android:visibility="gone"
-                android:layout_marginTop="15dp"
                 android:id="@+id/lnr_Error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/animation_view1">
+                android:layout_below="@+id/animation_view1"
+                android:layout_marginTop="15dp"
+                android:visibility="gone">
 
                 <ImageView
-                    android:layout_toRightOf="@+id/txtErrorr"
                     android:id="@+id/ivResend"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/txtErrorr"
                     android:src="@drawable/ic_resend" />
 
                 <TextView
 
-                    android:layout_centerInParent="true"
                     android:id="@+id/txtErrorr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_margin="8sp"
                     android:gravity="right"
                     android:padding="2sp"

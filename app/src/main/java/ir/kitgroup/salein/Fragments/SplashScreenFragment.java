@@ -24,6 +24,7 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -37,6 +38,7 @@ import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Config;
+
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
 
@@ -141,17 +143,15 @@ public class SplashScreenFragment extends Fragment {
                 return;
 
             myViewModel.getResultCompany().setValue(null);
-            if (result.size()>0){
-
-
+            if (result.size() > 0) {
                 CollectionUtils.filter(result, i -> i.INSK_ID != null && i.INSK_ID.equals(appId.packageName));
-
                 if (result.size() == 1) {
                     Company.deleteAll(Company.class);
                     Company.saveInTx(result.get(0));
                 } else {
-                   Toast.makeText(getActivity(), "اطلاعات شرکت در سرور وجود ندارد", Toast.LENGTH_SHORT).show();
-                   return;
+                    binding.txtErrorr.setVisibility(View.VISIBLE);
+                    binding.txtErrorr.setText("اطلاعات شرکت در سرور وجود ندارد");
+                    return;
                 }
                 BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
@@ -182,6 +182,9 @@ public class SplashScreenFragment extends Fragment {
 
 
         binding.lnrError.setOnClickListener(v -> {
+            if (Select.from(Company.class).list().size() > 0) {
+
+            }
             binding.animationView.setVisibility(View.VISIBLE);
             binding.animationView1.setVisibility(View.GONE);
             binding.lnrError.setVisibility(View.GONE);
@@ -196,9 +199,6 @@ public class SplashScreenFragment extends Fragment {
         PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         return pInfo.versionName;
     }
-
-
-
 
 
     //endregion Custom Method
