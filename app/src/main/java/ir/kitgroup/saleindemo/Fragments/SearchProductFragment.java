@@ -270,7 +270,7 @@ public class SearchProductFragment extends Fragment {
             }
 
 
-            if (sWord.length()<2 && result != null && result.size() > 0) {
+            if (sWord.length()>=2 && result != null && result.size() > 0) {
                 CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() && !i.getI().equals(Transport_GUID));
 
                 productList.addAll(result);

@@ -1084,6 +1084,11 @@ public class MainOrderFragment extends Fragment {
                 return;
 
             binding.orderTxtError.setVisibility(View.GONE);
+            sharedPreferences.edit().putBoolean("discount", false).apply();
+            sharedPreferences.edit().putBoolean("vip", false).apply();
+            binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
+            binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
+            binding.ivFilter.setImageResource(R.drawable.ic_filter);
             myViewModel.getResultProductLevel1().setValue(null);
             productLevel1List.clear();
             productLevel1List.addAll(result);
