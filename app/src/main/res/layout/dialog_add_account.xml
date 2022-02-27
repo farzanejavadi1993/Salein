@@ -11,22 +11,11 @@
         android:layout_width="450sp"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/card_iv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <ImageView
-
-                android:layout_width="100dp"
-                android:layout_height="87sp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/saleinicon128" />
-        </RelativeLayout>
 
         <com.google.android.material.card.MaterialCardView
             app:cardCornerRadius="15dp"
-            android:layout_below="@+id/card_iv"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout android:orientation="vertical"

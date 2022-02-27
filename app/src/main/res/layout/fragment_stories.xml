@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:gravity="center_horizontal"
         android:focusable="true"
         android:clickable="true"
         android:background="@color/white"

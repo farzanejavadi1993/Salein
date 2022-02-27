@@ -8,13 +8,13 @@
         android:layout_width="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:background="#eee"
+        android:background="@color/white"
         android:layout_height="match_parent">
 
 
         <RelativeLayout
             android:elevation="@dimen/margin4"
-            android:background="@color/white"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
