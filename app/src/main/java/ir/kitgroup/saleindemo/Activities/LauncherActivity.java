@@ -310,11 +310,16 @@ public class LauncherActivity extends AppCompatActivity {
     //endregion Override Method
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startActivity(getIntent());
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
         finish();
-        startActivity(getIntent());
+
     }
 }
