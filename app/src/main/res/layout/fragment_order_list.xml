@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -41,35 +42,37 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:elevation="4sp"
-            tools:ignore="UnusedAttribute">
-
-            <TextView
-                android:layout_centerInParent="true"
-                android:id="@+id/txt_title_toolbar"
-                style="@style/launcher_toolbar_TextView"
-                android:gravity="center"
-                android:text="لیست خریدهای شما"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+            tools:targetApi="lollipop">
 
             <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+
+                android:id="@+id/iv_back_fragment"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin8"
+                android:layout_marginRight="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/margin4"
+                android:padding="8dp"
                 android:rotationY="180"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/ic_fi_rr_angle_small_left"
                 tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/txt_title_toolbar"
+                style="@style/launcher_toolbar_TextView"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin10"
+
+                android:layout_toLeftOf="@+id/iv_back_fragment"
+                android:gravity="center"
+                android:text="لیست خرید های شما"
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="@dimen/margin10"
             android:id="@+id/recycler"

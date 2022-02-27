@@ -13,55 +13,57 @@
 
 
         <RelativeLayout
-            android:elevation="@dimen/margin4"
-
+            android:id="@+id/relativeLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:elevation="4sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            tools:targetApi="lollipop">
 
             <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+
+                android:id="@+id/iv_back_fragment"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin8"
+                android:layout_marginRight="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/margin4"
+                android:padding="8dp"
                 android:rotationY="180"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/ic_fi_rr_angle_small_left"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/txt_title_toolbar"
                 style="@style/launcher_toolbar_TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+
+                android:layout_marginEnd="@dimen/margin10"
+                android:layout_toLeftOf="@+id/iv_back_fragment"
+                android:gravity="center"
                 android:text="پشتیبانی"
-                android:textSize="12sp"
-                tools:ignore="RelativeOverlap" />
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
 
         <ImageView
-            android:padding="15dp"
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginStart="22dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="22dp"
+            android:padding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
 
         <TextView
 
