@@ -119,27 +119,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
 
-                    android:id="@+id/inputIp2"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/normal_left_right_margin"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="@dimen/normal_left_right_margin"
-                    android:layout_marginBottom="@dimen/margin4">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_ip2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/iransans"
-                        android:hint="آی پی داخلی سازمان"
-                        android:textDirection="firstStrongRtl"
-                        android:textSize="@dimen/text_normal_mobile_size" />
-
-                </com.google.android.material.textfield.TextInputLayout>
 
 
 
