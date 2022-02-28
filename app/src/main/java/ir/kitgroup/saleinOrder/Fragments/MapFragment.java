@@ -106,8 +106,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Inject
     SharedPreferences sharedPreferences;
 
-    @Inject
-    HostSelectionInterceptor hostSelectionInterceptor;
+
 
     //region Parameter
     private MyViewModel myViewModel;
@@ -224,10 +223,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         if (IP1 != null) {
             binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
-            binding.btnRegisterInformation.setVisibility(View.VISIBLE);
-            BuildConfig1.PRODUCTION_BASE_URL = "http://" + IP1 + "/api/REST/";
-            sharedPreferences.edit().putBoolean("status", true).apply();
-            hostSelectionInterceptor.setHostBaseUrl();
+
         }
 
 
@@ -891,7 +887,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
                 if (Select.from(Company.class).list().size() > 0) {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").addToBackStack("LauncherF").commit();
                 }
 
             }

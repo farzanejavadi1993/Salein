@@ -58,7 +58,7 @@ public class LauncherOrganizationFragment extends Fragment {
     //region Parameter
 
 
-    private boolean refresh = false;
+    public static boolean refresh = false;
     private Company company;
 
     private FragmentLauncherOrganizationBinding binding;
@@ -423,10 +423,14 @@ public class LauncherOrganizationFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         binding.progressbar.setVisibility(View.VISIBLE);
-        if (!refresh) {
+
+        if (!refresh){
             myViewModel.getTable(company.USER, company.PASS);
             myViewModel.getTypeOrder(company.USER, company.PASS);
         }
+
+
+
 
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
@@ -447,14 +451,11 @@ public class LauncherOrganizationFragment extends Fragment {
 
         myViewModel.getResultTable().observe(getViewLifecycleOwner(), result -> {
 
-            if (result == null) {
-
+            if (result == null)
                 return;
-            }
 
 
             if (result != null) {
-
                 tablesList.clear();
 
                 List<Tables> tb = Select.from(Tables.class).list();
@@ -481,15 +482,12 @@ public class LauncherOrganizationFragment extends Fragment {
 
         });
         myViewModel.getResultTypeOrder().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
-                binding.progressbar.setVisibility(View.GONE);
-                binding.refreshLayout.setRefreshing(false);
+            if (result == null)
                 return;
 
-            }
 
             if (result != null) {
-
+                // myViewModel.getResultTypeOrder().setValue(null);
                 getOutOrderList.clear();
                 orderTypes.clear();
                 orderTypes.addAll(result.getOrderTypes());
@@ -555,8 +553,8 @@ public class LauncherOrganizationFragment extends Fragment {
         filter("whole");
         refresh = true;
         binding.progressbar.setVisibility(View.VISIBLE);
-        myViewModel.getTable(company.USER, company.PASS);
-        myViewModel.getTypeOrder(company.USER, company.PASS);
+        //  myViewModel.getTable(company.USER, company.PASS);
+        // myViewModel.getTypeOrder(company.USER, company.PASS);
 
     }
 }

@@ -799,7 +799,9 @@ public class MyViewModel extends ViewModel {
 
                             try {
                                 ModelTable   iDs = gson.fromJson(jsonElement, typeIDs);
-                                resultTable.setValue(iDs);
+                                resultTable.postValue(iDs);
+
+                              //  resultTable.setValue(iDs);
                             } catch (Exception ignored) {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت میزهای سالن", ""));
                             }

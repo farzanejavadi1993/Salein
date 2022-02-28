@@ -217,7 +217,7 @@ public class LauncherActivity extends AppCompatActivity {
                 BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
-                replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment");
+                replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").addToBackStack("LauncherF");
                 //When User Is Not Login
 
             }

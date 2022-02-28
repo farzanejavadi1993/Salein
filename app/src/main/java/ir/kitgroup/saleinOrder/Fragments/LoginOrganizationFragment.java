@@ -3,6 +3,7 @@ package ir.kitgroup.saleinOrder.Fragments;
 
 import android.annotation.SuppressLint;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,17 +31,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 
-
-
-
-
-
+import ir.kitgroup.saleinOrder.DataBase.Company;
 import ir.kitgroup.saleinOrder.R;
 
 
+import ir.kitgroup.saleinOrder.classes.BuildConfig1;
+import ir.kitgroup.saleinOrder.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.FragmentOrganizationLoginBinding;
 
@@ -51,6 +53,11 @@ public class LoginOrganizationFragment extends Fragment {
     //region Parameter
 
 
+    @Inject
+    HostSelectionInterceptor hostSelectionInterceptor;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     private FragmentOrganizationLoginBinding binding;
 
@@ -98,6 +105,10 @@ public class LoginOrganizationFragment extends Fragment {
             bundleMap.putString("userName", binding.edtUser.getText().toString());
             bundleMap.putString("passWord",  binding.edtPassword.getText().toString());
             bundleMap.putString("numberPos", binding.edtSaleCode.getText().toString());
+
+            BuildConfig1.PRODUCTION_BASE_URL = "http://" + Util.toEnglishNumber( binding.edtIp1.getText().toString()) + "/api/REST/";
+            sharedPreferences.edit().putBoolean("status", true).apply();
+            hostSelectionInterceptor.setHostBaseUrl();
 
             MapFragment mapFragment = new MapFragment();
             mapFragment.setArguments(bundleMap);

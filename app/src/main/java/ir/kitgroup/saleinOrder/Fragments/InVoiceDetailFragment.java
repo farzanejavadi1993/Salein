@@ -965,8 +965,10 @@ public class InVoiceDetailFragment extends Fragment {
                         if (tb != null && tb.GO != null)
                             Tables.delete(tb);
 
+                        LauncherOrganizationFragment.refresh=true;
                         frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
                     }
+                    getActivity().getSupportFragmentManager().popBackStack();
 
 
                     FragmentManager ft = getActivity().getSupportFragmentManager();
@@ -978,7 +980,8 @@ public class InVoiceDetailFragment extends Fragment {
                     } else {
 
                         ft.beginTransaction().detach(frg).attach(frg).commit();
-                    } }
+                    }
+                }
 
 
 
