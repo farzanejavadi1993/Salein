@@ -30,6 +30,8 @@ import ir.kitgroup.saleinOrder.Fragments.SearchProductFragment;
 import ir.kitgroup.saleinOrder.Fragments.SettingFragment;
 import ir.kitgroup.saleinOrder.Fragments.SplashScreenFragment;
 import ir.kitgroup.saleinOrder.R;
+import ir.kitgroup.saleinOrder.classes.BuildConfig1;
+import ir.kitgroup.saleinOrder.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleinOrder.classes.Util;
 import ir.kitgroup.saleinOrder.databinding.ActivityLauncherBinding;
 import ir.kitgroup.saleinOrder.models.Config;
@@ -42,6 +44,9 @@ public class LauncherActivity extends AppCompatActivity {
 
     @Inject
     SharedPreferences sharedPreferences;
+
+    @Inject
+    HostSelectionInterceptor hostSelectionInterceptor;
 
     private ActivityLauncherBinding binding;
     private MainOrderFragment mainOrderFragment;
@@ -207,9 +212,15 @@ public class LauncherActivity extends AppCompatActivity {
 
         if (config.mode == 1) {
             //When User Is Login
-            if (Select.from(Company.class).list().size() > 0)
+            if (Select.from(Company.class).list().size() > 0) {
+
+                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                sharedPreferences.edit().putBoolean("status", true).apply();
+                hostSelectionInterceptor.setHostBaseUrl();
                 replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment");
                 //When User Is Not Login
+
+            }
             else
                 replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LoginOrganizationFragment());
 

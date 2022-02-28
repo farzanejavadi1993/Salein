@@ -681,7 +681,7 @@ public class PaymentMobileFragment extends Fragment {
             MaterialButton btnNo = dialogSendOrder.findViewById(R.id.btn_cancel);
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
-
+                if (Select.from(Account.class).first().getM()!=null)
                myViewModel.getInquiryAccount(company.USER, company.PASS, acc.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
@@ -981,7 +981,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getTypeOrder(company.USER,company.PASS);
+          //  myViewModel.getTypeOrder(company.USER,company.PASS);
 
 
         });
@@ -1110,102 +1110,12 @@ public class PaymentMobileFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             //region Get Credit Club
             try {
-                if (!OnceSee)
+                if (!OnceSee && Select.from(Account.class).first().getM()!=null)
                     myViewModel.getInquiryAccount(company.USER, company.PASS, acc.M);
                 else if (OnceSee)
                     binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
             } catch (Exception ignore) {}
             //endregion Get Credit Club
-
-        });
-        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null)
-                return;
-
-            myViewModel.getResultSetting().setValue(null);
-
-            timesList.clear();
-            List<Setting> settingsList = new ArrayList<>(result);
-            if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
-                sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
-                OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
-                try {
-                    paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
-                } catch (Exception ignored) {
-                    paymentType = 3;
-                }
-                if (((company.mode == 2)
-                        ||
-                        (!Ord_TYPE.equals(OrderTypeApp) &&
-                                Tbl_GUID.equals("") &&
-                                company.mode == 1))
-                        &&
-                        paymentType == 1) {
-
-                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                    binding.layoutPaymentOnline.setVisibility(View.GONE);
-
-                } else if (((company.mode == 2)
-                        ||
-                        (!Ord_TYPE.equals(OrderTypeApp) &&
-                                Tbl_GUID.equals("") &&
-                                company.mode == 1))
-                        &&
-                        paymentType == 2) {
-                    binding.btnPaymentPlace.setVisibility(View.GONE);
-                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                } else {
-                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
-                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
-                }
-            }
-            if (!settingsList.get(0).SERVICE_DAY.equals(""))
-                SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
-
-            allDate.clear();
-            Date dateNow = Calendar.getInstance().getTime();
-            if (SERVICE_DAY == 0) {
-                ModelDate modelDate = new ModelDate();
-                modelDate.date = dateNow;
-                modelDate.Click = true;
-                allDate.add(modelDate);
-            }
-            for (int i = 0; i < SERVICE_DAY; i++) {
-                Date date = Calendar.getInstance().getTime();
-                date.setDate(date.getDate() + i);
-                ModelDate modelDate = new ModelDate();
-                modelDate.date = date;
-                modelDate.Click = i == 0;
-                allDate.add(modelDate);
-            }
-            if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
-                binding.layoutAddress.setVisibility(View.VISIBLE);
-
-            } else if (company.mode == 1) {
-                binding.layoutTypeOrder.setVisibility(View.GONE);
-                binding.layoutAddress.setVisibility(View.GONE);
-                binding.layoutTime.setVisibility(View.GONE);
-                binding.layoutPayment.setVisibility(View.VISIBLE);
-            }
-
-
-            Transport_GUID = settingsList.get(0).PEYK;
-            sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
-            try {
-                allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
-
-            } catch (Exception ignore) {
-            }
-            if (allTime.size() > 0 && !allTime.get(0).equals("") && (company.mode == 2 || (!Ord_TYPE.equals(OrderTypeApp) &&
-                    Tbl_GUID.equals("") &&
-                    company.mode == 1)))
-                binding.layoutTime.setVisibility(View.VISIBLE);
-
-
-            binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getTypeOrder(company.USER,company.PASS);
-
 
         });
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {

@@ -154,7 +154,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private String userName = "";
     private String pasWord = "";
     private String numberPos = "";
-    private String IP1 = "";
+    private String IP1 ;
 
 
 
@@ -221,9 +221,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         company = Select.from(Company.class).first();
 
+
         if (IP1 != null) {
             binding.btnRegisterInformation.setText("ثبت موقعیت و ارسال اطلاعات");
-            binding.btnRegisterInformation.setVisibility(View.GONE);
+            binding.btnRegisterInformation.setVisibility(View.VISIBLE);
+            BuildConfig1.PRODUCTION_BASE_URL = "http://" + IP1 + "/api/REST/";
+            sharedPreferences.edit().putBoolean("status", true).apply();
+            hostSelectionInterceptor.setHostBaseUrl();
         }
 
 
@@ -854,7 +858,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             customProgress.hideProgress();
 
         });
-        myViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultLogin().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null) {
                 binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
@@ -864,11 +868,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 return;
             }
 
-            myViewModel.getResultUpdateAccount().setValue(null);
+            myViewModel.getResultLog().setValue(null);
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnRegisterInformation.setEnabled(true);
 
-            if (!result.equals("")) {
+            if (result.equals("")) {
                 Company.deleteAll(Company.class);
                 Company company = new Company();
                 company.IP1 = IP1;
@@ -884,9 +888,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                 getActivity().getSupportFragmentManager().popBackStack();
 
-                BuildConfig1.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
-                sharedPreferences.edit().putBoolean("status", true).apply();
-                hostSelectionInterceptor.setHostBaseUrl();
+
 
                 if (Select.from(Company.class).list().size() > 0) {
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").commit();

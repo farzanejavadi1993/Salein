@@ -602,16 +602,7 @@ public class MainOrderFragment extends Fragment {
         //endregion Configuration Client Application
 
 
-        if (company.mode == 1 && EDIT) {
-            binding.edtNameCustomer.setEnabled(false);
-            binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-            binding.edtNameCustomer.setText(Acc_NAME);
-            binding.accountRecyclerView.setVisibility(View.GONE);
-            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-            binding.pro.setVisibility(View.VISIBLE);
-            typeSearch = 1;
-            myViewModel.getAccountSearch(company.USER, company.PASS, Acc_NAME);
-        }
+
 
 
         //region Cast Variable Dialog Sync
@@ -955,9 +946,10 @@ public class MainOrderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
-        if (company.mode == 2) {
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+
+
             binding.progressbar.setVisibility(View.VISIBLE);
             sharedPreferences.edit().putBoolean("discount", false).apply();
             sharedPreferences.edit().putBoolean("vip", false).apply();
@@ -979,8 +971,23 @@ public class MainOrderFragment extends Fragment {
             myViewModel.getProductLevel1(company.USER, company.PASS);
             myViewModel.getSetting(company.USER, company.PASS);
             myViewModel.getUnit(company.USER, company.PASS);
+            if (company.mode==2)
             myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Account.class).first().getM());
+
+
+
+        if (company.mode == 1 && EDIT) {
+            binding.edtNameCustomer.setEnabled(false);
+            binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+            binding.edtNameCustomer.setText(Acc_NAME);
+            binding.accountRecyclerView.setVisibility(View.GONE);
+            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
+            binding.pro.setVisibility(View.VISIBLE);
+            typeSearch = 1;
+            myViewModel.getAccountSearch(company.USER, company.PASS, Acc_NAME);
         }
+
+
 
         myViewModel.getResultSearchAccount().observe(getViewLifecycleOwner(), result -> {
             binding.pro.setVisibility(View.GONE);

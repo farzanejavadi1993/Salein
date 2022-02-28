@@ -173,7 +173,7 @@ public class MyViewModel extends ViewModel {
 
                         }, throwable -> {
                             resultCompanies.setValue(null);
-                            eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""));
+                            eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات مشتری.", ""));
 
                         })
         );
@@ -785,7 +785,7 @@ public class MyViewModel extends ViewModel {
 
 
     public void getTable(String user, String passWord) {
-        compositeDisposable.clear();
+
         compositeDisposable.add(
                 myRepository.getTable(user, passWord)
                         .subscribeOn(Schedulers.io())
@@ -815,7 +815,7 @@ public class MyViewModel extends ViewModel {
 
 
     public void getTypeOrder(String user, String passWord) {
-        compositeDisposable.clear();
+
         compositeDisposable.add(
                 myRepository.getTypeOrder(user, passWord)
                         .subscribeOn(Schedulers.io())
@@ -868,14 +868,16 @@ public class MyViewModel extends ViewModel {
     public void getLogin(String user, String passWord) {
         compositeDisposable.clear();
         compositeDisposable.add(
-                myRepository.getTypeOrder(user, passWord)
+                myRepository.login(user, passWord)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
-                            if (jsonElement == null || !jsonElement.isEmpty()) {
-                                resultLogin.setValue("نام کاربری یا رمز عبور اشتباه است."); }
+                            if (jsonElement == null || !jsonElement.isEmpty())
+                                resultLogin.setValue("نام کاربری یا رمز عبور اشتباه است.");
+                            else
+                                resultLogin.setValue("");
 
                         }, throwable -> eMessage.setValue(new Message(-1, "خطا در ورود.", ""))));
     }
