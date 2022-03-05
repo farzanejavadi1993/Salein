@@ -317,7 +317,7 @@ public class LauncherActivity extends AppCompatActivity {
             loadProfile = false;
             binding.navView.setSelectedItemId(R.id.profile);
         }
-        else if (config.INSKU_ID.equals("ir.kitgroup.saleinOrder")&& size==1){
+        else if (size==1){
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
         }

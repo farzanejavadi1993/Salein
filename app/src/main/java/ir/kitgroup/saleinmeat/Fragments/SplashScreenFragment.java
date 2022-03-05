@@ -147,7 +147,7 @@ public class SplashScreenFragment extends Fragment {
                         bundleMainOrder.putString("Ord_TYPE", "");
                         MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
-                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF");
                     }
                 }
                 //endregion Account Is Login & Register
@@ -204,7 +204,7 @@ public class SplashScreenFragment extends Fragment {
                         bundleMainOrder.putString("Ord_TYPE", "");
                         MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
-                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                        addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF");
                     }
                 }
                 //endregion Account Is Login & Register
