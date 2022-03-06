@@ -94,7 +94,6 @@ public class CompanyFragment extends Fragment {
         if (storiesFragment != null) {
             storiesFragment.binding.tvDemo.setOnClickListener(v -> {
 
-                myViewModel.getResultMessage().setValue(null);
                 binding.progressbar.setVisibility(View.VISIBLE);
                 companySelect = companyDemo;
 
@@ -126,7 +125,7 @@ public class CompanyFragment extends Fragment {
         companyAdapterList.setOnClickItemListener((company, parent, index, delete) ->
         {
 
-            myViewModel.getResultMessage().setValue(null);
+
             if (parent) {
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();

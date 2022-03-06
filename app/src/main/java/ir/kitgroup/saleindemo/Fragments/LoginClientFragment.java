@@ -112,7 +112,7 @@ public class LoginClientFragment extends Fragment {
         try {
 
 
-             company = Select.from(Company.class).first();
+            company = Select.from(Company.class).first();
 
             //region Configuration Text Size
             int fontSize;

@@ -167,7 +167,9 @@ public class RegisterFragment extends Fragment {
 
                     MainOrderFragment mainOrderFragment = new MainOrderFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment")
+                            //.addToBackStack("MainOrderF")
+                            .commit();
                 }
                 //endregion Go To MainOrderFragment Because Account Is Register
             }

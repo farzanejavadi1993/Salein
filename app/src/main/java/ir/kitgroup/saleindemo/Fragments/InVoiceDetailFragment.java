@@ -619,7 +619,7 @@ public class InVoiceDetailFragment extends Fragment {
                     binding.progressBar.setVisibility(View.VISIBLE);
                     myViewModel.getDeleteInvoice(company.USER, company.PASS, Inv_GUID);
                 }
-                });
+            });
 
             //endregion Action BtnDelete
 
@@ -751,7 +751,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         if (type.equals("1")) {
             binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
+            myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
         }
         else {
             invDetails.clear();
@@ -772,10 +772,10 @@ public class InVoiceDetailFragment extends Fragment {
 
             } else {
                 counter = 0;
-                    ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
-                    for (int i = 0; i < invDetails.size(); i++) {
-                       myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
-                    }
+                ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
+                for (int i = 0; i < invDetails.size(); i++) {
+                    myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                }
             }
         }
 
@@ -949,39 +949,36 @@ public class InVoiceDetailFragment extends Fragment {
             myViewModel.getResultLog().setValue(null);
 
             int message = result.getLogs().get(0).getMessage();
-                if (message == 4) {
-                    List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
-                    for (int i = 0; i < invoiceDetail.size(); i++) {
-                        InvoiceDetail.deleteInTx(invoiceDetail.get(i));
-                    }
-                    Fragment frg;
-                    if (company.mode == 2) {
-                        getActivity().getSupportFragmentManager().popBackStack();
-                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
-
-                    } else {
-                        Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                        if (tb != null && tb.GO != null)
-                            Tables.delete(tb);
-
-                        LauncherOrganizationFragment.refresh=true;
-                        frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                    }
-                    getActivity().getSupportFragmentManager().popBackStack();
-
-
-                    FragmentManager ft = getActivity().getSupportFragmentManager();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                        ft.beginTransaction().detach(frg).commitNow();
-                        ft.beginTransaction().attach(frg).commitNow();
-
-                    } else {
-
-                        ft.beginTransaction().detach(frg).attach(frg).commit();
-                    }
+            if (message == 4) {
+                List<InvoiceDetail> invoiceDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
+                for (int i = 0; i < invoiceDetail.size(); i++) {
+                    InvoiceDetail.deleteInTx(invoiceDetail.get(i));
                 }
+                Fragment frg;
+                if (company.mode == 2) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
+
+                } else {
+                    Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
+                    if (tb != null && tb.GO != null)
+                        Tables.delete(tb);
+
+                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
+                }
+
+
+                FragmentManager ft = getActivity().getSupportFragmentManager();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                    ft.beginTransaction().detach(frg).commitNow();
+                    ft.beginTransaction().attach(frg).commitNow();
+
+                } else {
+
+                    ft.beginTransaction().detach(frg).attach(frg).commit();
+                } }
 
 
 

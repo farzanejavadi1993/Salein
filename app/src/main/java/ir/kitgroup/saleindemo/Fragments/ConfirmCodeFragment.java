@@ -372,7 +372,7 @@ public class ConfirmCodeFragment extends Fragment {
                     bundleMain.putString("Ord_TYPE", "");
                     MainOrderFragment mainOrderFragment = new MainOrderFragment();
                     mainOrderFragment.setArguments(bundleMain);
-                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF");
+                    addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
                 }
                 //endregion Go To MainOrderFragment Because Account Is Register
                 addFragment.commit();

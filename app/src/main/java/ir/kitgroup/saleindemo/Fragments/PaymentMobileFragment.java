@@ -33,7 +33,6 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -260,7 +259,7 @@ public class PaymentMobileFragment extends Fragment {
             btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
             btnNoDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
-                if (disableAccount && company.mode==2) {
+                if (disableAccount) {
                     getActivity().finish();
                 }
             });
@@ -268,7 +267,7 @@ public class PaymentMobileFragment extends Fragment {
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getSetting(company.USER, company.PASS);
+                myViewModel.getSetting(company.USER,company.PASS);
 
             });
 
@@ -682,8 +681,8 @@ public class PaymentMobileFragment extends Fragment {
             MaterialButton btnNo = dialogSendOrder.findViewById(R.id.btn_cancel);
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
-                if (Select.from(Account.class).first().getM() != null)
-                    myViewModel.getInquiryAccount(company.USER, company.PASS, acc.getM());
+
+                myViewModel.getInquiryAccount(company.USER, company.PASS, acc.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                     return;
@@ -706,7 +705,6 @@ public class PaymentMobileFragment extends Fragment {
                 if (company.mode == 2)
                     dialogSendOrder.show();
                 else {
-
                     myViewModel.getTable(company.USER, company.PASS);
                     binding.progressBar.setVisibility(View.VISIBLE);
                 }
@@ -853,10 +851,10 @@ public class PaymentMobileFragment extends Fragment {
                     bundleMainOrder.putString("Ord_TYPE", "");
                     MainOrderFragment mainOrderFragment = new MainOrderFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
-                    FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF");
-//                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
-//                        addFragment.addToBackStack("MainOrderF").commit();
-//                    else
+                    FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
+                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                        addFragment.addToBackStack("MainOrderF").commit();
+                    else
                         addFragment.commit();
                 } else {
                     if (Tbl_GUID.equals("")) {
@@ -875,11 +873,9 @@ public class PaymentMobileFragment extends Fragment {
                         tables.DATE = dateFormats.format(date);
                         tables.save();
                     }
-
-                    LauncherOrganizationFragment.refresh = true;
                     Account.deleteAll(Account.class);
                     LauncherOrganizationFragment launcherFragment = new LauncherOrganizationFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").addToBackStack("LauncherF").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").commit();
                 }
             });
             //endregion  Configuration Send Order
@@ -898,10 +894,105 @@ public class PaymentMobileFragment extends Fragment {
 
         myViewModel.getSetting(company.USER, company.PASS);
 
-        myViewModel.getResultSendOrder().observe(getViewLifecycleOwner(), result -> {
+
+        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
+
+            myViewModel.getResultSetting().setValue(null);
+
+            timesList.clear();
+            List<Setting> settingsList = new ArrayList<>(result);
+            if (!settingsList.get(0).ORDER_TYPE_APP.equals("")) {
+                sharedPreferences.edit().putString("OrderTypeApp", settingsList.get(0).ORDER_TYPE_APP).apply();
+                OrderTypeApp = Integer.parseInt(settingsList.get(0).ORDER_TYPE_APP);
+                try {
+                    paymentType = Integer.parseInt(settingsList.get(0).PAYMENT_TYPE);
+                } catch (Exception ignored) {
+                    paymentType = 3;
+                }
+                if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 1) {
+
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.GONE);
+
+                } else if (((company.mode == 2)
+                        ||
+                        (!Ord_TYPE.equals(OrderTypeApp) &&
+                                Tbl_GUID.equals("") &&
+                                company.mode == 1))
+                        &&
+                        paymentType == 2) {
+                    binding.btnPaymentPlace.setVisibility(View.GONE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                } else {
+                    binding.btnPaymentPlace.setVisibility(View.VISIBLE);
+                    binding.layoutPaymentOnline.setVisibility(View.VISIBLE);
+                }
+            }
+            if (!settingsList.get(0).SERVICE_DAY.equals(""))
+                SERVICE_DAY = Integer.parseInt(settingsList.get(0).SERVICE_DAY);
+
+            allDate.clear();
+            Date dateNow = Calendar.getInstance().getTime();
+            if (SERVICE_DAY == 0) {
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = dateNow;
+                modelDate.Click = true;
+                allDate.add(modelDate);
+            }
+            for (int i = 0; i < SERVICE_DAY; i++) {
+                Date date = Calendar.getInstance().getTime();
+                date.setDate(date.getDate() + i);
+                ModelDate modelDate = new ModelDate();
+                modelDate.date = date;
+                modelDate.Click = i == 0;
+                allDate.add(modelDate);
+            }
+            if (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1) {
+                binding.layoutAddress.setVisibility(View.VISIBLE);
+
+            } else if (company.mode == 1) {
+                binding.layoutTypeOrder.setVisibility(View.GONE);
+                binding.layoutAddress.setVisibility(View.GONE);
+                binding.layoutTime.setVisibility(View.GONE);
+                binding.layoutPayment.setVisibility(View.VISIBLE);
+            }
+
+
+            Transport_GUID = settingsList.get(0).PEYK;
+            sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+            try {
+                allTime = new ArrayList<>(Arrays.asList(settingsList.get(0).SERVICE_TIME.split(",")));
+
+            } catch (Exception ignore) {
+            }
+            if (allTime.size() > 0 && !allTime.get(0).equals("") && (company.mode == 2 || (!Ord_TYPE.equals(OrderTypeApp) &&
+                    Tbl_GUID.equals("") &&
+                    company.mode == 1)))
+                binding.layoutTime.setVisibility(View.VISIBLE);
+
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+            myViewModel.getTypeOrder(company.USER,company.PASS);
+
+
+        });
+        myViewModel.getResultSendOrder().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
+
+                return;
+            }
 
             myViewModel.getResultSendOrder().setValue(null);
             int message = 0;
@@ -955,12 +1046,16 @@ public class PaymentMobileFragment extends Fragment {
         });
         myViewModel.getResultTable().observe(getViewLifecycleOwner(), result -> {
 
-            if (result == null)
-                return;
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
 
+                return;
+            }
+
+            myViewModel.getResultTable().setValue(null);
 
             if (result != null) {
-                myViewModel.getResultTable().setValue(null);
                 ArrayList<Tables> Tables = new ArrayList<>(result.getTables());
                 CollectionUtils.filter(Tables, t -> t.I.equals(Tbl_GUID));
                 if (Tables.size() > 0 && Tables.get(0).RSV) {
@@ -975,9 +1070,12 @@ public class PaymentMobileFragment extends Fragment {
         });
         myViewModel.getResultTypeOrder().observe(getViewLifecycleOwner(), result -> {
 
-            if (result == null)
-                return;
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
 
+                return;
+            }
 
             myViewModel.getResultTypeOrder().setValue(null);
 
@@ -985,7 +1083,7 @@ public class PaymentMobileFragment extends Fragment {
             CollectionUtils.filter(result.getOrderTypes(), i -> i.getTy() == 2);
             OrdTList.addAll(result.getOrderTypes());
 
-            if (OrdTList.size() == 1 && company.mode == 2) {
+            if (OrdTList.size() == 1 && company.mode==2) {
                 OrdTList.get(0).Click = true;
                 Ord_TYPE = OrdTList.get(0).getC();
                 binding.tvTypeOrder.setVisibility(View.GONE);
@@ -1009,18 +1107,14 @@ public class PaymentMobileFragment extends Fragment {
                 }
             }
 
-
+            binding.progressBar.setVisibility(View.GONE);
             //region Get Credit Club
             try {
-                if (!OnceSee && Select.from(Account.class).first().getM() != null)
+                if (!OnceSee)
                     myViewModel.getInquiryAccount(company.USER, company.PASS, acc.M);
-                else if (OnceSee) {
+                else if (OnceSee)
                     binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-                    binding.progressBar.setVisibility(View.GONE);
-                } else
-                    binding.progressBar.setVisibility(View.GONE);
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) {}
             //endregion Get Credit Club
 
         });
@@ -1110,15 +1204,18 @@ public class PaymentMobileFragment extends Fragment {
 
 
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getTypeOrder(company.USER, company.PASS);
+            myViewModel.getTypeOrder(company.USER,company.PASS);
 
 
         });
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
-            if (result == null)
-                return;
+            if (result == null) {
+                binding.progressBar.setVisibility(View.GONE);
+                customProgress.hideProgress();
 
+                return;
+            }
 
             myViewModel.getResultInquiryAccount().setValue(null);
             disableAccount = false;
@@ -1150,7 +1247,7 @@ public class PaymentMobileFragment extends Fragment {
             myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
             disableAccount = sharedPreferences.getBoolean("disableAccount", false);
-            if (disableAccount && company.mode==2)
+            if (disableAccount)
                 showError(result.getName());
 
 
@@ -1288,6 +1385,14 @@ public class PaymentMobileFragment extends Fragment {
         bundle.putBoolean("edit", edit);
         bundle.putBoolean("setADR1", setAddress);
     }
+
+
+
+
+
+
+
+
 
 
     private void showError(String error) {

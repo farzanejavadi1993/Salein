@@ -41,13 +41,13 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="288" />
+            android:value="289" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.saleinmeat.DataBase" />
+            android:value="ir.kitgroup.saleindemo.DataBase" />
 
 <!--        <meta-data-->
 <!--            android:name="pushe_token"-->

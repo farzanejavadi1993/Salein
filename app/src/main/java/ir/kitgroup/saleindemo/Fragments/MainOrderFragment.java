@@ -524,7 +524,6 @@ public class MainOrderFragment extends Fragment {
                     account.S = String.valueOf(genderAccount);
                     accountsList.clear();
                     accountsList.add(account);
-                   customProgress.showProgress(getContext(),"در حال ایجاد مشتری",true);
                     myViewModel.addAccount(company.USER, company.PASS, accountsList);
 
                 }
@@ -603,7 +602,16 @@ public class MainOrderFragment extends Fragment {
         //endregion Configuration Client Application
 
 
-
+        if (company.mode == 1 && EDIT) {
+            binding.edtNameCustomer.setEnabled(false);
+            binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
+            binding.edtNameCustomer.setText(Acc_NAME);
+            binding.accountRecyclerView.setVisibility(View.GONE);
+            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
+            binding.pro.setVisibility(View.VISIBLE);
+            typeSearch = 1;
+            myViewModel.getAccountSearch(company.USER, company.PASS, Acc_NAME);
+        }
 
 
         //region Cast Variable Dialog Sync
@@ -947,10 +955,9 @@ public class MainOrderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
-
-
+        if (company.mode == 2) {
             binding.progressbar.setVisibility(View.VISIBLE);
             sharedPreferences.edit().putBoolean("discount", false).apply();
             sharedPreferences.edit().putBoolean("vip", false).apply();
@@ -972,23 +979,8 @@ public class MainOrderFragment extends Fragment {
             myViewModel.getProductLevel1(company.USER, company.PASS);
             myViewModel.getSetting(company.USER, company.PASS);
             myViewModel.getUnit(company.USER, company.PASS);
-            if (company.mode==2)
             myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Account.class).first().getM());
-
-
-
-        if (company.mode == 1 && EDIT) {
-            binding.edtNameCustomer.setEnabled(false);
-            binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-            binding.edtNameCustomer.setText(Acc_NAME);
-            binding.accountRecyclerView.setVisibility(View.GONE);
-            binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-            binding.pro.setVisibility(View.VISIBLE);
-            typeSearch = 1;
-            myViewModel.getAccountSearch(company.USER, company.PASS, Acc_NAME);
         }
-
-
 
         myViewModel.getResultSearchAccount().observe(getViewLifecycleOwner(), result -> {
             binding.pro.setVisibility(View.GONE);
@@ -1092,11 +1084,6 @@ public class MainOrderFragment extends Fragment {
                 return;
 
             binding.orderTxtError.setVisibility(View.GONE);
-            sharedPreferences.edit().putBoolean("discount", false).apply();
-            sharedPreferences.edit().putBoolean("vip", false).apply();
-            binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
-            binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
-            binding.ivFilter.setImageResource(R.drawable.ic_filter);
             myViewModel.getResultProductLevel1().setValue(null);
             productLevel1List.clear();
             productLevel1List.addAll(result);
@@ -1318,30 +1305,6 @@ public class MainOrderFragment extends Fragment {
             productAdapter.notifyDataSetChanged();
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
-
-        });
-        myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
-            binding.progressbar.setVisibility(View.GONE);
-
-            customProgress.hideProgress();
-            if (result == null)
-                return;
-
-            myViewModel.getResultAddAccount().setValue(null);
-
-            if (result){
-                Account.deleteAll(Account.class);
-                Account.saveInTx(accountsList.get(0));
-                dialogAddAccount.dismiss();
-                customProgress.hideProgress();
-                Acc_GUID = accountsList.get(0).I;
-                Acc_NAME = accountsList.get(0).N;
-                binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-                binding.edtNameCustomer.setText(accountsList.get(0).N);
-                binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-                accountsList.clear();
-            }
-
 
         });
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
