@@ -47,6 +47,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,6 +121,7 @@ public class MainOrderFragment extends Fragment {
 
 
     private ArrayList<Product> productList;
+    private ArrayList<String> closeDayList;
     private ArrayList<Product> productListData;
     private ProductAdapter1 productAdapter;
     private boolean isLastPage;
@@ -234,6 +236,7 @@ public class MainOrderFragment extends Fragment {
         productLevel1List = new ArrayList<>();
         productLevel2List = new ArrayList<>();
 
+        closeDayList = new ArrayList<>();
         productList = new ArrayList<>();
         productListData = new ArrayList<>();
 
@@ -1012,6 +1015,13 @@ public class MainOrderFragment extends Fragment {
             List<Setting> settingsList = new ArrayList<>(result);
 
             if (settingsList.size() > 0) {
+
+                String CloseDay = settingsList.get(0).CLOSE_DAY;
+                closeDayList.clear();
+                if (!CloseDay.equals("")) {
+                    closeDayList = new ArrayList<>(Arrays.asList(settingsList.get(0).CLOSE_DAY.split(",")));
+                }
+                productAdapter.setCloseListDate(closeDayList);
                 String Update = settingsList.get(0).UPDATE_APP;
                 try {
                     linkUpdate = settingsList.get(0).LINK_UPDATE;
@@ -1031,6 +1041,7 @@ public class MainOrderFragment extends Fragment {
                 }
                 sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
                 sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+
                 if (company.mode == 1) {
                     Acc_GUID = settingsList.get(0).DEFAULT_CUSTOMER;
                     accList.clear();
@@ -1459,7 +1470,7 @@ public class MainOrderFragment extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public  void setFilter(int type) {
+    public void setFilter(int type) {
         binding.animationView.setVisibility(View.VISIBLE);
         binding.progressbar.setVisibility(View.VISIBLE);
         productList.clear();
@@ -1475,6 +1486,7 @@ public class MainOrderFragment extends Fragment {
             myViewModel.getProductLevel1(company.USER, company.PASS);
 
     }
+
     public void setBundle(Bundle bundle) {
         this.Inv_GUID = bundle.getString("Inv_GUID");
         this.EDIT = bundle.getBoolean("EDIT");

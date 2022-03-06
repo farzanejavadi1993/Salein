@@ -1045,13 +1045,11 @@ public class PaymentMobileFragment extends Fragment {
 
         });
         myViewModel.getResultTable().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null) {
-                binding.progressBar.setVisibility(View.GONE);
-                customProgress.hideProgress();
-
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
                 return;
-            }
+
 
             myViewModel.getResultTable().setValue(null);
 
@@ -1065,17 +1063,14 @@ public class PaymentMobileFragment extends Fragment {
                 }
             }
 
-            binding.progressBar.setVisibility(View.GONE);
             dialogSendOrder.show();
         });
         myViewModel.getResultTypeOrder().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null) {
-                binding.progressBar.setVisibility(View.GONE);
-                customProgress.hideProgress();
-
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
                 return;
-            }
+
 
             myViewModel.getResultTypeOrder().setValue(null);
 
@@ -1098,7 +1093,8 @@ public class PaymentMobileFragment extends Fragment {
                 binding.layoutPeyk.setVisibility(View.GONE);
                 binding.tvTransport.setText("0 ریال");
                 binding.tvSumPurePrice.setText(format.format(Double.parseDouble(Sum_PURE_PRICE)) + "ریال");
-            } else {
+            }
+            else {
                 if ((OrdTList.size() == 1 && (company.mode == 2) || (Tbl_GUID.equals("") && !Ord_TYPE.equals(OrderTypeApp) && company.mode == 1))) {
                     sumTransport = calculateTransport;
                     binding.layoutPeyk.setVisibility(View.VISIBLE);
@@ -1107,11 +1103,13 @@ public class PaymentMobileFragment extends Fragment {
                 }
             }
 
-            binding.progressBar.setVisibility(View.GONE);
+
             //region Get Credit Club
             try {
-                if (!OnceSee)
+                if (!OnceSee) {
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     myViewModel.getInquiryAccount(company.USER, company.PASS, acc.M);
+                }
                 else if (OnceSee)
                     binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
             } catch (Exception ignore) {}
@@ -1209,13 +1207,11 @@ public class PaymentMobileFragment extends Fragment {
 
         });
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null) {
-                binding.progressBar.setVisibility(View.GONE);
-                customProgress.hideProgress();
-
+            binding.progressBar.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
                 return;
-            }
+
 
             myViewModel.getResultInquiryAccount().setValue(null);
             disableAccount = false;
@@ -1245,10 +1241,12 @@ public class PaymentMobileFragment extends Fragment {
                 return;
 
             myViewModel.getResultMessage().setValue(null);
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            Toasty.error(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
             disableAccount = sharedPreferences.getBoolean("disableAccount", false);
-            if (disableAccount)
+            if (disableAccount && company.mode==2)
                 showError(result.getName());
+
+
 
 
         });

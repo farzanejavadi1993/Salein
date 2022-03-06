@@ -41,11 +41,14 @@ import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import java.util.Locale;
 import java.util.UUID;
 
 
+import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -58,6 +61,7 @@ import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.Fragments.ShowDetailFragment;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.classes.Utilities;
 import ir.kitgroup.saleindemo.models.Config;
 import ir.kitgroup.saleindemo.models.ModelLog;
 import ir.kitgroup.saleindemo.R;
@@ -74,7 +78,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private final SharedPreferences sharedPreferences;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
 
     private final List<Product> productsList;
@@ -83,7 +87,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private Boolean Seen = false;
 
-    private  String Inv_GUID;
+    private String Inv_GUID;
     private String Tbl_GUID;
 
     private final DecimalFormat df;
@@ -94,9 +98,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
     private API api;
 
-    private List<Unit> unitList;
-
-    private String fragmentName = "main";
+    private final List<Unit> unitList;
+    private List<String> closeDateList;
+    private String valueOfDay;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -138,6 +142,32 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         df = new DecimalFormat();
         compositeDisposable = new CompositeDisposable();
         unitList = Select.from(Unit.class).list();
+
+        Calendar calendar = Calendar.getInstance();
+        switch (calendar.getTime().getDay()) {
+
+            case 0:
+                valueOfDay = "1";
+                break;
+            case 1:
+                valueOfDay = "2";
+                break;
+            case 2:
+                valueOfDay = "3";
+                break;
+            case 3:
+                valueOfDay = "4";
+                break;
+            case 4:
+                valueOfDay = "5";
+                break;
+            case 5:
+                valueOfDay = "6";
+                break;
+            case 6:
+                valueOfDay = "0";
+                break;
+        }
     }
 
     public void setMaxSale(String MaxSale) {
@@ -152,10 +182,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         this.api = api;
     }
 
+    public void setCloseListDate(ArrayList<String> closeDateList) {
+        this.closeDateList = closeDateList;
+    }
+
 
     public void setTbl_GUID(String Tbl_GUID) {
         this.Tbl_GUID = Tbl_GUID;
     }
+
     public void setInv_GUID(String Inv_GUID) {
         this.Inv_GUID = Inv_GUID;
     }
@@ -215,13 +250,16 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
         if (productsList.get(position) != null) {
             holder.error.setText("");
 
+            if (closeDateList.contains(valueOfDay))
+                holder.ProductAmountTxt.setEnabled(false);
+            else
+                holder.ProductAmountTxt.setEnabled(true);
 
 
-            fragmentName=sharedPreferences.getString("FNM","main");
+            String fragmentName = sharedPreferences.getString("FNM", "main");
 
             if (!fragmentName.equals("main"))
                 holder.ProductAmountTxt.clearFocus();
-
 
 
             InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
@@ -362,7 +400,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             holder.ivMax.setOnClickListener(view ->
                     {
 
-
+                        if (closeDateList.contains(valueOfDay)) {
+                            Toasty.warning(context, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
+                            return;
+                        }
                         holder.ProductAmountTxt.setCursorVisible(false);
 
                         if (holder.getAdapterPosition() < productsList.size())
@@ -386,7 +427,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
 
             holder.ivMinus.setOnClickListener(v ->
                     {
-
+                        if (closeDateList.contains(valueOfDay)) {
+                            Toasty.warning(context, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
+                            return;
+                        }
                         holder.ProductAmountTxt.setCursorVisible(false);
                         if (holder.getAdapterPosition() < productsList.size())
                             doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
@@ -413,7 +457,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
             });
 
 
-
             if (holder.textWatcher1 == null) {
                 holder.textWatcher1 = new TextWatcher() {
                     @Override
@@ -428,36 +471,35 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.viewHo
                         if (!charSequence.toString().isEmpty())
                             holder.ProductAmountTxt.setCursorVisible(true);
 
-                            String s = Util.toEnglishNumber(charSequence.toString());
-                            s = s.contains("٫") ? s.replace("٫", ".") : s;
-                            s = s.contains(",") ? s.replace(",", "") : s;
+                        String s = Util.toEnglishNumber(charSequence.toString());
+                        s = s.contains("٫") ? s.replace("٫", ".") : s;
+                        s = s.contains(",") ? s.replace(",", "") : s;
 
-                            if (!s.isEmpty()) {
-                                if (s.contains(".") &&
-                                        s.indexOf(".") == s.length() - 1) {
-                                    return;
-                                } else if (s.contains("٫") &&
-                                        s.indexOf("٫") == s.length() - 1) {
-                                    return;
-                                }
-
+                        if (!s.isEmpty()) {
+                            if (s.contains(".") &&
+                                    s.indexOf(".") == s.length() - 1) {
+                                return;
+                            } else if (s.contains("٫") &&
+                                    s.indexOf("٫") == s.length() - 1) {
+                                return;
                             }
 
-                            if (holder.getAdapterPosition() < productsList.size())
-                                doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
-                                        holder.getAdapterPosition(),
-                                        holder.error,
-                                        holder.progressBar,
-                                        holder.textWatcher1,
-                                        holder.ProductAmountTxt,
-                                        holder.ivMinus,
-                                        company,
-                                        maxSale,
-                                        productsList.get(holder.getAdapterPosition()).getI(),
-                                        s,
-                                        3
-                                );
+                        }
 
+                        if (holder.getAdapterPosition() < productsList.size())
+                            doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                                    holder.getAdapterPosition(),
+                                    holder.error,
+                                    holder.progressBar,
+                                    holder.textWatcher1,
+                                    holder.ProductAmountTxt,
+                                    holder.ivMinus,
+                                    company,
+                                    maxSale,
+                                    productsList.get(holder.getAdapterPosition()).getI(),
+                                    s,
+                                    3
+                            );
 
 
                     }

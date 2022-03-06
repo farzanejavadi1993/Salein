@@ -12,6 +12,7 @@ public class Setting  {
     public String UPDATE_APP;
     public String VERSION_APP;
     public String SERVICE_DAY;
+    public String CLOSE_DAY="1,6";
     public String PEYK;
     public String PAYMENT_TYPE;
     public String LINK_UPDATE;

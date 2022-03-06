@@ -317,10 +317,7 @@ public class LauncherActivity extends AppCompatActivity {
             loadProfile = false;
             binding.navView.setSelectedItemId(R.id.profile);
         }
-        else if (size==1){
-            messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
-            ExitDialog.show();
-        }
+
         else {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
