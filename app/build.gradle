@@ -9,7 +9,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleindemo"
+        applicationId "ir.kitgroup.saleinmeat"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 7
