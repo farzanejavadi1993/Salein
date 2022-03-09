@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "860259771511",
-    "project_id": "saleinjam-ee599",
-    "storage_bucket": "saleinjam-ee599.appspot.com"
+    "project_id": "saleindemo-ee599",
+    "storage_bucket": "saleindemo-ee599.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:860259771511:android:070e7cdc0d53a046d99272",
         "android_client_info": {
-          "package_name": "ir.kitgroup.saleinjam"
+          "package_name": "ir.kitgroup.saleindemo"
         }
       },
       "oauth_client": [
