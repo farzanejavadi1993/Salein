@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+
+
 }
 
 android {
@@ -9,7 +12,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinjam"
+        applicationId "ir.kitgroup.saleindemo"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 8
@@ -27,7 +30,7 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro', 'proguard.cfg'
         }
         testBuildType "proguard"
-       release {
+        release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -35,8 +38,6 @@ android {
             minifyEnabled false
             proguardFiles 'proguard-rules.pro'
         }
-
-
 
 
     }
@@ -96,22 +97,14 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
 
-
-
-
     //CedarMap Library
     implementation 'com.cedarmaps:CedarMapsSDK:4.0.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.6.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 
-
     //Download Image Library
     implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-
-
-
 
 
 
@@ -120,20 +113,13 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.19"
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
-
-
-
-
-
     //Hilt Library
-   implementation "com.google.dagger:hilt-android:2.39.1"
+    implementation "com.google.dagger:hilt-android:2.39.1"
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
     annotationProcessor "com.google.dagger:hilt-android-compiler:2.38.1"
-
-
-
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
 }
+
