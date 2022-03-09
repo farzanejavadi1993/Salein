@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "860259771511",
-    "project_id": "saleindemo-ee599",
-    "storage_bucket": "saleindemo-ee599.appspot.com"
+    "project_number": "113447143680",
+    "project_id": "saleinmeat",
+    "storage_bucket": "saleinmeat.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:860259771511:android:070e7cdc0d53a046d99272",
+        "mobilesdk_app_id": "1:113447143680:android:32d27f4ef7644c31614be5",
         "android_client_info": {
-          "package_name": "ir.kitgroup.saleindemo"
+          "package_name": "ir.kitgroup.saleinmeat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "860259771511-u6ainlhiroooedgdo6jmujbpmh4lrma8.apps.googleusercontent.com",
+          "client_id": "113447143680-rjuhdbfjp7d0m6ebrfec01iefslv2t0m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBrwPznKG-s1Owr3MO3wV7RtDsmexufRB0"
+          "current_key": "AIzaSyAlCUvy_2ZhjdxtFM39g6zxYNfp5Q6N6aQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "860259771511-u6ainlhiroooedgdo6jmujbpmh4lrma8.apps.googleusercontent.com",
+              "client_id": "113447143680-rjuhdbfjp7d0m6ebrfec01iefslv2t0m.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
