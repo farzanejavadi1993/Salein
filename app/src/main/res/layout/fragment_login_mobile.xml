@@ -74,8 +74,6 @@
             android:textColor="@color/medium_color"
             android:textSize="@dimen/text_normal_mobile_size"
             android:textStyle="bold" />
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="360dp"
             android:layout_marginTop="@dimen/margin8"
@@ -119,8 +117,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
             android:layout_width="360dp"
