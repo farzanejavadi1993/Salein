@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "113447143680",
-    "project_id": "saleinmeat",
-    "storage_bucket": "saleinmeat.appspot.com"
+    "project_id": "saleinOrder",
+    "storage_bucket": "saleinOrder.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:113447143680:android:32d27f4ef7644c31614be5",
         "android_client_info": {
-          "package_name": "ir.kitgroup.saleinmeat"
+          "package_name": "ir.kitgroup.saleinOrder"
         }
       },
       "oauth_client": [
