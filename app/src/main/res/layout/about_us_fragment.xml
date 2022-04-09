@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
         android:clickable="true"
         android:focusable="true"
-        android:background="#fff"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
 
         <RelativeLayout
@@ -52,34 +52,58 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent">
-               <TextView
-                   android:id="@+id/txtDescription"
-                   android:lineSpacingExtra="12dp"
-                   android:textColor="#2f2f2f"
-                   android:textSize="13sp"
-                   android:layout_marginTop="12dp"
-                   android:layout_marginBottom="12dp"
-                   android:layout_marginLeft="22dp"
-                   android:layout_marginRight="22dp"
-                   android:layout_alignParentRight="true"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"/>
-               <ImageView
-                   android:layout_below="@+id/txtDescription"
-                   android:id="@+id/iv_logo"
-                   android:layout_margin="22dp"
-                   android:layout_alignParentLeft="true"
-                   android:layout_width="80dp"
-                   android:layout_height="80dp"/>
 
-           </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/txtDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginBottom="12dp"
+                    android:lineSpacingExtra="12dp"
+                    android:textColor="#2f2f2f"
+                    android:textSize="13sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtDescription">
+
+                    <ImageView
+
+                        android:id="@+id/iv_logo"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="22dp" />
+
+                    <TextView
+                        android:id="@+id/txtVersion"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginBottom="12dp"
+                        android:lineSpacingExtra="12dp"
+                        android:textColor="#2f2f2f"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
-
-
-
 
 
     </LinearLayout>

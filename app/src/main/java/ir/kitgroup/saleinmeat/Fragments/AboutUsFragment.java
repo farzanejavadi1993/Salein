@@ -1,5 +1,7 @@
 package ir.kitgroup.saleinmeat.Fragments;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class AboutUsFragment extends Fragment {
     private AboutUsFragmentBinding binding;
 
     private Company company;
+    private String AppVersion="";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,14 +47,15 @@ public class AboutUsFragment extends Fragment {
             binding.txtDescription.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
 
-        binding.ivBackFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+        binding.ivBackFragment.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
 
 
+        try {
+            AppVersion = appVersion();
+            binding.txtVersion.setText( " نسخه "+AppVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         Picasso.get()
                 .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
                         company.I+"&width=300&height=300")
@@ -60,4 +64,11 @@ public class AboutUsFragment extends Fragment {
                 .into(binding.ivLogo);
 
     }
+
+
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        return pInfo.versionName;
+    }
+
 }

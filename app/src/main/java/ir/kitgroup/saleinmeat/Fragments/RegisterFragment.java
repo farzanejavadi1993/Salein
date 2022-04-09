@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import es.dmoral.toasty.Toasty;
+
 import ir.kitgroup.saleinmeat.Connect.MyViewModel;
 import ir.kitgroup.saleinmeat.DataBase.Account;
 import ir.kitgroup.saleinmeat.classes.Util;
@@ -131,8 +132,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
 
         myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
