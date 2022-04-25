@@ -30,8 +30,9 @@ import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
+import ir.kitgroup.saleindemo.databinding.FragmentRegisterBinding;
 import ir.kitgroup.saleindemo.models.Setting;
-import ir.kitgroup.saleinmeat.databinding.FragmentRegisterBinding;
+
 
 
 public class RegisterFragment extends Fragment {

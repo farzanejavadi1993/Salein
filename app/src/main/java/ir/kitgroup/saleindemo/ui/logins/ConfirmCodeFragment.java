@@ -28,10 +28,11 @@ import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
 import ir.kitgroup.saleindemo.Fragments.MapFragment;
 import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
+import ir.kitgroup.saleindemo.databinding.FragmentConfirmCodeBinding;
 import ir.kitgroup.saleindemo.models.Config;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleinmeat.databinding.FragmentConfirmCodeBinding;
+
 
 
 @AndroidEntryPoint

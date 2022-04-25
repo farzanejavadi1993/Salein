@@ -42,8 +42,9 @@ import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.databinding.FragmentLoginMobileBinding;
 import ir.kitgroup.saleindemo.models.Config;
-import ir.kitgroup.saleinmeat.databinding.FragmentLoginMobileBinding;
+
 
 @AndroidEntryPoint
 public class LoginClientFragment extends Fragment {

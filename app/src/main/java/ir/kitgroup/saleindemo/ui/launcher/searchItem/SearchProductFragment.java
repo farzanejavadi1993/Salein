@@ -1,4 +1,4 @@
-package ir.kitgroup.saleindemo.Fragments;
+package ir.kitgroup.saleindemo.ui.launcher.searchItem;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -51,11 +51,13 @@ import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleindemo.databinding.FragmentSearchProductBinding;
+
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.databinding.FragmentSearchProductBinding;
 import ir.kitgroup.saleindemo.models.Config;
 import ir.kitgroup.saleindemo.models.Description;
 import ir.kitgroup.saleindemo.models.Product;
+
 
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {

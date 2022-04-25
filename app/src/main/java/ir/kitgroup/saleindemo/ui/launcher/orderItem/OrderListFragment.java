@@ -1,4 +1,4 @@
-package ir.kitgroup.saleindemo.Fragments;
+package ir.kitgroup.saleindemo.ui.launcher.orderItem;
 
 
 import android.annotation.SuppressLint;
@@ -47,8 +47,10 @@ import ir.kitgroup.saleindemo.Adapters.OrderListAdapter;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
+import ir.kitgroup.saleindemo.Fragments.InVoiceDetailFragment;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.databinding.FragmentOrderListBinding;
 import ir.kitgroup.saleindemo.models.Invoice;
 
 
@@ -56,8 +58,9 @@ import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 
 import ir.kitgroup.saleindemo.classes.DateConverter;
-import ir.kitgroup.saleindemo.databinding.FragmentOrderListBinding;
+
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
+
 
 
 @AndroidEntryPoint

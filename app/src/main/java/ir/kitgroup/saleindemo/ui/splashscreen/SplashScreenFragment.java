@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.saleindemo.ui.logins.LoginClientFragment;
 import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
 import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
@@ -39,7 +40,7 @@ import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.models.Config;
-import ir.kitgroup.saleinmeat.databinding.FragmentSplashScreenBinding;
+
 
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {

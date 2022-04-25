@@ -27,7 +27,7 @@ import ir.kitgroup.saleindemo.Fragments.InVoiceDetailFragment;
 import ir.kitgroup.saleindemo.Fragments.LauncherOrganizationFragment;
 import ir.kitgroup.saleindemo.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
-import ir.kitgroup.saleindemo.Fragments.SearchProductFragment;
+import ir.kitgroup.saleindemo.ui.launcher.searchItem.SearchProductFragment;
 import ir.kitgroup.saleindemo.Fragments.SettingFragment;
 import ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment;
 import ir.kitgroup.saleindemo.R;
