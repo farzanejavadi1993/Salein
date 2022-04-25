@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
-import ir.kitgroup.saleindemo.Fragments.LoginClientFragment;
+import ir.kitgroup.saleindemo.ui.logins.LoginClientFragment;
 import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
 import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
 import ir.kitgroup.saleindemo.R;

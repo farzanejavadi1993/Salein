@@ -91,6 +91,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
 import ir.kitgroup.saleindemo.databinding.FragmentMapBinding;
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.ui.logins.RegisterFragment;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;

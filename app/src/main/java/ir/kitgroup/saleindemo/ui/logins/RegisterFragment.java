@@ -1,4 +1,4 @@
-package ir.kitgroup.saleindemo.Fragments;
+package ir.kitgroup.saleindemo.ui.logins;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -25,11 +25,13 @@ import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
+import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.databinding.FragmentRegisterBinding;
 import ir.kitgroup.saleindemo.models.Setting;
+import ir.kitgroup.saleinmeat.databinding.FragmentRegisterBinding;
 
 
 public class RegisterFragment extends Fragment {
