@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import ir.kitgroup.saleindemo.DataBase.Account;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
-import ir.kitgroup.saleindemo.Fragments.CompanyFragment;
-import ir.kitgroup.saleindemo.Fragments.MapFragment;
-import ir.kitgroup.saleindemo.ui.launcher.orderItem.OrderListFragment;
-import ir.kitgroup.saleindemo.Fragments.PaymentMobileFragment;
+import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
+import ir.kitgroup.saleindemo.ui.map.MapFragment;
+import ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment;
+import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.models.Invoice;
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
 

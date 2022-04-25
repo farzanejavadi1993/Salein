@@ -43,8 +43,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Activities.LauncherActivity;
-import ir.kitgroup.saleindemo.Adapters.DescriptionAdapter;
-import ir.kitgroup.saleindemo.Adapters.ProductAdapter1;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.ProductAdapter;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
@@ -78,7 +78,7 @@ public class SearchProductFragment extends Fragment {
     private String Transport_GUID = "";
     private String valueOfDay;
     private ArrayList<String> closeDayList;
-    private ProductAdapter1 productAdapter;
+    private ProductAdapter productAdapter;
     private String Inv_GUID = "";
     private ArrayList<Product> productList;
     private String maxSales = "0";
@@ -216,7 +216,7 @@ public class SearchProductFragment extends Fragment {
             }
         };
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
-        productAdapter = new ProductAdapter1(getActivity(), productList, company, sharedPreferences, config);
+        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences, config);
         String CloseDay = sharedPreferences.getString("close_day", "");
         closeDayList.clear();
         if (!CloseDay.equals("")) {

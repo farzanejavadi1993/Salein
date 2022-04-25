@@ -25,8 +25,8 @@ import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
-import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
-import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.companies.StoriesFragment;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
