@@ -93,7 +93,6 @@ public class MainOrderFragment extends Fragment {
     API api;
 
 
-
     private MyViewModel myViewModel;
     private Boolean disableAccount = false;
     private Boolean filterError = false;
@@ -261,7 +260,7 @@ public class MainOrderFragment extends Fragment {
         Acc_GUID = bundle.getString("Acc_GUID");
         EDIT = bundle.getBoolean("EDIT");//when order need EDIT
         Seen = bundle.getBoolean("Seen");
-       // invoiceDetails = (List<InvoiceDetail>) bundle.getSerializable("key");
+        // invoiceDetails = (List<InvoiceDetail>) bundle.getSerializable("key");
 
         setARD1 = bundle.getBoolean("setADR");
 
@@ -956,7 +955,6 @@ public class MainOrderFragment extends Fragment {
         });
 
 
-
     }
 
 
@@ -966,7 +964,7 @@ public class MainOrderFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-        List<InvoiceDetail> tempInvDetailses ;
+        List<InvoiceDetail> tempInvDetailses;
 
 
         binding.progressbar.setVisibility(View.VISIBLE);
@@ -977,9 +975,9 @@ public class MainOrderFragment extends Fragment {
         productLevel1List.clear();
         productLevel2List.clear();
         if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null) {
-          productAdapter.notifyDataSetChanged();
-          productLevel1Adapter.notifyDataSetChanged();
-          productLevel2Adapter.notifyDataSetChanged();
+            productAdapter.notifyDataSetChanged();
+            productLevel1Adapter.notifyDataSetChanged();
+            productLevel2Adapter.notifyDataSetChanged();
         }
 
         binding.orderTxtError.setText("");

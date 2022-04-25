@@ -134,6 +134,7 @@ public class RegisterFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
 
+
         myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
             binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnRegisterInformation.setEnabled(true);
