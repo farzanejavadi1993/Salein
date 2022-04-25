@@ -16,7 +16,7 @@ import okhttp3.Request;
 
 @Singleton
 public class HostSelectionInterceptor implements Interceptor {
-    private volatile HttpUrl host = HttpUrl.parse(BuildConfig1.PRODUCTION_BASE_URL);
+    private volatile HttpUrl host = HttpUrl.parse(Constant.PRODUCTION_BASE_URL);
     SharedPreferences preferenceHelper;
 
     @Inject
@@ -27,9 +27,9 @@ public class HostSelectionInterceptor implements Interceptor {
 
     public void setHostBaseUrl() {
         if (preferenceHelper.getBoolean("status",false)) {
-            this.host = HttpUrl.parse(BuildConfig1.PRODUCTION_BASE_URL);
+            this.host = HttpUrl.parse(Constant.PRODUCTION_BASE_URL);
         } else {
-            this.host = HttpUrl.parse(BuildConfig1.DEVELOPMENT_BASE_URL);
+            this.host = HttpUrl.parse(Constant.DEVELOPMENT_BASE_URL);
         }
     }
 

@@ -37,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.R;
 
 
-import ir.kitgroup.saleindemo.classes.BuildConfig1;
+import ir.kitgroup.saleindemo.classes.Constant;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.FragmentOrganizationLoginBinding;
@@ -104,7 +104,7 @@ public class LoginOrganizationFragment extends Fragment {
             bundleMap.putString("passWord",  binding.edtPassword.getText().toString());
             bundleMap.putString("numberPos", binding.edtSaleCode.getText().toString());
 
-            BuildConfig1.PRODUCTION_BASE_URL = "http://" + Util.toEnglishNumber( binding.edtIp1.getText().toString()) + "/api/REST/";
+            Constant.PRODUCTION_BASE_URL = "http://" + Util.toEnglishNumber( binding.edtIp1.getText().toString()) + "/api/REST/";
             sharedPreferences.edit().putBoolean("status", true).apply();
             hostSelectionInterceptor.setHostBaseUrl();
 

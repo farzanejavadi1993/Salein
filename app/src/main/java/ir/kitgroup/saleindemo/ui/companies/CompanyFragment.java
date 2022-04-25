@@ -37,7 +37,7 @@ import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.classes.BuildConfig1;
+import ir.kitgroup.saleindemo.classes.Constant;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleindemo.databinding.FragmentCompanyBinding;
 
@@ -137,7 +137,7 @@ public class CompanyFragment extends Fragment {
 
                 return;
             }
-            BuildConfig1.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
+            Constant.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
             sharedPreferences.edit().putBoolean("status", true).apply();
             hostSelectionInterceptor.setHostBaseUrl();
             companySelect = company;
@@ -232,7 +232,7 @@ public class CompanyFragment extends Fragment {
             myViewModel.getResultCompany().setValue(null);
             if (result.size() > 0) {
 
-                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 

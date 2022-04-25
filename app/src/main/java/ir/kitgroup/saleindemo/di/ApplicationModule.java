@@ -30,7 +30,7 @@ import dagger.hilt.components.SingletonComponent;
 
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.classes.BuildConfig1;
+import ir.kitgroup.saleindemo.classes.Constant;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleindemo.models.Config;
 import okhttp3.Cache;
@@ -182,7 +182,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(BuildConfig1.DEVELOPMENT_BASE_URL)
+                .baseUrl(Constant.DEVELOPMENT_BASE_URL)
                 .client(okHttpClient)
                 .build();
 

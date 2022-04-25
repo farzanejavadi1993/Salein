@@ -31,7 +31,7 @@ import ir.kitgroup.saleindemo.ui.launcher.searchItem.SearchProductFragment;
 import ir.kitgroup.saleindemo.ui.launcher.moreItem.SettingFragment;
 import ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.classes.BuildConfig1;
+import ir.kitgroup.saleindemo.classes.Constant;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.ActivityLauncherBinding;
@@ -232,7 +232,7 @@ public class LauncherActivity extends AppCompatActivity {
             //When User Is Login
             if (Select.from(Company.class).list().size() > 0) {
 
-                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
                 replaceFragment = getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new LauncherOrganizationFragment(), "LauncherFragment").addToBackStack("LauncherF");

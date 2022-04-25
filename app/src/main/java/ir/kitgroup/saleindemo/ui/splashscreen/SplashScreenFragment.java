@@ -35,7 +35,7 @@ import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.companies.StoriesFragment;
 import ir.kitgroup.saleindemo.R;
 
-import ir.kitgroup.saleindemo.classes.BuildConfig1;
+import ir.kitgroup.saleindemo.classes.Constant;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
@@ -137,7 +137,7 @@ public class SplashScreenFragment extends Fragment {
                 return;
             myViewModel.getResultMessage().setValue(null);
             if (Select.from(Company.class).list().size() > 0) {
-                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
                 FragmentTransaction addFragment;
@@ -170,7 +170,7 @@ public class SplashScreenFragment extends Fragment {
                 binding.animationView.setVisibility(View.GONE);
                 binding.lnrError.setVisibility(View.VISIBLE);
                 binding.txtErrorr.setText(result.getName());
-                BuildConfig1.PRODUCTION_BASE_URL="";
+                Constant.PRODUCTION_BASE_URL="";
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
             }
@@ -195,7 +195,7 @@ public class SplashScreenFragment extends Fragment {
                     binding.lnrError.setVisibility(View.VISIBLE);
                     return;
                 }
-                BuildConfig1.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 
