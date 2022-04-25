@@ -1,4 +1,4 @@
-package ir.kitgroup.saleindemo.Fragments;
+package ir.kitgroup.saleindemo.ui.splashscreen;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -29,13 +29,17 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.Fragments.LoginClientFragment;
+import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
+import ir.kitgroup.saleindemo.Fragments.StoriesFragment;
 import ir.kitgroup.saleindemo.R;
 
 import ir.kitgroup.saleindemo.classes.BuildConfig1;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
-import ir.kitgroup.saleindemo.databinding.FragmentSplashScreenBinding;
+
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.models.Config;
+import ir.kitgroup.saleinmeat.databinding.FragmentSplashScreenBinding;
 
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {

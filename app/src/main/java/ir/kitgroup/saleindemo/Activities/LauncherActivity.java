@@ -29,7 +29,7 @@ import ir.kitgroup.saleindemo.Fragments.LoginOrganizationFragment;
 import ir.kitgroup.saleindemo.Fragments.MainOrderFragment;
 import ir.kitgroup.saleindemo.Fragments.SearchProductFragment;
 import ir.kitgroup.saleindemo.Fragments.SettingFragment;
-import ir.kitgroup.saleindemo.Fragments.SplashScreenFragment;
+import ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.BuildConfig1;
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
