@@ -7,7 +7,8 @@ import java.util.List;
 
 
 
-
+import androidx.annotation.Keep;
+@Keep
 public class ModelProduct {
 
 

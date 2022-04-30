@@ -204,7 +204,7 @@ public class MainOrderFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        try {
         ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
         if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
             Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
@@ -953,6 +953,11 @@ public class MainOrderFragment extends Fragment {
         });
 
 
+
+
+        }catch (Exception e){
+            Toast.makeText(getActivity(), e+"", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -960,9 +965,9 @@ public class MainOrderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-        List<InvoiceDetail> tempInvDetailses;
+
 
 
         binding.progressbar.setVisibility(View.VISIBLE);

@@ -2,7 +2,8 @@ package ir.kitgroup.saleindemo.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+import androidx.annotation.Keep;
+@Keep
 public class PaymentRecieptDetail {
 
     @SerializedName("PAY_RCIPT_DET_UID")//ای دی

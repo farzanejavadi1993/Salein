@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -78,6 +79,9 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        try {
+
+
         Company company = Select.from(Company.class).first();
         sharedPreferences.edit().putBoolean("status", false).apply();
         hostSelectionInterceptor.setHostBaseUrl();
@@ -106,7 +110,11 @@ public class SplashScreenFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+         }catch (Exception e){
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
+
     //endregion Override Method
 
     @Override

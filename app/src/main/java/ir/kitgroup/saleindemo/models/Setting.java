@@ -1,7 +1,8 @@
 package ir.kitgroup.saleindemo.models;
 
 import com.orm.dsl.Unique;
-
+import androidx.annotation.Keep;
+@Keep
 public class Setting  {
     @Unique
     public String DEFAULT_PRICE_INVOICE;

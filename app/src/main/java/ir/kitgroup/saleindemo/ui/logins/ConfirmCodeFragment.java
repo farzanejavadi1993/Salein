@@ -40,8 +40,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 public class ConfirmCodeFragment extends Fragment {
 
     //region  Parameter
-    @Inject
-    Config config;
+
 
     @Inject
     SharedPreferences sharedPreferences;

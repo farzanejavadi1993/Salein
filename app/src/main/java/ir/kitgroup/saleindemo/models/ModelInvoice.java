@@ -8,7 +8,8 @@ import java.util.List;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 
 
-
+import androidx.annotation.Keep;
+@Keep
 public class ModelInvoice {
 
     @SerializedName("Invoice")

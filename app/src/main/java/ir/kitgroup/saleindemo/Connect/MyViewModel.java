@@ -1,6 +1,7 @@
 package ir.kitgroup.saleindemo.Connect;
 
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 
 import androidx.lifecycle.MutableLiveData;
@@ -141,6 +142,7 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
+
                             Gson gson = new Gson();
                             Type typeIDs = new TypeToken<ModelAccount>() {
                             }.getType();

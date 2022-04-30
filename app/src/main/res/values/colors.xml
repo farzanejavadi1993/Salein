@@ -12,7 +12,7 @@
     <color name="teal_200">#fff</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#000</color>
-    <color name="black_light">#2f2f2f</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="very_light">#AAEFE5E5</color>
     <color name="cliclColor">#AA337533</color>
@@ -26,7 +26,8 @@
     <color name="edt_color">#9A9292</color>
     <color name="favorite_color">#FFE716</color>
     <color name="invite_friend_color">#FF0000</color>
-
+    <color name="black_l">#6C6C6C</color>
+    <color name="black_light">#2f2f2f</color>
     <color name="colorGreenLight">#12E613</color>
     <color name="color_svg">#333333</color>
 
@@ -47,7 +48,7 @@
 
 
     <color name="linear_edit_background_color">#57ADF3</color>
-    <color name="black_l">#6C6C6C</color>
+
     <color name="black_l_large">#878686</color>
 
 

@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import ir.kitgroup.saleindemo.DataBase.Tables;
-
+import androidx.annotation.Keep;
+@Keep
 public class ModelTable {
     @SerializedName("Table")
     @Expose

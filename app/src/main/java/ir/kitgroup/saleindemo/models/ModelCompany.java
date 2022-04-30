@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
-
+import androidx.annotation.Keep;
+@Keep
 public class ModelCompany {
 
     @SerializedName("Company")

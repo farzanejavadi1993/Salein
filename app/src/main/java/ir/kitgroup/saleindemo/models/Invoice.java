@@ -4,7 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-
+import androidx.annotation.Keep;
+@Keep
 public class Invoice {
 
 

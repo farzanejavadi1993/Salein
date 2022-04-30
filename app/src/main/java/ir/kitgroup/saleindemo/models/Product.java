@@ -7,7 +7,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import ir.kitgroup.saleindemo.classes.Util;
-
+import androidx.annotation.Keep;
+@Keep
 public class Product {
 
     @SerializedName("I")

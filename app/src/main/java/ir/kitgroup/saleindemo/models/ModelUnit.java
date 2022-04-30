@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import ir.kitgroup.saleindemo.DataBase.Unit;
-
+import androidx.annotation.Keep;
+@Keep
 public class ModelUnit {
 
     @SerializedName("Unit")
