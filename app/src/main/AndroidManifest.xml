@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ir.kitgroup.saleindemo">
+    package="ir.kitgroup.saleinhamsafar">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -12,7 +12,7 @@
         android:required="false" />
 
     <application
-        android:name="ir.kitgroup.saleindemo.App"
+        android:name="ir.kitgroup.saleinhamsafar.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_hamsafar_round"
         android:label="@string/app_name_saleindemo"
@@ -39,7 +39,7 @@
             android:value="salein_channel" />
 
         <activity
-            android:name="ir.kitgroup.saleindemo.Activities.LauncherActivity"
+            android:name="ir.kitgroup.saleinhamsafar.Activities.LauncherActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
 
             android:screenOrientation="portrait">
@@ -71,7 +71,7 @@
         <!--        </service>-->
 
         <service
-            android:name="ir.kitgroup.saleindemo.Firebase.MyFirebaseMessagingService">
+            android:name="ir.kitgroup.saleinhamsafar.Firebase.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
