@@ -82,8 +82,6 @@ import static java.lang.Math.min;
 public class MainOrderFragment extends Fragment {
 
     //region Parameter
-    @Inject
-    Config config;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -207,7 +205,7 @@ public class MainOrderFragment extends Fragment {
 
         try {
         ir.kitgroup.saleinhamsafar.DataBase.Product.deleteAll(ir.kitgroup.saleinhamsafar.DataBase.Product.class);
-        if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
+        if (Util.getPackageName(getActivity()).equals("ir.kitgroup.saleinmeat")) {
             Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
             binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
 
@@ -637,7 +635,7 @@ public class MainOrderFragment extends Fragment {
                 return;
 
 
-            if (company.mode == 2 && !config.INSKU_ID.equals("ir.kitgroup.salein"))
+            if (company.mode == 2 && !Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                 getActivity().finish();
             else
                 getActivity().getSupportFragmentManager().popBackStack();
@@ -874,7 +872,7 @@ public class MainOrderFragment extends Fragment {
 
 
         //region CONFIGURATION DATA PRODUCT
-        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences, config);
+        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences);
         productAdapter.setTbl_GUID(Tbl_GUID);
         productAdapter.setInv_GUID(Inv_GUID);
         productAdapter.setType(Seen);

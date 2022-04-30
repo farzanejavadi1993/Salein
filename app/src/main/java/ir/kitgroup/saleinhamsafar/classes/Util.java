@@ -19,6 +19,8 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ir.kitgroup.saleinhamsafar.R;
+
 
 public class Util {
 
@@ -122,9 +124,16 @@ public class Util {
         return cal.getTime();
     }
 
+    public  static  String getPackageName(Activity activity) {
+        String packageName = "";
+        try {
+            PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+            packageName = pInfo.packageName;
 
-    public static String appVersion(Activity activity) throws PackageManager.NameNotFoundException {
-        PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-        return pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageName;
+
     }
 }

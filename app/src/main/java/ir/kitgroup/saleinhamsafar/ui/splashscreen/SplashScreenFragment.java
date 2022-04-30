@@ -1,6 +1,7 @@
 package ir.kitgroup.saleinhamsafar.ui.splashscreen;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -37,7 +38,6 @@ import ir.kitgroup.saleinhamsafar.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleinhamsafar.ui.companies.StoriesFragment;
 import ir.kitgroup.saleinhamsafar.R;
 
-
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
@@ -49,8 +49,7 @@ public class SplashScreenFragment extends Fragment {
 
 
     //region Parameter
-    @Inject
-    Config config;
+
 
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
@@ -83,35 +82,33 @@ public class SplashScreenFragment extends Fragment {
         try {
 
 
-        Company company = Select.from(Company.class).first();
-        sharedPreferences.edit().putBoolean("status", false).apply();
-        hostSelectionInterceptor.setHostBaseUrl();
+            Company company = Select.from(Company.class).first();
+            sharedPreferences.edit().putBoolean("status", false).apply();
+            hostSelectionInterceptor.setHostBaseUrl();
 
 
+            if (Util.getPackageName(getActivity()).equals("ir.kitgroup.saleinmeat")) {
+                try {
+                    Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
+                    binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                } catch (Exception ignored) {
+                }
+            } else
+                Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
 
-        if (config.INSKU_ID.equals("ir.kitgroup.saleinmeat")) {
+
+            String description = company != null && company.DESC != null ? company.DESC : "";
+            String title = company != null && company.N != null ? company.N : "";
+            binding.tvTitle.setText(title);
+            binding.tvDescription.setText(description);
+
             try {
-                Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
-                binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-            } catch (Exception ignored) {
+                binding.tvversion.setText(" نسخه " + appVersion());
+                appId = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
-        } else
-            Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
-
-
-
-        String description = company != null && company.DESC != null ? company.DESC : "";
-        String title = company != null && company.N != null ? company.N : "";
-        binding.tvTitle.setText(title);
-        binding.tvDescription.setText(description);
-
-        try {
-            binding.tvversion.setText(" نسخه " + Util.appVersion(getActivity()));
-            appId = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-         }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -152,7 +149,7 @@ public class SplashScreenFragment extends Fragment {
                 FragmentTransaction addFragment;
                 //region Account Is Login & Register
                 if (Select.from(Account.class).list().size() > 0) {
-                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                    if (Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                         addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
                     else {
                         Bundle bundleMainOrder = new Bundle();
@@ -162,7 +159,7 @@ public class SplashScreenFragment extends Fragment {
                         MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
                         addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment")
-                                //.addToBackStack("MainOrderF")
+                        //.addToBackStack("MainOrderF")
                         ;
                     }
                 }
@@ -173,13 +170,13 @@ public class SplashScreenFragment extends Fragment {
                 addFragment.commit();
 
 
-            }else {
+            } else {
                 binding.animationView1.setImageResource(R.drawable.warning);
                 binding.animationView1.setVisibility(View.VISIBLE);
                 binding.animationView.setVisibility(View.GONE);
                 binding.lnrError.setVisibility(View.VISIBLE);
                 binding.txtErrorr.setText(result.getName());
-                Util.PRODUCTION_BASE_URL="";
+                Util.PRODUCTION_BASE_URL = "";
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
             }
@@ -211,7 +208,7 @@ public class SplashScreenFragment extends Fragment {
                 FragmentTransaction addFragment;
                 //region Account Is Login & Register
                 if (Select.from(Account.class).list().size() > 0) {
-                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                    if (Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                         addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new StoriesFragment(), "StoriesFragment");
                     else {
                         Bundle bundleMainOrder = new Bundle();
@@ -221,7 +218,7 @@ public class SplashScreenFragment extends Fragment {
                         MainOrderFragment mainOrderFragment = new MainOrderFragment();
                         mainOrderFragment.setArguments(bundleMainOrder);
                         addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment")
-                              //  .addToBackStack("MainOrderF")
+                        //  .addToBackStack("MainOrderF")
                         ;
                     }
                 }
@@ -248,7 +245,6 @@ public class SplashScreenFragment extends Fragment {
     //region Custom Method
 
 
-
     //endregion Custom Method
 
 
@@ -264,6 +260,12 @@ public class SplashScreenFragment extends Fragment {
     public void onStop() {
         super.onStop();
     }
+
+    public String appVersion() throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+        return pInfo.versionName;
+    }
+
 
 
 }

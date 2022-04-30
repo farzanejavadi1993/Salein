@@ -40,8 +40,6 @@ import ir.kitgroup.saleinhamsafar.models.Config;
 @AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {
     //region Parameter
-    @Inject
-    Config config;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -228,7 +226,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         FragmentTransaction replaceFragment;
 
-        if (config.mode == 1) {
+        if (Util.getPackageName(LauncherActivity.this).equals("ir.kitgroup.saleinOrder")) {
             //When User Is Login
             if (Select.from(Company.class).list().size() > 0) {
 

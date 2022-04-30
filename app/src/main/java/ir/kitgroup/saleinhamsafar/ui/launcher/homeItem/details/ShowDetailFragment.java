@@ -27,8 +27,7 @@ import ir.kitgroup.saleinhamsafar.models.Config;
 
 @AndroidEntryPoint
 public class ShowDetailFragment extends Fragment {
-    @Inject
-    Config config;
+
 
     private ActivityDetailBinding binding;
     private Company company;

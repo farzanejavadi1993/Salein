@@ -62,8 +62,7 @@ import ir.kitgroup.saleinhamsafar.models.Product;
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {
 
-    @Inject
-    Config config;
+
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -216,7 +215,7 @@ public class SearchProductFragment extends Fragment {
             }
         };
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
-        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences, config);
+        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences);
         String CloseDay = sharedPreferences.getString("close_day", "");
         closeDayList.clear();
         if (!CloseDay.equals("")) {

@@ -33,8 +33,6 @@ import ir.kitgroup.saleinhamsafar.models.Config;
 @AndroidEntryPoint
 public class ContactUsFragment extends Fragment {
 
-    @Inject
-    Config config;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -111,42 +109,42 @@ public class ContactUsFragment extends Fragment {
         });
 
 
-        if ((!config.watsApp.equals("") || !config.Instagram.equals("") ||  !config.website.equals("")) && type==1 )
-            binding.layoutSocial.setVisibility(View.VISIBLE);
+       /* if ((!config.watsApp.equals("") || !config.Instagram.equals("") ||  !config.website.equals("")) && type==1 )
+            binding.layoutSocial.setVisibility(View.VISIBLE)*/;
 
 
 
 
-        binding.watsapp.setOnClickListener(v -> {
-
-            if (!config.watsApp.equals("")){
-
-                boolean install= appInstallOrNot("com.whatsapp");
-
-                if (install){
-
-
-                    Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
-                            Uri.parse(config.watsApp);
-                    intentWhatsAppGroup.setData(uri);
-                    intentWhatsAppGroup.setPackage("com.whatsapp");
-                    startActivity(intentWhatsAppGroup);
-                }else {
-                    Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
-                            .show();
-                }
-
-            }else {
-                Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        binding.watsapp.setOnClickListener(v -> {
+//
+//            if (!config.watsApp.equals("")){
+//
+//                boolean install= appInstallOrNot("com.whatsapp");
+//
+//                if (install){
+//
+//
+//                    Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
+//                            Uri.parse(config.watsApp);
+//                    intentWhatsAppGroup.setData(uri);
+//                    intentWhatsAppGroup.setPackage("com.whatsapp");
+//                    startActivity(intentWhatsAppGroup);
+//                }else {
+//                    Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
+//                            .show();
+//                }
+//
+//            }else {
+//                Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
 
         binding.ivBackFragment.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().popBackStack();;
         });
-        binding.instagram.setOnClickListener(v -> {
+     /*   binding.instagram.setOnClickListener(v -> {
             if (!config.Instagram.equals("")){
                 Uri uri = Uri.parse(config.Instagram);
                 Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
@@ -174,7 +172,7 @@ public class ContactUsFragment extends Fragment {
             }else {
                 Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
 
 

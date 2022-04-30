@@ -49,8 +49,7 @@ import ir.kitgroup.saleinhamsafar.models.Config;
 public class LoginClientFragment extends Fragment {
     //region PARAMETER
 
-    @Inject
-    Config config;
+
 
 
     private MyViewModel myViewModel;

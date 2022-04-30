@@ -77,8 +77,7 @@ import static java.lang.Math.toRadians;
 
 @AndroidEntryPoint
 public class PaymentMobileFragment extends Fragment {
-    @Inject
-    Config config;
+
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -852,7 +851,7 @@ public class PaymentMobileFragment extends Fragment {
                     MainOrderFragment mainOrderFragment = new MainOrderFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
                     FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
-                    if (config.INSKU_ID.equals("ir.kitgroup.salein"))
+                    if (Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                         addFragment.addToBackStack("MainOrderF").commit();
                     else
                         addFragment.commit();

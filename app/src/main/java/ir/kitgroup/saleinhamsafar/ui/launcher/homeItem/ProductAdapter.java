@@ -84,7 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
     private final Company company;
 
-    private final Config config;
+
 
     private final SharedPreferences sharedPreferences;
 
@@ -145,9 +145,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    public ProductAdapter(Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences, Config config) {
+    public ProductAdapter(Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences) {
         this.context = context;
-        this.config = config;
+
         this.productsList = productsList;
         this.company = company;
         this.sharedPreferences = sharedPreferences;
