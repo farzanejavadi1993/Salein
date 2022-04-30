@@ -311,11 +311,11 @@ public class LauncherActivity extends AppCompatActivity {
             }
 
 
-        }else if (config.mode==1 && size==1){
+        }else if (Util.getPackageName(LauncherActivity.this).equals("ir.kitgroup.saleinOrder")&& size==1){
             messageTextExitDialog.setText("آیا از برنامه خارج می شوید؟");
             ExitDialog.show();
         }
-        else if (config.mode == 1 && getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderF")) {
+        else if (Util.getPackageName(LauncherActivity.this).equals("ir.kitgroup.saleinOrder") && getSupportFragmentManager().getBackStackEntryAt(size - 1).getName().equals("MainOrderF")) {
             getVisibilityBottomBar(false);
             getSupportFragmentManager().popBackStack();
 

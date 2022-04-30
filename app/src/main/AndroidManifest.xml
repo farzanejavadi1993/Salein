@@ -28,7 +28,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/meat_icon" />
+            android:resource="@drawable/loading" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"

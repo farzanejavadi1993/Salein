@@ -50,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String channelId = "salein_channel";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.meat_icon)
+                .setSmallIcon(R.drawable.loading)
                 .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
