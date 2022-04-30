@@ -30,13 +30,14 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinhamsafar.Connect.MyViewModel;
 import ir.kitgroup.saleinhamsafar.DataBase.Account;
+import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.saleinhamsafar.ui.logins.LoginClientFragment;
 import ir.kitgroup.saleinhamsafar.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleinhamsafar.ui.companies.StoriesFragment;
 import ir.kitgroup.saleinhamsafar.R;
 
-import ir.kitgroup.saleinhamsafar.classes.Constant;
+
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
@@ -105,7 +106,7 @@ public class SplashScreenFragment extends Fragment {
         binding.tvDescription.setText(description);
 
         try {
-            binding.tvversion.setText(" نسخه " + appVersion());
+            binding.tvversion.setText(" نسخه " + Util.appVersion(getActivity()));
             appId = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -145,7 +146,7 @@ public class SplashScreenFragment extends Fragment {
                 return;
             myViewModel.getResultMessage().setValue(null);
             if (Select.from(Company.class).list().size() > 0) {
-                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
                 FragmentTransaction addFragment;
@@ -178,7 +179,7 @@ public class SplashScreenFragment extends Fragment {
                 binding.animationView.setVisibility(View.GONE);
                 binding.lnrError.setVisibility(View.VISIBLE);
                 binding.txtErrorr.setText(result.getName());
-                Constant.PRODUCTION_BASE_URL="";
+                Util.PRODUCTION_BASE_URL="";
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
             }
@@ -203,7 +204,7 @@ public class SplashScreenFragment extends Fragment {
                     binding.lnrError.setVisibility(View.VISIBLE);
                     return;
                 }
-                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 
@@ -245,10 +246,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
     //region Custom Method
-    public String appVersion() throws PackageManager.NameNotFoundException {
-        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-        return pInfo.versionName;
-    }
+
 
 
     //endregion Custom Method

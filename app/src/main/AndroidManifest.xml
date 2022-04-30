@@ -55,13 +55,13 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="295" />
+            android:value="296" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="ir.kitgroup.saleindemo.DataBase" />
+            android:value="ir.kitgroup.saleinhamsafar.DataBase" />
 
         <!--        <service-->
         <!--            android:name=".Firebase.MyGetMessage">-->

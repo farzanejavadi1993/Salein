@@ -55,6 +55,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinhamsafar.Activities.LauncherActivity;
+import ir.kitgroup.saleinhamsafar.databinding.FragmentMobileOrderMainBinding;
 import ir.kitgroup.saleinhamsafar.ui.organization.AccountAdapter;
 import ir.kitgroup.saleinhamsafar.ui.companies.CompanyFragment;
 import ir.kitgroup.saleinhamsafar.Connect.API;
@@ -71,7 +72,7 @@ import ir.kitgroup.saleinhamsafar.models.Description;
 import ir.kitgroup.saleinhamsafar.models.Product;
 import ir.kitgroup.saleinhamsafar.models.ProductLevel1;
 import ir.kitgroup.saleinhamsafar.R;
-import ir.kitgroup.saleinhamsafar.databinding.FragmentMobileOrderMainBinding;
+
 import ir.kitgroup.saleinhamsafar.models.ProductLevel2;
 import ir.kitgroup.saleinhamsafar.ui.map.MapFragment;
 

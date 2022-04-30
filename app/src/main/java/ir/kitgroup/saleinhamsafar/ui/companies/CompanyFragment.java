@@ -32,12 +32,13 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleinhamsafar.Activities.LauncherActivity;
+import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleinhamsafar.Connect.MyViewModel;
 import ir.kitgroup.saleinhamsafar.DataBase.Account;
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
 import ir.kitgroup.saleinhamsafar.R;
-import ir.kitgroup.saleinhamsafar.classes.Constant;
+
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleinhamsafar.databinding.FragmentCompanyBinding;
 
@@ -137,7 +138,7 @@ public class CompanyFragment extends Fragment {
 
                 return;
             }
-            Constant.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
+            Util.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
             sharedPreferences.edit().putBoolean("status", true).apply();
             hostSelectionInterceptor.setHostBaseUrl();
             companySelect = company;
@@ -232,7 +233,7 @@ public class CompanyFragment extends Fragment {
             myViewModel.getResultCompany().setValue(null);
             if (result.size() > 0) {
 
-                Constant.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 

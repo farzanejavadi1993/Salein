@@ -28,4 +28,5 @@ public class Company extends SugarRecord {
     public String numberPos="";
 
 
+
 }

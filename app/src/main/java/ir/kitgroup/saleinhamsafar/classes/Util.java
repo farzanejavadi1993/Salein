@@ -3,6 +3,8 @@ package ir.kitgroup.saleinhamsafar.classes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +26,8 @@ public class Util {
     public static double width = 0.0;
     public static double height = 0.0;
     public static double screenSize = 0.0;
+    public static String DEVELOPMENT_BASE_URL="http://api.kitgroup.ir/api/REST/";
+    public static String PRODUCTION_BASE_URL="";
 
 
 
@@ -119,5 +123,8 @@ public class Util {
     }
 
 
-    public static String Base_Url = "";
+    public static String appVersion(Activity activity) throws PackageManager.NameNotFoundException {
+        PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+        return pInfo.versionName;
+    }
 }

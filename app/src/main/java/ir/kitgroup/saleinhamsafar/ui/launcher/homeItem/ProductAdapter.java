@@ -6,7 +6,14 @@ import android.app.Activity;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -22,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +45,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
@@ -98,6 +111,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private final List<Unit> unitList;
     private List<String> closeDateList;
     private String valueOfDay;
+    private int imageId = 0;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
@@ -240,6 +254,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
@@ -266,12 +281,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             String ip = company.IP1;
 
+            String input_id = "ic_"+company.INSK_ID.split("ir.kitgroup.salein")[1];
+            if (imageId==0)
+            imageId= context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
+
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
-                    .error(config.imageIcon)
-                    .placeholder(R.drawable.loading)
+                    .error(imageId)
+                    .placeholder(imageId)
                     .into(holder.productImage);
 
 
@@ -1053,6 +1072,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         }
     }
+
 
 
 }

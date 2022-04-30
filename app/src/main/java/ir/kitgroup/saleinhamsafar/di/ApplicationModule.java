@@ -30,8 +30,9 @@ import dagger.hilt.components.SingletonComponent;
 
 import ir.kitgroup.saleinhamsafar.Connect.API;
 import ir.kitgroup.saleinhamsafar.R;
-import ir.kitgroup.saleinhamsafar.classes.Constant;
+
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
+import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.models.Config;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -182,7 +183,7 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Constant.DEVELOPMENT_BASE_URL)
+                .baseUrl(Util.DEVELOPMENT_BASE_URL)
                 .client(okHttpClient)
                 .build();
 
