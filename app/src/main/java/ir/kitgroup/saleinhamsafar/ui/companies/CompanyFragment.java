@@ -221,7 +221,7 @@ public class CompanyFragment extends Fragment {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-            myViewModel.getResultMessage().setValue(null);
+           // myViewModel.getResultMessage().setValue(null);
         });
 
         myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {

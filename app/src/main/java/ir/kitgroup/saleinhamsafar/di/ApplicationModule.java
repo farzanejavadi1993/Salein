@@ -29,11 +29,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
 import ir.kitgroup.saleinhamsafar.Connect.API;
-import ir.kitgroup.saleinhamsafar.R;
+
 
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleinhamsafar.classes.Util;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -79,8 +79,8 @@ public class ApplicationModule {
         return new OkHttpClient().newBuilder()
                 .cache(mCache)
                 .retryOnConnectionFailure(true)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(hostSelectionInterceptor)
                 .followRedirects(true)
                 .followSslRedirects(true)

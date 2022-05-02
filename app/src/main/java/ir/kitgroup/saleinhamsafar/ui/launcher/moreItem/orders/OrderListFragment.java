@@ -289,7 +289,7 @@ public class OrderListFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+           // myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
 

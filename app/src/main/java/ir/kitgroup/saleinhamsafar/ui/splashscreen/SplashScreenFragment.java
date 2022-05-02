@@ -41,7 +41,7 @@ import ir.kitgroup.saleinhamsafar.R;
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 
 
 @AndroidEntryPoint
@@ -141,7 +141,7 @@ public class SplashScreenFragment extends Fragment {
 
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+         //   myViewModel.getResultMessage().setValue(null);
             if (Select.from(Company.class).list().size() > 0) {
                 Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();

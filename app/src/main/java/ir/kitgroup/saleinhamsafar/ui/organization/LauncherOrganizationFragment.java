@@ -421,7 +421,7 @@ public class LauncherOrganizationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         binding.progressbar.setVisibility(View.VISIBLE);
 
 
@@ -437,7 +437,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 return;
             }
 
-            myViewModel.getResultMessage().setValue(null);
+          //  myViewModel.getResultMessage().setValue(null);
             binding.progressbar.setVisibility(View.GONE);
             binding.refreshLayout.setRefreshing(false);
 

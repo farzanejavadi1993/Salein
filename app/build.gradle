@@ -20,26 +20,28 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
+
+    
+
 
     buildTypes {
         proguard {
             debuggable false
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard.cfg'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro', 'proguard.cfg'
         }
         testBuildType "proguard"
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             proguardFiles 'proguard-rules.pro'
         }
-
-
     }
 
 

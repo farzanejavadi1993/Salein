@@ -42,7 +42,7 @@ import ir.kitgroup.saleinhamsafar.classes.Util;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
 import ir.kitgroup.saleinhamsafar.databinding.FragmentLoginMobileBinding;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 
 
 @AndroidEntryPoint
@@ -66,7 +66,7 @@ public class LoginClientFragment extends Fragment {
 
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            myViewModel.getResultMessage().setValue(null);
+         //   myViewModel.getResultMessage().setValue(null);
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
             binding.btnLogin.setEnabled(true);

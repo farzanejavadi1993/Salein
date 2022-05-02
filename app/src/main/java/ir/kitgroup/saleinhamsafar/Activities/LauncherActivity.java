@@ -35,7 +35,7 @@ import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.saleinhamsafar.databinding.ActivityLauncherBinding;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 
 @AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {

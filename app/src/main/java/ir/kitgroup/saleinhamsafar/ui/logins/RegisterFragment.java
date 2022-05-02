@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.saleinhamsafar.Connect.MyViewModel;
@@ -34,7 +35,7 @@ import ir.kitgroup.saleinhamsafar.databinding.FragmentRegisterBinding;
 import ir.kitgroup.saleinhamsafar.models.Setting;
 
 
-
+@AndroidEntryPoint
 public class RegisterFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentRegisterBinding binding;
@@ -135,7 +136,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
 
         myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
@@ -203,7 +204,7 @@ public class RegisterFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+          //  myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

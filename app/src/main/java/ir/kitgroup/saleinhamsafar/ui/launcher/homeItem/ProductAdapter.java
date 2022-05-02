@@ -71,7 +71,7 @@ import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.DataBase.InvoiceDetail;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 import ir.kitgroup.saleinhamsafar.models.ModelLog;
 import ir.kitgroup.saleinhamsafar.R;
 import ir.kitgroup.saleinhamsafar.models.Product;
@@ -83,7 +83,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private final Activity context;
 
     private final Company company;
-
+    private String defaultCoff = "0";
 
 
     private final SharedPreferences sharedPreferences;
@@ -109,12 +109,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private API api;
 
     private final List<Unit> unitList;
-    private List<String> closeDateList;
+    private List<String> closeDateList=new ArrayList<>();
     private String valueOfDay;
     private int imageId = 0;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
-
 
 
     public interface ClickItem {
@@ -154,7 +153,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         df = new DecimalFormat();
         compositeDisposable = new CompositeDisposable();
         unitList = Select.from(Unit.class).list();
-
+        defaultCoff = sharedPreferences.getString("coff", "0");
         Calendar calendar = Calendar.getInstance();
         switch (calendar.getTime().getDay()) {
 
@@ -263,7 +262,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         if (productsList.get(position) != null) {
             holder.error.setText("");
 
-            if (closeDateList.contains(valueOfDay))
+            if (closeDateList!=null && closeDateList.size()>0 && closeDateList.contains(valueOfDay))
                 holder.ProductAmountTxt.setEnabled(false);
             else
                 holder.ProductAmountTxt.setEnabled(true);
@@ -275,15 +274,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.ProductAmountTxt.clearFocus();
 
 
-         InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
-
+            InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
             String ip = company.IP1;
 
-            String input_id = "ic_"+company.INSK_ID.split("ir.kitgroup.salein")[1];
-            if (imageId==0)
-            imageId= context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
+            String input_id = "ic_" + company.INSK_ID.split("ir.kitgroup.salein")[1];
+            if (imageId == 0)
+                imageId = context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
 
 
             Picasso.get()
@@ -418,7 +416,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             holder.ivMax.setOnClickListener(view ->
                     {
 
-                        if (closeDateList.contains(valueOfDay)) {
+                        if (closeDateList.size()>0 && closeDateList.contains(valueOfDay)) {
                             Toasty.warning(context, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
                             return;
                         }
@@ -445,7 +443,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             holder.ivMinus.setOnClickListener(v ->
                     {
-                        if (closeDateList.contains(valueOfDay)) {
+                        if (closeDateList.size()>0 && closeDateList.contains(valueOfDay)) {
                             Toasty.warning(context, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
                             return;
                         }
@@ -660,8 +658,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
                                         double mainCoef1 = productsList.get(position).getCoef1();
+
+
                                         double coef1 = productsList.get(position).getCoef1();
                                         double coef2 = productsList.get(position).getCoef2();
+                                        if (defaultCoff.equals("1")){
+                                            coef2= productsList.get(position).getCoef1();
+                                        }else if (defaultCoff.equals("2")){
+                                            coef1= productsList.get(position).getCoef2();
+                                        }
+
                                         double amount = 0;
 
                                         if (remain <= 0) {
@@ -943,6 +949,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             double coef1 = productsList.get(position).getCoef1();
             double coef2 = productsList.get(position).getCoef2();
 
+            if (defaultCoff.equals("1")){
+                coef2= productsList.get(position).getCoef1();
+            }else if (defaultCoff.equals("2")){
+                coef1= productsList.get(position).getCoef2();
+            }
 
             //region PlusAmount
             if (MinOrPlus == 1) {
@@ -1072,7 +1083,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         }
     }
-
 
 
 }

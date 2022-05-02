@@ -28,7 +28,7 @@ import ir.kitgroup.saleinhamsafar.DataBase.Account;
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
 import ir.kitgroup.saleinhamsafar.R;
 import ir.kitgroup.saleinhamsafar.databinding.ContactUsFragmentBinding;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 
 @AndroidEntryPoint
 public class ContactUsFragment extends Fragment {

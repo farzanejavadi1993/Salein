@@ -96,7 +96,9 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
 
                         })
-                        .subscribe(jsonElement -> resultSendSms.setValue(""), throwable -> eMessage.setValue(new Message(-1, "خطا در ارسال پیامک", ""))));
+                        .subscribe(jsonElement ->
+                                        resultSendSms.setValue(""),
+                                throwable -> eMessage.setValue(new Message(-1, "خطا در ارسال پیامک", ""))));
     }
     public MutableLiveData<String> getResultSmsLogin() {
         return resultSendSms;
@@ -125,7 +127,8 @@ public class MyViewModel extends ViewModel {
                             } catch (Exception ignored) {
                             }
 
-                        }, throwable -> eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))));
+                        }, throwable ->
+                                eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))));
     }
     public MutableLiveData<List<Company>> getResultCompany() {
         return resultCompanies;
@@ -547,7 +550,7 @@ public class MyViewModel extends ViewModel {
    
    
     public void getSettingPrice(String user, String passWord) {
-        compositeDisposable.clear();
+       compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.getSetting(user, passWord)
                         .subscribeOn(Schedulers.io())

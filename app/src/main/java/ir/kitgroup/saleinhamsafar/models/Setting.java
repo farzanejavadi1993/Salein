@@ -19,5 +19,6 @@ public class Setting  {
     public String LINK_UPDATE;
     public String LINK_PAYMENT;
     public String ACC_STATUS_APP;
+    public String COEF;
 
 }

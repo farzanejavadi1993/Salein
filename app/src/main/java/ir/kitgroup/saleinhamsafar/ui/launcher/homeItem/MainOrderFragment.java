@@ -66,7 +66,7 @@ import ir.kitgroup.saleinhamsafar.DataBase.InvoiceDetail;
 import ir.kitgroup.saleinhamsafar.classes.PaginationScrollListener;
 import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 import ir.kitgroup.saleinhamsafar.models.Setting;
 import ir.kitgroup.saleinhamsafar.models.Description;
 import ir.kitgroup.saleinhamsafar.models.Product;
@@ -1032,6 +1032,7 @@ public class MainOrderFragment extends Fragment {
                     closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
                 }
                 sharedPreferences.edit().putString("close_day", CloseDay).apply();
+                sharedPreferences.edit().putString("coff", settingsList.get(0).COEF!=null?settingsList.get(0).COEF:"0").apply();
                 productAdapter.setCloseListDate(closeDayList);
                 String Update = settingsList.get(0).UPDATE_APP;
                 try {
@@ -1342,12 +1343,13 @@ public class MainOrderFragment extends Fragment {
             customProgress.hideProgress();
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+           // myViewModel.getResultMessage().setValue(null);
             if (result.getCode() == -4) {
 
                 sharedPreferences.edit().putBoolean("vip", false).apply();
                 sharedPreferences.edit().putBoolean("discount", false).apply();
-            } else if (result.getCode() == -2) {
+            }
+            else if (result.getCode() == -2) {
                 accList.clear();
                 accAdapter.notifyDataSetChanged();
             }

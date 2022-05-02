@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.content.res.ColorStateList;
@@ -28,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -98,16 +98,10 @@ import ir.kitgroup.saleinhamsafar.ui.logins.RegisterFragment;
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
 
-import javax.inject.Inject;
 
 @AndroidEntryPoint
+
 public class MapFragment extends Fragment implements PermissionsListener {
-
-
-    @Inject
-    SharedPreferences sharedPreferences;
-
-
 
     //region Parameter
     private MyViewModel myViewModel;
@@ -181,6 +175,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        try {
+
+        }catch (Exception e){
+            Toast.makeText(getActivity(), "jhjh", Toast.LENGTH_SHORT).show();
+        }
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(4);
 
@@ -766,7 +765,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
         myViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null) {
@@ -910,7 +910,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             if (result == null)
                 return;
 
-            myViewModel.getResultMessage().setValue(null);
+          //  myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
 
@@ -1109,12 +1109,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Override
     public void onStart() {
         super.onStart();
-        binding.mapView.onStart();
+
+          binding.mapView.onStart();
+
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
         binding.mapView.onStop();
 
     }
@@ -1122,19 +1126,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Override
     public void onResume() {
         super.onResume();
-        binding.mapView.onResume();
+
+      binding.mapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
         binding.mapView.onPause();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        binding.mapView.onLowMemory();
+
+       binding.mapView.onLowMemory();
     }
 
     @Override
@@ -1154,6 +1161,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
     private void setState(State state) {
+        Toast.makeText(getActivity(), "satate", Toast.LENGTH_SHORT).show();
         this.state = state;
         switch (state) {
             case MAP:

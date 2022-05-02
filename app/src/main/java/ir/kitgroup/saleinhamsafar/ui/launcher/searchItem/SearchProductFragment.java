@@ -54,7 +54,7 @@ import ir.kitgroup.saleinhamsafar.classes.Util;
 
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
 import ir.kitgroup.saleinhamsafar.databinding.FragmentSearchProductBinding;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 import ir.kitgroup.saleinhamsafar.models.Description;
 import ir.kitgroup.saleinhamsafar.models.Product;
 
@@ -330,7 +330,7 @@ public class SearchProductFragment extends Fragment {
             customProgress.hideProgress();
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+         //   myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

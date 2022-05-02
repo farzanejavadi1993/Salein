@@ -57,7 +57,7 @@ import ir.kitgroup.saleinhamsafar.DataBase.Tables;
 import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.classes.Utilities;
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 import ir.kitgroup.saleinhamsafar.models.ModelDate;
 import ir.kitgroup.saleinhamsafar.models.Setting;
 import ir.kitgroup.saleinhamsafar.models.PaymentRecieptDetail;
@@ -1239,7 +1239,7 @@ public class PaymentMobileFragment extends Fragment {
             if (result == null)
                 return;
 
-            myViewModel.getResultMessage().setValue(null);
+          //  myViewModel.getResultMessage().setValue(null);
             Toasty.error(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
             disableAccount = sharedPreferences.getBoolean("disableAccount", false);
             if (disableAccount && company.mode==2)

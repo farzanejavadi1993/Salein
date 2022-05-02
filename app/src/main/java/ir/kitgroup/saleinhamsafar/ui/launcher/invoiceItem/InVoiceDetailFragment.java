@@ -1109,7 +1109,7 @@ public class InVoiceDetailFragment extends Fragment {
             customProgress.hideProgress();
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+           // myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

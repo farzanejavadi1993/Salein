@@ -23,7 +23,7 @@ import ir.kitgroup.saleinhamsafar.R;
 import ir.kitgroup.saleinhamsafar.classes.Util;
 import ir.kitgroup.saleinhamsafar.databinding.ActivityDetailBinding;
 import ir.kitgroup.saleinhamsafar.DataBase.Company;
-import ir.kitgroup.saleinhamsafar.models.Config;
+
 
 @AndroidEntryPoint
 public class ShowDetailFragment extends Fragment {
@@ -95,7 +95,7 @@ public class ShowDetailFragment extends Fragment {
 
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+         //   myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

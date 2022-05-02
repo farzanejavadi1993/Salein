@@ -267,7 +267,7 @@ public class SettingFragment extends Fragment {
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
-            myViewModel.getResultMessage().setValue(null);
+          //  myViewModel.getResultMessage().setValue(null);
             if (disableAccount)
                 showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد",2);
 
