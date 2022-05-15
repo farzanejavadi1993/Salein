@@ -61,7 +61,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_location"
+                app:srcCompat="@drawable/ic_location"
                 tools:ignore="ContentDescription" />
 
 
@@ -168,7 +168,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="22dp"
             android:padding="@dimen/margin10"
-            android:src="@drawable/ic_cross"
+            app:srcCompat="@drawable/ic_cross"
             app:elevation="6dp"
             app:fabSize="normal"
             app:layout_constraintBottom_toTopOf="@+id/btn_register_information"

@@ -28,7 +28,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@drawable/ic_close"
+                    app:srcCompat="@drawable/ic_close"
                     android:layout_margin="8dp"
                     android:layout_gravity="right"
                     android:layout_width="24dp"

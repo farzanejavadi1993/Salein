@@ -57,7 +57,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin8"
                     android:layout_marginRight="@dimen/margin8"
-                    android:src="@drawable/ic_search"
+                    app:srcCompat="@drawable/ic_search"
                     tools:ignore="ContentDescription" />
 
 

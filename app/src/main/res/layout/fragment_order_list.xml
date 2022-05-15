@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
 
@@ -57,7 +58,7 @@
                 android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                android:src="@drawable/ic_fi_rr_angle_small_left"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                 tools:ignore="ContentDescription" />
 
             <TextView

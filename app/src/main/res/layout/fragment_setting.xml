@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,7 +58,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_power"
+                    app:srcCompat="@drawable/ic_power"
                     android:layout_marginLeft="16dp"
                     android:layout_alignParentLeft="true"
                     android:layout_width="30dp"
@@ -102,7 +102,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_profile"
+                    app:srcCompat="@drawable/ic_profile"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -112,7 +112,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:padding="6dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     tools:ignore="ContentDescription" />
 
             </RelativeLayout>
@@ -159,7 +159,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_cradit"
+                    app:srcCompat="@drawable/ic_cradit"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -183,7 +183,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:padding="6dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     tools:ignore="ContentDescription" />
 
 
@@ -226,7 +226,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_share"
+                    app:srcCompat="@drawable/ic_share"
                     tools:ignore="ContentDescription" />
 
 
@@ -269,7 +269,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_buylist"
+                    app:srcCompat="@drawable/ic_buylist"
                     tools:ignore="ContentDescription" />
 
 
@@ -312,7 +312,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_support"
+                    app:srcCompat="@drawable/ic_support"
                     tools:ignore="ContentDescription" />
 
 
@@ -356,7 +356,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@drawable/ic_aboout_us"
+                    app:srcCompat="@drawable/ic_aboout_us"
                     tools:ignore="ContentDescription" />
 
 

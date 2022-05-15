@@ -36,7 +36,7 @@
                 android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                android:src="@drawable/ic_fi_rr_angle_small_left"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -133,7 +133,7 @@
                         android:layout_marginTop="@dimen/margin8"
                         android:layout_marginEnd="@dimen/margin8"
                         android:layout_marginBottom="@dimen/margin8"
-                        android:src="@drawable/ic_support" />
+                        app:srcCompat="@drawable/ic_support" />
                 </RelativeLayout>
 
                 <TextView
@@ -192,7 +192,7 @@
                 android:layout_below="@+id/socialcommunicate"
                 android:layout_marginLeft="@dimen/margin10"
                 android:layout_toRightOf="@+id/watsapp"
-                android:src="@drawable/ic_chorome" />
+                app:srcCompat="@drawable/ic_chorome" />
             <ImageView
                 android:layout_marginRight="@dimen/margin10"
                 android:layout_below="@+id/socialcommunicate"
@@ -200,7 +200,7 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                android:layout_toLeftOf="@+id/watsapp"
-                android:src="@drawable/ic_instagram" />
+                app:srcCompat="@drawable/ic_instagram" />
 
             <ImageView
                 android:layout_below="@+id/socialcommunicate"
@@ -208,7 +208,7 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_watsapp" />
+                app:srcCompat="@drawable/ic_watsapp" />
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

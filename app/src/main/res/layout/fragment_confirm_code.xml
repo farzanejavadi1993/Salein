@@ -49,7 +49,7 @@
                     android:focusable="true"
                     android:padding="@dimen/icon_normal_padding_size"
                     android:rotationY="180"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     tools:ignore="ContentDescription" />
 
                 <TextView

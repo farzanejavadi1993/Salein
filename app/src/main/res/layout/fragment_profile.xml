@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -47,7 +48,7 @@
                     android:focusable="true"
                     android:padding="8dp"
                     android:rotationY="180"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -100,7 +101,7 @@
                         android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="12dp"
-                        android:src="@drawable/ic_profile" />
+                        app:srcCompat="@drawable/ic_profile" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -141,7 +142,7 @@
                         android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="12dp"
-                        android:src="@drawable/ic_phone" />
+                        app:srcCompat="@drawable/ic_phone" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -158,7 +159,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_location" />
+                    app:srcCompat="@drawable/ic_location" />
 
                 <TextView
 
@@ -219,7 +220,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_location" />
+                    app:srcCompat="@drawable/ic_location" />
 
                 <TextView
                     android:layout_width="match_parent"

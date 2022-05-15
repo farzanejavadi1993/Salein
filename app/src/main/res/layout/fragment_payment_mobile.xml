@@ -38,7 +38,7 @@
                 android:focusable="true"
                 android:padding="@dimen/margin4"
                 android:rotationY="180"
-                android:src="@drawable/ic_back"
+                app:srcCompat="@drawable/ic_back"
                 tools:ignore="ContentDescription" />
 
 
@@ -112,7 +112,7 @@
                         android:id="@+id/tv_add_address"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:src="@drawable/ic_plus_new"
+                        app:srcCompat="@drawable/ic_plus_new"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -164,7 +164,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_pay_place"
+                        app:srcCompat="@drawable/ic_pay_place"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -190,7 +190,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_tik"
+                        app:srcCompat="@drawable/ic_tik"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -217,7 +217,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_cradit"
+                        app:srcCompat="@drawable/ic_cradit"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -254,7 +254,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_tik"
+                        app:srcCompat="@drawable/ic_tik"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -325,7 +325,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_plus_new"
+                        app:srcCompat="@drawable/ic_plus_new"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -32,7 +32,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/ic_close"
+                app:srcCompat="@drawable/ic_close"
                 android:layout_width="24dp"
                 android:layout_height="24dp"/>
         </RelativeLayout>

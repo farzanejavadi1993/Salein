@@ -2,6 +2,7 @@
 <LinearLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:clickable="true"
@@ -74,7 +75,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/order_list_item_recycle_editText"
                     android:background="@drawable/minus_background"
-                    android:src="@drawable/ic_minus_red" />
+                    app:srcCompat="@drawable/ic_minus_red" />
 
                 <EditText
                     android:layout_toLeftOf="@+id/iv_max_invoice"
@@ -100,7 +101,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/plus_background"
-                    android:src="@drawable/ic_plus_white" />
+                    app:srcCompat="@drawable/ic_plus_white" />
 
             </RelativeLayout>
 
@@ -138,7 +139,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="@dimen/margin10"
-            android:src="@drawable/ic_close" />
+            app:srcCompat="@drawable/ic_close" />
 
 
         <ProgressBar

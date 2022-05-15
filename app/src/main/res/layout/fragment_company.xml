@@ -30,7 +30,7 @@
                 android:focusable="true"
                 android:padding="@dimen/margin4"
                 android:rotationY="180"
-                android:src="@drawable/ic_back"
+                app:srcCompat="@drawable/ic_back"
                 tools:ignore="ContentDescription" />
 
 

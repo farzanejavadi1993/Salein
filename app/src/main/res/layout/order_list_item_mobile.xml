@@ -39,7 +39,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:padding="3dp"
-                android:src="@drawable/ic_fi_rr_angle_small_left" />
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
             <TextView
@@ -124,7 +124,7 @@
                         android:layout_height="25dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_calendar_wait" />
+                        app:srcCompat="@drawable/ic_calendar_wait" />
 
 
                     <TextView
@@ -156,7 +156,7 @@
                         android:layout_height="25dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_calendar" />
+                        app:srcCompat="@drawable/ic_calendar" />
 
                     <TextView
                         android:id="@+id/tv_date_order"
@@ -190,7 +190,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_location" />
+                    app:srcCompat="@drawable/ic_location" />
 
                 <TextView
                     android:id="@+id/txtAddress"
@@ -241,7 +241,7 @@
                     android:clickable="true"
                     android:focusable="true"
 
-                    android:src="@drawable/ic_send" />
+                    app:srcCompat="@drawable/ic_send" />
 
                 <EditText
                     android:id="@+id/edt_description"

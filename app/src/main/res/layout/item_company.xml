@@ -63,7 +63,7 @@
             android:layout_height="30dp"
             android:layout_marginRight="@dimen/margin10"
             android:padding="5dp"
-            android:src="@drawable/ic_favorite"
+            app:srcCompat="@drawable/ic_favorite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +76,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="10dp"
-            android:src="@drawable/ic_fi_rr_angle_small_left"
+            app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

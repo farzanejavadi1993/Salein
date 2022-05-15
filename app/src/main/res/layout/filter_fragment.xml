@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:focusable="true"
         android:clickable="true"
@@ -71,7 +71,7 @@
 
 
                 <ImageView
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     android:layout_alignParentLeft="true"
 
                     android:layout_width="24dp"
@@ -112,7 +112,7 @@
 
 
                 <ImageView
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     android:layout_alignParentLeft="true"
                     android:layout_width="24dp"
                     android:padding="5dp"
@@ -160,7 +160,7 @@
                     android:layout_marginLeft="22dp"
 
                     android:padding="5dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
 
@@ -200,7 +200,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="22dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
 
@@ -241,7 +241,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="22dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left" />
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
 

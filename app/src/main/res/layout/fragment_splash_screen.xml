@@ -72,7 +72,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toRightOf="@+id/txtErrorr"
-                    android:src="@drawable/ic_resend" />
+                    app:srcCompat="@drawable/ic_resend" />
 
                 <TextView
 
