@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.models.Invoice;
 import ir.kitgroup.saleindemo.R;
 
@@ -119,7 +119,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         else {
             holder.layoutAddress.setVisibility(View.VISIBLE);
 
-            Account account= Select.from(Account.class).first();
+            User account= Select.from(User.class).first();
             if (account!=null&&invoice.INV_DEFAULT_ADDRESS.equals("1"))
                 holder.tvAddress.setText(account.ADR);
             else if (account!=null&&invoice.INV_DEFAULT_ADDRESS.equals("2"))

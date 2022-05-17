@@ -40,7 +40,7 @@ import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Product;
 
 import ir.kitgroup.saleindemo.DataBase.Tables;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.models.OrderType;
@@ -130,8 +130,8 @@ public class LauncherOrganizationFragment extends Fragment {
             switch (TypeClickButtonDialog) {
                 case "logOut":
 
-                    if (Account.count(Account.class) > 0)
-                        Account.deleteAll(Account.class);
+                    if (User.count(User.class) > 0)
+                        User.deleteAll(User.class);
 
 
                     if (InvoiceDetail.count(InvoiceDetail.class) > 0)
@@ -293,7 +293,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         tableAdapter.setOnClickItemListener((organization, Name, Reserve, T_GUID, Inv_GUID) -> {
-            Account.deleteAll(Account.class);
+            User.deleteAll(User.class);
             binding.txtError.setText("");
             if (Reserve) {
                 Bundle bundle = new Bundle();
@@ -358,7 +358,7 @@ public class LauncherOrganizationFragment extends Fragment {
 
         getOutOrderAdapter.setOnClickItemListener((name, code, ty) -> {
 
-            Account.deleteAll(Account.class);
+            User.deleteAll(User.class);
             if (code == 0 && ty == 0) {
                 filter("whole");
                 binding.txtError.setText("");

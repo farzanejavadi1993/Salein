@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
-            android:elevation="4sp"
+            android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,7 @@
             android:layout_marginStart="22dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="22dp"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textColor="#000"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,7 @@
 
             android:textStyle="normal"
             android:textColor="@color/medium_color"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:gravity="center"
             android:id="@+id/description"
             android:layout_width="0dp"
@@ -146,7 +146,7 @@
                     android:layout_marginEnd="20dp"
 
                     android:textColor="@color/purple_700"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/relativeLayout2"
@@ -180,7 +180,7 @@
                 android:gravity="right"
                 android:text="ما را در شبکه های جتماعی دنبال کنید."
                 android:textColor="@color/purple_700"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
 

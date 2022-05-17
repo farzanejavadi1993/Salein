@@ -13,7 +13,7 @@
         android:gravity="center_vertical"
         android:id="@+id/tv_time"
         android:textColor="@color/medium_color"
-        android:textSize="12sp"
+        android:textSize="12dp"
         android:layout_width="wrap_content"
         android:layout_height="46dp"
         android:layout_marginEnd="22dp"

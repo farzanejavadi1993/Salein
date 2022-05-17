@@ -42,7 +42,8 @@
             android:name="ir.kitgroup.saleindemo.Activities.LauncherActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
 
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +56,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="300" />
+            android:value="302" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -71,7 +72,8 @@
         <!--        </service>-->
 
         <service
-            android:name="ir.kitgroup.saleindemo.Firebase.MyFirebaseMessagingService">
+            android:name="ir.kitgroup.saleindemo.Firebase.MyFirebaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

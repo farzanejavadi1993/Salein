@@ -39,7 +39,7 @@ public class AboutUsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         company= Select.from(Company.class).first();
         binding.txtDescription.setText(company!=null && company.ABUS !=null?company.ABUS :"");

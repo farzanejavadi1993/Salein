@@ -23,12 +23,13 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.databinding.FragmentVerifyBinding;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.map.MapFragment;
 import ir.kitgroup.saleindemo.ui.companies.StoriesFragment;
-import ir.kitgroup.saleindemo.databinding.FragmentConfirmCodeBinding;
+
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 
@@ -36,7 +37,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 
 @AndroidEntryPoint
 
-public class ConfirmCodeFragment extends Fragment {
+public class VerifyFragment extends Fragment {
 
     //region  Parameter
 
@@ -47,7 +48,7 @@ public class ConfirmCodeFragment extends Fragment {
 
     private MyViewModel myViewModel;
     private Company company;
-    private FragmentConfirmCodeBinding binding;
+    private FragmentVerifyBinding binding;
     private int code;
     private String mobileNumber = "";
     //endregion Parameter
@@ -57,7 +58,7 @@ public class ConfirmCodeFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentConfirmCodeBinding.inflate(getLayoutInflater());
+        binding = FragmentVerifyBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -356,8 +357,8 @@ public class ConfirmCodeFragment extends Fragment {
 
             //region Account Is Register
             if (result.size() > 0) {
-                Account.deleteAll(Account.class);
-                Account.saveInTx(result);
+                User.deleteAll(User.class);
+                User.saveInTx(result);
 
                 FragmentTransaction addFragment;
                 //region Show All Company

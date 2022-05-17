@@ -178,7 +178,7 @@
                                     android:singleLine="true"
                                     android:text="ارسال به"
                                     android:textColor="@color/medium_color"
-                                    android:textSize="11sp" />
+                                    android:textSize="11dp" />
 
                                 <TextView
                                     android:id="@+id/tvAddress"
@@ -191,7 +191,7 @@
                                     android:gravity="right"
                                     android:singleLine="true"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp"
+                                    android:textSize="11dp"
                                     tools:text="مشهد خیابان یاس انتهای یاس 8" />
                             </RelativeLayout>
 
@@ -215,7 +215,7 @@
                                     android:singleLine="true"
                                     android:text="خرید از فروشگاه"
                                     android:textColor="@color/medium_color"
-                                    android:textSize="11sp" />
+                                    android:textSize="11dp" />
 
                                 <TextView
                                     android:id="@+id/tvNameStore"
@@ -228,7 +228,7 @@
                                     android:layout_toRightOf="@+id/iv_store_left"
                                     android:singleLine="true"
                                     android:textColor="@color/purple_700"
-                                    android:textSize="11sp"
+                                    android:textSize="11dp"
                                     tools:text="گوشت دنیوی" />
 
                                 <ImageView

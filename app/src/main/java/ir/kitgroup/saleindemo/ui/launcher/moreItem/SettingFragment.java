@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.Tables;
@@ -62,7 +62,7 @@ public class SettingFragment extends Fragment {
     private String mobile;
     private String linkPayment = "";
 
-    private Account acc;
+    private User acc;
 
    private  Boolean disableAccount=false;
 
@@ -80,15 +80,15 @@ public class SettingFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-        ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
+       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+       // ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
 
 
         company = Select.from(Company.class).first();
 
 
         linkPayment = sharedPreferences.getString("payment_link", "");
-         acc = Select.from(Account.class).first();
+         acc = Select.from(User.class).first();
         if (!linkPayment.equals(""))
             linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
@@ -119,8 +119,8 @@ public class SettingFragment extends Fragment {
             dialogSync.dismiss();
             sharedPreferences.edit().clear();
 
-            if (Account.count(Account.class) > 0)
-                Account.deleteAll(Account.class);
+            if (User.count(User.class) > 0)
+                User.deleteAll(User.class);
 
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                 InvoiceDetail.deleteAll(InvoiceDetail.class);
@@ -137,8 +137,8 @@ public class SettingFragment extends Fragment {
             if (Company.count(Company.class) > 0)
                 Company.deleteAll(Company.class);
 
-            ((LauncherActivity) getActivity()).setFistItem();
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+           // ((LauncherActivity) getActivity()).setFistItem();
+        //    ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
             final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
             for (int i = 0; i < size; i++) {
@@ -162,7 +162,7 @@ public class SettingFragment extends Fragment {
         binding.tvOrder.setTextSize(fontSize);
 
 
-        mobile = Select.from(Account.class).first().M;
+        mobile = Select.from(User.class).first().M;
         binding.btnShare.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             bundle.putInt("type",2);
@@ -245,10 +245,10 @@ public class SettingFragment extends Fragment {
                     //user is register
                     try {
                         if (result.size() > 0) {
-                            Account.deleteAll(Account.class);
-                            Account.saveInTx(result);
+                            User.deleteAll(User.class);
+                            User.saveInTx(result);
 
-                            Account acc = Select.from(Account.class).first();
+                            User acc = Select.from(User.class).first();
                             if (acc != null && acc.CRDT != null)
                                 binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 

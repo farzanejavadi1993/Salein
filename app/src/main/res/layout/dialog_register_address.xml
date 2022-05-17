@@ -20,7 +20,7 @@
                 android:text="آدرس خود را به صورت دقیق وارد نمایید."
                 android:layout_marginRight="22dp"
                 android:textColor="@color/medium_color"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -61,7 +61,7 @@
                 android:fontFamily="@font/iransans"
                 android:hint="آدرس"
                 android:textColor="#474747"
-                android:textSize="13sp" />
+                android:textSize="13dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -89,7 +89,7 @@
                 android:fontFamily="@font/iransans"
                 android:hint="واحد"
                 android:textColor="#474747"
-                android:textSize="13sp" />
+                android:textSize="13dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -118,7 +118,7 @@
                 android:fontFamily="@font/iransans"
                 android:hint="پلاک"
                 android:textColor="#474747"
-                android:textSize="13sp" />
+                android:textSize="13dp" />
         </com.google.android.material.card.MaterialCardView>
 
 
@@ -138,7 +138,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textColor="#2f2f2f"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
 
 
@@ -159,7 +159,7 @@
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
-                    android:layout_margin="8sp"
+                    android:layout_margin="8dp"
                     android:layout_marginBottom="30dp"
                     android:backgroundTint="@color/white"
                     android:text="آدرس 1"
@@ -167,17 +167,17 @@
                     app:cornerRadius="15dp"
                     app:strokeColor="@color/purple_700"
                     app:strokeWidth="1dp"
-                    android:textSize="11sp"
+                    android:textSize="11dp"
                      />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_2"
-                    android:textSize="11sp"
+                    android:textSize="11dp"
                     android:fontFamily="@font/iransans"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_margin="8sp"
+                    android:layout_margin="8dp"
                     android:layout_marginBottom="30dp"
                     android:backgroundTint="@color/white"
                     android:text="آدرس 2"

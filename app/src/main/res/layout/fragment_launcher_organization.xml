@@ -55,7 +55,7 @@
 
 
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="10dp"
                         android:text= "بیرون بر"
                         android:layout_centerInParent="true"
                         android:textColor="#000"
@@ -81,7 +81,7 @@
                         android:padding="10dp"
                         tools:ignore="ContentDescription" />
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="10dp"
                         android:text="رزرو"
                         android:layout_centerInParent="true"
                         android:textColor="#000"
@@ -106,7 +106,7 @@
                         android:padding="10dp"
                         tools:ignore="ContentDescription" />
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="10dp"
                         android:text="مشغول"
                         android:layout_centerInParent="true"
                         android:textColor="#000"
@@ -134,7 +134,7 @@
                     android:padding="10dp"
                     tools:ignore="ContentDescription" />
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="10dp"
                         android:text="خالی"
                         android:layout_centerInParent="true"
                         android:textColor="#000"
@@ -159,7 +159,7 @@
                         android:padding="10dp"
                         tools:ignore="ContentDescription" />
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="10dp"
                         android:text="همه"
                         android:layout_centerInParent="true"
                         android:textColor="#000"

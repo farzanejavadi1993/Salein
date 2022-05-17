@@ -242,10 +242,10 @@ public class SearchProductFragment extends Fragment {
             if (invDetails.size() > 0) {
                 counter = invDetails.size();
             }
-            if (counter == 0)
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
-            else
-                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+         //   if (counter == 0)
+          //      ((LauncherActivity) getActivity()).setClearCounterOrder();
+         //   else
+            //    ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
         });

@@ -75,7 +75,7 @@
                     android:hint="@string/search_product"
                     android:inputType="text"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     tools:targetApi="lollipop" />
 
 
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"/>
         <TextView
             android:id="@+id/txtError"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
           android:layout_below="@+id/toolbar"

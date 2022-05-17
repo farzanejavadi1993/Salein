@@ -6,11 +6,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <TextView
 
-        android:layout_marginLeft="4sp"
+        android:layout_marginLeft="4dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:id="@+id/account_item_recyclerview_row"
-        android:textSize="12sp"
+        android:textSize="12dp"
         android:textColor="#2f2f2f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -23,19 +23,19 @@
         android:layout_toLeftOf="@+id/account_item_recyclerview_row"
         android:layout_centerVertical="true"
         android:textColor="#2f2f2f"
-        android:textSize="12sp"
+        android:textSize="12dp"
         android:id="@+id/account_item_recycle_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="15sp"
+        android:padding="15dp"
        />
 
     <View
         android:layout_below="@+id/account_item_recycle_name"
         android:background="#eee"
         android:layout_width="match_parent"
-        android:layout_height="0.5sp"/>
+        android:layout_height="0.5dp"/>
 
 
 </RelativeLayout>

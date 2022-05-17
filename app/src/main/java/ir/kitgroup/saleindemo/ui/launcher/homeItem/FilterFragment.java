@@ -38,7 +38,7 @@ public class FilterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+        //((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
         filterDiscount = sharedPreferences.getBoolean("discount", false);
@@ -100,7 +100,7 @@ public class FilterFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
     }
 
     private void reloadSpecialMethod() {

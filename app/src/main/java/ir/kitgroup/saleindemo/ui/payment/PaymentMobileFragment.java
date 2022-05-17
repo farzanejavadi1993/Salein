@@ -62,7 +62,7 @@ import ir.kitgroup.saleindemo.models.ModelDate;
 import ir.kitgroup.saleindemo.models.Setting;
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.models.Invoice;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.models.OrderType;
@@ -96,7 +96,7 @@ public class PaymentMobileFragment extends Fragment {
     //endregion Dialog Sync
 
     //region Dialog Address
-    private Account acc;
+    private User acc;
     private Dialog dialogAddress;
     private RadioButton radioAddress1;
     private RadioButton radioAddress2;
@@ -375,7 +375,7 @@ public class PaymentMobileFragment extends Fragment {
 
 
             //region SetAddress
-            acc = Select.from(Account.class).first();
+            acc = Select.from(User.class).first();
             if (!linkPayment.equals(""))
                 linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
@@ -800,11 +800,11 @@ public class PaymentMobileFragment extends Fragment {
                 invoice.INV_DUE_DATE = dateChoose;
                 invoice.INV_DUE_TIME = hour + ":" + "00";
                 invoice.INV_STATUS = true;
-                if (Select.from(Account.class).first() == null) {
+                if (Select.from(User.class).first() == null) {
                     Toast.makeText(getActivity(), "مشتری معتبر نمی باشد", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                invoice.ACC_CLB_UID = Select.from(Account.class).first().I;
+                invoice.ACC_CLB_UID = Select.from(User.class).first().I;
                 invoice.TBL_UID = Tbl_GUID;
                 invoice.INV_TYPE_ORDER = Ord_TYPE;
                 if (typeAddress == 1) {
@@ -841,8 +841,8 @@ public class PaymentMobileFragment extends Fragment {
                 for (int i = 0; i < size; i++) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
-                ((LauncherActivity) getActivity()).setFistItem();
-                ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+          //      ((LauncherActivity) getActivity()).setFistItem();
+             //   ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
                 if (company.mode == 2) {
                     Bundle bundleMainOrder = new Bundle();
                     bundleMainOrder.putString("Inv_GUID", "");
@@ -861,7 +861,7 @@ public class PaymentMobileFragment extends Fragment {
                         tables.N = Tbl_NAME;
                         tables.C = Ord_TYPE;
                         tables.ACT = false;
-                        Account account = Select.from(Account.class).first();
+                        User account = Select.from(User.class).first();
                         tables.GO = account.N != null ? account.N : "فروش روزانه";
                         tables.RSV = false;
                         tables.I = new_Inv_GUID;
@@ -872,7 +872,7 @@ public class PaymentMobileFragment extends Fragment {
                         tables.DATE = dateFormats.format(date);
                         tables.save();
                     }
-                    Account.deleteAll(Account.class);
+                    User.deleteAll(User.class);
                     LauncherOrganizationFragment launcherFragment = new LauncherOrganizationFragment();
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, launcherFragment, "LauncherFragment").addToBackStack("LauncherF").commit();
                 }
@@ -1217,9 +1217,9 @@ public class PaymentMobileFragment extends Fragment {
             sharedPreferences.edit().putBoolean("disableAccount", false).apply();
             //user is register
             if (result.size() > 0) {
-                Account.deleteAll(Account.class);
-                Account.saveInTx(result);
-                acc = Select.from(Account.class).first();
+                User.deleteAll(User.class);
+                User.saveInTx(result);
+                acc = Select.from(User.class).first();
                 if (acc != null && acc.CRDT != null)
                     binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
                 binding.tvCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");

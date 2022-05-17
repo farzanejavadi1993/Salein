@@ -38,7 +38,7 @@
                 android:layout_marginLeft="4dp"
 
                 android:textColor="@color/black_light"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/order_list_item_recycle_txt_discount"
@@ -48,7 +48,7 @@
                 android:layout_toLeftOf="@+id/order_list_item_recycle_txt_name"
 
                 android:textColor="@color/invite_friend_color"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
         </RelativeLayout>
 
 
@@ -88,10 +88,10 @@
                     android:fontFamily="@font/iransans"
                     android:gravity="center"
                     android:inputType="numberDecimal"
-                    android:padding="5sp"
+                    android:padding="5dp"
                     android:text="0 "
                     android:textColor="@color/black_l"
-                    android:textSize="11sp"
+                    android:textSize="11dp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -127,7 +127,7 @@
                 android:layout_marginRight="5dp"
 
                 android:textColor="@color/black_light"
-                android:textSize="11sp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
         </RelativeLayout>
 

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/red_table"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <LinearLayout
             android:id="@+id/viewLauncher"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
-                android:elevation="4sp"
+                android:elevation="4dp"
                 tools:targetApi="lollipop">
 
                 <ImageView
@@ -94,7 +94,7 @@
                         android:gravity="right"
                         android:hint="@string/first_last_name"
                         android:textColor="@color/medium_color"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -135,7 +135,7 @@
                         android:gravity="right"
                         android:hint="شماره تلفن"
                         android:textColor="@color/medium_color"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -172,7 +172,7 @@
                     android:gravity="right"
                     android:text="ویرایش آدرس 1"
                     android:textColor="@color/purple_700"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
@@ -203,7 +203,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="10dp"
                         android:textColor="@color/medium_color"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -232,7 +232,7 @@
                     android:gravity="right"
                     android:text="ویرایش آدرس 2"
                     android:textColor="@color/purple_700"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
@@ -263,7 +263,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="10dp"
                         android:textColor="@color/medium_color"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>

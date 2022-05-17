@@ -22,7 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 
@@ -59,8 +59,8 @@ public class MyViewModel extends ViewModel {
 
     private final MutableLiveData<String> resultSendSms = new MutableLiveData<>();
     private final  MutableLiveData<List<Company>> resultCompanies = new MutableLiveData<>();
-    private final  MutableLiveData<List<Account>> resultInquiryAccount = new MutableLiveData<>();
-    private final  MutableLiveData<List<Account>> resultSearchAccount = new MutableLiveData<>();
+    private final  MutableLiveData<List<User>> resultInquiryAccount = new MutableLiveData<>();
+    private final  MutableLiveData<List<User>> resultSearchAccount = new MutableLiveData<>();
     private final  MutableLiveData<List<ProductLevel1>> resultProductLevel1 = new MutableLiveData<>();
     private final  MutableLiveData<List<ProductLevel2>> resultProductLevel2 = new MutableLiveData<>();
     private final  MutableLiveData<List<CustomTab>> resultCustomTab = new MutableLiveData<>();
@@ -190,14 +190,14 @@ public class MyViewModel extends ViewModel {
 
 
     }
-    public MutableLiveData<List<Account>> getResultInquiryAccount() {
+    public MutableLiveData<List<User>> getResultInquiryAccount() {
         return resultInquiryAccount;
     }
 
 
     
     
-    public void addAccount(String user, String passWord, List<Account> accounts) {
+    public void addAccount(String user, String passWord, List<User> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.addAccount(user, passWord, accounts)
@@ -266,7 +266,7 @@ public class MyViewModel extends ViewModel {
 
                         }, throwable -> eMessage.setValue(new Message(-2, "خطا در جستجوی مشتری", ""))));
     }
-    public MutableLiveData<List<Account>> getResultSearchAccount() {
+    public MutableLiveData<List<User>> getResultSearchAccount() {
         return resultSearchAccount;
     }
 
@@ -917,7 +917,7 @@ public class MyViewModel extends ViewModel {
 
 
 
-    public void updateAccount(String user, String passWord,List<Account> accounts) {
+    public void updateAccount(String user, String passWord,List<User> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.updateAccount(user, passWord,accounts)

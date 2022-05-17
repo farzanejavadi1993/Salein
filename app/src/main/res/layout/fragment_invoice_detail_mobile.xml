@@ -46,7 +46,7 @@
                 android:fontFamily="@font/iransans"
                 android:textColor="@color/medium_color"
                 android:textStyle="bold"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
             <TextView
 
                 android:layout_toLeftOf="@+id/tvName_customer"
@@ -141,9 +141,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="@dimen/margin10"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
 
                 <TextView
 
@@ -178,9 +178,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
                 <TextView
                     android:layout_alignParentRight="true"
                     android:id="@+id/order_list_sumDiscount_tv"
@@ -211,9 +211,9 @@
                 android:id="@+id/layout_transport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
                 <TextView
                     android:layout_alignParentRight="true"
                     android:id="@+id/txtSumTransport"
@@ -244,9 +244,9 @@
                 android:layout_marginBottom="@dimen/margin10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
                 <TextView
                     android:layout_alignParentRight="true"
                     android:id="@+id/order_list_purePrice_tv"
@@ -275,8 +275,8 @@
             <TextView
                 android:visibility="gone"
                 android:padding="5dp"
-                android:layout_marginLeft="8sp"
-                android:layout_marginRight="8sp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:inputType="textShortMessage|textMultiLine"
                 android:id="@+id/edt_description"
                 android:layout_width="match_parent"
@@ -287,7 +287,7 @@
                 android:fontFamily="@font/iransans"
                 android:hint="توضیحات"
                 android:textColor="@color/medium_color"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <LinearLayout
 
@@ -322,7 +322,7 @@
                         android:paddingBottom="7dp"
                         android:text="ادامه سفارش"
                         android:textColor="#fff"
-                        android:textSize="11sp" />
+                        android:textSize="11dp" />
 
                 </RelativeLayout>
 
@@ -349,7 +349,7 @@
                         android:paddingBottom="7dp"
                         android:text="ذخیره"
                         android:textColor="#fff"
-                        android:textSize="11sp" />
+                        android:textSize="11dp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -360,9 +360,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="@dimen/margin4"
-                android:layout_marginRight="8sp"
+                android:layout_marginRight="8dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center|bottom"
                 android:orientation="horizontal"
@@ -384,7 +384,7 @@
                     android:paddingBottom="7dp"
                     android:text="حذف"
                     android:textColor="#fff"
-                    android:textSize="11sp"
+                    android:textSize="11dp"
 
 
                     app:cornerRadius="@dimen/margin4"
@@ -404,7 +404,7 @@
                     android:paddingBottom="7dp"
                     android:text="ویرایش"
                     android:textColor="#fff"
-                    android:textSize="11sp"
+                    android:textSize="11dp"
                     app:cornerRadius="@dimen/margin4"
                     tools:ignore="HardcodedText" />
 

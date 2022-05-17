@@ -35,7 +35,7 @@ import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
 
@@ -58,7 +58,7 @@ public class CompanyFragment extends Fragment {
     private StoriesFragment storiesFragment;
     private ArrayList<Company> companies;
     private CompanyAdapterList companyAdapterList;
-    private Account account;
+    private User account;
 
     private String ParentId = "";
     private Dialog dialog;
@@ -83,7 +83,7 @@ public class CompanyFragment extends Fragment {
         sharedPreferences.edit().putBoolean("status", false).apply();
         hostSelectionInterceptor.setHostBaseUrl();
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         companies = new ArrayList<>();
         companyAdapterList = new CompanyAdapterList(companies, 2);
@@ -178,14 +178,14 @@ public class CompanyFragment extends Fragment {
         btnNo.setOnClickListener(v -> dialog.dismiss());
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
-            ArrayList<Account> AccList = new ArrayList<>();
+            ArrayList<User> AccList = new ArrayList<>();
             AccList.add(account);
             binding.progressbar.setVisibility(View.VISIBLE);
             myViewModel.addAccount(companySelect.USER,companySelect.PASS,AccList);
         });
         //endregion Cast Dialog
 
-        account = Select.from(Account.class).first();
+        account = Select.from(User.class).first();
         binding.ivBack.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
 
     }
@@ -283,8 +283,8 @@ public class CompanyFragment extends Fragment {
             //user is register
             if (result.size() > 0) {
 
-                Account.deleteAll(Account.class);
-                Account.saveInTx(result);
+                User.deleteAll(User.class);
+                User.saveInTx(result);
 
                 Company.deleteAll(Company.class);
                 Company.saveInTx(companySelect);
@@ -330,7 +330,7 @@ public class CompanyFragment extends Fragment {
 
 
     public static class JsonObjectAccount {
-        public List<Account> Account;
+        public List<User> Account;
     }
 
     public void setStoriesFragment(StoriesFragment storiesFragment) {

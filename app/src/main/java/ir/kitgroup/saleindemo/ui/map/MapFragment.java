@@ -86,7 +86,7 @@ import ir.kitgroup.saleindemo.ui.organization.LauncherOrganizationFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
@@ -107,7 +107,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private int flag;
     private String type;
-    private final List<Account> accounts = new ArrayList<>();
+    private final List<User> accounts = new ArrayList<>();
     private Company company;
 
 
@@ -186,7 +186,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
 
         //region Configuration Text Size
@@ -263,7 +263,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
 
         btnRegisterAddress.setOnClickListener(v -> {
-            Account accountORG = Select.from(Account.class).first();
+            User accountORG = Select.from(User.class).first();
 
 
             if (edtAddress.getText().toString().equals("") ||
@@ -283,7 +283,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
             //region Edit Address When Going From PaymentFragment
             if (edit_address != null && edit_address.equals("1")) {
-                Account account = new Account();
+                User account = new User();
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
@@ -321,7 +321,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
 
 
-                ArrayList<Account> list = new ArrayList<>();
+                ArrayList<User> list = new ArrayList<>();
                 list.add(account);
 
 
@@ -341,7 +341,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             //region Edit Address When Going From ProfileFragment
 
             else if (edit_address != null && edit_address.equals("2")) {
-                Account account = new Account();
+                User account = new User();
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
@@ -367,7 +367,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
 
 
-                ArrayList<Account> list = new ArrayList<>();
+                ArrayList<User> list = new ArrayList<>();
                 list.add(account);
 
 
@@ -388,7 +388,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             //region Edit Address When Going From MainOrderFragment
 
             else if (edit_address != null && edit_address.equals("3")) {
-                Account account = new Account();
+                User account = new User();
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
@@ -425,7 +425,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 }
 
 
-                ArrayList<Account> list = new ArrayList<>();
+                ArrayList<User> list = new ArrayList<>();
                 list.add(account);
 
 
@@ -451,7 +451,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //region Action btnRegisterInformation
 
         binding.btnRegisterInformation.setOnClickListener(v -> {
-            Account accountORG = Select.from(Account.class).first();
+            User accountORG = Select.from(User.class).first();
 
             if (edit_address != null && (edit_address.equals("10"))) {
 
@@ -786,8 +786,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     if (customProgress.isShow)
                         customProgress.hideProgress();
                     customProgress.hideProgress();
-                    Account.deleteAll(Account.class);
-                    Account.saveInTx(accounts);
+                    User.deleteAll(User.class);
+                    User.saveInTx(accounts);
 
                     getActivity().getSupportFragmentManager().popBackStack();
                     Fragment frg;
@@ -1148,8 +1148,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onDestroyView();
         binding.mapView.onDestroy();
         binding = null;
-        if (edit_address.equals("3"))
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+      //  if (edit_address.equals("3"))
+            //((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
     }
 
     @Override
@@ -1234,7 +1234,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     public static class JsonObjectAccount {
 
-        public List<Account> Account;
+        public List<User> Account;
 
     }
 

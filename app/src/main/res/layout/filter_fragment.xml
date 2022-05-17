@@ -26,7 +26,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="فیلترها"
                     android:textColor="@color/medium_color"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
 
@@ -43,7 +43,7 @@
                     android:lineSpacingExtra="12dp"
                     android:text="حذف فیلتر ها"
                     android:textColor="@color/purple_700"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
 
 
@@ -67,7 +67,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="دسته بندی"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
 
                 <ImageView
@@ -108,7 +108,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="محدوده قیمت"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
 
                 <ImageView
@@ -148,7 +148,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="منوی همیشگی"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -188,7 +188,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="فقط کالاهای تخفیف دار"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
 
 
@@ -229,7 +229,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="کالاهای جدید"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
 
                 <androidx.appcompat.widget.SwitchCompat

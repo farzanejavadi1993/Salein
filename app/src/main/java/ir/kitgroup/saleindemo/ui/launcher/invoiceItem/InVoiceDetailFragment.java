@@ -60,7 +60,7 @@ import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 
 import ir.kitgroup.saleindemo.DataBase.Tables;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
@@ -166,7 +166,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
         try {
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+            //((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
             ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
 
             Calendar calendar1 = Calendar.getInstance();
@@ -447,7 +447,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                 if (company.mode == 1) {
-                    Account acc = Select.from(Account.class).first();
+                    User acc = Select.from(User.class).first();
                     if (acc != null)
                         binding.tvNameCustomer.setText("(" + (acc.N != null ? acc.N + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
                     else

@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 import ir.kitgroup.saleindemo.Activities.LauncherActivity;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.FragmentProfileBinding;
@@ -39,7 +39,7 @@ public class ProfileFragment extends Fragment {
             type = bundle.getString("type");
         }catch (Exception ignored){}
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         int fontSize ;
         if (Util.screenSize >= 7)
@@ -52,7 +52,7 @@ public class ProfileFragment extends Fragment {
         binding.txtAddress2.setTextSize(fontSize);
         binding.txtAddress1.setTextSize(fontSize);
 
-        Account account = Select.from(Account.class).first();
+        User account = Select.from(User.class).first();
         if (account != null) {
             binding.txtName.setText(account.N);
             binding.tvMobile.setText(account.M);

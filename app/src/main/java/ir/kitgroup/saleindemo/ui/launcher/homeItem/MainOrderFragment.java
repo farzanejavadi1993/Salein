@@ -62,7 +62,7 @@ import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.classes.PaginationScrollListener;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -152,10 +152,10 @@ public class MainOrderFragment extends Fragment {
 
     private TextWatcher textWatcherAcc;
     private AccountAdapter accAdapter;
-    private ArrayList<Account> accList;
+    private ArrayList<User> accList;
 
     //region Variable DialogAddAccount
-    private List<Account> accountsList;
+    private List<User> accountsList;
     private Dialog dialogAddAccount;
     private EditText edtNameAccount;
     private EditText edtAddressAccount;
@@ -231,7 +231,7 @@ public class MainOrderFragment extends Fragment {
 
 
             if (company.mode == 1)
-                Account.deleteAll(Account.class);
+                User.deleteAll(User.class);
             //region First Value Parameter
 
 
@@ -277,8 +277,8 @@ public class MainOrderFragment extends Fragment {
 
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
-            if (EDIT)
-                ((LauncherActivity) getActivity()).setFistItem();
+          //  if (EDIT)
+             //   ((LauncherActivity) getActivity()).setFistItem();
 
 
             //region Create Order
@@ -307,13 +307,13 @@ public class MainOrderFragment extends Fragment {
                 CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
                 counter1 = invDetailses.size();
             }
-            if (counter1 == 0)
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
-            else
-                ((LauncherActivity) getActivity()).setCounterOrder(counter1);
-            ((LauncherActivity) getActivity()).setInVisibiltyItem(!EDIT);
-            ((LauncherActivity) getActivity()).setMainOrderFragment(this);
-            ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+           // if (counter1 == 0)
+              //  ((LauncherActivity) getActivity()).setClearCounterOrder();
+          //  else
+             //   ((LauncherActivity) getActivity()).setCounterOrder(counter1);
+          //  ((LauncherActivity) getActivity()).setInVisibiltyItem(!EDIT);
+           // ((LauncherActivity) getActivity()).setMainOrderFragment(this);
+          //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
             //endregion Create Order
 
             //endregion Get Bundle
@@ -342,7 +342,7 @@ public class MainOrderFragment extends Fragment {
             binding.tvNameStore.setText(company.N);
             //endregion Set Icon And Title
 
-            Account acc = Select.from(Account.class).first();
+            User acc = Select.from(User.class).first();
 
             //region Cast DialogAddress
             dialogAddress = new Dialog(getActivity());
@@ -484,7 +484,7 @@ public class MainOrderFragment extends Fragment {
 
             //region Configuration Organization Application
             if (company.mode == 1) {
-                ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
+               // ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
                 binding.layoutAddressBranch.setVisibility(View.GONE);
                 binding.layoutAccount.setVisibility(View.VISIBLE);
 
@@ -527,7 +527,7 @@ public class MainOrderFragment extends Fragment {
 
                     } else {
 
-                        Account account = new Account();
+                        User account = new User();
                         account.I = UUID.randomUUID().toString();
                         account.N = edtNameAccount.getText().toString();
                         account.M = edtMobileAccount.getText().toString();
@@ -577,8 +577,8 @@ public class MainOrderFragment extends Fragment {
                 };
 
                 accAdapter.setOnClickItemListener((account) -> {
-                    Account.deleteAll(Account.class);
-                    Account.saveInTx(account);
+                    User.deleteAll(User.class);
+                    User.saveInTx(account);
                     Acc_GUID = account.I;
                     Acc_NAME = account.N;
                     binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
@@ -606,8 +606,8 @@ public class MainOrderFragment extends Fragment {
                 binding.layoutAccount.setVisibility(View.GONE);
 
 
-                Acc_NAME = Select.from(Account.class).first().N;
-                Acc_GUID = Select.from(Account.class).first().I;
+                Acc_NAME = Select.from(User.class).first().N;
+                Acc_GUID = Select.from(User.class).first().I;
             }
 
             //endregion Configuration Client Application
@@ -977,9 +977,9 @@ public class MainOrderFragment extends Fragment {
                 if (invDetails.size() > 0) {
                     int counter = invDetails.size();
                     counter1 = counter;
-                    ((LauncherActivity) getActivity()).setCounterOrder(counter);
+                   // ((LauncherActivity) getActivity()).setCounterOrder(counter);
                 } else {
-                    ((LauncherActivity) getActivity()).setClearCounterOrder();
+                  //  ((LauncherActivity) getActivity()).setClearCounterOrder();
                 }
 
             });
@@ -1053,7 +1053,7 @@ public class MainOrderFragment extends Fragment {
         myViewModel.getSetting(company.USER, company.PASS);
         myViewModel.getUnit(company.USER, company.PASS);
         if (company.mode == 2)
-            myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Account.class).first().getM());
+            myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(User.class).first().getM());
 
 
         myViewModel.getResultSearchAccount().observe(getViewLifecycleOwner(), result -> {
@@ -1066,11 +1066,11 @@ public class MainOrderFragment extends Fragment {
                 accList.addAll(result);
                 binding.accountRecyclerView.setVisibility(View.VISIBLE);
             } else {
-                Account.deleteAll(Account.class);
+                User.deleteAll(User.class);
                 accList.addAll(result);
                 CollectionUtils.filter(accList, a -> a.I.equals(Acc_GUID));
                 if (accList.size() > 0)
-                    Account.saveInTx(accList.get(0));
+                    User.saveInTx(accList.get(0));
             }
 
             accAdapter.notifyDataSetChanged();
@@ -1159,10 +1159,10 @@ public class MainOrderFragment extends Fragment {
                 if (company.mode == 1) {
                     Acc_GUID = settingsList.get(0).DEFAULT_CUSTOMER;
                     accList.clear();
-                    Account account = new Account();
+                    User account = new User();
                     account.I = Acc_GUID;
                     accList.add(account);
-                    Account.saveInTx(accList);
+                    User.saveInTx(accList);
                     accList.clear();
                     if (!EDIT)
                         binding.edtNameCustomer.setHint("فروش روزانه");
@@ -1695,7 +1695,7 @@ public class MainOrderFragment extends Fragment {
         if (type == 1)
             myViewModel.getDiscountProduct(company.USER, company.PASS);
         else if (type == 2)
-            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(Account.class).first().I);
+            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(User.class).first().I);
         else
             myViewModel.getProductLevel1(company.USER, company.PASS);
 

@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.companies.StoriesFragment;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -40,7 +40,7 @@ public class RegisterFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentRegisterBinding binding;
     private Company company;
-    private final List<Account> accountsList = new ArrayList<>();
+    private final List<User> accountsList = new ArrayList<>();
     private int gender = 0;
     private boolean ACCSTP = true;
 
@@ -114,7 +114,7 @@ public class RegisterFragment extends Fragment {
                 Toast.makeText(getActivity(), "لطفا تمام فیلد ها را پر کنید", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Account account = new Account();
+            User account = new User();
             account.I = UUID.randomUUID().toString();
             account.N = binding.edtFLNameCustomer.getText().toString();
             account.M = binding.edtNumberPhoneCustomer.getText().toString();
@@ -152,8 +152,8 @@ public class RegisterFragment extends Fragment {
             if (result) {
 
 
-                Account.deleteAll(Account.class);
-                Account.saveInTx(accountsList);
+                User.deleteAll(User.class);
+                User.saveInTx(accountsList);
                 accountsList.clear();
 
                 getActivity().getSupportFragmentManager().popBackStack();

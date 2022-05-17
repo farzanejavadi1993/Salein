@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/SplashScreenFragment">
+
+
+
+    <fragment
+        android:id="@+id/SplashScreenFragment"
+        android:name="ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            app:popUpTo="@id/SplashScreenFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToLoginFragment"
+            app:destination="@id/LoginFragment" />
+        <action
+            app:popUpTo="@id/SplashScreenFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToMainFragment"
+            app:destination="@id/MainFragment" />
+    </fragment>
+
+
+
+
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="ir.kitgroup.saleindemo.ui.logins.LoginFragment"
+        tools:layout="@layout/fragment_login" >
+
+        <action
+            app:popUpTo="@id/LoginFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToVerifyFragment"
+            app:destination="@id/VerifyFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/StoreFragment"
+        android:name="ir.kitgroup.saleindemo.ui.companies.StoriesFragment"
+        tools:layout="@layout/fragment_stories" >
+
+
+    </fragment>
+
+
+
+
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="ir.kitgroup.saleindemo.ui.logins.LoginFragment"
+        tools:layout="@layout/fragment_mobile_order_main" >
+        <argument
+            android:name="Inv_GUID"
+            app:argType="string" />
+    </fragment>
+
+
+
+
+
+
+    <fragment
+        android:id="@+id/VerifyFragment"
+        android:name="ir.kitgroup.saleindemo.ui.logins.VerifyFragment"
+        tools:layout="@layout/fragment_verify" >
+
+        <action
+            app:popUpTo="@id/VerifyFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToMainFragment"
+            app:destination="@id/MainFragment"
+            />
+        <argument
+            android:name="mobile"
+            app:argType="string" />
+    </fragment>
+
+
+
+
+
+
+
+
+
+</navigation>

@@ -17,7 +17,7 @@
             android:textStyle="bold"
             android:textColor="@color/medium_color"
             android:layout_marginTop="14dp"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <RadioGroup
@@ -33,7 +33,7 @@
                 android:paddingEnd="@dimen/margin10"
                 android:background="@drawable/radio_btn_background"
                 android:gravity="right|center_vertical"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textColor="@color/medium_color"
                 android:fontFamily="@font/iransans"
                 android:id="@+id/radioAddress1"
@@ -52,7 +52,7 @@
                 android:id="@+id/radioAddress2"
                 android:textDirection="rtl"
                 android:layoutDirection="rtl"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textColor="@color/medium_color"
                 android:fontFamily="@font/iransans"
                 android:layout_width="match_parent"
@@ -69,8 +69,8 @@
             android:id="@+id/layoutButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:layout_marginBottom="10sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
 
@@ -81,8 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="8sp"
-                android:textSize="11sp"
+                android:layout_margin="8dp"
+                android:textSize="11dp"
                 android:layout_marginBottom="30dp"
                 android:backgroundTint="@color/white"
                 android:text=" آدرس جدید"

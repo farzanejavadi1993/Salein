@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
-            android:elevation="4sp"
+            android:elevation="4dp"
             tools:targetApi="lollipop">
 
             <ImageView
@@ -68,7 +68,7 @@
                     android:layout_marginBottom="12dp"
                     android:lineSpacingExtra="12dp"
                     android:textColor="#2f2f2f"
-                    android:textSize="13sp" />
+                    android:textSize="13dp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:layout_marginBottom="12dp"
                         android:lineSpacingExtra="12dp"
                         android:textColor="#2f2f2f"
-                        android:textSize="13sp"
+                        android:textSize="13dp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 

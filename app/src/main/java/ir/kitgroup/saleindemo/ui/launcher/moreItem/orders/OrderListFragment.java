@@ -44,7 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Account;
+import ir.kitgroup.saleindemo.DataBase.User;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
 import ir.kitgroup.saleindemo.DataBase.Company;
@@ -108,10 +108,10 @@ public class OrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         customProgress = CustomProgress.getInstance();
 
-        accGUID = Select.from(Account.class).list().get(0).I;
+        accGUID = Select.from(User.class).list().get(0).I;
         company = Select.from(Company.class).first();
 
 
@@ -197,7 +197,7 @@ public class OrderListFragment extends Fragment {
 
 
         binding.ivBackFragment.setOnClickListener(v -> {
-                    ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+                //    ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
         );

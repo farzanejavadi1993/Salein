@@ -1,20 +1,21 @@
 plugins {
     id 'com.android.application'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
     //id 'com.google.gms.google-services'
 
 
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
 
     defaultConfig {
         applicationId "ir.kitgroup.saleindemo"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0.0.0"
 
@@ -123,6 +124,16 @@ dependencies {
 
 
 
+    //region Navigation Library
+    def nav_version = "2.4.1"
+
+    // Java language implementation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    //endregion Navigation Library
 
 
     testImplementation 'junit:junit:4.13.2'

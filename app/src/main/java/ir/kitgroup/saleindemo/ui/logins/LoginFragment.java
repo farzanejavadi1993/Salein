@@ -39,66 +39,31 @@ import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
-import ir.kitgroup.saleindemo.databinding.FragmentLoginMobileBinding;
-
+import ir.kitgroup.saleindemo.databinding.FragmentLoginBinding;
 
 
 @AndroidEntryPoint
-public class LoginClientFragment extends Fragment {
+public class LoginFragment extends Fragment {
     //region PARAMETER
-
-
-
-
     private MyViewModel myViewModel;
+    private FragmentLoginBinding binding;
     private String mobileNumber = "";
     private int code = 0;
-    private FragmentLoginMobileBinding binding;
     private Boolean acceptRule = true;
-    private  Company company;
+    private Company company;
+
     //endregion PARAMETER
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-         //   myViewModel.getResultMessage().setValue(null);
-            binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            if (result == null) return;
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-        });
-
-        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            if (result == null)
-                return;
-            myViewModel.getResultSmsLogin().setValue(null);
-            if (result.equals("")) {
-                Bundle bundleOrder = new Bundle();
-                bundleOrder.putString("mobileNumber", mobileNumber);
-                bundleOrder.putInt("code", code);
-                ConfirmCodeFragment inVoiceDetailFragment = new ConfirmCodeFragment();
-                inVoiceDetailFragment.setArguments(bundleOrder);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
-            }
-
-        });
-
-    }
 
 
+
+    //region Override Method
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentLoginMobileBinding.inflate(getLayoutInflater());
+        binding = FragmentLoginBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -109,7 +74,6 @@ public class LoginClientFragment extends Fragment {
 
 
         try {
-
 
             company = Select.from(Company.class).first();
 
@@ -211,19 +175,51 @@ public class LoginClientFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            //   myViewModel.getResultMessage().setValue(null);
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null) return;
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
+        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null)
+                return;
+            myViewModel.getResultSmsLogin().setValue(null);
+            if (result.equals("")) {
+                Bundle bundleOrder = new Bundle();
+                bundleOrder.putString("mobileNumber", mobileNumber);
+                bundleOrder.putInt("code", code);
+                VerifyFragment inVoiceDetailFragment = new VerifyFragment();
+                inVoiceDetailFragment.setArguments(bundleOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
+            }
+
+        });
+
+    }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-
-
     }
+    //endregion Override Method
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+
+
+
 
 }

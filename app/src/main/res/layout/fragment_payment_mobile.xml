@@ -50,7 +50,7 @@
                 android:lineSpacingExtra="16dp"
                 android:text="@string/confirm_pay"
                 android:textColor="@color/medium_color"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -71,7 +71,7 @@
                 android:layout_alignParentRight="true"
                 android:text="@string/address"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
 
@@ -101,7 +101,7 @@
                         android:gravity="right"
                         android:hint="آدرس خود را وارد کنید"
                         android:textColor="@color/black_l"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +139,7 @@
                 android:layout_alignParentRight="true"
                 android:text="@string/type_pay"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
 
@@ -177,7 +177,7 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:text="@string/pay_place"
                         android:textColor="@color/black_l"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
                         app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
@@ -230,7 +230,7 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:text="استفاده از اعتبار باشگاه"
                         android:textColor="@color/black_l"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
                         app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
@@ -243,7 +243,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="موجودی : 0 ریال"
                         android:textColor="#6E6E6E"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentOnline"
                         app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentOnline"
                         app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentOnline" />
@@ -283,7 +283,7 @@
                 android:layout_alignParentRight="true"
                 android:text="زمان تحویل سفارش"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
 
@@ -313,7 +313,7 @@
                         android:gravity="right"
                         android:hint="زمان تحویل سفارش را وارد کنید"
                         android:textColor="#6C6C6C"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -354,7 +354,7 @@
                 android:layout_alignParentRight="true"
                 android:text="@string/type_order"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -391,7 +391,7 @@
                 android:gravity="center"
                 android:text="اصلاح سفارش"
                 android:textColor="@color/red_table"
-                android:textSize="13sp"
+                android:textSize="13dp"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -402,7 +402,7 @@
                 android:layout_marginEnd="10dp"
                 android:gravity="center"
                 android:textColor="@color/green_table"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
 
         </LinearLayout>
@@ -421,9 +421,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
 
               <RelativeLayout
                   android:visibility="gone"
@@ -465,7 +465,7 @@
                     android:layout_marginRight="8dp"
                     android:text="مبلغ قابل پرداخت"
                     android:textColor="@color/black_l"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     tools:ignore="RelativeOverlap" />
 
 
@@ -478,16 +478,16 @@
                     android:layout_marginLeft="8dp"
                     android:text="@string/rial_0"
                     android:textColor="@color/black_light"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="8sp">
+                android:layout_marginRight="8dp">
 
                 <EditText
                     android:id="@+id/edt_description"
@@ -515,15 +515,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginLeft="8sp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="8sp"
+                android:layout_marginRight="8dp"
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/green_table"
                 android:fontFamily="@font/iransans"
                 android:text="ارسال سفارش"
                 android:textColor="#fff"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 app:cornerRadius="12dp">
 
 

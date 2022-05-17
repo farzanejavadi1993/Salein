@@ -98,7 +98,7 @@
                 android:maxLength="11"
                 android:padding="15dp"
                 android:textColor="@color/medium_color"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:text="آن را می پذیرم."
                 android:textColor="@color/medium_color"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/login_tv_rules1"
@@ -163,14 +163,14 @@
                 android:layout_height="wrap_content"
                 android:text="  قوانین و مقررات "
                 android:textColor="@color/purple_700"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/login_tv_rules"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/medium_color"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <CheckBox
                 android:id="@+id/checkbox"

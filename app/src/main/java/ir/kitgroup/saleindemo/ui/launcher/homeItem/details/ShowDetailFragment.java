@@ -44,7 +44,7 @@ public class ShowDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         company = Select.from(Company.class).first();
         Bundle bundle = getArguments();
@@ -103,7 +103,7 @@ public class ShowDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         binding = null;
     }
 

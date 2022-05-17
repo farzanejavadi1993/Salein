@@ -48,8 +48,8 @@
     <style name="H5Right">
         <item name="android:gravity">end</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:lineSpacingExtra">9sp</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:lineSpacingExtra">9dp</item>
         <item name="android:textColor">#474747</item>
     </style>
 

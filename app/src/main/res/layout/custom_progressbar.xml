@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
-    android:padding="10sp"
+    android:padding="10dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -17,7 +17,7 @@
         android:text="در حال بارگذاری..."
         android:visibility="gone"
         android:textColor="#000"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
 
     <ProgressBar

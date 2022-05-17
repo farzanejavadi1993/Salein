@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/red_table"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <LinearLayout
             android:id="@+id/viewLauncher"
@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
-                android:elevation="4sp"
+                android:elevation="4dp"
                 tools:targetApi="lollipop">
 
                 <TextView
@@ -47,7 +47,7 @@
                     android:lineSpacingExtra="16dp"
                     android:text="@string/setting"
                     android:textColor="@color/medium_color"
-                    android:textSize="14sp"
+                    android:textSize="14dp"
                     android:textStyle="bold"
 
                     />
@@ -91,7 +91,7 @@
                     android:layout_toLeftOf="@+id/iv_profile"
                     android:text="@string/info_account"
                     android:textColor="#474747"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -171,7 +171,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="8dp"
                     android:textColor="@color/medium_color"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold"
                    />
 
@@ -218,7 +218,7 @@
                     android:layout_marginRight="8dp"
                     android:text="دعوت از دوستان"
                     android:textColor="#474747"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textStyle="bold" />
 
                 <ImageView
