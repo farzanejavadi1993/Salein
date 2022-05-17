@@ -71,12 +71,10 @@
 
         <ImageView
             android:layout_marginLeft="@dimen/margin6"
-            android:rotation="90"
             android:id="@+id/flesh"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
+            app:srcCompat="@drawable/ic_multilocation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

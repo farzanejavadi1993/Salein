@@ -286,7 +286,7 @@ public class MainOrderFragment extends Fragment {
                 String name;
                 name = company.INSK_ID.split("ir.kitgroup.")[1];
 
-                if (!Tbl_GUID.equals("") || company.mode == 2)
+                if (!Tbl_GUID.equals("") || company.mode == 2 && !name.equals("salein"))
                     Inv_GUID = sharedPreferences.getString(name, "");
 
                 if (Inv_GUID.equals("")) {

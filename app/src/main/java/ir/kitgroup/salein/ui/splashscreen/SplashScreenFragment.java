@@ -81,7 +81,7 @@ public class SplashScreenFragment extends Fragment {
         try {
 
 
-            Company company = Select.from(Company.class).first();
+
             sharedPreferences.edit().putBoolean("status", false).apply();
             hostSelectionInterceptor.setHostBaseUrl();
 
@@ -92,10 +92,15 @@ public class SplashScreenFragment extends Fragment {
                     binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 } catch (Exception ignored) {
                 }
-            } else
+            } else if (Util.getPackageName(getActivity()).equals("ir.kitgroup.salein")){
                 Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
+                Company.deleteAll(Company.class);
 
+            }else {
+                Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
+            }
 
+            Company company = Select.from(Company.class).first();
             String description = company != null && company.DESC != null ? company.DESC : "";
             String title = company != null && company.N != null ? company.N : "";
             binding.tvTitle.setText(title);

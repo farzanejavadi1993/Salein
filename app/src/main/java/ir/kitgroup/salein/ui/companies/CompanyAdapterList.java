@@ -72,6 +72,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
         if (!company.PI.equals("")) {
             holder.cardSalein.setRadius(0);
+            holder.cardSalein.setBackgroundResource(R.color.launcher_linear_order_header_color);
             holder.view.setVisibility(View.VISIBLE);
             ViewGroup.MarginLayoutParams layoutParams =
                     (ViewGroup.MarginLayoutParams) holder.cardSalein.getLayoutParams();
@@ -85,21 +86,18 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
         }
         holder.cardSalein.requestLayout();
 
-        if (company.Open)
-            holder.flesh.setRotation(270);
-        else
-            holder.flesh.setRotation(90);
+
 
 
         holder.itemView.setOnClickListener(v -> {
             if (!company.Open){
                 company.Open=true;
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),false);
-                holder.flesh.setRotation(270);
+
             }else {
                 company.Open=false;
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),true);
-                holder.flesh.setRotation(90);
+
             }
         });
     }

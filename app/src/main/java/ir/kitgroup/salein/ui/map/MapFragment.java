@@ -289,7 +289,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
-                account.CRDT = accountORG.CRDT;
+                account.CRDT =accountORG.CRDT>0?accountORG.CRDT : 0.0;
                 account.LAT = accountORG.LAT != null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-") ? accountORG.LAT : "0.0";
                 account.LNG = accountORG.LNG != null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-") ? accountORG.LNG : "0.0";
                 account.LAT1 = accountORG.LAT1 != null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-") ? accountORG.LAT1 : "0.0";
@@ -345,7 +345,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.I = accountORG.I;
                 account.N = accountORG.N;
                 account.M = accountORG.M;
-                account.CRDT = accountORG.CRDT;
+                account.CRDT = accountORG.CRDT>0?accountORG.CRDT : 0.0;
 
 
                 if (type.equals("1")) {
@@ -394,7 +394,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 account.M = accountORG.M;
                 account.ADR = accountORG.ADR;
                 account.ADR2 = accountORG.ADR2;
-                account.CRDT = accountORG.CRDT;
+                account.CRDT = accountORG.CRDT>0?accountORG.CRDT : 0.0;
                 account.LAT = accountORG.LAT != null && !accountORG.LAT.equals("") && !accountORG.LAT.equals("-") ? accountORG.LAT : "0.0";
                 account.LNG = accountORG.LNG != null && !accountORG.LNG.equals("") && !accountORG.LNG.equals("-") ? accountORG.LNG : "0.0";
                 account.LAT1 = accountORG.LAT1 != null && !accountORG.LAT1.equals("") && !accountORG.LAT1.equals("-") ? accountORG.LAT1 : "0.0";

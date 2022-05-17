@@ -268,16 +268,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             String ip = company.IP1;
 
-            String input_id = "ic_" + company.INSK_ID.split("ir.kitgroup.salein")[1];
-            if (imageId == 0)
+            try{
+
+                String input_id = "ic_" + company.INSK_ID.split("ir.kitgroup.salein")[1];
+              if (imageId==0)
                 imageId = context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
+            }
+            catch (Exception ignore){}
+
 
 
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
-                    .error(imageId==0?R.mipmap.ic_saleinorder :imageId)
-                    .placeholder(imageId==0?R.mipmap.ic_saleinorder :imageId)
+                    .error(imageId==0?R.drawable.nopic :imageId)
+                    .placeholder(imageId==0?R.drawable.nopic :imageId)
                     .into(holder.productImage);
 
 

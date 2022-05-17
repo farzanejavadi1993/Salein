@@ -69,7 +69,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                     if (!task.isSuccessful()) {
 
-                        return;
+                        return
                     }
 
                     String token = task.getResult();
@@ -339,6 +339,12 @@ public class LauncherActivity extends AppCompatActivity {
             setInVisibiltyItem(true);
             loadProfile = false;
             binding.navView.setSelectedItemId(R.id.profile);
+        }
+        else if (Util.getPackageName(LauncherActivity.this).equals("ir.kitgroup.salein") && size >1 && name.equals("MainOrderF")){
+            getVisibilityBottomBar(false);
+            for (int i=0;i<size ;i++){
+                getSupportFragmentManager().popBackStack();
+            }
         }
         else {
             getVisibilityBottomBar(false);

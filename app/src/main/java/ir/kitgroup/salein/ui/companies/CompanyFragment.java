@@ -127,6 +127,7 @@ public class CompanyFragment extends Fragment {
         {
 
 
+
             if (parent) {
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
@@ -135,8 +136,11 @@ public class CompanyFragment extends Fragment {
                 binding.progressbar.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.VISIBLE);
                 myViewModel.getCompany(company.I);
+                ParentId=company.I;
 
                 return;
+            }else {
+                ParentId="";
             }
             Util.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
             sharedPreferences.edit().putBoolean("status", true).apply();
@@ -153,10 +157,7 @@ public class CompanyFragment extends Fragment {
                 bundleMainOrder.putString("Ord_TYPE", "");
                 MainOrderFragment mainOrderFragment = new MainOrderFragment();
                 mainOrderFragment.setArguments(bundleMainOrder);
-                if (!ParentId.equals("")) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
+
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
             } else {
                 binding.progressbar.setVisibility(View.VISIBLE);
@@ -225,6 +226,7 @@ public class CompanyFragment extends Fragment {
         });
 
         myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
+
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
@@ -255,7 +257,7 @@ public class CompanyFragment extends Fragment {
                         companyDemo = demo.get(0);
                         storiesFragment.binding.tvDemo.setVisibility(View.VISIBLE);
                     }
-                    CollectionUtils.filter(result, r -> !r.INSK_ID.equals("ir.kitgroup.salein"));
+                    CollectionUtils.filter(result, r -> !r.INSK_ID.equals("ir.kitgroup.salein") && r.INSK_ID.contains("ir.kitgroup.salein"));
                     companies.addAll(result);
                 } else {
                     for (int i = 0; i < result.size(); i++) {
@@ -270,6 +272,7 @@ public class CompanyFragment extends Fragment {
                     }
                 }
                 companyAdapterList.notifyDataSetChanged();
+
             }
         });
 
@@ -286,6 +289,7 @@ public class CompanyFragment extends Fragment {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(companySelect);
 
+
                 sharedPreferences.edit().putString(NAME, "login").apply();
 
                 Bundle bundleMainOrder = new Bundle();
@@ -295,10 +299,7 @@ public class CompanyFragment extends Fragment {
 
                 MainOrderFragment mainOrderFragment = new MainOrderFragment();
                 mainOrderFragment.setArguments(bundleMainOrder);
-                if (!ParentId.equals("")) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
+
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
             }
             //user not register
@@ -322,10 +323,7 @@ public class CompanyFragment extends Fragment {
             bundleMainOrder.putString("Ord_TYPE", "");
             MainOrderFragment mainOrderFragment = new MainOrderFragment();
             mainOrderFragment.setArguments(bundleMainOrder);
-            if (!ParentId.equals("")) {
-                getActivity().getSupportFragmentManager().popBackStack();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
+
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
         });
     }
