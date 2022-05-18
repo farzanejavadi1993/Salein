@@ -40,11 +40,8 @@ import ir.kitgroup.saleindemo.classes.Util;
 public class VerifyFragment extends Fragment {
 
     //region  Parameter
-
-
     @Inject
     SharedPreferences sharedPreferences;
-
 
     private MyViewModel myViewModel;
     private Company company;

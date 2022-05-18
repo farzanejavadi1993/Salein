@@ -80,6 +80,9 @@
         <argument
             android:name="mobile"
             app:argType="string" />
+        <argument
+            android:name="code"
+            app:argType="integer" />
     </fragment>
 
 

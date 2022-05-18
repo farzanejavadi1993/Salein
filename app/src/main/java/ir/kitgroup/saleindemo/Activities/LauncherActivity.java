@@ -39,7 +39,7 @@ import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
 import ir.kitgroup.saleindemo.databinding.ActivityLauncherBinding;
 
 
-
+@AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {
     //region Parameter
     private ActivityLauncherBinding binding;

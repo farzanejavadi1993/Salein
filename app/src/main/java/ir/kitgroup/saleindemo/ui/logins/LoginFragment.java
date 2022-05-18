@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 
 import com.orm.query.Select;
@@ -55,8 +57,6 @@ public class LoginFragment extends Fragment {
     //endregion PARAMETER
 
 
-
-
     //region Override Method
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -73,122 +73,96 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        try {
-
-            company = Select.from(Company.class).first();
-
-            //region Configuration Text Size
-            int fontSize;
-            if (Util.screenSize >= 7) {
-                binding.tvWelcome.setTextSize(18);
-                fontSize = 14;
-            } else
-                fontSize = 12;
+        company = Select.from(Company.class).first();
 
 
-            binding.loginTvRules.setTextSize(fontSize);
-            binding.loginTvRules1.setTextSize(fontSize);
-            binding.loginTvRules2.setTextSize(fontSize);
-            binding.tvLogin.setTextSize(fontSize);
-            binding.btnLogin.setTextSize(fontSize);
-            binding.tvEnterMobile.setTextSize(fontSize);
-            binding.edtMobile.setTextSize(fontSize);
-            //endregion Configuration Text Size
+        binding.loginTvRules.setText("با ثبت نام در " + company.N);
 
 
-            binding.loginTvRules.setText("با ثبت نام در " + company.N);
-
-            //region Set Icon And Title
-            binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
-            Picasso.get()
-                    .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
-                            company.I+"&width=300&height=300")
-                    .error(R.drawable.loading)
-                    .placeholder(R.drawable.loading)
-                    .into(binding.imageLogo);
-            //endregion Set Icon And Title
+        //region Set Title to textView
+        binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
+        //endregion Set Title to textView
 
 
-            //region TextWatcher edtMobile
-            binding.edtMobile.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (Util.isValid(s.toString())) {
-
-                        Util.hideKeyBoard(getActivity(), binding.edtMobile);
-
-                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                        binding.btnLogin.setEnabled(true);
-                    } else {
-                        binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
-                        binding.btnLogin.setEnabled(false);
-                    }
-                }
-            });
-            //endregion TextWatcher edtMobile
+        //region Set UrlPath to ImageView
+        Picasso.get()
+                .load(Util.DEVELOPMENT_BASE_URL_Img + "/GetCompanyImage?id=" +
+                        company.I + "&width=300&height=300")
+                .error(R.drawable.loading)
+                .placeholder(R.drawable.loading)
+                .into(binding.imageLogo);
+        //endregion Set UrlPath to ImageView
 
 
-            //region Action btnLogin
-            binding.btnLogin.setOnClickListener(v -> {
-                if (acceptRule) {
+        //region TextWatcher For EdtMobile
+        binding.edtMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                    code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-                    String messageCode = String.valueOf(code);
-                    mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Util.isValid(s.toString())) {
+                    Util.hideKeyBoard(getActivity(), binding.edtMobile);
+                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                    binding.btnLogin.setEnabled(true);
+                } else {
                     binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                     binding.btnLogin.setEnabled(false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getSmsLogin(company.USER,company.PASS,messageCode, mobileNumber);
                 }
-            });
-            //endregion Action btnLogin
+            }
+        });
+        //endregion TextWatcher For EdtMobile
 
 
-            //region Action btnLogin
-            binding.loginTvRules1.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new RulesFragment(), "RulesFragment").addToBackStack("RulesF").commit());
-            //endregion Action btnLogin
+        //region Pressed btnLogin Button
+        binding.btnLogin.setOnClickListener(v -> {
+            if (acceptRule) {
+
+                code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+                String messageCode = String.valueOf(code);
+                mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnLogin.setEnabled(false);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                myViewModel.getSmsLogin(company.USER, company.PASS, messageCode, mobileNumber);
+            }
+        });
+        //endregion Pressed btnLogin Button
 
 
-            //region Action CheckBox
-            binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    acceptRule = true;
-                    binding.btnLogin.setVisibility(View.VISIBLE);
-                } else {
-                    acceptRule = false;
-                    binding.btnLogin.setVisibility(View.GONE);
-                }
-            });
-            //endregion Action CheckBox
+        //region Pressed btnRule Button
+        binding.btnRule.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new RulesFragment(), "RulesFragment").addToBackStack("RulesF").commit());
+        //endregion Pressed btnRule Button
 
 
-        } catch (Exception ignored) {
-        }
+        //region Press Or UnPress CheckBox
+        binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                acceptRule = true;
+                binding.btnLogin.setVisibility(View.VISIBLE);
+            } else {
+                acceptRule = false;
+                binding.btnLogin.setVisibility(View.GONE);
+            }
+        });
+        //endregion Press Or UnPress CheckBox
+
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            //   myViewModel.getResultMessage().setValue(null);
-            binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
-            binding.btnLogin.setEnabled(true);
-            if (result == null) return;
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-        });
+
+
+        //region Get Result From The Server
+
 
         myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
@@ -198,15 +172,21 @@ public class LoginFragment extends Fragment {
                 return;
             myViewModel.getResultSmsLogin().setValue(null);
             if (result.equals("")) {
-                Bundle bundleOrder = new Bundle();
-                bundleOrder.putString("mobileNumber", mobileNumber);
-                bundleOrder.putInt("code", code);
-                VerifyFragment inVoiceDetailFragment = new VerifyFragment();
-                inVoiceDetailFragment.setArguments(bundleOrder);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "ConfirmCodeFragment").addToBackStack("ConfirmCodeF").commit();
+                NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobileNumber,code);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
 
         });
+
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setEnabled(true);
+            if (result == null) return;
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+        //end region Get Result From The Server
+
 
     }
 
@@ -217,9 +197,6 @@ public class LoginFragment extends Fragment {
         binding = null;
     }
     //endregion Override Method
-
-
-
 
 
 }

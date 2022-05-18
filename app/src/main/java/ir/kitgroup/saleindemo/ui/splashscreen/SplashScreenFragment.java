@@ -54,6 +54,9 @@ public class SplashScreenFragment extends Fragment {
     private FragmentSplashScreenBinding binding;
     private String packageName;
     private Salein saleinInstance;
+    private  String title;
+    private  String description;
+    private  Company company;
     //endregion Parameter
 
 
@@ -75,14 +78,13 @@ public class SplashScreenFragment extends Fragment {
 
 
 
-        //region Set Gif In AnimationView From Local
-        Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
-        //endregion Set Gif In AnimationView From Local
+       //region Get The Company Is Save In The Database
+        company=Select.from(Company.class).first();
+       //endregion Get The Company Is Save In The Database
 
         //region Set Version In TextView
         try {
             binding.tvversion.setText(" نسخه " + appVersion());
-
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -107,7 +109,29 @@ public class SplashScreenFragment extends Fragment {
         { Salein salein=new Salein();
             salein.ContainAllCompanie =true;
             salein.save();
+            saleinInstance=salein;
         }
+
+        //region Set Title And Description In TextViews
+        if (saleinInstance!=null)
+            Company.deleteAll(Company.class);
+
+
+        title=company!=null ? company.N:"";
+        description=company!=null ? company.DESC:"";
+
+        binding.tvTitle.setText(title);
+        binding.tvDescription.setText(description);
+        //endregion Set Title And Description In TextViews
+
+
+
+
+        //region Set Gif In AnimationView From Local
+        Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
+        //endregion Set Gif In AnimationView From Local
+
+
         //endregion Create Salein Instance When PackageName Equal With ...
 
         //region Press The BtnError For Re-Request
