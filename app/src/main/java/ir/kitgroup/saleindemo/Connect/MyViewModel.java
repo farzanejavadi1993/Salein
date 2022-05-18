@@ -22,7 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 
@@ -59,8 +59,8 @@ public class MyViewModel extends ViewModel {
 
     private final MutableLiveData<String> resultSendSms = new MutableLiveData<>();
     private final  MutableLiveData<List<Company>> resultCompanies = new MutableLiveData<>();
-    private final  MutableLiveData<List<User>> resultInquiryAccount = new MutableLiveData<>();
-    private final  MutableLiveData<List<User>> resultSearchAccount = new MutableLiveData<>();
+    private final  MutableLiveData<List<Users>> resultInquiryAccount = new MutableLiveData<>();
+    private final  MutableLiveData<List<Users>> resultSearchAccount = new MutableLiveData<>();
     private final  MutableLiveData<List<ProductLevel1>> resultProductLevel1 = new MutableLiveData<>();
     private final  MutableLiveData<List<ProductLevel2>> resultProductLevel2 = new MutableLiveData<>();
     private final  MutableLiveData<List<CustomTab>> resultCustomTab = new MutableLiveData<>();
@@ -102,7 +102,8 @@ public class MyViewModel extends ViewModel {
                         })
                         .subscribe(jsonElement ->
                                         resultSendSms.setValue(""),
-                                throwable -> eMessage.setValue(new Message(-1, "خطا در ارسال پیامک", ""))));
+                                throwable ->
+                                        eMessage.setValue(new Message(-1, "خطا در ارسال پیامک", ""))));
     }
     public MutableLiveData<String> getResultSmsLogin() {
         return resultSendSms;
@@ -190,14 +191,14 @@ public class MyViewModel extends ViewModel {
 
 
     }
-    public MutableLiveData<List<User>> getResultInquiryAccount() {
+    public MutableLiveData<List<Users>> getResultInquiryAccount() {
         return resultInquiryAccount;
     }
 
 
     
     
-    public void addAccount(String user, String passWord, List<User> accounts) {
+    public void addAccount(String user, String passWord, List<Users> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.addAccount(user, passWord, accounts)
@@ -266,7 +267,7 @@ public class MyViewModel extends ViewModel {
 
                         }, throwable -> eMessage.setValue(new Message(-2, "خطا در جستجوی مشتری", ""))));
     }
-    public MutableLiveData<List<User>> getResultSearchAccount() {
+    public MutableLiveData<List<Users>> getResultSearchAccount() {
         return resultSearchAccount;
     }
 
@@ -917,7 +918,7 @@ public class MyViewModel extends ViewModel {
 
 
 
-    public void updateAccount(String user, String passWord,List<User> accounts) {
+    public void updateAccount(String user, String passWord,List<Users> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.updateAccount(user, passWord,accounts)

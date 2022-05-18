@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Salein;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.FragmentSplashScreenBinding;
@@ -208,7 +208,7 @@ public class SplashScreenFragment extends Fragment {
 
 
                 //region When The User Is Logged In
-                if (Select.from(User.class).list().size() > 0) {
+                if (Select.from(Users.class).list().size() > 0) {
                     if (saleinInstance!=null)
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
 
@@ -245,7 +245,7 @@ public class SplashScreenFragment extends Fragment {
                 //endregion Request From The Server With The IP Of The Company That Was Registered
 
                 //region When The User Is Logged In
-                if (Select.from(User.class).list().size() > 0) {
+                if (Select.from(Users.class).list().size() > 0) {
                     if (saleinInstance!=null)
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
 
@@ -285,7 +285,6 @@ public class SplashScreenFragment extends Fragment {
         binding = null;
     }
     //endregion Override Method
-
 
 
     //region Custom Method

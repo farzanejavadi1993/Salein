@@ -8,7 +8,7 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
 @Keep
-public class User extends SugarRecord {
+public class Users extends SugarRecord {
 
 
     @Unique

@@ -55,12 +55,11 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
-import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
 import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 
 import ir.kitgroup.saleindemo.DataBase.Tables;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
@@ -447,7 +446,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                 if (company.mode == 1) {
-                    User acc = Select.from(User.class).first();
+                    Users acc = Select.from(Users.class).first();
                     if (acc != null)
                         binding.tvNameCustomer.setText("(" + (acc.N != null ? acc.N + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
                     else

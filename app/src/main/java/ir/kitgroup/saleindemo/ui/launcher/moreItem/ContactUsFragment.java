@@ -21,9 +21,8 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.databinding.ContactUsFragmentBinding;
@@ -83,7 +82,7 @@ public class ContactUsFragment extends Fragment {
         }else {
             binding.txtTitleToolbar.setText("دعوت از دوستان");
             binding.image.setImageResource(R.drawable.ic_share);
-            User account= Select.from(User.class).first();
+            Users account= Select.from(Users.class).first();
             binding.description.setText(company!=null && company.TXT1!=null ?company.TXT1:"");
             binding.textView4.setText("کد معرف : "+account.getC());
         }
@@ -192,7 +191,7 @@ public class ContactUsFragment extends Fragment {
 
 
     private void shareApplication() {
-        User account=   Select.from(User.class).first();
+        Users account=   Select.from(Users.class).first();
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         String my_string = " سلام "+account.N +" شما را به "+company.N +" دعوت کرده است.از طریق لینک زیر برنامه را دانلود کنید."+"\n"+

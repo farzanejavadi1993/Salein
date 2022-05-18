@@ -54,7 +54,6 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.databinding.FragmentMobileOrderMainBinding;
 import ir.kitgroup.saleindemo.models.CustomTab;
 import ir.kitgroup.saleindemo.ui.organization.AccountAdapter;
@@ -62,7 +61,7 @@ import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.classes.PaginationScrollListener;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -152,10 +151,10 @@ public class MainOrderFragment extends Fragment {
 
     private TextWatcher textWatcherAcc;
     private AccountAdapter accAdapter;
-    private ArrayList<User> accList;
+    private ArrayList<Users> accList;
 
     //region Variable DialogAddAccount
-    private List<User> accountsList;
+    private List<Users> accountsList;
     private Dialog dialogAddAccount;
     private EditText edtNameAccount;
     private EditText edtAddressAccount;
@@ -231,7 +230,7 @@ public class MainOrderFragment extends Fragment {
 
 
             if (company.mode == 1)
-                User.deleteAll(User.class);
+                Users.deleteAll(Users.class);
             //region First Value Parameter
 
 
@@ -256,7 +255,7 @@ public class MainOrderFragment extends Fragment {
             //endregion First Value Parameter
 
 
-            //region Get Bundle
+           /* //region Get Bundle
             Bundle bundle = getArguments();
             Ord_TYPE = bundle.getString("Ord_TYPE");
             Tbl_GUID = bundle.getString("Tbl_GUID");
@@ -316,7 +315,7 @@ public class MainOrderFragment extends Fragment {
           //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
             //endregion Create Order
 
-            //endregion Get Bundle
+            //endregion Get Bundle*/
 
             //region Delete InvoiceDetail UnNecessary
             if (company.mode == 1) {
@@ -342,7 +341,7 @@ public class MainOrderFragment extends Fragment {
             binding.tvNameStore.setText(company.N);
             //endregion Set Icon And Title
 
-            User acc = Select.from(User.class).first();
+            Users acc = Select.from(Users.class).first();
 
             //region Cast DialogAddress
             dialogAddress = new Dialog(getActivity());
@@ -527,7 +526,7 @@ public class MainOrderFragment extends Fragment {
 
                     } else {
 
-                        User account = new User();
+                        Users account = new Users();
                         account.I = UUID.randomUUID().toString();
                         account.N = edtNameAccount.getText().toString();
                         account.M = edtMobileAccount.getText().toString();
@@ -577,8 +576,8 @@ public class MainOrderFragment extends Fragment {
                 };
 
                 accAdapter.setOnClickItemListener((account) -> {
-                    User.deleteAll(User.class);
-                    User.saveInTx(account);
+                    Users.deleteAll(Users.class);
+                    Users.saveInTx(account);
                     Acc_GUID = account.I;
                     Acc_NAME = account.N;
                     binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
@@ -606,8 +605,8 @@ public class MainOrderFragment extends Fragment {
                 binding.layoutAccount.setVisibility(View.GONE);
 
 
-                Acc_NAME = Select.from(User.class).first().N;
-                Acc_GUID = Select.from(User.class).first().I;
+                Acc_NAME = Select.from(Users.class).first().N;
+                Acc_GUID = Select.from(Users.class).first().I;
             }
 
             //endregion Configuration Client Application
@@ -1053,7 +1052,7 @@ public class MainOrderFragment extends Fragment {
         myViewModel.getSetting(company.USER, company.PASS);
         myViewModel.getUnit(company.USER, company.PASS);
         if (company.mode == 2)
-            myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(User.class).first().getM());
+            myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Users.class).first().getM());
 
 
         myViewModel.getResultSearchAccount().observe(getViewLifecycleOwner(), result -> {
@@ -1066,11 +1065,11 @@ public class MainOrderFragment extends Fragment {
                 accList.addAll(result);
                 binding.accountRecyclerView.setVisibility(View.VISIBLE);
             } else {
-                User.deleteAll(User.class);
+                Users.deleteAll(Users.class);
                 accList.addAll(result);
                 CollectionUtils.filter(accList, a -> a.I.equals(Acc_GUID));
                 if (accList.size() > 0)
-                    User.saveInTx(accList.get(0));
+                    Users.saveInTx(accList.get(0));
             }
 
             accAdapter.notifyDataSetChanged();
@@ -1159,10 +1158,10 @@ public class MainOrderFragment extends Fragment {
                 if (company.mode == 1) {
                     Acc_GUID = settingsList.get(0).DEFAULT_CUSTOMER;
                     accList.clear();
-                    User account = new User();
+                    Users account = new Users();
                     account.I = Acc_GUID;
                     accList.add(account);
-                    User.saveInTx(accList);
+                    Users.saveInTx(accList);
                     accList.clear();
                     if (!EDIT)
                         binding.edtNameCustomer.setHint("فروش روزانه");
@@ -1695,7 +1694,7 @@ public class MainOrderFragment extends Fragment {
         if (type == 1)
             myViewModel.getDiscountProduct(company.USER, company.PASS);
         else if (type == 2)
-            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(User.class).first().I);
+            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(Users.class).first().I);
         else
             myViewModel.getProductLevel1(company.USER, company.PASS);
 

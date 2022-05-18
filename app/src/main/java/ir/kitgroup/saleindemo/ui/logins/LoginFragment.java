@@ -46,14 +46,14 @@ import ir.kitgroup.saleindemo.databinding.FragmentLoginBinding;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
+
     //region PARAMETER
     private MyViewModel myViewModel;
     private FragmentLoginBinding binding;
-    private String mobileNumber = "";
+    private String mobile = "";
     private int code = 0;
     private Boolean acceptRule = true;
     private Company company;
-
     //endregion PARAMETER
 
 
@@ -94,6 +94,7 @@ public class LoginFragment extends Fragment {
         //endregion Set UrlPath to ImageView
 
 
+
         //region TextWatcher For EdtMobile
         binding.edtMobile.addTextChangedListener(new TextWatcher() {
             @Override
@@ -122,22 +123,28 @@ public class LoginFragment extends Fragment {
         //region Pressed btnLogin Button
         binding.btnLogin.setOnClickListener(v -> {
             if (acceptRule) {
-
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
                 String messageCode = String.valueOf(code);
-                mobileNumber = Objects.requireNonNull(binding.edtMobile.getText()).toString();
+                mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
                 binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 binding.btnLogin.setEnabled(false);
                 binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getSmsLogin(company.USER, company.PASS, messageCode, mobileNumber);
+                myViewModel.getSmsLogin(company.USER, company.PASS, messageCode, mobile);
             }
         });
         //endregion Pressed btnLogin Button
 
 
+
         //region Pressed btnRule Button
-        binding.btnRule.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new RulesFragment(), "RulesFragment").addToBackStack("RulesF").commit());
+        binding.btnRule.setOnClickListener(v ->
+                {
+                    NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
+                    Navigation.findNavController(binding.getRoot()).navigate(action);
+                }
+        );
         //endregion Pressed btnRule Button
+
 
 
         //region Press Or UnPress CheckBox
@@ -172,7 +179,7 @@ public class LoginFragment extends Fragment {
                 return;
             myViewModel.getResultSmsLogin().setValue(null);
             if (result.equals("")) {
-                NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobileNumber,code);
+                NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile,code);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
 

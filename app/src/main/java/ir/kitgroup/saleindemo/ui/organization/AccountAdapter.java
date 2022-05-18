@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.R;
 
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHolder>  {
 
-    private List<User> accountList ;
+    private List<Users> accountList ;
     private Context context;
 
 
@@ -28,13 +28,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHold
 
 
     public interface ClickItem {
-        void onRowClick(User account);
+        void onRowClick(Users account);
     }
 
     private ClickItem clickItem;
 
 
-    public AccountAdapter(Context context, List<User> accountList) {
+    public AccountAdapter(Context context, List<Users> accountList) {
         this.context = context;
         this.accountList = accountList;
     }
@@ -47,7 +47,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.viewHold
 
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
-        final User account = accountList.get(position);
+        final Users account = accountList.get(position);
         holder.GUID = account.getACCCLBUID();
         holder.accountName.setText(account.getACCCLBNAME() + "-" + account.getM());
 

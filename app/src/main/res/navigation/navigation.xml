@@ -21,6 +21,7 @@
             app:popUpToInclusive="true"
             android:id="@+id/actionGoToMainFragment"
             app:destination="@id/MainFragment" />
+
     </fragment>
 
 
@@ -33,10 +34,12 @@
         tools:layout="@layout/fragment_login" >
 
         <action
-            app:popUpTo="@id/LoginFragment"
-            app:popUpToInclusive="true"
             android:id="@+id/actionGoToVerifyFragment"
             app:destination="@id/VerifyFragment" />
+        <action
+
+            android:id="@+id/actionGoToRulesFragment"
+            app:destination="@id/RulesFragment" />
     </fragment>
 
 
@@ -54,18 +57,60 @@
 
     <fragment
         android:id="@+id/MainFragment"
-        android:name="ir.kitgroup.saleindemo.ui.logins.LoginFragment"
-        tools:layout="@layout/fragment_mobile_order_main" >
+        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment"
+        tools:layout="@layout/fragment_main" >
+        <action
+
+            android:id="@+id/actionGoToMoreFragment"
+            app:destination="@id/MoreFragment" />
         <argument
             android:name="Inv_GUID"
             app:argType="string" />
     </fragment>
 
 
+    <fragment
+        android:id="@+id/MoreFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.SettingFragment"
+        tools:layout="@layout/fragment_setting" >
+        <action
+
+            android:id="@+id/actionGoToMainFragment"
+            app:destination="@id/MainFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="ir.kitgroup.saleindemo.ui.logins.RegisterFragment"
+        tools:layout="@layout/fragment_register" >
+
+    </fragment>
 
 
 
+    <fragment
+        android:id="@+id/StoriesFragment"
+        android:name="ir.kitgroup.saleindemo.ui.companies.StoriesFragment"
+        tools:layout="@layout/fragment_stories" >
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/RulesFragment"
+        android:name="ir.kitgroup.saleindemo.ui.logins.RulesFragment"
+        tools:layout="@layout/fragment_rules" >
+
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
+        tools:layout="@layout/fragment_map" >
+
+    </fragment>
     <fragment
         android:id="@+id/VerifyFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.VerifyFragment"
@@ -76,6 +121,18 @@
             app:popUpToInclusive="true"
             android:id="@+id/actionGoToMainFragment"
             app:destination="@id/MainFragment"
+            />
+        <action
+            app:popUpTo="@id/VerifyFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToStoriesFragment"
+            app:destination="@id/StoriesFragment"
+            />
+        <action
+            app:popUpTo="@id/VerifyFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/actionGoToRegisterFragment"
+            app:destination="@id/RegisterFragment"
             />
         <argument
             android:name="mobile"

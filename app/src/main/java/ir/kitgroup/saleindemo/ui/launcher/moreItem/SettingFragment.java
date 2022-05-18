@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
@@ -27,9 +28,8 @@ import java.text.DecimalFormat;
 import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.Tables;
@@ -62,7 +62,7 @@ public class SettingFragment extends Fragment {
     private String mobile;
     private String linkPayment = "";
 
-    private User acc;
+    private Users acc;
 
    private  Boolean disableAccount=false;
 
@@ -88,7 +88,7 @@ public class SettingFragment extends Fragment {
 
 
         linkPayment = sharedPreferences.getString("payment_link", "");
-         acc = Select.from(User.class).first();
+         acc = Select.from(Users.class).first();
         if (!linkPayment.equals(""))
             linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
@@ -119,8 +119,8 @@ public class SettingFragment extends Fragment {
             dialogSync.dismiss();
             sharedPreferences.edit().clear();
 
-            if (User.count(User.class) > 0)
-                User.deleteAll(User.class);
+            if (Users.count(Users.class) > 0)
+                Users.deleteAll(Users.class);
 
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                 InvoiceDetail.deleteAll(InvoiceDetail.class);
@@ -162,7 +162,7 @@ public class SettingFragment extends Fragment {
         binding.tvOrder.setTextSize(fontSize);
 
 
-        mobile = Select.from(User.class).first().M;
+        mobile = Select.from(Users.class).first().M;
         binding.btnShare.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             bundle.putInt("type",2);
@@ -199,11 +199,12 @@ public class SettingFragment extends Fragment {
 
 
         binding.btnSupport.setOnClickListener(v ->{
-            Bundle bundle=new Bundle();
+          /*  Bundle bundle=new Bundle();
             bundle.putInt("type",1);
                     ContactUsFragment contactUsFragment=new ContactUsFragment();
                     contactUsFragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();*/
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToMainFragment);
                 }
 
         );
@@ -245,10 +246,10 @@ public class SettingFragment extends Fragment {
                     //user is register
                     try {
                         if (result.size() > 0) {
-                            User.deleteAll(User.class);
-                            User.saveInTx(result);
+                            Users.deleteAll(Users.class);
+                            Users.saveInTx(result);
 
-                            User acc = Select.from(User.class).first();
+                            Users acc = Select.from(Users.class).first();
                             if (acc != null && acc.CRDT != null)
                                 binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 

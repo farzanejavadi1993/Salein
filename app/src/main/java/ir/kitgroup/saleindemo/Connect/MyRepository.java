@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Observable;
-import ir.kitgroup.saleindemo.DataBase.User;
+import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.ui.map.MapFragment;
@@ -40,7 +40,7 @@ public class MyRepository {
     }
 
 
-    public Observable<String> addAccount(String user,String passWord,List<User> accounts) {
+    public Observable<String> addAccount(String user,String passWord,List<Users> accounts) {
         CompanyFragment.JsonObjectAccount jsonObjectAcc = new CompanyFragment.JsonObjectAccount();
         jsonObjectAcc.Account = accounts;
         Gson gson1 = new Gson();
@@ -154,7 +154,7 @@ public class MyRepository {
         return api.getOrderType1(user,passWord); }
 
 
-    public Observable<String> updateAccount(String user,String passWord,List<User> accounts) {
+    public Observable<String> updateAccount(String user,String passWord,List<Users> accounts) {
         MapFragment.JsonObjectAccount jsonObjectAcc = new MapFragment.JsonObjectAccount();
         jsonObjectAcc.Account = accounts;
 
