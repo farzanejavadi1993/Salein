@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
 
 
         //region Pressed btnRule Button
-        binding.btnRule.setOnClickListener(v ->
+        binding.loginTvRules.setOnClickListener(v ->
                 {
                     NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
@@ -192,7 +192,7 @@ public class LoginFragment extends Fragment {
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
-        //end region Get Result From The Server
+        //endregion Get Result From The Server
 
 
     }

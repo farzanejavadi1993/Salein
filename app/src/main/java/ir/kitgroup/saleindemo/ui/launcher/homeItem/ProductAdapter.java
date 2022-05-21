@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.UUID;
 
 
+import javax.inject.Inject;
+
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -133,7 +135,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    public ProductAdapter(Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences) {
+    @Inject
+    public ProductAdapter( Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences) {
         this.context = context;
 
         this.productsList = productsList;

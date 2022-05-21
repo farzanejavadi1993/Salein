@@ -84,6 +84,13 @@
         android:id="@+id/RegisterFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.RegisterFragment"
         tools:layout="@layout/fragment_register" >
+        <argument
+            android:name="mobile"
+            app:argType="string" />
+
+        <argument
+            android:name="from"
+            app:argType="string" />
 
     </fragment>
 
@@ -109,6 +116,7 @@
         android:id="@+id/MapFragment"
         android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
         tools:layout="@layout/fragment_map" >
+
 
     </fragment>
     <fragment

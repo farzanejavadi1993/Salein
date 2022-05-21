@@ -33,25 +33,25 @@ public class MainFragment extends Fragment {
         binding.navView.setSelectedItemId(R.id.homee);
         binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
         binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new MainOrderFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment()).commit();
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
 
             switch (item.getItemId()) {
 
                 case R.id.homee:
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new MainOrderFragment()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment()).commit();
                     return true;
 
 
                 case R.id.search:
 
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new MainOrderFragment()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment()).commit();
                     return true;
 
 
                 case R.id.orders:
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new MainOrderFragment()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment()).commit();
                     return true;
 
                 case R.id.profile:

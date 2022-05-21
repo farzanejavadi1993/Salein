@@ -82,7 +82,7 @@ import java.util.Objects;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.ui.organization.LauncherOrganizationFragment;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Users;
@@ -813,8 +813,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                         frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
 
-                        if (frg instanceof MainOrderFragment) {
-                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                        if (frg instanceof HomeFragment) {
+                            HomeFragment fgf = (HomeFragment) frg;
                             Bundle bundle = fgf.getBundle(setADR1);
                             frg.setArguments(bundle);
                         }

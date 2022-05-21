@@ -26,7 +26,7 @@ import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Users;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.ui.companies.StoriesFragment;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
@@ -170,7 +170,7 @@ public class RegisterFragment extends Fragment {
                     bundleMainOrder.putString("Tbl_GUID", "");
                     bundleMainOrder.putString("Ord_TYPE", "");
 
-                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                    HomeFragment mainOrderFragment = new HomeFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment")
                             //.addToBackStack("MainOrderF")
@@ -204,7 +204,7 @@ public class RegisterFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
                 return;
-          //  myViewModel.getResultMessage().setValue(null);
+            //  myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

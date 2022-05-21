@@ -55,7 +55,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
@@ -269,8 +269,8 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                if (frg instanceof HomeFragment) {
+                    HomeFragment fgf = (HomeFragment) frg;
                     fgf.refreshProductList();
                     fgf.counter1 = 0;
                 }
@@ -414,8 +414,8 @@ public class InVoiceDetailFragment extends Fragment {
                 invoiceDetailAdapter.notifyDataSetChanged();
 
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                if (frg instanceof HomeFragment) {
+                    HomeFragment fgf = (HomeFragment) frg;
                     fgf.refreshProductList();
                 }
                 dialogDescription.dismiss();
@@ -508,8 +508,8 @@ public class InVoiceDetailFragment extends Fragment {
 
                         invoiceDetailAdapter.notifyDataSetChanged();
                         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof MainOrderFragment) {
-                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                        if (frg instanceof HomeFragment) {
+                            HomeFragment fgf = (HomeFragment) frg;
                             fgf.refreshProductList();
                         }
 
@@ -699,7 +699,7 @@ public class InVoiceDetailFragment extends Fragment {
                 bundleMainOrder.putString("Acc_NAME", Acc_NAME);
                 bundleMainOrder.putBoolean("EDIT", true);
                 bundleMainOrder.putBoolean("Seen", true);
-                MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                HomeFragment mainOrderFragment = new HomeFragment();
                 mainOrderFragment.setArguments(bundleMainOrder);
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -1072,8 +1072,8 @@ public class InVoiceDetailFragment extends Fragment {
                         invoiceDetailAdapter.notifyDataSetChanged();
 
                         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof MainOrderFragment) {
-                            MainOrderFragment fgf = (MainOrderFragment) frg;
+                        if (frg instanceof HomeFragment) {
+                            HomeFragment fgf = (HomeFragment) frg;
                             fgf.refreshProductList();
                         }
                         return;
@@ -1096,8 +1096,8 @@ public class InVoiceDetailFragment extends Fragment {
                 invoiceDetailAdapter.notifyDataSetChanged();
 
                 Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof MainOrderFragment) {
-                    MainOrderFragment fgf = (MainOrderFragment) frg;
+                if (frg instanceof HomeFragment) {
+                    HomeFragment fgf = (HomeFragment) frg;
                     fgf.refreshProductList();
                 }
 

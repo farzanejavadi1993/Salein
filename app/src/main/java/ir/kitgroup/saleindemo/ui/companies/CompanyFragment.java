@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Company;
@@ -110,7 +110,7 @@ public class CompanyFragment extends Fragment {
                     bundleMainOrder.putString("Inv_GUID", "");
                     bundleMainOrder.putString("Tbl_GUID", "");
                     bundleMainOrder.putString("Ord_TYPE", "");
-                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                    HomeFragment mainOrderFragment = new HomeFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
                     getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                 } else {
@@ -154,7 +154,7 @@ public class CompanyFragment extends Fragment {
                 bundleMainOrder.putString("Inv_GUID", "");
                 bundleMainOrder.putString("Tbl_GUID", "");
                 bundleMainOrder.putString("Ord_TYPE", "");
-                MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                HomeFragment mainOrderFragment = new HomeFragment();
                 mainOrderFragment.setArguments(bundleMainOrder);
 
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
@@ -296,7 +296,7 @@ public class CompanyFragment extends Fragment {
                 bundleMainOrder.putString("Tbl_GUID", "");
                 bundleMainOrder.putString("Ord_TYPE", "");
 
-                MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                HomeFragment mainOrderFragment = new HomeFragment();
                 mainOrderFragment.setArguments(bundleMainOrder);
 
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
@@ -320,7 +320,7 @@ public class CompanyFragment extends Fragment {
             bundleMainOrder.putString("Inv_GUID", "");
             bundleMainOrder.putString("Tbl_GUID", "");
             bundleMainOrder.putString("Ord_TYPE", "");
-            MainOrderFragment mainOrderFragment = new MainOrderFragment();
+            HomeFragment mainOrderFragment = new HomeFragment();
             mainOrderFragment.setArguments(bundleMainOrder);
 
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();

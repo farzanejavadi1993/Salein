@@ -38,7 +38,7 @@ import java.util.List;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 
 
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.models.Product;
@@ -326,8 +326,8 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
 
                         notifyItemRemoved(orderDetailList.indexOf(result.get(0)));
                      Fragment frg = ((FragmentActivity) contex).getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                       if (frg instanceof MainOrderFragment) {
-                           MainOrderFragment fgf = (MainOrderFragment) frg;
+                       if (frg instanceof HomeFragment) {
+                           HomeFragment fgf = (HomeFragment) frg;
                            fgf.refreshProductList();
                            fgf.counter1 = fgf.counter1 - 1;
 

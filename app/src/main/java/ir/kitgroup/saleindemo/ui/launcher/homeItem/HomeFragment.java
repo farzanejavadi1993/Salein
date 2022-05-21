@@ -21,8 +21,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +54,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.databinding.FragmentMobileOrderMainBinding;
 import ir.kitgroup.saleindemo.models.CustomTab;
-import ir.kitgroup.saleindemo.ui.organization.AccountAdapter;
 import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
@@ -74,12 +71,11 @@ import ir.kitgroup.saleindemo.models.ProductLevel1;
 import ir.kitgroup.saleindemo.R;
 
 import ir.kitgroup.saleindemo.models.ProductLevel2;
-import ir.kitgroup.saleindemo.ui.map.MapFragment;
 
 import static java.lang.Math.min;
 
 @AndroidEntryPoint
-public class MainOrderFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     //region Parameter
 
@@ -91,22 +87,14 @@ public class MainOrderFragment extends Fragment {
 
 
     private MyViewModel myViewModel;
+    private FragmentMobileOrderMainBinding binding;
     private Boolean disableAccount = false;
     private Boolean filterError = false;
-
     private Company company;
-    private FragmentMobileOrderMainBinding binding;
     private CustomProgress customProgress;
-
     private String Inv_GUID = "";
-    private String Tbl_GUID = "";
-    private String Tbl_NAME = "";
-    private String Ord_TYPE = "";
-    private String Acc_GUID = "";
-    private String Acc_NAME = "";
     private Boolean Seen = false;
     private Boolean EDIT = false;
-    boolean setARD1 = false;
 
 
 
@@ -143,44 +131,19 @@ public class MainOrderFragment extends Fragment {
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
-
     private MaterialButton btnOkDialog;
     private MaterialButton btnNoDialog;
     //endregion Dialog Sync
 
 
-    private TextWatcher textWatcherAcc;
-    private AccountAdapter accAdapter;
-    private ArrayList<Users> accList;
-
-    //region Variable DialogAddAccount
-    private List<Users> accountsList;
-    private Dialog dialogAddAccount;
-    private EditText edtNameAccount;
-    private EditText edtAddressAccount;
-    private EditText edtMobileAccount;
-    private int genderAccount;
-    //endregion Variable DialogAddAccount
 
     //region Variable DialogUpdate
     private Dialog dialogUpdate;
     private TextView textUpdate;
     private MaterialButton btnNo;
-
     //endregion Variable DialogUpdate
 
-    //region Dialog Address
-    private Dialog dialogAddress;
-    private RadioButton radioAddress1;
-    private RadioButton radioAddress2;
-    public int typeAddress = 0;
 
-    private Double latitude1 = 0.0;
-    private Double longitude1 = 0.0;
-
-    private Double latitude2 = 0.0;
-    private Double longitude2 = 0.0;
-    //endregion Dialog Address
 
     private String maxSales = "0";
 
@@ -188,7 +151,6 @@ public class MainOrderFragment extends Fragment {
     private String linkUpdate = "";
 
     public int counter1 = 0;
-    private int typeSearch;
     private String GuidProductLvl2 = "";
     private int keyCustomTab =0;
 
@@ -212,13 +174,14 @@ public class MainOrderFragment extends Fragment {
 
         try {
             ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
+
             if (Util.getPackageName(getActivity()).equals("ir.kitgroup.saleinmeat")) {
                 Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
                 binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-
             }
 
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
             customProgress = CustomProgress.getInstance();
 
 
@@ -229,14 +192,11 @@ public class MainOrderFragment extends Fragment {
             company = Select.from(Company.class).first();
 
 
-            if (company.mode == 1)
-                Users.deleteAll(Users.class);
             //region First Value Parameter
 
 
             counter1 = 0;
             descriptionList = new ArrayList<>();
-            accountsList = new ArrayList<>();
             productLevel1List = new ArrayList<>();
             productLevel2List = new ArrayList<>();
             customTabList = new ArrayList<>();
@@ -255,29 +215,15 @@ public class MainOrderFragment extends Fragment {
             //endregion First Value Parameter
 
 
-           /* //region Get Bundle
+           //region Get Bundle
             Bundle bundle = getArguments();
-            Ord_TYPE = bundle.getString("Ord_TYPE");
-            Tbl_GUID = bundle.getString("Tbl_GUID");
-            Tbl_NAME = bundle.getString("Tbl_NAME");
-            Inv_GUID = bundle.getString("Inv_GUID");
 
-            Acc_NAME = bundle.getString("Acc_NAME");
-            Acc_GUID = bundle.getString("Acc_GUID");
+         /*   Inv_GUID = bundle.getString("Inv_GUID");
             EDIT = bundle.getBoolean("EDIT");//when order need EDIT
-            Seen = bundle.getBoolean("Seen");
-            // invoiceDetails = (List<InvoiceDetail>) bundle.getSerializable("key");
-
-            setARD1 = bundle.getBoolean("setADR");
-
-            if (!setARD1)
-                setARD1 = bundle.getBoolean("setADR1");
-
-
+            Seen = bundle.getBoolean("Seen");*/
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
-          //  if (EDIT)
-             //   ((LauncherActivity) getActivity()).setFistItem();
+
 
 
             //region Create Order
@@ -285,7 +231,7 @@ public class MainOrderFragment extends Fragment {
                 String name;
                 name = company.INSK_ID.split("ir.kitgroup.")[1];
 
-                if (!Tbl_GUID.equals("") || company.mode == 2 && !name.equals("salein"))
+                if (name.equals("salein"))
                     Inv_GUID = sharedPreferences.getString(name, "");
 
                 if (Inv_GUID.equals("")) {
@@ -343,129 +289,6 @@ public class MainOrderFragment extends Fragment {
 
             Users acc = Select.from(Users.class).first();
 
-            //region Cast DialogAddress
-            dialogAddress = new Dialog(getActivity());
-            dialogAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogAddress.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogAddress.setContentView(R.layout.dialog_address);
-            dialogAddress.setCancelable(true);
-
-            radioAddress1 = dialogAddress.findViewById(R.id.radioAddress1);
-            radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
-            radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
-            MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
-
-
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("")) {
-                String address = "ناموجود";
-
-                latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
-                longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
-                if (latitude1 != 0.0)
-                    address = acc.ADR;
-                radioAddress1.setText(address);
-
-            }
-            if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("")) {
-                String address = "ناموجود";
-
-                latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
-                longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
-                if (latitude2 != 0.0)
-                    address = acc.ADR2;
-
-                radioAddress2.setText(address);
-
-            }
-
-
-            radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-
-                    latitude1 = Double.parseDouble(acc.LAT != null && !acc.LAT.equals("") && !acc.LAT.equals("-") ? acc.LAT : "0.0");
-                    longitude1 = Double.parseDouble(acc.LNG != null && !acc.LNG.equals("") && !acc.LNG.equals("-") ? acc.LNG : "0.0");
-
-
-                    if (latitude1 == 0.0 && longitude1 == 0.0) {
-                        Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    typeAddress = 1;
-                    String address = radioAddress1.getText().toString();
-                    binding.tvAddress.setText(address);
-                    dialogAddress.dismiss();
-
-                }
-            });
-
-            radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    latitude2 = Double.parseDouble(acc.LAT1 != null && !acc.LAT1.equals("") && !acc.LAT1.equals("-") ? acc.LAT1 : "0.0");
-                    longitude2 = Double.parseDouble(acc.LNG1 != null && !acc.LNG1.equals("") && !acc.LNG1.equals("-") ? acc.LNG1 : "0.0");
-
-                    if (latitude2 == 0.0 || longitude2 == 0.0) {
-                        Toast.makeText(getActivity(), "آدرس خود را مجدد ثبت کنید ، طول و عرض جغرافیایی ثبت نشده است.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    typeAddress = 2;
-                    String address = radioAddress2.getText().toString();
-                    binding.tvAddress.setText(address);
-                    dialogAddress.dismiss();
-                }
-            });
-
-
-            btnNewAddress.setOnClickListener(v -> {
-                if (acc == null) {
-                    Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                dialogAddress.dismiss();
-
-                Bundle bundleMap = new Bundle();
-                bundleMap.putString("mobileNumber", "");
-                bundleMap.putString("edit_address", "3");
-                bundleMap.putString("type", "");
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
-            });
-            //endregion Cast DialogAddress
-
-
-            //region SetAddress
-            if (acc != null && acc.ADR != null && !acc.ADR.equals("") && !setARD1 && latitude1 != 0.0 && !setARD1) {
-                String address;
-                typeAddress = 1;
-                address = acc.ADR;
-                binding.tvAddress.setText(address);
-            } else if (acc != null && acc.ADR2 != null && !acc.ADR2.equals("") && latitude2 != 0.0) {
-                String address;
-                typeAddress = 2;
-                address = acc.ADR2;
-                binding.tvAddress.setText(address);
-            } else {
-                typeAddress = 0;
-                binding.tvAddress.setText("نامشخص");
-            }
-            //endregion SetAddress
-
-
-            //region Action BtnAddress
-            binding.btnAddAddress.setOnClickListener(v -> {
-                if (acc != null && acc.ADR != null && !acc.ADR.equals("") && acc.ADR2 != null && !acc.ADR2.equals(""))
-                    dialogAddress.show();
-                else {
-                    Bundle bundleMap = new Bundle();
-                    bundleMap.putString("mobileNumber", "");
-                    bundleMap.putString("edit_address", "3");
-                    bundleMap.putString("type", "");
-                    MapFragment mapFragment = new MapFragment();
-                    mapFragment.setArguments(bundleMap);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
-                }
-            });
-            //endregion Action BtnAddress
 
 
             //region Action BtnStore
@@ -481,147 +304,18 @@ public class MainOrderFragment extends Fragment {
             //endregion Action BtnStore
 
 
-            //region Configuration Organization Application
-            if (company.mode == 1) {
-               // ((LauncherActivity) getActivity()).setInVisibiltyItem(false);
-                binding.layoutAddressBranch.setVisibility(View.GONE);
-                binding.layoutAccount.setVisibility(View.VISIBLE);
 
-                //region Cast DialogAddAcc
-                dialogAddAccount = new Dialog(getActivity());
-                dialogAddAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialogAddAccount.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogAddAccount.setContentView(R.layout.dialog_add_account);
-                dialogAddAccount.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                dialogAddAccount.setCancelable(false);
-
-
-                ImageView imgCloseAddDialog = dialogAddAccount.findViewById(R.id.iv_close_add_dialog);
-                edtNameAccount = dialogAddAccount.findViewById(R.id.edt_address);
-                edtMobileAccount = dialogAddAccount.findViewById(R.id.edt_unit);
-                edtAddressAccount = dialogAddAccount.findViewById(R.id.edt_pelaque);
-                RadioButton radioMan = dialogAddAccount.findViewById(R.id.radioMan);
-                RadioButton radioWoman = dialogAddAccount.findViewById(R.id.radioWoman);
-                MaterialButton btnRegisterAccount = dialogAddAccount.findViewById(R.id.btn_register_address);
-                radioMan.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        genderAccount = 0;
-                    }
-                });
-                radioWoman.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        genderAccount = 1;
-                    }
-                });
-
-                imgCloseAddDialog.setOnClickListener(v -> dialogAddAccount.dismiss());
-
-
-                btnRegisterAccount.setOnClickListener(v -> {
-                    if (edtNameAccount.getText().toString().isEmpty() || edtMobileAccount.getText().toString().isEmpty()) {
-                        Toast.makeText(getActivity(), "لطفا فیلد نام مشتری و شماره موبایل مشتری را پر کنید.", Toast.LENGTH_SHORT).show();
-
-                    } else if (!edtMobileAccount.getText().toString().equals("1") && (edtMobileAccount.getText().toString().length() < 11 || edtMobileAccount.getText().toString().length() > 11)) {
-                        Toast.makeText(getActivity(), "شماره موبایل صحیح نمی باشد.", Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-                        Users account = new Users();
-                        account.I = UUID.randomUUID().toString();
-                        account.N = edtNameAccount.getText().toString();
-                        account.M = edtMobileAccount.getText().toString();
-                        account.ADR = edtAddressAccount.getText().toString();
-                        account.S = String.valueOf(genderAccount);
-                        accountsList.clear();
-                        accountsList.add(account);
-                        myViewModel.addAccount(company.USER, company.PASS, accountsList);
-
-                    }
-                });
-                //endregion Cast DialogAddAcc
-
-
-                accList = new ArrayList<>();
-                accAdapter = new AccountAdapter(getActivity(), accList);
-                binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                binding.accountRecyclerView.setAdapter(accAdapter);
-                textWatcherAcc = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        Acc_GUID = "";
-                        Acc_NAME = "";
-
-                        accList.clear();
-                        accAdapter.notifyDataSetChanged();
-                        if (s.toString().isEmpty() || s.toString().trim().equals("")) {
-                            binding.accountRecyclerView.setVisibility(View.GONE);
-                            binding.pro.setVisibility(View.GONE);
-                            binding.edtNameCustomer.setHint("جستجو مشتری");
-
-                        } else if (s.toString().length() > 2) {
-                            typeSearch = 0;
-                            binding.pro.setVisibility(View.VISIBLE);
-                            myViewModel.getAccountSearch(company.USER, company.PASS, Util.toEnglishNumber(s.toString()));
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                };
-
-                accAdapter.setOnClickItemListener((account) -> {
-                    Users.deleteAll(Users.class);
-                    Users.saveInTx(account);
-                    Acc_GUID = account.I;
-                    Acc_NAME = account.N;
-                    binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-                    binding.edtNameCustomer.setText(account.N);
-                    binding.accountRecyclerView.setVisibility(View.GONE);
-                    binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-                });
-
-
-                binding.btnAddAccount.setOnClickListener(v -> {
-                    edtNameAccount.setText("");
-                    edtAddressAccount.setText("");
-                    edtMobileAccount.setText("");
-                    dialogAddAccount.show();
-                });
-
-                binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-            }
-            //endregion Configuration Organization Application
 
 
             //region Configuration Client Application
-            else {
+
                 binding.layoutAddressBranch.setVisibility(View.VISIBLE);
                 binding.layoutAccount.setVisibility(View.GONE);
 
 
-                Acc_NAME = Select.from(Users.class).first().N;
-                Acc_GUID = Select.from(Users.class).first().I;
-            }
-
             //endregion Configuration Client Application
 
 
-            if (company.mode == 1 && EDIT) {
-                binding.edtNameCustomer.setEnabled(false);
-                binding.edtNameCustomer.removeTextChangedListener(textWatcherAcc);
-                binding.edtNameCustomer.setText(Acc_NAME);
-                binding.accountRecyclerView.setVisibility(View.GONE);
-                binding.edtNameCustomer.addTextChangedListener(textWatcherAcc);
-                binding.pro.setVisibility(View.VISIBLE);
-                typeSearch = 1;
-                myViewModel.getAccountSearch(company.USER, company.PASS, Acc_NAME);
-            }
 
 
             //region Cast Variable Dialog Sync
@@ -937,11 +631,10 @@ public class MainOrderFragment extends Fragment {
 
 
             //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences);
-            productAdapter.setTbl_GUID(Tbl_GUID);
+            productAdapter = new ProductAdapter(getActivity(), productList,company,sharedPreferences);
             productAdapter.setInv_GUID(Inv_GUID);
             productAdapter.setType(Seen);
-            productAdapter.setApi(api);
+           productAdapter.setApi(api);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -1055,27 +748,7 @@ public class MainOrderFragment extends Fragment {
             myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Users.class).first().getM());
 
 
-        myViewModel.getResultSearchAccount().observe(getViewLifecycleOwner(), result -> {
-            binding.pro.setVisibility(View.GONE);
-            if (result == null)
-                return;
-            myViewModel.getResultSearchAccount().setValue(null);
-            accList.clear();
-            if (typeSearch == 0) {
-                accList.addAll(result);
-                binding.accountRecyclerView.setVisibility(View.VISIBLE);
-            } else {
-                Users.deleteAll(Users.class);
-                accList.addAll(result);
-                CollectionUtils.filter(accList, a -> a.I.equals(Acc_GUID));
-                if (accList.size() > 0)
-                    Users.saveInTx(accList.get(0));
-            }
 
-            accAdapter.notifyDataSetChanged();
-            binding.pro.setVisibility(View.GONE);
-            customProgress.hideProgress();
-        });
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
@@ -1155,17 +828,7 @@ public class MainOrderFragment extends Fragment {
 
                 //region Default Account
                 sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
-                if (company.mode == 1) {
-                    Acc_GUID = settingsList.get(0).DEFAULT_CUSTOMER;
-                    accList.clear();
-                    Users account = new Users();
-                    account.I = Acc_GUID;
-                    accList.add(account);
-                    Users.saveInTx(accList);
-                    accList.clear();
-                    if (!EDIT)
-                        binding.edtNameCustomer.setHint("فروش روزانه");
-                }
+
                 //endregion Default Account
 
 
@@ -1371,7 +1034,7 @@ public class MainOrderFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+          productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1439,7 +1102,7 @@ public class MainOrderFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+           productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1479,7 +1142,7 @@ public class MainOrderFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+           productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
 
@@ -1518,7 +1181,7 @@ public class MainOrderFragment extends Fragment {
                 binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
             }
 
-            productAdapter.setMaxSale(maxSales);
+         productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
@@ -1535,9 +1198,6 @@ public class MainOrderFragment extends Fragment {
 
                 sharedPreferences.edit().putBoolean("vip", false).apply();
                 sharedPreferences.edit().putBoolean("discount", false).apply();
-            } else if (result.getCode() == -2) {
-                accList.clear();
-                accAdapter.notifyDataSetChanged();
             }
 
             disableAccount = sharedPreferences.getBoolean("disableAccount", false);
@@ -1652,20 +1312,10 @@ public class MainOrderFragment extends Fragment {
     public Bundle getBundle(boolean SetARD1) {
         Bundle bundle = new Bundle();
         bundle.putString("Inv_GUID", Inv_GUID);
-        bundle.putString("Tbl_GUID", Tbl_GUID);
-        bundle.putString("Tbl_NAME", Tbl_NAME);
-        bundle.putString("Ord_TYPE", Ord_TYPE);
-        bundle.putString("Acc_GUID", Acc_GUID);
-        bundle.putString("Acc_NAME", Acc_NAME);
         bundle.putBoolean("EDIT", EDIT);
         bundle.putBoolean("Seen", Seen);
 
 
-        if (!SetARD1) {
-            if (typeAddress == 2)
-                bundle.putBoolean("setADR1", true);
-        } else
-            bundle.putBoolean("setADR1", SetARD1);
         return bundle;
     }
 

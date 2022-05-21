@@ -46,7 +46,7 @@ import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.models.OrderType;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.databinding.FragmentLauncherOrganizationBinding;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment;
 
 import static java.util.Objects.*;
@@ -334,7 +334,7 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putBoolean("EDIT", false);
 
 
-                MainOrderFragment mainFragment = new MainOrderFragment();
+                HomeFragment mainFragment = new HomeFragment();
                 mainFragment.setArguments(bundle);
                 requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
@@ -390,7 +390,7 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putBoolean("EDIT", false);
             bundle.putString("Tbl_NAME", name);
 
-            MainOrderFragment mainFragment = new MainOrderFragment();
+            HomeFragment mainFragment = new HomeFragment();
             mainFragment.setArguments(bundle);
             requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 

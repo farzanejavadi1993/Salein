@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.databinding.FilterFragmentBinding;
 
 @AndroidEntryPoint
@@ -105,8 +104,8 @@ public class FilterFragment extends Fragment {
 
     private void reloadSpecialMethod() {
         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-        if (frg instanceof MainOrderFragment) {
-            MainOrderFragment fgf = (MainOrderFragment) frg;
+        if (frg instanceof HomeFragment) {
+            HomeFragment fgf = (HomeFragment) frg;
             if (filterDiscount)
                fgf.setFilter(1);
            else if (filterVip)
@@ -116,8 +115,8 @@ public class FilterFragment extends Fragment {
 
     private void reloadMainMethod() {
         Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-        if (frg instanceof MainOrderFragment) {
-            MainOrderFragment fgf = (MainOrderFragment) frg;
+        if (frg instanceof HomeFragment) {
+            HomeFragment fgf = (HomeFragment) frg;
             fgf.setFilter(3);
         }
     }

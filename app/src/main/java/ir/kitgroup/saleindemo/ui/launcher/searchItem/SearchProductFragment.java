@@ -215,7 +215,7 @@ public class SearchProductFragment extends Fragment {
             }
         };
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
-        productAdapter = new ProductAdapter(getActivity(), productList, company, sharedPreferences);
+        //productAdapter = new ProductAdapter(getActivity(), productList);
         String CloseDay = sharedPreferences.getString("close_day", "");
         closeDayList.clear();
         if (!CloseDay.equals("")) {

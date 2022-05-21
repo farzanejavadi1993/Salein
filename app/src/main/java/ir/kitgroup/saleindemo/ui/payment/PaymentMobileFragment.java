@@ -49,7 +49,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.ui.organization.LauncherOrganizationFragment;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainOrderFragment;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.Tables;
@@ -847,7 +847,7 @@ public class PaymentMobileFragment extends Fragment {
                     bundleMainOrder.putString("Inv_GUID", "");
                     bundleMainOrder.putString("Tbl_GUID", "");
                     bundleMainOrder.putString("Ord_TYPE", "");
-                    MainOrderFragment mainOrderFragment = new MainOrderFragment();
+                    HomeFragment mainOrderFragment = new HomeFragment();
                     mainOrderFragment.setArguments(bundleMainOrder);
                     FragmentTransaction addFragment = getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment");
                     if (Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
