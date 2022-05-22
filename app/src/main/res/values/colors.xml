@@ -40,6 +40,7 @@
     <color name="linear_delivery_background_color">#C8B933</color>
     <color name="linear_print_background_color">#259A8F</color>
     <color name="very_light_pink">#c4c4c4</color>
+    <color name="pale_gray">#f3f2f8</color>
     <color name="medium_color">#474747</color>
     <color name="stroke_color">#ddd</color>
     <color name="colorcode">#232323</color>

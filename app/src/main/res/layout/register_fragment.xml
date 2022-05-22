@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_height="match_parent"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbar"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+            <ImageView
+                android:rotation="180"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:focusable="true"
+                android:id="@+id/iv_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="right"
+                    android:lineSpacingExtra="16dp"
+                    android:text="آدرس و موقعیت را مشخص کنید."
+                    android:textColor="#474747"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="right"
+                    android:lineSpacingExtra="9dp"
+                    android:text="آدرس "
+                    android:textColor="#474747"
+                    android:textSize="13dp"
+                    android:textStyle="normal" />
+
+                <com.google.android.material.card.MaterialCardView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="@color/launcher_linear_order_header_color"
+                    app:cardCornerRadius="10dp"
+                    app:strokeColor="@color/launcher_linear_order_header_color"
+                    app:strokeWidth="1dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/edtAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="right|center"
+                            android:lineSpacingExtra="9dp"
+                            android:textColor="@color/medium_color"
+                            android:textSize="13dp"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="right"
+                    android:lineSpacingExtra="10dp"
+                    android:text=" ساختار آدرس را برای خوانایی بهتر به این شکل وارد کنید: نام شهر ، نام خیابان یا بولوار، نام کوچه، پلاک، واحد."
+                    android:textColor="#8a8a8a"
+                    android:textSize="12dp"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/tv_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="right"
+                    android:lineSpacingExtra="9dp"
+                    android:text="موقعیت خود را روی نقشه مشخص کنید."
+                    android:textColor="#474747"
+                    android:textSize="13dp"
+                    android:textStyle="normal" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="155dp"
+                    android:layout_marginTop="14dp"
+                    android:backgroundTint="@color/launcher_linear_order_header_color"
+                    app:cardCornerRadius="10dp">
+                                        <com.cedarstudios.cedarmapssdk.MapView
+                                            android:id="@+id/mapView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+
+                                            />
+                </com.google.android.material.card.MaterialCardView>
+
+                <RelativeLayout
+                    android:layout_marginTop="21dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvN"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:lineSpacingExtra="9dp"
+                        android:text="نام و نام خانوادگی"
+                        android:textColor="#474747"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="9dp"
+                        android:text="*"
+                        android:layout_toLeftOf="@+id/tvN"
+                        android:textColor="@color/red"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+                </RelativeLayout>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="5dp"
+                    android:strokeColor="@color/launcher_linear_order_header_color"
+                    android:backgroundTint="@color/launcher_linear_order_header_color"
+                    app:cardCornerRadius="10dp"
+                    app:strokeWidth="1dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/edtName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="right|center"
+                            android:inputType="text"
+                            android:lineSpacingExtra="9dp"
+                            android:textColor="@color/medium_color"
+                            android:textSize="13dp"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="21dp"
+                    android:gravity="right"
+                    android:lineSpacingExtra="9dp"
+                    android:text="کد معرف"
+                    android:textColor="#474747"
+                    android:textSize="13dp"
+                    android:textStyle="normal" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="@color/launcher_linear_order_header_color"
+                    android:strokeColor="@color/launcher_linear_order_header_color"
+                    app:cardCornerRadius="10dp"
+                    app:strokeWidth="1dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/edtCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="right|center"
+                            android:inputType="number"
+                            android:lineSpacingExtra="9dp"
+                            android:textColor="@color/medium_color"
+                            android:textSize="13dp"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="21dp">
+
+                    <TextView
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/tvGender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="right"
+                        android:lineSpacingExtra="9dp"
+                        android:text="جنسیت"
+                        android:textColor="#474747"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="9dp"
+                        android:text="*"
+                        android:layout_toLeftOf="@+id/tvGender"
+                        android:textColor="@color/red"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+
+                    <RadioGroup
+
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioWoman"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="22dp"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="center_vertical"
+                            android:text="@string/woman"
+                            android:textColor="@color/medium_color"
+                            android:textSize="@dimen/text_medium_mobile_size" />
+
+                        <RadioButton
+
+                            android:id="@+id/radioMan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="22dp"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="center_vertical"
+                            android:text="@string/man"
+                            android:textColor="@color/medium_color"
+                            android:textSize="@dimen/text_medium_mobile_size" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <RelativeLayout
+                android:id="@+id/card_button"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+
+                >
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_centerVertical="true"
+                    android:id="@+id/btn_register_information"
+                    android:layout_width="132dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginEnd="22dp"
+                    android:backgroundTint="@color/purple_500"
+                    android:fontFamily="@font/iransans"
+                    android:lineSpacingExtra="10dp"
+                    android:text="ثبت و ادامه"
+                    android:textColor="#fff"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    app:cornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+</layout>
