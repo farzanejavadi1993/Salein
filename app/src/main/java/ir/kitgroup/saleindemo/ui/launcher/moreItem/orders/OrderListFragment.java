@@ -148,7 +148,7 @@ public class OrderListFragment extends Fragment {
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getAllInvoice(company.USER, company.PASS, accGUID, datVip);
+            myViewModel.getAllInvoice(company.getUser(), company.getPass(), accGUID, datVip);
 
         });
 
@@ -188,7 +188,7 @@ public class OrderListFragment extends Fragment {
                 List<InvoiceDetail> invoiceDetailList = new ArrayList<>();
                 List<PaymentRecieptDetail> clsPaymentRecieptDetails = new ArrayList<>();
                 customProgress.showProgress(getActivity(), "در حال ارسال پیام", false);
-                myViewModel.sendFeedBack(company.USER, company.PASS, listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
+                myViewModel.sendFeedBack(company.getUser(), company.getPass(), listInvoice, invoiceDetailList, clsPaymentRecieptDetails);
             }
 
 
@@ -211,7 +211,7 @@ public class OrderListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
-        myViewModel.getAllInvoice(company.USER, company.PASS, accGUID, datVip);
+        myViewModel.getAllInvoice(company.getUser(), company.getPass(), accGUID, datVip);
         myViewModel.getResultAllInvoice().observe(getViewLifecycleOwner(), result -> {
             if (result == null) {
                 customProgress.hideProgress();

@@ -254,11 +254,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
 
 
-            String ip = company.IP1;
+            String ip = company.getIp1();
 
             try{
 
-                String input_id = "ic_" + company.INSK_ID.split("ir.kitgroup.salein")[1];
+                String input_id = "ic_" + company.getInskId().split("ir.kitgroup.salein")[1];
               if (imageId==0)
                 imageId = context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
             }
@@ -608,7 +608,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         try {
             compositeDisposable.add(
-                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
+                    api.getMaxSales(company.getUser(), company.getPass(), Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {
@@ -810,8 +810,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                                 invoicedetail.INV_UID = Inv_GUID;
                                                 invoicedetail.INV_DET_QUANTITY = amount;
                                                 invoicedetail.PRD_UID = Prd_GUID;
-                                                if (company.mode == 1)
-                                                    invoicedetail.TBL = Tbl_GUID;
                                                 invoicedetail.save();
                                             }
 
@@ -852,7 +850,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         try {
             compositeDisposable.add(
-                    api.getMaxSales(company.USER, company.PASS, Prd_GUID)
+                    api.getMaxSales(company.getUser(), company.getPass(), Prd_GUID)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnSubscribe(disposable -> {

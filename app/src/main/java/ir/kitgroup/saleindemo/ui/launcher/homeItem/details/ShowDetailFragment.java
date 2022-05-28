@@ -50,7 +50,7 @@ public class ShowDetailFragment extends Fragment {
         Id = bundle.getString("Id");
 
 
-        String ip = company.IP1;
+        String ip = company.getIp1();
 
         Picasso.get()
                 .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
@@ -67,7 +67,7 @@ public class ShowDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getProduct(company.USER,company.PASS,Id);
+        myViewModel.getProduct(company.getUser(),company.getPass(),Id);
 
         myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {
 

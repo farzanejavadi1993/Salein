@@ -6,34 +6,33 @@
     app:startDestination="@id/SplashScreenFragment">
 
 
-
     <fragment
         android:id="@+id/SplashScreenFragment"
         android:name="ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment"
-        tools:layout="@layout/fragment_splash_screen" >
+        tools:layout="@layout/fragment_splash_screen">
         <action
-            app:popUpTo="@id/SplashScreenFragment"
-            app:popUpToInclusive="true"
             android:id="@+id/actionGoToLoginFragment"
-            app:destination="@id/LoginFragment" />
-        <action
+            app:destination="@id/LoginFragment"
             app:popUpTo="@id/SplashScreenFragment"
-            app:popUpToInclusive="true"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/actionGoToMainFragment"
-            app:destination="@id/MainFragment" />
+            app:destination="@id/MainFragment"
+            app:popUpTo="@id/SplashScreenFragment"
+            app:popUpToInclusive="true" />
 
         <action
-            app:popUpTo="@id/SplashScreenFragment"
-            app:popUpToInclusive="true"
             android:id="@+id/actionGoToCompanyFragment"
-            app:destination="@id/CompanyFragment" />
+            app:destination="@id/CompanyFragment"
+            app:popUpTo="@id/SplashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 
     <fragment
         android:id="@+id/CompanyFragment"
         android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragment"
-        tools:layout="@layout/fragment_stories" >
+        tools:layout="@layout/fragment_all_company">
 
 
     </fragment>
@@ -42,7 +41,7 @@
     <fragment
         android:id="@+id/LoginFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.LoginFragment"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
 
         <action
             android:id="@+id/actionGoToVerifyFragment"
@@ -57,19 +56,16 @@
     <fragment
         android:id="@+id/StoreFragment"
         android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragment"
-        tools:layout="@layout/fragment_stories" >
+        tools:layout="@layout/fragment_all_company">
 
 
     </fragment>
 
 
-
-
-
     <fragment
         android:id="@+id/MainFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
 
         <action
             android:id="@+id/actionGotoInvoiceFragment"
@@ -90,7 +86,7 @@
     <fragment
         android:id="@+id/PaymentFragment"
         android:name="ir.kitgroup.saleindemo.ui.payment.PaymentFragment"
-        tools:layout="@layout/fragment_payment" >
+        tools:layout="@layout/fragment_payment">
 
         <action
             android:id="@+id/actionGoToRegisterFragment"
@@ -107,7 +103,7 @@
     <fragment
         android:id="@+id/InvoiceFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment"
-        tools:layout="@layout/invoice_list_item_recycle" >
+        tools:layout="@layout/invoice_list_item_recycle">
         <action
             android:id="@+id/actionGoToMainFragment"
             app:destination="@id/MainFragment" />
@@ -128,7 +124,7 @@
     <fragment
         android:id="@+id/FilterFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.FilterFragment"
-        tools:layout="@layout/filter_fragment" >
+        tools:layout="@layout/filter_fragment">
 
         <argument
             android:name="filter"
@@ -140,15 +136,67 @@
     <fragment
         android:id="@+id/MoreFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.MoreFragment"
-        tools:layout="@layout/more_fragment" >
+        tools:layout="@layout/more_fragment">
 
+        <action
+            android:id="@+id/actionGoToProfileFragment"
+            app:destination="@id/ProfileFragment" />
+
+        <action
+            android:id="@+id/actionGoToContactUsFragment"
+            app:destination="@id/ContactUsFragment" />
+        <action
+            android:id="@+id/actionGoToAboutUsFragment"
+            app:destination="@id/AboutUsFragment" />
+
+        <action
+            android:id="@+id/actionGoToOrderFragment"
+            app:destination="@id/OrderFragment" />
     </fragment>
 
 
     <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+
+
+        <action
+            android:id="@+id/actionGoToRegisterFragment"
+            app:destination="@id/RegisterFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ContactUsFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.ContactUsFragment"
+        tools:layout="@layout/contact_us_fragment">
+        <argument
+            android:name="show"
+            app:argType="string" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/AboutUsFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.AboutUsFragment"
+        tools:layout="@layout/about_us_fragment" />
+
+
+    <fragment
+        android:id="@+id/OrderFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment"
+        tools:layout="@layout/fragment_order_list" >
+
+        <action
+            android:id="@+id/actionGotoInvoiceFragment"
+            app:destination="@id/InvoiceFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/RegisterFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.RegisterFragment"
-        tools:layout="@layout/fragment_register" >
+        tools:layout="@layout/register_fragment">
         <action
             android:id="@+id/actionGoToMapFragment"
             app:destination="@id/MapFragment" />
@@ -160,27 +208,26 @@
             android:name="mobile"
             app:argType="string" />
 
+        <argument
+            android:name="radioValue"
+            app:argType="integer" />
 
 
     </fragment>
-
-
-
 
 
     <fragment
         android:id="@+id/RulesFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.RulesFragment"
-        tools:layout="@layout/fragment_rules" >
+        tools:layout="@layout/fragment_rules">
 
     </fragment>
-
 
 
     <fragment
         android:id="@+id/MapFragment"
         android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_map">
         <argument
             android:name="from"
             app:argType="string" />
@@ -189,26 +236,23 @@
     <fragment
         android:id="@+id/VerifyFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.VerifyFragment"
-        tools:layout="@layout/fragment_verify" >
+        tools:layout="@layout/fragment_verify">
 
         <action
-            app:popUpTo="@id/VerifyFragment"
-            app:popUpToInclusive="true"
             android:id="@+id/actionGoToMainFragment"
             app:destination="@id/MainFragment"
-            />
-        <action
             app:popUpTo="@id/VerifyFragment"
-            app:popUpToInclusive="true"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/actionGoToCompanyFragment"
             app:destination="@id/CompanyFragment"
-            />
-        <action
             app:popUpTo="@id/VerifyFragment"
-            app:popUpToInclusive="true"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/actionGoToRegisterFragment"
             app:destination="@id/RegisterFragment"
-            />
+            app:popUpTo="@id/VerifyFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="mobile"
             app:argType="string" />
@@ -216,13 +260,6 @@
             android:name="code"
             app:argType="integer" />
     </fragment>
-
-
-
-
-
-
-
 
 
 </navigation>

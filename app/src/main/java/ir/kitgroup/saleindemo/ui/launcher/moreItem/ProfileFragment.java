@@ -7,19 +7,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+
 import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.FragmentProfileBinding;
 import ir.kitgroup.saleindemo.ui.map.MapFragment;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-    private String type = "";
-    private String address = "";
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -33,75 +33,43 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
-        try {
-            address = bundle.getString("address");
-            type = bundle.getString("type");
-        }catch (Exception ignored){}
 
-       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
-        int fontSize ;
-        if (Util.screenSize >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
-        binding.txtTitleToolbar.setTextSize(fontSize);
-        binding.txtName.setTextSize(fontSize);
-        binding.tvMobile.setTextSize(fontSize);
-        binding.txtAddress2.setTextSize(fontSize);
-        binding.txtAddress1.setTextSize(fontSize);
 
-        Users account = Select.from(Users.class).first();
-        if (account != null) {
-            binding.txtName.setText(account.N);
-            binding.tvMobile.setText(account.M);
 
-            if (account.ADR != null && !account.ADR.equals("")) {
-                String address ;
-                try {
-                    address = account.ADR;
-                } catch (Exception e) {
-                    address = account.ADR;
-                }
-                binding.txtAddress1.setText(address);
-            } else {
+
+
+        Users user = Select.from(Users.class).first();
+        if (user != null) {
+            binding.txtName.setText(user.N);
+            binding.tvMobile.setText(user.M);
+
+            if (user.ADR != null && !user.ADR.equals(""))
+                binding.txtAddress1.setText(user.ADR);
+
+            else
                 binding.txtAddress1.setText("ناموجود");
-            }
-            if (account.ADR2 != null && !account.ADR2.equals("")) {
-                String address;
-                address = account.ADR2;
-                binding.txtAddress2.setText(address);
-            } else {
+
+
+            if (user.ADR2 != null && !user.ADR2.equals(""))
+                binding.txtAddress2.setText(user.ADR2);
+          else
                 binding.txtAddress2.setText("ناموجود");
-            }
 
-            if (type.equals("1") && !address.equals("")) {
-                binding.txtAddress1.setText(address);
-            } else if (type.equals("2") && !address.equals("")) {
-                binding.txtAddress2.setText(address);
-            }
-            binding.editAddress1.setOnClickListener(v -> {
-                Bundle bundleMap = new Bundle();
-                bundleMap.putString("mobileNumber", "");
-                bundleMap.putString("edit_address", "2");
-                bundleMap.putString("type", "1");
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
+
+
+
+          binding.txtAddress1.setOnClickListener(view1 -> {
+              NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.M,1);
+              Navigation.findNavController(binding.getRoot()).navigate(action);
+          });
+
+            binding.txtAddress2.setOnClickListener(view1 -> {
+                NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.M,2);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             });
 
-
-            binding.editAddress2.setOnClickListener(v -> {
-                Bundle bundleMap = new Bundle();
-                bundleMap.putString("mobileNumber", "");
-                bundleMap.putString("edit_address", "2");
-                bundleMap.putString("type", "2");
-                MapFragment mapFragment = new MapFragment();
-                mapFragment.setArguments(bundleMap);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mapFragment, "MapFragment").addToBackStack("MapF").commit();
-            });
-            binding.ivBackFragment.setOnClickListener(v -> getFragmentManager().popBackStack());
+            binding.ivBackFragment.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
         }
     }
 }

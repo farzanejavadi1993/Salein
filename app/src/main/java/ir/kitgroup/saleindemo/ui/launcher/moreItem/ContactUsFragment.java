@@ -1,5 +1,6 @@
 package ir.kitgroup.saleindemo.ui.launcher.moreItem;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -25,7 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
+import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.ContactUsFragmentBinding;
+import ir.kitgroup.saleindemo.ui.logins.RegisterFragmentArgs;
 
 
 @AndroidEntryPoint
@@ -52,11 +55,13 @@ public class ContactUsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
 
 
         Bundle bundle=getArguments();
-        int type=bundle.getInt("type");//1contact   2share
+        int type=bundle.getInt("type");
+
+        String show = ContactUsFragmentArgs.fromBundle(getArguments()).getShow();
 
 
         updateLink = sharedPreferences.getString("update_link", "");
@@ -65,25 +70,25 @@ public class ContactUsFragment extends Fragment {
 
 
         Picasso.get()
-                .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
-                        company.I+"&width=300&height=300")
+                .load(Util.DEVELOPMENT_BASE_URL_Img +"/GetCompanyImage?id=" +
+                        company.getI()+"&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageView);
 
-        binding.title.setText(company.N);
+
+        binding.title.setText(company.getN());
 
 
-        if (type==1){
-
+        if (show.equals("Contact")){
             binding.image.setImageResource(R.drawable.ic_support);
-            binding.description.setText(company.DESC);
-            binding.textView4.setText(company.T1);
+            binding.description.setText(company.getDesc());
+            binding.textView4.setText(company.getT1());
         }else {
             binding.txtTitleToolbar.setText("دعوت از دوستان");
             binding.image.setImageResource(R.drawable.ic_share);
             Users account= Select.from(Users.class).first();
-            binding.description.setText(company!=null && company.TXT1!=null ?company.TXT1:"");
+            binding.description.setText(company!=null && company.getTxt1()!=null ?company.getTxt1():"");
             binding.textView4.setText("کد معرف : "+account.getC());
         }
 
@@ -107,42 +112,42 @@ public class ContactUsFragment extends Fragment {
         });
 
 
-       /* if ((!config.watsApp.equals("") || !config.Instagram.equals("") ||  !config.website.equals("")) && type==1 )
-            binding.layoutSocial.setVisibility(View.VISIBLE)*/;
+        if ((!config.watsApp.equals("") || !config.Instagram.equals("") ||  !config.website.equals("")) && type==1 )
+            binding.layoutSocial.setVisibility(View.VISIBLE);
 
 
 
 
-//        binding.watsapp.setOnClickListener(v -> {
-//
-//            if (!config.watsApp.equals("")){
-//
-//                boolean install= appInstallOrNot("com.whatsapp");
-//
-//                if (install){
-//
-//
-//                    Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
-//                            Uri.parse(config.watsApp);
-//                    intentWhatsAppGroup.setData(uri);
-//                    intentWhatsAppGroup.setPackage("com.whatsapp");
-//                    startActivity(intentWhatsAppGroup);
-//                }else {
-//                    Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//
-//            }else {
-//                Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        binding.watsapp.setOnClickListener(v -> {
+
+            if (!config.watsApp.equals("")){
+
+                boolean install= appInstallOrNot("com.whatsapp");
+
+                if (install){
+
+
+                    Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
+                            Uri.parse(config.watsApp);
+                    intentWhatsAppGroup.setData(uri);
+                    intentWhatsAppGroup.setPackage("com.whatsapp");
+                    startActivity(intentWhatsAppGroup);
+                }else {
+                    Toast.makeText(getActivity(), "لطفا اپلیکیشن واتس آپ نصب کنید.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+            }else {
+                Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
         binding.ivBackFragment.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().popBackStack();;
         });
-     /*   binding.instagram.setOnClickListener(v -> {
+      binding.instagram.setOnClickListener(v -> {
             if (!config.Instagram.equals("")){
                 Uri uri = Uri.parse(config.Instagram);
                 Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
@@ -170,7 +175,7 @@ public class ContactUsFragment extends Fragment {
             }else {
                 Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
 
 
 

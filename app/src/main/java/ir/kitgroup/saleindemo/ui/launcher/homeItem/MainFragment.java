@@ -57,7 +57,7 @@ public class MainFragment extends Fragment {
         //region Create Order
 
         if (Inv_GUID.equals("")) {
-            String name = company.INSK_ID.split("ir.kitgroup.")[1];
+            String name = company.getInskId().split("ir.kitgroup.")[1];
             Inv_GUID = sharedPreferences.getString(name, "");
 
             if (Inv_GUID.equals("")) {

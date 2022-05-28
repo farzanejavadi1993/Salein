@@ -15,29 +15,34 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.text.DecimalFormat;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
+import ir.kitgroup.saleindemo.DataBase.Salein;
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.Tables;
 import ir.kitgroup.saleindemo.DataBase.Unit;
 import ir.kitgroup.saleindemo.databinding.MoreFragmentBinding;
-import ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
 
 
@@ -46,7 +51,6 @@ public class MoreFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
-
 
 
     private MoreFragmentBinding binding;
@@ -62,11 +66,12 @@ public class MoreFragment extends Fragment {
     private String mobile;
     private String linkPayment = "";
 
-    private Users acc;
+    private Users user;
 
-   private  Boolean disableAccount=false;
+    private Boolean disableAccount = false;
 
     private MyViewModel myViewModel;
+
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -80,22 +85,22 @@ public class MoreFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-       // ((LauncherActivity) getActivity()).setInVisibiltyItem(true);
-
 
         company = Select.from(Company.class).first();
-
-
         linkPayment = sharedPreferences.getString("payment_link", "");
-         acc = Select.from(Users.class).first();
-        if (!linkPayment.equals(""))
-            linkPayment = linkPayment + "/ChargeClub?c=" + acc.getC();
 
-        if (company!=null && company.ABUS !=null && !company.ABUS.equals("")){
+        user = Select.from(Users.class).first();
+        mobile = Select.from(Users.class).first().M;
+        if (!linkPayment.equals(""))
+            linkPayment = linkPayment + "/ChargeClub?c=" + user.getC();
+
+
+        if (company != null && company.getAbus() != null && !company.getAbus().equals("")) {
             binding.view.setVisibility(View.VISIBLE);
             binding.btnAboutUs.setVisibility(View.VISIBLE);
         }
+
+
         //region Cast Variable Dialog Sync
         dialogSync = new Dialog(getActivity());
         dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -109,7 +114,7 @@ public class MoreFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
 
-            if (disableAccount){
+            if (disableAccount) {
                 getActivity().finish();
             }
 
@@ -137,13 +142,14 @@ public class MoreFragment extends Fragment {
             if (Company.count(Company.class) > 0)
                 Company.deleteAll(Company.class);
 
-           // ((LauncherActivity) getActivity()).setFistItem();
-        //    ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
-            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-            for (int i = 0; i < size; i++) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
+            if (Salein.count(Salein.class) > 0)
+                Salein.deleteAll(Salein.class);
+
+//            final int size = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+//            for (int i = 0; i < size; i++) {
+//                getActivity().getSupportFragmentManager().popBackStack();
+//            }
 
             getActivity().finish();
             startActivity(getActivity().getIntent());
@@ -151,26 +157,11 @@ public class MoreFragment extends Fragment {
         });
         //endregion Cast Variable Dialog Sync
 
-        int fontSize;
-        if (Util.screenSize >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
-        binding.tvProfile.setTextSize(fontSize);
-        binding.tvComment.setTextSize(fontSize);
-        binding.tvCredit.setTextSize(fontSize);
-        binding.tvOrder.setTextSize(fontSize);
 
 
-        mobile = Select.from(Users.class).first().M;
         binding.btnShare.setOnClickListener(v -> {
-            Bundle bundle=new Bundle();
-            bundle.putInt("type",2);
-            ContactUsFragment contactUsFragment=new ContactUsFragment();
-            contactUsFragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();
-
-
+            NavDirections action = MoreFragmentDirections.actionGoToContactUsFragment("Share");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 
         binding.btnCredit.setOnClickListener(v -> {
@@ -187,46 +178,38 @@ public class MoreFragment extends Fragment {
             }
         });
 
-        binding.ivPower.setOnClickListener(v -> showError( "آیا مایل به خروج از برنامه هستید؟",1));
+        binding.ivPower.setOnClickListener(v -> showError("آیا مایل به خروج از برنامه هستید؟", 1));
+        binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
 
-        try {
-            binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
-        } catch (Exception ignored) {}
 
 
         binding.lProfile.setOnClickListener(v ->
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new ProfileFragment(), "ProfileFragment").addToBackStack("ProfileF").commit());
-
-
-        binding.btnSupport.setOnClickListener(v ->{
-          /*  Bundle bundle=new Bundle();
-            bundle.putInt("type",1);
-                    ContactUsFragment contactUsFragment=new ContactUsFragment();
-                    contactUsFragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, contactUsFragment, "ContactUsFragment").addToBackStack("AboutUsF").commit();*/
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToMainFragment);
-                }
-
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToProfileFragment)
         );
+
+
+        binding.btnSupport.setOnClickListener(v -> {
+            NavDirections action = MoreFragmentDirections.actionGoToContactUsFragment("Contact");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
 
 
         binding.btnAboutUs.setOnClickListener(v ->
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new AboutUsFragment(), "AboutUsFragment").addToBackStack("AboutUsF").commit()
-        );
-        binding.btnOrderList.setOnClickListener(v ->
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new OrderListFragment(), "OrderListFragment").addToBackStack("OrderListF").commit());
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToAboutUsFragment));
 
-        if (acc != null && acc.CRDT != null) {
-            binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+
+        binding.btnOrderList.setOnClickListener(v ->
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment));
+
+
+        if (user != null && user.CRDT != null) {
+            binding.txtCredit.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
         } else {
             binding.txtCredit.setText("موجودی : " + "0" + " ریال ");
         }
 
 
-
-
     }
-
 
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
@@ -234,43 +217,44 @@ public class MoreFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getInquiryAccount(company.USER,company.PASS,acc.M);
+        myViewModel.getInquiryAccount(company.getUser(), company.getPass(), user.M);
 
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
             myViewModel.getResultInquiryAccount().setValue(null);
 
-                    disableAccount=false;
-                    sharedPreferences.edit().putBoolean("disableAccount", false).apply();
-                    //user is register
-                    try {
-                        if (result.size() > 0) {
-                            Users.deleteAll(Users.class);
-                            Users.saveInTx(result);
+            disableAccount = false;
+            sharedPreferences.edit().putBoolean("disableAccount", false).apply();
+            //user is register
+            try {
+                if (result.size() > 0) {
+                    Users.deleteAll(Users.class);
+                    Users.saveInTx(result);
 
-                            Users acc = Select.from(Users.class).first();
-                            if (acc != null && acc.CRDT != null)
-                                binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                    Users acc = Select.from(Users.class).first();
+                    if (acc != null && acc.CRDT != null)
+                        binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
-                            binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
-                        } else {
-                            binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
-                            binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
-                            disableAccount=sharedPreferences.getBoolean("disableAccount",false);
-                            if (disableAccount)
-                                showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد",2);
-                        }
-                    } catch (Exception ignored) {}
+                    binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                } else {
+                    binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                    binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
+                    disableAccount = sharedPreferences.getBoolean("disableAccount", false);
+                    if (disableAccount)
+                        showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد", 2);
+                }
+            } catch (Exception ignored) {
+            }
 
 
         });
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
-          //  myViewModel.getResultMessage().setValue(null);
+
             if (disableAccount)
-                showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد",2);
+                showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد", 2);
 
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
@@ -280,17 +264,15 @@ public class MoreFragment extends Fragment {
     }
 
 
-
     private void showError(String error, int type) {
         textMessageDialog.setText(error);
 
         dialogSync.dismiss();
-        if (type==2) {
+        if (type == 2) {
             btnOkDialog.setVisibility(View.GONE);
             btnNoDialog.setText("بستن");
 
-        }
-        else {
+        } else {
             btnOkDialog.setVisibility(View.VISIBLE);
             btnNoDialog.setText("خیر");
             btnOkDialog.setText("بله");
@@ -298,11 +280,13 @@ public class MoreFragment extends Fragment {
         dialogSync.setCancelable(false);
         dialogSync.show();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         seenActivity = true;
-        myViewModel.getInquiryAccount(company.USER,company.PASS,mobile);
+        myViewModel.getInquiryAccount(company.getUser(), company.getPass(), mobile);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -32,14 +32,13 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
 
 import ir.kitgroup.saleindemo.classes.HostSelectionInterceptor;
-import ir.kitgroup.saleindemo.databinding.FragmentCompanyBinding;
+import ir.kitgroup.saleindemo.databinding.FragmentAllCompanyBinding;
 
 @AndroidEntryPoint
 public class AllCompanyFragment extends Fragment {
@@ -51,7 +50,7 @@ public class AllCompanyFragment extends Fragment {
 
     private MyViewModel myViewModel;
 
-    private FragmentCompanyBinding binding;
+    private FragmentAllCompanyBinding binding;
     private Company companyDemo;
     private Company companySelect;
     private CompanyFragment storiesFragment;
@@ -70,7 +69,7 @@ public class AllCompanyFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentCompanyBinding.inflate(getLayoutInflater());
+        binding = FragmentAllCompanyBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -100,7 +99,7 @@ public class AllCompanyFragment extends Fragment {
                 sharedPreferences.edit().putBoolean("status", false).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 
-                String nameSave = sharedPreferences.getString(companyDemo.N, "");
+                String nameSave = sharedPreferences.getString(companyDemo.getN(), "");
 
                 if (!nameSave.equals("")) {
                     binding.progressbar.setVisibility(View.GONE);
@@ -114,8 +113,8 @@ public class AllCompanyFragment extends Fragment {
                    // mainOrderFragment.setArguments(bundleMainOrder);
                    // getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                 } else {
-                    NAME = companyDemo.N;
-                    myViewModel.getInquiryAccount(companyDemo.USER,companyDemo.PASS,account.M);
+                    NAME = companyDemo.getN();
+                    myViewModel.getInquiryAccount(companyDemo.getUser(),companyDemo.getPass(),account.M);
                 }
             });
         }
@@ -134,19 +133,19 @@ public class AllCompanyFragment extends Fragment {
                 this.DLT = delete;
                 binding.progressbar.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.VISIBLE);
-                myViewModel.getCompany(company.I);
-                ParentId=company.I;
+                myViewModel.getCompany(company.getI());
+                ParentId=company.getI();
 
                 return;
             }else {
                 ParentId="";
             }
-            Util.PRODUCTION_BASE_URL = "http://" + company.IP1 + "/api/REST/";
+            Util.PRODUCTION_BASE_URL = "http://" + company.getIp1() + "/api/REST/";
             sharedPreferences.edit().putBoolean("status", true).apply();
             hostSelectionInterceptor.setHostBaseUrl();
             companySelect = company;
 
-            String nameSave = sharedPreferences.getString(company.N, "");
+            String nameSave = sharedPreferences.getString(company.getN(), "");
             if (!nameSave.equals("")) {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(company);
@@ -160,8 +159,8 @@ public class AllCompanyFragment extends Fragment {
               //  getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
             } else {
                 binding.progressbar.setVisibility(View.VISIBLE);
-                NAME = companySelect.N;
-                myViewModel.getInquiryAccount(companySelect.USER,companySelect.PASS,account.M);
+                NAME = companySelect.getN();
+                myViewModel.getInquiryAccount(companySelect.getUser(),companySelect.getPass(),account.M);
             }
         });
 
@@ -180,7 +179,7 @@ public class AllCompanyFragment extends Fragment {
             ArrayList<Users> AccList = new ArrayList<>();
             AccList.add(account);
             binding.progressbar.setVisibility(View.VISIBLE);
-            myViewModel.addAccount(companySelect.USER,companySelect.PASS,AccList);
+            myViewModel.addAccount(companySelect.getUser(),companySelect.getPass(),AccList);
         });
         //endregion Cast Dialog
 
@@ -234,7 +233,7 @@ public class AllCompanyFragment extends Fragment {
             myViewModel.getResultCompany().setValue(null);
             if (result.size() > 0) {
 
-                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
 
@@ -244,26 +243,26 @@ public class AllCompanyFragment extends Fragment {
                     for (int i = 0; i < result.size(); i++) {
                         ArrayList<Company> companyArrayList = new ArrayList<>(result);
                         int finalI = i;
-                        CollectionUtils.filter(companyArrayList, r -> result.get(finalI).I.equals(r.PI));
+                        CollectionUtils.filter(companyArrayList, r -> result.get(finalI).getI().equals(r.getPi()));
                         if (companyArrayList.size() > 0)
                             result.get(finalI).Parent = true;
                     }
 
-                    CollectionUtils.filter(result, r -> r.PI.equals(""));
+                    CollectionUtils.filter(result, r -> r.getPi().equals(""));
                     ArrayList<Company> demo = new ArrayList<>(result);
-                    CollectionUtils.filter(demo, r -> r.INSK_ID.equals("ir.kitgroup.salein"));
+                    CollectionUtils.filter(demo, r -> r.getInskId().equals("ir.kitgroup.salein"));
                     if (demo.size() > 0 && storiesFragment != null) {
                         companyDemo = demo.get(0);
                         storiesFragment.binding.tvDemo.setVisibility(View.VISIBLE);
                     }
-                    CollectionUtils.filter(result, r -> !r.INSK_ID.equals("ir.kitgroup.salein") && r.INSK_ID.contains("ir.kitgroup.salein"));
+                    CollectionUtils.filter(result, r -> !r.getInskId().equals("ir.kitgroup.salein") && r.getInskId().contains("ir.kitgroup.salein"));
                     companies.addAll(result);
                 } else {
                     for (int i = 0; i < result.size(); i++) {
                         if (DLT) {
                             ArrayList<Company> list = new ArrayList<>(companies);
                             int finalI = i;
-                            CollectionUtils.filter(list, l -> l.I.equals(result.get(finalI).I));
+                            CollectionUtils.filter(list, l -> l.getI().equals(result.get(finalI).getI()));
                             if (list.size() > 0)
                                 companies.remove(list.get(0));
                         } else

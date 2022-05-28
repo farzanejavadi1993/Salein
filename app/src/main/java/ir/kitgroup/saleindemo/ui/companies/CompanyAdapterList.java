@@ -55,22 +55,22 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             holder.favoriteCompany.setVisibility(View.GONE);
 
         Picasso.get()
-                .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
-                        company.I+"&width=120&height=120")
+                .load(Util.DEVELOPMENT_BASE_URL_Img+"/GetCompanyImage?id=" +
+                        company.getI()+"&width=120&height=120")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(holder.ivCompany);
 
-        holder.tvTitleCompany.setText(company.N);
+        holder.tvTitleCompany.setText(company.getN());
 
-        holder.tvDescriptionCompany.setText(company.DESC);
+        holder.tvDescriptionCompany.setText(company.getDesc());
 
         if (company.Parent!=null && company.Parent)
             holder.flesh.setVisibility(View.VISIBLE);
         else
             holder.flesh.setVisibility(View.GONE);
 
-        if (!company.PI.equals("")) {
+        if (!company.getPi().equals("")) {
             holder.cardSalein.setRadius(0);
             holder.cardSalein.setBackgroundResource(R.color.launcher_linear_order_header_color);
             holder.view.setVisibility(View.VISIBLE);

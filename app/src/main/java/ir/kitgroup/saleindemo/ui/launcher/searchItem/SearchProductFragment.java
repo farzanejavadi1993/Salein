@@ -210,7 +210,7 @@ public class SearchProductFragment extends Fragment {
                 if (s.toString().length() >= 2 || s.toString().isEmpty() || s.toString().trim().equals("")) {
                     sWord = s.toString();
                     binding.pro.setVisibility(View.VISIBLE);
-                    myViewModel.getSearchProduct(company.USER, company.PASS, Util.toEnglishNumber(s.toString()));
+                    myViewModel.getSearchProduct(company.getUser(), company.getPass(), Util.toEnglishNumber(s.toString()));
 
                 }
             }
@@ -256,7 +256,7 @@ public class SearchProductFragment extends Fragment {
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
                     customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات از سرور", false);
-                    myViewModel.getDescription(company.USER, company.PASS, GUID);
+                    myViewModel.getDescription(company.getUser(), company.getPass(), GUID);
                 }
             } else {
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();

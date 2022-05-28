@@ -60,6 +60,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
     public static boolean refresh = false;
     private Company company;
+    private String userName;
+    private String passWord;
 
     private FragmentLauncherOrganizationBinding binding;
 
@@ -100,6 +102,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
 
         company = Select.from(Company.class).first();
+        userName=company.getUser();
+        passWord=company.getPass();
         tablesList = new ArrayList<>();
         AllTable = new ArrayList<>();
 
@@ -121,8 +125,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
         binding.refreshLayout.setOnRefreshListener(() -> {
                     binding.progressbar.setVisibility(View.VISIBLE);
-                    myViewModel.getTable(company.USER, company.PASS);
-                    myViewModel.getTypeOrder(company.USER, company.PASS);
+                    myViewModel.getTable(company.getUser(), company.getPass());
+                    myViewModel.getTypeOrder(company.getUser(), company.getPass());
                 }
         );
         btnOkDialog.setOnClickListener(v -> {
@@ -159,8 +163,8 @@ public class LauncherOrganizationFragment extends Fragment {
 
                 case "error":
                     binding.progressbar.setVisibility(View.VISIBLE);
-                    myViewModel.getTable(company.USER, company.PASS);
-                    myViewModel.getTypeOrder(company.USER, company.PASS);
+                    myViewModel.getTable(company.getUser(), company.getPass());
+                    myViewModel.getTypeOrder(company.getUser(), company.getPass());
 
 
                     break;

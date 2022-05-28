@@ -52,6 +52,8 @@ public class VerifyFragment extends Fragment {
     private FragmentVerifyBinding binding;
 
     private Company company;
+    private String userName;
+    private String passWord;
     private int code;
     private String mobile;
 
@@ -87,6 +89,8 @@ public class VerifyFragment extends Fragment {
 
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
+        userName=company.getUser();
+        passWord=company.getPass();
         //endregion Get The Company Is Save In The Database
 
 
@@ -98,7 +102,7 @@ public class VerifyFragment extends Fragment {
         //region Set Icon And
         Picasso.get()
                 .load(Util.DEVELOPMENT_BASE_URL_Img + "/GetCompanyImage?id=" +
-                        company.I + "&width=300&height=300")
+                        company.getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
@@ -119,7 +123,7 @@ public class VerifyFragment extends Fragment {
                     binding.otpView.showSuccess();
                     binding.otpView.setEnabled(false);
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getInquiryAccount(company.USER, company.PASS, mobile);
+                    myViewModel.getInquiryAccount(userName, passWord, mobile);
                 } else {
                     binding.otpView.showError();
                     binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
@@ -145,7 +149,7 @@ public class VerifyFragment extends Fragment {
                         code = new Random(System.nanoTime()).nextInt(89000) + 10000;
                         String messageCode = String.valueOf(code);
                         binding.progressResendCode.setVisibility(View.VISIBLE);
-                        myViewModel.getSmsLogin(company.USER, company.PASS, messageCode, mobile);
+                        myViewModel.getSmsLogin(userName, passWord, messageCode, mobile);
 
                     }
                 }
@@ -194,7 +198,7 @@ public class VerifyFragment extends Fragment {
 
             //region When The User Is Not Register In
             else {
-                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment",mobile);
+                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment",mobile,-1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
             }

@@ -258,7 +258,7 @@ public class InVoiceDetailFragment extends Fragment {
                 dialogSync.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
                 if (type.equals("1"))
-                    myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
+                    myViewModel.getInvoice(company.getUser(),company.getPass(),Inv_GUID);
                 else {
                     invDetails.clear();
                     invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -279,7 +279,7 @@ public class InVoiceDetailFragment extends Fragment {
                         counter = 0;
                         ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                         for (int i = 0; i < invDetails.size(); i++) {
-                            myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                            myViewModel.getProduct(company.getUser(),company.getPass(),invDetails.get(i).PRD_UID);
                         }
                     }
                 }
@@ -397,7 +397,7 @@ public class InVoiceDetailFragment extends Fragment {
                 if (maxSales.equals("1")) {
                     Prd_UID = Prd_GUID;
                     sWord=s;
-                    myViewModel.getMaxSale(company.USER, company.PASS, Prd_GUID);
+                    myViewModel.getMaxSale(company.getUser(), company.getPass(), Prd_GUID);
                 } else {
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -521,7 +521,7 @@ public class InVoiceDetailFragment extends Fragment {
                 descriptionList.clear();
                 GuidInv = GUIDInv;
                 customProgress.showProgress(getActivity(),"در حال دریافت تضیحات",true);
-                myViewModel.getDescription(company.USER,company.PASS,GUIDPrd);
+                myViewModel.getDescription(company.getUser(),company.getPass(),GUIDPrd);
             });
 
 
@@ -553,7 +553,7 @@ public class InVoiceDetailFragment extends Fragment {
             binding.btnDelete.setOnClickListener(v -> {
                 if (status == 1) {
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getDeleteInvoice(company.USER, company.PASS, Inv_GUID);
+                    myViewModel.getDeleteInvoice(company.getUser(), company.getPass(), Inv_GUID);
                 }
             });
 
@@ -651,7 +651,7 @@ public class InVoiceDetailFragment extends Fragment {
 
         if (type.equals("1")) {
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getInvoice(company.USER,company.PASS,Inv_GUID);
+            myViewModel.getInvoice(company.getUser(),company.getPass(),Inv_GUID);
         }
         else {
             invDetails.clear();
@@ -674,7 +674,7 @@ public class InVoiceDetailFragment extends Fragment {
                 counter = 0;
                 ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                 for (int i = 0; i < invDetails.size(); i++) {
-                    myViewModel.getProduct(company.USER,company.PASS,invDetails.get(i).PRD_UID);
+                    myViewModel.getProduct(company.getUser(),company.getPass(),invDetails.get(i).PRD_UID);
                 }
             }
         }
@@ -699,7 +699,7 @@ public class InVoiceDetailFragment extends Fragment {
                 textView.setTextSize(13);
             } else {
 
-                String name = company.INSK_ID.split("ir.kitgroup.")[1];
+                String name = company.getInskId().split("ir.kitgroup.")[1];
                 String invGuid = sharedPreferences.getString(name, "");
 
                 List<InvoiceDetail> list = Select.from(InvoiceDetail.class).list();
@@ -764,7 +764,7 @@ public class InVoiceDetailFragment extends Fragment {
             else {
                 ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                 for (int i = 0; i < invDetails.size(); i++) {
-                    myViewModel.getProduct(company.USER, company.PASS, invDetails.get(i).PRD_UID);
+                    myViewModel.getProduct(company.getUser(), company.getPass(), invDetails.get(i).PRD_UID);
                 }
             }
             binding.progressBar.setVisibility(View.GONE);

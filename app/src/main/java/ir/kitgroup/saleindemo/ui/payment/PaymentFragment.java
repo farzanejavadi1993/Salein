@@ -302,7 +302,7 @@ public class PaymentFragment extends Fragment {
                     return;
                 }
                 dialogAddress.dismiss();
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM());
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM(),-1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
             //endregion Cast DialogAddress
@@ -407,7 +407,7 @@ public class PaymentFragment extends Fragment {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM());
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM(),-1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
 

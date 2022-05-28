@@ -22,7 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleindemo.databinding.FragmentStoriesBinding;
+import ir.kitgroup.saleindemo.databinding.FragmentCompanyBinding;
 
 @AndroidEntryPoint
 public class CompanyFragment extends Fragment {
@@ -31,13 +31,13 @@ public class CompanyFragment extends Fragment {
     Typeface typeface;
 
 
-    public FragmentStoriesBinding binding;
+    public FragmentCompanyBinding binding;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentStoriesBinding.inflate(getLayoutInflater());
+        binding = FragmentCompanyBinding.inflate(getLayoutInflater());
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         return binding.getRoot();

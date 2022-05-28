@@ -54,6 +54,8 @@ public class LoginFragment extends Fragment {
     private int code = 0;
     private Boolean acceptRule = true;
     private Company company;
+    private String userName;
+    private String passWord;
     //endregion PARAMETER
 
 
@@ -74,6 +76,8 @@ public class LoginFragment extends Fragment {
 
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
+        userName=company.getUser();
+        passWord=company.getPass();
        //endregion Get The Company Is Save In The Database
 
 
@@ -81,12 +85,12 @@ public class LoginFragment extends Fragment {
 
 
         //region Set Title to textView
-        binding.tvWelcome.setText(" به " + company.N + " خوش آمدید ");
+        binding.tvWelcome.setText(" به " + company.getN() + " خوش آمدید ");
         //endregion Set Title to textView
 
 
        //region Set Title to RuleTextView
-        binding.loginTvRules.setText("با ثبت نام در " + company.N);
+        binding.loginTvRules.setText("با ثبت نام در " + company.getN());
        //endregion Set Title to RuleTextView
 
 
@@ -94,7 +98,7 @@ public class LoginFragment extends Fragment {
         //region Set UrlPath to ImageView
         Picasso.get()
                 .load(Util.DEVELOPMENT_BASE_URL_Img + "/GetCompanyImage?id=" +
-                        company.I + "&width=300&height=300")
+                        company.getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
@@ -137,7 +141,7 @@ public class LoginFragment extends Fragment {
                 binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 binding.btnLogin.setEnabled(false);
                 binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getSmsLogin(company.USER, company.PASS, messageCode, mobile);
+                myViewModel.getSmsLogin(userName,passWord, messageCode, mobile);
             }
         });
         //endregion Pressed btnLogin Button

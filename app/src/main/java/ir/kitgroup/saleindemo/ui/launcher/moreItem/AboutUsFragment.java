@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
+import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.AboutUsFragmentBinding;
 
 
@@ -41,7 +42,7 @@ public class AboutUsFragment extends Fragment {
        // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         company= Select.from(Company.class).first();
-        binding.txtDescription.setText(company!=null && company.ABUS !=null?company.ABUS :"");
+        binding.txtDescription.setText(company!=null && company.getAbus() !=null?company.getAbus() :"");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.txtDescription.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
@@ -56,8 +57,8 @@ public class AboutUsFragment extends Fragment {
             e.printStackTrace();
         }
         Picasso.get()
-                .load("http://api.kitgroup.ir/GetCompanyImage?id=" +
-                        company.I+"&width=300&height=300")
+                .load(Util.DEVELOPMENT_BASE_URL_Img +"/GetCompanyImage?id=" +
+                        company.getI()+"&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivLogo);

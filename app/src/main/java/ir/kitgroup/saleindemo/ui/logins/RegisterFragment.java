@@ -72,9 +72,12 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private MyViewModel myViewModel;
     private RegisterFragmentBinding binding;
     private Company company;
+    private String userName;
+    private String passWord;
+
 
     private final List<Users> accountsList = new ArrayList<>();
-    private int radioValue = -1;
+    private int radioValue;
     private boolean ACCSTP = true;
     private String from;//this Variable Show From Which Fragment Did We Enter This Fragment?
     private String mobile;
@@ -164,6 +167,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         //region Get Bundle And Set Data
         from = RegisterFragmentArgs.fromBundle(getArguments()).getFrom();
         mobile = RegisterFragmentArgs.fromBundle(getArguments()).getMobile();
+        radioValue = RegisterFragmentArgs.fromBundle(getArguments()).getRadioValue();
 
         if (from.equals("PaymentFragment")) {
             binding.tvRadioGroup.setText("انتخاب به عنوان");
@@ -172,6 +176,12 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             binding.CodeId.setVisibility(View.GONE);
             binding.nameCard.setVisibility(View.GONE);
         }
+        if (from.equals("ProfileFragment")) {
+            binding.edtName.setEnabled(false);
+            binding.CodeId.setVisibility(View.GONE);
+            binding.radioCard.setVisibility(View.GONE);
+        }
+
         //endregion Get Bundle And Set Data
 
 
@@ -191,6 +201,8 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
+        userName=company.getUser();
+        passWord=company.getPass();
         //endregion Get The Company Is Save In The Database
 
         //region Press RadioButton
@@ -243,7 +255,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 usr.STAPP = ACCSTP;
                 accountsList.clear();
                 accountsList.add(usr);
-                myViewModel.getSetting(company.USER, company.PASS);
+                myViewModel.getSetting(userName, passWord);
             }
             //endregion Add Account
 
@@ -262,12 +274,16 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 usr.LNG1 = user.LNG1 != null && !user.LNG1.equals("") && !user.LNG1.equals("-") ? user.LNG1 : "0.0";
 
                 if (radioValue == 1) {
+                    if (from.equals("PaymentFragment"))
                     PaymentFragment.ChooseAddress2 = false;
+
                     usr.ADR = binding.edtAddress.getText().toString();
                     usr.LAT = String.valueOf(Util.latitude);
                     usr.LNG = String.valueOf(Util.longitude);
                 } else if (radioValue == 2) {
+                    if (from.equals("PaymentFragment"))
                     PaymentFragment.ChooseAddress2 = true;
+
                     usr.ADR2 = binding.edtAddress.getText().toString();
                     usr.LAT1 = String.valueOf(Util.latitude);
                     usr.LNG1 = String.valueOf(Util.longitude);
@@ -281,7 +297,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 binding.btnRegisterInformation.setEnabled(false);
 
 
-                myViewModel.updateAccount(company.USER, company.PASS, usersList);
+                myViewModel.updateAccount(userName,passWord, usersList);
 
 
             }
@@ -346,7 +362,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 accountsList.get(0).STAPP = ACCSTP;
                 binding.btnRegisterInformation.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
                 binding.btnRegisterInformation.setEnabled(false);
-                myViewModel.addAccount(company.USER, company.PASS, accountsList);
+                myViewModel.addAccount(userName,passWord, accountsList);
             }
 
 
