@@ -26,7 +26,7 @@ import ir.kitgroup.saleindemo.models.OrderType;
 import ir.kitgroup.saleindemo.R;
 
 
-public class OrderTypePaymentAdapter extends RecyclerView.Adapter<OrderTypePaymentAdapter.viewHolder> {
+public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAdapter.viewHolder> {
 
     private  final List<OrderType> list;
     private final Activity context;
@@ -44,7 +44,7 @@ public class OrderTypePaymentAdapter extends RecyclerView.Adapter<OrderTypePayme
     }
 
 
-    public OrderTypePaymentAdapter(Activity context, List<OrderType> list) {
+    public OrderTypeOrderAdapter(Activity context, List<OrderType> list) {
         this.context = context;
         this.list = list;
     }

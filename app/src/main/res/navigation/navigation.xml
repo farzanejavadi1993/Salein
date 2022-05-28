@@ -70,24 +70,78 @@
         android:id="@+id/MainFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment"
         tools:layout="@layout/fragment_main" >
-        <action
 
+        <action
+            android:id="@+id/actionGotoInvoiceFragment"
+            app:destination="@id/InvoiceFragment" />
+        <action
             android:id="@+id/actionGoToMoreFragment"
             app:destination="@id/MoreFragment" />
+
         <argument
             android:name="Inv_GUID"
             app:argType="string" />
+
+        <action
+            android:id="@+id/actionGoToFilterFragment"
+            app:destination="@id/FilterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/PaymentFragment"
+        android:name="ir.kitgroup.saleindemo.ui.payment.PaymentFragment"
+        tools:layout="@layout/fragment_payment" >
+
+        <action
+            android:id="@+id/actionGoToRegisterFragment"
+            app:destination="@id/RegisterFragment" />
+
+        <argument
+            android:name="Edit"
+            app:argType="boolean" />
+
+
     </fragment>
 
 
     <fragment
-        android:id="@+id/MoreFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.SettingFragment"
-        tools:layout="@layout/fragment_setting" >
+        android:id="@+id/InvoiceFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment"
+        tools:layout="@layout/invoice_list_item_recycle" >
         <action
-
             android:id="@+id/actionGoToMainFragment"
             app:destination="@id/MainFragment" />
+        <action
+            android:id="@+id/actionGoToPaymentFragment"
+            app:destination="@id/PaymentFragment" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="edit"
+            app:argType="boolean" />
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/FilterFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.FilterFragment"
+        tools:layout="@layout/filter_fragment" >
+
+        <argument
+            android:name="filter"
+            app:argType="boolean" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/MoreFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.MoreFragment"
+        tools:layout="@layout/more_fragment" >
+
     </fragment>
 
 

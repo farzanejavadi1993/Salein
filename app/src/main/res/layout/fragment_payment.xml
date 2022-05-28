@@ -153,13 +153,14 @@
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/btn_payment_place"
+                  android:visibility="gone"
+                    android:id="@+id/btn_on_site_payment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/iv_payment_place"
+                        android:id="@+id/iv_on_site_payment"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
@@ -171,7 +172,7 @@
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/tvTitlePaymentPlace"
+                        android:id="@+id/tvTitleOnSitePayment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margin10"
@@ -179,13 +180,13 @@
                         android:textColor="@color/black_l"
                         android:textSize="11dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_place"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_place"
-                        app:layout_constraintTop_toTopOf="@+id/iv_payment_place" />
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_on_site_payment"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_on_site_payment"
+                        app:layout_constraintTop_toTopOf="@+id/iv_on_site_payment" />
 
 
                     <ImageView
-                        android:id="@+id/iv_ok_payment_place"
+                        android:id="@+id/iv_ok_on_site_payment"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
@@ -206,13 +207,14 @@
                     android:background="#eee" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_payment_online"
+                  android:visibility="gone"
+                    android:id="@+id/btn_club_payment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/iv_payment_online"
+                        android:id="@+id/iv_club_payment"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
@@ -224,7 +226,7 @@
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/tvTitlePaymentOnline"
+                        android:id="@+id/tvTitleclubPayment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margin10"
@@ -232,9 +234,9 @@
                         android:textColor="@color/black_l"
                         android:textSize="11dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_payment_online"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_payment_online"
-                        app:layout_constraintTop_toTopOf="@+id/iv_payment_online" />
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_club_payment"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_club_payment"
+                        app:layout_constraintTop_toTopOf="@+id/iv_club_payment" />
 
                     <TextView
                         android:id="@+id/tvCredit"
@@ -244,12 +246,12 @@
                         android:text="موجودی : 0 ریال"
                         android:textColor="#6E6E6E"
                         android:textSize="11dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvTitlePaymentOnline"
-                        app:layout_constraintEnd_toStartOf="@+id/tvTitlePaymentOnline"
-                        app:layout_constraintTop_toTopOf="@+id/tvTitlePaymentOnline" />
+                        app:layout_constraintBottom_toBottomOf="@+id/tvTitleclubPayment"
+                        app:layout_constraintEnd_toStartOf="@+id/tvTitleclubPayment"
+                        app:layout_constraintTop_toTopOf="@+id/tvTitleclubPayment" />
 
                     <ImageView
-                        android:id="@+id/iv_ok_payment_online"
+                        android:id="@+id/iv_ok_club_payment"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
@@ -384,16 +386,25 @@
             >
 
             <TextView
+                android:id="@+id/tv_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/green_table"
+                android:textSize="13dp"
+                android:textStyle="bold"
+             />
+            <TextView
+
                 android:id="@+id/tv_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center"
-                android:text="اصلاح سفارش"
                 android:textColor="@color/red_table"
                 android:textSize="13dp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+            />
 
             <TextView
                 android:id="@+id/tv_successFull_pay_online"

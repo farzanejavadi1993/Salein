@@ -43,6 +43,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.ProductAdapter;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
@@ -61,7 +62,11 @@ import ir.kitgroup.saleindemo.models.Product;
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {
 
+   private MainFragment mainFragment;
 
+    public SearchProductFragment(MainFragment mainFragment) {
+        this.mainFragment = mainFragment;
+    }
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -73,13 +78,13 @@ public class SearchProductFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentSearchProductBinding binding;
     private Company company;
-    private String Transport_GUID = "";
-    private String valueOfDay;
-    private ArrayList<String> closeDayList;
+    private String Transport_GUID = "";//It Is GUID Of Transport Or GUID Of Row Transport In Order Form That Get From Server And Save In Local With SharedPreferences
+    private String Inv_GUID = "";//It Is GUID Of Order Form
+    private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
     private ProductAdapter productAdapter;
-    private String Inv_GUID = "";
+
     private ArrayList<Product> productList;
-    private String maxSales = "0";
+    private String maxSales = "0";//It Is For Check Inventory
     private CustomProgress customProgress;
 
     //region Variable Dialog Description
@@ -106,19 +111,24 @@ public class SearchProductFragment extends Fragment {
 
 
 
-        customProgress = CustomProgress.getInstance();
-
-
-        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-        Bundle bundle = getArguments();
-        Boolean seen = bundle.getBoolean("Seen");
-        Inv_GUID = bundle.getString("Inv_GUID");
-        String tbl_GUID = bundle.getString("Tbl_GUID");
-        maxSales = sharedPreferences.getString("maxSale", "0");
+        //region Config
         productList = new ArrayList<>();
         closeDayList = new ArrayList<>();
 
+        customProgress = CustomProgress.getInstance();
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
+        Inv_GUID = sharedPreferences.getString("Inv_GUID","");
+        maxSales = sharedPreferences.getString("maxSale", "0");
+        String CloseDay = sharedPreferences.getString("close_day", "");
+        closeDayList.clear();
+        if (!CloseDay.equals("")) {
+            closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
+        }
         company = Select.from(Company.class).first();
+        //endregion Config
+
+
+
 
         //region Cast DialogDescription
         dialogDescription = new Dialog(getActivity());
@@ -162,6 +172,7 @@ public class SearchProductFragment extends Fragment {
         });
 
 
+
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -184,12 +195,7 @@ public class SearchProductFragment extends Fragment {
         });
         //endregion Cast DialogDescription
 
-        int fontSize;
-        if (Util.screenSize >= 7)
-            fontSize = 14;
-        else
-            fontSize = 12;
-        binding.edtSearchProduct.setTextSize(fontSize);
+        //region config SearchView
         TextWatcher textWatcherProduct = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -214,19 +220,11 @@ public class SearchProductFragment extends Fragment {
             }
         };
         binding.edtSearchProduct.addTextChangedListener(textWatcherProduct);
-        //productAdapter = new ProductAdapter(getActivity(), productList);
-        String CloseDay = sharedPreferences.getString("close_day", "");
-        closeDayList.clear();
-        if (!CloseDay.equals("")) {
-            closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
-        }
+        //endregion config SearchView
 
-        productAdapter.setCloseListDate(closeDayList);
 
-        productAdapter.setTbl_GUID(tbl_GUID);
-        productAdapter.setInv_GUID(Inv_GUID);
-        productAdapter.setType(seen);
-        productAdapter.setApi(api);
+        //region Config RecyclerView And Its Adapter
+        productAdapter = new ProductAdapter(getActivity(), productList,sharedPreferences,closeDayList,api);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -241,10 +239,10 @@ public class SearchProductFragment extends Fragment {
             if (invDetails.size() > 0) {
                 counter = invDetails.size();
             }
-         //   if (counter == 0)
-          //      ((LauncherActivity) getActivity()).setClearCounterOrder();
-         //   else
-            //    ((LauncherActivity) getActivity()).setCounterOrder(counter);
+             if (counter == 0)
+                  mainFragment.clearNumber();
+               else
+              mainFragment.setNumber(counter);
 
 
         });
@@ -264,6 +262,8 @@ public class SearchProductFragment extends Fragment {
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
             }
         });
+        //endregion Config RecyclerView And Its Adapter
+
     }
 
 
@@ -299,7 +299,6 @@ public class SearchProductFragment extends Fragment {
 
         });
 
-
         myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
             if (result == null) {
                 binding.pro.setVisibility(View.GONE);
@@ -321,7 +320,6 @@ public class SearchProductFragment extends Fragment {
             binding.pro.setVisibility(View.GONE);
         });
 
-
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             productList.clear();
             productAdapter.notifyDataSetChanged();
@@ -329,7 +327,7 @@ public class SearchProductFragment extends Fragment {
             customProgress.hideProgress();
             if (result == null)
                 return;
-         //   myViewModel.getResultMessage().setValue(null);
+
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 

@@ -77,6 +77,12 @@ public class SplashScreenFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        //region Config
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+        //endregion Config
+
+
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
         //endregion Get The Company Is Save In The Database
@@ -132,7 +138,6 @@ public class SplashScreenFragment extends Fragment {
         else
             Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
         //endregion Set Gif In AnimationView
-
 
 
         //region Press The BtnError For Re-Request
@@ -212,15 +217,13 @@ public class SplashScreenFragment extends Fragment {
                 if (Select.from(Users.class).list().size() > 0) {
                     if (saleinInstance != null)
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
-                    else
-                    {
+                    else {
                         NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);
                     }
 
                 }
                 //endregion When The User Is Logged In
-
 
 
                 //region When The User Is Not Logged In

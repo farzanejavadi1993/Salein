@@ -102,7 +102,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private State state = State.MAP;
     private CircleManager circleManager;
     private String from;//this Variable Show From Which Fragment Did We Enter This Fragment?
-
+    private double latitude=0.0;
+    private double longitude=0.0;
 
 
     private enum State {
@@ -147,6 +148,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
         //region Action btnRegisterInformation
 
         binding.btnRegisterInformation.setOnClickListener(v -> {
+            Util.longitude=longitude;
+            Util.latitude=latitude;
             Navigation.findNavController(binding.getRoot()).popBackStack();
         });
         //endregion Action btnRegisterInformation
@@ -649,8 +652,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     public void onSuccess(@NonNull ReverseGeocode result) {
 
 
-                       Util.latitude = position.target.getLatitude();
-                       Util.longitude = position.target.getLongitude();
+                     latitude = position.target.getLatitude();
+                     longitude = position.target.getLongitude();
                         binding.edtAddress.setVisibility(View.VISIBLE);
                         binding.pro.setVisibility(View.GONE);
 
@@ -672,7 +675,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
     private void setState(State state) {
-        Toast.makeText(getActivity(), "satate", Toast.LENGTH_SHORT).show();
+
         this.state = state;
         switch (state) {
             case MAP:

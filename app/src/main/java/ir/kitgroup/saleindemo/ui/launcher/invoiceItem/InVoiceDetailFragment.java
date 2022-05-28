@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,9 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import androidx.fragment.app.FragmentManager;
-
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,16 +53,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
-import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
-import ir.kitgroup.saleindemo.DataBase.Users;
-
-import ir.kitgroup.saleindemo.DataBase.Tables;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
-import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.Utilities;
 
 import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
@@ -83,30 +75,19 @@ public class InVoiceDetailFragment extends Fragment {
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
-
-
-    private String valueOfDay;
-    private ArrayList<String> closeDayList;
-
-
-
     private FragmentInvoiceDetailMobileBinding binding;
+    private MyViewModel myViewModel;
     private Company company;
+    private CustomProgress customProgress;
+
+
     private String Prd_UID;
     private String sWord;
 
-    private CustomProgress customProgress;
-    private String type = "";
-    private String Inv_GUID = "";
-    private String Tbl_GUID = "";
-    private String Tbl_NAME = "";
-    private String Ord_TYPE = "";
-    private String Acc_NAME = "";
-    private String Acc_GUID = "";
-    private Boolean Seen = false;
-    private boolean EDIT = false;
-    private boolean setADR1 = false;
 
+    private String type = "";//This Variable Show We Come To This Fragment From Which Fragment If Amount Equal "2" Mean We Come To This Fragment From Home Fragment And We Arent Going To Edit Order
+    private String Inv_GUID = "";
+    private boolean EDIT = false;
 
     private double sumPrice;
     private double sumPurePrice;
@@ -145,7 +126,8 @@ public class InVoiceDetailFragment extends Fragment {
 
 
     private int counter = 0;
-    private MyViewModel myViewModel;
+    private  ArrayList<String> closeDayList;
+    private String valueOfDay;
 
 
     //endregion Parameter
@@ -165,14 +147,14 @@ public class InVoiceDetailFragment extends Fragment {
 
 
         try {
-            //((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+
             ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
 
             Calendar calendar1 = Calendar.getInstance();
             switch (calendar1.getTime().getDay()) {
 
                 case 0:
-                    valueOfDay = "1";
+                     valueOfDay = "1";
                     break;
                 case 1:
                     valueOfDay = "2";
@@ -193,8 +175,10 @@ public class InVoiceDetailFragment extends Fragment {
                     valueOfDay = "0";
                     break;
             }
+             Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
             String CloseDay = sharedPreferences.getString("close_day", "");
-            closeDayList=new ArrayList<>();
+
+            closeDayList = new ArrayList<>(); //This Variable Is For Get holidays From Server
             if (!CloseDay.equals("")) {
                 closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
             }
@@ -210,36 +194,6 @@ public class InVoiceDetailFragment extends Fragment {
             descriptionList = new ArrayList<>();
             maxSales = sharedPreferences.getString("maxSale", "0");
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-
-
-            //region Configuration Text Size
-            int fontSize;
-            int fontLargeSize;
-            if (Util.screenSize >= 7) {
-                fontSize = 13;
-                fontLargeSize = 14;
-            } else {
-                fontSize = 11;
-                fontLargeSize = 12;
-            }
-
-
-            binding.tvNameCustomer.setTextSize(fontSize);
-            binding.txtDate.setTextSize(fontSize);
-            binding.txtTableNumber.setTextSize(fontSize);
-            binding.orderListPurePriceTv.setTextSize(fontSize);
-            binding.tvSumPurePrice.setTextSize(fontLargeSize);
-            binding.orderListSumPriceTv.setTextSize(fontLargeSize);
-            binding.tvSumPrice.setTextSize(fontLargeSize);
-            binding.orderListSumDiscountTv.setTextSize(fontLargeSize);
-            binding.tvSumDiscount.setTextSize(fontLargeSize);
-            binding.tvSumTransport.setTextSize(fontLargeSize);
-            binding.txtSumTransport.setTextSize(fontLargeSize);
-            binding.btnContinue.setTextSize(fontSize);
-            binding.btnDelete.setTextSize(fontSize);
-            binding.btnEdit.setTextSize(fontSize);
-            binding.txtDeleteAll.setTextSize(fontSize);
-            //endregion Configuration Text Size
 
 
             //region Cast Dialog Delete
@@ -266,15 +220,6 @@ public class InVoiceDetailFragment extends Fragment {
                 }
                 invoiceDetailList.clear();
                 invoiceDetailAdapter.notifyDataSetChanged();
-
-
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof HomeFragment) {
-                    HomeFragment fgf = (HomeFragment) frg;
-                    fgf.refreshProductList();
-                    fgf.counter1 = 0;
-                }
-
                 binding.progressBar.setVisibility(View.GONE);
                 dialogDelete.dismiss();
 
@@ -283,30 +228,11 @@ public class InVoiceDetailFragment extends Fragment {
 
 
             //region Get Bundle
-            Bundle bundle = getArguments();
-            type = bundle.getString("type");//1 EditWork   //2 create work
-            Ord_TYPE = bundle.getString("Ord_TYPE");
-            Tbl_GUID = bundle.getString("Tbl_GUID");
-            Tbl_NAME = bundle.getString("Tbl_NAME");
-            Inv_GUID = bundle.getString("Inv_GUID");
-            Acc_NAME = bundle.getString("Acc_NAME");
-            Acc_GUID = bundle.getString("Acc_GUID");
-            EDIT = bundle.getBoolean("EDIT");//when order need EDIT
-            Seen = bundle.getBoolean("Seen");
-            setADR1 = bundle.getBoolean("setADR1");
 
-
-            binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
+            type =  InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 Edit  //2 create
+            EDIT =  InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEdit();//when order need EDIT
             //endregion Get Bundle
 
-
-            //region Configuration Client Application
-            if (company.mode == 2) {
-                binding.tvNameCustomer.setVisibility(View.GONE);
-                binding.txtTableNumber.setVisibility(View.GONE);
-
-            }
-            //endregion Configuration Client Application
 
 
             sumPrice = 0;
@@ -321,8 +247,7 @@ public class InVoiceDetailFragment extends Fragment {
             dialogSync.setContentView(R.layout.custom_dialog);
             dialogSync.setCancelable(false);
 
-//           TextView textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-//           ImageView ivIconSync = dialogSync.findViewById(R.id.iv_icon);
+
 
             MaterialButton btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
             MaterialButton btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
@@ -344,7 +269,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                                 .show();
 
-                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                        TextView textView =alertDialog.findViewById(android.R.id.message);
                         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                         textView.setTypeface(face);
                         textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -412,12 +337,6 @@ public class InVoiceDetailFragment extends Fragment {
 
 
                 invoiceDetailAdapter.notifyDataSetChanged();
-
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof HomeFragment) {
-                    HomeFragment fgf = (HomeFragment) frg;
-                    fgf.refreshProductList();
-                }
                 dialogDescription.dismiss();
             });
             //endregion Cast DialogDescription
@@ -438,20 +357,10 @@ public class InVoiceDetailFragment extends Fragment {
             //region See Order During Work
             else {
 
-
                 Calendar calendar = Calendar.getInstance();
                 Utilities.SolarCalendar sc = util.new SolarCalendar(calendar.getTime());
                 String text2 = (sc.strWeekDay) + "\t" + String.format(loc, "%02d", sc.date) + "\t" + (sc.strMonth) + "\t" + sc.year;
                 binding.txtDate.setText(text2);
-
-
-                if (company.mode == 1) {
-                    Users acc = Select.from(Users.class).first();
-                    if (acc != null)
-                        binding.tvNameCustomer.setText("(" + (acc.N != null ? acc.N + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
-                    else
-                        binding.tvNameCustomer.setText("(" + "فروش پیش فرض" + " _ " + Tbl_NAME + ")");
-                }
 
             }
             //endregion See Order During Work
@@ -475,7 +384,7 @@ public class InVoiceDetailFragment extends Fragment {
             binding.tvSumDiscount.setText(format.format(sumDiscounts) + " ریال ");
 
 
-            invoiceDetailAdapter = new InvoiceDetailAdapter(getActivity(), invoiceDetailList, type, Seen, sharedPreferences);
+            invoiceDetailAdapter = new InvoiceDetailAdapter(getActivity(), invoiceDetailList, type, sharedPreferences);
             binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
             binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
             binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -507,17 +416,8 @@ public class InVoiceDetailFragment extends Fragment {
                         }
 
                         invoiceDetailAdapter.notifyDataSetChanged();
-                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof HomeFragment) {
-                            HomeFragment fgf = (HomeFragment) frg;
-                            fgf.refreshProductList();
-                        }
 
-
-                    }
-                }
-
-
+                    } }
             });
 
 
@@ -525,7 +425,6 @@ public class InVoiceDetailFragment extends Fragment {
                 @Override
                 public void onChanged() {
                     super.onChanged();
-
                     sumPrice = 0;
                     sumPurePrice = 0;
                     sumDiscounts = 0;
@@ -543,9 +442,8 @@ public class InVoiceDetailFragment extends Fragment {
                             double sumprice = (invoiceDetails.get(i).INV_DET_QUANTITY * product.getPrice(sharedPreferences));
 
                             double discountPrice;
-                            if (type.equals("1") || Seen)
+                            if (type.equals("1"))
                                 discountPrice = sumprice * (invoiceDetails.get(i).INV_DET_PERCENT_DISCOUNT / 100);
-
                             else
                                 discountPrice = sumprice * (product.getPercDis() / 100);
                             double totalPrice = sumprice - discountPrice;
@@ -674,36 +572,15 @@ public class InVoiceDetailFragment extends Fragment {
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
-                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textView =  alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
                     textView.setTextSize(13);
                     return;
                 }
-                Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                String tblGuid;
-                if (tb != null && tb.GO != null)
-                    tblGuid = "";
-                else
-                    tblGuid = Tbl_GUID;
-
-
-                Bundle bundleMainOrder = new Bundle();
-//                bundleMainOrder.putSerializable("key", (Serializable) invoiceDetailList);
-                bundleMainOrder.putString("Inv_GUID", Inv_GUID);
-                bundleMainOrder.putString("Tbl_GUID", tblGuid);
-                bundleMainOrder.putString("Tbl_NAME", Tbl_NAME);
-                bundleMainOrder.putString("Ord_TYPE", Ord_TYPE);
-                bundleMainOrder.putString("Acc_GUID", Acc_GUID);
-                bundleMainOrder.putString("Acc_NAME", Acc_NAME);
-                bundleMainOrder.putBoolean("EDIT", true);
-                bundleMainOrder.putBoolean("Seen", true);
-                HomeFragment mainOrderFragment = new HomeFragment();
-                mainOrderFragment.setArguments(bundleMainOrder);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
-
-
+                NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainFragment(Inv_GUID);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             });
             //endregion Action BtnEdit
 
@@ -725,7 +602,7 @@ public class InVoiceDetailFragment extends Fragment {
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
-                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textView =  alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -736,7 +613,7 @@ public class InVoiceDetailFragment extends Fragment {
                             .setMessage("برای ردیف های سفارش مقدار وارد کنید و یا ردیف با مقدار صفر را حذف کنید .")
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
-                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textView =  alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -745,31 +622,8 @@ public class InVoiceDetailFragment extends Fragment {
                     return;
                 }
                 binding.btnContinue.setEnabled(false);
-                String ordTy = "";
-                if (company.mode != 2)
-                    ordTy = Ord_TYPE;
-
-
-                boolean edit = false;
-                if (EDIT)
-                    edit = true;
-
-
-                Bundle bundlePayment = new Bundle();
-                bundlePayment.putString("Inv_GUID", Inv_GUID);
-                bundlePayment.putString("Tbl_GUID", Tbl_GUID);
-                bundlePayment.putString("Tbl_NAME", Tbl_NAME);
-                bundlePayment.putString("Ord_TYPE", ordTy);
-                bundlePayment.putString("Acc_GUID", Acc_GUID);
-                bundlePayment.putString("Acc_NAME", Acc_NAME);
-                bundlePayment.putString("Sum_PRICE", String.valueOf(sumPurePrice));
-                bundlePayment.putBoolean("EDIT", edit);
-                bundlePayment.putBoolean("Seen", Seen);
-                bundlePayment.putBoolean("setADR1", setADR1);
-                binding.btnContinue.setEnabled(true);
-                PaymentMobileFragment paymentMobileFragment = new PaymentMobileFragment();
-                paymentMobileFragment.setArguments(bundlePayment);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, paymentMobileFragment, "PaymentMobileFragment").addToBackStack("PaymentMobileF").commit();
+                NavDirections action = InVoiceDetailFragmentDirections.actionGoToPaymentFragment(EDIT);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
 
             });
             //endregion Action BtnContinue
@@ -810,7 +664,7 @@ public class InVoiceDetailFragment extends Fragment {
                         .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                         .show();
 
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                TextView textView =  alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
                 textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -838,7 +692,7 @@ public class InVoiceDetailFragment extends Fragment {
                         .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                         .show();
 
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                TextView textView = alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
                 textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -858,7 +712,7 @@ public class InVoiceDetailFragment extends Fragment {
                 InvoiceDetail.saveInTx(result.getInvoiceDetail());
 
                 status = result.getInvoice().get(0).INV_STEP;
-                Ord_TYPE = String.valueOf(result.getInvoice().get(0).INV_TYPE_ORDER);
+
 
 
                 if (result.getInvoice().get(0).INV_DESCRIBTION != null && !result.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
@@ -870,13 +724,8 @@ public class InVoiceDetailFragment extends Fragment {
                 }
 
 
-                if (company.mode == 1) {
-                    Acc_NAME = result.getInvoice().get(0).ACC_CLB_NAME;
-                    Acc_GUID = result.getInvoice().get(0).ACC_CLB_UID;
-                }
 
 
-                binding.tvNameCustomer.setText("(" + (Acc_NAME != null ? Acc_NAME + " _ " : "  فروش روزانه  ") + Tbl_NAME + ")");
 
 
                 if (status != null && status == 1) {
@@ -906,7 +755,7 @@ public class InVoiceDetailFragment extends Fragment {
                         .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                         .show();
 
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                TextView textView = alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
                 textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -1001,35 +850,10 @@ public class InVoiceDetailFragment extends Fragment {
                 for (int i = 0; i < invoiceDetail.size(); i++) {
                     InvoiceDetail.deleteInTx(invoiceDetail.get(i));
                 }
-                Fragment frg;
-                if (company.mode == 2) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("OrderListFragment");
 
-                } else {
-                    Tables tb = Select.from(Tables.class).where("I ='" + Tbl_GUID + "'").first();
-                    if (tb != null && tb.GO != null)
-                        Tables.delete(tb);
-
-                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("LauncherFragment");
-                }
-
-
-                FragmentManager ft = getActivity().getSupportFragmentManager();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                    ft.beginTransaction().detach(frg).commitNow();
-                    ft.beginTransaction().attach(frg).commitNow();
-
-                } else {
-
-                    ft.beginTransaction().detach(frg).attach(frg).commit();
-                } }
-
-
-
+                Navigation.findNavController(binding.getRoot()).popBackStack();
+            }
             customProgress.hideProgress();
-
 
         });
         myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), res -> {
@@ -1057,7 +881,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                                 .show();
 
-                        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                        TextView textView =  alertDialog.findViewById(android.R.id.message);
                         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                         textView.setTypeface(face);
                         textView.setTextColor(getResources().getColor(R.color.medium_color));
@@ -1071,11 +895,6 @@ public class InVoiceDetailFragment extends Fragment {
 
                         invoiceDetailAdapter.notifyDataSetChanged();
 
-                        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                        if (frg instanceof HomeFragment) {
-                            HomeFragment fgf = (HomeFragment) frg;
-                            fgf.refreshProductList();
-                        }
                         return;
                     }
                 }
@@ -1095,11 +914,6 @@ public class InVoiceDetailFragment extends Fragment {
 
                 invoiceDetailAdapter.notifyDataSetChanged();
 
-                Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-                if (frg instanceof HomeFragment) {
-                    HomeFragment fgf = (HomeFragment) frg;
-                    fgf.refreshProductList();
-                }
 
             }
 

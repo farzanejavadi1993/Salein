@@ -334,9 +334,9 @@ public class LauncherOrganizationFragment extends Fragment {
                 bundle.putBoolean("EDIT", false);
 
 
-                HomeFragment mainFragment = new HomeFragment();
-                mainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+                //HomeFragment mainFragment = new HomeFragment();
+               // mainFragment.setArguments(bundle);
+              //  requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
 
             }
@@ -390,9 +390,9 @@ public class LauncherOrganizationFragment extends Fragment {
             bundle.putBoolean("EDIT", false);
             bundle.putString("Tbl_NAME", name);
 
-            HomeFragment mainFragment = new HomeFragment();
-            mainFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+           // HomeFragment mainFragment = new HomeFragment();
+           // mainFragment.setArguments(bundle);
+           // requireActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
 
 
         });

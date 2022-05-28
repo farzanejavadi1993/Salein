@@ -29,6 +29,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,15 +49,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleindemo.databinding.FragmentMobileOrderMainBinding;
-import ir.kitgroup.saleindemo.models.CustomTab;
-import ir.kitgroup.saleindemo.ui.companies.AllCompanyFragment;
 import ir.kitgroup.saleindemo.Connect.API;
+
+import ir.kitgroup.saleindemo.databinding.HomeFragmentBinding;
+import ir.kitgroup.saleindemo.models.CustomTab;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
 import ir.kitgroup.saleindemo.classes.CustomProgress;
 import ir.kitgroup.saleindemo.DataBase.Users;
@@ -63,13 +64,11 @@ import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.classes.PaginationScrollListener;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.DataBase.Company;
-
 import ir.kitgroup.saleindemo.models.Setting;
 import ir.kitgroup.saleindemo.models.Description;
 import ir.kitgroup.saleindemo.models.Product;
 import ir.kitgroup.saleindemo.models.ProductLevel1;
 import ir.kitgroup.saleindemo.R;
-
 import ir.kitgroup.saleindemo.models.ProductLevel2;
 
 import static java.lang.Math.min;
@@ -77,25 +76,21 @@ import static java.lang.Math.min;
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
-    //region Parameter
+    private MainFragment mainFragment;
 
+    HomeFragment(MainFragment mainFragment) {
+        this.mainFragment = mainFragment;
+    }
+
+    //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
-
     @Inject
     API api;
-
-
+    private HomeFragmentBinding binding;
     private MyViewModel myViewModel;
-    private FragmentMobileOrderMainBinding binding;
-    private Boolean disableAccount = false;
-    private Boolean filterError = false;
     private Company company;
     private CustomProgress customProgress;
-    private String Inv_GUID = "";
-    private Boolean Seen = false;
-    private Boolean EDIT = false;
-
 
 
     private ArrayList<ProductLevel1> productLevel1List;
@@ -110,14 +105,21 @@ public class HomeFragment extends Fragment {
     private CustomTabAdapter customTabAdapter;
 
 
-    private ArrayList<Product> productList;
-    private ArrayList<String> closeDayList;
-    private ArrayList<Product> productListData;
+    private ArrayList<Product> productListData;//All Product
+    private ArrayList<Product> productList;//Filter Of All Product
     private ProductAdapter productAdapter;
+
+
+    private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
+
+
+    //region Variable Pager For ProductList
     private boolean isLastPage;
     private boolean isLoading;
     private int currentPage = 1;
     private int totalPage;
+    //endregion Variable Pager For ProductList
+
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
@@ -136,7 +138,6 @@ public class HomeFragment extends Fragment {
     //endregion Dialog Sync
 
 
-
     //region Variable DialogUpdate
     private Dialog dialogUpdate;
     private TextView textUpdate;
@@ -144,15 +145,16 @@ public class HomeFragment extends Fragment {
     //endregion Variable DialogUpdate
 
 
+    private String maxSales = "0";//For Check Inventory If Its Amount ==1  Default Amount iS 0
+    private String Transport_GUID = "";//GUID Of Transport Row , We Create Row Of Transport At Order Form By Using This GUID
+    private String linkUpdate = "";//It is Update Link Get From Server
+    private String GuidProductLvl2 = "";//It Is GUID Of ProductLevel2 Item For Get Product By Using This GUID
+    private int keyCustomTab = 0;//It Is Number Of CustomTab Item For Get Product By Using This Number
+    private Boolean disableAccount = false;
+    private Boolean filterError = false;
+    public int counter = 0;//Number Of Order Rows
+    private String Inv_GUID = "";
 
-    private String maxSales = "0";
-
-    private String Transport_GUID = "";
-    private String linkUpdate = "";
-
-    public int counter1 = 0;
-    private String GuidProductLvl2 = "";
-    private int keyCustomTab =0;
 
     //endregion Parameter
 
@@ -161,7 +163,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentMobileOrderMainBinding.inflate(getLayoutInflater());
+        binding = HomeFragmentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -173,149 +175,50 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-            ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
-
-            if (Util.getPackageName(getActivity()).equals("ir.kitgroup.saleinmeat")) {
-                Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
-                binding.mainBackground.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-            }
-
+            //region Config
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+            ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
             customProgress = CustomProgress.getInstance();
-
-
             sharedPreferences.edit().putString("FNM", "main").apply();
-            sharedPreferences.edit().putBoolean("vip", false).apply();
-            sharedPreferences.edit().putBoolean("discount", false).apply();
-
+            Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             company = Select.from(Company.class).first();
+            //endregion Config
 
+            //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
+            if (Util.getPackageName(getActivity()).contains("meat"))
+                Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
+            //endregion Set Animation Instead Of ProgressBar By Using PackageName In special cases
 
             //region First Value Parameter
-
-
-            counter1 = 0;
-            descriptionList = new ArrayList<>();
+            counter = 0;
             productLevel1List = new ArrayList<>();
             productLevel2List = new ArrayList<>();
             customTabList = new ArrayList<>();
-
-            closeDayList = new ArrayList<>();
             productList = new ArrayList<>();
             productListData = new ArrayList<>();
-
-
-            if (productAdapter != null) {
-                productAdapter.notifyDataSetChanged();
-                productLevel1Adapter.notifyDataSetChanged();
-                productLevel2Adapter.notifyDataSetChanged();
-                customTabAdapter.notifyDataSetChanged();
-            }
+            descriptionList = new ArrayList<>();
+            closeDayList = new ArrayList<>();
             //endregion First Value Parameter
 
-
-           //region Get Bundle
-            Bundle bundle = getArguments();
-
-         /*   Inv_GUID = bundle.getString("Inv_GUID");
-            EDIT = bundle.getBoolean("EDIT");//when order need EDIT
-            Seen = bundle.getBoolean("Seen");*/
-            Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-
-
-
-
-            //region Create Order
-            if (Inv_GUID.equals("")) {
-                String name;
-                name = company.INSK_ID.split("ir.kitgroup.")[1];
-
-                if (name.equals("salein"))
-                    Inv_GUID = sharedPreferences.getString(name, "");
-
-                if (Inv_GUID.equals("")) {
-                    Inv_GUID = UUID.randomUUID().toString();
-                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
-
-                }
-                sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
-
-            } else {
-                if (company.mode == 1)
-                    sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
-            }
-
-
+            //region Get Invoice By Guid Of Order Form
+            Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
             List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetailses.size() > 0) {
                 CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
-                counter1 = invDetailses.size();
+                counter = invDetailses.size();
             }
-           // if (counter1 == 0)
-              //  ((LauncherActivity) getActivity()).setClearCounterOrder();
-          //  else
-             //   ((LauncherActivity) getActivity()).setCounterOrder(counter1);
-          //  ((LauncherActivity) getActivity()).setInVisibiltyItem(!EDIT);
-           // ((LauncherActivity) getActivity()).setMainOrderFragment(this);
-          //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-            //endregion Create Order
 
-            //endregion Get Bundle*/
-
-            //region Delete InvoiceDetail UnNecessary
-            if (company.mode == 1) {
-                List<InvoiceDetail> invDetail = Select.from(InvoiceDetail.class).where("TBL ='" + "" + "'").list();
-                for (int i = 0; i < invDetail.size(); i++) {
-                    InvoiceDetail.delete(invDetail.get(i));
-                }
-            }
-            //endregion Delete InvoiceDetail UnNecessary
-
-
-            //region Configuration Text Size
-            int fontSize;
-            if (Util.screenSize >= 7)
-                fontSize = 14;
+            if (counter == 0)
+                mainFragment.clearNumber();
             else
-                fontSize = 12;
-            binding.edtNameCustomer.setTextSize(fontSize);
-            //endregion Configuration Text Size
+                mainFragment.setNumber(counter);
+            //endregion Get Invoice By Guid Of Order Form
 
-
-            //region Set Icon And Title
+            //region Set Title To TextView
             binding.tvNameStore.setText(company.N);
-            //endregion Set Icon And Title
+            //endregion Set Title To TextView
 
-            Users acc = Select.from(Users.class).first();
-
-
-
-            //region Action BtnStore
-            binding.btnStore.setOnClickListener(v -> {
-                if (!company.PI.equals("")) {
-                    Bundle bundleCompany = new Bundle();
-                    bundleCompany.putString("ParentId", company.PI);
-                    AllCompanyFragment companyFragment = new AllCompanyFragment();
-                    companyFragment.setArguments(bundleCompany);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, companyFragment, "companyFragment").addToBackStack("companyF").commit();
-                }
-            });
-            //endregion Action BtnStore
-
-
-
-
-
-            //region Configuration Client Application
-
-                binding.layoutAddressBranch.setVisibility(View.VISIBLE);
-                binding.layoutAccount.setVisibility(View.GONE);
-
-
-            //endregion Configuration Client Application
-
-
+            Users user = Select.from(Users.class).first();
 
 
             //region Cast Variable Dialog Sync
@@ -337,8 +240,7 @@ public class HomeFragment extends Fragment {
                 } else if (filterError)
                     return;
 
-
-                if (company.mode == 2 && !Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
+                if (!Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                     getActivity().finish();
                 else
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -347,6 +249,10 @@ public class HomeFragment extends Fragment {
 
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
+                binding.ivFilter.setImageResource(R.drawable.ic_filter);
+                sharedPreferences.edit().putBoolean("discount", false).apply();
+                sharedPreferences.edit().putBoolean("vip", false).apply();
+
                 binding.animationView.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.VISIBLE);
                 productList.clear();
@@ -355,8 +261,7 @@ public class HomeFragment extends Fragment {
                 productLevel2List.clear();
                 productAdapter.notifyDataSetChanged();
                 myViewModel.getProductLevel1(company.USER, company.PASS);
-                if (company.mode == 2)
-                    myViewModel.getInquiryAccount(company.USER, company.PASS, acc.getM());
+                myViewModel.getInquiryAccount(company.USER, company.PASS, user.getM());
                 myViewModel.getUnit(company.USER, company.PASS);
                 myViewModel.getSetting(company.USER, company.PASS);
             });
@@ -463,7 +368,6 @@ public class HomeFragment extends Fragment {
 
             //region CONFIGURATION DATA PRODUCT_LEVEL1
             productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
-
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             manager.setReverseLayout(true);
@@ -573,8 +477,6 @@ public class HomeFragment extends Fragment {
 
             //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
 
-
-
             //region CONFIGURATION DATA CUSTOM_TAB
             customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
 
@@ -609,7 +511,7 @@ public class HomeFragment extends Fragment {
 
                 //region Click New Item
                 ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
-                CollectionUtils.filter(resCustomTab, r -> r.getT()==key);
+                CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
 
                 if (customTabList.size() > 0) {
                     customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
@@ -620,8 +522,8 @@ public class HomeFragment extends Fragment {
 
 
                 //region Full ProductList Because This Item ProductLevel1 Is True
-                keyCustomTab=key;
-              myViewModel.getSettingPrice(company.USER,company.PASS);
+                keyCustomTab = key;
+                myViewModel.getSettingPrice(company.USER, company.PASS);
                 //endregion Full ProductList Because This Item ProductLevel1 Is True
             });
 
@@ -631,10 +533,7 @@ public class HomeFragment extends Fragment {
 
 
             //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList,company,sharedPreferences);
-            productAdapter.setInv_GUID(Inv_GUID);
-            productAdapter.setType(Seen);
-           productAdapter.setApi(api);
+            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences,closeDayList,api);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -667,11 +566,10 @@ public class HomeFragment extends Fragment {
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
                 if (invDetails.size() > 0) {
-                    int counter = invDetails.size();
-                    counter1 = counter;
-                   // ((LauncherActivity) getActivity()).setCounterOrder(counter);
+                    this.counter = invDetails.size();
+                    mainFragment.setNumber(counter);
                 } else {
-                  //  ((LauncherActivity) getActivity()).setClearCounterOrder();
+                    mainFragment.clearNumber();
                 }
 
             });
@@ -698,15 +596,17 @@ public class HomeFragment extends Fragment {
 
             //endregion CONFIGURATION DATA PRODUCT
 
-
             binding.ivFilter.setOnClickListener(v -> {
-                FilterFragment filterFragment = new FilterFragment();
-                if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE) {
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putBoolean("filter", true);
-                    filterFragment.setArguments(bundle1);
-                }
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, filterFragment, "FilterFragment").addToBackStack("FilterF").commit();
+
+                boolean filter = false;
+
+                if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE)
+                    filter = true;
+
+
+                NavDirections action = MainFragmentDirections.actionGoToFilterFragment(filter);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+
             });
 
 
@@ -722,17 +622,17 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-
-
         binding.progressbar.setVisibility(View.VISIBLE);
-        sharedPreferences.edit().putBoolean("discount", false).apply();
-        sharedPreferences.edit().putBoolean("vip", false).apply();
+        binding.animationView.setVisibility(View.VISIBLE);
         productList.clear();
         productListData.clear();
+        customTabList.clear();
         productLevel1List.clear();
         productLevel2List.clear();
-        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null) {
+
+        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
             productAdapter.notifyDataSetChanged();
+            customTabAdapter.notifyDataSetChanged();
             productLevel1Adapter.notifyDataSetChanged();
             productLevel2Adapter.notifyDataSetChanged();
         }
@@ -741,12 +641,9 @@ public class HomeFragment extends Fragment {
         binding.ivFilter.setImageResource(R.drawable.ic_filter);
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
-
         myViewModel.getSetting(company.USER, company.PASS);
         myViewModel.getUnit(company.USER, company.PASS);
-        if (company.mode == 2)
-            myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Users.class).first().getM());
-
+        myViewModel.getInquiryAccount(company.USER, company.PASS, Select.from(Users.class).first().getM());
 
 
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
@@ -760,22 +657,23 @@ public class HomeFragment extends Fragment {
             if (settingsList.size() > 0) {
 
 
-
                 //region menu
-                sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU .equals("")? settingsList.get(0).MENU : "0").apply();
+                sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("") ? settingsList.get(0).MENU : "0").apply();
                 String menu = sharedPreferences.getString("menu", "0");
-                if (!menu.equals("0") && company.mode==2) {
-
+                if (!menu.equals("0")) {
                     myViewModel.getCustomTab(company.USER, company.PASS);
                     binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                     binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
                     binding.orderRecyclerViewCustomTab.setVisibility(View.VISIBLE);
+                } else {
 
+                    if (sharedPreferences.getBoolean("discount", false))
+                        myViewModel.getDiscountProduct(company.USER, company.PASS);
+                    else if (sharedPreferences.getBoolean("vip", false))
+                        myViewModel.getVipProduct(company.USER, company.PASS, Select.from(Users.class).first().I);
+                    else
+                        myViewModel.getProductLevel1(company.USER, company.PASS);
 
-                }
-                else
-                {
-                    myViewModel.getProductLevel1(company.USER, company.PASS);
                     binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
                     binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
                     binding.orderRecyclerViewCustomTab.setVisibility(View.GONE);
@@ -793,29 +691,30 @@ public class HomeFragment extends Fragment {
                 //endregion  closeDayList
 
 
-
-
                 //region updateApp
                 String update = settingsList.get(0).UPDATE_APP;
                 try {
                     linkUpdate = settingsList.get(0).LINK_UPDATE;
                     sharedPreferences.edit().putString("update_link", settingsList.get(0).LINK_UPDATE).apply();
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 String NewVersion = settingsList.get(0).VERSION_APP;
                 String AppVersion = "";
                 try {
                     AppVersion = appVersion();
-                } catch (PackageManager.NameNotFoundException e) { e.printStackTrace(); }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
 
-                if (company.mode == 2 && update.equals("3") && !AppVersion.equals(NewVersion)) {
+                if (update.equals("3") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.GONE);
                     dialogUpdate.setCancelable(false);
                     dialogUpdate.show();
                     ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
-                } else if (company.mode == 2 && update.equals("2") && !AppVersion.equals(NewVersion)) {
+                } else if ( update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);
@@ -973,8 +872,7 @@ public class HomeFragment extends Fragment {
                 myViewModel.getSettingPrice(company.USER, company.PASS);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-            }
-            else {
+            } else {
                 binding.orderTxtError.setText("هیچ منویی وجود ندارد.");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.GONE);
@@ -1034,7 +932,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-          productAdapter.setMaxSale(maxSales);
+            productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1047,9 +945,9 @@ public class HomeFragment extends Fragment {
             maxSales = result.get(0).MAX_SALE;
             sharedPreferences.edit().putString("maxSale", maxSales).apply();
 
-            String menu=sharedPreferences.getString("menu","");
+            String menu = sharedPreferences.getString("menu", "");
             if (!menu.equals("0"))
-                myViewModel.getProductCustomTab(company.USER, company.PASS,keyCustomTab);
+                myViewModel.getProductCustomTab(company.USER, company.PASS, keyCustomTab);
 
             else
                 myViewModel.getListProduct(company.USER, company.PASS, GuidProductLvl2);
@@ -1102,7 +1000,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-           productAdapter.setMaxSale(maxSales);
+            productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1142,7 +1040,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-           productAdapter.setMaxSale(maxSales);
+            productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
 
@@ -1181,21 +1079,20 @@ public class HomeFragment extends Fragment {
                 binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
             }
 
-         productAdapter.setMaxSale(maxSales);
+            productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
 
         });
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            binding.pro.setVisibility(View.GONE);
             binding.progressbar.setVisibility(View.GONE);
             customProgress.hideProgress();
             if (result == null)
                 return;
-            // myViewModel.getResultMessage().setValue(null);
-            if (result.getCode() == -4) {
 
+            if (result.getCode() == -4) {
+                binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
                 sharedPreferences.edit().putBoolean("vip", false).apply();
                 sharedPreferences.edit().putBoolean("discount", false).apply();
             }
@@ -1222,11 +1119,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
-    }
 
 
     private void showError(String error, int type) {
@@ -1252,8 +1145,6 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void loadMore() {
-
-
         int pageSize = 18;
         isLoading = true;
 
@@ -1309,51 +1200,16 @@ public class HomeFragment extends Fragment {
         return pInfo.versionName;
     }
 
-    public Bundle getBundle(boolean SetARD1) {
-        Bundle bundle = new Bundle();
-        bundle.putString("Inv_GUID", Inv_GUID);
-        bundle.putBoolean("EDIT", EDIT);
-        bundle.putBoolean("Seen", Seen);
 
 
-        return bundle;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void refreshProductList() {
-        productAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        EDIT = false;
         binding = null;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setFilter(int type) {
-        binding.ivFilter.setImageResource(R.drawable.ic_filter);
-        binding.animationView.setVisibility(View.VISIBLE);
-        binding.progressbar.setVisibility(View.VISIBLE);
-        productList.clear();
-        productListData.clear();
-        productLevel1List.clear();
-        productLevel2List.clear();
-        productAdapter.notifyDataSetChanged();
-        if (type == 1)
-            myViewModel.getDiscountProduct(company.USER, company.PASS);
-        else if (type == 2)
-            myViewModel.getVipProduct(company.USER, company.PASS, Select.from(Users.class).first().I);
-        else
-            myViewModel.getProductLevel1(company.USER, company.PASS);
 
-    }
 
-    public void setBundle(Bundle bundle) {
-        this.Inv_GUID = bundle.getString("Inv_GUID");
-        this.EDIT = bundle.getBoolean("EDIT");
-        this.Seen = bundle.getBoolean("Seen");
-    }
 
 }

@@ -4,39 +4,36 @@
 
     <RelativeLayout
 
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:focusable="true"
-        android:clickable="true"
         android:layout_height="match_parent"
-        >
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
 
-
-
             <ImageView
-                android:rotation="180"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:focusable="true"
                 android:id="@+id/iv_back"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                app:srcCompat="@drawable/ic_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:rotation="180"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -54,7 +51,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:gravity="right"
                     android:lineSpacingExtra="16dp"
                     android:text="آدرس و موقعیت را مشخص کنید."
@@ -62,16 +58,36 @@
                     android:textSize="14dp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
                     android:layout_marginTop="18dp"
-                    android:gravity="right"
-                    android:lineSpacingExtra="9dp"
-                    android:text="آدرس "
-                    android:textColor="#474747"
-                    android:textSize="13dp"
-                    android:textStyle="normal" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="right"
+                        android:lineSpacingExtra="9dp"
+                        android:text="آدرس "
+                        android:textColor="#474747"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/address"
+                        android:lineSpacingExtra="9dp"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:textSize="13dp"
+                        android:textStyle="normal" />
+
+                </RelativeLayout>
+
 
                 <com.google.android.material.card.MaterialCardView
 
@@ -138,122 +154,135 @@
                     android:layout_marginTop="14dp"
                     android:backgroundTint="@color/launcher_linear_order_header_color"
                     app:cardCornerRadius="10dp">
-                                        <com.cedarstudios.cedarmapssdk.MapView
-                                            android:id="@+id/mapView"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
 
-                                            />
+                    <com.cedarstudios.cedarmapssdk.MapView
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        />
                 </com.google.android.material.card.MaterialCardView>
 
-                <RelativeLayout
-                    android:layout_marginTop="21dp"
+                <LinearLayout
+                    android:id="@+id/nameCard"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="21dp">
+
+                        <TextView
+                            android:id="@+id/tvN"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:lineSpacingExtra="9dp"
+                            android:text="نام و نام خانوادگی"
+                            android:textColor="#474747"
+                            android:textSize="13dp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tvN"
+                            android:lineSpacingExtra="9dp"
+                            android:text="*"
+                            android:textColor="@color/red"
+                            android:textSize="13dp"
+                            android:textStyle="normal" />
+                    </RelativeLayout>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="@color/launcher_linear_order_header_color"
+                        android:strokeColor="@color/launcher_linear_order_header_color"
+                        app:cardCornerRadius="10dp"
+                        app:strokeWidth="1dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <EditText
+                                android:id="@+id/edtName"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="16dp"
+                                android:background="@android:color/transparent"
+                                android:fontFamily="@font/iransans"
+                                android:gravity="right|center"
+                                android:inputType="text"
+                                android:lineSpacingExtra="9dp"
+                                android:textColor="@color/medium_color"
+                                android:textSize="13dp"
+                                android:textStyle="normal" />
+
+                        </RelativeLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/CodeId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvN"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginTop="21dp"
+                        android:gravity="right"
                         android:lineSpacingExtra="9dp"
-                        android:text="نام و نام خانوادگی"
+                        android:text="کد معرف"
                         android:textColor="#474747"
                         android:textSize="13dp"
                         android:textStyle="normal" />
-                    <TextView
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="9dp"
-                        android:text="*"
-                        android:layout_toLeftOf="@+id/tvN"
-                        android:textColor="@color/red"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
-                </RelativeLayout>
 
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="5dp"
-                    android:strokeColor="@color/launcher_linear_order_header_color"
-                    android:backgroundTint="@color/launcher_linear_order_header_color"
-                    app:cardCornerRadius="10dp"
-                    app:strokeWidth="1dp">
-
-                    <RelativeLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="48dp"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="@color/launcher_linear_order_header_color"
+                        android:strokeColor="@color/launcher_linear_order_header_color"
+                        app:cardCornerRadius="10dp"
+                        app:strokeWidth="1dp">
 
-                        <EditText
-                            android:id="@+id/edtName"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="right|center"
-                            android:inputType="text"
-                            android:lineSpacingExtra="9dp"
-                            android:textColor="@color/medium_color"
-                            android:textSize="13dp"
-                            android:textStyle="normal" />
+                            android:layout_height="match_parent">
 
-                    </RelativeLayout>
+                            <EditText
+                                android:id="@+id/edtCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="16dp"
+                                android:background="@android:color/transparent"
+                                android:fontFamily="@font/iransans"
+                                android:gravity="right|center"
+                                android:inputType="number"
+                                android:lineSpacingExtra="9dp"
+                                android:textColor="@color/medium_color"
+                                android:textSize="13dp"
+                                android:textStyle="normal" />
 
-                </com.google.android.material.card.MaterialCardView>
+                        </RelativeLayout>
 
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="21dp"
-                    android:gravity="right"
-                    android:lineSpacingExtra="9dp"
-                    android:text="کد معرف"
-                    android:textColor="#474747"
-                    android:textSize="13dp"
-                    android:textStyle="normal" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="5dp"
-                    android:backgroundTint="@color/launcher_linear_order_header_color"
-                    android:strokeColor="@color/launcher_linear_order_header_color"
-                    app:cardCornerRadius="10dp"
-                    app:strokeWidth="1dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <EditText
-                            android:id="@+id/edtCode"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="right|center"
-                            android:inputType="number"
-                            android:lineSpacingExtra="9dp"
-                            android:textColor="@color/medium_color"
-                            android:textSize="13dp"
-                            android:textStyle="normal" />
-
-                    </RelativeLayout>
-
-                </com.google.android.material.card.MaterialCardView>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
 
                 <RelativeLayout
@@ -262,10 +291,10 @@
                     android:layout_marginTop="21dp">
 
                     <TextView
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/tvGender"
+                        android:id="@+id/tvRadioGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="right"
                         android:lineSpacingExtra="9dp"
@@ -273,28 +302,39 @@
                         android:textColor="#474747"
                         android:textSize="13dp"
                         android:textStyle="normal" />
+
                     <TextView
-                        android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/tvRadioGroup"
                         android:lineSpacingExtra="9dp"
                         android:text="*"
-                        android:layout_toLeftOf="@+id/tvGender"
                         android:textColor="@color/red"
                         android:textSize="13dp"
                         android:textStyle="normal" />
 
                     <RadioGroup
-
                         android:id="@+id/radioGroup"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:layout_toLeftOf="@+id/tvRadioGroup"
                         android:orientation="horizontal">
-
                         <RadioButton
-                            android:id="@+id/radioWoman"
+
+                            android:id="@+id/radio2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="22dp"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="center_vertical"
+                            android:text="@string/man"
+                            android:textColor="@color/medium_color"
+                            android:textSize="@dimen/text_medium_mobile_size" />
+                        <RadioButton
+                            android:id="@+id/radio1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="22dp"
@@ -304,17 +344,7 @@
                             android:textColor="@color/medium_color"
                             android:textSize="@dimen/text_medium_mobile_size" />
 
-                        <RadioButton
 
-                            android:id="@+id/radioMan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="22dp"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="center_vertical"
-                            android:text="@string/man"
-                            android:textColor="@color/medium_color"
-                            android:textSize="@dimen/text_medium_mobile_size" />
                     </RadioGroup>
                 </RelativeLayout>
 
@@ -323,28 +353,26 @@
         </androidx.core.widget.NestedScrollView>
 
 
-
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
 
             <RelativeLayout
                 android:id="@+id/card_button"
-                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:layout_alignParentBottom="true"
 
                 >
 
                 <com.google.android.material.button.MaterialButton
-                    android:layout_centerVertical="true"
                     android:id="@+id/btn_register_information"
                     android:layout_width="132dp"
                     android:layout_height="50dp"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="22dp"
                     android:layout_marginEnd="22dp"
                     android:backgroundTint="@color/purple_500"
@@ -364,9 +392,7 @@
         </LinearLayout>
 
 
-
     </RelativeLayout>
-
 
 
 </layout>

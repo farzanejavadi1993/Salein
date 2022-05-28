@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
 
-        android:background="#EEEEF1"
+        android:background="@color/white"
         android:focusable="true"
         android:clickable="true"
         xmlns:android="http://schemas.android.com/apk/res/android"

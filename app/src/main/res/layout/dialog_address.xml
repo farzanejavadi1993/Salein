@@ -29,6 +29,7 @@
             android:layout_height="wrap_content">
             <RadioButton
 
+                android:visibility="gone"
                 android:paddingStart="@dimen/margin10"
                 android:paddingEnd="@dimen/margin10"
                 android:background="@drawable/radio_btn_background"
@@ -43,7 +44,7 @@
             </RadioButton>
 
             <RadioButton
-
+                android:visibility="gone"
                 android:paddingStart="@dimen/margin10"
                 android:paddingEnd="@dimen/margin10"
                 android:layout_marginTop="@dimen/margin10"

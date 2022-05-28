@@ -74,7 +74,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private final Activity context;
 
     private final Company company;
-    private String defaultCoff = "0";
+    private String defaultCoff ;
 
 
     private final SharedPreferences sharedPreferences;
@@ -93,8 +93,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
     private final DecimalFormat df;
 
-    private int fontSize = 0;
-    private int fontLargeSize = 0;
+
 
 
     private API api;
@@ -135,12 +134,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    @Inject
-    public ProductAdapter( Activity context, List<Product> productsList, Company company, SharedPreferences sharedPreferences) {
+    public ProductAdapter( Activity context, List<Product> productsList, SharedPreferences sharedPreferences,ArrayList<String> closeDateList,API api) {
+        this.closeDateList=closeDateList;
+        this.api = api;
         this.context = context;
-
+        this.Inv_GUID =sharedPreferences.getString("Inv_GUID","");
         this.productsList = productsList;
-        this.company = company;
+        this.company =Select.from(Company.class).first();
         this.sharedPreferences = sharedPreferences;
         df = new DecimalFormat();
         compositeDisposable = new CompositeDisposable();
@@ -181,22 +181,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         this.Seen = Seen;
     }
 
-    public void setApi(API api) {
-        this.api = api;
-    }
+
 
     public void setCloseListDate(ArrayList<String> closeDateList) {
         this.closeDateList = closeDateList;
     }
 
 
-    public void setTbl_GUID(String Tbl_GUID) {
-        this.Tbl_GUID = Tbl_GUID;
-    }
 
-    public void setInv_GUID(String Inv_GUID) {
-        this.Inv_GUID = Inv_GUID;
-    }
+
 
 
     public void addLoadingView() {
@@ -226,15 +219,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Util.VIEW_TYPE_ITEM) {
-            if (Util.screenSize >= 7) {
-                fontSize = 13;
-                fontLargeSize = 14;
 
-            } else {
-                fontSize = 11;
-                fontLargeSize = 12;
-
-            }
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
                     false));
         } else if (viewType == Util.VIEW_TYPE_LOADING) {
@@ -290,12 +275,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
             holder.productOldPrice.setTextSize(13);
-            holder.productDiscountPercent.setTextSize(fontLargeSize);
-            holder.Line.setTextSize(fontSize);
-            holder.productPrice.setTextSize(fontLargeSize);
-            holder.edtDesc.setTextSize(fontSize);
-            holder.ProductAmountTxt.setTextSize(fontSize);
-            holder.unit.setTextSize(fontSize);
+
 
 
             ArrayList<Unit> units = new ArrayList<>(unitList);

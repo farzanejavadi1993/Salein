@@ -11,7 +11,7 @@ import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.ui.companies.AllCompanyFragment;
 import ir.kitgroup.saleindemo.ui.map.MapFragment;
 import ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment;
-import ir.kitgroup.saleindemo.ui.payment.PaymentMobileFragment;
+import ir.kitgroup.saleindemo.ui.payment.PaymentFragment;
 import ir.kitgroup.saleindemo.models.Invoice;
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
 
@@ -132,13 +132,13 @@ public class MyRepository {
 
 
     public Observable<String> sendOrder(String user,String passWord,List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail,String numberPos) {
-        PaymentMobileFragment.JsonObject jsonObject = new PaymentMobileFragment.JsonObject();
+        PaymentFragment.JsonObject jsonObject = new PaymentFragment.JsonObject();
         jsonObject.Invoice = invoice;
         jsonObject.InvoiceDetail = invoiceDetail;
         jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
 
         Gson gson = new Gson();
-        Type typeJsonObject = new TypeToken<PaymentMobileFragment.JsonObject>() {
+        Type typeJsonObject = new TypeToken<PaymentFragment.JsonObject>() {
         }.getType();
         return api.sendOrder(user,passWord, gson.toJson(jsonObject, typeJsonObject),"",numberPos);
     }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true">
+
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/animation_view"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_home"
+            android:orientation="vertical">
+
+
+
+                <RelativeLayout
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/btn_company_branches"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp">
+
+                        <TextView
+                            android:id="@+id/tvTitleStore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="8dp"
+                            android:layout_toLeftOf="@+id/iv_store_left"
+                            android:singleLine="true"
+                            android:text="خرید از فروشگاه"
+                            android:textColor="@color/white"
+                            android:textSize="11dp" />
+
+                        <TextView
+
+                            android:id="@+id/tvNameStore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTitleStore"
+                            android:layout_marginRight="8dp"
+                            android:layout_toLeftOf="@+id/iv_store_left"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textSize="11dp"
+                            tools:text="گوشت دنیوی" />
+
+                        <ImageView
+                            android:id="@+id/iv_store_left"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:padding="@dimen/margin4"
+                            android:rotation="270"
+                            app:srcCompat="@drawable/ic_left_icon" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_filter"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:srcCompat="@drawable/ic_filter" />
+
+                </RelativeLayout>
+
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/order_recyclerView_productLevel1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="9.5dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/order_recyclerView_productLevel2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin8"
+                android:layout_marginEnd="9.5dp"
+                android:layoutDirection="rtl" />
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_home"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recyclerView_customTab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin8"
+                    android:layout_marginEnd="9.5dp"
+                    android:layoutDirection="rtl" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recyclerView_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="54dp"
+                    android:layoutDirection="rtl"
+
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/order_txt_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/normal_left_right_margin"
+            android:gravity="center"
+            android:textColor="@color/black_l"
+            android:textSize="@dimen/text_normal_mobile_size"
+            android:visibility="gone" />
+    </RelativeLayout>
+</layout>

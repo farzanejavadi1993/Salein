@@ -170,7 +170,6 @@ public class MyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (Select.from(Company.class).first().mode==2)
                                         compositeDisposable.dispose();
                                     }
                                 } else {
@@ -511,7 +510,9 @@ public class MyViewModel extends ViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
                         })
-                        .subscribe(this::accept2, throwable ->
+                        .subscribe(
+                                this::accept2,
+                                throwable ->
                                 eMessage.setValue(new Message(-4, "خطا در دریافت منوی همیشگی", ""))));
     }
     public MutableLiveData<List<Product>> getResultVipProduct() {
@@ -809,7 +810,8 @@ public class MyViewModel extends ViewModel {
                                 if (iDs == null) {
                                     eMessage.setValue(new Message(-1, "لیست دریافت شده از کالاها نا معتبر می باشد ، دوباره تلاش کنید.", ""));
                                 }
-                                sharedPreferences.edit().putBoolean("vip", true).apply();
+//                                sharedPreferences.edit().putBoolean("vip", false).apply();
+//                                sharedPreferences.edit().putBoolean("discount", false).apply();
                                 resultSearchProduct.setValue(iDs.getProductList());
 
                             } catch (Exception ignored) {

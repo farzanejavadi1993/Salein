@@ -34,22 +34,22 @@ import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.Tables;
 import ir.kitgroup.saleindemo.DataBase.Unit;
+import ir.kitgroup.saleindemo.databinding.MoreFragmentBinding;
 import ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleindemo.databinding.FragmentSettingBinding;
 import ir.kitgroup.saleindemo.DataBase.Company;
 
 
 @AndroidEntryPoint
-public class SettingFragment extends Fragment {
+public class MoreFragment extends Fragment {
 
     @Inject
     SharedPreferences sharedPreferences;
 
 
 
-    private FragmentSettingBinding binding;
+    private MoreFragmentBinding binding;
     private Company company;
     //region Dialog Sync
     private Dialog dialogSync;
@@ -71,7 +71,7 @@ public class SettingFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @org.jetbrains.annotations.NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentSettingBinding.inflate(getLayoutInflater());
+        binding = MoreFragmentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 

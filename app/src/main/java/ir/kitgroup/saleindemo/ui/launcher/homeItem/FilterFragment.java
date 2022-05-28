@@ -68,13 +68,12 @@ public class FilterFragment extends Fragment {
                 filterDiscount = true;
                 filterVip = false;
                 binding.switchVip.setChecked(false);
-                reloadSpecialMethod();
+                sharedPreferences.edit().putBoolean("discount", true).apply();
 
             } else {
                 binding.switchVip.setChecked(false);
                 filterDiscount = false;
                 filterVip = false;
-                reloadMainMethod();
                 sharedPreferences.edit().putBoolean("discount", false).apply();
             }
         });
@@ -85,12 +84,12 @@ public class FilterFragment extends Fragment {
                 filterDiscount = false;
                 filterVip = true;
                 binding.switchDiscount.setChecked(false);
-                reloadSpecialMethod();
+                sharedPreferences.edit().putBoolean("vip", true).apply();
+
             } else {
                 binding.switchDiscount.setChecked(false);
                 filterDiscount = false;
                 filterVip = false;
-                reloadMainMethod();
                 sharedPreferences.edit().putBoolean("vip", false).apply();
             }
         });
@@ -99,25 +98,10 @@ public class FilterFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+
     }
 
-    private void reloadSpecialMethod() {
-        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-        if (frg instanceof HomeFragment) {
-            HomeFragment fgf = (HomeFragment) frg;
-            if (filterDiscount)
-               fgf.setFilter(1);
-           else if (filterVip)
-               fgf.setFilter(2);
-        }
-    }
 
-    private void reloadMainMethod() {
-        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("MainOrderFragment");
-        if (frg instanceof HomeFragment) {
-            HomeFragment fgf = (HomeFragment) frg;
-            fgf.setFilter(3);
-        }
-    }
+
+
 }

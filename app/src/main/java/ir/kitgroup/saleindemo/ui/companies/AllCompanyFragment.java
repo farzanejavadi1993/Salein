@@ -110,9 +110,9 @@ public class AllCompanyFragment extends Fragment {
                     bundleMainOrder.putString("Inv_GUID", "");
                     bundleMainOrder.putString("Tbl_GUID", "");
                     bundleMainOrder.putString("Ord_TYPE", "");
-                    HomeFragment mainOrderFragment = new HomeFragment();
-                    mainOrderFragment.setArguments(bundleMainOrder);
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+                    //HomeFragment mainOrderFragment = new HomeFragment();
+                   // mainOrderFragment.setArguments(bundleMainOrder);
+                   // getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
                 } else {
                     NAME = companyDemo.N;
                     myViewModel.getInquiryAccount(companyDemo.USER,companyDemo.PASS,account.M);
@@ -154,10 +154,10 @@ public class AllCompanyFragment extends Fragment {
                 bundleMainOrder.putString("Inv_GUID", "");
                 bundleMainOrder.putString("Tbl_GUID", "");
                 bundleMainOrder.putString("Ord_TYPE", "");
-                HomeFragment mainOrderFragment = new HomeFragment();
-                mainOrderFragment.setArguments(bundleMainOrder);
+               // HomeFragment mainOrderFragment = new HomeFragment();
+               // mainOrderFragment.setArguments(bundleMainOrder);
 
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+              //  getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
             } else {
                 binding.progressbar.setVisibility(View.VISIBLE);
                 NAME = companySelect.N;
@@ -296,10 +296,10 @@ public class AllCompanyFragment extends Fragment {
                 bundleMainOrder.putString("Tbl_GUID", "");
                 bundleMainOrder.putString("Ord_TYPE", "");
 
-                HomeFragment mainOrderFragment = new HomeFragment();
-                mainOrderFragment.setArguments(bundleMainOrder);
+               // HomeFragment mainOrderFragment = new HomeFragment();
+               // mainOrderFragment.setArguments(bundleMainOrder);
 
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+              //  getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
             }
             //user not register
             else {
@@ -320,10 +320,10 @@ public class AllCompanyFragment extends Fragment {
             bundleMainOrder.putString("Inv_GUID", "");
             bundleMainOrder.putString("Tbl_GUID", "");
             bundleMainOrder.putString("Ord_TYPE", "");
-            HomeFragment mainOrderFragment = new HomeFragment();
-            mainOrderFragment.setArguments(bundleMainOrder);
+            //HomeFragment mainOrderFragment = new HomeFragment();
+           // mainOrderFragment.setArguments(bundleMainOrder);
 
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
+           // getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, mainOrderFragment, "MainOrderFragment").addToBackStack("MainOrderF").commit();
         });
     }
 

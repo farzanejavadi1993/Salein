@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <RadioButton
-                        android:id="@+id/radioWoman"
+                        android:id="@+id/radio1"
                         android:layout_marginRight="22dp"
                         android:textColor="#474747"
                         android:textSize="12dp"
@@ -137,7 +137,7 @@
                         android:layout_height="wrap_content"/>
                     <RadioButton
                         android:fontFamily="@font/iransans"
-                        android:id="@+id/radioMan"
+                        android:id="@+id/radio2"
                         android:layout_marginRight="22dp"
                         android:textColor="#474747"
                         android:textSize="12dp"
