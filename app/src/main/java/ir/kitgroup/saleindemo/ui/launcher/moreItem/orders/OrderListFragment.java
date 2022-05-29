@@ -23,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
@@ -57,6 +59,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.DateConverter;
 
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragmentDirections;
 import ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment;
 
 
@@ -165,26 +168,15 @@ public class OrderListFragment extends Fragment {
         orderListAdapter.setOnClickItemListener((description, type, Inv_GUID) -> {
 
             if (type == 1) {
-                Bundle bundleOrder = new Bundle();
-                bundleOrder.putString("Inv_GUID", Inv_GUID);
-                bundleOrder.putString("Tbl_GUID", "");
-                bundleOrder.putString("Tbl_NAME", "");
-                bundleOrder.putString("Ord_TYPE", "");
-                bundleOrder.putString("Acc_GUID", "");
-                bundleOrder.putString("Acc_NAME", "");
-                bundleOrder.putString("type", "1");
+                NavDirections action = OrderListFragmentDirections.actionGotoInvoiceFragment(Inv_GUID,"1", true);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
 
-                InVoiceDetailFragment inVoiceDetailFragment = new InVoiceDetailFragment();
-                inVoiceDetailFragment.setArguments(bundleOrder);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, inVoiceDetailFragment, "InVoiceDetailFragment").addToBackStack("InVoiceDetailFX").commit();
             } else {
                 Invoice invoice = new Invoice();
                 invoice.INV_UID = Inv_GUID;
                 invoice.INV_DESCRIBTION = description;
                 List<Invoice> listInvoice = new ArrayList<>();
                 listInvoice.add(invoice);
-
-
                 List<InvoiceDetail> invoiceDetailList = new ArrayList<>();
                 List<PaymentRecieptDetail> clsPaymentRecieptDetails = new ArrayList<>();
                 customProgress.showProgress(getActivity(), "در حال ارسال پیام", false);
@@ -196,8 +188,7 @@ public class OrderListFragment extends Fragment {
 
 
         binding.ivBackFragment.setOnClickListener(v -> {
-                //    ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
-                    getActivity().getSupportFragmentManager().popBackStack();
+            Navigation.findNavController(binding.getRoot()).popBackStack();
                 }
         );
 

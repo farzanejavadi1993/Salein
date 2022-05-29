@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
@@ -184,7 +185,8 @@ public class AllCompanyFragment extends Fragment {
         //endregion Cast Dialog
 
         account = Select.from(Users.class).first();
-        binding.ivBack.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
+        binding.ivBack.setOnClickListener(v ->
+                Navigation.findNavController(binding.getRoot()).popBackStack());
 
     }
 

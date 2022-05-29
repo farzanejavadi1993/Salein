@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
@@ -47,7 +48,8 @@ public class AboutUsFragment extends Fragment {
             binding.txtDescription.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
 
-        binding.ivBackFragment.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
+        binding.ivBackFragment.setOnClickListener(v ->
+                Navigation.findNavController(binding.getRoot()).popBackStack());
 
 
         try {

@@ -74,6 +74,8 @@
             android:id="@+id/actionGoToMoreFragment"
             app:destination="@id/MoreFragment" />
 
+
+
         <argument
             android:name="Inv_GUID"
             app:argType="string" />
@@ -82,6 +84,7 @@
             android:id="@+id/actionGoToFilterFragment"
             app:destination="@id/FilterFragment" />
     </fragment>
+
 
     <fragment
         android:id="@+id/PaymentFragment"
@@ -99,6 +102,12 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment"
+        tools:layout="@layout/home_fragment">
+
+    </fragment>
 
     <fragment
         android:id="@+id/InvoiceFragment"
@@ -110,6 +119,9 @@
         <action
             android:id="@+id/actionGoToPaymentFragment"
             app:destination="@id/PaymentFragment" />
+        <argument
+            android:name="Inv_GUID"
+            app:argType="string" />
         <argument
             android:name="type"
             app:argType="string" />

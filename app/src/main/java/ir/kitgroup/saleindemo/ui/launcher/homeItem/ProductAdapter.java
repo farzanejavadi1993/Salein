@@ -99,7 +99,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private API api;
 
     private final List<Unit> unitList;
-    private List<String> closeDateList=new ArrayList<>();
+    private List<String> closeDateList;
     private String valueOfDay;
     private int imageId = 0;
 
@@ -324,7 +324,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher1, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
                 }
 
             });

@@ -62,6 +62,7 @@ import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.models.Setting;
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragmentDirections;
 import ir.kitgroup.saleindemo.ui.payment.PaymentFragment;
 
 
@@ -333,7 +334,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
                 //region  Go To CompanyFragment Because Account Is Register
                 if (Select.from(Salein.class).first() != null) {
-                    getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher, new CompanyFragment(), "StoriesFragment").commit();
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToCompanyFragment);
                 }
                 //endregion  Go To CompanyFragment Because Account Is Register
 

@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
@@ -23,6 +25,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.DataBase.Company;
+import ir.kitgroup.saleindemo.DataBase.InvoiceDetail;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.databinding.FragmentMainBinding;
 import ir.kitgroup.saleindemo.ui.launcher.searchItem.SearchProductFragment;
@@ -43,13 +46,14 @@ public class MainFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "CommitTransaction"})
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mainFragment = this;
+
         String Inv_GUID = MainFragmentArgs.fromBundle(getArguments()).getInvGUID();
 
         company = Select.from(Company.class).first();
@@ -71,13 +75,15 @@ public class MainFragment extends Fragment {
         binding.navView.setSelectedItemId(R.id.homee);
         binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
         binding.navView.getOrCreateBadge(R.id.orders).setBackgroundColor(getResources().getColor(R.color.red_table));
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment(mainFragment)).commit();
+
+
         binding.navView.setOnNavigationItemSelectedListener(item -> {
 
 
             switch (item.getItemId()) {
 
                 case R.id.homee:
+
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment(mainFragment)).commit();
                     return true;
 
@@ -89,7 +95,7 @@ public class MainFragment extends Fragment {
 
 
                 case R.id.orders:
-                    NavDirections action = MainFragmentDirections.actionGotoInvoiceFragment("2", false);
+                    NavDirections action = MainFragmentDirections.actionGotoInvoiceFragment("", "2", false);
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                     return true;
 
@@ -99,6 +105,10 @@ public class MainFragment extends Fragment {
             }
             return false;
         });
+
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment(mainFragment)).commit();
+
+
     }
 
 

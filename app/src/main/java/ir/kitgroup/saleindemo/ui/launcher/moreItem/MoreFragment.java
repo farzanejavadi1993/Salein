@@ -55,6 +55,9 @@ public class MoreFragment extends Fragment {
 
     private MoreFragmentBinding binding;
     private Company company;
+    private String userName;
+    private String passWord;
+
     //region Dialog Sync
     private Dialog dialogSync;
     private TextView textMessageDialog;
@@ -87,6 +90,9 @@ public class MoreFragment extends Fragment {
 
 
         company = Select.from(Company.class).first();
+
+        userName=company.getUser();
+        passWord=company.getPass();
         linkPayment = sharedPreferences.getString("payment_link", "");
 
         user = Select.from(Users.class).first();
@@ -217,7 +223,7 @@ public class MoreFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getInquiryAccount(company.getUser(), company.getPass(), user.M);
+        myViewModel.getInquiryAccount(userName,passWord, user.M);
 
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
@@ -284,7 +290,7 @@ public class MoreFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         seenActivity = true;
-        myViewModel.getInquiryAccount(company.getUser(), company.getPass(), mobile);
+        myViewModel.getInquiryAccount(userName,passWord, mobile);
     }
 
     @Override

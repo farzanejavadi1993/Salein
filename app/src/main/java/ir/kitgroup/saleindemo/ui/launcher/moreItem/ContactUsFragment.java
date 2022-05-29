@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
@@ -85,6 +87,7 @@ public class ContactUsFragment extends Fragment {
             binding.description.setText(company.getDesc());
             binding.textView4.setText(company.getT1());
         }else {
+            binding.layoutSocial.setVisibility(View.GONE);
             binding.txtTitleToolbar.setText("دعوت از دوستان");
             binding.image.setImageResource(R.drawable.ic_share);
             Users account= Select.from(Users.class).first();
@@ -93,14 +96,16 @@ public class ContactUsFragment extends Fragment {
         }
 
 
-        binding.imageView.setOnClickListener(v -> getFragmentManager().popBackStack());
+        binding.imageView.setOnClickListener(v ->
+                Navigation.findNavController(binding.getRoot()).popBackStack()
+        );
 
 
 
         binding.Call1.setOnClickListener(v -> {
             if (type==1){
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + company.T1));
+                intent.setData(Uri.parse("tel:" + company.getT1()));
                 startActivity(intent);
             }else {
                 if (!updateLink.equals(""))
@@ -112,15 +117,30 @@ public class ContactUsFragment extends Fragment {
         });
 
 
-        if ((!config.watsApp.equals("") || !config.Instagram.equals("") ||  !config.website.equals("")) && type==1 )
-            binding.layoutSocial.setVisibility(View.VISIBLE);
+
+
+        if (!company.getWhata().equals(""))
+            binding.watsapp.setVisibility(View.VISIBLE);
+
+
+        if (!company.getEmail().equals(""))
+            binding.instagram.setVisibility(View.VISIBLE);
+
+        if (!company.getWebs().equals(""))
+            binding.website.setVisibility(View.VISIBLE);
+
+
+        if (!company.getWhata().equals("") || !company.getEmail().equals("") || !company.getWebs().equals(""))
+        binding.socialcommunicate.setVisibility(View.VISIBLE);
+
+
 
 
 
 
         binding.watsapp.setOnClickListener(v -> {
 
-            if (!config.watsApp.equals("")){
+            if (!company.getWhata().equals("")){
 
                 boolean install= appInstallOrNot("com.whatsapp");
 
@@ -128,7 +148,7 @@ public class ContactUsFragment extends Fragment {
 
 
                     Intent intentWhatsAppGroup = new Intent(Intent.ACTION_VIEW); Uri uri =
-                            Uri.parse(config.watsApp);
+                            Uri.parse(company.getWhata());
                     intentWhatsAppGroup.setData(uri);
                     intentWhatsAppGroup.setPackage("com.whatsapp");
                     startActivity(intentWhatsAppGroup);
@@ -145,11 +165,11 @@ public class ContactUsFragment extends Fragment {
 
 
         binding.ivBackFragment.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().popBackStack();;
+            Navigation.findNavController(binding.getRoot()).popBackStack();
         });
-      binding.instagram.setOnClickListener(v -> {
-            if (!config.Instagram.equals("")){
-                Uri uri = Uri.parse(config.Instagram);
+     binding.instagram.setOnClickListener(v -> {
+            if (!company.getEmail().equals("")){
+                Uri uri = Uri.parse(company.getEmail());
                 Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
                 likeIng.setPackage("com.instagram.android");
@@ -158,7 +178,7 @@ public class ContactUsFragment extends Fragment {
                     startActivity(likeIng);
                 } catch (ActivityNotFoundException e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(config.Instagram)));
+                            Uri.parse(company.getEmail())));
                 }
             }else {
                 Toast.makeText(getActivity(), "در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
@@ -168,8 +188,8 @@ public class ContactUsFragment extends Fragment {
 
 
         binding.website.setOnClickListener(v -> {
-            if (!config.website.equals("")){
-                Uri uri = Uri.parse(config.website);
+            if (!company.getWebs().equals("")){
+                Uri uri = Uri.parse(company.getWebs());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }else {
@@ -199,7 +219,7 @@ public class ContactUsFragment extends Fragment {
         Users account=   Select.from(Users.class).first();
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        String my_string = " سلام "+account.N +" شما را به "+company.N +" دعوت کرده است.از طریق لینک زیر برنامه را دانلود کنید."+"\n"+
+        String my_string = " سلام "+account.N +" شما را به "+company.getN() +" دعوت کرده است.از طریق لینک زیر برنامه را دانلود کنید."+"\n"+
                 updateLink
                 +"\n"+"کد معرف : " + account.getC();
         intent.putExtra(Intent.EXTRA_TEXT, my_string);

@@ -67,6 +67,7 @@ import ir.kitgroup.saleindemo.R;
 
 import ir.kitgroup.saleindemo.databinding.FragmentInvoiceDetailMobileBinding;
 import ir.kitgroup.saleindemo.models.Product;
+import ir.kitgroup.saleindemo.ui.logins.RegisterFragmentArgs;
 
 @AndroidEntryPoint
 
@@ -78,6 +79,9 @@ public class InVoiceDetailFragment extends Fragment {
     private FragmentInvoiceDetailMobileBinding binding;
     private MyViewModel myViewModel;
     private Company company;
+    private String userName;
+    private String passWord;
+
     private CustomProgress customProgress;
 
 
@@ -94,7 +98,7 @@ public class InVoiceDetailFragment extends Fragment {
     private double sumDiscounts;
 
     private List<InvoiceDetail> invDetails;
-    private   List<InvoiceDetail> invoiceDetailList;
+    private List<InvoiceDetail> invoiceDetailList;
     private InvoiceDetailAdapter invoiceDetailAdapter;
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
@@ -126,7 +130,7 @@ public class InVoiceDetailFragment extends Fragment {
 
 
     private int counter = 0;
-    private  ArrayList<String> closeDayList;
+    private ArrayList<String> closeDayList;
     private String valueOfDay;
 
 
@@ -154,7 +158,7 @@ public class InVoiceDetailFragment extends Fragment {
             switch (calendar1.getTime().getDay()) {
 
                 case 0:
-                     valueOfDay = "1";
+                    valueOfDay = "1";
                     break;
                 case 1:
                     valueOfDay = "2";
@@ -175,7 +179,12 @@ public class InVoiceDetailFragment extends Fragment {
                     valueOfDay = "0";
                     break;
             }
-             Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+
+            Inv_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            if (Inv_GUID.equals(""))
+                Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+
+
             String CloseDay = sharedPreferences.getString("close_day", "");
 
             closeDayList = new ArrayList<>(); //This Variable Is For Get holidays From Server
@@ -187,6 +196,8 @@ public class InVoiceDetailFragment extends Fragment {
             sharedPreferences.edit().putString("FNM", "invoice").apply();
             customProgress = CustomProgress.getInstance();
             company = Select.from(Company.class).first();
+            userName = company.getUser();
+            passWord = company.getPass();
 
 
             invDetails = new ArrayList<>();
@@ -229,15 +240,15 @@ public class InVoiceDetailFragment extends Fragment {
 
             //region Get Bundle
 
-            type =  InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 Edit  //2 create
-            EDIT =  InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEdit();//when order need EDIT
+            type = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 Edit  //2 create
+            EDIT = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEdit();//when order need EDIT
             //endregion Get Bundle
-
 
 
             sumPrice = 0;
             sumPurePrice = 0;
             sumDiscounts = 0;
+            counter=0;
 
 
             //region Cast Variable Dialog Sync
@@ -246,7 +257,6 @@ public class InVoiceDetailFragment extends Fragment {
             dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialogSync.setContentView(R.layout.custom_dialog);
             dialogSync.setCancelable(false);
-
 
 
             MaterialButton btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
@@ -258,7 +268,7 @@ public class InVoiceDetailFragment extends Fragment {
                 dialogSync.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
                 if (type.equals("1"))
-                    myViewModel.getInvoice(company.getUser(),company.getPass(),Inv_GUID);
+                    myViewModel.getInvoice(userName, passWord, Inv_GUID);
                 else {
                     invDetails.clear();
                     invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -269,7 +279,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                                 .show();
 
-                        TextView textView =alertDialog.findViewById(android.R.id.message);
+                        TextView textView = alertDialog.findViewById(android.R.id.message);
                         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                         textView.setTypeface(face);
                         textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -279,7 +289,7 @@ public class InVoiceDetailFragment extends Fragment {
                         counter = 0;
                         ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                         for (int i = 0; i < invDetails.size(); i++) {
-                            myViewModel.getProduct(company.getUser(),company.getPass(),invDetails.get(i).PRD_UID);
+                            myViewModel.getProduct(userName, passWord, invDetails.get(i).PRD_UID);
                         }
                     }
                 }
@@ -396,8 +406,8 @@ public class InVoiceDetailFragment extends Fragment {
 
                 if (maxSales.equals("1")) {
                     Prd_UID = Prd_GUID;
-                    sWord=s;
-                    myViewModel.getMaxSale(company.getUser(), company.getPass(), Prd_GUID);
+                    sWord = s;
+                    myViewModel.getMaxSale(userName, passWord, Prd_GUID);
                 } else {
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -417,7 +427,8 @@ public class InVoiceDetailFragment extends Fragment {
 
                         invoiceDetailAdapter.notifyDataSetChanged();
 
-                    } }
+                    }
+                }
             });
 
 
@@ -520,8 +531,8 @@ public class InVoiceDetailFragment extends Fragment {
                 edtDescriptionItem.setText(description);
                 descriptionList.clear();
                 GuidInv = GUIDInv;
-                customProgress.showProgress(getActivity(),"در حال دریافت تضیحات",true);
-                myViewModel.getDescription(company.getUser(),company.getPass(),GUIDPrd);
+                customProgress.showProgress(getActivity(), "در حال دریافت تضیحات", true);
+                myViewModel.getDescription(userName, passWord, GUIDPrd);
             });
 
 
@@ -553,7 +564,7 @@ public class InVoiceDetailFragment extends Fragment {
             binding.btnDelete.setOnClickListener(v -> {
                 if (status == 1) {
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getDeleteInvoice(company.getUser(), company.getPass(), Inv_GUID);
+                    myViewModel.getDeleteInvoice(userName, passWord, Inv_GUID);
                 }
             });
 
@@ -562,7 +573,7 @@ public class InVoiceDetailFragment extends Fragment {
 
             //region Action BtnEdit
             binding.btnEdit.setOnClickListener(v -> {
-                 if (closeDayList.contains(valueOfDay)) {
+                if (closeDayList.contains(valueOfDay)) {
                     Toasty.warning(getActivity(), "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
@@ -572,7 +583,7 @@ public class InVoiceDetailFragment extends Fragment {
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
-                    TextView textView =  alertDialog.findViewById(android.R.id.message);
+                    TextView textView = alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -581,6 +592,7 @@ public class InVoiceDetailFragment extends Fragment {
                 }
                 NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainFragment(Inv_GUID);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
+
             });
             //endregion Action BtnEdit
 
@@ -602,7 +614,7 @@ public class InVoiceDetailFragment extends Fragment {
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
 
-                    TextView textView =  alertDialog.findViewById(android.R.id.message);
+                    TextView textView = alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -613,7 +625,7 @@ public class InVoiceDetailFragment extends Fragment {
                             .setMessage("برای ردیف های سفارش مقدار وارد کنید و یا ردیف با مقدار صفر را حذف کنید .")
                             .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                             .show();
-                    TextView textView =  alertDialog.findViewById(android.R.id.message);
+                    TextView textView = alertDialog.findViewById(android.R.id.message);
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                     textView.setTypeface(face);
                     textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -635,8 +647,6 @@ public class InVoiceDetailFragment extends Fragment {
             });
 
 
-
-
         } catch (Exception ignore) {
 
         }
@@ -651,9 +661,8 @@ public class InVoiceDetailFragment extends Fragment {
 
         if (type.equals("1")) {
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getInvoice(company.getUser(),company.getPass(),Inv_GUID);
-        }
-        else {
+            myViewModel.getInvoice(userName, passWord, Inv_GUID);
+        } else {
             invDetails.clear();
             invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
             if (invDetails.size() == 0) {
@@ -664,7 +673,7 @@ public class InVoiceDetailFragment extends Fragment {
                         .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                         .show();
 
-                TextView textView =  alertDialog.findViewById(android.R.id.message);
+                TextView textView = alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
                 textView.setTextColor(getResources().getColor(R.color.red_table));
@@ -674,7 +683,7 @@ public class InVoiceDetailFragment extends Fragment {
                 counter = 0;
                 ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                 for (int i = 0; i < invDetails.size(); i++) {
-                    myViewModel.getProduct(company.getUser(),company.getPass(),invDetails.get(i).PRD_UID);
+                    myViewModel.getProduct(userName, passWord, invDetails.get(i).PRD_UID);
                 }
             }
         }
@@ -714,7 +723,6 @@ public class InVoiceDetailFragment extends Fragment {
                 status = result.getInvoice().get(0).INV_STEP;
 
 
-
                 if (result.getInvoice().get(0).INV_DESCRIBTION != null && !result.getInvoice().get(0).INV_DESCRIBTION.equals("")) {
                     binding.edtDescription.setHint("توضیحات : " + result.getInvoice().get(0).INV_DESCRIBTION);
                     binding.edtDescription.setVisibility(View.VISIBLE);
@@ -724,14 +732,11 @@ public class InVoiceDetailFragment extends Fragment {
                 }
 
 
-
-
-
-
                 if (status != null && status == 1) {
                     binding.layoutEditDelete.setVisibility(View.VISIBLE);
                 } else {
-                    binding.layoutEditDelete.setVisibility(View.GONE);
+                    //PLEASE Gone View Farzane
+                    binding.layoutEditDelete.setVisibility(View.VISIBLE);
                 }
 
 
@@ -760,11 +765,10 @@ public class InVoiceDetailFragment extends Fragment {
                 textView.setTypeface(face);
                 textView.setTextColor(getResources().getColor(R.color.red_table));
                 textView.setTextSize(13);
-            }
-            else {
+            } else {
                 ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                 for (int i = 0; i < invDetails.size(); i++) {
-                    myViewModel.getProduct(company.getUser(), company.getPass(), invDetails.get(i).PRD_UID);
+                    myViewModel.getProduct(userName, passWord, invDetails.get(i).PRD_UID);
                 }
             }
             binding.progressBar.setVisibility(View.GONE);
@@ -774,7 +778,7 @@ public class InVoiceDetailFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultListProduct().setValue(null);
+            myViewModel.getResultProduct().setValue(null);
 
             counter = counter + 1;
 
@@ -881,7 +885,7 @@ public class InVoiceDetailFragment extends Fragment {
                                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                                 .show();
 
-                        TextView textView =  alertDialog.findViewById(android.R.id.message);
+                        TextView textView = alertDialog.findViewById(android.R.id.message);
                         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                         textView.setTypeface(face);
                         textView.setTextColor(getResources().getColor(R.color.medium_color));
@@ -922,16 +926,11 @@ public class InVoiceDetailFragment extends Fragment {
             customProgress.hideProgress();
             if (result == null)
                 return;
-           // myViewModel.getResultMessage().setValue(null);
+            // myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
     }
-
-
-
-
-
 
 
     @Override

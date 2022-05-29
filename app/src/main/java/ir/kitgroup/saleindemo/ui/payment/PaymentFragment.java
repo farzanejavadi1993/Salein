@@ -78,6 +78,9 @@ public class PaymentFragment extends Fragment {
     private FragmentPaymentBinding binding;
     private MyViewModel myViewModel;
     private Company company;
+    private String userName;
+    private String passWord;
+
     private String linkPayment = "";//It Is For Payment That Get From Server
     private CustomProgress customProgress;
     private String typePayment = "-1";// Default Amount For Payment Is -1 Because If User Do'nt Choose Type Of Payment We Can Show He/She Error Toast
@@ -122,7 +125,7 @@ public class PaymentFragment extends Fragment {
     private Integer SERVICE_DAY = 0;//This Variable Show Service days Of Company And Get From Server
     private String timeChoose = "";//This Variable Show Service Times Per Day Of Company And Get From Server
     private boolean disableAccount = false;
-    private double sumTransport = 0.0;
+    private double sumTransport = 0;
     //region Time Dialog
     private Dialog dialogTime;
     private TimeAdapter timeAdapter;
@@ -160,6 +163,9 @@ public class PaymentFragment extends Fragment {
             //region Config
             user = Select.from(Users.class).first();
             company = Select.from(Company.class).first();
+            
+            userName=company.getUser();
+            passWord=company.getPass();
             customProgress = CustomProgress.getInstance();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
@@ -200,7 +206,7 @@ public class PaymentFragment extends Fragment {
             btnOkDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getSetting(company.USER, company.PASS);
+                myViewModel.getSetting(userName, passWord);
 
             });
 
@@ -229,7 +235,7 @@ public class PaymentFragment extends Fragment {
                     else
                         binding.tvError.setText("");
 
-                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
+                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
 
                     double price = PriceTransport(distance / 1000, sumPurePrice);
 
@@ -268,7 +274,7 @@ public class PaymentFragment extends Fragment {
                     }else
                         binding.tvError.setText("");
 
-                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
+                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
                     double price = PriceTransport(distance / 1000, sumPurePrice);
                     if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
@@ -318,7 +324,7 @@ public class PaymentFragment extends Fragment {
                     if (latitude1== 0.0 || longitude1 == 0.0) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }
-                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
+                    double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
                     double price = PriceTransport(distance / 1000,sumPurePrice);
                     if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
@@ -354,7 +360,7 @@ public class PaymentFragment extends Fragment {
                     if ((latitude2 == 0.0 || longitude2 == 0.0)) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }
-                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.LAT), Double.parseDouble(company.LONG)));
+                    double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
                     double price = PriceTransport(distance / 1000, sumPurePrice);
                     if (price == -1.0 ) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
@@ -571,10 +577,12 @@ public class PaymentFragment extends Fragment {
 
                 if (Ord_TYPE.equals(OrderTypeApp)) {
                     sumTransport = 0;
+                    binding.tvError.setVisibility(View.GONE);
                     binding.layoutPeyk.setVisibility(View.GONE);
                     binding.tvTransport.setText("0 ریال");
                     binding.tvSumPurePrice.setText(format.format(sumPurePrice) + "ریال");
                 } else {
+                    binding.tvError.setVisibility(View.VISIBLE);
                     sumTransport = calculateTransport;
                     binding.layoutPeyk.setVisibility(View.VISIBLE);
                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
@@ -663,7 +671,7 @@ public class PaymentFragment extends Fragment {
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
 
-                myViewModel.getInquiryAccount(company.USER, company.PASS, user.getM());
+                myViewModel.getInquiryAccount(userName, passWord, user.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                     return;
@@ -701,7 +709,7 @@ public class PaymentFragment extends Fragment {
 
                 InvoiceDetail invoiceDetailTransport = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID.toLowerCase() + "' AND PRDUID ='" + Transport_GUID.toLowerCase() + "'").first();
 
-                if (invoiceDetailTransport == null && sumTransport != 0) {
+                if (invoiceDetailTransport == null) {
                     invoiceDetailTransport = new InvoiceDetail();
                     invoiceDetailTransport.INV_DET_UID = UUID.randomUUID().toString();
                     invoiceDetailTransport.ROW_NUMBER = invDetails.size() + 1;
@@ -718,6 +726,8 @@ public class PaymentFragment extends Fragment {
                         Toast.makeText(getActivity(), "خطا در ارسال مبلغ توزیع", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+                    if (sumTransport!=0)
                     InvoiceDetail.save(invoiceDetailTransport);
                 }
                 else {
@@ -805,7 +815,7 @@ public class PaymentFragment extends Fragment {
                 }
 
                 customProgress.showProgress(getActivity(), "در حال ارسال سفارش...", false);
-                myViewModel.sendOrder(company.USER, company.PASS, listInvoice, invoiceDetailList, clsPaymentRecieptDetails, "");
+                myViewModel.sendOrder(userName, passWord, listInvoice, invoiceDetailList, clsPaymentRecieptDetails, "");
 
 
             });
@@ -817,7 +827,7 @@ public class PaymentFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot()).popBackStack();
                 }
             });
-            //endregion  Configuration Send Order
+            //endregion Configuration Send Order
 
 
             binding.ivBack.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
@@ -833,7 +843,7 @@ public class PaymentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
-        myViewModel.getSetting(company.USER, company.PASS);
+        myViewModel.getSetting(userName, passWord);
 
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
 
@@ -906,7 +916,7 @@ public class PaymentFragment extends Fragment {
 
 
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getTypeOrder(company.USER, company.PASS);
+            myViewModel.getTypeOrder(userName, passWord);
 
 
         });
@@ -950,7 +960,7 @@ public class PaymentFragment extends Fragment {
 
             //region Get Credit Club
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getInquiryAccount(company.USER, company.PASS, user.M);
+            myViewModel.getInquiryAccount(userName, passWord, user.M);
             //endregion Get Credit Club
 
         });
@@ -1060,7 +1070,7 @@ public class PaymentFragment extends Fragment {
     private double PriceTransport(double distance, double SumPurePrice) {
         double priceTransport = -1;
         try {
-            if ("ir.kitgroup.saleinmeat".equals(company.INSK_ID)) {
+            if ("ir.kitgroup.saleinmeat".equals(company.getInskId())) {
                 if (SumPurePrice > 2000000) {
                     priceTransport = 0.0;
                 } else {

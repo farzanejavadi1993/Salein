@@ -78,6 +78,9 @@ public class SearchProductFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentSearchProductBinding binding;
     private Company company;
+    private String userName;
+    private String passWord;
+
     private String Transport_GUID = "";//It Is GUID Of Transport Or GUID Of Row Transport In Order Form That Get From Server And Save In Local With SharedPreferences
     private String Inv_GUID = "";//It Is GUID Of Order Form
     private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
@@ -125,6 +128,9 @@ public class SearchProductFragment extends Fragment {
             closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
         }
         company = Select.from(Company.class).first();
+
+        userName=company.getUser();
+        passWord=company.getPass();
         //endregion Config
 
 
@@ -210,7 +216,7 @@ public class SearchProductFragment extends Fragment {
                 if (s.toString().length() >= 2 || s.toString().isEmpty() || s.toString().trim().equals("")) {
                     sWord = s.toString();
                     binding.pro.setVisibility(View.VISIBLE);
-                    myViewModel.getSearchProduct(company.getUser(), company.getPass(), Util.toEnglishNumber(s.toString()));
+                    myViewModel.getSearchProduct(userName,passWord, Util.toEnglishNumber(s.toString()));
 
                 }
             }
@@ -256,7 +262,7 @@ public class SearchProductFragment extends Fragment {
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
                     customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات از سرور", false);
-                    myViewModel.getDescription(company.getUser(), company.getPass(), GUID);
+                    myViewModel.getDescription(userName,passWord, GUID);
                 }
             } else {
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();

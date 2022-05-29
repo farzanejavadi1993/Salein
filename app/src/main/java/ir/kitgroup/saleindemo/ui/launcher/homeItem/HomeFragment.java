@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
 
     private MainFragment mainFragment;
 
-    HomeFragment(MainFragment mainFragment) {
+  public  HomeFragment(MainFragment mainFragment) {
         this.mainFragment = mainFragment;
     }
 
@@ -90,6 +90,9 @@ public class HomeFragment extends Fragment {
     private HomeFragmentBinding binding;
     private MyViewModel myViewModel;
     private Company company;
+    private String userName;
+    private String passWord;
+
     private CustomProgress customProgress;
 
 
@@ -182,6 +185,8 @@ public class HomeFragment extends Fragment {
             sharedPreferences.edit().putString("FNM", "main").apply();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             company = Select.from(Company.class).first();
+            userName=company.getUser();
+            passWord=company.getPass();
             //endregion Config
 
             //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
@@ -243,7 +248,7 @@ public class HomeFragment extends Fragment {
                 if (!Util.getPackageName(getActivity()).equals("ir.kitgroup.salein"))
                     getActivity().finish();
                 else
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    Navigation.findNavController(binding.getRoot()).popBackStack();
             });
 
 
@@ -260,10 +265,10 @@ public class HomeFragment extends Fragment {
                 productLevel1List.clear();
                 productLevel2List.clear();
                 productAdapter.notifyDataSetChanged();
-                myViewModel.getProductLevel1(company.getUser(), company.getPass());
-                myViewModel.getInquiryAccount(company.getUser(), company.getPass(), user.getM());
-                myViewModel.getUnit(company.getUser(), company.getPass());
-                myViewModel.getSetting(company.getUser(), company.getPass());
+                myViewModel.getProductLevel1(userName,passWord);
+                myViewModel.getInquiryAccount(userName,passWord, user.getM());
+                myViewModel.getUnit(userName,passWord);
+                myViewModel.getSetting(userName,passWord);
             });
 
             //endregion Cast Variable Dialog Sync
@@ -414,7 +419,7 @@ public class HomeFragment extends Fragment {
 
 
                 //region Full ProductLevel2List Because This Item ProductLevel1 Is True
-                myViewModel.getProductLevel2(company.getUser(), company.getPass(), GUID);
+                myViewModel.getProductLevel2(userName, passWord, GUID);
                 //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
             });
             //endregion Click Item ProductLevel1
@@ -469,7 +474,7 @@ public class HomeFragment extends Fragment {
 
                 //region Full ProductList Because This Item ProductLevel1 Is True
                 GuidProductLvl2 = GUID;
-                myViewModel.getSettingPrice(company.getUser(), company.getPass());
+                myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because This Item ProductLevel1 Is True
             });
 
@@ -523,7 +528,7 @@ public class HomeFragment extends Fragment {
 
                 //region Full ProductList Because This Item ProductLevel1 Is True
                 keyCustomTab = key;
-                myViewModel.getSettingPrice(company.getUser(), company.getPass());
+                myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because This Item ProductLevel1 Is True
             });
 
@@ -565,7 +570,7 @@ public class HomeFragment extends Fragment {
             productAdapter.setOnClickListener((Prd_UID) -> {
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-                if (invDetails.size() > 0) {
+               if (invDetails.size() > 0) {
                     this.counter = invDetails.size();
                     mainFragment.setNumber(counter);
                 } else {
@@ -585,7 +590,7 @@ public class HomeFragment extends Fragment {
                         descriptionList.clear();
                         GuidInv = result.get(0).INV_DET_UID;
                         customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
-                        myViewModel.getDescription(company.getUser(), company.getPass(), GUID);
+                        myViewModel.getDescription(userName, passWord, GUID);
 
                     }
                 } else {
@@ -641,9 +646,9 @@ public class HomeFragment extends Fragment {
         binding.ivFilter.setImageResource(R.drawable.ic_filter);
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
-        myViewModel.getSetting(company.getUser(), company.getPass());
-        myViewModel.getUnit(company.getUser(), company.getPass());
-        myViewModel.getInquiryAccount(company.getUser(), company.getPass(), Select.from(Users.class).first().getM());
+        myViewModel.getSetting(userName, passWord);
+        myViewModel.getUnit(userName, passWord);
+        myViewModel.getInquiryAccount(userName, passWord, Select.from(Users.class).first().getM());
 
 
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
@@ -661,18 +666,18 @@ public class HomeFragment extends Fragment {
                 sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("") ? settingsList.get(0).MENU : "0").apply();
                 String menu = sharedPreferences.getString("menu", "0");
                 if (!menu.equals("0")) {
-                    myViewModel.getCustomTab(company.getUser(), company.getPass());
+                    myViewModel.getCustomTab(userName, passWord);
                     binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
                     binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
                     binding.orderRecyclerViewCustomTab.setVisibility(View.VISIBLE);
                 } else {
 
                     if (sharedPreferences.getBoolean("discount", false))
-                        myViewModel.getDiscountProduct(company.getUser(), company.getPass());
+                        myViewModel.getDiscountProduct(userName, passWord);
                     else if (sharedPreferences.getBoolean("vip", false))
-                        myViewModel.getVipProduct(company.getUser(), company.getPass(), Select.from(Users.class).first().I);
+                        myViewModel.getVipProduct(userName, passWord, Select.from(Users.class).first().I);
                     else
-                        myViewModel.getProductLevel1(company.getUser(), company.getPass());
+                        myViewModel.getProductLevel1(userName, passWord);
 
                     binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
                     binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
@@ -776,7 +781,7 @@ public class HomeFragment extends Fragment {
 
             if (productLevel1List.size() > 0) {
                 productLevel1List.get(0).Click = true;
-                myViewModel.getProductLevel2(company.getUser(), company.getPass(), productLevel1List.get(0).getI());
+                myViewModel.getProductLevel2(userName, passWord, productLevel1List.get(0).getI());
             } else {
                 binding.progressbar.setVisibility(View.GONE);
                 binding.animationView.setVisibility(View.GONE);
@@ -832,7 +837,7 @@ public class HomeFragment extends Fragment {
 
                 //region Full ProductList Because First Item ProductLevel2 Is True
                 GuidProductLvl2 = productLevel2List.get(0).getI();
-                myViewModel.getSettingPrice(company.getUser(), company.getPass());
+                myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
             } else {
@@ -869,7 +874,7 @@ public class HomeFragment extends Fragment {
 
                 //region Full ProductList Because First Item ProductLevel2 Is True
                 keyCustomTab = customTabList.get(0).getT();
-                myViewModel.getSettingPrice(company.getUser(), company.getPass());
+                myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
             } else {
@@ -947,10 +952,10 @@ public class HomeFragment extends Fragment {
 
             String menu = sharedPreferences.getString("menu", "");
             if (!menu.equals("0"))
-                myViewModel.getProductCustomTab(company.getUser(), company.getPass(), keyCustomTab);
+                myViewModel.getProductCustomTab(userName, passWord, keyCustomTab);
 
             else
-                myViewModel.getListProduct(company.getUser(), company.getPass(), GuidProductLvl2);
+                myViewModel.getListProduct(userName, passWord, GuidProductLvl2);
 
 
         });

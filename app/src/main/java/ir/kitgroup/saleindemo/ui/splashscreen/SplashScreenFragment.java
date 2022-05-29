@@ -123,8 +123,8 @@ public class SplashScreenFragment extends Fragment {
             Company.deleteAll(Company.class);
 
 
-        title = company != null && company.N != null ? company.N : "";
-        description = company != null && company.DESC != null ? company.DESC : "";
+        title = company != null && company.getN() != null ? company.getN(): "";
+        description = company != null && company.getDesc() != null ? company.getDesc() : "";
 
 
         binding.tvTitle.setText(title);
@@ -187,7 +187,7 @@ public class SplashScreenFragment extends Fragment {
             if (result.size() > 0) {
 
                 //region Find A Company With An Application PackageName
-                CollectionUtils.filter(result, i -> i.INSK_ID != null && i.INSK_ID.equals(packageName));
+                CollectionUtils.filter(result, i -> i.getInskId() != null && i.getInskId().equals(packageName));
                 if (result.size() == 1) {
                     //region Save Company Information In Database For Use For Request From Server And Other Items
                     Company.deleteAll(Company.class);
@@ -207,7 +207,7 @@ public class SplashScreenFragment extends Fragment {
                 //endregion Can't Find A Company With The PackageName
 
                 //region Request From The Server With The IP Of The Company That Was Found
-                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
                 //endregion Request From The Server With The IP Of The Company That Was Found
@@ -244,7 +244,7 @@ public class SplashScreenFragment extends Fragment {
             if (Select.from(Company.class).list().size() > 0) {
 
                 //region Request From The Server With The IP Of The Company That Was Registered
-                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().IP1 + "/api/REST/";
+                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
                 hostSelectionInterceptor.setHostBaseUrl();
                 //endregion Request From The Server With The IP Of The Company That Was Registered
