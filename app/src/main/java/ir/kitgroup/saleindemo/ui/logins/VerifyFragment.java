@@ -188,8 +188,9 @@ public class VerifyFragment extends Fragment {
 
                 //region Go To MainFragment Because Account Is Register
                 else {
-                    NavDirections action = VerifyFragmentDirections.actionGoToMainFragment("");
+                   NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
                     Navigation.findNavController(binding.getRoot()).navigate(action);
+
                 }
                 //endregion Go To MainFragment Because Account Is Register
 

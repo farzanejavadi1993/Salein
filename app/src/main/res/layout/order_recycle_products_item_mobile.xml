@@ -57,8 +57,9 @@
     </RelativeLayout>
 
     <TextView
+        android:lineSpacingExtra="10dp"
         android:id="@+id/order_recycle_item_product_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginStart="12dp"
@@ -68,7 +69,8 @@
         android:gravity="right"
         android:text="lklklklkl"
         android:textColor="@color/medium_color"
-        android:textSize="@dimen/text_normal_mobile_size" />
+        android:textStyle="bold"
+        android:textSize="13dp" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

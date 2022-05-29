@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.google.android.material.card.MaterialCardView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Random;
 
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -68,23 +71,21 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
         holder.subGroupName.setText(subGroup.getN() );
 
 
+        setAnimation(holder.itemView);
+
 
         holder.subGroupName.setTextSize(fontSize);
 
         if (subGroup.Click ){
-           /* if (LauncherActivity.screenInches>=7)
-            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.order_item_recycle_subgroup_card_background));
-            else {*/
+
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.order_item_recycle_group__card_background));
                 holder.subGroupName.setTextColor(context.getResources().getColor(R.color.white));
-           // }
+
         }else if (!subGroup.Click ){
-         /*   if (LauncherActivity.screenInches>=7)
-                holder.cardView.setBackground(null);
-            else {*/
+
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_subgroup_mobile));
                 holder.subGroupName.setTextColor(context.getResources().getColor(R.color.medium_color));
-           // }
+
 
 
         }
@@ -125,7 +126,14 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
 
         }
     }
+    protected void setAnimation(View viewToAnimate) {
 
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(1000));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+
+
+    }
 
 }
 

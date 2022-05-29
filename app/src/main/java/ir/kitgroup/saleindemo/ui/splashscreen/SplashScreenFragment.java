@@ -123,7 +123,7 @@ public class SplashScreenFragment extends Fragment {
             Company.deleteAll(Company.class);
 
 
-        title = company != null && company.getN() != null ? company.getN(): "";
+        title = company != null && company.getN() != null ? company.getN() : "";
         description = company != null && company.getDesc() != null ? company.getDesc() : "";
 
 
@@ -218,11 +218,11 @@ public class SplashScreenFragment extends Fragment {
                     if (saleinInstance != null)
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
                     else {
-                       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
-                        Navigation.findNavController(binding.getRoot()).navigate(action);
-
-                      /*  NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                 /*       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);*/
+
+                        NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                        Navigation.findNavController(binding.getRoot()).navigate(action);
                     }
 
                 }
@@ -258,11 +258,11 @@ public class SplashScreenFragment extends Fragment {
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
 
                     else {
-                       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
-                        Navigation.findNavController(binding.getRoot()).navigate(action);
-
-                   /*     NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                      /* NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);*/
+
+                        NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                        Navigation.findNavController(binding.getRoot()).navigate(action);
 
                     }
                 }

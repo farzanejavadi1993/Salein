@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Random;
 
 
 import ir.kitgroup.saleindemo.R;
@@ -69,20 +72,16 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
 
         holder.groupName.setText(productGroupLevel1.getN());
 
+        setAnimation(holder.itemView);
 
 
         holder.groupName.setTextSize(fontSize);
 
 
-        if (productGroupLevel1.Click) {
+        if (productGroupLevel1.Click)
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.group_background));
-            holder.groupName.setTextColor(context.getResources().getColor(R.color.white));
-
-        } else {
+         else
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_subgroup_mobile));
-            holder.groupName.setTextColor(context.getResources().getColor(R.color.black_l));
-
-        }
 
 
         holder.itemView.setOnClickListener(view -> clickItem.onRowClick(productGroupLevel1s.get(position).getI()));
@@ -116,6 +115,14 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
     }
 
 
+    protected void setAnimation(View viewToAnimate) {
+
+            ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setDuration(new Random().nextInt(1000));//to make duration random number between [0,501)
+            viewToAnimate.startAnimation(anim);
+
+
+    }
 }
 
 

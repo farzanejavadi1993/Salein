@@ -21,5 +21,6 @@
         android:paddingRight="15dp"
         android:paddingBottom="5dp"
         android:textColor="@color/black_l"
-        android:textSize="@dimen/text_medium_mobile_size" />
+        android:textStyle="bold"
+        android:textSize="@dimen/text_normal_mobile_size" />
 </RelativeLayout>

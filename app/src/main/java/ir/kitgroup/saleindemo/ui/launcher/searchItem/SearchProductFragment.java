@@ -42,8 +42,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
+import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.DescriptionAdapter;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.ProductAdapter;
 import ir.kitgroup.saleindemo.Connect.API;
 import ir.kitgroup.saleindemo.Connect.MyViewModel;
@@ -62,11 +62,6 @@ import ir.kitgroup.saleindemo.models.Product;
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {
 
-   private MainFragment mainFragment;
-
-    public SearchProductFragment(MainFragment mainFragment) {
-        this.mainFragment = mainFragment;
-    }
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -113,14 +108,13 @@ public class SearchProductFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         //region Config
         productList = new ArrayList<>();
         closeDayList = new ArrayList<>();
 
         customProgress = CustomProgress.getInstance();
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-        Inv_GUID = sharedPreferences.getString("Inv_GUID","");
+        Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
         maxSales = sharedPreferences.getString("maxSale", "0");
         String CloseDay = sharedPreferences.getString("close_day", "");
         closeDayList.clear();
@@ -129,11 +123,9 @@ public class SearchProductFragment extends Fragment {
         }
         company = Select.from(Company.class).first();
 
-        userName=company.getUser();
-        passWord=company.getPass();
+        userName = company.getUser();
+        passWord = company.getPass();
         //endregion Config
-
-
 
 
         //region Cast DialogDescription
@@ -178,7 +170,6 @@ public class SearchProductFragment extends Fragment {
         });
 
 
-
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,7 +207,7 @@ public class SearchProductFragment extends Fragment {
                 if (s.toString().length() >= 2 || s.toString().isEmpty() || s.toString().trim().equals("")) {
                     sWord = s.toString();
                     binding.pro.setVisibility(View.VISIBLE);
-                    myViewModel.getSearchProduct(userName,passWord, Util.toEnglishNumber(s.toString()));
+                    myViewModel.getSearchProduct(userName, passWord, Util.toEnglishNumber(s.toString()));
 
                 }
             }
@@ -230,7 +221,7 @@ public class SearchProductFragment extends Fragment {
 
 
         //region Config RecyclerView And Its Adapter
-        productAdapter = new ProductAdapter(getActivity(), productList,sharedPreferences,closeDayList,api);
+        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api,2);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -245,10 +236,11 @@ public class SearchProductFragment extends Fragment {
             if (invDetails.size() > 0) {
                 counter = invDetails.size();
             }
-             if (counter == 0)
-                  mainFragment.clearNumber();
-               else
-              mainFragment.setNumber(counter);
+            if (counter == 0)
+
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
+            else
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
         });
@@ -262,7 +254,7 @@ public class SearchProductFragment extends Fragment {
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
                     customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات از سرور", false);
-                    myViewModel.getDescription(userName,passWord, GUID);
+                    myViewModel.getDescription(userName, passWord, GUID);
                 }
             } else {
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();

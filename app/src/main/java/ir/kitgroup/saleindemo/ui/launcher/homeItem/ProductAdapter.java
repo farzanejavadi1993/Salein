@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +15,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,7 +27,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siyamed.shapeimageview.RoundedImageView;
@@ -48,9 +49,6 @@ import java.util.List;
 
 import java.util.UUID;
 
-
-import javax.inject.Inject;
-
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -66,45 +64,27 @@ import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.models.ModelLog;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.models.Product;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.details.ShowDetailFragment;
 
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
 
     private final Activity context;
-
     private final Company company;
-    private String defaultCoff ;
-
-
+    private final String defaultCoff ;
     private final SharedPreferences sharedPreferences;
-
     private final CompositeDisposable compositeDisposable;
-
-
     private final List<Product> productsList;
-
     private String maxSale;
-
     private Boolean Seen = false;
-
-    private String Inv_GUID;
-    private String Tbl_GUID;
-
+    private final String Inv_GUID;
     private final DecimalFormat df;
-
-
-
-
     private API api;
-
     private final List<Unit> unitList;
     private List<String> closeDateList;
     private String valueOfDay;
     private int imageId = 0;
-
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
-
+    private  int type;//1  from Home Fragment    2 from Search Fragment
 
     public interface ClickItem {
         void onClick(String Prd_UID);
@@ -134,9 +114,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    public ProductAdapter( Activity context, List<Product> productsList, SharedPreferences sharedPreferences,ArrayList<String> closeDateList,API api) {
+    public ProductAdapter( Activity context, List<Product> productsList, SharedPreferences sharedPreferences,ArrayList<String> closeDateList,API api,int type) {
         this.closeDateList=closeDateList;
         this.api = api;
+        this.type=type;
         this.context = context;
         this.Inv_GUID =sharedPreferences.getString("Inv_GUID","");
         this.productsList = productsList;
@@ -189,9 +170,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
 
-
-
-
     public void addLoadingView() {
         new Handler().post(() -> {
             productsList.add(null);
@@ -219,11 +197,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
         if (viewType == Util.VIEW_TYPE_ITEM) {
-
             return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_products_item_mobile, parent,
                     false));
-        } else if (viewType == Util.VIEW_TYPE_LOADING) {
-
+        }
+        else if (viewType == Util.VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_loading, parent, false);
             return new viewHolder(view);
         }
@@ -237,6 +214,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
         if (productsList.get(position) != null) {
+           if (type==1)
+               setFadeAnimation(holder.itemView);
+
             holder.error.setText("");
 
             if (closeDateList!=null && closeDateList.size()>0 && closeDateList.contains(valueOfDay))
@@ -249,6 +229,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             if (!fragmentName.equals("main"))
                 holder.ProductAmountTxt.clearFocus();
+
+
 
 
             InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productsList.get(holder.getAdapterPosition()).getI() + "'").first();
@@ -286,7 +268,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.unit.setText("");
 
 
-            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN());
+            holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN().trim());
 
 
             if (productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) > 0) {
@@ -320,11 +302,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.tab++;
                 if (holder.tab == 2) {
                     holder.tab = 0;
-                    Bundle bundle = new Bundle();
+                 /*   Bundle bundle = new Bundle();
                     bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
                     ShowDetailFragment showDetailFragment = new ShowDetailFragment();
                     showDetailFragment.setArguments(bundle);
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher1, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher1, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();*/
                 }
 
             });
@@ -1059,6 +1041,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         }
     }
 
+    private void setFadeAnimation(View view) {
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(1000);
+        view.startAnimation(anim);
+    }
 
 }
 

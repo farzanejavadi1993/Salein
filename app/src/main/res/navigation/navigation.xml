@@ -15,11 +15,7 @@
             app:destination="@id/LoginFragment"
             app:popUpTo="@id/SplashScreenFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/actionGoToMainFragment"
-            app:destination="@id/MainFragment"
-            app:popUpTo="@id/SplashScreenFragment"
-            app:popUpToInclusive="true" />
+
 
         <action
             android:id="@+id/actionGoToCompanyFragment"
@@ -41,11 +37,13 @@
     <fragment
         android:id="@+id/CompanyFragment"
         android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragment"
-        tools:layout="@layout/fragment_all_company">
+        tools:layout="@layout/fragment_all_company"/>
 
 
-    </fragment>
-
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="ir.kitgroup.saleindemo.ui.launcher.searchItem.SearchProductFragment"
+        tools:layout="@layout/fragment_search_product"/>
 
     <fragment
         android:id="@+id/LoginFragment"
@@ -71,29 +69,6 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/MainFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragment"
-        tools:layout="@layout/fragment_main">
-
-        <action
-            android:id="@+id/actionGotoInvoiceFragment"
-            app:destination="@id/InvoiceFragment" />
-        <action
-            android:id="@+id/actionGoToMoreFragment"
-            app:destination="@id/MoreFragment" />
-
-
-
-        <argument
-            android:name="Inv_GUID"
-            app:argType="string" />
-
-        <action
-            android:id="@+id/actionGoToFilterFragment"
-            app:destination="@id/FilterFragment" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/PaymentFragment"
@@ -111,26 +86,26 @@
 
     </fragment>
 
+
     <fragment
         android:id="@+id/HomeFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment"
         tools:layout="@layout/home_fragment">
         <action
-            android:id="@+id/actionGoToOrderFragment"
-            app:destination="@id/OrderFragment" />
-
+            android:id="@+id/actionGoToFilterFragment"
+            app:destination="@id/FilterFragment" />
         <argument
             android:name="Inv_GUID"
             app:argType="string" />
     </fragment>
 
+
+
     <fragment
         android:id="@+id/InvoiceFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment"
         tools:layout="@layout/invoice_list_item_recycle">
-        <action
-            android:id="@+id/actionGoToMainFragment"
-            app:destination="@id/MainFragment" />
+
         <action
             android:id="@+id/actionGoToPaymentFragment"
             app:destination="@id/PaymentFragment" />
@@ -271,8 +246,8 @@
         tools:layout="@layout/fragment_verify">
 
         <action
-            android:id="@+id/actionGoToMainFragment"
-            app:destination="@id/MainFragment"
+            android:id="@+id/actionGoToHomeFragment"
+            app:destination="@id/HomeFragment"
             app:popUpTo="@id/VerifyFragment"
             app:popUpToInclusive="true" />
         <action

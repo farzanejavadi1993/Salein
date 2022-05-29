@@ -58,11 +58,9 @@ import ir.kitgroup.saleindemo.DataBase.Salein;
 import ir.kitgroup.saleindemo.DataBase.Users;
 import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.databinding.RegisterFragmentBinding;
-import ir.kitgroup.saleindemo.ui.companies.CompanyFragment;
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.models.Setting;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragmentDirections;
 import ir.kitgroup.saleindemo.ui.payment.PaymentFragment;
 
 
@@ -345,7 +343,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                     Util.latitude = 0;
                     Util.longitude = 0;
                     Util.nameUser = "";
-                    NavDirections action = VerifyFragmentDirections.actionGoToMainFragment("");
+                    NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
                 //endregion Go To MainOrderFragment Because Account Is Register

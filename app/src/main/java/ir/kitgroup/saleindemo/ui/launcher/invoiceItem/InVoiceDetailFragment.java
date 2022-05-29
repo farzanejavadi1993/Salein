@@ -180,7 +180,16 @@ public class InVoiceDetailFragment extends Fragment {
                     break;
             }
 
-            Inv_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            try {
+                Inv_GUID = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getInvGUID();
+                type = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 Edit  //2 create
+                EDIT = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEdit();//when order need EDIT
+            }catch (Exception ignore){
+                Inv_GUID="";
+                type="2";
+                EDIT=false;
+            }
+
             if (Inv_GUID.equals(""))
                 Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
 
@@ -238,11 +247,7 @@ public class InVoiceDetailFragment extends Fragment {
             //endregion Cast Dialog Delete
 
 
-            //region Get Bundle
 
-            type = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getType();//1 Edit  //2 create
-            EDIT = InVoiceDetailFragmentArgs.fromBundle(getArguments()).getEdit();//when order need EDIT
-            //endregion Get Bundle
 
 
             sumPrice = 0;
@@ -590,7 +595,7 @@ public class InVoiceDetailFragment extends Fragment {
                     textView.setTextSize(13);
                     return;
                 }
-               NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainFragment(Inv_GUID);
+               NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
 
@@ -740,7 +745,7 @@ public class InVoiceDetailFragment extends Fragment {
                     binding.layoutEditDelete.setVisibility(View.VISIBLE);
                 } else {
                     //PLEASE Gone View Farzane
-                    binding.layoutEditDelete.setVisibility(View.VISIBLE);
+                    binding.layoutEditDelete.setVisibility(View.GONE);
                 }
 
 

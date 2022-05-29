@@ -33,7 +33,8 @@
         android:gravity="center"
         android:padding="5dp"
         android:textColor="@color/medium_color"
-        android:textSize="@dimen/text_medium_mobile_size"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_normal_mobile_size"
         />
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

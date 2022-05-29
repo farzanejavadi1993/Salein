@@ -4,25 +4,25 @@
 
 
     <item android:title="پروفایل"
-        android:id="@+id/profile"
+        android:id="@+id/MoreFragment"
         android:icon="@drawable/ic_profile"
         app:showAsAction="ifRoom"
         />
 
     <item android:title="سبد خرید"
-        android:id="@+id/orders"
+        android:id="@+id/InvoiceFragment"
         android:icon="@drawable/ic_buylist"
         app:showAsAction="always"
         />
 
     <item android:title="جستجو"
-        android:id="@+id/search"
+        android:id="@+id/SearchFragment"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"
         />
 
     <item android:title="خانه"
-        android:id="@+id/homee"
+        android:id="@+id/HomeFragment"
         android:icon="@drawable/ic_home"
         app:showAsAction="always"
         />

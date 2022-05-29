@@ -6,11 +6,26 @@
     <color name="light_background">#F6F6F6</color>
 
 
-    <color name="purple_200">#60AEF3</color>
-    <color name="purple_500">#1e88e5</color>
-    <color name="purple_700">#1e88e5</color>
+    <color name="purple_200">#ffbcaf</color>
+    <color name="purple_500">#ff8a80</color>
+    <color name="purple_700">#c85a54</color>
     <color name="teal_200">#fff</color>
+
+   <!-- color productLevel1-->
+    <color name="brown_primary_dark">#cbae82</color>
+    <color name="brown_primary">#ffe0b2</color>
+    <color name="brown_light">#ffffe4</color>
+
+
+    <!-- color productLevel2-->
+    <color name="pink_primary_dark">#62757f</color>
+    <color name="pink_primary">#90a4ae</color>
+    <color name="pink_light">#c1d5e0</color>
+
+
+
     <color name="teal_700">#FF018786</color>
+
     <color name="black">#000</color>
 
     <color name="white">#FFFFFFFF</color>

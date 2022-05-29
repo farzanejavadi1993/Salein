@@ -138,7 +138,7 @@ public class MyViewModel extends ViewModel {
 
 
     public void getInquiryAccount(String user, String passWord, String mobile) {
-     //   List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+     List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         compositeDisposable.add(
                 myRepository.getInquiryAccount(user, passWord, mobile)
                         .subscribeOn(Schedulers.io())
@@ -146,7 +146,7 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
-                            //InvoiceDetail.saveInTx(invoiceDetails);
+                            InvoiceDetail.saveInTx(invoiceDetails);
                             Gson gson = new Gson();
                             Type typeIDs = new TypeToken<ModelAccount>() {
                             }.getType();
@@ -237,7 +237,7 @@ public class MyViewModel extends ViewModel {
    
    
     public void getProductLevel1(String user, String passWord) {
-      //  List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+        List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         compositeDisposable.add(
                 myRepository.getProductLevel1(user, passWord)
                         .subscribeOn(Schedulers.io())
@@ -245,7 +245,7 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
-                          //  InvoiceDetail.saveInTx(invoiceDetails);
+                        InvoiceDetail.saveInTx(invoiceDetails);
                             Gson gson = new Gson();
                             Type typeModelProductLevel1 = new TypeToken<ModelProductLevel1>() {
                             }.getType();
@@ -273,7 +273,7 @@ public class MyViewModel extends ViewModel {
    
    
     public void getProductLevel2(String user, String passWord, String prd1Id) {
-       //   List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+         List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         compositeDisposable.add(
                 myRepository.getProductLevel2(user, passWord, prd1Id)
                         .subscribeOn(Schedulers.io())
@@ -281,7 +281,7 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
-                       //     InvoiceDetail.saveInTx(invoiceDetails);
+                           InvoiceDetail.saveInTx(invoiceDetails);
                             Gson gson = new Gson();
                             Type typeModelProduct2 = new TypeToken<ModelProductLevel2>() {
                             }.getType();
@@ -489,7 +489,7 @@ public class MyViewModel extends ViewModel {
     
     
     public void getUnit(String user, String passWord) {
-      //  List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+      List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         compositeDisposable.add(
                 myRepository.getUnit(user, passWord)
                         .subscribeOn(Schedulers.io())
@@ -497,7 +497,7 @@ public class MyViewModel extends ViewModel {
                         .doOnSubscribe(disposable -> {
                         })
                         .subscribe(jsonElement -> {
-                          //  InvoiceDetail.saveInTx(invoiceDetails);
+                          InvoiceDetail.saveInTx(invoiceDetails);
                             Gson gson = new Gson();
                             Type typeIDs = new TypeToken<ModelUnit>() {
                             }.getType();
@@ -553,7 +553,7 @@ public class MyViewModel extends ViewModel {
     
     
     public void getSetting(String user, String passWord) {
-      //  List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+       List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         compositeDisposable.add(
                 myRepository.getSetting(user, passWord)
                         .subscribeOn(Schedulers.io())
@@ -562,7 +562,7 @@ public class MyViewModel extends ViewModel {
                         })
                         .subscribe(jsonElement -> {
 
-                        //    InvoiceDetail.saveInTx(invoiceDetails);
+                          InvoiceDetail.saveInTx(invoiceDetails);
                             Gson gson = new Gson();
                             Type typeIDs = new TypeToken<ModelSetting>() {
                             }.getType();

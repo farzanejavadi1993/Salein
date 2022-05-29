@@ -55,6 +55,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.saleindemo.Activities.LauncherActivity;
 import ir.kitgroup.saleindemo.Connect.API;
 
 import ir.kitgroup.saleindemo.databinding.HomeFragmentBinding;
@@ -78,13 +79,13 @@ import static java.lang.Math.min;
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
-    private MainFragment mainFragment;
+   /* private MainFragment mainFragment;
 
     public HomeFragment(MainFragment mainFragment) {
         List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
         InvoiceDetail.saveInTx(invoiceDetails);
         this.mainFragment = mainFragment;
-    }
+    }*/
 
     //region Parameter
     @Inject
@@ -195,7 +196,24 @@ public class HomeFragment extends Fragment {
             //endregion Config
 
 
+            //region Create Order
+            Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            if (Inv_GUID.equals("")) {
+                ((LauncherActivity) getActivity()).setGoneProfileItem(true);
+                String name = company.getInskId().split("ir.kitgroup.")[1];
+                Inv_GUID = sharedPreferences.getString(name, "");
 
+                if (Inv_GUID.equals("")) {
+                    Inv_GUID = UUID.randomUUID().toString();
+                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
+                }
+            }else {
+                ((LauncherActivity) getActivity()).setGoneProfileItem(false);
+            }
+
+            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
+
+            //endregion Create Order
 
 
             //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
@@ -222,10 +240,11 @@ public class HomeFragment extends Fragment {
                 counter = invDetailses.size();
             }
 
-          /* if (counter == 0)
-                mainFragment.clearNumber();
+
+            if (counter == 0)
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
             else
-                mainFragment.setNumber(counter);*/
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
             //endregion Get Invoice By Guid Of Order Form
 
             //region Set Title To TextView
@@ -547,7 +566,7 @@ public class HomeFragment extends Fragment {
 
 
             //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api);
+            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api,1);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -579,12 +598,12 @@ public class HomeFragment extends Fragment {
             productAdapter.setOnClickListener((Prd_UID) -> {
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-//              if (invDetails.size() > 0) {
-//                    this.counter = invDetails.size();
-//                    mainFragment.setNumber(counter);
-//                } else {
-//                    mainFragment.clearNumber();
-//                }
+                if (invDetails.size() > 0) {
+                    this.counter = invDetails.size();
+                    ((LauncherActivity) getActivity()).setCounterOrder(counter);
+                } else
+                    ((LauncherActivity) getActivity()).setClearCounterOrder();
+
 
             });
 
@@ -618,10 +637,9 @@ public class HomeFragment extends Fragment {
                     filter = true;
 
 
-                NavDirections action = MainFragmentDirections.actionGoToFilterFragment(filter);
+                NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
-                // Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment);
 
             });
 

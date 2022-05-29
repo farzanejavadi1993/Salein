@@ -59,8 +59,6 @@ import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.DateConverter;
 
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
-import ir.kitgroup.saleindemo.ui.launcher.homeItem.MainFragmentDirections;
-import ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment;
 
 
 @AndroidEntryPoint
