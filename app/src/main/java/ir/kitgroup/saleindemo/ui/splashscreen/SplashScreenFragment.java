@@ -218,8 +218,11 @@ public class SplashScreenFragment extends Fragment {
                     if (saleinInstance != null)
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
                     else {
-                        NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
+                       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);
+
+                      /*  NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                        Navigation.findNavController(binding.getRoot()).navigate(action);*/
                     }
 
                 }
@@ -255,8 +258,12 @@ public class SplashScreenFragment extends Fragment {
                         Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
 
                     else {
-                        NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
+                       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);
+
+                   /*     NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                        Navigation.findNavController(binding.getRoot()).navigate(action);*/
+
                     }
                 }
                 //endregion When The User Is Logged In

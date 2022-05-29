@@ -590,8 +590,12 @@ public class InVoiceDetailFragment extends Fragment {
                     textView.setTextSize(13);
                     return;
                 }
-                NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainFragment(Inv_GUID);
+               NavDirections action = InVoiceDetailFragmentDirections.actionGoToMainFragment(Inv_GUID);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
+
+
+              /*  NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID);
+                Navigation.findNavController(binding.getRoot()).navigate(action);*/
 
             });
             //endregion Action BtnEdit

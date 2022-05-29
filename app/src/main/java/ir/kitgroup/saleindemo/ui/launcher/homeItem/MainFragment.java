@@ -54,12 +54,12 @@ public class MainFragment extends Fragment {
 
         mainFragment = this;
 
-        String Inv_GUID = MainFragmentArgs.fromBundle(getArguments()).getInvGUID();
 
         company = Select.from(Company.class).first();
 
-        //region Create Order
 
+        //region Create Order
+        String Inv_GUID = MainFragmentArgs.fromBundle(getArguments()).getInvGUID();
         if (Inv_GUID.equals("")) {
             String name = company.getInskId().split("ir.kitgroup.")[1];
             Inv_GUID = sharedPreferences.getString(name, "");
@@ -69,8 +69,10 @@ public class MainFragment extends Fragment {
                 sharedPreferences.edit().putString(name, Inv_GUID).apply();
             }
         }
+
         sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
 
+        //endregion Create Order
 
         binding.navView.setSelectedItemId(R.id.homee);
         binding.navView.getOrCreateBadge(R.id.orders).clearNumber();
@@ -105,7 +107,6 @@ public class MainFragment extends Fragment {
             }
             return false;
         });
-
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_launcher1, new HomeFragment(mainFragment)).commit();
 
 

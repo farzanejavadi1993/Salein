@@ -3,6 +3,7 @@ package ir.kitgroup.saleindemo.ui.launcher.homeItem;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -49,6 +50,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -78,7 +80,9 @@ public class HomeFragment extends Fragment {
 
     private MainFragment mainFragment;
 
-  public  HomeFragment(MainFragment mainFragment) {
+    public HomeFragment(MainFragment mainFragment) {
+        List<InvoiceDetail> invoiceDetails=Select.from(InvoiceDetail.class).list();
+        InvoiceDetail.saveInTx(invoiceDetails);
         this.mainFragment = mainFragment;
     }
 
@@ -179,15 +183,20 @@ public class HomeFragment extends Fragment {
 
         try {
             //region Config
+
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
             customProgress = CustomProgress.getInstance();
             sharedPreferences.edit().putString("FNM", "main").apply();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             company = Select.from(Company.class).first();
-            userName=company.getUser();
-            passWord=company.getPass();
+            userName = company.getUser();
+            passWord = company.getPass();
             //endregion Config
+
+
+
+
 
             //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
             if (Util.getPackageName(getActivity()).contains("meat"))
@@ -213,10 +222,10 @@ public class HomeFragment extends Fragment {
                 counter = invDetailses.size();
             }
 
-            if (counter == 0)
+          /* if (counter == 0)
                 mainFragment.clearNumber();
             else
-                mainFragment.setNumber(counter);
+                mainFragment.setNumber(counter);*/
             //endregion Get Invoice By Guid Of Order Form
 
             //region Set Title To TextView
@@ -265,10 +274,10 @@ public class HomeFragment extends Fragment {
                 productLevel1List.clear();
                 productLevel2List.clear();
                 productAdapter.notifyDataSetChanged();
-                myViewModel.getProductLevel1(userName,passWord);
-                myViewModel.getInquiryAccount(userName,passWord, user.getM());
-                myViewModel.getUnit(userName,passWord);
-                myViewModel.getSetting(userName,passWord);
+                myViewModel.getProductLevel1(userName, passWord);
+                myViewModel.getInquiryAccount(userName, passWord, user.getM());
+                myViewModel.getUnit(userName, passWord);
+                myViewModel.getSetting(userName, passWord);
             });
 
             //endregion Cast Variable Dialog Sync
@@ -538,7 +547,7 @@ public class HomeFragment extends Fragment {
 
 
             //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences,closeDayList,api);
+            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
@@ -570,12 +579,12 @@ public class HomeFragment extends Fragment {
             productAdapter.setOnClickListener((Prd_UID) -> {
                 List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
-               if (invDetails.size() > 0) {
-                    this.counter = invDetails.size();
-                    mainFragment.setNumber(counter);
-                } else {
-                    mainFragment.clearNumber();
-                }
+//              if (invDetails.size() > 0) {
+//                    this.counter = invDetails.size();
+//                    mainFragment.setNumber(counter);
+//                } else {
+//                    mainFragment.clearNumber();
+//                }
 
             });
 
@@ -612,6 +621,8 @@ public class HomeFragment extends Fragment {
                 NavDirections action = MainFragmentDirections.actionGoToFilterFragment(filter);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
+                // Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment);
+
             });
 
 
@@ -627,6 +638,7 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
         binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
         productList.clear();
@@ -719,7 +731,7 @@ public class HomeFragment extends Fragment {
                     dialogUpdate.show();
                     ir.kitgroup.saleindemo.DataBase.Product.deleteAll(ir.kitgroup.saleindemo.DataBase.Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
-                } else if ( update.equals("2") && !AppVersion.equals(NewVersion)) {
+                } else if (update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);
@@ -1124,9 +1136,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
-
     private void showError(String error, int type) {
 
 
@@ -1206,15 +1215,14 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
-
-
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 }
