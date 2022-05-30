@@ -68,10 +68,10 @@
                             android:singleLine="true"
                             android:text="خرید از فروشگاه"
                             android:textColor="@color/white"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
 
                         <TextView
-
+                            android:textStyle="bold"
                             android:id="@+id/tvNameStore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -80,13 +80,13 @@
                             android:layout_toLeftOf="@+id/iv_store_left"
                             android:singleLine="true"
                             android:textColor="@color/white"
-                            android:textSize="11dp"
+                            android:textSize="12dp"
                             tools:text="گوشت دنیوی" />
 
                         <ImageView
                             android:id="@+id/iv_store_left"
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/margin4"

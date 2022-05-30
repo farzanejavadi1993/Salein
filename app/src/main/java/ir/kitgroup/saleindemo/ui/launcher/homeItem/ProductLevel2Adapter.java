@@ -29,7 +29,7 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
 
     private final List<ProductLevel2> subGroupList ;
     private final Activity context;
-    private  int fontSize=0;
+
     public interface ClickItem {
         void onRowClick(String GUID);
     }
@@ -51,16 +51,7 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-
-
-       if (Util.screenSize >=7)
-            fontSize=13;
-        else
-            fontSize=11;
-            return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
-
-
-
+        return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -71,10 +62,9 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
         holder.subGroupName.setText(subGroup.getN() );
 
 
-        setAnimation(holder.itemView);
+      //  setAnimation(holder.itemView);
 
 
-        holder.subGroupName.setTextSize(fontSize);
 
         if (subGroup.Click ){
 

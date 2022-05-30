@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+import android.graphics.PorterDuff;
 import android.net.Uri;
 
 import android.os.Bundle;
@@ -68,7 +69,7 @@ public class ContactUsFragment extends Fragment {
 
         updateLink = sharedPreferences.getString("update_link", "");
         company = Select.from(Company.class).first();
-
+        binding.image.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
 
         Picasso.get()
@@ -103,7 +104,7 @@ public class ContactUsFragment extends Fragment {
 
 
         binding.Call1.setOnClickListener(v -> {
-            if (type==1){
+            if (show.equals("Contact")){
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + company.getT1()));
                 startActivity(intent);

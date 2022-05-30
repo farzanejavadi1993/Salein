@@ -19,7 +19,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 
 public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.viewHolder> {
     private final List<Company> list ;
-    private int fontSize = 0;
+
     private final int type;//1 from Company    2 from MyCompany
 
     //region Interface
@@ -39,11 +39,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        if (Util.screenSize >= 7) {
-            fontSize = 13;
-        } else {
-            fontSize = 12;
-        }
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_company, parent, false);
         return new viewHolder(view);
     }
@@ -125,8 +121,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             ivCompany= itemView.findViewById(R.id.ivCompany);
             favoriteCompany = itemView.findViewById(R.id.favoriteCompany);
             flesh = itemView.findViewById(R.id.flesh);
-            tvTitleCompany.setTextSize(fontSize);
-            tvDescriptionCompany.setTextSize(fontSize);
+
         }
     }
 }

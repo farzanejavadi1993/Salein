@@ -38,12 +38,14 @@
                 android:textColor="@color/medium_color"
                 android:fontFamily="@font/iransans"
                 android:id="@+id/radioAddress1"
+                android:button="?android:selectableItemBackground"
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
 
             </RadioButton>
 
             <RadioButton
+                android:button="?android:selectableItemBackground"
                 android:visibility="gone"
                 android:paddingStart="@dimen/margin10"
                 android:paddingEnd="@dimen/margin10"
@@ -75,21 +77,22 @@
             android:orientation="horizontal">
 
 
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_edit"
-                android:fontFamily="@font/iransans"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="8dp"
-                android:textSize="11dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:backgroundTint="@color/white"
+                android:fontFamily="@font/iransans"
                 android:text=" آدرس جدید"
-                android:textColor="@color/purple_700"
+                android:textColor="@color/purple_500"
+                android:textSize="11dp"
                 app:cornerRadius="15dp"
-                app:strokeColor="@color/purple_700"
+                app:strokeColor="@color/purple_500"
                 app:strokeWidth="1dp"
                 tools:ignore="UnusedAttribute" />
 

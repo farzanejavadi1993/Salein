@@ -821,7 +821,7 @@ public class MyViewModel extends ViewModel {
                             } catch (Exception ignored) {
                                 eMessage.setValue(new Message(-1, "خطا در ارسال سفارش", ""));
                             }
-                        }, throwable -> eMessage.setValue(new Message(-1, "خطا در ترسال سفارش", ""))));
+                        }, throwable -> eMessage.setValue(new Message(-1, "خطا در ارسال سفارش", ""))));
     }
     public MutableLiveData<ModelLog> getResultSendOrder() {
         return resultLog;

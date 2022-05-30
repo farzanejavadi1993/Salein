@@ -54,8 +54,7 @@
                 android:id="@+id/txt_table_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_marginRight="@dimen/margin10"
+                android:layout_marginRight="12dp"
                 android:lineSpacingExtra="16dp"
                 android:textColor="@color/medium_color"
                 android:textStyle="bold"
@@ -63,14 +62,13 @@
 
 
             <TextView
+
                 android:id="@+id/txt_deleteAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="12dp"
                 android:text="حذف همه"
                 android:textColor="@color/purple_700"
                 android:textSize="@dimen/text_medium_mobile_size" />
@@ -310,19 +308,26 @@
                     android:gravity="center|bottom">
 
 
-                    <TextView
 
+
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_continue"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/order_item_recycle_group__card_background"
-                        android:gravity="center"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:text="ادامه سفارش"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bottom_background"
+                        android:fontFamily="@font/iransans"
+                        android:text="ادامه"
                         android:textColor="#fff"
-                        android:textSize="11dp" />
+                        android:layout_marginBottom="18dp"
+                        android:textSize="12dp"
+                        app:cornerRadius="12dp">
+
+
+                    </com.google.android.material.button.MaterialButton>
+
+
 
                 </RelativeLayout>
 

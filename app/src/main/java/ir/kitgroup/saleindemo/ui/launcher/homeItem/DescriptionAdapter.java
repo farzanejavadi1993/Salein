@@ -24,7 +24,6 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     private List<Description> list = new ArrayList<>();
     private Activity context;
-    private int fontSize = 0;
 
 
     public void setOnClickItemListener(ClickItem clickItem) {
@@ -46,11 +45,6 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       if (Util.screenSize>= 7) {
-           fontSize = 13;
-       } else {
-           fontSize = 12;
-       }
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false);
         return new viewHolder(view);
@@ -121,7 +115,6 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
             tableName = itemView.findViewById(R.id.launcher_recycle_table_txt_name);
             cardView = itemView.findViewById(R.id.launcher_recycle_table_card);
-            tableName.setTextSize(fontSize);
 
 
 

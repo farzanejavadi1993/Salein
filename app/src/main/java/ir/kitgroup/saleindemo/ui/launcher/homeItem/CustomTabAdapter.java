@@ -27,7 +27,7 @@ public class CustomTabAdapter extends RecyclerView.Adapter<CustomTabAdapter.view
 
     private final List<CustomTab> customTabs ;
     private final Activity context;
-    private  int fontSize=0;
+
 
     public interface ClickItem {
         void onRowClick(int key);
@@ -49,17 +49,7 @@ public class CustomTabAdapter extends RecyclerView.Adapter<CustomTabAdapter.view
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 
-        if (Util.screenSize >=7)
-            fontSize=13;
-        else
-            fontSize=11;
-
-
         return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_group_item1, parent, false));
-
-
-
-
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -68,7 +58,7 @@ public class CustomTabAdapter extends RecyclerView.Adapter<CustomTabAdapter.view
         final CustomTab customTab = customTabs.get(position);
 
         holder.txtNameTab.setText(customTab.getTn());
-        holder.txtNameTab.setTextSize(fontSize);
+
 
 
         if (customTab.Click) {

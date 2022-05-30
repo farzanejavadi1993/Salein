@@ -94,7 +94,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.RulesFragment:
                 case R.id.PaymentFragment:
                 case R.id.SplashScreenFragment:
-                case R.id.SearchFragment:
+
                 case R.id.MoreFragment:
                     binding.navView.setVisibility(View.GONE);
                     break;

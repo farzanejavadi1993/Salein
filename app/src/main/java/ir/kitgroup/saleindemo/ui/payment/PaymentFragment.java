@@ -220,7 +220,7 @@ public class PaymentFragment extends Fragment {
             dialogAddress.setCancelable(true);
             radioAddress1 = dialogAddress.findViewById(R.id.radioAddress1);
             radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
-            radioAddress2 = dialogAddress.findViewById(R.id.radioAddress2);
+
             MaterialButton btnNewAddress = dialogAddress.findViewById(R.id.btn_edit);
 
 
@@ -279,7 +279,6 @@ public class PaymentFragment extends Fragment {
                     if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
                         dialogAddress.dismiss();
-                        binding.tvTypeOrder.setVisibility(View.GONE);
                         return;
                     } else {
                         calculateTransport=price;
@@ -329,7 +328,7 @@ public class PaymentFragment extends Fragment {
                     if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
                         dialogAddress.dismiss();
-                        binding.tvTypeOrder.setVisibility(View.GONE);
+
                         return;
                     } else {
                         calculateTransport=price;
@@ -365,7 +364,7 @@ public class PaymentFragment extends Fragment {
                     if (price == -1.0 ) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
                         dialogAddress.dismiss();
-                        binding.tvTypeOrder.setVisibility(View.GONE);
+
                         return;
                     } else {
                         calculateTransport = price;
@@ -936,9 +935,7 @@ public class PaymentFragment extends Fragment {
             if (OrdTList.size() == 1) {
                 OrdTList.get(0).Click = true;
                 Ord_TYPE = OrdTList.get(0).getC();
-                binding.tvTypeOrder.setVisibility(View.GONE);
-                binding.recyclerViewOrderType.setVisibility(View.GONE);
-
+                binding.layoutTypeOrder.setVisibility(View.GONE);
             }
 
 

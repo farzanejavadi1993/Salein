@@ -83,7 +83,7 @@ public class MoreFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @SuppressLint({"SetTextI18n", "CommitPrefEdits"})
+   @SuppressLint({"SetTextI18n", "CommitPrefEdits"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -101,10 +101,9 @@ public class MoreFragment extends Fragment {
             linkPayment = linkPayment + "/ChargeClub?c=" + user.getC();
 
 
-        if (company != null && company.getAbus() != null && !company.getAbus().equals("")) {
-            binding.view.setVisibility(View.VISIBLE);
-            binding.btnAboutUs.setVisibility(View.VISIBLE);
-        }
+        if (company != null && company.getAbus() != null && !company.getAbus().equals(""))
+            binding.cardAboutUs.setVisibility(View.VISIBLE);
+
 
 
         //region Cast Variable Dialog Sync
@@ -165,12 +164,12 @@ public class MoreFragment extends Fragment {
 
 
 
-        binding.btnShare.setOnClickListener(v -> {
+        binding.cardShare.setOnClickListener(v -> {
             NavDirections action = MoreFragmentDirections.actionGoToContactUsFragment("Share");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 
-        binding.btnCredit.setOnClickListener(v -> {
+        binding.cardCredit.setOnClickListener(v -> {
             if (!linkPayment.equals("")) {
                 if (seenActivity) {
                     seenActivity = false;
@@ -185,35 +184,38 @@ public class MoreFragment extends Fragment {
         });
 
         binding.ivPower.setOnClickListener(v -> showError("آیا مایل به خروج از برنامه هستید؟", 1));
-        binding.ivSupport.setColorFilter(getResources().getColor(R.color.color_svg), PorterDuff.Mode.SRC_IN);
 
 
 
-        binding.lProfile.setOnClickListener(v ->
+
+        binding.cardProfile.setOnClickListener(v ->
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToProfileFragment)
         );
 
 
-        binding.btnSupport.setOnClickListener(v -> {
+        binding.cardContactUs.setOnClickListener(v -> {
             NavDirections action = MoreFragmentDirections.actionGoToContactUsFragment("Contact");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 
 
-        binding.btnAboutUs.setOnClickListener(v ->
+        binding.cardAboutUs.setOnClickListener(v ->
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToAboutUsFragment));
 
 
-        binding.btnOrderList.setOnClickListener(v ->
+        binding.cardOrder.setOnClickListener(v ->
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment));
 
 
         if (user != null && user.CRDT != null) {
-            binding.txtCredit.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
+            binding.tvCredits.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
         } else {
-            binding.txtCredit.setText("موجودی : " + "0" + " ریال ");
+            binding.tvCredits.setText("موجودی : " + "0" + " ریال ");
         }
 
+
+
+        binding.ivBackFragment.setOnClickListener(view1 -> Navigation.findNavController(binding.getRoot()).popBackStack());
 
     }
 
@@ -240,12 +242,12 @@ public class MoreFragment extends Fragment {
 
                     Users acc = Select.from(Users.class).first();
                     if (acc != null && acc.CRDT != null)
-                        binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                        binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
-                    binding.txtCredit.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                    binding.tvCredits.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                 } else {
-                    binding.txtCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
-                    binding.txtCredit.setText("خطا در بروز رسانی موجودی ");
+                    binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                    binding.tvCredits.setText("خطا در بروز رسانی موجودی ");
                     disableAccount = sharedPreferences.getBoolean("disableAccount", false);
                     if (disableAccount)
                         showError("حساب شما غیر فعال است بعداز بررسی و تایید کارشناس  فعال میگردد", 2);

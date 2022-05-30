@@ -32,7 +32,7 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
     private final Activity context;
 
 
-    private int fontSize=0;
+
     public interface ClickItem {
         void onRowClick(String GUID,Integer code);
     }
@@ -51,10 +51,7 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-       if (Util.screenSize >=7)
-           fontSize=13;
-       else
-           fontSize=11;
+
         return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
 
 
@@ -67,11 +64,8 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
 
         holder.name.setText(orderType.getN());
 
-
-        holder.name.setTextSize(fontSize);
         if (orderType.Click) {
-
-            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.order_item_recycle_group__card_background));
+            holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_bottom_low_radius));
             holder.name.setTextColor(context.getResources().getColor(R.color.white));
 
         } else if (!orderType.Click) {

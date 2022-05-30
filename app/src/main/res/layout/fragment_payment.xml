@@ -55,7 +55,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-
             android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +75,7 @@
 
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/layout_address"
+                android:id="@+id/address_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_address"
@@ -142,9 +141,7 @@
                 android:textSize="12dp"
                 android:textStyle="bold" />
 
-
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_payment"
@@ -267,7 +264,6 @@
 
 
         </RelativeLayout>
-
         <RelativeLayout
             android:visibility="gone"
             android:id="@+id/layoutTime"
@@ -287,8 +283,6 @@
                 android:textColor="@color/black"
                 android:textSize="12dp"
                 android:textStyle="bold" />
-
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/timeLayout"
                 android:layout_width="match_parent"
@@ -349,7 +343,6 @@
             >
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tv_type_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -360,7 +353,6 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-
                 android:id="@+id/recyclerViewOrderType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -370,8 +362,6 @@
 
 
         </RelativeLayout>
-
-
 
         <LinearLayout
             android:id="@+id/rl_error"
@@ -419,6 +409,7 @@
         </LinearLayout>
 
         <LinearLayout
+
             android:id="@+id/order_list_layout_sumPrice_detail_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -449,7 +440,7 @@
                       android:layout_marginRight="8dp"
                       android:text="هزینه ارسال"
                       android:textColor="@color/black_l"
-                      android:textSize="@dimen/text_medium_mobile_size"
+                      android:textSize="@dimen/text_normal_mobile_size"
                       tools:ignore="RelativeOverlap" />
 
                   <TextView
@@ -461,7 +452,7 @@
                       android:layout_marginRight="8dp"
                       android:text="@string/rial_0"
                       android:textColor="@color/black_light"
-                      android:textSize="@dimen/text_medium_mobile_size"
+                      android:textSize="13dp"
                       android:textStyle="bold" />
               </RelativeLayout>
 
@@ -489,7 +480,7 @@
                     android:layout_marginLeft="8dp"
                     android:text="@string/rial_0"
                     android:textColor="@color/black_light"
-                    android:textSize="12dp"
+                    android:textSize="13dp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
@@ -521,24 +512,28 @@
 
             </RelativeLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_register_order"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/green_table"
-                android:fontFamily="@font/iransans"
-                android:text="ارسال سفارش"
-                android:textColor="#fff"
-                android:textSize="12dp"
-                app:cornerRadius="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginBottom="13dp"
+                    android:id="@+id/btn_register_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="12dp"
+                    app:backgroundTint="@null"
+                   android:background="@drawable/bottom_background"
+                    android:fontFamily="@font/iransans"
+                    android:text="ارسال سفارش"
+                    android:textColor="#fff"
+                    android:textSize="12dp"
+                    app:cornerRadius="12dp">
 
 
-            </com.google.android.material.button.MaterialButton>
+                </com.google.android.material.button.MaterialButton>
+
+
 
 
         </LinearLayout>

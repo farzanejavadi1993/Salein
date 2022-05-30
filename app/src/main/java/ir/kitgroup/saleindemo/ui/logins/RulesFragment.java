@@ -35,13 +35,7 @@ public class RulesFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Company company = Select.from(Company.class).first();
-        int fontSize;
-        if (Util.screenSize >= 7)
-            fontSize = 12;
-        else
-            fontSize = 14;
-        binding.tvTitle.setTextSize(fontSize);
-        binding.tvRule.setTextSize(fontSize);
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
