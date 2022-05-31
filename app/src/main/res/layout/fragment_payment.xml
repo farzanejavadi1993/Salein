@@ -28,18 +28,16 @@
 
             <ImageView
                 android:id="@+id/iv_back"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin8"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/margin4"
+                android:padding="8dp"
                 android:rotationY="180"
-                app:srcCompat="@drawable/ic_back"
-                tools:ignore="ContentDescription" />
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
             <TextView

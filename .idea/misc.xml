@@ -107,11 +107,13 @@
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/background_subgroup_mobile.xml" value="0.1109375" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/bottom_background.xml" value="0.161" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/call_shape.xml" value="0.161" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/curve_background.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/gradient_home.xml" value="0.12578125" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/group_background.xml" value="0.1109375" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/home_group_background.xml" value="0.1109375" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_aboout_us.xml" value="0.1875" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_cradit.xml" value="0.1875" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_edit.xml" value="0.2105" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_filter_active.xml" value="0.164453125" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_left_icon.xml" value="0.144140625" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_minus_red.xml" value="0.12578125" />
@@ -129,15 +131,19 @@
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/contact_us_fragment.xml" value="0.15" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/dialog_address.xml" value="0.13797814207650272" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_company.xml" value="0.15234375" />
-        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_invoice_detail_mobile.xml" value="0.18" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_invoice_detail_mobile.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_login.xml" value="0.13490437158469945" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_main.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_map.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_order_list.xml" value="0.12978142076502733" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_payment.xml" value="0.18" />
-        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_profile.xml" value="0.1407103825136612" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_profile.xml" value="0.18" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_register.xml" value="0.1078125" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_search_product.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_stories.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/home_fragment.xml" value="0.13797814207650272" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/more_fragment.xml" value="0.18" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/order_list_item_mobile.xml" value="0.12978142076502733" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/order_recycle_group_item1.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.33" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/order_recycle_subgroup_item_mobile.xml" value="0.1" />
@@ -164,7 +170,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

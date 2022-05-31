@@ -11,7 +11,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleindemo"
+        applicationId "ir.kitgroup.salein"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
@@ -83,6 +83,9 @@ dependencies {
     implementation "com.airbnb.android:lottie:+"
     implementation 'com.github.GrenderG:Toasty:1.5.2'
     implementation 'com.github.aabhasr1:OtpView:v1.1.2'
+
+
+
 
 
     //Retrofit Library

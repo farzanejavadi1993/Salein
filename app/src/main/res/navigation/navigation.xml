@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/SplashScreenFragment"
-        android:name="ir.kitgroup.saleindemo.ui.splashscreen.SplashScreenFragment"
+        android:name="ir.kitgroup.salein.ui.splashscreen.SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/actionGoToLoginFragment"
@@ -36,18 +36,18 @@
 
     <fragment
         android:id="@+id/CompanyFragment"
-        android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragment"
+        android:name="ir.kitgroup.salein.ui.companies.CompanyFragment"
         tools:layout="@layout/fragment_all_company"/>
 
 
     <fragment
         android:id="@+id/SearchFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.searchItem.SearchProductFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.searchItem.SearchProductFragment"
         tools:layout="@layout/fragment_search_product"/>
 
     <fragment
         android:id="@+id/LoginFragment"
-        android:name="ir.kitgroup.saleindemo.ui.logins.LoginFragment"
+        android:name="ir.kitgroup.salein.ui.logins.LoginFragment"
         tools:layout="@layout/fragment_login">
 
         <action
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/StoreFragment"
-        android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragment"
+        android:name="ir.kitgroup.salein.ui.companies.CompanyFragment"
         tools:layout="@layout/fragment_all_company">
 
 
@@ -72,7 +72,7 @@
 
     <fragment
         android:id="@+id/PaymentFragment"
-        android:name="ir.kitgroup.saleindemo.ui.payment.PaymentFragment"
+        android:name="ir.kitgroup.salein.ui.payment.PaymentFragment"
         tools:layout="@layout/fragment_payment">
 
         <action
@@ -89,7 +89,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment"
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/actionGoToFilterFragment"
@@ -103,7 +103,7 @@
 
     <fragment
         android:id="@+id/InvoiceFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.invoiceItem.InVoiceDetailFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.invoiceItem.InVoiceDetailFragment"
         tools:layout="@layout/invoice_list_item_recycle">
 
         <action
@@ -128,7 +128,7 @@
 
     <fragment
         android:id="@+id/FilterFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.FilterFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.homeItem.FilterFragment"
         tools:layout="@layout/filter_fragment">
 
         <argument
@@ -140,7 +140,7 @@
 
     <fragment
         android:id="@+id/MoreFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.MoreFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.moreItem.MoreFragment"
         tools:layout="@layout/more_fragment">
 
         <action
@@ -162,7 +162,7 @@
 
     <fragment
         android:id="@+id/ProfileFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.ProfileFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.moreItem.ProfileFragment"
         tools:layout="@layout/fragment_profile">
 
 
@@ -174,7 +174,7 @@
 
     <fragment
         android:id="@+id/ContactUsFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.ContactUsFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.moreItem.ContactUsFragment"
         tools:layout="@layout/contact_us_fragment">
         <argument
             android:name="show"
@@ -184,13 +184,13 @@
 
     <fragment
         android:id="@+id/AboutUsFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.AboutUsFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.moreItem.AboutUsFragment"
         tools:layout="@layout/about_us_fragment" />
 
 
     <fragment
         android:id="@+id/OrderFragment"
-        android:name="ir.kitgroup.saleindemo.ui.launcher.moreItem.orders.OrderListFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.moreItem.orders.OrderListFragment"
         tools:layout="@layout/fragment_order_list" >
 
         <action
@@ -202,7 +202,7 @@
 
     <fragment
         android:id="@+id/RegisterFragment"
-        android:name="ir.kitgroup.saleindemo.ui.logins.RegisterFragment"
+        android:name="ir.kitgroup.salein.ui.logins.RegisterFragment"
         tools:layout="@layout/register_fragment">
         <action
             android:id="@+id/actionGoToMapFragment"
@@ -225,7 +225,7 @@
 
     <fragment
         android:id="@+id/RulesFragment"
-        android:name="ir.kitgroup.saleindemo.ui.logins.RulesFragment"
+        android:name="ir.kitgroup.salein.ui.logins.RulesFragment"
         tools:layout="@layout/fragment_rules">
 
     </fragment>
@@ -233,7 +233,7 @@
 
     <fragment
         android:id="@+id/MapFragment"
-        android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
+        android:name="ir.kitgroup.salein.ui.map.MapFragment"
         tools:layout="@layout/fragment_map">
         <argument
             android:name="from"
@@ -242,7 +242,7 @@
     </fragment>
     <fragment
         android:id="@+id/VerifyFragment"
-        android:name="ir.kitgroup.saleindemo.ui.logins.VerifyFragment"
+        android:name="ir.kitgroup.salein.ui.logins.VerifyFragment"
         tools:layout="@layout/fragment_verify">
 
         <action

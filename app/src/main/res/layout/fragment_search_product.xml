@@ -10,80 +10,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.card.MaterialCardView
+        <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="12dp"
-            android:elevation="@dimen/margin4"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="4dp"
-            tools:ignore="UnusedAttribute">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/background_edittext"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="@color/white"
+            android:elevation="@dimen/login_toolbar_elevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="lollipop">
 
-            <RelativeLayout
-                android:id="@+id/layout_search_product"
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/iv_back"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:rotationY="180"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.SearchView
+                android:layout_toLeftOf="@+id/iv_back"
+                android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginStart="2dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent" />
+        </RelativeLayout>
 
-                android:background="@drawable/background_edittext">
-
-                <ProgressBar
-                    android:visibility="gone"
-                    android:id="@+id/pro"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/margin8" />
-
-
-                <ImageView
-                    android:id="@+id/iv_search"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin8"
-                    android:layout_marginRight="@dimen/margin8"
-                    app:srcCompat="@drawable/ic_search"
-                    tools:ignore="ContentDescription" />
-
-
-                <EditText
-
-                    android:id="@+id/edt_search_product"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/iv_search"
-                    android:background="@drawable/background_edittext"
-                    android:backgroundTint="@android:color/transparent"
-                    android:fontFamily="@font/iransans"
-                    android:gravity="right"
-                    android:hint="@string/search_product"
-                    android:inputType="text"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12dp"
-                    tools:targetApi="lollipop" />
-
-
-            </RelativeLayout>
-
-        </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
+        <ProgressBar
+            android:id="@+id/pro"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginBottom="54dp"

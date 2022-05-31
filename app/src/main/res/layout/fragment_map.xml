@@ -8,8 +8,6 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/login_background_color"
@@ -29,7 +27,25 @@
             tools:targetApi="lollipop">
 
 
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/iv_back"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:rotationY="180"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
             <androidx.appcompat.widget.SearchView
+                android:layout_toLeftOf="@+id/iv_back"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,13 +194,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_height_size"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginLeft="22dp"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
             android:layout_marginRight="22dp"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/purple_700"
+            app:backgroundTint="@null"
+            android:background="@drawable/bottom_background"
             android:fontFamily="@font/iransans"
             android:text="@string/register_gps"
             android:textColor="@color/white"
