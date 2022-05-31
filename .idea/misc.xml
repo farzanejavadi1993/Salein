@@ -120,6 +120,7 @@
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_plus_white.xml" value="0.106640625" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_share.xml" value="0.1875" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/ic_support.xml" value="0.1875" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/inactive_bottom.xml" value="0.189" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/minus_background.xml" value="0.106640625" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/navigation_view_colored.xml" value="0.106640625" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/drawable/order_item_recycle_group__card_background.xml" value="0.1109375" />
@@ -141,6 +142,7 @@
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_register.xml" value="0.1078125" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_search_product.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_stories.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/fragment_verify.xml" value="0.13524590163934427" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/home_fragment.xml" value="0.13797814207650272" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/more_fragment.xml" value="0.18" />
         <entry key="..\:/SaleInApp folder/SaleinNew/app/src/main/res/layout/order_list_item_mobile.xml" value="0.12978142076502733" />

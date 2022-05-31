@@ -197,6 +197,7 @@ public class SplashScreenFragment extends Fragment {
                 }
                 //endregion Find A Company With An Application PackageName
 
+
                 //region Can't Find A Company With The PackageName
                 else {
                     binding.txtErrorr.setText("اطلاعات شرکت در سرور وجود ندارد.");
@@ -205,6 +206,7 @@ public class SplashScreenFragment extends Fragment {
                     return;
                 }
                 //endregion Can't Find A Company With The PackageName
+
 
                 //region Request From The Server With The IP Of The Company That Was Found
                 Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
@@ -216,17 +218,16 @@ public class SplashScreenFragment extends Fragment {
                 //region When The User Is Logged In
                 if (Select.from(Users.class).list().size() > 0) {
                     if (saleinInstance != null)
-                        Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
+                        Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToCompanyFragment);
                     else {
-                 /*       NavDirections action = SplashScreenFragmentDirections.actionGoToMainFragment("");
-                        Navigation.findNavController(binding.getRoot()).navigate(action);*/
-
                         NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
                         Navigation.findNavController(binding.getRoot()).navigate(action);
                     }
 
                 }
                 //endregion When The User Is Logged In
+
+
 
 
                 //region When The User Is Not Logged In

@@ -114,7 +114,6 @@
                 app:otp_box_background_success="@drawable/otp_success"
                 app:otp_text_size="12dp"
                 app:text_typeface="@font/iransans"
-
                 app:width="40dp" />
         </RelativeLayout>
 

@@ -117,17 +117,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
             android:layout_width="360dp"
-            android:layout_height="@dimen/bottom_height_size"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/layout_editText"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="22dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/bottom_background_inActive_color"
+            app:backgroundTint="@null"
+            android:background="@color/bottom_background_inActive_color"
             android:enabled="false"
             android:fontFamily="@font/iransans"
             android:text="@string/get_code"
@@ -162,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="  قوانین و مقررات "
-                android:textColor="@color/purple_700"
+                android:textColor="@color/purple_500"
                 android:textSize="11dp" />
 
             <TextView

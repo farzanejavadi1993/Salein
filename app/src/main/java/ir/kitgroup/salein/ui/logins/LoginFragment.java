@@ -37,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.salein.Connect.MyViewModel;
+
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 
@@ -120,10 +121,10 @@ public class LoginFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (Util.isValid(s.toString())) {
                     Util.hideKeyBoard(getActivity(), binding.edtMobile);
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                    binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
                     binding.btnLogin.setEnabled(true);
                 } else {
-                    binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                    binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);
                     binding.btnLogin.setEnabled(false);
                 }
             }
@@ -138,7 +139,7 @@ public class LoginFragment extends Fragment {
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
                 String messageCode = String.valueOf(code);
                 mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
-                binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.bottom_background_inActive_color));
+                binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnLogin.setEnabled(false);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 myViewModel.getSmsLogin(userName,passWord, messageCode, mobile);
@@ -183,7 +184,7 @@ public class LoginFragment extends Fragment {
 
         myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
             binding.btnLogin.setEnabled(true);
             if (result == null)
                 return;
@@ -197,7 +198,7 @@ public class LoginFragment extends Fragment {
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.purple_700));
+            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
