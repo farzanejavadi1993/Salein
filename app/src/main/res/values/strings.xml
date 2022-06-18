@@ -124,4 +124,8 @@
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZGV2ZWxvcGVyZ2lybDIwMTc3IiwiYSI6ImNrcmFieGN3azB3cGQydm1jOG9ienJheGMifQ._cTGNkLzOYMwCryu_YQnLw</string>
 
+
+    <string name="passenger_not_find">چیزی یافت نشد!</string>
+    <string name="passenger_not_find_description">شما هنوز هیچ سفارشی ثبت نکرده‌اید. برای شروع روی دکمه سفارش آنلاین بزنید.</string>
+    <string name="company_not_find_description">شما هنوز هیچ شرکتی ثبت نکرده‌اید. شرکت مورد نظر خود را از لیست شرکت ها ذخیره کنید.</string>
 </resources>

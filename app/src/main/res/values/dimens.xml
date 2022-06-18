@@ -83,9 +83,7 @@
     <dimen name="launcher_order_editText_description_padding">10dp</dimen>
     <dimen name="launcher_order_editText_description_margin">4dp</dimen>
 
-
-
-
+    <dimen name="not_find_top_margin">12dp</dimen>
     <dimen name="margin10">10dp</dimen>
     <dimen name="margin8">8dp</dimen>
     <dimen name="margin4">4dp</dimen>
@@ -93,12 +91,16 @@
     <dimen name="margin6">6dp</dimen>
 
 
+    <dimen name="design_bottom_navigation_item_max_width" tools:override="true">600dp</dimen>
+    <dimen name="design_bottom_navigation_active_item_max_width" tools:override="true">600dp</dimen>
 
-        <dimen name="design_bottom_navigation_item_max_width" tools:override="true">600dp</dimen>
-        <dimen name="design_bottom_navigation_active_item_max_width" tools:override="true">600dp</dimen>
-
-
-
+    <dimen name="not_find_description_left_right_margin">37dp</dimen>
+    <dimen name="not_find_description_top_margin">8dp</dimen>
+    <dimen name="not_find_size">12dp</dimen>
+    <dimen name="not_find_description_size">13dp</dimen>
+    <dimen name="passenger_title_size">18dp</dimen>
+    <dimen name="passenger_icon_empty_page">96dp</dimen>
+    <dimen name="passenger_icon_empty_page_top_margin">90dp</dimen>
 
 
 </resources>

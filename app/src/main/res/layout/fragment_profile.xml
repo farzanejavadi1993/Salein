@@ -145,12 +145,12 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_alignParentRight="true"
                                 android:id="@+id/address1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="right"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="16dp"
+                                android:gravity="right"
                                 android:text="آدرس 1"
                                 android:textColor="#818181"
                                 android:textSize="13dp" />
@@ -163,7 +163,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/address1"
-                                android:layout_marginRight="@dimen/margin10"
+                                android:layout_marginRight="16dp"
                                 android:layout_toLeftOf="@+id/ivPhone"
                                 android:textColor="@color/medium_color"
                                 android:textSize="13dp"
@@ -210,7 +210,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/address2"
-                                android:layout_marginRight="@dimen/margin10"
+                                android:layout_marginRight="16dp"
                                 android:layout_toLeftOf="@+id/ivPhone"
                                 android:textColor="@color/medium_color"
                                 android:textSize="13dp"

@@ -12,16 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Activities.TabActivity">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginBottom="3dp">
 
-
+            <ImageView
+                android:layout_marginRight="12dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/iv_back"
+                android:layout_width="@dimen/icon_normal_size"
+                android:layout_height="@dimen/icon_normal_size"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:rotationY="180"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
             <TextView
+                android:layout_marginRight="@dimen/margin10"
+                android:layout_toLeftOf="@+id/iv_back"
+             android:layout_centerVertical="true"
                 android:id="@+id/tv_title_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,50 +46,45 @@
                 android:textColor="@color/medium_color"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                />
 
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tvDemo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="13dp"
+                android:layout_marginLeft="16dp"
                 android:lineSpacingExtra="16dp"
                 android:text="ورود به دمو"
-                android:textColor="@color/purple_700"
+                android:textColor="@color/purple_500"
                 android:textSize="14dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textStyle="bold" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <com.google.android.material.tabs.TabLayout
-
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layoutDirection="rtl"
-
-            app:tabTextColor="@color/medium_color"
-            app:tabSelectedTextColor="@color/purple_700"
-            app:tabIndicatorColor="@color/purple_700"
-            android:id="@+id/tabLayout"
-
-
+        </RelativeLayout>
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
+            android:layout_marginLeft="22dp"
+            android:id="@+id/cardTab"
+            app:cardElevation="4dp"
+            android:layout_marginRight="22dp"
+            app:cardCornerRadius="15dp"
+            android:layout_height="wrap_content">
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:id="@+id/tabLayout"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.card.MaterialCardView>
         <androidx.viewpager.widget.ViewPager
-            android:rotationY="180"
-            android:layout_marginTop="18dp"
-            android:id="@+id/viewPager"
+            android:layout_below="@+id/cardTab"
+            android:layout_marginTop="15dp"
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            />
+
 
     </LinearLayout>
 </layout>

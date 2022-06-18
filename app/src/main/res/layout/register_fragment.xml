@@ -255,7 +255,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:backgroundTint="@color/launcher_linear_order_header_color"
                         android:strokeColor="@color/launcher_linear_order_header_color"
@@ -264,7 +264,7 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="48dp">
 
                             <EditText
                                 android:id="@+id/edtCode"
@@ -366,9 +366,10 @@
 
 
             <RelativeLayout
+                android:layout_marginBottom="@dimen/margin10"
                 android:id="@+id/card_button"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
 
                 >
@@ -380,7 +381,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="22dp"
                     android:layout_marginEnd="22dp"
-                    app:backgroundTint="@color/purple_500"
+                    app:backgroundTint="@null"
+                    android:background="@drawable/bottom_background"
                     android:fontFamily="@font/iransans"
                     android:lineSpacingExtra="10dp"
                     android:text="ثبت و ادامه"

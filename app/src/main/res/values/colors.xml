@@ -45,7 +45,7 @@
     <color name="black_light">#2f2f2f</color>
     <color name="colorGreenLight">#12E613</color>
     <color name="color_svg">#333333</color>
-
+    <color name="invalid_name_color">#8a8a8a</color>
 
     <color name="view_color">#ccc</color>
     <color name="view_color_launcher">#6A6767</color>
