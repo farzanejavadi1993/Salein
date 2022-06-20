@@ -1,24 +1,34 @@
 package ir.kitgroup.saleindemo.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
+;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.Util;
 
+
+import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
 import ir.kitgroup.saleindemo.databinding.ActivityLauncherBinding;
 
 
 @AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {
     //region Parameter
+    @Inject
+    SharedPreferences sharedPreferences;
     private ActivityLauncherBinding binding;
     private NavController navController;
     private int destinationId;
@@ -44,21 +54,21 @@ public class LauncherActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       /* int count=navController.getGraph().getStartDestinationId();
-        if (count==0){
-            if (touchCount == 1) {
-                finish();
-                return;
-            } else {
-                touchCount += 1;
-            }
-            Toasty.success(this, "برای خروج دوبار پشت سرهم بازگشت را بزنید").show();
-            new Handler().postDelayed(() -> {
-                touchCount = 0;
-            }, 2000);
 
-        }
-        else*/
+      if (sharedPreferences.getBoolean("vip",false) || sharedPreferences.getBoolean("discount",false)) {
+      /* *//*   NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+          navHostFragment.getChildFragmentManager().getFragments().get(0).;*//*
+
+          NavHostFragment fragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+          HomeFragment frag = (HomeFragment) fragment.getFragmentManager().findFragmentById(R.id.HomeFragment);
+          if (frag!=null)
+          frag.showData();*/
+
+          FragmentManager fm = getSupportFragmentManager();
+          HomeFragment fragment = (HomeFragment) fm.findFragmentById(R.id.HomeFragment);
+          fragment.sayHi();
+      }
+
         super.onBackPressed();
 
 
@@ -114,6 +124,7 @@ public class LauncherActivity extends AppCompatActivity {
                     break;
                 case R.id.HomeFragment: {
                     binding.navView.setVisibility(View.VISIBLE);
+
                 }
                     break;
 
@@ -141,9 +152,6 @@ public class LauncherActivity extends AppCompatActivity {
 
 
 
-    public interface CallBack {
-        void callBack();
-    }
 
 
     //endregion Method

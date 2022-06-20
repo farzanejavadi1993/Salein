@@ -107,6 +107,7 @@
 
 
     <fragment
+        android:tag="homeFragment"
         android:id="@+id/HomeFragment"
         android:name="ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment"
         tools:layout="@layout/home_fragment">
