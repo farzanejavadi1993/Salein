@@ -1069,11 +1069,17 @@ public class PaymentFragment extends Fragment {
         double priceTransport = -1;
         try {
             if ("ir.kitgroup.saleinmeat".equals(company.getInskId())) {
-                if (SumPurePrice > 2000000) {
+                if (0 < distance && distance <= 1) {
+                    priceTransport = 50000;
+                }else
+                {
+                    priceTransport = 150000;
+                }
+               /* if (SumPurePrice > 2000000) {
                     priceTransport = 0.0;
                 } else {
                     priceTransport = 100000;
-                }
+                }*/
             } else {
                 if ((distance == 0 || 0 < distance) && distance <= 1) {
                     priceTransport = 50000;

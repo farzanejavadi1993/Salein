@@ -44,6 +44,7 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/otp_success.xml" value="0.14296875" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/radio_btn_background.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/rectangle_table_pink.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/rectangle_table_red.xml" value="0.1555" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/rounded_edittext_blue.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/rounded_edittext_gray.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/drawable/save_background.xml" value="0.1" />
@@ -53,6 +54,7 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/activity_detail.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/activity_launcher.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/activity_search_autocomplete_item.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/banner_fragment.xml" value="0.12421875" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/contact_us_fragment.xml" value="0.121484375" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/custom_dialog.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/custom_progressbar.xml" value="0.1" />
@@ -74,6 +76,7 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_my_company.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_order_list.xml" value="0.22" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_organization_login.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_payment.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_payment_mobile.xml" value="0.25" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_profile.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/fragment_register.xml" value="0.19133574007220217" />
@@ -91,6 +94,7 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_recycle_type_order.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_time.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/launcher_recycle_table_item.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/more_fragment.xml" value="0.134765625" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_list_item_mobile.xml" value="0.22" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_recycle_group_item1.xml" value="0.9523809523809523" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.18" />

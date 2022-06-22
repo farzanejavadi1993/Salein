@@ -27,6 +27,7 @@
             android:elevation="@dimen/margin4">
 
             <ImageView
+                android:layout_marginRight="12dp"
                 android:id="@+id/iv_back"
                 android:layout_width="@dimen/icon_normal_size"
                 android:layout_height="@dimen/icon_normal_size"

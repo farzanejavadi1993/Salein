@@ -65,6 +65,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.Product;
 
 
+
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
 
     private final Activity context;
@@ -214,7 +215,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         if (productsList.get(position) != null) {
            if (type==1)
-               setFadeAnimation(holder.itemView);
+               try {
+                   setFadeAnimation(holder.itemView);
+               }catch (Exception ignored){}
+
 
             holder.error.setText("");
 

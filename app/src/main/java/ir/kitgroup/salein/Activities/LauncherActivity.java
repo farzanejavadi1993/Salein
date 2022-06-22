@@ -19,11 +19,13 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+import com.orm.query.Select;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.Util;
 
 
@@ -75,8 +77,12 @@ public class LauncherActivity extends AppCompatActivity {
                     if (fragment instanceof HomeFragment) {
                         ((HomeFragment) fragment).showData();
                     }
-                } else
-                  dialog.show();
+                } else {
+                    if (Select.from(Salein.class).first() == null)
+                        dialog.show();
+                    else
+                        super.onBackPressed();
+                }
 
                 break;
 

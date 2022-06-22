@@ -20,12 +20,12 @@
             android:id="@+id/order_recycle_item_product_img"
             android:layout_width="120dp"
             android:layout_height="120dp"
+
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginBottom="@dimen/margin10"
-            app:siBorderColor="#AAA9A9"
-            app:siBorderWidth="0.5dp"
+            android:src="@mipmap/ic_meat"
             app:siRadius="15dp" />
 
 
@@ -57,7 +57,6 @@
     </RelativeLayout>
 
     <TextView
-        android:lineSpacingExtra="10dp"
         android:id="@+id/order_recycle_item_product_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,10 +66,11 @@
         android:layout_marginEnd="12dp"
         android:layout_toRightOf="@+id/layout_Image"
         android:gravity="right"
-        android:text="lklklklkl"
+        android:lineSpacingExtra="10dp"
+
         android:textColor="@color/medium_color"
-        android:textStyle="bold"
-        android:textSize="13dp" />
+        android:textSize="13dp"
+        android:textStyle="bold" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/order_recycle_item_product_old_price"
             android:gravity="right"
-            android:text="lklkkklk"
+
             android:textColor="@color/medium_color"
             android:textSize="12dp"
             android:textStyle="bold"

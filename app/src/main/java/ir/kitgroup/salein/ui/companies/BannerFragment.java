@@ -29,24 +29,6 @@ public class BannerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.adv1);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.tvDescript1.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
-
-        }
-
-        binding.tvMore1.setOnClickListener(view1 -> {
-            if (binding.tvDescript1.getVisibility()==View.VISIBLE) {
-                binding.tvMore1.setText("بیشتر");
-                binding.tvDescript1.setVisibility(View.GONE);
-            }
-            else {
-                binding.tvMore1.setText("بستن");
-                binding.tvDescript1.setVisibility(View.VISIBLE);
-            }
-        });
-
 
     }
 

@@ -1,121 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout >
 
-    <LinearLayout
+<layout>
 
-        xmlns:tools="http://schemas.android.com/tools"
-        android:focusable="true"
+    <RelativeLayout
         android:clickable="true"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:focusable="true"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/white">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical">
 
 
 
-            <LinearLayout
-                android:orientation="vertical"
+
+
+
+
+
+            <ImageView
+                android:id="@+id/iv_icon_empty"
+                android:layout_width="@dimen/passenger_icon_empty_page"
+                android:layout_height="@dimen/passenger_icon_empty_page"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/passenger_icon_empty_page_top_margin"
+                android:src="@drawable/ic_not_found"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tv_not_find"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/not_find_top_margin"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="@string/passenger_not_find"
+                android:textColor="@color/invalid_name_color"
+                android:textSize="@dimen/not_find_size"
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="15dp"
-                    app:cardElevation="10dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="15dp">
-
-                    <LinearLayout
-
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:scaleType="centerCrop"
-                            android:id="@+id/adv1"
-                            android:layout_width="match_parent"
-                            android:layout_height="180dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:lottie_autoPlay="true"
-                            app:lottie_loop="true"
-
-                            tools:ignore="ContentDescription"
-                            />
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                style="@style/H7Right"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginLeft="12dp"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginRight="12dp"
-                                android:singleLine="true"
-                                android:text="ارزانتر از همه جا ، تخفیفات ویژه مشترکین شرکت پخش پدیده"
-                                android:textStyle="bold" />
-
-
-                            <TextView
-
-                                android:id="@+id/tvMore1"
-                                android:layout_alignParentLeft="true"
-                                style="@style/H7Right"
-                                android:textColor="@color/purple_500"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginLeft="12dp"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginRight="12dp"
-                                android:singleLine="true"
-                                android:text="بیشتر"
-                                android:textStyle="bold" />
-
-
-                        </RelativeLayout>
-
-                        <TextView
-
-                            android:singleLine="true"
-                            android:layout_marginRight="12dp"
-                            android:layout_marginBottom="10dp"
-                            android:textColor="@color/colorGreenLight"
-                            android:layout_marginTop="5dp"
-                            style="@style/H7Right"
-                            android:text="مهلت : 4 روز باقی مانده"
-                            android:gravity="right"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:visibility="gone"
-                            android:id="@+id/tvDescript1"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="18dp"
-                            android:gravity="center"
-                            style="@style/H7Right"
-                            android:text="پس از موفقیت‌های سال‌های گذشته در زمینه‌ی عرضه‌ی مستقیم لوازم آرایشی و بهداشتی هم اینک و در طی اجرای کمپین ویژه‌ی اردیبهشت امسال تحت عنوان جشنواره بهارانه، خانومی از سه بخش جدید عطر، مادر و کودک و شوینده‌ها نیز رونمایی می‌کندتا هموطنان سراسر کشور بتوانند به راحتی و بدون نیاز به خروج از منزل در دوران کرونا، به محصولات رده‌های دیگر نیز دسترسی مستقیم و با قیمت مناسب داشته باشند."
-                            android:layout_marginRight="12dp"
-                            android:layout_marginLeft="12dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                tools:ignore="SpUsage" />
 
 
 
 
-            </LinearLayout>
 
 
-    </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
 </layout>
