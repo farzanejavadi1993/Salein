@@ -140,14 +140,14 @@
 
         <LinearLayout
 
-            android:layout_marginRight="@dimen/margin2"
-            android:layout_marginLeft="@dimen/margin2"
             android:id="@+id/layoutRule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_login"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin2"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/margin2"
             android:gravity="center|center_vertical"
             android:orientation="horizontal">
 

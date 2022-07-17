@@ -699,6 +699,7 @@ public class PaymentFragment extends Fragment {
             btnNo.setOnClickListener(v -> dialogSendOrder.dismiss());
 
             btnOk.setOnClickListener(v -> {
+
                 dialogSendOrder.dismiss();
                 Date date = Calendar.getInstance().getTime();
 
@@ -769,6 +770,7 @@ public class PaymentFragment extends Fragment {
                     }
                 }
                 Invoice invoice = new Invoice();
+                invoice.INV_UID=Inv_GUID;
                 invoice.INV_TOTAL_AMOUNT = totalPrice + sumTransport;//جمع فاکنور
                 invoice.INV_TOTAL_DISCOUNT = 0.0;
                 invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent * 100;
@@ -823,7 +825,8 @@ public class PaymentFragment extends Fragment {
             btnReturned.setOnClickListener(v -> {
                 dialogSendOrder.dismiss();
 
-                for (int i = 0; i < 2; i++) {
+              int size= Navigation.findNavController(binding.getRoot()).getBackQueue().size();
+                for (int i = 0; i < size-2; i++) {
                     Navigation.findNavController(binding.getRoot()).popBackStack();
                 }
             });
@@ -1014,7 +1017,14 @@ public class PaymentFragment extends Fragment {
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" +
                         Inv_GUID + "'").list();
                 InvoiceDetail.deleteInTx(invoiceDetails);
+
+                //region Delete Inv_GUID
+                String name = company.getInskId().split("ir.kitgroup.")[1];
+                Inv_GUID = sharedPreferences.getString(name, "");
                 sharedPreferences.edit().putString("Inv_GUID", "").apply();
+                sharedPreferences.edit().putString(name, "").apply();
+                //endregion Delete Inv_GUID
+
                 tvMessage.setText("سفارش با موفقیت ارسال شد");
 
             } else {

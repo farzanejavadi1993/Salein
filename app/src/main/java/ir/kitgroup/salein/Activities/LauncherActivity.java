@@ -25,13 +25,14 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+
+import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.Util;
 
 
 import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment;
-import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
-import ir.kitgroup.salein.R;
 
 
 
@@ -78,7 +79,7 @@ public class LauncherActivity extends AppCompatActivity {
                         ((HomeFragment) fragment).showData();
                     }
                 } else {
-                    if (Select.from(Salein.class).first() == null)
+                    if (Select.from(Salein.class).first() == null && navController.getBackQueue().size()==2)
                         dialog.show();
                     else
                         super.onBackPressed();
@@ -159,7 +160,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public void setGoneProfileItem(boolean show) {
+    public void setShowProfileItem(boolean show) {
         binding.navView.getMenu().getItem(0).setVisible(show);
     }
 

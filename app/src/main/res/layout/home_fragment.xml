@@ -56,7 +56,6 @@
                             android:textSize="12dp" />
 
                         <TextView
-                            android:textStyle="bold"
                             android:id="@+id/tvNameStore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -66,6 +65,7 @@
                             android:singleLine="true"
                             android:textColor="@color/white"
                             android:textSize="12dp"
+                            android:textStyle="bold"
                             tools:text="گوشت دنیوی" />
 
                         <ImageView

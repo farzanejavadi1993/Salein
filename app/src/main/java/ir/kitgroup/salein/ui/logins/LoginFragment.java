@@ -192,7 +192,7 @@ public class LoginFragment extends Fragment {
             if (result.equals("")) {
                 NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
-            }
+           }
 
         });
 
@@ -202,6 +202,7 @@ public class LoginFragment extends Fragment {
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
         });
         //endregion Get Result From The Server
 

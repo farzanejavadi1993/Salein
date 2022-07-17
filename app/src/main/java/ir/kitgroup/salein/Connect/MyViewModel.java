@@ -49,6 +49,7 @@ import ir.kitgroup.salein.models.Product;
 import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ProductLevel2;
 import ir.kitgroup.salein.models.Setting;
+import ir.kitgroup.salein.ui.payment.PaymentFragment;
 
 @HiltViewModel
 public class MyViewModel extends ViewModel {
@@ -806,9 +807,19 @@ public class MyViewModel extends ViewModel {
 
 
     public void sendOrder(String user,String passWord,List<Invoice> invoice, List<InvoiceDetail> invoiceDetail, List<PaymentRecieptDetail> clsPaymentRecieptDetail,String numberPos) {
-        compositeDisposable.clear();
+
+        PaymentFragment.JsonObject jsonObject = new PaymentFragment.JsonObject();
+        jsonObject.Invoice = invoice;
+        jsonObject.InvoiceDetail = invoiceDetail;
+        jsonObject.PaymentRecieptDetail = clsPaymentRecieptDetail;
+
+        Gson gson1 = new Gson();
+        Type typeJsonObject = new TypeToken<PaymentFragment.JsonObject>() {
+        }.getType();
+
+
         compositeDisposable.add(
-                myRepository.sendOrder(user, passWord, invoice,invoiceDetail,clsPaymentRecieptDetail,numberPos)
+                myRepository.sendOrder(user, passWord,  gson1.toJson(jsonObject, typeJsonObject),numberPos)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {

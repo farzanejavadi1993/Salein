@@ -181,6 +181,7 @@ public class HomeFragment extends Fragment {
         try {
             //region Config
 
+            Inv_GUID="";
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             Product.deleteAll(Product.class);
 
@@ -195,9 +196,16 @@ public class HomeFragment extends Fragment {
 
 
             //region Create Order
-            Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
+
+            try {
+                Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
+                getArguments().clear();
+            }catch (Exception ignored){
+                Inv_GUID="";
+            }
+
             if (Inv_GUID.equals("")) {
-                ((LauncherActivity) getActivity()).setGoneProfileItem(true);
+                ((LauncherActivity) getActivity()).setShowProfileItem(true);
                 String name = company.getInskId().split("ir.kitgroup.")[1];
                 Inv_GUID = sharedPreferences.getString(name, "");
 
@@ -206,7 +214,7 @@ public class HomeFragment extends Fragment {
                     sharedPreferences.edit().putString(name, Inv_GUID).apply();
                 }
             } else {
-                ((LauncherActivity) getActivity()).setGoneProfileItem(false);
+                ((LauncherActivity) getActivity()).setShowProfileItem(false);
             }
 
             sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
@@ -641,8 +649,10 @@ public class HomeFragment extends Fragment {
             });
 
             binding.btnCompanyBranches.setOnClickListener(view1 -> {
-                NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+                if (!company.Parent.equals("")) {
+                    NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
+                    Navigation.findNavController(binding.getRoot()).navigate(action);
+                }
             });
 
 
@@ -753,7 +763,8 @@ public class HomeFragment extends Fragment {
                     dialogUpdate.show();
                     Product.deleteAll(Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
-                } else if (update.equals("2") && !AppVersion.equals(NewVersion)) {
+                }
+                else if (update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);
