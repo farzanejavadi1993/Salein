@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -21,15 +20,11 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Salein;
@@ -65,6 +60,9 @@ public class SplashScreenFragment extends Fragment {
     private String appVersion = "";
     private String message = "";
     private String newVersion = "";
+    private String titleUpdate = "";
+    private String messageUpdate = "";
+    private boolean forcedUpdate =false;
     private Boolean  forced=false;
 
 
@@ -162,7 +160,7 @@ public class SplashScreenFragment extends Fragment {
         binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
             binding.btnWarning.setVisibility(View.GONE);
-            myViewModel.getCompany("");
+            myViewModel.getApp(Util.APPLICATION_ID);
         });
         //endregion Press The BtnError For Re-Request
 
@@ -174,82 +172,7 @@ public class SplashScreenFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-
-
-            myViewModel.getResultMessage().setValue(null);
-     /*       myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
-
-                if (result == null)
-                    return;
-
-                myViewModel.getResultCustomerFromServer().setValue(null);
-
-                //region Information Account From Server
-                if (result.size() > 0) {
-                    List<AppDetail> list = result.get(0).getApps();
-
-                    if (list.size() > 0) {
-                        CollectionUtils.filter(list, r -> r.getIemi().equals(IMEI) && r.getAppId().equals(Constant.APPLICATION_ID));
-                        if (list.size() > 0) {
-                            if (!list.get(0).getIsActive()) {
-                                from = "disable";
-                                customDialog.showDialog(getActivity(), "با این تلفن نمیتوانید وارد نرم افزار شوید.", false, "خروج", "", false, false, true);
-                                return;
-                            }
-                        }
-                    }
-                    else {
-
-                        from = "disable";
-                        customDialog.showDialog(getActivity(), "ورود به حساب کاربری ممکن نیست.", false, "خروج", "", false, false, true);
-                        return;
-                    }
-
-
-                } else {
-                    clearData();
-                }
-
-                checkUpdate();
-                //endregion Information Account From Server
-
-
-            });
-            myViewModel.getResultgetApp().observe(getViewLifecycleOwner(), result -> {
-
-                if (result == null)
-                    return;
-
-                myViewModel.getResultgetApp().setValue(null);
-                if (result.size() > 0) {
-                    Util.APPLICATION_ID = result.get(0).getAppId();
-                    if (result.get(0).getIsActive()) {
-
-                        newVersion = result.get(0).getVersion();
-                        title = result.get(0).getUpdateTitle();
-                        message = result.get(0).getUpdateDesc();
-                        linkUpdate = result.get(0).getLink();
-                        sharedPreferences.edit().putString("link_update", linkUpdate).apply();
-                        forced = result.get(0).getForced();
-                        if (account != null)
-                            myViewModel.getCustomerFromServer(account.getM());
-                        else
-                            checkUpdate();
-
-
-                    } else {
-                        binding.tvError.setText("اپلیکیشن غیر فعال شده است.");
-                        binding.tvError.setVisibility(View.VISIBLE);
-                    }
-
-                }
-
-            });
-            myViewModel.getApp(Util.APPLICATIONCODE);*/
-
-
-
-
+        myViewModel.getResultMessage().setValue(null);
 
         //region Get Company From Server After 1 Minute
         Thread thread = new Thread() {
@@ -257,8 +180,7 @@ public class SplashScreenFragment extends Fragment {
             public void run() {
                 try {
                     sleep(1000);
-                    myViewModel.getCompany("");
-
+                    myViewModel.getApp(Util.APPLICATION_CODE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -270,65 +192,7 @@ public class SplashScreenFragment extends Fragment {
 
 
         //region Get Result From The Server
-        myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
 
-
-            if (result == null) return;
-
-            myViewModel.getResultCompany().setValue(null);
-
-            if (result.size() > 0) {
-
-                //region Find A Company With An Application PackageName
-                CollectionUtils.filter(result, i -> i.getInskId() != null && i.getInskId().equals(packageName));
-                if (result.size() == 1) {
-                    //region Save Company Information In Database For Use For Request From Server And Other Items
-                    Company.deleteAll(Company.class);
-                    Company.saveInTx(result.get(0));
-                    //endregion Save Company Information In Database For Use For Request From Server And Other Items
-
-                }
-                //endregion Find A Company With An Application PackageName
-
-
-                //region Can't Find A Company With The PackageName
-                else {
-                    binding.txtErrorr.setText("اطلاعات شرکت در سرور وجود ندارد.");
-                    binding.animationView.setVisibility(View.GONE);
-                    binding.btnWarning.setVisibility(View.VISIBLE);
-                    return;
-                }
-                //endregion Can't Find A Company With The PackageName
-
-
-                //region Request From The Server With The IP Of The Company That Was Found
-                Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
-                sharedPreferences.edit().putBoolean("status", true).apply();
-                hostSelectionInterceptor.setHostBaseUrl();
-                //endregion Request From The Server With The IP Of The Company That Was Found
-
-
-                //region When The User Is Logged In
-                NavDirections action;
-                if (Select.from(Users.class).list().size() > 0) {
-                    if (saleinInstance != null)
-                        action = SplashScreenFragmentDirections.actionGoToCompanyFragment();
-                    else
-                        action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
-
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-                //endregion When The User Is Logged In
-
-
-                //region When The User Is Not Logged In
-                else
-                    Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
-                //endregion When The User Is Not Logged In
-
-
-            }
-        });
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
@@ -376,6 +240,33 @@ public class SplashScreenFragment extends Fragment {
             //endregion Company Information Is Not Save In The Database
 
         });
+
+        myViewModel.getResultGetApp().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+
+            myViewModel.getResultGetApp().setValue(null);
+
+            if (result.size() > 0) {
+                Util.APPLICATION_ID = result.get(0).getAppId();
+                if (result.get(0).getIsActive()) {
+                    binding.btnError.setVisibility(View.GONE);
+                    newVersion = result.get(0).getVersion();
+                    titleUpdate = result.get(0).getUpdateTitle();
+                    messageUpdate = result.get(0).getUpdateDesc();
+                    linkUpdate = result.get(0).getLink();
+                    sharedPreferences.edit().putString("link_update", linkUpdate).apply();
+                    forcedUpdate = result.get(0).getForced();
+                   // checkUpdate();
+
+                } else {
+                    binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
+                    binding.btnError.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+        });
         //endregion Get Result From The Server
 
 
@@ -398,6 +289,29 @@ public class SplashScreenFragment extends Fragment {
     public String getPackageName() throws PackageManager.NameNotFoundException {
         return getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).packageName;
     }
+
+    /*private void checkUpdate() {
+
+        if (forcedUpdate && !newVersion.equals("") && !appVersion.equals(newVersion)) {
+            updateApplicationDialog.showDialog(getActivity(), titleUpdate, false, "بستن", "آپدیت", false, true, false);
+            return;
+
+        } else if (!forcedUpdate && !newVersion.equals("") && !appVersion.equals(newVersion)) {
+
+            updateApplicationDialog.showDialog(getActivity(), titleUpdate, true, "بعدا", "آپدیت", false, true, true);
+            return;
+        } else if (account != null) {
+
+            if (!newVersion.equals("") && !oldVersion.equals(newVersion)) {
+
+                updateApplicationDialog.showDialog(getActivity(), messageUpdate, false, "", "بستن", false, true, false);
+                return;
+            }
+
+
+        }
+
+    }*/
     //endregion Custom Method
 
 

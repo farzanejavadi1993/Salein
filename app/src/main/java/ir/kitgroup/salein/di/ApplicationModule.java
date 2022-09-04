@@ -54,12 +54,6 @@ public class ApplicationModule {
     }
 
 
-
-
-
-
-
-
     @Provides
     @Singleton
     public HostSelectionInterceptor provideHostSelectionInterceptor(SharedPreferences preferenceHelper) {
@@ -107,10 +101,6 @@ public class ApplicationModule {
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
     }
-
-
-
-
 
     @Provides
     @Singleton

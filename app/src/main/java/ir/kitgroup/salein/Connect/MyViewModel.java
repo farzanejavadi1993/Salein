@@ -1016,7 +1016,7 @@ public class MyViewModel extends ViewModel {
                                 throwable ->
                                         eMessage.setValue(new Message(-1, "خطا در دریافت آی دی آپلیکیشن", ""))));
     }
-    public MutableLiveData<List<AppDetail>> getResultgetApp() {
+    public MutableLiveData<List<AppDetail>> getResultGetApp() {
         return resultApp;
     }
 

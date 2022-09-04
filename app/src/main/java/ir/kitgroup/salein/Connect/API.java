@@ -121,6 +121,9 @@ public interface API {
     @GET("GetAccount")
     Observable<String> getCompany(@Query("parentAccountId") String parentAccountId);
 
+
+
+
     @GET("ProductDiscountSync")
     Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);
 
