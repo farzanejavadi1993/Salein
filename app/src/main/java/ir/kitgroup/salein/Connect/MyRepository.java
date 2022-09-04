@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Observable;
 import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.models.AppDetail;
@@ -32,10 +33,13 @@ public class MyRepository {
     }
 
 
-    public Observable<String> getCompany(String parentAccountId) {
-        return api.getCompany(parentAccountId);
+    public Observable<String> getAllCompany(String parentAccountId) {
+        return api.getAllCompany(parentAccountId);
     }
 
+    public Observable<List<Company>> getCompany(String id) {
+        return api.getCompany(id);
+    }
 
     public Observable<String> getInquiryAccount(String user,String passWord,String mobile) {
         return api.getInquiryAccount1(user,passWord, mobile,"", "", 1, 1);

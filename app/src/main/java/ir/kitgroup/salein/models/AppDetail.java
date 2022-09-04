@@ -12,6 +12,27 @@ public class AppDetail {
     @SerializedName("AppId")
     @Expose
     private String appId;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    @SerializedName("AccountId")
+    @Expose
+    private String accountId;
+
     @SerializedName("UserName")
     @Expose
     private Object userName;

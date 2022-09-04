@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Log;
 import retrofit2.http.Body;
@@ -119,7 +120,7 @@ public interface API {
 
 
     @GET("GetAccount")
-    Observable<String> getCompany(@Query("parentAccountId") String parentAccountId);
+    Observable<String> getAllCompany(@Query("parentAccountId") String parentAccountId);
 
 
 
@@ -138,6 +139,9 @@ public interface API {
 
     @POST("GetApp")
     Observable<List<AppDetail>> getApp(@Query("id") String id);
+
+    @POST("GetAccount")
+    Observable<List<Company>> getCompany(@Query("id") String id);
 
     @GET("GetCustomerFromServer")
     Observable<List<Account>> getCustomerFromServer(@Query("mobile") String mobile);

@@ -107,7 +107,7 @@ public class AllCompanyFragment extends Fragment {
                 this.DLT = delete;
                 binding.progressbar.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.VISIBLE);
-                myViewModel.getCompany(company.getI());
+                myViewModel.getAllCompany(company.getI());
                 ParentId = company.getI();
 
                 return;
@@ -232,7 +232,7 @@ public class AllCompanyFragment extends Fragment {
                 this.INDX = -1;
                 this.DLT = false;
                 binding.progressbar.setVisibility(View.VISIBLE);
-                myViewModel.getCompany(ParentId);
+                myViewModel.getAllCompany(ParentId);
 
             }
         } catch (Exception ignored) {
@@ -240,7 +240,7 @@ public class AllCompanyFragment extends Fragment {
             this.INDX = 0;
             this.DLT = false;
             binding.progressbar.setVisibility(View.VISIBLE);
-            myViewModel.getCompany("");
+            myViewModel.getAllCompany("");
         }
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
