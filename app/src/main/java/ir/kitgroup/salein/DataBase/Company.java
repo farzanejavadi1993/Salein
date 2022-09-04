@@ -71,6 +71,41 @@ public class Company extends SugarRecord {
     @Expose
     private String webs;
 
+
+    public String get_long() {
+        return _long;
+    }
+
+    public void set_long(String _long) {
+        this._long = _long;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public Boolean getParent() {
+        return Parent;
+    }
+
+    public void setParent(Boolean parent) {
+        Parent = parent;
+    }
+
+    public Boolean getOpen() {
+        return Open;
+    }
+
+    public void setOpen(Boolean open) {
+        Open = open;
+    }
+
+    private String version;
+
     public String getI() {
         return i;
     }

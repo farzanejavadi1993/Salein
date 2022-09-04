@@ -12,33 +12,15 @@ public class AppDetail {
     @SerializedName("AppId")
     @Expose
     private String appId;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
     @SerializedName("AccountId")
     @Expose
     private String accountId;
-
     @SerializedName("UserName")
     @Expose
     private Object userName;
     @SerializedName("DisplayName")
     @Expose
-    private Object displayName;
+    private String displayName;
     @SerializedName("IsActive")
     @Expose
     private Boolean isActive;
@@ -73,24 +55,20 @@ public class AppDetail {
     @Expose
     private String version;
 
-    public String getIemi() {
-        return iemi;
-    }
-
-    public void setIemi(String iemi) {
-        this.iemi = iemi;
-    }
-
-    @SerializedName("IMEI")
-    @Expose
-    private String iemi;
-
     public String getAppId() {
         return appId;
     }
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public Object getUserName() {
@@ -101,11 +79,11 @@ public class AppDetail {
         this.userName = userName;
     }
 
-    public Object getDisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(Object displayName) {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
