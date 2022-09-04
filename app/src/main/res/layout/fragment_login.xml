@@ -92,7 +92,7 @@
 
                 android:background="@drawable/background_edittext"
                 android:fontFamily="@font/iransans"
-                android:gravity="right"
+                android:gravity="center"
                 android:hint="@string/phone_number_account"
                 android:inputType="number"
                 android:maxLength="11"

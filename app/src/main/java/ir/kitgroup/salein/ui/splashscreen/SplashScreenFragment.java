@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.ConnectToServer;
@@ -68,6 +69,7 @@ public class SplashScreenFragment extends Fragment {
     private Boolean forced = false;
     private String versionApp;
     private String companyGuid = "";
+    private Account account;
 
     private CustomDialog customDialog;
     private String oldVersion = "";//please change farzane
@@ -94,10 +96,10 @@ public class SplashScreenFragment extends Fragment {
 
 
         init();
-        initSaleinInstance();
-        connectToServer(false, "");
         initPackageName();
         iniAppVersion();
+        initSaleinInstance();
+        connectToServer(false, "");
         setData();
         initAnimation();
         initCustomDialog();
@@ -201,7 +203,7 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (!oldVersion.equals("")) {//please change farzane
+        } else if (account!=null) {
             if (!newVersion.equals("") && !oldVersion.equals(newVersion)) {
                 customDialog.showDialog(getActivity(), titleUpdate, false, "", "بستن", true, false);
             }
@@ -213,6 +215,10 @@ public class SplashScreenFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void init() {
+        account=Select.from(Account.class).first();
+        if (account!=null)
+            oldVersion=account.getVersion();
+
         sharedPreferences.edit().putBoolean("vip", false).apply();
         sharedPreferences.edit().putBoolean("discount", false).apply();
 

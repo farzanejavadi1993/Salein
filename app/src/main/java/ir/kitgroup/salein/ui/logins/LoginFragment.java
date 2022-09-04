@@ -57,6 +57,7 @@ public class LoginFragment extends Fragment {
     private Company company;
     private String userName;
     private String passWord;
+
     //endregion PARAMETER
 
 
@@ -75,39 +76,70 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //region Get The Company Is Save In The Database
+       init();
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel.getResultMessage().setValue(null);
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnLogin.setEnabled(true);
+            if (result == null) return;
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+        });
+        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnLogin.setEnabled(true);
+            if (result == null)
+                return;
+            myViewModel.getResultSmsLogin().setValue(null);
+            if (result.equals("")) {
+                NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+           }
+
+        });
+
+
+
+
+
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    //endregion Override Method
+
+
+    private void init(){
         company = Select.from(Company.class).first();
         userName=company.getUser();
         passWord=company.getPass();
-       //endregion Get The Company Is Save In The Database
 
-
-
-
-
-        //region Set Title to textView
         binding.tvWelcome.setText(" به " + company.getN() + " خوش آمدید ");
-        //endregion Set Title to textView
 
-
-       //region Set Title to RuleTextView
         binding.loginTvRules.setText("با ثبت نام در " + company.getN());
-       //endregion Set Title to RuleTextView
 
-
-
-        //region Set UrlPath to ImageView
         Picasso.get()
                 .load(Util.DEVELOPMENT_BASE_URL_Img + "/GetCompanyImage?id=" +
                         company.getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
-        //endregion Set UrlPath to ImageView
 
 
-
-        //region TextWatcher For EdtMobile
         binding.edtMobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -129,11 +161,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        //endregion TextWatcher For EdtMobile
 
-
-
-        //region Pressed btnLogin Button
         binding.btnLogin.setOnClickListener(v -> {
             if (acceptRule) {
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
@@ -145,20 +173,16 @@ public class LoginFragment extends Fragment {
                 myViewModel.getSmsLogin(userName,passWord, messageCode, mobile);
             }
         });
-        //endregion Pressed btnLogin Button
 
-
-        //region Pressed btnRule Button
         binding.loginTvRules.setOnClickListener(v ->
                 {
                     NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
         );
-        //endregion Pressed btnRule Button
 
 
-        //region Press Or UnPress CheckBox
+
         binding.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 acceptRule = true;
@@ -168,54 +192,6 @@ public class LoginFragment extends Fragment {
                 binding.btnLogin.setVisibility(View.GONE);
             }
         });
-        //endregion Press Or UnPress CheckBox
-
-
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getResultMessage().setValue(null);
-
-        //region Get Result From The Server
-
-
-        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
-            binding.btnLogin.setEnabled(true);
-            if (result == null)
-                return;
-            myViewModel.getResultSmsLogin().setValue(null);
-            if (result.equals("")) {
-                NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-           }
-
-        });
-
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
-            binding.btnLogin.setEnabled(true);
-            if (result == null) return;
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-
-        });
-        //endregion Get Result From The Server
-
-
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-    //endregion Override Method
-
 
 }
