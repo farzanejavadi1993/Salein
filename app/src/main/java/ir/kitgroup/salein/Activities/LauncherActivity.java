@@ -68,7 +68,6 @@ public class LauncherActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onBackPressed() {
-
         switch (navController.getCurrentDestination().getId()) {
             case R.id.HomeFragment:
                 if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false)) {
@@ -95,22 +94,14 @@ public class LauncherActivity extends AppCompatActivity {
                 super.onBackPressed();
                 break;
         }
-
-
     }
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        startActivity(getIntent());
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-
+    protected void onPause() {
+        super.onPause();
+        if (sharedPreferences.getBoolean("loginSuccess", false))
+            finish();
     }
 
     //endregion Override Method
@@ -159,7 +150,6 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-
     public void setShowProfileItem(boolean show) {
         binding.navView.getMenu().getItem(0).setVisible(show);
     }
@@ -190,7 +180,6 @@ public class LauncherActivity extends AppCompatActivity {
         });
         //endregion Cast Dialog
     }
-
 
     //endregion Method
 
