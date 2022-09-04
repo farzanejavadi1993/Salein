@@ -1,7 +1,13 @@
 package ir.kitgroup.salein.Connect;
+
 import com.google.gson.JsonElement;
 
+import java.util.List;
+
 import io.reactivex.Observable;
+import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.models.AppDetail;
+import ir.kitgroup.salein.models.Log;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -121,6 +127,17 @@ public interface API {
 
     @GET("ProductVipSync")
     Observable<String> getProductVipSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password ,@Query("customerId") String customerId);
+
+
+    @POST("AddCustomerToServer")
+    Observable<List<Log>> addAccountToServer(@Query("companyId") String companyId
+            , @Body()  String jsonObject);
+
+    @POST("GetApp")
+    Observable<List<AppDetail>> getApp(@Query("id") String id);
+
+    @GET("GetCustomerFromServer")
+    Observable<List<Account>> getCustomerFromServer(@Query("mobile") String mobile);
 
 
 }

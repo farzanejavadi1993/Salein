@@ -5,6 +5,7 @@ buildscript {
         jcenter()
         maven{ url 'https://maven.aliyun.com/repository/google'}
 
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.0"
@@ -23,10 +24,10 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url "https://jitpack.io" }
         maven {
             url "https://repo.cedarmaps.com/android/"
         }
+        maven { url "https://jitpack.io" }
        maven { url "https://oss.jfrog.org/libs-snapshot" }
 
 

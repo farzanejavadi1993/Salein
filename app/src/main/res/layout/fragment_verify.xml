@@ -51,7 +51,6 @@
 
 
         <TextView
-
             android:id="@+id/tv_message"
             android:layout_width="360dp"
             android:layout_height="wrap_content"
@@ -80,10 +79,9 @@
             android:layout_below="@+id/relativeLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="22dp"
-
             android:layout_marginTop="220dp"
             android:layout_marginRight="26dp"
-            android:gravity="right"
+            android:gravity="center"
             android:text="@string/enter_code"
             android:textColor="@color/medium_color"
             android:textSize="@dimen/text_normal_mobile_size"
@@ -96,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvEnterCode"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="22dp">
 
             <in.aabhasjindal.otptextview.OtpTextView

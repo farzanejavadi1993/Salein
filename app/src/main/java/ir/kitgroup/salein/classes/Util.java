@@ -28,6 +28,8 @@ public class Util {
     public static double screenSize = 0.0;
     public static String DEVELOPMENT_BASE_URL="http://api.kitgroup.ir/api/REST/";
     public static String DEVELOPMENT_BASE_URL_Img="http://api.kitgroup.ir";
+    public static int APPLICATION_CODE=12345678;
+    public static String APPLICATION_ID="";
     public static String PRODUCTION_BASE_URL="";
     public static double latitude =  0;
     public static double longitude = 0;
@@ -36,6 +38,7 @@ public class Util {
     public static final String MARKER_ICON_ID = "marker-icon-id";
     public static  String address = "";
     public static String nameUser = "";
+
 
 
 

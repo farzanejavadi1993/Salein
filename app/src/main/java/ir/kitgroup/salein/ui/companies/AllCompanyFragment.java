@@ -229,7 +229,6 @@ public class AllCompanyFragment extends Fragment {
             if (!ParentId.equals("")) {
                 binding.toolbar.setVisibility(View.VISIBLE);
                 binding.mainLayout.setRotationY(0);
-
                 this.INDX = -1;
                 this.DLT = false;
                 binding.progressbar.setVisibility(View.VISIBLE);
@@ -259,9 +258,9 @@ public class AllCompanyFragment extends Fragment {
 
 
             if (result.size() > 0) {
-               Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
+            /*   Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
                 sharedPreferences.edit().putBoolean("status", true).apply();
-                hostSelectionInterceptor.setHostBaseUrl();
+                hostSelectionInterceptor.setHostBaseUrl();*/
 
                 //regionGet All Company
                 if (ParentId.equals("")) {

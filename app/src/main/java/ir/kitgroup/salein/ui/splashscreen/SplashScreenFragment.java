@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -23,9 +24,12 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Salein;
@@ -57,6 +61,15 @@ public class SplashScreenFragment extends Fragment {
     private String title;
     private String description;
     private Company company;
+    private String linkUpdate = "";
+    private String appVersion = "";
+    private String message = "";
+    private String newVersion = "";
+    private Boolean  forced=false;
+
+
+
+
     //endregion Parameter
 
 
@@ -161,6 +174,81 @@ public class SplashScreenFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
+
+            myViewModel.getResultMessage().setValue(null);
+     /*       myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+
+                if (result == null)
+                    return;
+
+                myViewModel.getResultCustomerFromServer().setValue(null);
+
+                //region Information Account From Server
+                if (result.size() > 0) {
+                    List<AppDetail> list = result.get(0).getApps();
+
+                    if (list.size() > 0) {
+                        CollectionUtils.filter(list, r -> r.getIemi().equals(IMEI) && r.getAppId().equals(Constant.APPLICATION_ID));
+                        if (list.size() > 0) {
+                            if (!list.get(0).getIsActive()) {
+                                from = "disable";
+                                customDialog.showDialog(getActivity(), "با این تلفن نمیتوانید وارد نرم افزار شوید.", false, "خروج", "", false, false, true);
+                                return;
+                            }
+                        }
+                    }
+                    else {
+
+                        from = "disable";
+                        customDialog.showDialog(getActivity(), "ورود به حساب کاربری ممکن نیست.", false, "خروج", "", false, false, true);
+                        return;
+                    }
+
+
+                } else {
+                    clearData();
+                }
+
+                checkUpdate();
+                //endregion Information Account From Server
+
+
+            });
+            myViewModel.getResultgetApp().observe(getViewLifecycleOwner(), result -> {
+
+                if (result == null)
+                    return;
+
+                myViewModel.getResultgetApp().setValue(null);
+                if (result.size() > 0) {
+                    Util.APPLICATION_ID = result.get(0).getAppId();
+                    if (result.get(0).getIsActive()) {
+
+                        newVersion = result.get(0).getVersion();
+                        title = result.get(0).getUpdateTitle();
+                        message = result.get(0).getUpdateDesc();
+                        linkUpdate = result.get(0).getLink();
+                        sharedPreferences.edit().putString("link_update", linkUpdate).apply();
+                        forced = result.get(0).getForced();
+                        if (account != null)
+                            myViewModel.getCustomerFromServer(account.getM());
+                        else
+                            checkUpdate();
+
+
+                    } else {
+                        binding.tvError.setText("اپلیکیشن غیر فعال شده است.");
+                        binding.tvError.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+            });
+            myViewModel.getApp(Util.APPLICATIONCODE);*/
+
+
+
 
 
         //region Get Company From Server After 1 Minute

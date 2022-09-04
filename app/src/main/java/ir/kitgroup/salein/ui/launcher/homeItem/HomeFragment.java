@@ -156,7 +156,7 @@ public class HomeFragment extends Fragment {
 
     public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
-
+    private  Salein salein;
 
 
     //endregion Parameter
@@ -192,6 +192,7 @@ public class HomeFragment extends Fragment {
             company = Select.from(Company.class).first();
             userName = company.getUser();
             passWord = company.getPass();
+            salein=Select.from(Salein.class).first();
             //endregion Config
 
 
@@ -649,7 +650,7 @@ public class HomeFragment extends Fragment {
             });
 
             binding.btnCompanyBranches.setOnClickListener(view1 -> {
-                if (!company.Parent.equals("")) {
+                if (company.Parent!=null) {
                     NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
@@ -756,7 +757,7 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                if (update.equals("3") && !AppVersion.equals(NewVersion)) {
+                if (salein==null && update.equals("3") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.GONE);
                     dialogUpdate.setCancelable(false);
@@ -764,7 +765,7 @@ public class HomeFragment extends Fragment {
                     Product.deleteAll(Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
                 }
-                else if (update.equals("2") && !AppVersion.equals(NewVersion)) {
+                else if (salein==null &&update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);
@@ -885,7 +886,8 @@ public class HomeFragment extends Fragment {
                 myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-            } else {
+            }
+            else {
 
 
                 binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");

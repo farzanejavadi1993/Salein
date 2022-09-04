@@ -6,8 +6,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Observable;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.salein.models.AppDetail;
+import ir.kitgroup.salein.models.Log;
 import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 import ir.kitgroup.salein.ui.map.MapFragment;
 import ir.kitgroup.salein.ui.launcher.moreItem.orders.OrderListFragment;
@@ -161,4 +164,15 @@ public class MyRepository {
 
 
 
+    public Observable<List<Log>> addAccountToServer(String accounts) {
+        return api.addAccountToServer("",accounts);
+    }
+
+    public Observable<List<AppDetail>> getApp(String id) {
+        return api.getApp(id);
+    }
+
+    public Observable<List<Account>> getCustomerFromServer(String mobile) {
+        return api.getCustomerFromServer(mobile);
+    }
 }

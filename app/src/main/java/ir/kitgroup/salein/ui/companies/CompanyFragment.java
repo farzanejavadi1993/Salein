@@ -56,7 +56,7 @@ public class CompanyFragment extends Fragment {
 
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
         adapter.addFragment(new BannerFragment(), "آگهی ها");
-        adapter.addFragment(new MyCompanyFragment(), "پخش های من");
+        adapter.addFragment(new MyCompanyFragment(), "انتخاب های من");
         adapter.addFragment(companyFragment, "همه");
 
 
