@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -248,6 +249,7 @@ public class SplashScreenFragment extends Fragment {
             myViewModel.getResultGetApp().setValue(null);
 
             if (result.size() > 0) {
+                Toast.makeText(getActivity(), "farzane", Toast.LENGTH_SHORT).show();
                 Util.APPLICATION_ID = result.get(0).getAppId();
                 if (result.get(0).getIsActive()) {
                     binding.btnError.setVisibility(View.GONE);
