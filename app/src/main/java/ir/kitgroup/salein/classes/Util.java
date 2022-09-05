@@ -1,10 +1,13 @@
 package ir.kitgroup.salein.classes;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -147,5 +150,30 @@ public class Util {
         }
         return packageName;
 
+    }
+
+    public static String getAndroidID(Activity activity) {
+
+        String id;
+
+        @SuppressLint("HardwareIds")
+        String androidId = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        if (androidId == null || androidId.equals("")) {
+            try {
+                androidId = "35" + Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+                        Build.DEVICE.length() % 10 + Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+                        Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+                        Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+                        Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+                        Build.USER.length() % 10;
+            } catch (Exception ignored) {
+                androidId = Build.ID + Build.HOST;
+            }
+        }
+        id = androidId;
+
+
+        return id;
     }
 }

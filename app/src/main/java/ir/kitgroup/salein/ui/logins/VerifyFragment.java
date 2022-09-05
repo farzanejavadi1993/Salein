@@ -165,7 +165,7 @@ public class VerifyFragment extends Fragment {
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
         myViewModel.getResultMessage().setValue(null);
-        //region Get Result From The Server
+
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
@@ -227,7 +227,7 @@ public class VerifyFragment extends Fragment {
         });
 
 
-        //endregion Get Result From The Server
+
 
     }
 

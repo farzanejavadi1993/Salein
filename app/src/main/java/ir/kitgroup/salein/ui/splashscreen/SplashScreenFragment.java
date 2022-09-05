@@ -20,7 +20,10 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,6 +41,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.models.AppDetail;
 
 
 @AndroidEntryPoint
@@ -118,8 +122,6 @@ public class SplashScreenFragment extends Fragment {
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null) return;
-
-
             // Company Information Is Already Save In The Database And Can Be Used To Log In To The Application
             if (Select.from(Company.class).list().size() > 0)
                 navigate(company);
@@ -149,7 +151,12 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-                    checkUpdate();
+                    if (account!=null)
+                        if (account != null)
+                            myViewModel.getCustomerFromServer(account.getM());
+                        else
+                            checkUpdate();
+
                 } else {
                     binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
                     binding.btnError.setVisibility(View.VISIBLE);

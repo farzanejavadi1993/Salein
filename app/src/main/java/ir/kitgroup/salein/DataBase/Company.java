@@ -71,6 +71,17 @@ public class Company extends SugarRecord {
     @Expose
     private String webs;
 
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    @SerializedName("AppId")
+    @Expose
+    private String appId;
 
     public String get_long() {
         return _long;
