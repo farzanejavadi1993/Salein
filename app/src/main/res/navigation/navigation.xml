@@ -65,7 +65,11 @@
     <fragment
         android:id="@+id/SearchFragment"
         android:name="ir.kitgroup.salein.ui.launcher.searchItem.SearchProductFragment"
-        tools:layout="@layout/fragment_search_product"/>
+        tools:layout="@layout/fragment_search_product">
+        <action
+            android:id="@+id/actionGoToShowDetailFragment"
+            app:destination="@id/ShowDetailFragment" />
+    </fragment>
 
     <fragment
         android:label="login"
@@ -106,6 +110,18 @@
     </fragment>
 
 
+
+    <fragment
+        android:tag="ShowDetailFragment"
+        android:id="@+id/ShowDetailFragment"
+        android:name="ir.kitgroup.salein.ui.launcher.homeItem.details.ShowDetailFragment"
+        tools:layout="@layout/activity_detail">
+
+        <argument
+            android:name="Id"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:tag="homeFragment"
         android:id="@+id/HomeFragment"
@@ -114,6 +130,9 @@
         <action
             android:id="@+id/actionGoToFilterFragment"
             app:destination="@id/FilterFragment" />
+        <action
+            android:id="@+id/actionGoToShowDetailFragment"
+            app:destination="@id/ShowDetailFragment" />
         <action
 
             app:popUpTo="@id/AllCompanyFragment"

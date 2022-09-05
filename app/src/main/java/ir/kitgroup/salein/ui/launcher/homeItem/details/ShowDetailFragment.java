@@ -21,6 +21,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.ui.logins.VerifyFragmentArgs;
 
 
 @AndroidEntryPoint
@@ -46,14 +47,15 @@ public class ShowDetailFragment extends Fragment {
        // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
 
         company = Select.from(Company.class).first();
-        Bundle bundle = getArguments();
-        Id = bundle.getString("Id");
+
+        Id = ShowDetailFragmentArgs.fromBundle(getArguments()).getId();
+
 
 
         String ip = company.getIp1();
 
         Picasso.get()
-                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.width + "&height=" + (int) Util.height / 2)
+                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.height/2 + "&height=" + (int) Util.height / 2)
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);

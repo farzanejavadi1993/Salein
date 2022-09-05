@@ -92,11 +92,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         //2     MINUS AMOUNT
         //3     Edit AMOUNT
     }
-
-
     private ClickItem clickItem;
-
-
     public void setOnClickListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
@@ -106,11 +102,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         void onDesc(String GUID, double amount);
 
     }
-
     private Descriptions descriptionItem;
-
     public void setOnDescriptionItem(Descriptions descriptionItem) {
         this.descriptionItem = descriptionItem;
+    }
+
+
+    public interface ClickImage {
+        void onClick(String Prd_UID);
+        //1     PLUS AMOUNT
+        //2     MINUS AMOUNT
+        //3     Edit AMOUNT
+    }
+    private ClickImage clickImage;
+    public void setOnClickImageListener(ClickImage clickImage) {
+        this.clickImage = clickImage;
     }
 
 
@@ -305,11 +311,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.tab++;
                 if (holder.tab == 2) {
                     holder.tab = 0;
-                 /*   Bundle bundle = new Bundle();
-                    bundle.putString("Id", productsList.get(holder.getAdapterPosition()).getI());
-                    ShowDetailFragment showDetailFragment = new ShowDetailFragment();
-                    showDetailFragment.setArguments(bundle);
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().add(R.id.frame_launcher1, showDetailFragment, "ShowDetailFragment").addToBackStack("ShowDetailF").commit();*/
+                    clickImage.onClick(productsList.get(holder.getAdapterPosition()).getI());
+
                 }
 
             });

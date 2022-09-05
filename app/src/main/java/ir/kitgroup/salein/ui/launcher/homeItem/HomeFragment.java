@@ -633,6 +633,14 @@ public class HomeFragment extends Fragment {
             });
 
 
+            productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
+                @Override
+                public void onClick(String Prd_UID) {
+                    NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
+                    Navigation.findNavController(binding.getRoot()).navigate(action);
+
+                }
+            });
             //endregion CONFIGURATION DATA PRODUCT
 
             binding.ivFilter.setOnClickListener(v -> {

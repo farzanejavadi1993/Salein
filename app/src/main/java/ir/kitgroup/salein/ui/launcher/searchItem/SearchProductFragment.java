@@ -25,6 +25,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +51,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.ui.launcher.homeItem.DescriptionAdapter;
+import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragmentDirections;
 import ir.kitgroup.salein.ui.launcher.homeItem.ProductAdapter;
 import ir.kitgroup.salein.Connect.API;
 import ir.kitgroup.salein.Connect.MyViewModel;
@@ -286,6 +289,14 @@ public class SearchProductFragment extends Fragment {
                 ((LauncherActivity) getActivity()).setCounterOrder(counter);
 
 
+        });
+        productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
+            @Override
+            public void onClick(String Prd_UID) {
+                NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+
+            }
         });
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {

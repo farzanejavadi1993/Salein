@@ -123,8 +123,6 @@ public interface API {
     Observable<String> getAllCompany(@Query("parentAccountId") String parentAccountId);
 
 
-
-
     @GET("ProductDiscountSync")
     Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);
 

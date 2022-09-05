@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.ui.splashscreen;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -306,11 +307,16 @@ public class SplashScreenFragment extends Fragment {
     private void initCustomDialog() {
         customDialog = CustomDialog.getInstance();
         customDialog.setOnClickPositiveButton(() -> {
-
+            if (!linkUpdate.equals("")) {
+                Uri uri = Uri.parse(linkUpdate);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
         });
 
         customDialog.setOnClickNegativeButton(() -> {
-
+            customDialog.hideProgress();
+            myViewModel.getCompany(companyGuid);
         });
 
     }
