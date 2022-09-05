@@ -208,10 +208,11 @@ public class SplashScreenFragment extends Fragment {
 
         } else if (user !=null) {
             if (!newVersion.equals("") && !oldVersion.equals(newVersion)) {
-                customDialog.showDialog(getActivity(), titleUpdate, false, "", "بستن", true, false);
+                customDialog.showDialog(getActivity(), titleUpdate, false, "بستن", "", false, true);
             }
-        } else
-            myViewModel.getCompany(companyGuid);
+            else
+                myViewModel.getCompany(companyGuid);
+        }
 
 
     }

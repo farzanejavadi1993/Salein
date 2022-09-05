@@ -250,11 +250,11 @@ public class AllCompanyFragment extends Fragment {
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
-        myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultAllCompany().observe(getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultCompany().setValue(null);
+            myViewModel.getResultAllCompany().setValue(null);
 
 
             if (result.size() > 0) {
