@@ -63,15 +63,7 @@ public class Account extends SugarRecord {
     private String imei;
 
 
-    public String getVersion() {
-        return version;
-    }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    private String version;
     public String getAppId() {
         return appId;
     }

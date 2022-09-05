@@ -153,5 +153,14 @@ public class Users extends SugarRecord {
         return C;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    private String version;
 
 }

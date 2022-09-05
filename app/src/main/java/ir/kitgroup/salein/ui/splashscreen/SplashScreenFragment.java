@@ -20,10 +20,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,7 +38,6 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.AppDetail;
 
 
 @AndroidEntryPoint
@@ -73,7 +69,7 @@ public class SplashScreenFragment extends Fragment {
     private Boolean forced = false;
     private String versionApp;
     private String companyGuid = "";
-    private Account account;
+    private Users user;
 
     private CustomDialog customDialog;
     private String oldVersion = "";//please change farzane
@@ -151,9 +147,9 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-                    if (account!=null)
-                        if (account != null)
-                            myViewModel.getCustomerFromServer(account.getM());
+                    if (user !=null)
+                        if (user != null)
+                            myViewModel.getCustomerFromServer(user.getM());
                         else
                             checkUpdate();
 
@@ -210,7 +206,7 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (account!=null) {
+        } else if (user !=null) {
             if (!newVersion.equals("") && !oldVersion.equals(newVersion)) {
                 customDialog.showDialog(getActivity(), titleUpdate, false, "", "بستن", true, false);
             }
@@ -222,9 +218,9 @@ public class SplashScreenFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        account=Select.from(Account.class).first();
-        if (account!=null)
-            oldVersion=account.getVersion();
+        user =Select.from(Users.class).first();
+        if (user !=null)
+            oldVersion= user.getVersion();
 
         sharedPreferences.edit().putBoolean("vip", false).apply();
         sharedPreferences.edit().putBoolean("discount", false).apply();
