@@ -108,10 +108,10 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         //region Config Map
         try {
             binding.mapView.onCreate(savedInstanceState);
+
         } catch (Exception ignore) {
         }
 
-        binding.mapView.onCreate(savedInstanceState);
 
 
         binding.mapView.getMapAsync(mapboxMap -> {

@@ -147,10 +147,10 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-                    if (user !=null)
-                        if (user != null)
+
+                       /* if (user != null)
                             myViewModel.getCustomerFromServer(user.getM());
-                        else
+                        else*/
                             checkUpdate();
 
                 } else {
