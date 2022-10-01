@@ -20,26 +20,6 @@
             android:layout_height="match_parent">
 
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvTitle"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/medium_color"
-                android:textSize="14dp" />
-
-
             <RelativeLayout
                 android:visibility="gone"
                 android:id="@+id/btnWarning"
@@ -88,10 +68,10 @@
             </RelativeLayout>
             <ImageView
                 android:id="@+id/animation_view"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="20dp"
+
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 tools:ignore="ContentDescription" />

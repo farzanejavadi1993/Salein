@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.ConnectToServer;
@@ -41,6 +40,7 @@ import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.DataBase.Company;
 
 
+@SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
 
@@ -55,11 +55,9 @@ public class SplashScreenFragment extends Fragment {
 
     private MyViewModel myViewModel;
     private FragmentSplashScreenBinding binding;
+
+
     private String packageName;
-    private Salein saleinInstance;
-    private String title;
-    private String description;
-    private Company company;
     private String linkUpdate = "";
     private String appVersion = "";
     private String message = "";
@@ -90,19 +88,16 @@ public class SplashScreenFragment extends Fragment {
         return binding.getRoot();
     }
 
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         init();
+        initAnimation();
         initPackageName();
         iniAppVersion();
-        initSaleinInstance();
-        connectToServer(false, "");
-        setData();
-        initAnimation();
+        connectToServer(false);
         initCustomDialog();
 
     }
@@ -119,26 +114,24 @@ public class SplashScreenFragment extends Fragment {
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null) return;
-            // Company Information Is Already Save In The Database And Can Be Used To Log In To The Application
-            if (Select.from(Company.class).list().size() > 0)
-                navigate(company);
+
+            if (getCompany() != null)
+                navigate();
+
             else {
                 binding.animationView.setVisibility(View.GONE);
                 binding.btnWarning.setVisibility(View.VISIBLE);
                 binding.txtErrorr.setText(result.getName());
             }
-
-
         });
+
         myViewModel.getResultGetApp().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
 
             myViewModel.getResultGetApp().setValue(null);
-
             if (result.size() > 0) {
                 Util.APPLICATION_ID = result.get(0).getAppId();
-
                 if (result.get(0).getIsActive()) {
                     binding.btnError.setVisibility(View.GONE);
                     newVersion = result.get(0).getVersion();
@@ -152,13 +145,12 @@ public class SplashScreenFragment extends Fragment {
                        /* if (user != null)
                             myViewModel.getCustomerFromServer(user.getM());
                         else*/
-                            checkUpdate();
+                    checkUpdate();
 
                 } else {
                     binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
                     binding.btnError.setVisibility(View.VISIBLE);
                 }
-
             }
 
         });
@@ -171,12 +163,9 @@ public class SplashScreenFragment extends Fragment {
             if (result.size() > 0) {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(result);
-                navigate(result.get(0));
+                navigate();
             }
-
         });
-
-
     }
 
 
@@ -198,7 +187,6 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void checkUpdate() {
-
         if (forcedUpdate && !newVersion.equals("") && !appVersion.equals(newVersion)) {
             customDialog.showDialog(getActivity(), titleUpdate, false, "", "آپدیت", true, false);
 
@@ -207,39 +195,26 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (user !=null) {
-            if (!newVersion.equals("") && !oldVersion.equals(newVersion)) {
-                customDialog.showDialog(getActivity(), titleUpdate, false, "بستن", "", false, true);
-            }
-            else
-                myViewModel.getCompany(companyGuid);
-        }
+        } else if (user != null && !newVersion.equals("") && !oldVersion.equals(newVersion)) {
+            customDialog.showDialog(getActivity(), titleUpdate, false, "بستن", "", false, true);
+        } else
+            myViewModel.getCompany(companyGuid);
 
 
     }
 
-    @SuppressLint("SetTextI18n")
+
     private void init() {
-        user =Select.from(Users.class).first();
-        if (user !=null)
-            oldVersion= user.getVersion();
-
-        sharedPreferences.edit().putBoolean("vip", false).apply();
-        sharedPreferences.edit().putBoolean("discount", false).apply();
-
-
         binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
             binding.btnWarning.setVisibility(View.GONE);
             myViewModel.getApp(Util.APPLICATION_ID);
         });
-
-
     }
 
-    private void connectToServer(boolean connect, String url) {
+    private void connectToServer(boolean connect) {
         ConnectToServer connectToServer = new ConnectToServer();
-        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, connect, url);
+        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, connect, getIp());
     }
 
     private void initPackageName() {
@@ -250,33 +225,12 @@ public class SplashScreenFragment extends Fragment {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private void iniAppVersion() {
         try {
-            binding.tvversion.setText(" نسخه " + appVersion());
+            binding.tvversion.setText(String.format("%s%s", getString(R.string.application_version), appVersion()));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private void initSaleinInstance() {
-        saleinInstance = Select.from(Salein.class).first();
-        if (saleinInstance == null && packageName.equals("ir.kitgroup.salein")) {
-            saleinInstance = new Salein();
-            saleinInstance.ContainAllCompanie = true;
-            saleinInstance.save();
-        }
-        if (saleinInstance != null)
-            Company.deleteAll(Company.class);
-    }
-
-
-    private void setData() {
-        company = Select.from(Company.class).first();
-        title = company != null && company.getN() != null ? company.getN() : "";
-        description = company != null && company.getDesc() != null ? company.getDesc() : "";
-        binding.tvTitle.setText(title);
-        binding.tvDescription.setText(description);
     }
 
     private void initAnimation() {
@@ -285,7 +239,6 @@ public class SplashScreenFragment extends Fragment {
         else
             Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
     }
-
 
     private void getApp() {
         Thread thread = new Thread() {
@@ -321,22 +274,75 @@ public class SplashScreenFragment extends Fragment {
 
     }
 
-    private void navigate(Company company){
-        connectToServer(true, "http://" + company.getIp1() + "/api/REST/");
-        // When The User Is Logged In
-        if (Select.from(Users.class).list().size() > 0) {
-            if (saleinInstance != null)
-                Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToCompanyFragment);
+    private void navigate() {
+
+        connectToServer(true);
+
+        //region When The User Is Logged In
+        if (getUser() != null) {
+
+            if (getUser().getSaleinUser() != null)
+                Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
+
             else {
                 NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+                Navigation.findNavController(getView()).navigate(action);
             }
         }
-        //region When The User Is Not Logged In
+        //endregion When The User Is Not Logged In
         else
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToLoginFragment);
+            Navigation.findNavController(getView()).navigate(R.id.actionGoToLoginFragment);
         //endregion When The User Is Not Logged In
     }
+
+    private Company getCompany() {
+        return Select.from(Company.class).first();
+    }
+
+    private Users getUser() {
+        return Select.from(Users.class).first();
+    }
+
+    private String getIp() {
+        return "http://" + getCompany().getIp1() + "/api/REST/";
+    }
+
+
+//    @SuppressLint("SetTextI18n")
+//    private void init() {
+//        binding.btnWarning.setOnClickListener(v -> {
+//            binding.animationView.setVisibility(View.VISIBLE);
+//            binding.btnWarning.setVisibility(View.GONE);
+//            myViewModel.getApp(Util.APPLICATION_ID);
+//        });
+//        if (getUser() != null)
+//          oldVersion = getUser().getVersion();
+//        sharedPreferences.edit().putBoolean("vip", false).apply();
+//        sharedPreferences.edit().putBoolean("discount", false).apply();
+//    }
+//    private void initSaleinInstance() {
+//        saleinInstance = Select.from(Salein.class).first();
+//        if (saleinInstance == null && packageName.equals("ir.kitgroup.salein")) {
+//            saleinInstance = new Salein();
+//            saleinInstance.ContainAllCompanie = true;
+//            saleinInstance.save();
+//        }
+//        if (saleinInstance != null)
+//            Company.deleteAll(Company.class);
+//    }
+
+    /*  private void setData() {
+
+        title = company != null && company.getN() != null ? company.getN() : "";
+        description = company != null && company.getDesc() != null ? company.getDesc() : "";
+        binding.tvTitle.setText(title);
+        binding.tvDescription.setText(description);
+    }*/
+
+
+
+
+
 
     //endregion Custom Method
 

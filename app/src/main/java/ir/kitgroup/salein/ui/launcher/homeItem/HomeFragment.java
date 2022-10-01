@@ -181,6 +181,10 @@ public class HomeFragment extends Fragment {
         try {
             //region Config
 
+            sharedPreferences.edit().putBoolean("vip", false).apply();
+            sharedPreferences.edit().putBoolean("discount", false).apply();
+
+
             Inv_GUID="";
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             Product.deleteAll(Product.class);

@@ -10,16 +10,21 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -33,7 +38,6 @@ import ir.kitgroup.salein.classes.Util;
 
 
 import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment;
-
 
 
 @AndroidEntryPoint
@@ -56,8 +60,14 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Util.ScreenSize(this);
 
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            String company = getIntent().getExtras().getString("companyId");
+            sharedPreferences.edit().putString("companyId", Objects.requireNonNullElse(company, "")).apply();
+            Toast.makeText(this, Objects.requireNonNullElse(company, ""), Toast.LENGTH_SHORT).show();
+        }else
+            sharedPreferences.edit().putString("company", "").apply();
+        Util.ScreenSize(this);
         navigationHandler();
         castDialog();
     }
@@ -78,7 +88,7 @@ public class LauncherActivity extends AppCompatActivity {
                         ((HomeFragment) fragment).showData();
                     }
                 } else {
-                    if (Select.from(Salein.class).first() == null && navController.getBackQueue().size()==2)
+                    if (Select.from(Salein.class).first() == null && navController.getBackQueue().size() == 2)
                         dialog.show();
                     else
                         super.onBackPressed();
@@ -100,8 +110,8 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (sharedPreferences.getBoolean("loginSuccess", false))
-            finish();
+        // if (sharedPreferences.getBoolean("loginSuccess", false))
+        finish();
     }
 
     //endregion Override Method

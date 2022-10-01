@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 
 import com.google.android.material.button.MaterialButton;
 import com.orm.query.Select;
@@ -32,6 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.classes.Util;
@@ -41,6 +46,7 @@ import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
+
 import ir.kitgroup.salein.databinding.FragmentAllCompanyBinding;
 import ir.kitgroup.salein.models.Setting;
 
@@ -53,8 +59,8 @@ public class AllCompanyFragment extends Fragment {
     HostSelectionInterceptor hostSelectionInterceptor;
 
     private MyViewModel myViewModel;
-
     private FragmentAllCompanyBinding binding;
+
     private Company companyDemo;
     private Company companySelect;
     private CompanyFragment storiesFragment;
@@ -72,6 +78,7 @@ public class AllCompanyFragment extends Fragment {
 
     private boolean ACCSTP=false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -221,7 +228,7 @@ public class AllCompanyFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(MyViewModel.class);
 
         try {
 
@@ -243,14 +250,14 @@ public class AllCompanyFragment extends Fragment {
             myViewModel.getAllCompany("");
         }
 
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultMessage().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null) return;
             myViewModel.getResultMessage().setValue(null);
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+            Toasty.warning(getActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
-        myViewModel.getResultAllCompany().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultAllCompany().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
@@ -299,6 +306,11 @@ public class AllCompanyFragment extends Fragment {
 
                     //endregion Filter Demo Company
 
+                    String companyId=sharedPreferences.getString("companyId","");
+                    if (!companyId.equals("")) {
+                        CollectionUtils.filter(result, r -> r.getI().contains(companyId));
+                        sharedPreferences.edit().putString("companyId", "").apply();
+                    }
                     companies.addAll(result);
                 }
                 //endregionGet All Company
@@ -325,7 +337,7 @@ public class AllCompanyFragment extends Fragment {
             }
         });
 
-        myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultInquiryAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
@@ -351,7 +363,7 @@ public class AllCompanyFragment extends Fragment {
         });
 
 
-        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultSetting().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
             myViewModel.getResultSetting().setValue(null);
@@ -368,7 +380,7 @@ public class AllCompanyFragment extends Fragment {
 
         });
 
-        myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultAddAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;

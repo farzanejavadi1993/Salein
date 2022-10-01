@@ -21,7 +21,6 @@ public class Users extends SugarRecord {
     @SerializedName("C")
     @Expose
     private String C;
-
     public String Token;
     public String getC() {
         String c="";
@@ -162,5 +161,15 @@ public class Users extends SugarRecord {
     }
 
     private String version;
+
+    public String getSaleinUser() {
+        return SaleinUser;
+    }
+
+    public void setSaleinUser(String saleinUser) {
+        SaleinUser = saleinUser;
+    }
+
+    private String SaleinUser;
 
 }
