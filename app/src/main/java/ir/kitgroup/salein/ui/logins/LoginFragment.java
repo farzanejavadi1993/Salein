@@ -48,7 +48,7 @@ import ir.kitgroup.salein.databinding.FragmentLoginBinding;
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
-    //region PARAMETER
+
     private MyViewModel myViewModel;
     private FragmentLoginBinding binding;
     private String mobile = "";
@@ -58,7 +58,6 @@ public class LoginFragment extends Fragment {
     private String userName;
     private String passWord;
 
-    //endregion PARAMETER
 
 
     //region Override Method
@@ -107,12 +106,7 @@ public class LoginFragment extends Fragment {
 
         });
 
-
-
-
-
     }
-
 
     @Override
     public void onDestroyView() {

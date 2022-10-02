@@ -40,7 +40,6 @@ import ir.kitgroup.salein.classes.Util;
 
 
 @AndroidEntryPoint
-
 public class VerifyFragment extends Fragment {
 
     //region  Parameter
@@ -268,6 +267,11 @@ public class VerifyFragment extends Fragment {
         int seconds = (int) (timer_left / 1000) % 60;
         String timeLeftFormated = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         binding.tvTimer.setText("دریافت مجدد کد تایید تا " + timeLeftFormated);
+    }
+
+
+    private Company getCompany() {
+        return Select.from(Company.class).first();
     }
     //endregion Method
 

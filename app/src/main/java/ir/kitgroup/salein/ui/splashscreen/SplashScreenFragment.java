@@ -65,8 +65,8 @@ public class SplashScreenFragment extends Fragment {
 
 
     private String packageName;
-    private String linkUpdate = "";
     private final String appVersion = "";
+    private String linkUpdate = "";
     private String newVersion = "";
     private String titleUpdate = "";
     private String messageUpdate = "";
@@ -185,7 +185,6 @@ public class SplashScreenFragment extends Fragment {
 
         });
 
-
         myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
@@ -232,11 +231,7 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
         } else
             myViewModel.getCompany(companyGuid);
-
-
     }
-
-
 
     private void init() {
         binding.btnWarning.setOnClickListener(v -> {
@@ -289,8 +284,6 @@ public class SplashScreenFragment extends Fragment {
         thread.start();
     }
 
-
-
     private void initCustomDialog() {
         customDialog = CustomDialog.getInstance();
         customDialog.setOnClickPositiveButton(() -> {
@@ -307,7 +300,6 @@ public class SplashScreenFragment extends Fragment {
                 user.setVersion(appVersion);
                 user.save();
             }
-
             customDialog.hideProgress();
             myViewModel.getCompany(companyGuid);
         });
@@ -363,6 +355,7 @@ public class SplashScreenFragment extends Fragment {
         Users.deleteAll(Users.class);
 
     }
+
 
     /*   @SuppressLint("SetTextI18n")
     private void init() {
