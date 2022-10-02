@@ -21,14 +21,20 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.DataBase.InvoiceDetail;
+import ir.kitgroup.salein.DataBase.Product;
+import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.DataBase.Users;
-import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.CustomDialog;
 import ir.kitgroup.salein.classes.Util;
@@ -38,6 +44,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.models.AppDetail;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -59,19 +66,13 @@ public class SplashScreenFragment extends Fragment {
 
     private String packageName;
     private String linkUpdate = "";
-    private String appVersion = "";
-    private String message = "";
+    private final String appVersion = "";
     private String newVersion = "";
     private String titleUpdate = "";
     private String messageUpdate = "";
     private boolean forcedUpdate = false;
-    private Boolean forced = false;
-    private String versionApp;
     private String companyGuid = "";
-    private Users user;
-
     private CustomDialog customDialog;
-    private String oldVersion = "";//please change farzane
 
 
     //endregion Parameter
@@ -93,11 +94,11 @@ public class SplashScreenFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        connectToServer(false);
         init();
-        initAnimation();
         initPackageName();
         iniAppVersion();
-        connectToServer(false);
+        initAnimation();
         initCustomDialog();
 
     }
@@ -130,6 +131,7 @@ public class SplashScreenFragment extends Fragment {
                 return;
 
             myViewModel.getResultGetApp().setValue(null);
+
             if (result.size() > 0) {
                 Util.APPLICATION_ID = result.get(0).getAppId();
                 if (result.get(0).getIsActive()) {
@@ -141,19 +143,49 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-
-                       /* if (user != null)
-                            myViewModel.getCustomerFromServer(user.getM());
-                        else*/
-                    checkUpdate();
+                    if (getUser() != null)
+                        myViewModel.getCustomerFromServer(getUser().getM());
+                    else
+                        checkUpdate();
 
                 } else {
-                    binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
                     binding.btnError.setVisibility(View.VISIBLE);
+                    binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
+
                 }
             }
 
         });
+
+        myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            myViewModel.getResultCustomerFromServer().setValue(null);
+
+            //region Information Account From Server
+            if (result.size() > 0) {
+                String IMEI = Util.getAndroidID(getActivity());
+                List<AppDetail> Apps = result.get(0).getApps();
+                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
+
+                if (Apps.size() > 0) {
+                    if (!Apps.get(0).getIsActive()) {
+                        binding.txtErrorr.setText("با این تلفن نمیتوانید وارد نرم افزار شوید.");
+                        return;
+                    }
+                } else
+                    clearData();
+            } else
+                clearData();
+
+            checkUpdate();
+            //endregion Information Account From Server
+
+        });
+
+
         myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
@@ -164,7 +196,8 @@ public class SplashScreenFragment extends Fragment {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(result);
                 navigate();
-            }
+            }else
+                binding.txtErrorr.setText("شرکت یافت نشد.");
         });
     }
 
@@ -195,13 +228,14 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (user != null && !newVersion.equals("") && !oldVersion.equals(newVersion)) {
-            customDialog.showDialog(getActivity(), titleUpdate, false, "بستن", "", false, true);
+        } else if (getUser() != null && !messageUpdate.equals("") && !getUser().getVersion().equals(newVersion)) {
+            customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
         } else
             myViewModel.getCompany(companyGuid);
 
 
     }
+
 
 
     private void init() {
@@ -237,7 +271,7 @@ public class SplashScreenFragment extends Fragment {
         if (packageName.contains("meat"))
             Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
         else
-            Glide.with(this).load(Uri.parse("file:///android_asset/loading3.gif")).into(binding.animationView);
+            Glide.with(this).load(Uri.parse("")).placeholder(R.drawable.splash_vector).error(R.drawable.splash_vector).into(binding.animationView);
     }
 
     private void getApp() {
@@ -256,7 +290,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
 
-    //please change farzane
+
     private void initCustomDialog() {
         customDialog = CustomDialog.getInstance();
         customDialog.setOnClickPositiveButton(() -> {
@@ -268,6 +302,12 @@ public class SplashScreenFragment extends Fragment {
         });
 
         customDialog.setOnClickNegativeButton(() -> {
+            if (getUser() != null && messageUpdate.equals("") && !getUser().getVersion().equals(newVersion)) {
+                Users user = getUser();
+                user.setVersion(appVersion);
+                user.save();
+            }
+
             customDialog.hideProgress();
             myViewModel.getCompany(companyGuid);
         });
@@ -304,44 +344,56 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private String getIp() {
-        return "http://" + getCompany().getIp1() + "/api/REST/";
+        String ip;
+        if (getCompany()!=null)
+        ip= "http://" + getCompany().getIp1() + "/api/REST/";
+        else
+            ip="";
+        return ip;
     }
 
+    private void clearData() {
+        sharedPreferences.edit().clear().apply();
+        Account.deleteAll(Account.class);
+        Company.deleteAll(Company.class);
+        InvoiceDetail.deleteAll(InvoiceDetail.class);
+        Company.deleteAll(Company.class);
+        Product.deleteAll(Product.class);
+        Unit.deleteAll(Unit.class);
+        Users.deleteAll(Users.class);
 
-//    @SuppressLint("SetTextI18n")
-//    private void init() {
-//        binding.btnWarning.setOnClickListener(v -> {
-//            binding.animationView.setVisibility(View.VISIBLE);
-//            binding.btnWarning.setVisibility(View.GONE);
-//            myViewModel.getApp(Util.APPLICATION_ID);
-//        });
-//        if (getUser() != null)
-//          oldVersion = getUser().getVersion();
-//        sharedPreferences.edit().putBoolean("vip", false).apply();
-//        sharedPreferences.edit().putBoolean("discount", false).apply();
-//    }
-//    private void initSaleinInstance() {
-//        saleinInstance = Select.from(Salein.class).first();
-//        if (saleinInstance == null && packageName.equals("ir.kitgroup.salein")) {
-//            saleinInstance = new Salein();
-//            saleinInstance.ContainAllCompanie = true;
-//            saleinInstance.save();
-//        }
-//        if (saleinInstance != null)
-//            Company.deleteAll(Company.class);
-//    }
+    }
 
-    /*  private void setData() {
+    /*   @SuppressLint("SetTextI18n")
+    private void init() {
+        binding.btnWarning.setOnClickListener(v -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.btnWarning.setVisibility(View.GONE);
+            myViewModel.getApp(Util.APPLICATION_ID);
+        });
+        if (getUser() != null)
+          oldVersion = getUser().getVersion();
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+    }
+    private void initSaleinInstance() {
+        saleinInstance = Select.from(Salein.class).first();
+        if (saleinInstance == null && packageName.equals("ir.kitgroup.salein")) {
+            saleinInstance = new Salein();
+            saleinInstance.ContainAllCompanie = true;
+            saleinInstance.save();
+        }
+        if (saleinInstance != null)
+            Company.deleteAll(Company.class);
+    }
+
+      private void setData() {
 
         title = company != null && company.getN() != null ? company.getN() : "";
         description = company != null && company.getDesc() != null ? company.getDesc() : "";
         binding.tvTitle.setText(title);
         binding.tvDescription.setText(description);
     }*/
-
-
-
-
 
 
     //endregion Custom Method

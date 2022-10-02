@@ -38,7 +38,7 @@ import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.DataBase.Tables;
+
 import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.databinding.MoreFragmentBinding;
 import ir.kitgroup.salein.R;
@@ -137,8 +137,7 @@ public class MoreFragment extends Fragment {
             if (Product.count(Product.class) > 0)
                 Product.deleteAll(Product.class);
 
-            if (Tables.count(Tables.class) > 0)
-                Tables.deleteAll(Tables.class);
+
 
             if (Unit.count(Unit.class) > 0)
                 Unit.deleteAll(Unit.class);

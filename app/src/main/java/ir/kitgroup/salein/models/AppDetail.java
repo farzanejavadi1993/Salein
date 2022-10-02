@@ -7,20 +7,19 @@ import androidx.annotation.Keep;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 @Keep
 public class AppDetail {
     @SerializedName("AppId")
     @Expose
     private String appId;
-    @SerializedName("AccountId")
-    @Expose
-    private String accountId;
     @SerializedName("UserName")
     @Expose
     private Object userName;
     @SerializedName("DisplayName")
     @Expose
-    private String displayName;
+    private Object displayName;
     @SerializedName("IsActive")
     @Expose
     private Boolean isActive;
@@ -55,13 +54,83 @@ public class AppDetail {
     @Expose
     private String version;
 
-    public String getAppId() {
-        return appId;
+
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
+
+    @SerializedName("CityName")
+    @Expose
+    private String cityName;
+
+
+    @SerializedName("GuildName")
+    @Expose
+    private String guildName;
+
+
+    @SerializedName("StateName")
+    @Expose
+    private String stateName;
+    public String getGuildName() {
+        return guildName;
+    }
+
+    public void setGuildName(String guildName) {
+        this.guildName = guildName;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    @SerializedName("GuildId")
+    @Expose
+    private String guildId;
+
+    @SerializedName("StateId")
+    @Expose
+    private String stateId;
+    @SerializedName("CityId")
+    @Expose
+    private String cityId;
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    @SerializedName("ShopName")
+    @Expose
+    private String shopName;
+
+    @SerializedName("Relation")
+    @Expose
+    private List<String> relation;
+
+    @SerializedName("AccountId")
+    @Expose
+    private String accountId;
+
 
     public String getAccountId() {
         return accountId;
@@ -69,6 +138,62 @@ public class AppDetail {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+    public List<String> getRelation() {
+        return relation;
+    }
+
+    public void setRelation(List<String> relation) {
+        this.relation = relation;
+    }
+
+
+    public String getGuildId() {
+        return guildId;
+    }
+
+    public void setGuildId(String guildId) {
+        this.guildId = guildId;
+    }
+
+    public String getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+
+
+
+
+    public String getIemi() {
+        return iemi;
+    }
+
+    public void setIemi(String iemi) {
+        this.iemi = iemi;
+    }
+
+    @SerializedName("IMEI")
+    @Expose
+    private String iemi;
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     public Object getUserName() {
@@ -79,11 +204,11 @@ public class AppDetail {
         this.userName = userName;
     }
 
-    public String getDisplayName() {
+    public Object getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(Object displayName) {
         this.displayName = displayName;
     }
 
@@ -176,4 +301,3 @@ public class AppDetail {
     }
 
 }
-
