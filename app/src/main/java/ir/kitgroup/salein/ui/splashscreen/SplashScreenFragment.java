@@ -35,6 +35,7 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.DataBase.Users;
+import ir.kitgroup.salein.classes.ApplicationInformation;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.CustomDialog;
 import ir.kitgroup.salein.classes.Util;
@@ -45,6 +46,7 @@ import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.AppDetail;
+import ir.kitgroup.salein.DataBase.AppInfo;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -63,7 +65,7 @@ public class SplashScreenFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentSplashScreenBinding binding;
 
-    private String packageName;
+
     private final String appVersion = "";
 
     private String linkUpdate = "";
@@ -73,6 +75,9 @@ public class SplashScreenFragment extends Fragment {
     private boolean forcedUpdate = false;
     private String companyGuid = "";
     private CustomDialog customDialog;
+
+
+    private AppInfo appInfo;
 
 
     //region Override Method
@@ -92,9 +97,8 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         connectToServer(false);
-        init();
-        initPackageName();
         iniAppVersion();
+        init();
         initAnimation();
         initCustomDialog();
     }
@@ -208,9 +212,7 @@ public class SplashScreenFragment extends Fragment {
         return getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
     }
 
-    public String getPackageName() throws PackageManager.NameNotFoundException {
-        return getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).packageName;
-    }
+
 
     private void checkUpdate() {
         if (forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
@@ -228,7 +230,9 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void init() {
-        binding.btnWarning.setOnClickListener(v -> {
+        appInfo=Select.from(AppInfo.class).first();
+
+      binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
             binding.btnWarning.setVisibility(View.GONE);
             myViewModel.getApp(Util.APPLICATION_ID);
@@ -240,13 +244,7 @@ public class SplashScreenFragment extends Fragment {
         connectToServer.connect(sharedPreferences, hostSelectionInterceptor, connect, getIp());
     }
 
-    private void initPackageName() {
-        try {
-            packageName = getPackageName();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     private void iniAppVersion() {
         try {
@@ -257,10 +255,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void initAnimation() {
-        if (packageName.contains("meat"))
-            Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
-        else
-            Glide.with(this).load(Uri.parse("")).placeholder(R.drawable.splash_vector).error(R.drawable.splash_vector).into(binding.animationView);
+        Glide.with(this).asGif().load(Uri.parse(appInfo.getGif_url())).into(binding.animationView);
     }
 
     private void getApp() {
@@ -269,7 +264,7 @@ public class SplashScreenFragment extends Fragment {
             public void run() {
                 try {
                     sleep(1000);
-                    myViewModel.getApp(Util.APPLICATION_CODE);
+                    myViewModel.getApp(appInfo.getApplication_code());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -347,6 +342,7 @@ public class SplashScreenFragment extends Fragment {
         Product.deleteAll(Product.class);
         Unit.deleteAll(Unit.class);
         Users.deleteAll(Users.class);
+
 
     }
 

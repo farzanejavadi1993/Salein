@@ -34,7 +34,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Salein;
+
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
@@ -146,8 +146,7 @@ public class MoreFragment extends Fragment {
                 Company.deleteAll(Company.class);
 
 
-            if (Salein.count(Salein.class) > 0)
-                Salein.deleteAll(Salein.class);
+
 
 
 

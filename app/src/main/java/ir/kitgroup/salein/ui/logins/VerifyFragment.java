@@ -30,7 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import in.aabhasjindal.otptextview.OTPListener;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Salein;
+
+import ir.kitgroup.salein.DataBase.AppInfo;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
@@ -88,8 +89,8 @@ public class VerifyFragment extends Fragment {
 
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
-        userName=company.getUser();
-        passWord=company.getPass();
+        userName = company.getUser();
+        passWord = company.getPass();
         //endregion Get The Company Is Save In The Database
 
 
@@ -178,7 +179,7 @@ public class VerifyFragment extends Fragment {
 
 
                 //region Go To CompanyFragment Because Account Is Register
-                if (Select.from(Salein.class).first() != null) {
+                if (Select.from(AppInfo.class).first().isSalein_main()) {
                     NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
@@ -187,7 +188,7 @@ public class VerifyFragment extends Fragment {
 
                 //region Go To MainFragment Because Account Is Register
                 else {
-                   NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
+                    NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
                     Navigation.findNavController(binding.getRoot()).navigate(action);
 
                 }
@@ -198,7 +199,7 @@ public class VerifyFragment extends Fragment {
 
             //region When The User Is Not Register In
             else {
-                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment",mobile,-1);
+                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment", mobile, -1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
             }
@@ -226,8 +227,6 @@ public class VerifyFragment extends Fragment {
         });
 
 
-
-
     }
 
 
@@ -235,7 +234,7 @@ public class VerifyFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         countDownTimer.cancel();
-                binding = null;
+        binding = null;
     }
 
 

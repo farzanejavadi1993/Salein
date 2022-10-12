@@ -23,7 +23,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Salein;
+
+import ir.kitgroup.salein.DataBase.AppInfo;
 import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -201,7 +202,7 @@ public class MyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (Select.from(Salein.class).first() == null)
+                                        if (!Select.from(AppInfo.class).first().isSalein_main())
                                             compositeDisposable.dispose();
                                     }
                                 } else {

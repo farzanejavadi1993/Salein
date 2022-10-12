@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,9 +32,11 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 
+import ir.kitgroup.salein.DataBase.AppInfo;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ApplicationInformation;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
-import ir.kitgroup.salein.DataBase.Salein;
+
 import ir.kitgroup.salein.classes.Util;
 
 
@@ -48,6 +51,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ActivityLauncherBinding binding;
     private NavController navController;
     private Dialog dialog;
+    private AppInfo appInfo;
 
 
     //endregion Parameter
@@ -61,15 +65,19 @@ public class LauncherActivity extends AppCompatActivity {
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        initAppInfo();
         if (getIntent() != null && getIntent().getExtras() != null) {
             String company = getIntent().getExtras().getString("companyId");
             sharedPreferences.edit().putString("companyId", Objects.requireNonNullElse(company, "")).apply();
             Toast.makeText(this, Objects.requireNonNullElse(company, ""), Toast.LENGTH_SHORT).show();
-        }else
+        } else
             sharedPreferences.edit().putString("company", "").apply();
+
         Util.ScreenSize(this);
         navigationHandler();
         castDialog();
+
+
     }
 
 
@@ -88,7 +96,7 @@ public class LauncherActivity extends AppCompatActivity {
                         ((HomeFragment) fragment).showData();
                     }
                 } else {
-                    if (Select.from(Salein.class).first() == null && navController.getBackQueue().size() == 2)
+                    if (!appInfo.isSalein_main() && navController.getBackQueue().size() == 2)
                         dialog.show();
                     else
                         super.onBackPressed();
@@ -118,6 +126,14 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     //region Method
+
+    private void initAppInfo() {
+        ApplicationInformation applicationInformation = new ApplicationInformation();
+         appInfo = applicationInformation.getInformation(getPackageName());
+        if (Select.from(AppInfo.class).list().size() == 0)
+            AppInfo.saveInTx(appInfo);
+    }
+
     private void navigationHandler() {
 
         binding.navView.getOrCreateBadge(R.id.InvoiceFragment).clearNumber();
@@ -190,6 +206,18 @@ public class LauncherActivity extends AppCompatActivity {
         });
         //endregion Cast Dialog
     }
+
+
+    public String getPackageName() {
+        String packageName = "";
+        try {
+            packageName = getPackageManager().getPackageInfo(getPackageName(), 0).packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageName;
+    }
+
 
     //endregion Method
 

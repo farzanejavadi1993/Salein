@@ -58,8 +58,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.DataBase.AppInfo;
 import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.DataBase.Salein;
+
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.Connect.MyViewModel;
@@ -156,7 +157,7 @@ public class HomeFragment extends Fragment {
 
     public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
-    private  Salein salein;
+    private AppInfo appInfo;
 
 
     //endregion Parameter
@@ -196,7 +197,7 @@ public class HomeFragment extends Fragment {
             company = Select.from(Company.class).first();
             userName = company.getUser();
             passWord = company.getPass();
-            salein=Select.from(Salein.class).first();
+            appInfo=Select.from(AppInfo.class).first();
             //endregion Config
 
 
@@ -279,7 +280,7 @@ public class HomeFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 if (disableAccount) {
-                    if (Select.from(Salein.class).first() == null)
+                    if (!appInfo.isSalein_main())
                         getActivity().finish();
                     else
                         Navigation.findNavController(binding.getRoot()).popBackStack();
@@ -769,7 +770,7 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                if (salein==null && update.equals("3") && !AppVersion.equals(NewVersion)) {
+                if (!appInfo.isSalein_main() && update.equals("3") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.GONE);
                     dialogUpdate.setCancelable(false);
@@ -777,7 +778,7 @@ public class HomeFragment extends Fragment {
                     Product.deleteAll(Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
                 }
-                else if (salein==null &&update.equals("2") && !AppVersion.equals(NewVersion)) {
+                else if (!appInfo.isSalein_main() &&update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);
