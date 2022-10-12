@@ -29,7 +29,7 @@ public class HostSelectionInterceptor implements Interceptor {
         if (preferenceHelper.getBoolean("status",false)) {
             this.host = HttpUrl.parse(Util.PRODUCTION_BASE_URL);
         } else {
-            this.host = HttpUrl.parse(Util.DEVELOPMENT_BASE_URL);
+            this.host = HttpUrl.parse(Util.Main_URL);
         }
     }
 

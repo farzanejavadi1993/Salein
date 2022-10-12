@@ -30,6 +30,7 @@ import dagger.hilt.components.SingletonComponent;
 import ir.kitgroup.salein.Connect.CompanyAPI;
 
 
+import ir.kitgroup.salein.Connect.MainApi;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.classes.Util;
 
@@ -83,21 +84,52 @@ public class ApplicationModule {
 
     }
 
+    @Provides
+    @Singleton
+    @Named("Main")
+    public OkHttpClient provideOkHttpClientMain(@ApplicationContext Context context,HostSelectionInterceptor  hostSelectionInterceptor) {
+
+        long cacheSize = 5 * 1024 * 1024;
+        Cache mCache = new Cache(context.getCacheDir(), cacheSize);
+
+        return new OkHttpClient().newBuilder()
+                .cache(mCache)
+                .retryOnConnectionFailure(true)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .build();
+
+
+    }
 
 
 
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
+    @Named("Company")
+    Retrofit provideRetrofit(Gson gson, @Named("Company")OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Util.DEVELOPMENT_BASE_URL)
+                .baseUrl(Util.Main_URL)
                 .client(okHttpClient)
                 .build();
+    }
 
 
+    @Provides
+    @Singleton
+    @Named("Main")
+    Retrofit provideRetrofitMain(Gson gson,@Named("Main") OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(Util.Main_URL)
+                .client(okHttpClient)
+                .build();
     }
 
     @Provides
@@ -117,9 +149,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public CompanyAPI provideAPI(Retrofit ret) {
-
+    public CompanyAPI provideCompanyAPI(@Named("Company") Retrofit ret) {
         return ret.create(CompanyAPI.class);
+    }
 
+    @Provides
+    @Singleton
+    public MainApi provideMainApi(@Named("Main") Retrofit ret) {
+        return ret.create(MainApi.class);
     }
 }

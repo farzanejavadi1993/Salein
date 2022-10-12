@@ -67,7 +67,7 @@ public class CompanyViewModel extends ViewModel {
 
     private final MutableLiveData<String> resultSendSms = new MutableLiveData<>();
     private final MutableLiveData<List<Company>> resultAllCompany = new MutableLiveData<>();
-    private final MutableLiveData<List<Company>> resultCompany = new MutableLiveData<>();
+
     private final MutableLiveData<List<Account>> resultInquiryAccount = new MutableLiveData<>();
     private final MutableLiveData<List<ProductLevel1>> resultProductLevel1 = new MutableLiveData<>();
     private final MutableLiveData<List<ProductLevel2>> resultProductLevel2 = new MutableLiveData<>();
@@ -87,11 +87,10 @@ public class CompanyViewModel extends ViewModel {
     private final MutableLiveData<ModelLog> resultLog = new MutableLiveData<>();
     private final MutableLiveData<Integer> resultMaxSale = new MutableLiveData<>();
     private final MutableLiveData<Boolean> resultAddAccount = new MutableLiveData<>();
-    private final MutableLiveData<List<Log>> resultAddAccountToServer = new MutableLiveData<>();
-    private final MutableLiveData<List<AppDetail>> resultApp = new MutableLiveData<>();
+
     private final MutableLiveData<ModelTypeOrder> resultTypeOrder = new MutableLiveData<>();
     private final MutableLiveData<Message> eMessage = new MutableLiveData<>();
-    private final MutableLiveData<List<Account>> resultCustomerFromServer = new MutableLiveData<>();
+
 
     @Inject
     public CompanyViewModel(CompanyRepository myRepository, SharedPreferences sharedPreferences) {
@@ -151,24 +150,7 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void getCompany(String id) {
-        compositeDisposable.add(
-                myRepository.getCompany(id)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(
-                                resultCompany::setValue
-                                , throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))
-                        )
-        );
-    }
 
-    public MutableLiveData<List<Company>> getResultCompany() {
-        return resultCompany;
-    }
 
 
     public void getInquiryAccount(String user, String passWord, String mobile) {
@@ -970,64 +952,5 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void addAccountToServer(Util.JsonObjectAccount accounts) {
 
-        Gson gson = new Gson();
-        Type typeAccount = new TypeToken<AllCompanyFragment.JsonObjectAccount>() {
-        }.getType();
-
-        compositeDisposable.add(
-                myRepository.addAccountToServer(gson.toJson(accounts, typeAccount))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(
-                                resultAddAccountToServer::setValue,
-                                throwable ->
-                                        eMessage.setValue(new Message(111, "خطا در ثبت اطلاعات مشتری", ""))));
-    }
-
-    public MutableLiveData<List<Log>> getResultAddAccountToServer() {
-        return resultAddAccountToServer;
-    }
-
-
-    public void getApp(String id) {
-
-
-        compositeDisposable.add(
-                myRepository.getApp(id)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(
-                                resultApp::setValue,
-                                throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در دریافت آی دی آپلیکیشن", ""))));
-    }
-
-    public MutableLiveData<List<AppDetail>> getResultGetApp() {
-        return resultApp;
-    }
-
-
-    public void getCustomerFromServer(String mobile) {
-        compositeDisposable.clear();
-        compositeDisposable.add(
-                myRepository.getCustomerFromServer(mobile)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(
-                                resultCustomerFromServer::setValue,
-                                throwable ->
-                                        eMessage.setValue(new Message(110, "خطا در دریافت اطلاعات کاربر", ""))));
-    }
-
-    public MutableLiveData<List<Account>> getResultCustomerFromServer() {
-        return resultCustomerFromServer;
-    }
 }

@@ -59,7 +59,7 @@ public class AboutUsFragment extends Fragment {
             e.printStackTrace();
         }
         Picasso.get()
-                .load(Util.DEVELOPMENT_BASE_URL_Img +"/GetCompanyImage?id=" +
+                .load(Util.Main_Url_IMAGE +"/GetCompanyImage?id=" +
                         company.getI()+"&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)

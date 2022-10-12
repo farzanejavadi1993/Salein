@@ -51,7 +51,7 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             holder.favoriteCompany.setVisibility(View.GONE);
 
         Picasso.get()
-                .load(Util.DEVELOPMENT_BASE_URL_Img+"/GetCompanyImage?id=" +
+                .load(Util.Main_Url_IMAGE +"/GetCompanyImage?id=" +
                         company.getI()+"&width=120&height=120")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
