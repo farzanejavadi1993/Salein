@@ -26,7 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
@@ -90,7 +91,7 @@ public class ContactUsFragment extends Fragment {
             binding.layoutSocial.setVisibility(View.GONE);
             binding.txtTitleToolbar.setText("دعوت از دوستان");
             binding.image.setImageResource(R.drawable.ic_share);
-            Users account= Select.from(Users.class).first();
+            Account account= Select.from(Account.class).first();
             binding.description.setText(company!=null && company.getTxt1()!=null ?company.getTxt1():"");
             binding.textView4.setText("کد معرف : "+account.getC());
         }
@@ -216,10 +217,10 @@ public class ContactUsFragment extends Fragment {
 
 
     private void shareApplication() {
-        Users account=   Select.from(Users.class).first();
+        Account account=   Select.from(Account.class).first();
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        String my_string = " سلام "+account.N +" شما را به "+company.getN() +" دعوت کرده است.از طریق لینک زیر برنامه را دانلود کنید."+"\n"+
+        String my_string = " سلام "+account.getN() +" شما را به "+company.getN() +" دعوت کرده است.از طریق لینک زیر برنامه را دانلود کنید."+"\n"+
                 updateLink
                 +"\n"+"کد معرف : " + account.getC();
         intent.putExtra(Intent.EXTRA_TEXT, my_string);

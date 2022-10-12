@@ -14,7 +14,8 @@ import androidx.navigation.Navigation;
 import com.orm.query.Select;
 import org.jetbrains.annotations.NotNull;
 
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.FragmentProfileBinding;
 
@@ -41,22 +42,22 @@ public class ProfileFragment extends Fragment {
 
 
 
-       Users user = Select.from(Users.class).first();
+       Account user = Select.from(Account.class).first();
         if (user != null) {
-            binding.txtName.setText(user.N);
-            binding.tvPhone.setText(user.M);
+            binding.txtName.setText(user.getN());
+            binding.tvPhone.setText(user.getM());
 
-            if (user.ADR != null && !user.ADR.equals("")) {
+            if (user.getAdr() != null && !user.getAdr().equals("")) {
                 binding.cardAddress1.setVisibility(View.VISIBLE);
-                binding.tvAddress1.setText(user.ADR);
+                binding.tvAddress1.setText(user.getAdr());
 
             }
 
 
 
-            if (user.ADR2 != null && !user.ADR2.equals("")){
+            if (user.getAdr2() != null && !user.getAdr2().equals("")){
                 binding.cardAddress2.setVisibility(View.VISIBLE);
-                binding.tvAddress2.setText(user.ADR2);
+                binding.tvAddress2.setText(user.getAdr2());
             }
 
 
@@ -64,12 +65,12 @@ public class ProfileFragment extends Fragment {
 
 
           binding.cardAddress1.setOnClickListener(view1 -> {
-              NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.M,1);
+              NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),1);
               Navigation.findNavController(binding.getRoot()).navigate(action);
           });
 
             binding.cardAddress2.setOnClickListener(view1 -> {
-                NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.M,2);
+                NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),2);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
 

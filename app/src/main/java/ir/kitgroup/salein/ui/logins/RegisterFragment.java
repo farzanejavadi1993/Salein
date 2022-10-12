@@ -55,8 +55,9 @@ import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.salein.Connect.MyViewModel;
 
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
-import ir.kitgroup.salein.DataBase.Users;
+
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.RegisterFragmentBinding;
 import ir.kitgroup.salein.DataBase.Company;
@@ -76,13 +77,13 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private String passWord;
 
 
-    private final List<Users> accountsList = new ArrayList<>();
+    private final List<Account> accountsList = new ArrayList<>();
     private int radioValue;
     private boolean ACCSTP = true;
     private String from;//this Variable Show From Which Fragment Did We Enter This Fragment?
     private String mobile;
-    private Users user;
-    private List<Users> usersList;
+    private Account account;
+    private List<Account> accounts;
 
     private MapboxMap mapboxMap;
     private LocationEngine locationEngine = null;
@@ -112,7 +113,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
         } catch (Exception ignore) {
         }
-
 
 
         binding.mapView.getMapAsync(mapboxMap -> {
@@ -186,23 +186,23 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
 
         //region Get User Is Save In Database And Complete Information If User Is Not Null
-        usersList = new ArrayList<>();
+        accounts = new ArrayList<>();
 
 
         binding.edtAddress.setText(Util.address);
         binding.edtName.setText(Util.nameUser);
 
-        user = Select.from(Users.class).first();
-        if (user != null)
-            binding.edtName.setText(user.N);
+        account = Select.from(Account.class).first();
+        if (account != null)
+            binding.edtName.setText(account.getN());
 
 
         //endregion Get User Is Save In Database And Complete Information If User Is Not Null
 
         //region Get The Company Is Save In The Database
         company = Select.from(Company.class).first();
-        userName=company.getUser();
-        passWord=company.getPass();
+        userName = company.getUser();
+        passWord = company.getPass();
         //endregion Get The Company Is Save In The Database
 
         //region Press RadioButton
@@ -239,15 +239,15 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 Toasty.error(requireActivity(), "لطفا فیلدهای ستاره دار را پر کنید.", Toast.LENGTH_SHORT, true).show();
                 return;
             }
-            Users usr = new Users();
+            Account usr = new Account();
 
             //region Add Account
             if (from.equals("VerifyFragment")) {
-                usr.I = UUID.randomUUID().toString();
-                usr.N = binding.edtName.getText().toString();
-                usr.M = mobile;
+                usr.setI(UUID.randomUUID().toString());
+                usr.setN(binding.edtName.getText().toString());
+                usr.setM(mobile);
                 usr.PSW = mobile;
-                usr.ADR = binding.edtAddress.getText().toString();
+                usr.setAdr(binding.edtAddress.getText().toString());
                 usr.LAT = String.valueOf(Util.latitude);
                 usr.LNG = String.valueOf(Util.longitude);
                 usr.S = String.valueOf(radioValue);
@@ -262,42 +262,42 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
             //region Update Account
             else {
-                usr.I = user.I;
-                usr.N = user.N;
-                usr.M = user.M;
-                usr.ADR = user.ADR;
-                usr.ADR2 = user.ADR2;
-                usr.CRDT = user.CRDT > 0 ? user.CRDT : 0.0;
-                usr.LAT = user.LAT != null && !user.LAT.equals("") && !user.LAT.equals("-") ? user.LAT : "0.0";
-                usr.LNG = user.LNG != null && !user.LNG.equals("") && !user.LNG.equals("-") ? user.LNG : "0.0";
-                usr.LAT1 = user.LAT1 != null && !user.LAT1.equals("") && !user.LAT1.equals("-") ? user.LAT1 : "0.0";
-                usr.LNG1 = user.LNG1 != null && !user.LNG1.equals("") && !user.LNG1.equals("-") ? user.LNG1 : "0.0";
+                usr.setI(account.getI());
+                usr.setN(account.getN());
+                usr.setM(account.getM());
+                usr.setAdr(account.getAdr());
+                usr.setAdr2(account.getAdr2());
+                usr.CRDT = account.CRDT > 0 ? account.CRDT : 0.0;
+                usr.LAT = account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0";
+                usr.LNG = account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0";
+                usr.LAT1 = account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0";
+                usr.LNG1 = account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0";
 
                 if (radioValue == 1) {
                     if (from.equals("PaymentFragment"))
-                    PaymentFragment.ChooseAddress2 = false;
+                        PaymentFragment.ChooseAddress2 = false;
 
-                    usr.ADR = binding.edtAddress.getText().toString();
+                    usr.setAdr( binding.edtAddress.getText().toString());
                     usr.LAT = String.valueOf(Util.latitude);
                     usr.LNG = String.valueOf(Util.longitude);
                 } else if (radioValue == 2) {
                     if (from.equals("PaymentFragment"))
-                    PaymentFragment.ChooseAddress2 = true;
+                        PaymentFragment.ChooseAddress2 = true;
 
-                    usr.ADR2 = binding.edtAddress.getText().toString();
+                    usr.setAdr2( binding.edtAddress.getText().toString());
                     usr.LAT1 = String.valueOf(Util.latitude);
                     usr.LNG1 = String.valueOf(Util.longitude);
                 }
 
 
-                usersList.clear();
-                usersList.add(usr);
+                accounts.clear();
+                accounts.add(usr);
 
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
 
 
-                myViewModel.updateAccount(userName,passWord, usersList);
+                myViewModel.updateAccount(userName, passWord, accounts);
 
 
             }
@@ -329,8 +329,8 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             myViewModel.getResultAddAccount().setValue(null);
 
             if (result) {
-                Users.deleteAll(Users.class);
-                Users.saveInTx(accountsList);
+                Account.deleteAll(Account.class);
+                Account.saveInTx(accountsList);
                 accountsList.clear();
 
 
@@ -366,7 +366,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 accountsList.get(0).STAPP = ACCSTP;
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
-                myViewModel.addAccount(userName,passWord, accountsList);
+                myViewModel.addAccount(userName, passWord, accountsList);
             }
 
 
@@ -386,12 +386,12 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                 if (message == 1) {
-                    Users.deleteAll(Users.class);
-                    Users.saveInTx(usersList);
-                    Util.longitude=0;
-                    Util.latitude=0;
-                    Util.address="";
-                    Util.nameUser="";
+                    Account.deleteAll(Account.class);
+                    Account.saveInTx(accounts);
+                    Util.longitude = 0;
+                    Util.latitude = 0;
+                    Util.address = "";
+                    Util.nameUser = "";
                     Navigation.findNavController(binding.getRoot()).popBackStack();
 
                 } else {

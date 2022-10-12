@@ -47,6 +47,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.DataBase.Company;
@@ -56,7 +57,7 @@ import ir.kitgroup.salein.models.ModelDate;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 import ir.kitgroup.salein.classes.CustomProgress;
-import ir.kitgroup.salein.DataBase.Users;
+
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.models.OrderType;
@@ -95,7 +96,7 @@ public class PaymentFragment extends Fragment {
     //endregion Dialog Sync
 
     //region Dialog Address
-    private Users user;
+    private Account account;
     private Dialog dialogAddress;
     private RadioButton radioAddress1;
     private RadioButton radioAddress2;
@@ -162,7 +163,7 @@ public class PaymentFragment extends Fragment {
         try {
 
             //region Config
-            user = Select.from(Users.class).first();
+            account = Select.from(Account.class).first();
             company = Select.from(Company.class).first();
             
             userName=company.getUser();
@@ -171,7 +172,7 @@ public class PaymentFragment extends Fragment {
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
             if (!linkPayment.equals(""))
-                linkPayment = linkPayment + "/ChargeClub?c=" + user.getC();
+                linkPayment = linkPayment + "/ChargeClub?c=" + account.getC();
             OrdTList = new ArrayList<>();
             timesList = new ArrayList<>();
             times = new ArrayList<>();
@@ -228,8 +229,8 @@ public class PaymentFragment extends Fragment {
             radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
                 if (isChecked) {
-                    latitude1 = Double.parseDouble(user.LAT != null && !user.LAT.equals("") && !user.LAT.equals("-") ? user.LAT : "0.0");
-                    longitude1 = Double.parseDouble(user.LNG != null && !user.LNG.equals("") && !user.LNG.equals("-") ? user.LNG : "0.0");
+                    latitude1 = Double.parseDouble(account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0");
+                    longitude1 = Double.parseDouble(account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0");
 
                     if (latitude1 == 0 && longitude1 == 0)
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
@@ -268,8 +269,8 @@ public class PaymentFragment extends Fragment {
             radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
                 if (isChecked) {
-                    latitude2 = Double.parseDouble(user.LAT1 != null && !user.LAT1.equals("") && !user.LAT1.equals("-") ? user.LAT1 : "0.0");
-                    longitude2 = Double.parseDouble(user.LNG1 != null && !user.LNG1.equals("") && !user.LNG1.equals("-") ? user.LNG1 : "0.0");
+                    latitude2 = Double.parseDouble(account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0");
+                    longitude2 = Double.parseDouble(account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0");
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }else
@@ -303,24 +304,24 @@ public class PaymentFragment extends Fragment {
             });
 
             btnNewAddress.setOnClickListener(v -> {
-                if (user == null) {
+                if (account == null) {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialogAddress.dismiss();
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM(),-1);
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(),-1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
             //endregion Cast DialogAddress
 
             //region SetAddress
-            if (user != null && user.ADR != null && !user.ADR.equals("")) {
-                radioAddress1.setText(user.ADR);
+            if (account != null && account.getAdr() != null && !account.getAdr().equals("")) {
+                radioAddress1.setText(account.getAdr());
                 radioAddress1.setVisibility(View.VISIBLE);
                 //region If The Address Selected By The User Is Not Address 2 We Calculate Cost OfTransport
                 if (!ChooseAddress2){
-                    latitude1 = Double.parseDouble(user.LAT != null && !user.LAT.equals("") && !user.LAT.equals("-") ? user.LAT: "0.0");
-                    longitude1 = Double.parseDouble(user.LNG != null && !user.LNG.equals("") && !user.LNG.equals("-") ? user.LNG : "0.0");
+                    latitude1 = Double.parseDouble(account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT: "0.0");
+                    longitude1 = Double.parseDouble(account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0");
                     if (latitude1== 0.0 || longitude1 == 0.0) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }
@@ -349,14 +350,14 @@ public class PaymentFragment extends Fragment {
             else
                 radioAddress1.setVisibility(View.GONE);
 
-            if (user != null && user.ADR2 != null && !user.ADR2.equals("")) {
+            if (account != null && account.getAdr2() != null && !account.getAdr2().equals("")) {
                 radioAddress2.setVisibility(View.VISIBLE);
-                radioAddress2.setText(user.ADR2);
+                radioAddress2.setText(account.getAdr2());
 
                 //region If The Address Selected By The User Is  Address 2 We Calculate Cost OfTransport
                 if (ChooseAddress2) {
-                    latitude2 = Double.parseDouble(user.LAT1 != null && !user.LAT1.equals("") && !user.LAT1.equals("-") ? user.LAT1 : "0.0");
-                    longitude2 = Double.parseDouble(user.LNG1 != null && !user.LNG1.equals("") && !user.LNG1.equals("-") ? user.LNG1 : "0.0");
+                    latitude2 = Double.parseDouble(account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0");
+                    longitude2 = Double.parseDouble(account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0");
                     if ((latitude2 == 0.0 || longitude2 == 0.0)) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }
@@ -388,16 +389,16 @@ public class PaymentFragment extends Fragment {
                 radioAddress2.setVisibility(View.GONE);
 
 
-            if (user != null && user.ADR != null && !user.ADR.equals("") && !ChooseAddress2) {
-                binding.edtAddress.setText(user.ADR);
+            if (account != null && account.getAdr() != null && !account.getAdr().equals("") && !ChooseAddress2) {
+                binding.edtAddress.setText(account.getAdr());
                 typeAddress = 1;
-                ValidAddress = user.ADR;
+                ValidAddress = account.getAdr();
 
             }
-            else if (user != null && user.ADR2 != null && !user.ADR2.equals("")) {
-                binding.edtAddress.setText(user.ADR2);
+            else if (account != null && account.getAdr2() != null && !account.getAdr2().equals("")) {
+                binding.edtAddress.setText(account.getAdr2());
                 typeAddress = 2;
-                ValidAddress = user.ADR2;
+                ValidAddress = account.getAdr2();
             }
             else {
                 typeAddress = 0;
@@ -409,11 +410,11 @@ public class PaymentFragment extends Fragment {
                 if (typeAddress != 0) {
                     dialogAddress.show();
                     return;
-                } else if (user == null) {
+                } else if (account == null) {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", user.getM(),-1);
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(),-1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
 
@@ -599,8 +600,8 @@ public class PaymentFragment extends Fragment {
                 binding.tvSuccessFullPayOnline.setText("");
                 binding.ivOkClubPayment.setVisibility(View.GONE);
 
-                if (user != null && user.CRDT != null) {
-                    binding.tvCredit.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
+                if (account != null && account.CRDT != null) {
+                    binding.tvCredit.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
                 }
                 binding.ivOkOnSitePayment.setVisibility(View.VISIBLE);
             });
@@ -611,9 +612,9 @@ public class PaymentFragment extends Fragment {
 
                 binding.ivOkOnSitePayment.setVisibility(View.GONE);
 
-                if (user != null && user.CRDT != null && user.CRDT >= (sumPurePrice + sumTransport)) {
+                if (account != null && account.CRDT != null && account.CRDT >= (sumPurePrice + sumTransport)) {
                     binding.tvSuccessFullPayOnline.setText("پرداخت موفقیت آمیز");
-                    binding.tvCredit.setText(format.format(user.CRDT - (sumPurePrice + sumTransport)));
+                    binding.tvCredit.setText(format.format(account.CRDT - (sumPurePrice + sumTransport)));
                     typePayment = "4";
                     binding.ivOkClubPayment.setVisibility(View.VISIBLE);
                 }
@@ -671,7 +672,7 @@ public class PaymentFragment extends Fragment {
 
             binding.btnRegisterOrder.setOnClickListener(v -> {
 
-                myViewModel.getInquiryAccount(userName, passWord, user.getM());
+                myViewModel.getInquiryAccount(userName, passWord, account.getM());
                 if (typePayment.equals("-1")) {
                     Toast.makeText(getActivity(), "نوع پرداخت را مشخص کنید.", Toast.LENGTH_SHORT).show();
                     return;
@@ -788,11 +789,11 @@ public class PaymentFragment extends Fragment {
                 invoice.INV_DUE_DATE = dateChoose;
                 invoice.INV_DUE_TIME = hour + ":" + "00";
                 invoice.INV_STATUS = true;
-                if (Select.from(Users.class).first() == null) {
+                if (Select.from(Account.class).first() == null) {
                     Toast.makeText(getActivity(), "مشتری معتبر نمی باشد", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                invoice.ACC_CLB_UID = Select.from(Users.class).first().I;
+                invoice.ACC_CLB_UID = Select.from(Account.class).first().getI();
                 invoice.INV_TYPE_ORDER = Ord_TYPE;
                 if (typeAddress == 1) {
                     invoice.ACC_CLB_ADDRESS = "";
@@ -961,7 +962,7 @@ public class PaymentFragment extends Fragment {
 
             //region Get Credit Club
             binding.progressBar.setVisibility(View.VISIBLE);
-            myViewModel.getInquiryAccount(userName, passWord, user.M);
+            myViewModel.getInquiryAccount(userName, passWord, account.getM());
             //endregion Get Credit Club
 
         });
@@ -978,12 +979,12 @@ public class PaymentFragment extends Fragment {
             sharedPreferences.edit().putBoolean("disableAccount", false).apply();
             //user is register
             if (result.size() > 0) {
-                Users.deleteAll(Users.class);
-                Users.saveInTx(result);
-                user = Select.from(Users.class).first();
-                if (user != null && user.CRDT != null)
+                Account.deleteAll(Account.class);
+                Account.saveInTx(result);
+                account = Select.from(Account.class).first();
+                if (account != null && account.CRDT != null)
                     binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                binding.tvCredit.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
+                binding.tvCredit.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
             } else {
                 binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
                 binding.tvCredit.setText("خطا در بروز رسانی موجودی ");

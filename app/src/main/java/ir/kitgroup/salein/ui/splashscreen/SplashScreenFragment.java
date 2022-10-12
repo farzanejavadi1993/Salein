@@ -24,6 +24,7 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,8 +35,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Unit;
-import ir.kitgroup.salein.DataBase.Users;
-import ir.kitgroup.salein.classes.ApplicationInformation;
+
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.CustomDialog;
 import ir.kitgroup.salein.classes.Util;
@@ -112,6 +112,7 @@ public class SplashScreenFragment extends Fragment {
         myViewModel.getResultMessage().setValue(null);
         getApp();
 
+
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null) return;
@@ -143,8 +144,8 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-                    if (getUser() != null)
-                        myViewModel.getCustomerFromServer(getUser().getM());
+                    if (getAccount() != null)
+                        myViewModel.getCustomerFromServer(getAccount().getM());
                     else
                         checkUpdate();
 
@@ -176,10 +177,26 @@ public class SplashScreenFragment extends Fragment {
                         return;
                     }
                 } else
-                    clearData();
-            } else
+                {
+
+                    Account account=Select.from(Account.class).first();
+                    if (getAccount()!=null){
+                        account.setImei(IMEI);
+                        account.setAppId(Util.APPLICATION_ID);
+                        Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
+                        ArrayList<Account> accounts=new ArrayList<>();
+                        accounts.add(account);
+                        jsonObjectAcc.Account = accounts;
+                        myViewModel.addAccountToServer(jsonObjectAcc);
+                    }
+
+                }
+
+            }
+            else {
                 clearData();
 
+            }
             checkUpdate();
             //endregion Information Account From Server
 
@@ -223,7 +240,7 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (getUser() != null && !messageUpdate.equals("") && !getUser().getVersion().equals(newVersionUpdate)) {
+        } else if (getAccount() != null && !messageUpdate.equals("") && !getAccount().getVersion().equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
         } else
             myViewModel.getCompany(companyGuid);
@@ -284,10 +301,10 @@ public class SplashScreenFragment extends Fragment {
         });
 
         customDialog.setOnClickNegativeButton(() -> {
-            if (getUser() != null && messageUpdate.equals("") && !getUser().getVersion().equals(newVersionUpdate)) {
-                Users user = getUser();
-                user.setVersion(appVersion);
-                user.save();
+            if (getAccount() != null && messageUpdate.equals("") && !getAccount().getVersion().equals(newVersionUpdate)) {
+                Account account = getAccount();
+                account.setVersion(appVersion);
+                account.save();
             }
             customDialog.hideProgress();
             myViewModel.getCompany(companyGuid);
@@ -300,9 +317,9 @@ public class SplashScreenFragment extends Fragment {
         connectToServer(true);
 
         //region When The User Is Logged In
-        if (getUser() != null) {
+        if (getAccount() != null) {
 
-            if (getUser().getSaleinUser() != null)
+            if (Select.from(AppInfo.class).first().isSalein_main())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
 
             else {
@@ -320,10 +337,11 @@ public class SplashScreenFragment extends Fragment {
         return Select.from(Company.class).first();
     }
 
-    private Users getUser() {
-        return Select.from(Users.class).first();
-    }
 
+
+    private Account getAccount() {
+        return Select.from(Account.class).first();
+    }
     private String getIp() {
         String ip;
         if (getCompany()!=null)
@@ -341,7 +359,7 @@ public class SplashScreenFragment extends Fragment {
         Company.deleteAll(Company.class);
         Product.deleteAll(Product.class);
         Unit.deleteAll(Unit.class);
-        Users.deleteAll(Users.class);
+        Account.deleteAll(Account.class);
 
 
     }

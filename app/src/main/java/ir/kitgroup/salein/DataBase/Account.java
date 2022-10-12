@@ -5,6 +5,7 @@ import androidx.annotation.Keep;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 import java.util.List;
 
@@ -13,9 +14,48 @@ import ir.kitgroup.salein.models.AppDetail;
 
 @Keep
 public class Account extends SugarRecord {
+    @Unique
     @SerializedName("I")
     @Expose
     private String i;
+    @SerializedName("C")
+    @Expose
+    private String C;
+
+    @SerializedName("STAPP")
+    @Expose
+    public Boolean STAPP;
+    @SerializedName("STS")
+    @Expose
+    public boolean STS;
+    @SerializedName("M2")
+    @Expose
+    private String M2;
+    @SerializedName("CRDT")
+    @Expose
+    public Double CRDT;
+    @SerializedName("PSW")
+    @Expose
+    public String PSW;
+
+    @SerializedName("PC")//INTRODUCTION CODE
+    @Expose
+    public String PC;
+    @SerializedName("LAT")
+    @Expose
+    public String LAT;
+    @SerializedName("LNG")
+    @Expose
+    public String LNG;
+    @SerializedName("LAT1")
+    @Expose
+    public String LAT1;
+    @SerializedName("LNG1")
+    @Expose
+    public String LNG1;
+    @SerializedName("S")
+    @Expose
+    public String S;
     @SerializedName("N")
     @Expose
     private String n;
@@ -33,10 +73,126 @@ public class Account extends SugarRecord {
     private String adr;
     @SerializedName("ADR2")
     @Expose
-    private Object adr2;
+    private String adr2;
     @SerializedName("PM")
     @Expose
     private String pm;
+    @SerializedName("APP")
+    @Expose
+    private List<AppDetail> apps = null;
+    @SerializedName("IMEI")
+    @Expose
+    private String imei;
+
+    public String getC() {
+        return C;
+    }
+
+    public void setC(String c) {
+        C = c;
+    }
+
+    public Boolean getSTAPP() {
+        return STAPP;
+    }
+
+    public void setSTAPP(Boolean STAPP) {
+        this.STAPP = STAPP;
+    }
+
+    public boolean isSTS() {
+        return STS;
+    }
+
+    public void setSTS(boolean STS) {
+        this.STS = STS;
+    }
+
+    public String getM2() {
+        return M2;
+    }
+
+    public void setM2(String m2) {
+        M2 = m2;
+    }
+
+    public Double getCRDT() {
+        return CRDT;
+    }
+
+    public void setCRDT(Double CRDT) {
+        this.CRDT = CRDT;
+    }
+
+    public String getPSW() {
+        return PSW;
+    }
+
+    public void setPSW(String PSW) {
+        this.PSW = PSW;
+    }
+
+    public String getPC() {
+        return PC;
+    }
+
+    public void setPC(String PC) {
+        this.PC = PC;
+    }
+
+    public String getLAT() {
+        return LAT;
+    }
+
+    public void setLAT(String LAT) {
+        this.LAT = LAT;
+    }
+
+    public String getLNG() {
+        return LNG;
+    }
+
+    public void setLNG(String LNG) {
+        this.LNG = LNG;
+    }
+
+    public String getLAT1() {
+        return LAT1;
+    }
+
+    public void setLAT1(String LAT1) {
+        this.LAT1 = LAT1;
+    }
+
+    public String getLNG1() {
+        return LNG1;
+    }
+
+    public void setLNG1(String LNG1) {
+        this.LNG1 = LNG1;
+    }
+
+    public String getS() {
+        return S;
+    }
+
+    public void setS(String s) {
+        S = s;
+    }
+
+    @SerializedName("APPID")
+    @Expose
+    private String appId;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    private String version;
 
     public List<AppDetail> getApps() {
         return apps;
@@ -46,9 +202,7 @@ public class Account extends SugarRecord {
         this.apps = apps;
     }
 
-    @SerializedName("APP")
-    @Expose
-    private List<AppDetail> apps = null;
+
 
     public String getImei() {
         return imei;
@@ -57,10 +211,6 @@ public class Account extends SugarRecord {
     public void setImei(String imei) {
         this.imei = imei;
     }
-
-    @SerializedName("IMEI")
-    @Expose
-    private String imei;
 
 
 
@@ -72,9 +222,7 @@ public class Account extends SugarRecord {
         this.appId = appId;
     }
 
-    @SerializedName("APPID")
-    @Expose
-    private String appId;
+
 
     public String getPm() {
         return pm;
@@ -134,12 +282,14 @@ public class Account extends SugarRecord {
         this.adr = adr;
     }
 
-    public Object getAdr2() {
+    public String getAdr2() {
         return adr2;
     }
 
-    public void setAdr2(Object adr2) {
+    public void setAdr2(String adr2) {
         this.adr2 = adr2;
     }
+
+
 
 }

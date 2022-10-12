@@ -5,21 +5,22 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import ir.kitgroup.salein.DataBase.Users;
+import ir.kitgroup.salein.DataBase.Account;
+
 import androidx.annotation.Keep;
 @Keep
 public class ModelAccount {
 
     @SerializedName("Account")
     @Expose
-    private List<Users> AccountList = null;
+    private List<Account> AccountList = null;
 
 
 
-    public List<Users> getAccountList() {
+    public List<Account> getAccountList() {
         return AccountList;
     }
-    public void setAccountList(List<Users> AccountList) {
+    public void setAccountList(List<Account> AccountList) {
         this.AccountList = AccountList;
     }
 

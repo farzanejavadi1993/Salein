@@ -28,7 +28,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.R;
 
@@ -119,11 +120,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         else {
             holder.layoutAddress.setVisibility(View.VISIBLE);
 
-            Users account= Select.from(Users.class).first();
+            Account account= Select.from(Account.class).first();
             if (account!=null&&invoice.INV_DEFAULT_ADDRESS.equals("1"))
-                holder.tvAddress.setText(account.ADR);
+                holder.tvAddress.setText(account.getAdr());
             else if (account!=null&&invoice.INV_DEFAULT_ADDRESS.equals("2"))
-                holder.tvAddress.setText(account.ADR2);
+                holder.tvAddress.setText(account.getAdr2());
             else
                 holder.layoutAddress.setVisibility(View.GONE);
 

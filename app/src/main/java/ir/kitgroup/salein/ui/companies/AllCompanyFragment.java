@@ -39,9 +39,10 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Users;
+
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
 
@@ -66,7 +67,7 @@ public class AllCompanyFragment extends Fragment {
     private CompanyFragment storiesFragment;
     private ArrayList<Company> companies;
     private CompanyAdapterList companyAdapterList;
-    private Users account;
+    private Account account;
 
     private String ParentId = "";
     private Dialog dialog;
@@ -159,7 +160,7 @@ public class AllCompanyFragment extends Fragment {
                     ParentId="";
                 binding.progressbar.setVisibility(View.VISIBLE);
                 NAME = companySelect.getN();
-                myViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.M);
+                myViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
             }
             //endregion If User Is Not Login To Company Selected
 
@@ -189,7 +190,7 @@ public class AllCompanyFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 } else {
                     NAME = companyDemo.getN();
-                    myViewModel.getInquiryAccount(companyDemo.getUser(), companyDemo.getPass(), account.M);
+                    myViewModel.getInquiryAccount(companyDemo.getUser(), companyDemo.getPass(), account.getM());
                 }
             });
         }
@@ -216,7 +217,7 @@ public class AllCompanyFragment extends Fragment {
         });
         //endregion Cast Dialog
 
-        account = Select.from(Users.class).first();
+        account = Select.from(Account.class).first();
 
         binding.ivBack.setOnClickListener(v ->
                 Navigation.findNavController(binding.getRoot()).popBackStack());
@@ -345,8 +346,8 @@ public class AllCompanyFragment extends Fragment {
             //user is register
             if (result.size() > 0) {
 
-                Users.deleteAll(Users.class);
-                Users.saveInTx(result);
+                Account.deleteAll(Account.class);
+                Account.saveInTx(result);
 
                 Company.deleteAll(Company.class);
                 Company.saveInTx(companySelect);
@@ -372,7 +373,7 @@ public class AllCompanyFragment extends Fragment {
                 String accStp = settingsList.get(0).ACC_STATUS_APP;
                 ACCSTP = !accStp.equals("0");
                 account.STAPP = ACCSTP;
-                ArrayList<Users> AccList = new ArrayList<>();
+                ArrayList<Account> AccList = new ArrayList<>();
                 AccList.add(account);
                 myViewModel.addAccount(companySelect.getUser(),companySelect.getPass(),AccList);
             }
@@ -395,7 +396,7 @@ public class AllCompanyFragment extends Fragment {
 
 
     public static class JsonObjectAccount {
-        public List<Users> Account;
+        public List<ir.kitgroup.salein.DataBase.Account> Account;
     }
 
     public void setStoriesFragment(CompanyFragment storiesFragment) {

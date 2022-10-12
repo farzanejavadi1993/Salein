@@ -19,8 +19,11 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ir.kitgroup.salein.DataBase.Account;
 
 
 public class Util {
@@ -175,5 +178,9 @@ public class Util {
 
 
         return id;
+    }
+
+    public static class JsonObjectAccount {
+        public List<ir.kitgroup.salein.DataBase.Account> Account;
     }
 }

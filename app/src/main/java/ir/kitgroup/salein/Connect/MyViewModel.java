@@ -25,12 +25,13 @@ import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.AppInfo;
-import ir.kitgroup.salein.DataBase.Users;
+
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.DataBase.Unit;
 
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.models.Description;
@@ -67,7 +68,7 @@ public class MyViewModel extends ViewModel {
     private final MutableLiveData<String> resultSendSms = new MutableLiveData<>();
     private final MutableLiveData<List<Company>> resultAllCompany = new MutableLiveData<>();
     private final MutableLiveData<List<Company>> resultCompany = new MutableLiveData<>();
-    private final MutableLiveData<List<Users>> resultInquiryAccount = new MutableLiveData<>();
+    private final MutableLiveData<List<Account>> resultInquiryAccount = new MutableLiveData<>();
     private final MutableLiveData<List<ProductLevel1>> resultProductLevel1 = new MutableLiveData<>();
     private final MutableLiveData<List<ProductLevel2>> resultProductLevel2 = new MutableLiveData<>();
     private final MutableLiveData<List<CustomTab>> resultCustomTab = new MutableLiveData<>();
@@ -224,12 +225,12 @@ public class MyViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<List<Users>> getResultInquiryAccount() {
+    public MutableLiveData<List<Account>> getResultInquiryAccount() {
         return resultInquiryAccount;
     }
 
 
-    public void addAccount(String user, String passWord, List<Users> accounts) {
+    public void addAccount(String user, String passWord, List<Account> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.addAccount(user, passWord, accounts)
@@ -875,7 +876,7 @@ public class MyViewModel extends ViewModel {
     }
 
 
-    public void updateAccount(String user, String passWord, List<Users> accounts) {
+    public void updateAccount(String user, String passWord, List<Account> accounts) {
         compositeDisposable.clear();
         compositeDisposable.add(
                 myRepository.updateAccount(user, passWord, accounts)
@@ -969,7 +970,7 @@ public class MyViewModel extends ViewModel {
     }
 
 
-    public void addAccountToServer(AllCompanyFragment accounts) {
+    public void addAccountToServer(Util.JsonObjectAccount accounts) {
 
         Gson gson = new Gson();
         Type typeAccount = new TypeToken<AllCompanyFragment.JsonObjectAccount>() {
@@ -984,7 +985,7 @@ public class MyViewModel extends ViewModel {
                         .subscribe(
                                 resultAddAccountToServer::setValue,
                                 throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در ثبت اطلاعات مشتری", ""))));
+                                        eMessage.setValue(new Message(111, "خطا در ثبت اطلاعات مشتری", ""))));
     }
 
     public MutableLiveData<List<Log>> getResultAddAccountToServer() {
@@ -1023,7 +1024,7 @@ public class MyViewModel extends ViewModel {
                         .subscribe(
                                 resultCustomerFromServer::setValue,
                                 throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات کاربر", ""))));
+                                        eMessage.setValue(new Message(110, "خطا در دریافت اطلاعات کاربر", ""))));
     }
 
     public MutableLiveData<List<Account>> getResultCustomerFromServer() {

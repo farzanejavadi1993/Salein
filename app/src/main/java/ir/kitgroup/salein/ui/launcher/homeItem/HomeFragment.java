@@ -58,6 +58,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.API;
 
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
 import ir.kitgroup.salein.DataBase.Product;
 
@@ -65,7 +66,7 @@ import ir.kitgroup.salein.databinding.HomeFragmentBinding;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.classes.CustomProgress;
-import ir.kitgroup.salein.DataBase.Users;
+
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.classes.PaginationScrollListener;
 import ir.kitgroup.salein.classes.Util;
@@ -263,7 +264,7 @@ public class HomeFragment extends Fragment {
             binding.tvNameStore.setText(company.getN());
             //endregion Set Title To TextView
 
-            Users user = Select.from(Users.class).first();
+            Account account = Select.from(Account.class).first();
 
 
             //region Cast Variable Dialog Sync
@@ -305,7 +306,7 @@ public class HomeFragment extends Fragment {
                 productLevel2List.clear();
                 productAdapter.notifyDataSetChanged();
                 myViewModel.getProductLevel1(userName, passWord);
-                myViewModel.getInquiryAccount(userName, passWord, user.getM());
+                myViewModel.getInquiryAccount(userName, passWord, account.getM());
                 myViewModel.getUnit(userName, passWord);
                 myViewModel.getSetting(userName, passWord);
             });
@@ -706,7 +707,7 @@ public class HomeFragment extends Fragment {
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
         myViewModel.getSetting(userName, passWord);
         myViewModel.getUnit(userName, passWord);
-        myViewModel.getInquiryAccount(userName, passWord, Select.from(Users.class).first().getM());
+        myViewModel.getInquiryAccount(userName, passWord, Select.from(Account.class).first().getM());
 
 
         myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
@@ -733,7 +734,7 @@ public class HomeFragment extends Fragment {
                     if (sharedPreferences.getBoolean("discount", false))
                         myViewModel.getDiscountProduct(userName, passWord);
                     else if (sharedPreferences.getBoolean("vip", false))
-                        myViewModel.getVipProduct(userName, passWord, Select.from(Users.class).first().I);
+                        myViewModel.getVipProduct(userName, passWord, Select.from(Account.class).first().getI());
                     else
                         myViewModel.getProductLevel1(userName, passWord);
 
@@ -1306,7 +1307,7 @@ public class HomeFragment extends Fragment {
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
         myViewModel.getSetting(userName, passWord);
         myViewModel.getUnit(userName, passWord);
-        myViewModel.getInquiryAccount(userName, passWord, Select.from(Users.class).first().getM());
+        myViewModel.getInquiryAccount(userName, passWord, Select.from(Account.class).first().getM());
 
 
     }

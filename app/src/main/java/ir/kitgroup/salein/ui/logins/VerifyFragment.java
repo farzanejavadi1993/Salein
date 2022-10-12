@@ -19,8 +19,10 @@ import androidx.navigation.Navigation;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -31,13 +33,16 @@ import es.dmoral.toasty.Toasty;
 import in.aabhasjindal.otptextview.OTPListener;
 import ir.kitgroup.salein.Connect.MyViewModel;
 
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
-import ir.kitgroup.salein.DataBase.Users;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.classes.ConnectToServer;
+import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
+import ir.kitgroup.salein.models.AppDetail;
 
 
 @AndroidEntryPoint
@@ -47,6 +52,8 @@ public class VerifyFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
+    @Inject
+    HostSelectionInterceptor hostSelectionInterceptor;
 
     private MyViewModel myViewModel;
     private FragmentVerifyBinding binding;
@@ -60,6 +67,7 @@ public class VerifyFragment extends Fragment {
     private CountDownTimer countDownTimer;
     private boolean resendCode = false;
     private long timer_left = 180000;
+    private List<Account> accountList;
     //endregion Parameter
 
 
@@ -123,7 +131,7 @@ public class VerifyFragment extends Fragment {
                     binding.otpView.showSuccess();
                     binding.otpView.setEnabled(false);
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getInquiryAccount(userName, passWord, mobile);
+                    myViewModel.getCustomerFromServer(mobile);
                 } else {
                     binding.otpView.showError();
                     binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
@@ -166,6 +174,53 @@ public class VerifyFragment extends Fragment {
 
         myViewModel.getResultMessage().setValue(null);
 
+
+        myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            myViewModel.getResultCustomerFromServer().setValue(null);
+
+            //region Information Account From Server
+            if (result.size() > 0) {
+                String IMEI = Util.getAndroidID(getActivity());
+                List<AppDetail> Apps = result.get(0).getApps();
+                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
+
+                if (Apps.size() > 0) {
+                    myViewModel.getInquiryAccount(userName, passWord, mobile);
+                }
+                else{
+                    Account account=new Account();
+                    account.setImei(IMEI);
+                    account.setAppId(Util.APPLICATION_ID);
+                    Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
+                    jsonObjectAcc.Account = accountList;
+                    myViewModel.addAccountToServer(jsonObjectAcc);
+
+                }
+            }
+
+           else {
+
+            }
+
+            //endregion Information Account From Server
+
+
+        });
+        myViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            myViewModel.getResultAddAccountToServer().setValue(null);
+            if (result.get(0).getMessage() == 1) {
+                myViewModel.getInquiryAccount(userName, passWord, mobile);
+            } else
+                Toasty.error(requireActivity(), result.get(0).getMessage(), Toast.LENGTH_SHORT, true).show();
+        });
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)
@@ -174,8 +229,8 @@ public class VerifyFragment extends Fragment {
 
             //region When The User Is Register In
             if (result.size() > 0) {
-                Users.deleteAll(Users.class);
-                Users.saveInTx(result);
+                Account.deleteAll(Account.class);
+                Account.saveInTx(result);
 
 
                 //region Go To CompanyFragment Because Account Is Register
@@ -219,10 +274,15 @@ public class VerifyFragment extends Fragment {
         });
 
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
+            if (result.getCode()==110 || result.getCode()==111){
+                myViewModel.getInquiryAccount(userName, passWord, mobile);
+                return;
+            }
             binding.progressBar.setVisibility(View.GONE);
             binding.otpView.setEnabled(true);
             binding.otpView.resetState();
-            if (result == null) return;
+
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
@@ -271,6 +331,20 @@ public class VerifyFragment extends Fragment {
 
     private Company getCompany() {
         return Select.from(Company.class).first();
+    }
+
+    private void connectToServer(boolean connect,String ip) {
+        ConnectToServer connectToServer = new ConnectToServer();
+        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, connect, ip);
+    }
+
+    private String getIp() {
+        String ip;
+        if (getCompany()!=null)
+            ip= "http://" + getCompany().getIp1() + "/api/REST/";
+        else
+            ip="";
+        return ip;
     }
     //endregion Method
 

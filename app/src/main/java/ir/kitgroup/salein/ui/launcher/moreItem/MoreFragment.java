@@ -35,7 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
 
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 
@@ -68,7 +69,7 @@ public class MoreFragment extends Fragment {
     private String mobile;
     private String linkPayment = "";
 
-    private Users user;
+    private Account account;
 
     private Boolean disableAccount = false;
 
@@ -94,10 +95,10 @@ public class MoreFragment extends Fragment {
         passWord=company.getPass();
         linkPayment = sharedPreferences.getString("payment_link", "");
 
-        user = Select.from(Users.class).first();
-        mobile = Select.from(Users.class).first().M;
+        account = Select.from(Account.class).first();
+        mobile = account.getM();
         if (!linkPayment.equals(""))
-            linkPayment = linkPayment + "/ChargeClub?c=" + user.getC();
+            linkPayment = linkPayment + "/ChargeClub?c=" + account.getC();
 
 
         if (company != null && company.getAbus() != null && !company.getAbus().equals(""))
@@ -128,8 +129,8 @@ public class MoreFragment extends Fragment {
             dialogSync.dismiss();
             sharedPreferences.edit().clear();
 
-            if (Users.count(Users.class) > 0)
-                Users.deleteAll(Users.class);
+            if (Account.count(Account.class) > 0)
+                Account.deleteAll(Account.class);
 
             if (InvoiceDetail.count(InvoiceDetail.class) > 0)
                 InvoiceDetail.deleteAll(InvoiceDetail.class);
@@ -203,8 +204,8 @@ public class MoreFragment extends Fragment {
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment));
 
 
-        if (user != null && user.CRDT != null) {
-            binding.tvCredits.setText("موجودی : " + format.format(user.CRDT) + " ریال ");
+        if (account != null && account.CRDT != null) {
+            binding.tvCredits.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
         } else {
             binding.tvCredits.setText("موجودی : " + "0" + " ریال ");
         }
@@ -221,7 +222,7 @@ public class MoreFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        myViewModel.getInquiryAccount(userName,passWord, user.M);
+        myViewModel.getInquiryAccount(userName,passWord, account.getM());
 
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
@@ -233,10 +234,10 @@ public class MoreFragment extends Fragment {
             //user is register
             try {
                 if (result.size() > 0) {
-                    Users.deleteAll(Users.class);
-                    Users.saveInTx(result);
+                    Account.deleteAll(Account.class);
+                    Account.saveInTx(result);
 
-                    Users acc = Select.from(Users.class).first();
+                    Account acc = Select.from(Account.class).first();
                     if (acc != null && acc.CRDT != null)
                         binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 

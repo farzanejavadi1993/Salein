@@ -45,7 +45,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.DataBase.Company;
@@ -111,7 +112,7 @@ public class OrderListFragment extends Fragment {
       //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
         customProgress = CustomProgress.getInstance();
 
-        accGUID = Select.from(Users.class).list().get(0).I;
+        accGUID = Select.from(Account.class).list().get(0).getI();
         company = Select.from(Company.class).first();
 
 

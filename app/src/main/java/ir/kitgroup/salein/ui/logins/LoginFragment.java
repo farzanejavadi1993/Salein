@@ -117,13 +117,13 @@ public class LoginFragment extends Fragment {
     //endregion Override Method
 
 
+    @SuppressLint("SetTextI18n")
     private void init(){
         company = Select.from(Company.class).first();
         userName=company.getUser();
         passWord=company.getPass();
 
         binding.tvWelcome.setText(" به " + company.getN() + " خوش آمدید ");
-
         binding.loginTvRules.setText("با ثبت نام در " + company.getN());
 
         Picasso.get()

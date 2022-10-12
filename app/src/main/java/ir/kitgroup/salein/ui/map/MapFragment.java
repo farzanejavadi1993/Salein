@@ -72,7 +72,8 @@ import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Connect.MyViewModel;
-import ir.kitgroup.salein.DataBase.Users;
+
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.classes.CustomProgress;
@@ -91,7 +92,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private MyViewModel myViewModel;
     private FragmentMapBinding binding;
 
-    private final List<Users> accounts = new ArrayList<>();
+    private final List<Account> accounts = new ArrayList<>();
     private Company company;
     private CustomProgress customProgress;
     private final int LOCATION_PERMISSION_REQUEST_CODE = 99;
@@ -500,7 +501,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     public static class JsonObjectAccount {
 
-        public List<Users> Account;
+        public List<Account> Account;
 
     }
 
