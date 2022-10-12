@@ -52,7 +52,7 @@ import ir.kitgroup.salein.models.AppDetail;
 public class SplashScreenFragment extends Fragment {
 
 
-    //region Parameter
+
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
@@ -63,19 +63,16 @@ public class SplashScreenFragment extends Fragment {
     private MyViewModel myViewModel;
     private FragmentSplashScreenBinding binding;
 
-
     private String packageName;
     private final String appVersion = "";
+
     private String linkUpdate = "";
-    private String newVersion = "";
+    private String newVersionUpdate = "";
     private String titleUpdate = "";
     private String messageUpdate = "";
     private boolean forcedUpdate = false;
     private String companyGuid = "";
     private CustomDialog customDialog;
-
-
-    //endregion Parameter
 
 
     //region Override Method
@@ -100,7 +97,6 @@ public class SplashScreenFragment extends Fragment {
         iniAppVersion();
         initAnimation();
         initCustomDialog();
-
     }
 
 
@@ -136,7 +132,7 @@ public class SplashScreenFragment extends Fragment {
                 Util.APPLICATION_ID = result.get(0).getAppId();
                 if (result.get(0).getIsActive()) {
                     binding.btnError.setVisibility(View.GONE);
-                    newVersion = result.get(0).getVersion();
+                    newVersionUpdate = result.get(0).getVersion();
                     titleUpdate = result.get(0).getUpdateTitle();
                     messageUpdate = result.get(0).getUpdateDesc();
                     linkUpdate = result.get(0).getLink();
@@ -188,9 +184,7 @@ public class SplashScreenFragment extends Fragment {
         myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
-
             myViewModel.getResultCompany().setValue(null);
-
             if (result.size() > 0) {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(result);
@@ -206,8 +200,8 @@ public class SplashScreenFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    //endregion Override Method
 
+    //endregion Override Method
 
     //region Custom Method
     public String appVersion() throws PackageManager.NameNotFoundException {
@@ -219,15 +213,15 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void checkUpdate() {
-        if (forcedUpdate && !newVersion.equals("") && !appVersion.equals(newVersion)) {
+        if (forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), titleUpdate, false, "", "آپدیت", true, false);
 
 
-        } else if (!forcedUpdate && !newVersion.equals("") && !appVersion.equals(newVersion)) {
+        } else if (!forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (getUser() != null && !messageUpdate.equals("") && !getUser().getVersion().equals(newVersion)) {
+        } else if (getUser() != null && !messageUpdate.equals("") && !getUser().getVersion().equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
         } else
             myViewModel.getCompany(companyGuid);
@@ -295,7 +289,7 @@ public class SplashScreenFragment extends Fragment {
         });
 
         customDialog.setOnClickNegativeButton(() -> {
-            if (getUser() != null && messageUpdate.equals("") && !getUser().getVersion().equals(newVersion)) {
+            if (getUser() != null && messageUpdate.equals("") && !getUser().getVersion().equals(newVersionUpdate)) {
                 Users user = getUser();
                 user.setVersion(appVersion);
                 user.save();
