@@ -28,6 +28,9 @@ public class AppInfo extends SugarRecord {
   }
 
   public String getGif_url() {
+    String gift="";
+    if (gif_url!=null)
+      gift=gif_url;
     return gif_url;
   }
 

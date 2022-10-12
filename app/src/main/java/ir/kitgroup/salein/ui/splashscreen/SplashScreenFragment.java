@@ -30,12 +30,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Unit;
 
+import ir.kitgroup.salein.classes.ApplicationInformation;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.CustomDialog;
 import ir.kitgroup.salein.classes.Util;
@@ -97,8 +99,9 @@ public class SplashScreenFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         connectToServer(false);
-        iniAppVersion();
         init();
+        initAppInfo();
+        iniAppVersion();
         initAnimation();
         initCustomDialog();
     }
@@ -245,11 +248,26 @@ public class SplashScreenFragment extends Fragment {
         } else
             myViewModel.getCompany(companyGuid);
     }
+    private void initAppInfo() {
+        ApplicationInformation applicationInformation = new ApplicationInformation();
+        String packageName=getPackageName1();
+        appInfo = applicationInformation.getInformation(packageName);
+        if (Select.from(AppInfo.class).list().size() == 0)
+            AppInfo.saveInTx(appInfo);
+    }
 
-    private void init() {
-        appInfo=Select.from(AppInfo.class).first();
+    public String getPackageName1() {
+        String packageName = "";
+        try {
+            packageName =getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageName;
+    }
 
-      binding.btnWarning.setOnClickListener(v -> {
+
+    private void init() {binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
             binding.btnWarning.setVisibility(View.GONE);
             myViewModel.getApp(Util.APPLICATION_ID);
@@ -272,7 +290,9 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void initAnimation() {
+
         Glide.with(this).asGif().load(Uri.parse(appInfo.getGif_url())).into(binding.animationView);
+
     }
 
     private void getApp() {

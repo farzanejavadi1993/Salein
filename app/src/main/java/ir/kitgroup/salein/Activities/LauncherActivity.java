@@ -65,7 +65,6 @@ public class LauncherActivity extends AppCompatActivity {
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initAppInfo();
         if (getIntent() != null && getIntent().getExtras() != null) {
             String company = getIntent().getExtras().getString("companyId");
             sharedPreferences.edit().putString("companyId", Objects.requireNonNullElse(company, "")).apply();
@@ -127,12 +126,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     //region Method
 
-    private void initAppInfo() {
-        ApplicationInformation applicationInformation = new ApplicationInformation();
-         appInfo = applicationInformation.getInformation(getPackageName());
-        if (Select.from(AppInfo.class).list().size() == 0)
-            AppInfo.saveInTx(appInfo);
-    }
+
 
     private void navigationHandler() {
 
@@ -208,15 +202,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
-    public String getPackageName() {
-        String packageName = "";
-        try {
-            packageName = getPackageManager().getPackageInfo(getPackageName(), 0).packageName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return packageName;
-    }
+
 
 
     //endregion Method
