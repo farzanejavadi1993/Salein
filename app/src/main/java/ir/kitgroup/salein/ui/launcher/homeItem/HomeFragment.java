@@ -56,7 +56,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.CompanyAPI;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
@@ -64,7 +64,7 @@ import ir.kitgroup.salein.DataBase.Product;
 
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
 import ir.kitgroup.salein.models.CustomTab;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.classes.CustomProgress;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -87,9 +87,9 @@ public class HomeFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
     @Inject
-    API api;
+    CompanyAPI api;
     private HomeFragmentBinding binding;
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private Company company;
     private String userName;
     private String passWord;
@@ -683,7 +683,7 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
 
         binding.progressbar.setVisibility(View.VISIBLE);

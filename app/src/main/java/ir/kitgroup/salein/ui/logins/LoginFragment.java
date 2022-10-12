@@ -36,7 +36,7 @@ import java.util.Random;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
@@ -49,7 +49,7 @@ import ir.kitgroup.salein.databinding.FragmentLoginBinding;
 public class LoginFragment extends Fragment {
 
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentLoginBinding binding;
     private String mobile = "";
     private int code = 0;
@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         myViewModel.getResultMessage().setValue(null);
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);

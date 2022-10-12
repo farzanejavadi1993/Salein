@@ -52,7 +52,7 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.CompanyAPI;
 import ir.kitgroup.salein.DataBase.Unit;
 import ir.kitgroup.salein.classes.Util;
 
@@ -78,7 +78,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     private Boolean Seen = false;
     private final String Inv_GUID;
     private final DecimalFormat df;
-    private API api;
+    private CompanyAPI api;
     private final List<Unit> unitList;
     private List<String> closeDateList;
     private String valueOfDay;
@@ -120,7 +120,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    public ProductAdapter( Activity context, List<Product> productsList, SharedPreferences sharedPreferences,ArrayList<String> closeDateList,API api,int type) {
+    public ProductAdapter(Activity context, List<Product> productsList, SharedPreferences sharedPreferences, ArrayList<String> closeDateList, CompanyAPI api, int type) {
         this.closeDateList=closeDateList;
         this.api = api;
         this.type=type;

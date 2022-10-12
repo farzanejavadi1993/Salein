@@ -53,9 +53,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.ui.launcher.homeItem.DescriptionAdapter;
-import ir.kitgroup.salein.Connect.MyViewModel;
 import ir.kitgroup.salein.classes.CustomProgress;
 import ir.kitgroup.salein.classes.Utilities;
 
@@ -76,7 +76,7 @@ public class InVoiceDetailFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
     private FragmentInvoiceDetailMobileBinding binding;
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private Company company;
     private String userName;
     private String passWord;
@@ -666,7 +666,7 @@ public class InVoiceDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         if (type.equals("1")) {
             binding.progressBar.setVisibility(View.VISIBLE);

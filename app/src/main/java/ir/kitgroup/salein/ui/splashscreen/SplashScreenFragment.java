@@ -30,8 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
@@ -54,9 +53,6 @@ import ir.kitgroup.salein.DataBase.AppInfo;
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 public class SplashScreenFragment extends Fragment {
-
-
-
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
@@ -64,7 +60,7 @@ public class SplashScreenFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentSplashScreenBinding binding;
 
 
@@ -111,7 +107,7 @@ public class SplashScreenFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         myViewModel.getResultMessage().setValue(null);
         getApp();
 

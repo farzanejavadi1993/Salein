@@ -53,7 +53,7 @@ import java.util.UUID;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
@@ -70,7 +70,7 @@ import ir.kitgroup.salein.ui.payment.PaymentFragment;
 public class RegisterFragment extends Fragment implements PermissionsListener {
 
     //region Variable
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private RegisterFragmentBinding binding;
     private Company company;
     private String userName;
@@ -316,7 +316,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getResultMessage().setValue(null);
 

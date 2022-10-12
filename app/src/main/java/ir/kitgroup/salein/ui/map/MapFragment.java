@@ -71,7 +71,7 @@ import java.util.List;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.R;
@@ -89,7 +89,7 @@ import static android.os.Looper.getMainLooper;
 public class MapFragment extends Fragment implements PermissionsListener {
 
     //region Parameter
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentMapBinding binding;
 
     private final List<Account> accounts = new ArrayList<>();
@@ -357,7 +357,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getResultMessage().setValue(null);
     }

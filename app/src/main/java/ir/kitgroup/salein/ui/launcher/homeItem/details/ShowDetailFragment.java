@@ -16,12 +16,11 @@ import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.ui.logins.VerifyFragmentArgs;
 
 
 @AndroidEntryPoint
@@ -32,7 +31,7 @@ public class ShowDetailFragment extends Fragment {
     private Company company;
     private  String Id;
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
 
     @Nullable
     @Override
@@ -68,7 +67,7 @@ public class ShowDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         myViewModel.getProduct(company.getUser(),company.getPass(),Id);
 
         myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {

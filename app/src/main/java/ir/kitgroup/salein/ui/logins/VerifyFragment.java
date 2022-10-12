@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import in.aabhasjindal.otptextview.OTPListener;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.AppInfo;
@@ -55,7 +55,7 @@ public class VerifyFragment extends Fragment {
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentVerifyBinding binding;
 
     private Company company;
@@ -170,7 +170,7 @@ public class VerifyFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getResultMessage().setValue(null);
 

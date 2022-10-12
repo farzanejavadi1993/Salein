@@ -59,8 +59,8 @@ import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 import ir.kitgroup.salein.ui.payment.PaymentFragment;
 
 @HiltViewModel
-public class MyViewModel extends ViewModel {
-    private final MyRepository myRepository;
+public class CompanyViewModel extends ViewModel {
+    private final CompanyRepository myRepository;
     private final SharedPreferences sharedPreferences;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -94,7 +94,7 @@ public class MyViewModel extends ViewModel {
     private final MutableLiveData<List<Account>> resultCustomerFromServer = new MutableLiveData<>();
 
     @Inject
-    public MyViewModel(MyRepository myRepository, SharedPreferences sharedPreferences) {
+    public CompanyViewModel(CompanyRepository myRepository, SharedPreferences sharedPreferences) {
         this.myRepository = myRepository;
         this.sharedPreferences = sharedPreferences;
     }

@@ -15,7 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 
-public interface API {
+public interface CompanyAPI {
 
     @POST("SyncData")
     Observable<String>  sendOrder(@Query("userName") String userName, @Query("password") String password,

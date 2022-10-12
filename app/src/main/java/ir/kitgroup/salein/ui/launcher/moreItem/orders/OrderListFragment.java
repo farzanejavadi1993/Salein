@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -92,7 +92,7 @@ public class OrderListFragment extends Fragment {
     private final ArrayList<Invoice> list = new ArrayList<>();
     private String datVip = "";
     private String accGUID = "";
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
 
 
     @Nullable
@@ -199,7 +199,7 @@ public class OrderListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getAllInvoice(company.getUser(), company.getPass(), accGUID, datVip);
         myViewModel.getResultAllInvoice().observe(getViewLifecycleOwner(), result -> {

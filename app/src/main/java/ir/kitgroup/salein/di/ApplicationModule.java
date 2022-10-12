@@ -26,7 +26,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import dagger.hilt.components.SingletonComponent;
 
-import ir.kitgroup.salein.Connect.API;
+import ir.kitgroup.salein.Connect.CompanyAPI;
 
 
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
@@ -111,9 +111,9 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public API provideAPI(Retrofit ret) {
+    public CompanyAPI provideAPI(Retrofit ret) {
 
-        return ret.create(API.class);
+        return ret.create(CompanyAPI.class);
 
     }
 }

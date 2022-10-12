@@ -46,7 +46,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.classes.Utilities;
@@ -78,7 +78,7 @@ public class PaymentFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     private FragmentPaymentBinding binding;
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private Company company;
     private String userName;
     private String passWord;
@@ -845,7 +845,7 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getSetting(userName, passWord);
 

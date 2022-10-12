@@ -51,10 +51,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.ui.launcher.homeItem.DescriptionAdapter;
-import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragmentDirections;
 import ir.kitgroup.salein.ui.launcher.homeItem.ProductAdapter;
-import ir.kitgroup.salein.Connect.API;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyAPI;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.CustomProgress;
@@ -75,10 +74,10 @@ public class SearchProductFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     @Inject
-    API api;
+    CompanyAPI api;
 
     private String sWord = "";
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentSearchProductBinding binding;
     private Company company;
     private String userName;
@@ -323,7 +322,7 @@ public class SearchProductFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
         myViewModel.getResultSearchProduct().observe(getViewLifecycleOwner(), result -> {
 

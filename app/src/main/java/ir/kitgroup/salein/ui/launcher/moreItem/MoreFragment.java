@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
-import ir.kitgroup.salein.Connect.MyViewModel;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 
 import ir.kitgroup.salein.DataBase.Account;
@@ -73,7 +73,7 @@ public class MoreFragment extends Fragment {
 
     private Boolean disableAccount = false;
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -221,7 +221,7 @@ public class MoreFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         myViewModel.getInquiryAccount(userName,passWord, account.getM());
 
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {

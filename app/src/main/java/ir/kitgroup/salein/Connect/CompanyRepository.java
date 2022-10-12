@@ -19,11 +19,11 @@ import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.models.PaymentRecieptDetail;
 
 
-public class MyRepository {
-    private final API api;
+public class CompanyRepository {
+    private final CompanyAPI api;
 
     @Inject
-    public MyRepository(API api) {
+    public CompanyRepository(CompanyAPI api) {
         this.api = api;
     }
 

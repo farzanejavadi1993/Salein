@@ -39,9 +39,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
+import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.Connect.MyViewModel;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
@@ -59,7 +59,7 @@ public class AllCompanyFragment extends Fragment {
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
-    private MyViewModel myViewModel;
+    private CompanyViewModel myViewModel;
     private FragmentAllCompanyBinding binding;
 
     private Company companyDemo;
@@ -229,7 +229,7 @@ public class AllCompanyFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        myViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(MyViewModel.class);
+        myViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(CompanyViewModel.class);
 
         try {
 
