@@ -1,4 +1,4 @@
 package ir.kitgroup.salein.Connect;
 
-public class ServerRepository {
+public class MainViewModel {
 }

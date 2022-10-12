@@ -16,6 +16,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -63,6 +64,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    @Named("Company")
     public OkHttpClient provideOkHttpClient(@ApplicationContext Context context,HostSelectionInterceptor  hostSelectionInterceptor) {
 
         long cacheSize = 5 * 1024 * 1024;
@@ -80,6 +82,10 @@ public class ApplicationModule {
 
 
     }
+
+
+
+
 
     @Provides
     @Singleton
