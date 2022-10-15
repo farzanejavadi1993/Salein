@@ -1,13 +1,10 @@
 package ir.kitgroup.salein.di;
 
 
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -22,18 +19,12 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-
 import dagger.hilt.android.qualifiers.ApplicationContext;
-
 import dagger.hilt.components.SingletonComponent;
-
 import ir.kitgroup.salein.Connect.CompanyAPI;
-
-
 import ir.kitgroup.salein.Connect.MainApi;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.classes.Util;
-
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -66,7 +57,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     @Named("Company")
-    public OkHttpClient provideOkHttpClient(@ApplicationContext Context context,HostSelectionInterceptor  hostSelectionInterceptor) {
+    public OkHttpClient provideOkHttpClient(@ApplicationContext Context context, HostSelectionInterceptor  hostSelectionInterceptor) {
 
         long cacheSize = 5 * 1024 * 1024;
         Cache mCache = new Cache(context.getCacheDir(), cacheSize);
@@ -87,7 +78,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     @Named("Main")
-    public OkHttpClient provideOkHttpClientMain(@ApplicationContext Context context,HostSelectionInterceptor  hostSelectionInterceptor) {
+    public OkHttpClient provideOkHttpClientMain(@ApplicationContext Context context) {
 
         long cacheSize = 5 * 1024 * 1024;
         Cache mCache = new Cache(context.getCacheDir(), cacheSize);

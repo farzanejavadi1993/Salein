@@ -3,6 +3,7 @@ package ir.kitgroup.salein.Connect;
 import android.content.SharedPreferences;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -10,8 +11,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+
 import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -23,7 +26,9 @@ import ir.kitgroup.salein.models.Log;
 import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
-public class MainViewModel {
+
+@HiltViewModel
+public class MainViewModel extends ViewModel {
     private final MainRepository mainRepository;
     private final SharedPreferences sharedPreferences;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -121,6 +126,10 @@ public class MainViewModel {
 
     public MutableLiveData<List<Company>> getResultCompany() {
         return resultCompany;
+    }
+
+    public MutableLiveData<Message> getResultMessage() {
+        return eMessage;
     }
 
 }

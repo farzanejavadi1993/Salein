@@ -131,7 +131,7 @@ public class VerifyFragment extends Fragment {
                     binding.otpView.showSuccess();
                     binding.otpView.setEnabled(false);
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    myViewModel.getCustomerFromServer(mobile);
+                  //  myViewModel.getCustomerFromServer(mobile);
                 } else {
                     binding.otpView.showError();
                     binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
@@ -175,7 +175,7 @@ public class VerifyFragment extends Fragment {
         myViewModel.getResultMessage().setValue(null);
 
 
-        myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+     /*   myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
@@ -197,7 +197,7 @@ public class VerifyFragment extends Fragment {
                     account.setAppId(Util.APPLICATION_ID);
                     Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
                     jsonObjectAcc.Account = accountList;
-                    myViewModel.addAccountToServer(jsonObjectAcc);
+                  //  myViewModel.addAccountToServer(jsonObjectAcc);
 
                 }
             }
@@ -209,18 +209,18 @@ public class VerifyFragment extends Fragment {
             //endregion Information Account From Server
 
 
-        });
-        myViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null)
-                return;
-
-            myViewModel.getResultAddAccountToServer().setValue(null);
-            if (result.get(0).getMessage() == 1) {
-                myViewModel.getInquiryAccount(userName, passWord, mobile);
-            } else
-                Toasty.error(requireActivity(), result.get(0).getMessage(), Toast.LENGTH_SHORT, true).show();
-        });
+        });*/
+//        myViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
+//
+//            if (result == null)
+//                return;
+//
+//            myViewModel.getResultAddAccountToServer().setValue(null);
+//            if (result.get(0).getMessage() == 1) {
+//                myViewModel.getInquiryAccount(userName, passWord, mobile);
+//            } else
+//                Toasty.error(requireActivity(), result.get(0).getMessage(), Toast.LENGTH_SHORT, true).show();
+//        });
         myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             if (result == null)

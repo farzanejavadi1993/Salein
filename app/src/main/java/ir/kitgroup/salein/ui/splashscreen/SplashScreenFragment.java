@@ -61,6 +61,7 @@ public class SplashScreenFragment extends Fragment {
 
 
     private CompanyViewModel myViewModel;
+
     private FragmentSplashScreenBinding binding;
 
 
@@ -126,92 +127,92 @@ public class SplashScreenFragment extends Fragment {
             }
         });
 
-        myViewModel.getResultGetApp().observe(getViewLifecycleOwner(), result -> {
-            if (result == null)
-                return;
-
-            myViewModel.getResultGetApp().setValue(null);
-
-            if (result.size() > 0) {
-                Util.APPLICATION_ID = result.get(0).getAppId();
-                if (result.get(0).getIsActive()) {
-                    binding.btnError.setVisibility(View.GONE);
-                    newVersionUpdate = result.get(0).getVersion();
-                    titleUpdate = result.get(0).getUpdateTitle();
-                    messageUpdate = result.get(0).getUpdateDesc();
-                    linkUpdate = result.get(0).getLink();
-                    sharedPreferences.edit().putString("link_update", linkUpdate).apply();
-                    forcedUpdate = result.get(0).getForced();
-                    companyGuid = result.get(0).getAccountId();
-                    if (getAccount() != null)
-                        myViewModel.getCustomerFromServer(getAccount().getM());
-                    else
-                        checkUpdate();
-
-                } else {
-                    binding.btnError.setVisibility(View.VISIBLE);
-                    binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
-
-                }
-            }
-
-        });
-
-        myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null)
-                return;
-
-            myViewModel.getResultCustomerFromServer().setValue(null);
-
-            //region Information Account From Server
-            if (result.size() > 0) {
-                String IMEI = Util.getAndroidID(getActivity());
-                List<AppDetail> Apps = result.get(0).getApps();
-                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
-
-                if (Apps.size() > 0) {
-                    if (!Apps.get(0).getIsActive()) {
-                        binding.txtErrorr.setText("با این تلفن نمیتوانید وارد نرم افزار شوید.");
-                        return;
-                    }
-                } else
-                {
-
-                    Account account=Select.from(Account.class).first();
-                    if (getAccount()!=null){
-                        account.setImei(IMEI);
-                        account.setAppId(Util.APPLICATION_ID);
-                        Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
-                        ArrayList<Account> accounts=new ArrayList<>();
-                        accounts.add(account);
-                        jsonObjectAcc.Account = accounts;
-                        myViewModel.addAccountToServer(jsonObjectAcc);
-                    }
-
-                }
-
-            }
-            else {
-                clearData();
-
-            }
-            checkUpdate();
-            //endregion Information Account From Server
-
-        });
-
-        myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
-            if (result == null)
-                return;
-            myViewModel.getResultCompany().setValue(null);
-            if (result.size() > 0) {
-                Company.deleteAll(Company.class);
-                Company.saveInTx(result);
-                navigate();
-            }else
-                binding.txtErrorr.setText("شرکت یافت نشد.");
-        });
+//        myViewModel.getResultGetApp().observe(getViewLifecycleOwner(), result -> {
+//            if (result == null)
+//                return;
+//
+//            myViewModel.getResultGetApp().setValue(null);
+//
+//            if (result.size() > 0) {
+//                Util.APPLICATION_ID = result.get(0).getAppId();
+//                if (result.get(0).getIsActive()) {
+//                    binding.btnError.setVisibility(View.GONE);
+//                    newVersionUpdate = result.get(0).getVersion();
+//                    titleUpdate = result.get(0).getUpdateTitle();
+//                    messageUpdate = result.get(0).getUpdateDesc();
+//                    linkUpdate = result.get(0).getLink();
+//                    sharedPreferences.edit().putString("link_update", linkUpdate).apply();
+//                    forcedUpdate = result.get(0).getForced();
+//                    companyGuid = result.get(0).getAccountId();
+//                    if (getAccount() != null)
+//                        myViewModel.getCustomerFromServer(getAccount().getM());
+//                    else
+//                        checkUpdate();
+//
+//                } else {
+//                    binding.btnError.setVisibility(View.VISIBLE);
+//                    binding.txtErrorr.setText("اپلیکیشن غیر فعال شده است.");
+//
+//                }
+//            }
+//
+//        });
+//
+//        myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+//
+//            if (result == null)
+//                return;
+//
+//            myViewModel.getResultCustomerFromServer().setValue(null);
+//
+//            //region Information Account From Server
+//            if (result.size() > 0) {
+//                String IMEI = Util.getAndroidID(getActivity());
+//                List<AppDetail> Apps = result.get(0).getApps();
+//                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
+//
+//                if (Apps.size() > 0) {
+//                    if (!Apps.get(0).getIsActive()) {
+//                        binding.txtErrorr.setText("با این تلفن نمیتوانید وارد نرم افزار شوید.");
+//                        return;
+//                    }
+//                } else
+//                {
+//
+//                    Account account=Select.from(Account.class).first();
+//                    if (getAccount()!=null){
+//                        account.setImei(IMEI);
+//                        account.setAppId(Util.APPLICATION_ID);
+//                        Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
+//                        ArrayList<Account> accounts=new ArrayList<>();
+//                        accounts.add(account);
+//                        jsonObjectAcc.Account = accounts;
+//                        myViewModel.addAccountToServer(jsonObjectAcc);
+//                    }
+//
+//                }
+//
+//            }
+//            else {
+//                clearData();
+//
+//            }
+//            checkUpdate();
+//            //endregion Information Account From Server
+//
+//        });
+//
+//        myViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
+//            if (result == null)
+//                return;
+//            myViewModel.getResultCompany().setValue(null);
+//            if (result.size() > 0) {
+//                Company.deleteAll(Company.class);
+//                Company.saveInTx(result);
+//                navigate();
+//            }else
+//                binding.txtErrorr.setText("شرکت یافت نشد.");
+//        });
     }
 
 
@@ -241,8 +242,9 @@ public class SplashScreenFragment extends Fragment {
 
         } else if (getAccount() != null && !messageUpdate.equals("") && !getAccount().getVersion().equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
-        } else
-            myViewModel.getCompany(companyGuid);
+        }
+        //else
+           // myViewModel.getCompany(companyGuid);
     }
     private void initAppInfo() {
         ApplicationInformation applicationInformation = new ApplicationInformation();
@@ -266,7 +268,7 @@ public class SplashScreenFragment extends Fragment {
     private void init() {binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
             binding.btnWarning.setVisibility(View.GONE);
-            myViewModel.getApp(Util.APPLICATION_ID);
+          //  myViewModel.getApp(Util.APPLICATION_ID);
         });
     }
 
@@ -297,7 +299,7 @@ public class SplashScreenFragment extends Fragment {
             public void run() {
                 try {
                     sleep(1000);
-                    myViewModel.getApp(appInfo.getApplication_code());
+                  //  myViewModel.getApp(appInfo.getApplication_code());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -323,7 +325,7 @@ public class SplashScreenFragment extends Fragment {
                 account.save();
             }
             customDialog.hideProgress();
-            myViewModel.getCompany(companyGuid);
+           // myViewModel.getCompany(companyGuid);
         });
 
     }
