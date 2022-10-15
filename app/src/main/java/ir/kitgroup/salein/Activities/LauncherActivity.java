@@ -10,20 +10,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.orm.query.Select;
 
 import java.util.Objects;
 
@@ -32,9 +28,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.ApplicationInformation;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 
 import ir.kitgroup.salein.classes.Util;
@@ -51,7 +46,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ActivityLauncherBinding binding;
     private NavController navController;
     private Dialog dialog;
-    private AppInfo appInfo;
+    private AppInformation appInfo;
 
 
     //endregion Parameter

@@ -24,19 +24,16 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.DataBase.Unit;
 
-import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.models.Invoice;
-import ir.kitgroup.salein.models.Log;
 import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.models.ModelAccount;
 import ir.kitgroup.salein.models.ModelCompany;
@@ -55,7 +52,6 @@ import ir.kitgroup.salein.models.Product;
 import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.models.ProductLevel2;
 import ir.kitgroup.salein.models.Setting;
-import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 import ir.kitgroup.salein.ui.payment.PaymentFragment;
 
 @HiltViewModel
@@ -185,7 +181,7 @@ public class CompanyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (!Select.from(AppInfo.class).first().isSalein_main())
+                                        if (!Select.from(AppInformation.class).first().isSalein_main())
                                             compositeDisposable.dispose();
                                     }
                                 } else {

@@ -21,11 +21,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.orm.query.Select;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,18 +32,15 @@ import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.DataBase.Unit;
 
-import ir.kitgroup.salein.classes.ApplicationInformation;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.CustomDialog;
-import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.FragmentSplashScreenBinding;
 import ir.kitgroup.salein.R;
 
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.models.AppDetail;
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -76,7 +69,7 @@ public class SplashScreenFragment extends Fragment {
     private CustomDialog customDialog;
 
 
-    private AppInfo appInfo;
+    private AppInformation appInfo;
 
 
     //region Override Method
@@ -247,11 +240,11 @@ public class SplashScreenFragment extends Fragment {
            // myViewModel.getCompany(companyGuid);
     }
     private void initAppInfo() {
-        ApplicationInformation applicationInformation = new ApplicationInformation();
+        ir.kitgroup.salein.classes.packageName.ApplicationInformation applicationInformation = new ir.kitgroup.salein.classes.packageName.ApplicationInformation();
         String packageName=getPackageName1();
         appInfo = applicationInformation.getInformation(packageName);
-        if (Select.from(AppInfo.class).list().size() == 0)
-            AppInfo.saveInTx(appInfo);
+        if (Select.from(AppInformation.class).list().size() == 0)
+            AppInformation.saveInTx(appInfo);
     }
 
     public String getPackageName1() {
@@ -337,7 +330,7 @@ public class SplashScreenFragment extends Fragment {
         //region When The User Is Logged In
         if (getAccount() != null) {
 
-            if (Select.from(AppInfo.class).first().isSalein_main())
+            if (Select.from(AppInformation.class).first().isSalein_main())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
 
             else {

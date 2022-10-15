@@ -59,7 +59,7 @@ import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.CompanyAPI;
 
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 import ir.kitgroup.salein.DataBase.Product;
 
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
@@ -158,7 +158,7 @@ public class HomeFragment extends Fragment {
 
     public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
-    private AppInfo appInfo;
+    private AppInformation appInfo;
 
 
     //endregion Parameter
@@ -198,7 +198,7 @@ public class HomeFragment extends Fragment {
             company = Select.from(Company.class).first();
             userName = company.getUser();
             passWord = company.getPass();
-            appInfo=Select.from(AppInfo.class).first();
+            appInfo=Select.from(AppInformation.class).first();
             //endregion Config
 
 

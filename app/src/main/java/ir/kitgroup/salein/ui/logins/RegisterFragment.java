@@ -56,7 +56,7 @@ import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.RegisterFragmentBinding;
@@ -335,7 +335,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
 
                 //region  Go To CompanyFragment Because Account Is Register
-                if (Select.from(AppInfo.class).first().isSalein_main()) {
+                if (Select.from(AppInformation.class).first().isSalein_main()) {
                     NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }

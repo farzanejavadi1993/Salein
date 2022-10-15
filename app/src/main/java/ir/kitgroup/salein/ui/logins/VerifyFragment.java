@@ -19,7 +19,6 @@ import androidx.navigation.Navigation;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -34,7 +33,7 @@ import in.aabhasjindal.otptextview.OTPListener;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.AppInfo;
+import ir.kitgroup.salein.DataBase.AppInformation;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
@@ -42,7 +41,6 @@ import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.models.AppDetail;
 
 
 @AndroidEntryPoint
@@ -234,7 +232,7 @@ public class VerifyFragment extends Fragment {
 
 
                 //region Go To CompanyFragment Because Account Is Register
-                if (Select.from(AppInfo.class).first().isSalein_main()) {
+                if (Select.from(AppInformation.class).first().isSalein_main()) {
                     NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
