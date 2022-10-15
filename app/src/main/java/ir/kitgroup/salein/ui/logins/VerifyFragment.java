@@ -33,7 +33,7 @@ import in.aabhasjindal.otptextview.OTPListener;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.AppInformation;
+import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
@@ -232,7 +232,7 @@ public class VerifyFragment extends Fragment {
 
 
                 //region Go To CompanyFragment Because Account Is Register
-                if (Select.from(AppInformation.class).first().isSalein_main()) {
+                if (Select.from(Salein.class).first().isSalein_main()) {
                     NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }

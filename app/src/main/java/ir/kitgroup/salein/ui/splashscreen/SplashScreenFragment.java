@@ -40,7 +40,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.DataBase.AppInformation;
+import ir.kitgroup.salein.DataBase.Salein;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -69,7 +69,7 @@ public class SplashScreenFragment extends Fragment {
     private CustomDialog customDialog;
 
 
-    private AppInformation appInfo;
+    private Salein appInfo;
 
 
     //region Override Method
@@ -240,11 +240,12 @@ public class SplashScreenFragment extends Fragment {
            // myViewModel.getCompany(companyGuid);
     }
     private void initAppInfo() {
-        ir.kitgroup.salein.classes.packageName.ApplicationInformation applicationInformation = new ir.kitgroup.salein.classes.packageName.ApplicationInformation();
+        ir.kitgroup.salein.classes.application_information.ApplicationInformation applicationInformation = new ir.kitgroup.salein.classes.application_information.ApplicationInformation();
         String packageName=getPackageName1();
-        appInfo = applicationInformation.getInformation(packageName);
-        if (Select.from(AppInformation.class).list().size() == 0)
-            AppInformation.saveInTx(appInfo);
+        appInfo=new Salein();
+       // appInfo = applicationInformation.getInformation(packageName);
+        if (Select.from(Salein.class).list().size() == 0)
+            Salein.saveInTx(appInfo);
     }
 
     public String getPackageName1() {
@@ -330,7 +331,7 @@ public class SplashScreenFragment extends Fragment {
         //region When The User Is Logged In
         if (getAccount() != null) {
 
-            if (Select.from(AppInformation.class).first().isSalein_main())
+            if (Select.from(Salein.class).first().isSalein_main())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
 
             else {

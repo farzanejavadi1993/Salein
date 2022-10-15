@@ -2,80 +2,49 @@ package ir.kitgroup.salein.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.button.MaterialButton;
-
+import com.orm.query.Select;
 import java.util.Objects;
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-
-
-import ir.kitgroup.salein.DataBase.AppInformation;
+import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
-
-import ir.kitgroup.salein.classes.Util;
-
-
 import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment;
 
 
 @AndroidEntryPoint
 public class LauncherActivity extends AppCompatActivity {
+
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
     private ActivityLauncherBinding binding;
     private NavController navController;
-    private Dialog dialog;
-    private AppInformation appInfo;
-
-
+    private int count;
     //endregion Parameter
 
 
+    //region Override Method
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            String company = getIntent().getExtras().getString("companyId");
-            sharedPreferences.edit().putString("companyId", Objects.requireNonNullElse(company, "")).apply();
-            Toast.makeText(this, Objects.requireNonNullElse(company, ""), Toast.LENGTH_SHORT).show();
-        } else
-            sharedPreferences.edit().putString("company", "").apply();
-
-        Util.ScreenSize(this);
+        getBundle();
         navigationHandler();
-        castDialog();
-
-
     }
 
-
-    //region Override Method
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -83,26 +52,24 @@ public class LauncherActivity extends AppCompatActivity {
         switch (navController.getCurrentDestination().getId()) {
             case R.id.HomeFragment:
                 if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false)) {
-                    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().getPrimaryNavigationFragment();
-                    FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
-                    Fragment fragment = fragmentManager.getPrimaryNavigationFragment();
-                    if (fragment instanceof HomeFragment) {
-                        ((HomeFragment) fragment).showData();
-                    }
-                } else {
-                    if (!appInfo.isSalein_main() && navController.getBackQueue().size() == 2)
-                        dialog.show();
+                  getDoActionInHomeFragment();
+                }
+
+                else {
+
+                    if (Select.from(Salein.class).first() == null && navController.getBackQueue().size() == 2)
+                   finishApp();
+
                     else
                         super.onBackPressed();
                 }
-
                 break;
 
             case R.id.CompanyFragment:
-                dialog.show();
-
+                finishApp();
                 break;
-            default:
+
+                default:
                 super.onBackPressed();
                 break;
         }
@@ -115,23 +82,29 @@ public class LauncherActivity extends AppCompatActivity {
         // if (sharedPreferences.getBoolean("loginSuccess", false))
         finish();
     }
-
     //endregion Override Method
 
 
-    //region Method
+    //region Custom Method
+    private void getBundle() {
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            String companyId = getIntent().getExtras().getString("companyId");
+            sharedPreferences.edit().putString(
+                            "companyId", Objects.requireNonNullElse(companyId, ""))
+                    .apply();
+        } else
+            sharedPreferences.edit().putString("company", "").apply();
+    }
 
-
-
+    @SuppressLint("NonConstantResourceId")
     private void navigationHandler() {
-
         binding.navView.getOrCreateBadge(R.id.InvoiceFragment).clearNumber();
+
         binding.navView.getOrCreateBadge(R.id.InvoiceFragment).setBackgroundColor(getResources().getColor(R.color.purple_500));
+
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int destinationId = destination.getId();
-
             switch (destination.getId()) {
                 case R.id.LoginFragment:
                 case R.id.VerifyFragment:
@@ -160,9 +133,8 @@ public class LauncherActivity extends AppCompatActivity {
 
             }
         });
+
         NavigationUI.setupWithNavController(binding.navView, navController);
-
-
     }
 
     public void setShowProfileItem(boolean show) {
@@ -177,29 +149,26 @@ public class LauncherActivity extends AppCompatActivity {
         binding.navView.getOrCreateBadge(R.id.InvoiceFragment).clearNumber();
     }
 
-    private void castDialog() {
-        //region Cast Dialog
-        dialog = new Dialog(LauncherActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCancelable(false);
-        TextView textExitDialog = dialog.findViewById(R.id.tv_message);
-        textExitDialog.setText("آیا مایل به خروج از برنامه می باشید؟");
-        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
-        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
-        btnNo.setOnClickListener(v -> dialog.dismiss());
-        btnOk.setOnClickListener(v -> {
-            dialog.dismiss();
+    private void finishApp() {
+        if (count == 1) {
             finish();
-        });
-        //endregion Cast Dialog
+            return;
+        }
+        count += 1;
+
     }
 
+    private Fragment getFragment(){
+        return  (NavHostFragment) getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getPrimaryNavigationFragment();
+    }
 
+    private void getDoActionInHomeFragment(){
+        Fragment fragment=getFragment();
 
-
-
-    //endregion Method
+        if (fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).showData();
+        }
+    }
+    //endregion Custom Method
 
 }

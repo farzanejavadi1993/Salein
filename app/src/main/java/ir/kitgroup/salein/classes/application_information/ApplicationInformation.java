@@ -1,17 +1,17 @@
-package ir.kitgroup.salein.classes.packageName;
+package ir.kitgroup.salein.classes.application_information;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
-import ir.kitgroup.salein.DataBase.AppInformation;
+import ir.kitgroup.salein.DataBase.Salein;
 
 
 public class ApplicationInformation {
 
 
-    public AppInformation getInformation(PackageName packageName , Activity activity) throws PackageManager.NameNotFoundException {
+    public Salein getInformation(PackageName packageName , Activity activity) throws PackageManager.NameNotFoundException {
 
-        AppInformation appInfo = new AppInformation();
+        Salein appInfo = new Salein();
             switch (packageName.getPackageName(activity)) {
                 case "ir.kitgroup.salein":
                     appInfo.setApplication_code("12345678");

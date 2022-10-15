@@ -62,8 +62,6 @@ public class Util {
             double y = Math.pow(height / dm.ydpi, 2);
             screenSize=Math.sqrt(x + y);
         }
-
-
     }
 
     public static final int VIEW_TYPE_ITEM = 0;

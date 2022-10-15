@@ -1,4 +1,4 @@
-package ir.kitgroup.salein.classes.packageName;
+package ir.kitgroup.salein.classes.application_information;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

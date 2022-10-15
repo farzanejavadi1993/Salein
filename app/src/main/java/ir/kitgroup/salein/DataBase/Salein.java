@@ -2,7 +2,7 @@ package ir.kitgroup.salein.DataBase;
 
 import com.orm.SugarRecord;
 
-public class AppInformation extends SugarRecord {
+public class Salein extends SugarRecord {
 
   private   String application_code="";
   private String gif_url="";
