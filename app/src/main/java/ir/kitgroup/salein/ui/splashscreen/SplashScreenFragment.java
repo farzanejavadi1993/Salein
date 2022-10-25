@@ -30,7 +30,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -75,6 +74,8 @@ public class SplashScreenFragment extends Fragment {
     private Salein salein;
     private String IMEI = "";
     private String companyGuid = "";
+    private Company company;
+    private Account account;
 
     //region Parameter
 
@@ -111,16 +112,14 @@ public class SplashScreenFragment extends Fragment {
         mainViewModel.getApp(salein.getApplication_code());
 
         mainViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
 
-            if (result == null) return;
-
-            if (getCompany() != null)
+            if (company != null)
                 navigate();
-            else {
-                binding.animationView.setVisibility(View.GONE);
-                binding.btnWarning.setVisibility(View.VISIBLE);
-                binding.txtErrorr.setText(result.getDescription());
-            }
+            else
+                showError(result.getDescription());
+
         });
 
         mainViewModel.getResultGetApp().observe(getViewLifecycleOwner(), result -> {
@@ -140,8 +139,8 @@ public class SplashScreenFragment extends Fragment {
                     sharedPreferences.edit().putString("link_update", linkUpdate).apply();
                     forcedUpdate = result.get(0).getForced();
                     companyGuid = result.get(0).getAccountId();
-                    if (getAccount() != null)
-                        mainViewModel.getCustomerFromServer(getAccount().getM());
+                    if (account != null)
+                        mainViewModel.getCustomerFromServer(account.getM());
                     else
                         checkUpdate();
 
@@ -166,7 +165,7 @@ public class SplashScreenFragment extends Fragment {
 
                 if (Apps.size() > 0) {
                     if (!Apps.get(0).getIsActive()) {
-                        binding.txtErrorr.setText("با این تلفن نمیتوانید وارد نرم افزار شوید.");
+                        showError("با این تلفن نمیتوانید وارد نرم افزار شوید.");
                         return;
                     }
                 } else {
@@ -197,7 +196,8 @@ public class SplashScreenFragment extends Fragment {
                 Company.saveInTx(result);
                 navigate();
             } else
-                binding.txtErrorr.setText("شرکت یافت نشد.");
+                showError("شرکت یافت نشد.");
+
         });
     }
 
@@ -224,7 +224,7 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (getAccount() != null && !messageUpdate.equals("") && !getAccount().getVersion().equals(newVersionUpdate)) {
+        } else if (account != null && !messageUpdate.equals("") && !account.getVersion().equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
         } else
             mainViewModel.getCompany(companyGuid);
@@ -234,13 +234,14 @@ public class SplashScreenFragment extends Fragment {
         ApplicationInformation applicationInformation = new ApplicationInformation();
         PackageName packageName = new PackageName();
         salein = applicationInformation.getInformation(packageName, getActivity());
-        if (Select.from(Salein.class).list().size() == 0 && salein.getSalein())
+        if (Select.from(Salein.class).first() ==null && salein.getSalein())
             Salein.saveInTx(salein);
 
     }
 
     private void init() {
-
+        company=getCompany();
+        account=getAccount();
         IMEI = Util.getAndroidID(getActivity());
         binding.btnWarning.setOnClickListener(v -> {
             binding.animationView.setVisibility(View.VISIBLE);
@@ -273,8 +274,7 @@ public class SplashScreenFragment extends Fragment {
         });
 
         customDialog.setOnClickNegativeButton(() -> {
-            if (getAccount() != null && messageUpdate.equals("") && !getAccount().getVersion().equals(newVersionUpdate)) {
-                Account account = getAccount();
+            if (account != null && messageUpdate.equals("") && !account.getVersion().equals(newVersionUpdate)) {
                 account.setVersion(appVersion);
                 account.save();
             }
@@ -286,19 +286,18 @@ public class SplashScreenFragment extends Fragment {
 
     private void navigate() {
 
-        //region When The User Is Logged In
-        if (getAccount() != null) {
-            if (Select.from(Salein.class).first().getSalein())
+        if (account != null) {
+            if (Select.from(Salein.class).first()!=null)
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
             else {
                 NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
                 Navigation.findNavController(getView()).navigate(action);
             }
         }
-        //endregion When The User Is Not Logged In
         else
             Navigation.findNavController(getView()).navigate(R.id.actionGoToLoginFragment);
-        //endregion When The User Is Not Logged In
+
+
     }
 
     private Company getCompany() {
@@ -309,20 +308,7 @@ public class SplashScreenFragment extends Fragment {
         return Select.from(Account.class).first();
     }
 
-    private void clearData() {
-        sharedPreferences.edit().clear().apply();
-        Account.deleteAll(Account.class);
-        Company.deleteAll(Company.class);
-        InvoiceDetail.deleteAll(InvoiceDetail.class);
-        Company.deleteAll(Company.class);
-        Product.deleteAll(Product.class);
-        Unit.deleteAll(Unit.class);
-        Account.deleteAll(Account.class);
-    }
-
-
     private void addCustomerToSerVer() {
-        Account account = getAccount();
         if (account != null) {
             account.setImei(Util.getAndroidID(getActivity()));
             account.setAppId(Util.APPLICATION_ID);
@@ -336,37 +322,22 @@ public class SplashScreenFragment extends Fragment {
     }
 
 
-
-    /*   @SuppressLint("SetTextI18n")
-    private void init() {
-        binding.btnWarning.setOnClickListener(v -> {
-            binding.animationView.setVisibility(View.VISIBLE);
-            binding.btnWarning.setVisibility(View.GONE);
-            myViewModel.getApp(Util.APPLICATION_ID);
-        });
-        if (getUser() != null)
-          oldVersion = getUser().getVersion();
-        sharedPreferences.edit().putBoolean("vip", false).apply();
-        sharedPreferences.edit().putBoolean("discount", false).apply();
-    }
-    private void initSaleinInstance() {
-        saleinInstance = Select.from(Salein.class).first();
-        if (saleinInstance == null && packageName.equals("ir.kitgroup.salein")) {
-            saleinInstance = new Salein();
-            saleinInstance.ContainAllCompanie = true;
-            saleinInstance.save();
-        }
-        if (saleinInstance != null)
-            Company.deleteAll(Company.class);
+    private void showError(String error){
+        binding.animationView.setVisibility(View.GONE);
+        binding.btnWarning.setVisibility(View.VISIBLE);
+        binding.txtErrorr.setText(error);
     }
 
-      private void setData() {
-
-        title = company != null && company.getN() != null ? company.getN() : "";
-        description = company != null && company.getDesc() != null ? company.getDesc() : "";
-        binding.tvTitle.setText(title);
-        binding.tvDescription.setText(description);
-    }*/
+    private void clearData() {
+        sharedPreferences.edit().clear().apply();
+        Account.deleteAll(Account.class);
+        Company.deleteAll(Company.class);
+        InvoiceDetail.deleteAll(InvoiceDetail.class);
+        Company.deleteAll(Company.class);
+        Product.deleteAll(Product.class);
+        Unit.deleteAll(Unit.class);
+        Account.deleteAll(Account.class);
+    }
 
 
     //endregion Custom Method

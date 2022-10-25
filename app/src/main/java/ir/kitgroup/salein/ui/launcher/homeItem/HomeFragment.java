@@ -281,7 +281,7 @@ public class HomeFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 if (disableAccount) {
-                    if (!appInfo.getSalein())
+                    if (appInfo==null)
                         getActivity().finish();
                     else
                         Navigation.findNavController(binding.getRoot()).popBackStack();

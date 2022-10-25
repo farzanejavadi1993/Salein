@@ -19,8 +19,10 @@ import androidx.navigation.Navigation;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -32,15 +34,16 @@ import es.dmoral.toasty.Toasty;
 import in.aabhasjindal.otptextview.OTPListener;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
+import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
+import ir.kitgroup.salein.models.AppDetail;
 
 
 @AndroidEntryPoint
@@ -53,10 +56,11 @@ public class VerifyFragment extends Fragment {
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
-    private CompanyViewModel myViewModel;
+    private CompanyViewModel companyViewModel;
+    private MainViewModel mainViewModel;
     private FragmentVerifyBinding binding;
 
-    private Company company;
+
     private String userName;
     private String passWord;
     private int code;
@@ -65,12 +69,10 @@ public class VerifyFragment extends Fragment {
     private CountDownTimer countDownTimer;
     private boolean resendCode = false;
     private long timer_left = 180000;
-    private List<Account> accountList;
     //endregion Parameter
 
 
     //region Override Method
-
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -85,100 +87,67 @@ public class VerifyFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        getBundle();
+        init();
         startTimer();
-
-        //region Get Bundle And Set Data
-        code = VerifyFragmentArgs.fromBundle(getArguments()).getCode();
-        mobile = VerifyFragmentArgs.fromBundle(getArguments()).getMobile();
-        //endregion Get Bundle And Set Data
-
-        //region Get The Company Is Save In The Database
-        company = Select.from(Company.class).first();
-        userName = company.getUser();
-        passWord = company.getPass();
-        //endregion Get The Company Is Save In The Database
-
-
-        //region set Title To EditText
-        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
-        //endregion set Title To EditText
-
-
-        //region Set Icon And
-        Picasso.get()
-                .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
-                        company.getI() + "&width=300&height=300")
-                .error(R.drawable.loading)
-                .placeholder(R.drawable.loading)
-                .into(binding.imageLogo);
-        //endregion Set Icon And
-
-
-        //region OtpConfig
-        binding.otpView.setOtpListener(new OTPListener() {
-            @Override
-            public void onInteractionListener() {
-                binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                binding.tvEnterCode.setText("کد تایید 5 رقمی را وارد کنید");
-            }
-
-            @Override
-            public void onOTPComplete(String otp) {
-                if (Integer.parseInt(otp) == code) {
-                    binding.otpView.showSuccess();
-                    binding.otpView.setEnabled(false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                  //  myViewModel.getCustomerFromServer(mobile);
-                } else {
-                    binding.otpView.showError();
-                    binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
-                    binding.tvEnterCode.setText("کد وارد شده اشتباه است.");
-                }
-
-            }
-        });
-        //endregion OtpConfig
-
-
-        //region Pressed  ivBackFragment
-        binding.ivBackFragment.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
-        //endregion Pressed  ivBackFragment
-
-
-        //region Pressed  tvTimer
-        binding.tvTimer.setOnClickListener(v -> {
-                    if (resendCode) {
-                        resendCode = false;
-                        timer_left = 90000;
-                        startTimer();
-                        code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-                        String messageCode = String.valueOf(code);
-                        binding.progressResendCode.setVisibility(View.VISIBLE);
-                        myViewModel.getSmsLogin(userName, passWord, messageCode, mobile);
-
-                    }
-                }
-        );
-        //endregion Pressed  tvTimer
-
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
+        companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        myViewModel.getResultMessage().setValue(null);
+        companyViewModel.getResultMessage().setValue(null);
+        mainViewModel.getResultMessage().setValue(null);
 
 
-     /*   myViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            binding.progressBar.setVisibility(View.GONE);
+            binding.otpView.setEnabled(true);
+            binding.otpView.resetState();
+
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+        mainViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            navigate();
+        });
+
+
+        companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
 
-            myViewModel.getResultCustomerFromServer().setValue(null);
+            companyViewModel.getResultInquiryAccount().setValue(null);
+
+            sharedPreferences.edit().putBoolean("disableAccount", false).apply();
+
+            if (result.size() > 0) {
+                Account.deleteAll(Account.class);
+                Account.saveInTx(result);
+                mainViewModel.getCustomerFromServer(mobile);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment", mobile, -1);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+
+            }
+
+
+        });
+
+        mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+
+            mainViewModel.getResultCustomerFromServer().setValue(null);
 
             //region Information Account From Server
             if (result.size() > 0) {
@@ -186,107 +155,29 @@ public class VerifyFragment extends Fragment {
                 List<AppDetail> Apps = result.get(0).getApps();
                 CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
 
-                if (Apps.size() > 0) {
-                    myViewModel.getInquiryAccount(userName, passWord, mobile);
-                }
-                else{
-                    Account account=new Account();
-                    account.setImei(IMEI);
-                    account.setAppId(Util.APPLICATION_ID);
-                    Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
-                    jsonObjectAcc.Account = accountList;
-                  //  myViewModel.addAccountToServer(jsonObjectAcc);
+                if (Apps.size() > 0)
+                    navigate();
+                else
+                    addCustomerToSerVer();
 
-                }
-            }
-
-           else {
-
+            } else {
+                addCustomerToSerVer();
             }
 
             //endregion Information Account From Server
 
 
-        });*/
-//        myViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
-//
-//            if (result == null)
-//                return;
-//
-//            myViewModel.getResultAddAccountToServer().setValue(null);
-//            if (result.get(0).getMessage() == 1) {
-//                myViewModel.getInquiryAccount(userName, passWord, mobile);
-//            } else
-//                Toasty.error(requireActivity(), result.get(0).getMessage(), Toast.LENGTH_SHORT, true).show();
-//        });
-        myViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
-            binding.progressBar.setVisibility(View.GONE);
+        });
+
+        mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
+
             if (result == null)
                 return;
-            sharedPreferences.edit().putBoolean("disableAccount", false).apply();
-
-            //region When The User Is Register In
-            if (result.size() > 0) {
-                Account.deleteAll(Account.class);
-                Account.saveInTx(result);
-
-
-                //region Go To CompanyFragment Because Account Is Register
-                if (Select.from(Salein.class).first().getSalein()) {
-                    NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-                //endregion Go To CompanyFragment Because Account Is Register
-
-
-                //region Go To MainFragment Because Account Is Register
-                else {
-                    NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-
-                }
-                //endregion Go To MainFragment Because Account Is Register
-
-            }
-            //endregion When The User Is Register In
-
-            //region When The User Is Not Register In
-            else {
-                NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment", mobile, -1);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-
-            }
-            //endregion When The User Is Not Register In
-
+            mainViewModel.getResultAddAccountToServer().setValue(null);
+            navigate();
         });
-
-        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
-            binding.progressResendCode.setVisibility(View.GONE);
-            if (result == null)
-                return;
-            myViewModel.getResultSmsLogin().setValue(null);
-            if (result.equals("")) {
-                Toasty.success(requireActivity(), "پیامک با موفقیت ارسال شد.", Toast.LENGTH_SHORT, true).show();
-            }
-
-        });
-
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) return;
-            if (result.getCode()==110 || result.getCode()==111){
-                myViewModel.getInquiryAccount(userName, passWord, mobile);
-                return;
-            }
-            binding.progressBar.setVisibility(View.GONE);
-            binding.otpView.setEnabled(true);
-            binding.otpView.resetState();
-
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-        });
-
 
     }
-
 
     @Override
     public void onDestroyView() {
@@ -294,8 +185,6 @@ public class VerifyFragment extends Fragment {
         countDownTimer.cancel();
         binding = null;
     }
-
-
     //endregion Override Method
 
 
@@ -317,7 +206,6 @@ public class VerifyFragment extends Fragment {
         }.start();
     }
 
-
     @SuppressLint("SetTextI18n")
     private void updateTimerText() {
         int minutes = (int) (timer_left / 1000) / 60;
@@ -326,24 +214,99 @@ public class VerifyFragment extends Fragment {
         binding.tvTimer.setText("دریافت مجدد کد تایید تا " + timeLeftFormated);
     }
 
-
     private Company getCompany() {
         return Select.from(Company.class).first();
     }
 
-    private void connectToServer(boolean connect,String ip) {
-        ConnectToServer connectToServer = new ConnectToServer();
-        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, connect, ip);
+    private void getBundle() {
+        code = VerifyFragmentArgs.fromBundle(getArguments()).getCode();
+        mobile = VerifyFragmentArgs.fromBundle(getArguments()).getMobile();
     }
 
-    private String getIp() {
-        String ip;
-        if (getCompany()!=null)
-            ip= "http://" + getCompany().getIp1() + "/api/REST/";
-        else
-            ip="";
-        return ip;
+    private void init() {
+        userName = getCompany().getUser();
+        passWord = getCompany().getPass();
+        binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
+
+        Picasso.get()
+                .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
+                        getCompany().getI() + "&width=300&height=300")
+                .error(R.drawable.loading)
+                .placeholder(R.drawable.loading)
+                .into(binding.imageLogo);
+
+
+        binding.otpView.setOtpListener(new OTPListener() {
+            @Override
+            public void onInteractionListener() {
+                binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                binding.tvEnterCode.setText("کد تایید 5 رقمی را وارد کنید");
+            }
+
+            @Override
+            public void onOTPComplete(String otp) {
+                if (Integer.parseInt(otp) == code) {
+                    binding.otpView.showSuccess();
+                    binding.otpView.setEnabled(false);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    companyViewModel.getInquiryAccount(userName, passWord, mobile);
+
+                } else {
+                    binding.otpView.showError();
+                    binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
+                    binding.tvEnterCode.setText("کد وارد شده اشتباه است.");
+                }
+
+            }
+        });
+
+        binding.ivBackFragment.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
+
+
+        binding.tvTimer.setOnClickListener(v -> {
+            if (resendCode) {
+                resendCode = false;
+                timer_left = 90000;
+                startTimer();
+                code = new Random(System.nanoTime()).nextInt(89000) + 10000;
+                String messageCode = String.valueOf(code);
+                binding.progressResendCode.setVisibility(View.VISIBLE);
+                companyViewModel.getSmsLogin(userName, passWord, messageCode, mobile);
+
+            }
+        });
+
     }
+
+    private void addCustomerToSerVer() {
+        Account account = Select.from(Account.class).first();
+
+        if (account != null) {
+            account.setImei(Util.getAndroidID(getActivity()));
+            account.setAppId(Util.APPLICATION_ID);
+            Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
+            ArrayList<Account> accounts = new ArrayList<>();
+            accounts.add(account);
+            jsonObjectAcc.Account = accounts;
+            mainViewModel.addAccountToServer(jsonObjectAcc);
+        }
+
+    }
+
+    private void navigate() {
+        binding.progressBar.setVisibility(View.GONE);
+        if (Select.from(Salein.class).first() != null) {
+            NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        } else {
+            NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+
+        }
+
+    }
+
+
     //endregion Method
 
 }

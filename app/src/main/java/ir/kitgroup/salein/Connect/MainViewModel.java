@@ -67,7 +67,7 @@ public class MainViewModel extends ViewModel {
                         .subscribe(
                                 resultAddAccountToServer::setValue,
                                 throwable ->
-                                        eMessage.setValue(new Message(111, "خطا در ثبت اطلاعات مشتری", ""))));
+                                        eMessage.setValue(new Message(111, "", "خطا در ثبت اطلاعات مشتری"))));
     }
     public MutableLiveData<List<Log>> getResultAddAccountToServer() {
         return resultAddAccountToServer;
@@ -115,7 +115,7 @@ public class MainViewModel extends ViewModel {
                         .subscribe(
                                 resultCustomerFromServer::setValue,
                                 throwable ->
-                                        eMessage.setValue(new Message(110, "خطا در دریافت اطلاعات کاربر", ""))));
+                                        eMessage.setValue(new Message(110, "", "خطا در دریافت اطلاعات کاربر"))));
     }
     public MutableLiveData<List<Account>> getResultCustomerFromServer() {
         return resultCustomerFromServer;
@@ -132,7 +132,7 @@ public class MainViewModel extends ViewModel {
                         .subscribe(
                                 resultCompany::setValue
                                 , throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))
+                                        eMessage.setValue(new Message(-1, "", "خطا در دریافت اطلاعات شرکت"))
                         )
         );
     }

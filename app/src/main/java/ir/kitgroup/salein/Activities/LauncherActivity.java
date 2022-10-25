@@ -57,7 +57,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                 else {
 
-                    if (!Select.from(Salein.class).first().getSalein() && navController.getBackQueue().size() == 2)
+                    if (Select.from(Salein.class).first()==null && navController.getBackQueue().size() == 2)
                    finishApp();
 
                     else

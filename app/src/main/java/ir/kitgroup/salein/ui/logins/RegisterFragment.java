@@ -43,6 +43,7 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.orm.query.Select;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
@@ -55,6 +56,7 @@ import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
+import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 
@@ -62,6 +64,7 @@ import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.RegisterFragmentBinding;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.ui.payment.PaymentFragment;
 
@@ -70,19 +73,20 @@ import ir.kitgroup.salein.ui.payment.PaymentFragment;
 public class RegisterFragment extends Fragment implements PermissionsListener {
 
     //region Variable
-    private CompanyViewModel myViewModel;
+    private CompanyViewModel companyViewModel;
+    private MainViewModel mainViewModel;
     private RegisterFragmentBinding binding;
-    private Company company;
+
     private String userName;
     private String passWord;
-
-
     private final List<Account> accountsList = new ArrayList<>();
+
+    private Account account;
     private int radioValue;
     private boolean ACCSTP = true;
-    private String from;//this Variable Show From Which Fragment Did We Enter This Fragment?
+    private String from;
     private String mobile;
-    private Account account;
+
     private List<Account> accounts;
 
     private MapboxMap mapboxMap;
@@ -93,7 +97,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
 
     //region Override Method
-
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -105,210 +108,10 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-        //region Config Map
-        try {
-            binding.mapView.onCreate(savedInstanceState);
-
-        } catch (Exception ignore) {
-        }
-
-
-        binding.mapView.getMapAsync(mapboxMap -> {
-            this.mapboxMap = mapboxMap;
-
-            CedarMapsStyleConfigurator.configure(
-                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
-                        @Override
-                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
-                            mapboxMap.setStyle(styleBuilder, style -> {
-                                if (getActivity() == null) {
-                                    return;
-                                }
-
-                                //Add marker to map
-                                if (mapboxMap.getStyle() != null) {
-                                    enableLocationComponent(mapboxMap.getStyle());
-                                }
-                                //  toggleCurrentLocationButton();
-
-                                if (Util.latitude != 0 && Util.longitude != 0)
-                                    addMarkerToMapViewAtPosition(new LatLng(Util.latitude, Util.longitude));
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull String errorMessage) {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            this.mapboxMap.setMaxZoomPreference(18);
-            this.mapboxMap.setMinZoomPreference(6);
-            this.mapboxMap.setCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(new LatLng(Util.latitude, Util.longitude))
-                            .zoom(15)
-                            .build());
-
-            //Set a touch event listener on the map
-            this.mapboxMap.addOnMapClickListener(point -> {
-                Util.nameUser = binding.edtName.getText().toString();
-                Util.address = binding.edtAddress.getText().toString();
-                NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-                return false;
-            });
-
-        });
-        //endregion Config Map
-
-        //region Get Bundle And Set Data
-        from = RegisterFragmentArgs.fromBundle(getArguments()).getFrom();
-        mobile = RegisterFragmentArgs.fromBundle(getArguments()).getMobile();
-        radioValue = RegisterFragmentArgs.fromBundle(getArguments()).getRadioValue();
-
-        if (from.equals("PaymentFragment")) {
-            binding.tvRadioGroup.setText("انتخاب به عنوان");
-            binding.radio1.setText("آدرس 1");
-            binding.radio2.setText("آدرس 2");
-            binding.CodeId.setVisibility(View.GONE);
-            binding.nameCard.setVisibility(View.GONE);
-        }
-        if (from.equals("ProfileFragment")) {
-            binding.edtName.setEnabled(false);
-            binding.CodeId.setVisibility(View.GONE);
-            binding.radioCard.setVisibility(View.GONE);
-        }
-
-        //endregion Get Bundle And Set Data
-
-
-        //region Get User Is Save In Database And Complete Information If User Is Not Null
-        accounts = new ArrayList<>();
-
-
-        binding.edtAddress.setText(Util.address);
-        binding.edtName.setText(Util.nameUser);
-
-        account = Select.from(Account.class).first();
-        if (account != null)
-            binding.edtName.setText(account.getN());
-
-
-        //endregion Get User Is Save In Database And Complete Information If User Is Not Null
-
-        //region Get The Company Is Save In The Database
-        company = Select.from(Company.class).first();
-        userName = company.getUser();
-        passWord = company.getPass();
-        //endregion Get The Company Is Save In The Database
-
-        //region Press RadioButton
-        binding.radio1.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                radioValue = 1;// Choose As Woman gender Or Choose As Address1
-            }
-        });
-
-
-        binding.radio2.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                if (from.equals("PaymentFragment"))
-                    radioValue = 2;//Choose As Address2
-                else
-                    radioValue = 0;//Choose As Man Gender
-            }
-        });
-
-
-        //endregion Press RadioButton
-
-        //region Action btnRegisterInformation
-        binding.btnRegisterInformation.setOnClickListener(v -> {
-
-            if (
-                    binding.edtName.getText().toString().isEmpty()
-                            ||
-                            binding.edtAddress.getText().toString().isEmpty()
-                            ||
-                            radioValue == -1
-            ) {
-
-                Toasty.error(requireActivity(), "لطفا فیلدهای ستاره دار را پر کنید.", Toast.LENGTH_SHORT, true).show();
-                return;
-            }
-            Account usr = new Account();
-
-            //region Add Account
-            if (from.equals("VerifyFragment")) {
-                usr.setI(UUID.randomUUID().toString());
-                usr.setN(binding.edtName.getText().toString());
-                usr.setM(mobile);
-                usr.PSW = mobile;
-                usr.setAdr(binding.edtAddress.getText().toString());
-                usr.LAT = String.valueOf(Util.latitude);
-                usr.LNG = String.valueOf(Util.longitude);
-                usr.S = String.valueOf(radioValue);
-                usr.PC = binding.edtCode.getText().toString();
-                usr.STAPP = ACCSTP;
-                accountsList.clear();
-                accountsList.add(usr);
-                myViewModel.getSetting(userName, passWord);
-            }
-            //endregion Add Account
-
-
-            //region Update Account
-            else {
-                usr.setI(account.getI());
-                usr.setN(account.getN());
-                usr.setM(account.getM());
-                usr.setAdr(account.getAdr());
-                usr.setAdr2(account.getAdr2());
-                usr.CRDT = account.CRDT > 0 ? account.CRDT : 0.0;
-                usr.LAT = account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0";
-                usr.LNG = account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0";
-                usr.LAT1 = account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0";
-                usr.LNG1 = account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0";
-
-                if (radioValue == 1) {
-                    if (from.equals("PaymentFragment"))
-                        PaymentFragment.ChooseAddress2 = false;
-
-                    usr.setAdr( binding.edtAddress.getText().toString());
-                    usr.LAT = String.valueOf(Util.latitude);
-                    usr.LNG = String.valueOf(Util.longitude);
-                } else if (radioValue == 2) {
-                    if (from.equals("PaymentFragment"))
-                        PaymentFragment.ChooseAddress2 = true;
-
-                    usr.setAdr2( binding.edtAddress.getText().toString());
-                    usr.LAT1 = String.valueOf(Util.latitude);
-                    usr.LNG1 = String.valueOf(Util.longitude);
-                }
-
-
-                accounts.clear();
-                accounts.add(usr);
-
-                binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
-                binding.btnRegisterInformation.setEnabled(false);
-
-
-                myViewModel.updateAccount(userName, passWord, accounts);
-
-
-            }
-            //endregion Update Account
-
-
-        });
-        //endregion Action btnRegisterInformation*/
-
-
-        binding.ivBack.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
+        initMap(savedInstanceState);
+        getBundle();
+        setDataBundle();
+        init();
     }
 
 
@@ -316,49 +119,40 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
-        myViewModel.getResultMessage().setValue(null);
+        companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        myViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
-            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
-            binding.btnRegisterInformation.setEnabled(true);
+
+        companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+
 
             if (result == null)
                 return;
-            myViewModel.getResultAddAccount().setValue(null);
+
+            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnRegisterInformation.setEnabled(true);
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
+        companyViewModel.getResultAddAccount().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+            companyViewModel.getResultAddAccount().setValue(null);
 
             if (result) {
                 Account.deleteAll(Account.class);
                 Account.saveInTx(accountsList);
                 accountsList.clear();
-
-
-                //region  Go To CompanyFragment Because Account Is Register
-                if (Select.from(Salein.class).first().getSalein()) {
-                    NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-                //endregion  Go To CompanyFragment Because Account Is Register
-
-
-                //region Go To MainOrderFragment Because Account Is Register
-                else {
-                    Util.address = "";
-                    Util.latitude = 0;
-                    Util.longitude = 0;
-                    Util.nameUser = "";
-                    NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-                //endregion Go To MainOrderFragment Because Account Is Register
+                mainViewModel.getCustomerFromServer(mobile);
             }
         });
 
-        myViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultSetting().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
-            myViewModel.getResultSetting().setValue(null);
+            companyViewModel.getResultSetting().setValue(null);
             List<Setting> settingsList = new ArrayList<>(result);
             if (settingsList.size() > 0) {
                 String accStp = settingsList.get(0).ACC_STATUS_APP;
@@ -366,20 +160,21 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 accountsList.get(0).STAPP = ACCSTP;
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
-                myViewModel.addAccount(userName, passWord, accountsList);
+                companyViewModel.addAccount(userName, passWord, accountsList);
             }
 
 
         });
 
-        myViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
-            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
-            binding.btnRegisterInformation.setEnabled(true);
+        companyViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
+
             if (result == null)
                 return;
 
+            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnRegisterInformation.setEnabled(true);
 
-            myViewModel.getResultUpdateAccount().setValue(null);
+            companyViewModel.getResultUpdateAccount().setValue(null);
             if (result != null) {
                 int message = result.getLogs().get(0).getMessage();
                 String description = result.getLogs().get(0).getDescription();
@@ -395,24 +190,44 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                     Navigation.findNavController(binding.getRoot()).popBackStack();
 
                 } else {
-                    Toast.makeText(getActivity(), "خطا در بروز رسانی اطلاعات کاربر", Toast.LENGTH_SHORT).show();
+                    Toasty.error(getActivity(), "خطا در بروز رسانی اطلاعات کاربر", Toast.LENGTH_SHORT).show();
                 }
 
-
             } else {
-                Toast.makeText(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
+                Toasty.error(getActivity(), "خطا در دریافت مدل", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
-            binding.btnRegisterInformation.setEnabled(true);
+        mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+
+            mainViewModel.getResultCustomerFromServer().setValue(null);
+
+            if (result.size() > 0) {
+                String IMEI = Util.getAndroidID(getActivity());
+                List<AppDetail> Apps = result.get(0).getApps();
+                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
+
+                if (Apps.size() > 0)
+                    navigate();
+                else
+                    addCustomerToSerVer();
+
+            } else {
+                addCustomerToSerVer();
+            }
+
+        });
+
+        mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+            mainViewModel.getResultAddAccountToServer().setValue(null);
+            navigate();
         });
 
     }
@@ -542,28 +357,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
-    @SuppressLint("MissingPermission")
-    private void toggleCurrentLocationButton() {
-        if (!mapboxMap.getLocationComponent().isLocationComponentActivated() || !mapboxMap.getLocationComponent().isLocationComponentEnabled()) {
-            return;
-        }
-        Location location = mapboxMap.getLocationComponent().getLastKnownLocation();
-        if (location != null) {
-            animateToCoordinate(new LatLng(location.getLatitude(), location.getLongitude()));
-            /*Util.latitude = location.getLatitude();
-            Util.longitude = location.getLongitude();*/
-        }
-
-        switch (mapboxMap.getLocationComponent().getRenderMode()) {
-            case RenderMode.NORMAL:
-                mapboxMap.getLocationComponent().setRenderMode(RenderMode.COMPASS);
-                break;
-            case RenderMode.GPS:
-            case RenderMode.COMPASS:
-                mapboxMap.getLocationComponent().setRenderMode(RenderMode.NORMAL);
-                break;
-        }
-    }
 
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
@@ -640,7 +433,240 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         }
     }
 
+    private Company getCompany() {
+        return Select.from(Company.class).first();
+    }
 
+    private void initMap(Bundle savedInstanceState) {
+        try {
+            binding.mapView.onCreate(savedInstanceState);
+
+        } catch (Exception ignore) {
+        }
+
+
+        binding.mapView.getMapAsync(mapboxMap -> {
+            this.mapboxMap = mapboxMap;
+
+            CedarMapsStyleConfigurator.configure(
+                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
+                        @Override
+                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
+                            mapboxMap.setStyle(styleBuilder, style -> {
+                                if (getActivity() == null) {
+                                    return;
+                                }
+
+                                //Add marker to map
+                                if (mapboxMap.getStyle() != null) {
+                                    enableLocationComponent(mapboxMap.getStyle());
+                                }
+                                //  toggleCurrentLocationButton();
+
+                                if (Util.latitude != 0 && Util.longitude != 0)
+                                    addMarkerToMapViewAtPosition(new LatLng(Util.latitude, Util.longitude));
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull String errorMessage) {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            this.mapboxMap.setMaxZoomPreference(18);
+            this.mapboxMap.setMinZoomPreference(6);
+            this.mapboxMap.setCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(new LatLng(Util.latitude, Util.longitude))
+                            .zoom(15)
+                            .build());
+
+            //Set a touch event listener on the map
+            this.mapboxMap.addOnMapClickListener(point -> {
+                Util.nameUser = binding.edtName.getText().toString();
+                Util.address = binding.edtAddress.getText().toString();
+                NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+                return false;
+            });
+
+        });
+    }
+
+    private void getBundle() {
+        from = RegisterFragmentArgs.fromBundle(getArguments()).getFrom();
+        mobile = RegisterFragmentArgs.fromBundle(getArguments()).getMobile();
+        radioValue = RegisterFragmentArgs.fromBundle(getArguments()).getRadioValue();
+    }
+
+    private void setDataBundle() {
+        if (from.equals("PaymentFragment")) {
+            binding.tvRadioGroup.setText("انتخاب به عنوان");
+            binding.radio1.setText("آدرس 1");
+            binding.radio2.setText("آدرس 2");
+            binding.CodeId.setVisibility(View.GONE);
+            binding.nameCard.setVisibility(View.GONE);
+        }
+        if (from.equals("ProfileFragment")) {
+            binding.edtName.setEnabled(false);
+            binding.CodeId.setVisibility(View.GONE);
+            binding.radioCard.setVisibility(View.GONE);
+        }
+    }
+
+    private Account getAccount() {
+        return Select.from(Account.class).first();
+    }
+
+    private void init() {
+
+        account = getAccount();
+
+        accounts = new ArrayList<>();
+        binding.edtAddress.setText(Util.address);
+        binding.edtName.setText(Util.nameUser);
+
+        if (account != null)
+            binding.edtName.setText(account.getN());
+
+
+        userName = getCompany().getUser();
+        passWord = getCompany().getPass();
+
+
+        binding.radio1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                radioValue = 1;// Choose As Woman gender Or Choose As Address1
+            }
+        });
+
+
+        binding.radio2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (from.equals("PaymentFragment"))
+                    radioValue = 2;//Choose As Address2
+                else
+                    radioValue = 0;//Choose As Man Gender
+            }
+        });
+
+
+        binding.btnRegisterInformation.setOnClickListener(v -> {
+
+            if (binding.edtName.getText().toString().isEmpty()
+                    ||
+                    binding.edtAddress.getText().toString().isEmpty()
+                    ||
+                    radioValue == -1
+            ) {
+
+                Toasty.error(requireActivity(), "لطفا فیلدهای ستاره دار را پر کنید.", Toast.LENGTH_SHORT, true).show();
+                return;
+            }
+            Account acc = new Account();
+
+            //region Add Account
+            if (from.equals("VerifyFragment")) {
+                acc.setI(UUID.randomUUID().toString());
+                acc.setN(binding.edtName.getText().toString());
+                acc.setM(mobile);
+                acc.PSW = mobile;
+                acc.setAdr(binding.edtAddress.getText().toString());
+                acc.LAT = String.valueOf(Util.latitude);
+                acc.LNG = String.valueOf(Util.longitude);
+                acc.S = String.valueOf(radioValue);
+                acc.PC = binding.edtCode.getText().toString();
+                acc.STAPP = ACCSTP;
+                accountsList.clear();
+                accountsList.add(acc);
+                companyViewModel.getSetting(userName, passWord);
+            }
+            //endregion Add Account
+
+
+            //region Update Account
+            else {
+                acc.setI(account.getI());
+                acc.setN(account.getN());
+                acc.setM(account.getM());
+                acc.setAdr(account.getAdr());
+                acc.setAdr2(account.getAdr2());
+                acc.CRDT = account.CRDT > 0 ? account.CRDT : 0.0;
+                acc.LAT = account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0";
+                acc.LNG = account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0";
+                acc.LAT1 = account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0";
+                acc.LNG1 = account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0";
+
+                if (radioValue == 1) {
+                    if (from.equals("PaymentFragment"))
+                        PaymentFragment.ChooseAddress2 = false;
+
+                    acc.setAdr(binding.edtAddress.getText().toString());
+                    acc.LAT = String.valueOf(Util.latitude);
+                    acc.LNG = String.valueOf(Util.longitude);
+                } else if (radioValue == 2) {
+                    if (from.equals("PaymentFragment"))
+                        PaymentFragment.ChooseAddress2 = true;
+
+                    acc.setAdr2(binding.edtAddress.getText().toString());
+                    acc.LAT1 = String.valueOf(Util.latitude);
+                    acc.LNG1 = String.valueOf(Util.longitude);
+                }
+
+
+                accounts.clear();
+                accounts.add(acc);
+
+                binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
+                binding.btnRegisterInformation.setEnabled(false);
+
+
+                companyViewModel.updateAccount(userName, passWord, accounts);
+
+
+            }
+            //endregion Update Account
+
+
+        });
+
+
+        binding.ivBack.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
+    }
+
+
+    private void addCustomerToSerVer() {
+        Account account = Select.from(Account.class).first();
+
+        if (account != null) {
+            account.setImei(Util.getAndroidID(getActivity()));
+            account.setAppId(Util.APPLICATION_ID);
+            Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
+            ArrayList<Account> accounts = new ArrayList<>();
+            accounts.add(account);
+            jsonObjectAcc.Account = accounts;
+            mainViewModel.addAccountToServer(jsonObjectAcc);
+        }
+
+    }
+
+    private void navigate() {
+        binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
+        binding.btnRegisterInformation.setEnabled(true);
+        if (Select.from(Salein.class).first() != null) {
+            NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        } else {
+            Util.address = "";
+            Util.latitude = 0;
+            Util.longitude = 0;
+            Util.nameUser = "";
+            NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        }
+
+    }
     //endregion Method
 
 
