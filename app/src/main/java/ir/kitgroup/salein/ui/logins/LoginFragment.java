@@ -3,6 +3,7 @@ package ir.kitgroup.salein.ui.logins;
 
 import android.annotation.SuppressLint;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,12 +34,16 @@ import java.util.Objects;
 import java.util.Random;
 
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConnectToServer;
+import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 import ir.kitgroup.salein.classes.Util;
 
 import ir.kitgroup.salein.DataBase.Company;
@@ -48,16 +53,22 @@ import ir.kitgroup.salein.databinding.FragmentLoginBinding;
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
+    @Inject
+    SharedPreferences sharedPreferences;
 
-    private CompanyViewModel myViewModel;
+    @Inject
+    HostSelectionInterceptor hostSelectionInterceptor;
     private FragmentLoginBinding binding;
+
+    private CompanyViewModel companyViewModel;
     private String mobile = "";
     private int code = 0;
     private Boolean acceptRule = true;
-    private Company company;
+
+
+    private String title;
     private String userName;
     private String passWord;
-
 
 
     //region Override Method
@@ -74,17 +85,16 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-       init();
-
+        connectToServer();
+        init();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
-        myViewModel.getResultMessage().setValue(null);
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+        companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
+        companyViewModel.getResultMessage().setValue(null);
+        companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
             binding.btnLogin.setEnabled(true);
@@ -92,17 +102,17 @@ public class LoginFragment extends Fragment {
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
         });
-        myViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
             binding.btnLogin.setEnabled(true);
             if (result == null)
                 return;
-            myViewModel.getResultSmsLogin().setValue(null);
+            companyViewModel.getResultSmsLogin().setValue(null);
             if (result.equals("")) {
                 NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
-           }
+            }
 
         });
 
@@ -118,20 +128,23 @@ public class LoginFragment extends Fragment {
 
 
     @SuppressLint("SetTextI18n")
-    private void init(){
-        company = Select.from(Company.class).first();
-        userName=company.getUser();
-        passWord=company.getPass();
+    private void init() {
 
-        binding.tvWelcome.setText(" به " + company.getN() + " خوش آمدید ");
-        binding.loginTvRules.setText("با ثبت نام در " + company.getN());
+        userName = getCompany().getUser();
+        passWord = getCompany().getPass();
+        title = getCompany().getN();
+
+        binding.tvWelcome.setText(" به " + title + " خوش آمدید ");
+        binding.loginTvRules.setText("با ثبت نام در " + title);
+
 
         Picasso.get()
                 .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
-                        company.getI() + "&width=300&height=300")
+                        getCompany().getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
+
 
 
         binding.edtMobile.addTextChangedListener(new TextWatcher() {
@@ -156,6 +169,8 @@ public class LoginFragment extends Fragment {
             }
         });
 
+
+
         binding.btnLogin.setOnClickListener(v -> {
             if (acceptRule) {
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
@@ -164,7 +179,7 @@ public class LoginFragment extends Fragment {
                 binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnLogin.setEnabled(false);
                 binding.progressBar.setVisibility(View.VISIBLE);
-                myViewModel.getSmsLogin(userName,passWord, messageCode, mobile);
+                companyViewModel.getSmsLogin(userName, passWord, messageCode, mobile);
             }
         });
 
@@ -188,4 +203,19 @@ public class LoginFragment extends Fragment {
         });
     }
 
+
+    private void connectToServer() {
+        ConnectToServer connectToServer = new ConnectToServer();
+        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, true, getIp());
+    }
+
+
+    private String getIp() {
+        return "http://" + getCompany().getIp1() + "/api/REST/";
+    }
+
+
+    private Company getCompany() {
+        return Select.from(Company.class).first();
+    }
 }

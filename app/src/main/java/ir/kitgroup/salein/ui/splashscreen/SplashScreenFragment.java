@@ -73,7 +73,7 @@ public class SplashScreenFragment extends Fragment {
     private CustomDialog customDialog;
 
     private Salein salein;
-    private String IMEI="";
+    private String IMEI = "";
     private String companyGuid = "";
 
     //region Parameter
@@ -173,8 +173,7 @@ public class SplashScreenFragment extends Fragment {
                     addCustomerToSerVer();
                 }
 
-            }
-            else {
+            } else {
                 addCustomerToSerVer();
             }
             checkUpdate();
@@ -232,13 +231,11 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void initAppInfo() {
-        if (Select.from(Salein.class).list().size() == 0) {
-            ApplicationInformation applicationInformation = new ApplicationInformation();
-            PackageName packageName = new PackageName();
-            salein = applicationInformation.getInformation(packageName, getActivity());
-            if (salein.getSalein())
+        ApplicationInformation applicationInformation = new ApplicationInformation();
+        PackageName packageName = new PackageName();
+        salein = applicationInformation.getInformation(packageName, getActivity());
+        if (Select.from(Salein.class).list().size() == 0 && salein.getSalein())
             Salein.saveInTx(salein);
-        }
 
     }
 
@@ -263,7 +260,6 @@ public class SplashScreenFragment extends Fragment {
     private void initAnimation() {
         Glide.with(this).asGif().load(Uri.parse(salein.getGif_url())).into(binding.animationView);
     }
-
 
 
     private void initCustomDialog() {
@@ -326,7 +322,7 @@ public class SplashScreenFragment extends Fragment {
 
 
     private void addCustomerToSerVer() {
-        Account account=getAccount();
+        Account account = getAccount();
         if (account != null) {
             account.setImei(Util.getAndroidID(getActivity()));
             account.setAppId(Util.APPLICATION_ID);
