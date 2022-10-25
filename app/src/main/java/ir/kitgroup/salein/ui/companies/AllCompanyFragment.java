@@ -395,9 +395,6 @@ public class AllCompanyFragment extends Fragment {
 
 
 
-    public static class JsonObjectAccount {
-        public List<ir.kitgroup.salein.DataBase.Account> Account;
-    }
 
     public void setStoriesFragment(CompanyFragment storiesFragment) {
         this.storiesFragment = storiesFragment;

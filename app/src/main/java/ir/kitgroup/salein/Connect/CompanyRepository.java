@@ -11,6 +11,7 @@ import ir.kitgroup.salein.DataBase.Account;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 import ir.kitgroup.salein.ui.map.MapFragment;
 import ir.kitgroup.salein.ui.launcher.moreItem.orders.OrderListFragment;
@@ -43,10 +44,10 @@ public class CompanyRepository {
 
 
     public Observable<String> addAccount(String user,String passWord,List<Account> accounts) {
-        AllCompanyFragment.JsonObjectAccount jsonObjectAcc = new AllCompanyFragment.JsonObjectAccount();
+        Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
         jsonObjectAcc.Account = accounts;
         Gson gson1 = new Gson();
-        Type typeJsonObject = new TypeToken<AllCompanyFragment.JsonObjectAccount>() {
+        Type typeJsonObject = new TypeToken<Util.JsonObjectAccount>() {
         }.getType();
         return api.addAccount(user,passWord,gson1.toJson(jsonObjectAcc, typeJsonObject),"");
     }

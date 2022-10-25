@@ -55,7 +55,7 @@ public class MainViewModel extends ViewModel {
     public void addAccountToServer(Util.JsonObjectAccount accounts) {
 
         Gson gson = new Gson();
-        Type typeAccount = new TypeToken<AllCompanyFragment.JsonObjectAccount>() {
+        Type typeAccount = new TypeToken<Util.JsonObjectAccount>() {
         }.getType();
 
         compositeDisposable.add(

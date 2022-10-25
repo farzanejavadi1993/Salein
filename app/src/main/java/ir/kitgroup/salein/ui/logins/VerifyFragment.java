@@ -44,6 +44,7 @@ import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.AppDetail;
+import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
 
 @AndroidEntryPoint
@@ -289,6 +290,7 @@ public class VerifyFragment extends Fragment {
             accounts.add(account);
             jsonObjectAcc.Account = accounts;
             mainViewModel.addAccountToServer(jsonObjectAcc);
+
         }
 
     }
