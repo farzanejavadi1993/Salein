@@ -6,7 +6,13 @@ import android.content.pm.PackageManager;
 public class PackageName {
 
 
-    public String getPackageName(Activity activity) throws PackageManager.NameNotFoundException {
-        return activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).packageName;
+    public String getPackageName(Activity activity) {
+      String pakageName="";
+        try {
+           pakageName= activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return pakageName;
     }
 }

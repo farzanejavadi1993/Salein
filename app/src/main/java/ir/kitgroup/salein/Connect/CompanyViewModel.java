@@ -181,7 +181,7 @@ public class CompanyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (!Select.from(Salein.class).first().isSalein_main())
+                                        if (!Select.from(Salein.class).first().getSalein())
                                             compositeDisposable.dispose();
                                     }
                                 } else {

@@ -20,6 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.classes.NetWorkHelper1;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Log;
@@ -29,8 +30,10 @@ import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
+
     private final MainRepository mainRepository;
     private final SharedPreferences sharedPreferences;
+    private NetWorkHelper1 networkHelper;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
@@ -43,9 +46,10 @@ public class MainViewModel extends ViewModel {
 
 
     @Inject
-    public MainViewModel(MainRepository mainRepository, SharedPreferences sharedPreferences) {
+    public MainViewModel(MainRepository mainRepository, SharedPreferences sharedPreferences,NetWorkHelper1 networkHelper) {
         this.mainRepository = mainRepository;
         this.sharedPreferences = sharedPreferences;
+        this.networkHelper=networkHelper;
     }
 
     public void addAccountToServer(Util.JsonObjectAccount accounts) {
@@ -82,8 +86,17 @@ public class MainViewModel extends ViewModel {
                         })
                         .subscribe(
                                 resultApp::setValue,
-                                throwable ->
-                                        eMessage.setValue(new Message(-1, "خطا در دریافت آی دی آپلیکیشن", ""))));
+                                throwable ->{
+
+                                    if (!networkHelper.isNetworkConnected1())
+                                        eMessage.setValue(new Message(3, "", "خطا در اتصال اینترنت"));
+                                    else
+                                        eMessage.setValue(new Message(1, "", "خطا درارتباط با سرور "));
+
+                                }
+                        ));
+
+
     }
     public MutableLiveData<List<AppDetail>> getResultGetApp() {
         return resultApp;

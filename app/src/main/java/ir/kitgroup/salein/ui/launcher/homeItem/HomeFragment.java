@@ -281,7 +281,7 @@ public class HomeFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 if (disableAccount) {
-                    if (!appInfo.isSalein_main())
+                    if (!appInfo.getSalein())
                         getActivity().finish();
                     else
                         Navigation.findNavController(binding.getRoot()).popBackStack();
@@ -771,7 +771,7 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                if (!appInfo.isSalein_main() && update.equals("3") && !AppVersion.equals(NewVersion)) {
+                if (!appInfo.getSalein() && update.equals("3") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.GONE);
                     dialogUpdate.setCancelable(false);
@@ -779,7 +779,7 @@ public class HomeFragment extends Fragment {
                     Product.deleteAll(Product.class);
                     InvoiceDetail.deleteAll(InvoiceDetail.class);
                 }
-                else if (!appInfo.isSalein_main() &&update.equals("2") && !AppVersion.equals(NewVersion)) {
+                else if (!appInfo.getSalein() &&update.equals("2") && !AppVersion.equals(NewVersion)) {
                     textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
                     btnNo.setVisibility(View.VISIBLE);
                     dialogUpdate.setCancelable(true);

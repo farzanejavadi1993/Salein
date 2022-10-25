@@ -232,7 +232,7 @@ public class VerifyFragment extends Fragment {
 
 
                 //region Go To CompanyFragment Because Account Is Register
-                if (Select.from(Salein.class).first().isSalein_main()) {
+                if (Select.from(Salein.class).first().getSalein()) {
                     NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }

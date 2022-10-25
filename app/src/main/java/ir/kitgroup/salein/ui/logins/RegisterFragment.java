@@ -335,7 +335,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
 
                 //region  Go To CompanyFragment Because Account Is Register
-                if (Select.from(Salein.class).first().isSalein_main()) {
+                if (Select.from(Salein.class).first().getSalein()) {
                     NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }

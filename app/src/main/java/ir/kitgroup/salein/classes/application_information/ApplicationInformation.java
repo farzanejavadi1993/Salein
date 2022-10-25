@@ -1,21 +1,18 @@
 package ir.kitgroup.salein.classes.application_information;
 
 import android.app.Activity;
-import android.content.pm.PackageManager;
 
 import ir.kitgroup.salein.DataBase.Salein;
 
 
 public class ApplicationInformation {
-
-
-    public Salein getInformation(PackageName packageName , Activity activity) throws PackageManager.NameNotFoundException {
+    public Salein getInformation(PackageName packageName , Activity activity) {
 
         Salein appInfo = new Salein();
             switch (packageName.getPackageName(activity)) {
                 case "ir.kitgroup.salein":
                     appInfo.setApplication_code("12345678");
-                    appInfo.setSalein_main(true);
+                    appInfo.setSaleinApp(true);
                     break;
                 case "ir.kitgroup.saleinmeat":
                     appInfo.setApplication_code("987654");
