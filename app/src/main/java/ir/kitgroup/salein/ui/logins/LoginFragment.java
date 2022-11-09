@@ -184,8 +184,7 @@ public class LoginFragment extends Fragment {
         });
 
         binding.loginTvRules.setOnClickListener(v ->
-                {
-                    NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
+                {NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
         );

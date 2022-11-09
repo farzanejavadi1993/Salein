@@ -64,8 +64,7 @@ public interface CompanyAPI {
     @GET("SettingSync")
     Observable<String> getSetting1(@Query("userName") String userName, @Query("password") String password);
 
-    @GET("productSync")
-    Observable<String> getProduct1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
+
 
 
     @GET("GetAllInvoice")
@@ -95,10 +94,14 @@ public interface CompanyAPI {
     @GET("MaxSaleSync")
     Observable<String> getMaxSales(@Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
 
+    @GET("ProductLevel1Sync")
+    Observable<String> getProductLevel1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password);
 
     @GET("ProductLevel2Sync")
     Observable<String> getProductLevel2(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel1Uid") String productLevel1Uid);
 
+    @GET("productSync")
+    Observable<String> getProduct1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("productLevel2Uid") String productLevel2Uid);
 
 
     @GET("CustomTabSync")
@@ -108,8 +111,7 @@ public interface CompanyAPI {
     @GET("ProductCustomSync")
     Observable<JsonElement> getProductCustomSync(@Query("token") String token, @Query("userName") String userName, @Query("password") String password,@Query("tabNumber") int key);
 
-    @GET("ProductLevel1Sync")
-    Observable<String> getProductLevel1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password);
+
 
 
     @GET("ProductSearch")

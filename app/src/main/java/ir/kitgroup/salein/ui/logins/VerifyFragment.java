@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+
 
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
@@ -44,7 +46,6 @@ import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.AppDetail;
-import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
 
 @AndroidEntryPoint
@@ -120,13 +121,12 @@ public class VerifyFragment extends Fragment {
         });
 
 
+
         companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
-
             companyViewModel.getResultInquiryAccount().setValue(null);
-
             sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
             if (result.size() > 0) {
@@ -137,11 +137,9 @@ public class VerifyFragment extends Fragment {
                 binding.progressBar.setVisibility(View.GONE);
                 NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment", mobile, -1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
-
             }
-
-
         });
+
 
         mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
 
@@ -222,6 +220,7 @@ public class VerifyFragment extends Fragment {
     private void getBundle() {
         code = VerifyFragmentArgs.fromBundle(getArguments()).getCode();
         mobile = VerifyFragmentArgs.fromBundle(getArguments()).getMobile();
+
     }
 
     private void init() {
@@ -307,8 +306,6 @@ public class VerifyFragment extends Fragment {
         }
 
     }
-
-
     //endregion Method
 
 }

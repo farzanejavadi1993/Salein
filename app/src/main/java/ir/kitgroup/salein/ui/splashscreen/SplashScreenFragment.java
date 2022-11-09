@@ -156,7 +156,6 @@ public class SplashScreenFragment extends Fragment {
 
             if (result == null)
                 return;
-
             mainViewModel.getResultCustomerFromServer().setValue(null);
 
             if (result.size() > 0) {
@@ -168,11 +167,13 @@ public class SplashScreenFragment extends Fragment {
                         showError("با این تلفن نمیتوانید وارد نرم افزار شوید.");
                         return;
                     }
-                } else {
+                }
+                else {
                     addCustomerToSerVer();
                 }
+            }
 
-            } else {
+            else {
                 addCustomerToSerVer();
             }
             checkUpdate();
@@ -184,7 +185,6 @@ public class SplashScreenFragment extends Fragment {
                 return;
             mainViewModel.getResultAddAccountToServer().setValue(null);
             checkUpdate();
-
         });
 
         mainViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
@@ -224,8 +224,19 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (account != null && !messageUpdate.equals("") && !account.getVersion().equals(newVersionUpdate)) {
+        } else if (account != null  && !account.getVersion().equals(newVersionUpdate)) {
+
+            if (!messageUpdate.equals(""))
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
+
+            else  {
+                account.setVersion(appVersion);
+                account.save();
+                binding.animationView.setVisibility(View.VISIBLE);
+                mainViewModel.getCompany(companyGuid);
+            }
+
+
         } else
             mainViewModel.getCompany(companyGuid);
     }
@@ -317,8 +328,11 @@ public class SplashScreenFragment extends Fragment {
             accounts.add(account);
             jsonObjectAcc.Account = accounts;
             mainViewModel.addAccountToServer(jsonObjectAcc);
-        }
+        }else {
 
+
+
+        }
     }
 
 

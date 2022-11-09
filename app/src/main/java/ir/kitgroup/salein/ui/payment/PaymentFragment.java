@@ -49,6 +49,7 @@ import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Product;
+import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.DataBase.Company;
 
@@ -119,7 +120,7 @@ public class PaymentFragment extends Fragment {
 
 
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
-    private double sumPurePrice =0;
+    private double sumPurePrice = 0;
     private List<InvoiceDetail> invDetails;
     private String Inv_GUID;
     private Integer ViewOfPayment = 0;//If This Variable Equal 1 We Only Show On_Site Payment Card If This Variable Equal 2 We Only Show Club Pay Card If This Variable Equal 3 We Can Show Both Pay Cards
@@ -165,9 +166,9 @@ public class PaymentFragment extends Fragment {
             //region Config
             account = Select.from(Account.class).first();
             company = Select.from(Company.class).first();
-            
-            userName=company.getUser();
-            passWord=company.getPass();
+
+            userName = company.getUser();
+            passWord = company.getPass();
             customProgress = CustomProgress.getInstance();
             Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
             Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
@@ -181,7 +182,7 @@ public class PaymentFragment extends Fragment {
             dateList = new ArrayList<>();
             Date dateNow = Calendar.getInstance().getTime();
             dateChoose = dateNow;
-            sumPurePrice=0;
+            sumPurePrice = 0;
             //endregion Config
 
             //region get Bundle
@@ -273,7 +274,7 @@ public class PaymentFragment extends Fragment {
                     longitude2 = Double.parseDouble(account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0");
                     if (latitude2 == 0.0 || longitude2 == 0.0) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
-                    }else
+                    } else
                         binding.tvError.setText("");
 
                     double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
@@ -283,7 +284,7 @@ public class PaymentFragment extends Fragment {
                         dialogAddress.dismiss();
                         return;
                     } else {
-                        calculateTransport=price;
+                        calculateTransport = price;
                         if (Ord_TYPE.equals(OrderTypeApp)) {
                             sumTransport = 0;
                             binding.layoutPeyk.setVisibility(View.GONE);
@@ -309,7 +310,7 @@ public class PaymentFragment extends Fragment {
                     return;
                 }
                 dialogAddress.dismiss();
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(),-1);
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(), -1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
             //endregion Cast DialogAddress
@@ -319,21 +320,21 @@ public class PaymentFragment extends Fragment {
                 radioAddress1.setText(account.getAdr());
                 radioAddress1.setVisibility(View.VISIBLE);
                 //region If The Address Selected By The User Is Not Address 2 We Calculate Cost OfTransport
-                if (!ChooseAddress2){
-                    latitude1 = Double.parseDouble(account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT: "0.0");
+                if (!ChooseAddress2) {
+                    latitude1 = Double.parseDouble(account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0");
                     longitude1 = Double.parseDouble(account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0");
-                    if (latitude1== 0.0 || longitude1 == 0.0) {
+                    if (latitude1 == 0.0 || longitude1 == 0.0) {
                         binding.tvError.setText("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
                     }
                     double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
-                    double price = PriceTransport(distance / 1000,sumPurePrice);
+                    double price = PriceTransport(distance / 1000, sumPurePrice);
                     if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
                         dialogAddress.dismiss();
 
                         return;
                     } else {
-                        calculateTransport=price;
+                        calculateTransport = price;
                         if (Ord_TYPE.equals(OrderTypeApp)) {
                             sumTransport = 0;
                             binding.layoutPeyk.setVisibility(View.GONE);
@@ -346,8 +347,7 @@ public class PaymentFragment extends Fragment {
                     }
                 }
                 //endregion If The Address Selected By The User Is Not Address 2 We Calculate Cost OfTransport
-            }
-            else
+            } else
                 radioAddress1.setVisibility(View.GONE);
 
             if (account != null && account.getAdr2() != null && !account.getAdr2().equals("")) {
@@ -363,7 +363,7 @@ public class PaymentFragment extends Fragment {
                     }
                     double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(Double.parseDouble(company.getLat()), Double.parseDouble(company.getLong())));
                     double price = PriceTransport(distance / 1000, sumPurePrice);
-                    if (price == -1.0 ) {
+                    if (price == -1.0) {
                         binding.tvError.setText("سفارش خارج از محدوده است.");
                         dialogAddress.dismiss();
 
@@ -384,8 +384,7 @@ public class PaymentFragment extends Fragment {
                     }
                 }
                 //endregion If The Address Selected By The User Is Address 2 We Calculate Cost OfTransport
-            }
-            else
+            } else
                 radioAddress2.setVisibility(View.GONE);
 
 
@@ -394,13 +393,11 @@ public class PaymentFragment extends Fragment {
                 typeAddress = 1;
                 ValidAddress = account.getAdr();
 
-            }
-            else if (account != null && account.getAdr2() != null && !account.getAdr2().equals("")) {
+            } else if (account != null && account.getAdr2() != null && !account.getAdr2().equals("")) {
                 binding.edtAddress.setText(account.getAdr2());
                 typeAddress = 2;
                 ValidAddress = account.getAdr2();
-            }
-            else {
+            } else {
                 typeAddress = 0;
                 ValidAddress = "";
             }
@@ -414,7 +411,7 @@ public class PaymentFragment extends Fragment {
                     Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(),-1);
+                NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(), -1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });
 
@@ -587,7 +584,7 @@ public class PaymentFragment extends Fragment {
                     sumTransport = calculateTransport;
                     binding.layoutPeyk.setVisibility(View.VISIBLE);
                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
-                    binding.tvSumPurePrice.setText(format.format(sumPurePrice+ sumTransport) + "ریال");
+                    binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + "ریال");
                 }
             });
 
@@ -617,14 +614,12 @@ public class PaymentFragment extends Fragment {
                     binding.tvCredit.setText(format.format(account.CRDT - (sumPurePrice + sumTransport)));
                     typePayment = "4";
                     binding.ivOkClubPayment.setVisibility(View.VISIBLE);
-                }
-                else if (!linkPayment.equals("")) {
+                } else if (!linkPayment.equals("")) {
                     Uri uri = Uri.parse(linkPayment);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                     startActivityForResult(intent, 44);
-                }
-                else {
+                } else {
                     Toast.makeText(getActivity(), "انتقال به باشگاه مشتریان ، در حال حاضر در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
 
                 }
@@ -729,10 +724,9 @@ public class PaymentFragment extends Fragment {
                         return;
                     }
 
-                    if (sumTransport!=0)
-                    InvoiceDetail.save(invoiceDetailTransport);
-                }
-                else {
+                    if (sumTransport != 0)
+                        InvoiceDetail.save(invoiceDetailTransport);
+                } else {
                     invoiceDetailTransport.INV_UID = Inv_GUID;
                     invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                     invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(sumTransport);
@@ -771,7 +765,7 @@ public class PaymentFragment extends Fragment {
                     }
                 }
                 Invoice invoice = new Invoice();
-                invoice.INV_UID=Inv_GUID;
+                invoice.INV_UID = Inv_GUID;
                 invoice.INV_TOTAL_AMOUNT = totalPrice + sumTransport;//جمع فاکنور
                 invoice.INV_TOTAL_DISCOUNT = 0.0;
                 invoice.INV_PERCENT_DISCOUNT = sumDiscountPercent * 100;
@@ -826,10 +820,11 @@ public class PaymentFragment extends Fragment {
             btnReturned.setOnClickListener(v -> {
                 dialogSendOrder.dismiss();
 
-              int size= Navigation.findNavController(binding.getRoot()).getBackQueue().size();
-                for (int i = 0; i < size-2; i++) {
+                for (int i = 0; i < 2; i++) {
                     Navigation.findNavController(binding.getRoot()).popBackStack();
                 }
+
+
             });
             //endregion Configuration Send Order
 
@@ -955,7 +950,7 @@ public class PaymentFragment extends Fragment {
                     sumTransport = calculateTransport;
                     binding.layoutPeyk.setVisibility(View.VISIBLE);
                     binding.tvTransport.setText(format.format(sumTransport) + " ریال ");
-                    binding.tvSumPurePrice.setText(format.format(sumPurePrice+ sumTransport) + "ریال");
+                    binding.tvSumPurePrice.setText(format.format(sumPurePrice + sumTransport) + "ریال");
                 }
             }
 
@@ -1082,8 +1077,7 @@ public class PaymentFragment extends Fragment {
             if ("ir.kitgroup.saleinmeat".equals(company.getInskId())) {
                 if (0 < distance && distance <= 1) {
                     priceTransport = 50000;
-                }else
-                {
+                } else {
                     priceTransport = 150000;
                 }
                /* if (SumPurePrice > 2000000) {

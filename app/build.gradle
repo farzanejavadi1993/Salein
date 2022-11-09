@@ -69,11 +69,13 @@ configurations.all {
     }
 }
 dependencies {
+
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/commons-collections4-4.4.jar')
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
     //noinspection GradleCompatible,GradleCompatible
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //noinspection GradleCompatibl
