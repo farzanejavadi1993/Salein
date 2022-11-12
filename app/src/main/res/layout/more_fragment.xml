@@ -71,7 +71,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/profile"
+                    app:srcCompat="@drawable/profile"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +82,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -137,7 +137,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/basketbuy"
+                    app:srcCompat="@drawable/basketbuy"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -148,7 +148,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -205,7 +205,7 @@
                         android:layout_centerVertical="true"
                         android:id="@+id/credit"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_cradit"
+                        app:srcCompat="@drawable/ic_cradit"
                         android:layout_width="24dp"
                         android:layout_height="24dp"/>
 
@@ -237,7 +237,7 @@
                         android:layout_centerVertical="true"
                         android:id="@+id/share"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_share"
+                        app:srcCompat="@drawable/ic_share"
                         android:layout_width="24dp"
                         android:layout_height="24dp"/>
                     <TextView
@@ -270,7 +270,7 @@
                         android:layout_height="24dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_support" />
+                        app:srcCompat="@drawable/ic_support" />
                     <TextView
                         android:layout_centerVertical="true"
                         android:text="تماس با ما"
@@ -298,7 +298,7 @@
                         android:layout_centerVertical="true"
                         android:id="@+id/aboutUs"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_aboout_us"
+                        app:srcCompat="@drawable/ic_aboout_us"
                         android:layout_width="24dp"
                         android:layout_height="24dp"/>
                     <TextView

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,9 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.Task;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +42,7 @@ import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Company;
-import ir.kitgroup.salein.classes.HostSelectionInterceptor;
+import ir.kitgroup.salein.classes.AppSMSBroadcastReceiver;
 import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.salein.R;
@@ -55,12 +57,11 @@ public class VerifyFragment extends Fragment {
     @Inject
     SharedPreferences sharedPreferences;
 
-    @Inject
-    HostSelectionInterceptor hostSelectionInterceptor;
+    private FragmentVerifyBinding binding;
+
 
     private CompanyViewModel companyViewModel;
     private MainViewModel mainViewModel;
-    private FragmentVerifyBinding binding;
 
 
     private String userName;
@@ -68,6 +69,8 @@ public class VerifyFragment extends Fragment {
     private int code;
     private String mobile;
 
+
+    private Company company;
     private CountDownTimer countDownTimer;
     private boolean resendCode = false;
     private long timer_left = 180000;
@@ -90,6 +93,7 @@ public class VerifyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getBundle();
+        getCodeFromSms();
         init();
         startTimer();
     }
@@ -121,7 +125,6 @@ public class VerifyFragment extends Fragment {
         });
 
 
-
         companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
@@ -139,7 +142,6 @@ public class VerifyFragment extends Fragment {
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
         });
-
 
         mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
 
@@ -164,8 +166,6 @@ public class VerifyFragment extends Fragment {
             }
 
             //endregion Information Account From Server
-
-
         });
 
         mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
@@ -209,8 +209,8 @@ public class VerifyFragment extends Fragment {
     private void updateTimerText() {
         int minutes = (int) (timer_left / 1000) / 60;
         int seconds = (int) (timer_left / 1000) % 60;
-        String timeLeftFormated = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-        binding.tvTimer.setText("دریافت مجدد کد تایید تا " + timeLeftFormated);
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        binding.tvTimer.setText("دریافت مجدد کد تایید تا " + timeLeftFormatted);
     }
 
     private Company getCompany() {
@@ -220,17 +220,18 @@ public class VerifyFragment extends Fragment {
     private void getBundle() {
         code = VerifyFragmentArgs.fromBundle(getArguments()).getCode();
         mobile = VerifyFragmentArgs.fromBundle(getArguments()).getMobile();
-
     }
 
+    @SuppressLint("SetTextI18n")
     private void init() {
-        userName = getCompany().getUser();
-        passWord = getCompany().getPass();
+        company=getCompany();
+        userName = company.getUser();
+        passWord = company.getPass();
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
 
         Picasso.get()
                 .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
-                        getCompany().getI() + "&width=300&height=300")
+                        company.getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
@@ -245,14 +246,16 @@ public class VerifyFragment extends Fragment {
 
             @Override
             public void onOTPComplete(String otp) {
+
                 if (Integer.parseInt(otp) == code) {
                     binding.otpView.showSuccess();
                     binding.otpView.setEnabled(false);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     companyViewModel.getInquiryAccount(userName, passWord, mobile);
-
-                } else {
+                }
+                else {
                     binding.otpView.showError();
+                    binding.otpView.resetState();
                     binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
                     binding.tvEnterCode.setText("کد وارد شده اشتباه است.");
                 }
@@ -275,7 +278,6 @@ public class VerifyFragment extends Fragment {
 
             }
         });
-
     }
 
     private void addCustomerToSerVer() {
@@ -305,6 +307,38 @@ public class VerifyFragment extends Fragment {
 
         }
 
+    }
+
+    private void getCodeFromSms() {
+        try {
+            smsListener();
+            initBroadCast();
+        } catch (Exception ignored) {}
+
+    }
+
+    private void initBroadCast() {
+
+        AppSMSBroadcastReceiver appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
+        appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
+            binding.otpView.setOTP(code);
+//            new android.os.Handler(Looper.getMainLooper()).postDelayed(
+//                    () ->
+//                            binding.btnEnter.performClick(),
+//                    600);
+        });
+    }
+
+    private void smsListener() {
+
+        SmsRetrieverClient client = SmsRetriever.getClient(getContext());
+        Task<Void> task = client.startSmsRetriever();
+
+        task.addOnSuccessListener(aVoid -> {
+        });
+
+        task.addOnFailureListener(e -> {
+        });
     }
     //endregion Method
 

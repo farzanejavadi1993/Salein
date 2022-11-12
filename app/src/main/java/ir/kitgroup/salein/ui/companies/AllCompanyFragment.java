@@ -40,8 +40,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
+import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.classes.Util;
+import ir.kitgroup.salein.classes.ConnectToServer;
+
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
@@ -59,7 +61,9 @@ public class AllCompanyFragment extends Fragment {
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
 
-    private CompanyViewModel myViewModel;
+    private ConnectToServer connectToServer;
+    private CompanyViewModel companyViewModel;
+    private MainViewModel mainViewModel;
     private FragmentAllCompanyBinding binding;
 
     private Company companyDemo;
@@ -76,8 +80,9 @@ public class AllCompanyFragment extends Fragment {
     private int INDX;
     private String NAME;
 
+    private int pageMain = 1;
 
-    private boolean ACCSTP=false;
+    private boolean ACCSTP = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -93,39 +98,36 @@ public class AllCompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        //region Config
-        sharedPreferences.edit().putBoolean("status", false).apply();
-        hostSelectionInterceptor.setHostBaseUrl();
-        //endregion Config
+        connectToServer = new ConnectToServer();
 
         //region Config RecyclerView
         companies = new ArrayList<>();
         companyAdapterList = new CompanyAdapterList(companies, 2);
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(companyAdapterList);
+
         companyAdapterList.setOnClickItemListener((company, parent, index, delete) ->
         {
 
-            account.STAPP=false;
+            account.STAPP = false;
             //region Get Child From This Parent
             if (parent) {
-                sharedPreferences.edit().putBoolean("status", false).apply();
-                hostSelectionInterceptor.setHostBaseUrl();
                 this.INDX = index;
                 this.DLT = delete;
                 binding.progressbar.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.VISIBLE);
-                myViewModel.getAllCompany(company.getI());
+                mainViewModel.getAllCompany(company.getI(), pageMain);
                 ParentId = company.getI();
-
                 return;
             }
             //endregion Get Child From This Parent
 
+
+
             //region Enter To Home Fragment
-            Util.PRODUCTION_BASE_URL = "http://" + company.getIp1() + "/api/REST/";
-            sharedPreferences.edit().putBoolean("status", true).apply();
-            hostSelectionInterceptor.setHostBaseUrl();
+            String url = "http://" + company.getIp1() + "/api/REST/";
+            connectToServer.connect(sharedPreferences, hostSelectionInterceptor, true, url);
             companySelect = company;
 
             //region If User Login To Company Selected
@@ -135,50 +137,41 @@ public class AllCompanyFragment extends Fragment {
                 Company.saveInTx(company);
                 NavDirections action;
                 if (!ParentId.equals("")) {
-
                     action = AllCompanyFragmentDirections.actionGoToHomeFragment("");
-                }
-                else
-                    action= CompanyFragmentDirections.actionGoToHomeFragment("");
+                } else
+                    action = CompanyFragmentDirections.actionGoToHomeFragment("");
 
 
                 if (!parent)
-                    ParentId="";
+                    ParentId = "";
 
                 Navigation.findNavController(binding.getRoot()).navigate(action);
-
-
-
             }
             //endregion If User Login To Company Selected
-
 
 
             //region If User Is Not Login To Company Selected
             else {
                 if (!parent)
-                    ParentId="";
+                    ParentId = "";
                 binding.progressbar.setVisibility(View.VISIBLE);
                 NAME = companySelect.getN();
-                myViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
+                companyViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
             }
             //endregion If User Is Not Login To Company Selected
-
 
 
             //endregion Enter To Home Fragment
         });
         //endregion Config RecyclerView
 
+
         //region Go To SaleinDemo
         if (storiesFragment != null) {
             storiesFragment.binding.tvDemo.setOnClickListener(v -> {
-
                 binding.progressbar.setVisibility(View.VISIBLE);
                 companySelect = companyDemo;
 
-                sharedPreferences.edit().putBoolean("status", false).apply();
-                hostSelectionInterceptor.setHostBaseUrl();
 
                 String nameSave = sharedPreferences.getString(companyDemo.getN(), "");
 
@@ -190,11 +183,10 @@ public class AllCompanyFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 } else {
                     NAME = companyDemo.getN();
-                    myViewModel.getInquiryAccount(companyDemo.getUser(), companyDemo.getPass(), account.getM());
+                    companyViewModel.getInquiryAccount(companyDemo.getUser(), companyDemo.getPass(), account.getM());
                 }
             });
         }
-
 
 
         //endregion Go To SaleinDemo
@@ -213,7 +205,7 @@ public class AllCompanyFragment extends Fragment {
             dialog.dismiss();
 
             binding.progressbar.setVisibility(View.VISIBLE);
-            myViewModel.getSetting(companySelect.getUser(), companySelect.getPass());
+            companyViewModel.getSetting(companySelect.getUser(), companySelect.getPass());
         });
         //endregion Cast Dialog
 
@@ -229,46 +221,54 @@ public class AllCompanyFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        myViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(CompanyViewModel.class);
+        companyViewModel = new ViewModelProvider(getActivity()).get(CompanyViewModel.class);
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
 
         try {
 
             ParentId = AllCompanyFragmentArgs.fromBundle(getArguments()).getParentId();
+
             if (!ParentId.equals("")) {
                 binding.toolbar.setVisibility(View.VISIBLE);
                 binding.mainLayout.setRotationY(0);
                 this.INDX = -1;
                 this.DLT = false;
                 binding.progressbar.setVisibility(View.VISIBLE);
-                myViewModel.getAllCompany(ParentId);
+                mainViewModel.getAllCompany(ParentId, pageMain);
 
             }
-        } catch (Exception ignored) {
 
+        } catch (Exception ignored) {
             this.INDX = 0;
             this.DLT = false;
             binding.progressbar.setVisibility(View.VISIBLE);
-            myViewModel.getAllCompany("");
+            mainViewModel.getAllCompany("", pageMain);
         }
 
-        myViewModel.getResultMessage().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+
+        companyViewModel.getResultMessage().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null) return;
-            myViewModel.getResultMessage().setValue(null);
+            companyViewModel.getResultMessage().setValue(null);
             Toasty.warning(getActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
-        myViewModel.getResultAllCompany().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+        mainViewModel.getResultMessage().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+            binding.progressbar.setVisibility(View.GONE);
+            if (result == null) return;
+            mainViewModel.getResultMessage().setValue(null);
+            Toasty.warning(getActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
+        mainViewModel.getResultAllCompany().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultAllCompany().setValue(null);
+            mainViewModel.getResultAllCompany().setValue(null);
 
 
             if (result.size() > 0) {
-            /*   Util.PRODUCTION_BASE_URL = "http://" + Select.from(Company.class).first().getIp1() + "/api/REST/";
-                sharedPreferences.edit().putBoolean("status", true).apply();
-                hostSelectionInterceptor.setHostBaseUrl();*/
+
 
                 //regionGet All Company
                 if (ParentId.equals("")) {
@@ -307,7 +307,7 @@ public class AllCompanyFragment extends Fragment {
 
                     //endregion Filter Demo Company
 
-                    String companyId=sharedPreferences.getString("companyId","");
+                    String companyId = sharedPreferences.getString("companyId", "");
                     if (!companyId.equals("")) {
                         CollectionUtils.filter(result, r -> r.getI().contains(companyId));
                         sharedPreferences.edit().putString("companyId", "").apply();
@@ -315,7 +315,6 @@ public class AllCompanyFragment extends Fragment {
                     companies.addAll(result);
                 }
                 //endregionGet All Company
-
 
 
                 //region Get Child Company
@@ -338,11 +337,11 @@ public class AllCompanyFragment extends Fragment {
             }
         });
 
-        myViewModel.getResultInquiryAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultInquiryAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultInquiryAccount().setValue(null);
+            companyViewModel.getResultInquiryAccount().setValue(null);
             //user is register
             if (result.size() > 0) {
 
@@ -363,11 +362,10 @@ public class AllCompanyFragment extends Fragment {
             }
         });
 
-
-        myViewModel.getResultSetting().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultSetting().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
-            myViewModel.getResultSetting().setValue(null);
+            companyViewModel.getResultSetting().setValue(null);
             List<Setting> settingsList = new ArrayList<>(result);
             if (settingsList.size() > 0) {
                 String accStp = settingsList.get(0).ACC_STATUS_APP;
@@ -375,25 +373,23 @@ public class AllCompanyFragment extends Fragment {
                 account.STAPP = ACCSTP;
                 ArrayList<Account> AccList = new ArrayList<>();
                 AccList.add(account);
-                myViewModel.addAccount(companySelect.getUser(),companySelect.getPass(),AccList);
+                companyViewModel.addAccount(companySelect.getUser(), companySelect.getPass(), AccList);
             }
 
 
         });
 
-        myViewModel.getResultAddAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
+        companyViewModel.getResultAddAccount().observe(storiesFragment.getViewLifecycleOwner(), result -> {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
-            myViewModel.getResultAddAccount().setValue(null);
+            companyViewModel.getResultAddAccount().setValue(null);
             Company.deleteAll(Company.class);
             Company.saveInTx(companySelect);
             NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
     }
-
-
 
 
     public void setStoriesFragment(CompanyFragment storiesFragment) {
@@ -405,5 +401,6 @@ public class AllCompanyFragment extends Fragment {
         super.onDestroyView();
 
     }
+
 
 }

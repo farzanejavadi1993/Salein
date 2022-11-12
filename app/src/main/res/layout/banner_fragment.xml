@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:clickable="true"
@@ -32,7 +32,7 @@
                 android:layout_height="@dimen/passenger_icon_empty_page"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/passenger_icon_empty_page_top_margin"
-                android:src="@drawable/ic_not_found"
+                app:srcCompat="@drawable/ic_not_found"
                 tools:ignore="ContentDescription" />
 
             <TextView

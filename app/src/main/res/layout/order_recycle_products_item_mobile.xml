@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_home"
@@ -49,7 +47,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:rotationY="180"
-                android:src="@drawable/ic_discount" />
+                app:srcCompat="@drawable/ic_discount" />
 
             <TextView
                 android:id="@+id/order_recycle_item_product_discountPercent"

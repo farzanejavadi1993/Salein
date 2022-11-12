@@ -25,4 +25,8 @@ public interface MainApi {
 
    @GET("GetCustomerFromServer")
     Observable<List<Account>> getCustomerFromServer(@Query("mobile") String mobile);
+
+
+    @GET("GetAccount")
+    Observable<String> getAllCompany(@Query("parentAccountId") String parentAccountId ,@Query("appType") int appType ,@Query("page") int page);
 }

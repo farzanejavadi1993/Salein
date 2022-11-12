@@ -31,7 +31,7 @@
                 android:padding="8dp"
                 android:rotationY="180"
                 app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
-                tools:ignore="ContentDescription" />
+         />
 
             <TextView
 
@@ -251,7 +251,7 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/profile"
+                    app:srcCompat="@drawable/profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

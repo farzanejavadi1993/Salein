@@ -33,9 +33,7 @@ public class CompanyRepository {
     }
 
 
-    public Observable<String> getAllCompany(String parentAccountId) {
-        return api.getAllCompany(parentAccountId);
-    }
+
 
 
     public Observable<String> getInquiryAccount(String user,String passWord,String mobile) {

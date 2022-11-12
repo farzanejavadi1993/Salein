@@ -78,7 +78,7 @@
     <string name="choose_address">انتخاب آدرس</string>
     <string name="title_address">عنوان آدرس</string>
     <string name="detail_address">جزییات آدرس</string>
-    <string name="type_order">نوع سفارش</string>
+    <string name="type_order">نحوه تحویل سفارش</string>
 
 
     <string name="api_key">AIzaSyBtqQBKEW7fvUihpkqdPtoK4i39-WZGxRw</string>

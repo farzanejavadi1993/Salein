@@ -25,6 +25,7 @@ import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Log;
 import ir.kitgroup.salein.models.Message;
+import ir.kitgroup.salein.models.ModelCompany;
 import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
 
@@ -35,6 +36,7 @@ public class MainViewModel extends ViewModel {
     private final SharedPreferences sharedPreferences;
     private NetWorkHelper1 networkHelper;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final MutableLiveData<List<Company>> resultAllCompany = new MutableLiveData<>();
 
 
     private final MutableLiveData<List<Company>> resultCompany = new MutableLiveData<>();
@@ -143,6 +145,38 @@ public class MainViewModel extends ViewModel {
 
     public MutableLiveData<Message> getResultMessage() {
         return eMessage;
+    }
+
+
+
+    public void getAllCompany(String parentAccountId,int page) {
+        compositeDisposable.add(
+                mainRepository.getAllCompany(parentAccountId,page)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> {
+                        })
+                        .subscribe(jsonElement -> {
+                            Gson gson = new Gson();
+                            Type typeIDs = new TypeToken<ModelCompany>() {
+                            }.getType();
+                            try {
+                                ModelCompany iDs = gson.fromJson(jsonElement, typeIDs);
+                                if (iDs != null && iDs.getCompany() != null) {
+                                    resultAllCompany.setValue(iDs.getCompany());
+
+                                } else {
+                                    eMessage.setValue(new Message(-1, "خطا در ارتباط با سرور ، دوباره سعی کنید.", ""));
+                                }
+                            } catch (Exception ignored) {
+                            }
+
+                        }, throwable ->
+                                eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))));
+    }
+
+    public MutableLiveData<List<Company>> getResultAllCompany() {
+        return resultAllCompany;
     }
 
 }

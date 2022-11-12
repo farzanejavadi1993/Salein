@@ -118,8 +118,6 @@ public interface CompanyAPI {
     Observable<String> getSearchProduct(@Query("token") String token,@Query("userName") String userName, @Query("password") String password, @Query("word") String word);
 
 
-    @GET("GetAccount")
-    Observable<String> getAllCompany(@Query("parentAccountId") String parentAccountId);
 
 
     @GET("ProductDiscountSync")

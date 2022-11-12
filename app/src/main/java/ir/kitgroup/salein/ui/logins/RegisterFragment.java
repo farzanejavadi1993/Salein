@@ -75,11 +75,12 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     //region Variable
     private CompanyViewModel companyViewModel;
     private MainViewModel mainViewModel;
+
     private RegisterFragmentBinding binding;
 
     private String userName;
     private String passWord;
-    private final List<Account> accountsList = new ArrayList<>();
+    private List<Account> accountsList;
 
     private Account account;
     private int radioValue;
@@ -108,6 +109,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         initMap(savedInstanceState);
         getBundle();
         setDataBundle();
@@ -440,7 +442,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private void initMap(Bundle savedInstanceState) {
         try {
             binding.mapView.onCreate(savedInstanceState);
-
         } catch (Exception ignore) {
         }
 
@@ -486,8 +487,9 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             this.mapboxMap.addOnMapClickListener(point -> {
                 Util.nameUser = binding.edtName.getText().toString();
                 Util.address = binding.edtAddress.getText().toString();
-                NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+                Navigation.findNavController(binding.getRoot()).popBackStack();
+              /*  NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
+                Navigation.findNavController(binding.getRoot()).navigate(action);*/
                 return false;
             });
 
@@ -520,7 +522,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     }
 
     private void init() {
-
+        accountsList = new ArrayList<>();
         account = getAccount();
 
         accounts = new ArrayList<>();

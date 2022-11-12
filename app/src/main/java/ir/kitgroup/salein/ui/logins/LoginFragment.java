@@ -58,6 +58,7 @@ public class LoginFragment extends Fragment {
 
     @Inject
     HostSelectionInterceptor hostSelectionInterceptor;
+
     private FragmentLoginBinding binding;
 
     private CompanyViewModel companyViewModel;
@@ -66,9 +67,11 @@ public class LoginFragment extends Fragment {
     private Boolean acceptRule = true;
 
 
-    private String title;
     private String userName;
     private String passWord;
+
+
+    private Company company;
 
 
     //region Override Method
@@ -85,13 +88,15 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        connectToServer();
         init();
+        connectToServer();
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         companyViewModel.getResultMessage().setValue(null);
         companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
@@ -102,6 +107,8 @@ public class LoginFragment extends Fragment {
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
 
         });
+
+
         companyViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setBackgroundResource(R.drawable.bottom_background);
@@ -113,7 +120,6 @@ public class LoginFragment extends Fragment {
                 NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
-
         });
 
     }
@@ -130,9 +136,10 @@ public class LoginFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void init() {
 
-        userName = getCompany().getUser();
-        passWord = getCompany().getPass();
-        title = getCompany().getN();
+        company=getCompany();
+        userName = company.getUser();
+        passWord = company.getPass();
+        String title = company.getN();
 
         binding.tvWelcome.setText(" به " + title + " خوش آمدید ");
         binding.loginTvRules.setText("با ثبت نام در " + title);
@@ -140,7 +147,7 @@ public class LoginFragment extends Fragment {
 
         Picasso.get()
                 .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
-                        getCompany().getI() + "&width=300&height=300")
+                       company.getI() + "&width=300&height=300")
                 .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.imageLogo);
@@ -168,6 +175,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+
 
 
 
@@ -210,7 +218,7 @@ public class LoginFragment extends Fragment {
 
 
     private String getIp() {
-        return "http://" + getCompany().getIp1() + "/api/REST/";
+        return "http://" + company.getIp1() + "/api/REST/";
     }
 
 

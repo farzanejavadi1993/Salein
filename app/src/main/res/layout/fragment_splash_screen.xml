@@ -32,9 +32,8 @@
                     android:layout_height="180dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/warning"
-
-                    app:lottie_autoPlay="true" />
+                    app:srcCompat="@drawable/warning"
+                     />
 
                 <RelativeLayout
                     android:id="@+id/btn_Error"

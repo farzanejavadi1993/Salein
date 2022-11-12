@@ -35,4 +35,8 @@ public class MainRepository {
     public Observable<List<Company>> getCompany(String id) {
         return api.getCompany(id);
     }
+
+    public Observable<String> getAllCompany(String parentAccountId,int page) {
+        return api.getAllCompany(parentAccountId,1,page);
+    }
 }

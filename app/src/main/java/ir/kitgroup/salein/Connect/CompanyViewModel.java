@@ -115,35 +115,7 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void getAllCompany(String parentAccountId) {
-        compositeDisposable.add(
-                myRepository.getAllCompany(parentAccountId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> {
-                        })
-                        .subscribe(jsonElement -> {
-                            Gson gson = new Gson();
-                            Type typeIDs = new TypeToken<ModelCompany>() {
-                            }.getType();
-                            try {
-                                ModelCompany iDs = gson.fromJson(jsonElement, typeIDs);
-                                if (iDs != null && iDs.getCompany() != null) {
-                                    resultAllCompany.setValue(iDs.getCompany());
 
-                                } else {
-                                    eMessage.setValue(new Message(-1, "خطا در ارتباط با سرور ، دوباره سعی کنید.", ""));
-                                }
-                            } catch (Exception ignored) {
-                            }
-
-                        }, throwable ->
-                                eMessage.setValue(new Message(-1, "خطا در دریافت اطلاعات شرکت", ""))));
-    }
-
-    public MutableLiveData<List<Company>> getResultAllCompany() {
-        return resultAllCompany;
-    }
 
 
 

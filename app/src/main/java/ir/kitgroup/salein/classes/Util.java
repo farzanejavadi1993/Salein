@@ -32,11 +32,12 @@ public class Util {
     public static double width = 0.0;
     public static double height = 0.0;
     public static double screenSize = 0.0;
-  public static String Main_URL ="http://api.kitgroup.ir/api/REST/";
-   public static String Main_Url_IMAGE ="http://api.kitgroup.ir";
+//  public static String Main_URL ="http://api.kitgroup.ir/api/REST/";
+//   public static String Main_Url_IMAGE ="http://api.kitgroup.ir";
 
-//  public static String DEVELOPMENT_BASE_URL="http://192.168.20.33:90/api/REST/";
-//    public static String DEVELOPMENT_BASE_URL_Img="http://192.168.20.33:90";
+  public static String Main_URL="http://192.168.20.63:2022/api/REST/";
+    public static String Main_Url_IMAGE="http://192.168.20.63:2022";
+
     public static String APPLICATION_CODE="12345678";
     public static String APPLICATION_ID="";
     public static String PRODUCTION_BASE_URL="";
