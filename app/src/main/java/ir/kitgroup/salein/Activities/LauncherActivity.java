@@ -80,7 +80,7 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         // if (sharedPreferences.getBoolean("loginSuccess", false))
-        finish();
+       // finish();
     }
     //endregion Override Method
 

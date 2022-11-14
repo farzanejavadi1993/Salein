@@ -86,16 +86,19 @@ public class HomeFragment extends Fragment {
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
+
     @Inject
     CompanyAPI api;
+
     private HomeFragmentBinding binding;
+
     private CompanyViewModel myViewModel;
+
     private Company company;
     private String userName;
     private String passWord;
 
     private CustomProgress customProgress;
-
 
     private ArrayList<ProductLevel1> productLevel1List;
     private ProductLevel1Adapter productLevel1Adapter;
@@ -109,12 +112,12 @@ public class HomeFragment extends Fragment {
     private CustomTabAdapter customTabAdapter;
 
 
-    private ArrayList<ir.kitgroup.salein.models.Product> productListData;//All Product
-    private ArrayList<ir.kitgroup.salein.models.Product> productList;//Filter Of All Product
+    private ArrayList<ir.kitgroup.salein.models.Product> productListData;
+    private ArrayList<ir.kitgroup.salein.models.Product> productList;
     private ProductAdapter productAdapter;
 
 
-    private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
+    private ArrayList<String> closeDayList;
 
 
     //region Variable Pager For ProductList
@@ -185,9 +188,8 @@ public class HomeFragment extends Fragment {
 
             sharedPreferences.edit().putBoolean("vip", false).apply();
             sharedPreferences.edit().putBoolean("discount", false).apply();
-
-
             Inv_GUID="";
+
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             Product.deleteAll(Product.class);
 
@@ -664,7 +666,7 @@ public class HomeFragment extends Fragment {
             });
 
             binding.btnCompanyBranches.setOnClickListener(view1 -> {
-                if (company.Parent!=null) {
+                if (!company.getPi().equals("")) {
                     NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }

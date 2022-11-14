@@ -69,9 +69,10 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
             holder.view.setVisibility(View.VISIBLE);
 
 
-        if (!company.getPi().equals("")) {
+        if (!company.getPi().equals(""))
             holder.cardSalein.setBackgroundResource(R.color.launcher_linear_order_header_color);
-        }
+        else
+            holder.cardSalein.setBackgroundResource(R.color.white);
 
 
         holder.cardSalein.requestLayout();

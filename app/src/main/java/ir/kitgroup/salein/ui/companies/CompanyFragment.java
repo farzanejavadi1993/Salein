@@ -50,7 +50,7 @@ public class CompanyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
        AllCompanyFragment companyFragment = new AllCompanyFragment();
-       companyFragment.setStoriesFragment(this);
+       companyFragment.setCompanyFragment(this);
 
 
 

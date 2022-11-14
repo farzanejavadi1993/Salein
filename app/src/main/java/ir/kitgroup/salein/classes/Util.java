@@ -32,24 +32,22 @@ public class Util {
     public static double width = 0.0;
     public static double height = 0.0;
     public static double screenSize = 0.0;
-//  public static String Main_URL ="http://api.kitgroup.ir/api/REST/";
-//   public static String Main_Url_IMAGE ="http://api.kitgroup.ir";
+   /* public static String Main_URL = "http://api.kitgroup.ir/api/REST/";
+    public static String Main_Url_IMAGE = "http://api.kitgroup.ir";*/
 
   public static String Main_URL="http://192.168.20.63:2022/api/REST/";
     public static String Main_Url_IMAGE="http://192.168.20.63:2022";
 
-    public static String APPLICATION_CODE="12345678";
-    public static String APPLICATION_ID="";
-    public static String PRODUCTION_BASE_URL="";
-    public static double latitude =  0;
+    public static String APPLICATION_CODE = "12345678";
+    public static String APPLICATION_ID = "";
+    public static String PRODUCTION_BASE_URL = "";
+    public static double latitude = 0;
     public static double longitude = 0;
     public static final String MARKERS_SOURCE = "markers-source";
     public static final String MARKERS_LAYER = "markers-layer";
     public static final String MARKER_ICON_ID = "marker-icon-id";
-    public static  String address = "";
+    public static String address = "";
     public static String nameUser = "";
-
-
 
 
     public static void ScreenSize(Activity activity) {
@@ -61,7 +59,7 @@ public class Util {
             height = dm.heightPixels;
             double x = Math.pow(width / dm.xdpi, 2);
             double y = Math.pow(height / dm.ydpi, 2);
-            screenSize=Math.sqrt(x + y);
+            screenSize = Math.sqrt(x + y);
         }
     }
 
@@ -141,7 +139,7 @@ public class Util {
         return cal.getTime();
     }
 
-    public  static  String getPackageName(Activity activity) {
+    public static String getPackageName(Activity activity) {
         String packageName = "";
         try {
             PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
