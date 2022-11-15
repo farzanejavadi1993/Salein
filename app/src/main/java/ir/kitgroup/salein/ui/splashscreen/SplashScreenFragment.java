@@ -245,7 +245,7 @@ public class SplashScreenFragment extends Fragment {
         ApplicationInformation applicationInformation = new ApplicationInformation();
         PackageName packageName = new PackageName();
         salein = applicationInformation.getInformation(packageName, getActivity());
-        if (Select.from(Salein.class).first() ==null && salein.getSalein())
+        if (Select.from(Salein.class).first() ==null)
             Salein.saveInTx(salein);
 
     }
@@ -298,7 +298,7 @@ public class SplashScreenFragment extends Fragment {
     private void navigate() {
 
         if (account != null) {
-            if (Select.from(Salein.class).first()!=null)
+            if (Select.from(Salein.class).first().getSalein())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
             else {
                 NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");

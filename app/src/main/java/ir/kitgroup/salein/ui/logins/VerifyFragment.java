@@ -298,7 +298,7 @@ public class VerifyFragment extends Fragment {
 
     private void navigate() {
         binding.progressBar.setVisibility(View.GONE);
-        if (Select.from(Salein.class).first() != null) {
+        if (Select.from(Salein.class).first().getSalein()) {
             NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {

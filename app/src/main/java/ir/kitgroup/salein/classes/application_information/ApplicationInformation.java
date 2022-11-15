@@ -12,6 +12,7 @@ public class ApplicationInformation {
             switch (packageName.getPackageName(activity)) {
                 case "ir.kitgroup.salein":
                     appInfo.setApplication_code("12345678");
+                    appInfo.setGif_url("file:///android_asset/loading.json");
                     appInfo.setSaleinApp(true);
                     break;
                 case "ir.kitgroup.saleinmeat":
@@ -20,6 +21,7 @@ public class ApplicationInformation {
                     break;
                 case "ir.kitgroup.saleinjam":
                     appInfo.setApplication_code("1116");
+                    appInfo.setGif_url("file:///android_asset/loading.json");
                     break;
             }
             return appInfo;

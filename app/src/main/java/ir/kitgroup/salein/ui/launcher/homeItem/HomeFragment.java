@@ -4,7 +4,6 @@ package ir.kitgroup.salein.ui.launcher.homeItem;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -153,7 +152,7 @@ public class HomeFragment extends Fragment {
 
     public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
-    private Salein appInfo;
+    private Salein salein;
 
 
     //endregion Parameter
@@ -175,469 +174,20 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            //region Config
+        init();
+        initGetBundle();
+        initSetDataFromBundle();
+        initSetAnimation();
+        initCastDialogSync();
+        initCastDialogDescription();
+        initRecyclerViewProductLevel1();
+        initRecyclerViewProductLevel2();
+        initRecyclerViewCustomTab();
+        initRecyclerViewProduct();
+        initFirstValueOfVariable();
+        initGetInVoiceById();
 
-            sharedPreferences.edit().putBoolean("vip", false).apply();
-            sharedPreferences.edit().putBoolean("discount", false).apply();
-            Inv_GUID = "";
 
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            Product.deleteAll(Product.class);
-
-            customProgress = CustomProgress.getInstance();
-            sharedPreferences.edit().putString("FNM", "main").apply();
-            Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-            binding.ivFilter.setImageResource(R.drawable.ic_filter);
-            company = Select.from(Company.class).first();
-            userName = company.getUser();
-            passWord = company.getPass();
-            appInfo = Select.from(Salein.class).first();
-            //endregion Config
-
-
-            //region Create Order
-
-            try {
-                Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
-                getArguments().clear();
-            } catch (Exception ignored) {
-                Inv_GUID = "";
-            }
-
-            if (Inv_GUID.equals("")) {
-                ((LauncherActivity) getActivity()).setShowProfileItem(true);
-                String name = company.getInskId().split("ir.kitgroup.")[1];
-                Inv_GUID = sharedPreferences.getString(name, "");
-
-                if (Inv_GUID.equals("")) {
-                    Inv_GUID = UUID.randomUUID().toString();
-                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
-                }
-            } else {
-                ((LauncherActivity) getActivity()).setShowProfileItem(false);
-            }
-
-            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
-
-            //endregion Create Order
-
-
-            //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
-            if (Util.getPackageName(getActivity()).contains("meat"))
-                Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
-            //endregion Set Animation Instead Of ProgressBar By Using PackageName In special cases
-
-            //region First Value Parameter
-            counter = 0;
-            productLevel1List = new ArrayList<>();
-            productLevel2List = new ArrayList<>();
-            customTabList = new ArrayList<>();
-            productList = new ArrayList<>();
-            productListData = new ArrayList<>();
-            descriptionList = new ArrayList<>();
-            closeDayList = new ArrayList<>();
-            //endregion First Value Parameter
-
-            //region Get Invoice By Guid Of Order Form
-            Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
-            List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            if (invDetailses.size() > 0) {
-                CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
-                counter = invDetailses.size();
-            }
-
-
-            if (counter == 0)
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
-            else
-                ((LauncherActivity) getActivity()).setCounterOrder(counter);
-            //endregion Get Invoice By Guid Of Order Form
-
-            //region Set Title To TextView
-            binding.tvNameStore.setText(company.getN());
-            //endregion Set Title To TextView
-
-            Account account = Select.from(Account.class).first();
-
-
-            //region Cast Variable Dialog Sync
-            dialogSync = new Dialog(getActivity());
-            dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogSync.setContentView(R.layout.custom_dialog);
-            dialogSync.setCancelable(false);
-
-            textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-
-            btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
-            btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
-            btnNoDialog.setOnClickListener(v -> {
-                dialogSync.dismiss();
-                if (disableAccount) {
-                    if (appInfo == null)
-                        getActivity().finish();
-                    else
-                        Navigation.findNavController(binding.getRoot()).popBackStack();
-                    return;
-                }
-
-
-            });
-
-
-            btnOkDialog.setOnClickListener(v -> {
-                dialogSync.dismiss();
-                binding.ivFilter.setImageResource(R.drawable.ic_filter);
-                sharedPreferences.edit().putBoolean("discount", false).apply();
-                sharedPreferences.edit().putBoolean("vip", false).apply();
-
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-                productListData.clear();
-                productLevel1List.clear();
-                productLevel2List.clear();
-                productAdapter.notifyDataSetChanged();
-                myViewModel.getProductLevel1(userName, passWord);
-                myViewModel.getInquiryAccount(userName, passWord, account.getM());
-                myViewModel.getUnit(userName, passWord);
-                myViewModel.getSetting(userName, passWord);
-            });
-
-            //endregion Cast Variable Dialog Sync
-
-
-            //region Cast DialogDescription
-            dialogDescription = new Dialog(getActivity());
-            dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogDescription.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogDescription.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialogDescription.setContentView(R.layout.dialog_description);
-            dialogDescription.setCancelable(false);
-            edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
-            MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
-            RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
-
-
-            FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
-            flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
-            flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
-            flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
-            flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
-            recyclerDescription.setLayoutManager(flexboxLayoutManager);
-
-            descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
-            recyclerDescription.setAdapter(descriptionAdapter);
-
-            descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
-                if (click) {
-                    descriptionList.get(position).Click = true;
-                    String description = edtDescriptionItem.getText().toString();
-                    edtDescriptionItem.setText(description + "   " + "'" + desc + "'");
-                } else {
-                    descriptionList.get(position).Click = false;
-                    if (edtDescriptionItem.getText().toString().contains("'" + desc + "'"))
-
-                        edtDescriptionItem.setText(edtDescriptionItem.getText().toString().replace("   " + "'" + desc + "'", ""));
-                }
-            });
-
-            btnRegisterDescription.setOnClickListener(v -> {
-                InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
-                if (invDetail != null) {
-                    invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
-                    invDetail.update();
-                }
-                productAdapter.notifyDataSetChanged();
-                dialogDescription.dismiss();
-            });
-
-            edtDescriptionItem.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.toString().isEmpty()) {
-                        for (int i = 0; i < descriptionList.size(); i++) {
-                            descriptionList.get(i).Click = false;
-                        }
-                        descriptionAdapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-            //endregion Cast DialogDescription
-
-
-            //region CONFIGURATION DATA PRODUCT_LEVEL1
-            productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager.setReverseLayout(true);
-            binding.orderRecyclerViewProductLevel1.setLayoutManager(manager);
-            binding.orderRecyclerViewProductLevel1.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
-
-
-            //region Click Item ProductLevel1
-            productLevel1Adapter.SetOnItemClickListener(GUID -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item ProductLevel1 And Item ProductLevel2
-                ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
-                CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
-                if (resultPrdGrp1.size() > 0) {
-                    productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
-
-
-                //region Click New Item ProductLevel1
-                ArrayList<ProductLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
-                CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(GUID));
-                if (resultPrdGroup1_.size() > 0) {
-                    productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
-                }
-                //endregion Click New Item ProductLevel1
-
-
-                productLevel1Adapter.notifyDataSetChanged();
-                productList.clear();
-                productListData.clear();
-                productAdapter.notifyDataSetChanged();
-
-                productLevel2List.clear();
-                productLevel2Adapter.notifyDataSetChanged();
-
-
-                //region Full ProductLevel2List Because This Item ProductLevel1 Is True
-                myViewModel.getProductLevel2(userName, passWord, GUID);
-                //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
-            });
-            //endregion Click Item ProductLevel1
-
-
-            //endregion CONFIGURATION DATA PRODUCT_LEVEL1
-
-            //region CONFIGURATION DATA PRODUCT_LEVEL_2
-            productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
-
-            LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
-            manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager2.setReverseLayout(true);
-            binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
-            binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
-
-
-            //region Click Item ProductLevel2
-            productLevel2Adapter.SetOnItemClickListener(GUID -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-
-                productAdapter.notifyDataSetChanged();
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item
-                ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
-                CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
-                if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
-                    productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item
-
-
-                //region Click New Item
-                ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
-                CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
-
-                if (resProductGroupLevel2.size() > 0) {
-                    productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
-                }
-                //endregion Click New Item
-
-                productLevel2Adapter.notifyDataSetChanged();
-
-
-                //region Full ProductList Because This Item ProductLevel1 Is True
-                GuidProductLvl2 = GUID;
-                myViewModel.getSettingPrice(userName, passWord);
-                //endregion Full ProductList Because This Item ProductLevel1 Is True
-            });
-
-            //endregion Click Item ProductLevel2
-
-            //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
-
-            //region CONFIGURATION DATA CUSTOM_TAB
-            customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
-
-            LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
-            managerCustom.setOrientation(LinearLayoutManager.HORIZONTAL);
-            managerCustom.setReverseLayout(true);
-            binding.orderRecyclerViewCustomTab.setLayoutManager(managerCustom);
-            binding.orderRecyclerViewCustomTab.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewCustomTab.setAdapter(customTabAdapter);
-
-
-            //region Click Item CustomTab
-            customTabAdapter.SetOnItemClickListener(key -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-                productAdapter.notifyDataSetChanged();
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item
-                ArrayList<CustomTab> resultCustomTab = new ArrayList<>(customTabList);
-                CollectionUtils.filter(resultCustomTab, r -> r.Click);
-                if (resultCustomTab.size() > 0 && customTabList.size() > 0) {
-                    customTabList.get(customTabList.indexOf(resultCustomTab.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item
-
-
-                //region Click New Item
-                ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
-                CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
-
-                if (customTabList.size() > 0) {
-                    customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
-                }
-                //endregion Click New Item
-
-                customTabAdapter.notifyDataSetChanged();
-
-
-                //region Full ProductList Because This Item ProductLevel1 Is True
-                keyCustomTab = key;
-                myViewModel.getSettingPrice(userName, passWord);
-                //endregion Full ProductList Because This Item ProductLevel1 Is True
-            });
-
-            //endregion Click Item CustomTab
-
-            //endregion CONFIGURATION DATA CUSTOM_TAB
-
-
-            //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api, 1);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-            binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
-            binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
-
-
-            binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-
-                @Override
-                protected void loadMoreItems() {
-
-                    currentPage++;
-                    loadMore();
-                }
-
-                @Override
-                public boolean isLastPage() {
-                    return isLastPage;
-
-
-                }
-
-                @Override
-                public boolean isLoading() {
-                    return isLoading;
-                }
-            });
-            binding.orderRecyclerViewProduct.setAdapter(productAdapter);
-            productAdapter.setOnClickListener((Prd_UID) -> {
-                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                if (invDetails.size() > 0) {
-                    this.counter = invDetails.size();
-                    ((LauncherActivity) getActivity()).setCounterOrder(counter);
-                } else
-                    ((LauncherActivity) getActivity()).setClearCounterOrder();
-
-
-            });
-
-
-            productAdapter.setOnDescriptionItem((GUID, amount) -> {
-                if (amount > 0) {
-                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
-                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                    if (result.size() > 0) {
-                        edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
-                        descriptionList.clear();
-                        GuidInv = result.get(0).INV_DET_UID;
-                        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
-                        myViewModel.getDescription(userName, passWord, GUID);
-
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
-            productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
-                @Override
-                public void onClick(String Prd_UID) {
-                    NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-
-                }
-            });
-            //endregion CONFIGURATION DATA PRODUCT
-
-            binding.ivFilter.setOnClickListener(v -> {
-
-                boolean filter = false;
-
-                if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE)
-                    filter = true;
-
-
-                NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-
-
-            });
-
-            binding.btnCompanyBranches.setOnClickListener(view1 -> {
-                if (!company.getPi().equals("")) {
-                    NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-            });
-
-
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e + "", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -1232,8 +782,480 @@ public class HomeFragment extends Fragment {
         myViewModel.getSetting(userName, passWord);
         myViewModel.getUnit(userName, passWord);
         myViewModel.getInquiryAccount(userName, passWord, Select.from(Account.class).first().getM());
+    }
+
+    private void init() {
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+        sharedPreferences.edit().putString("FNM", "main").apply();
 
 
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
+
+
+
+        customProgress = CustomProgress.getInstance();
+        company = Select.from(Company.class).first();
+        userName = company.getUser();
+        passWord = company.getPass();
+        salein = Select.from(Salein.class).first();
+
+        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+
+        binding.tvNameStore.setText(company.getN());
+
+        binding.ivFilter.setOnClickListener(v -> {
+
+            boolean filter = false;
+
+            if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE)
+                filter = true;
+
+
+            NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+
+
+        });
+
+        binding.btnCompanyBranches.setOnClickListener(view1 -> {
+            if (!company.getPi().equals("")) {
+                NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+            }
+        });
+
+        Inv_GUID = "";
+        Product.deleteAll(Product.class);
+
+    }
+
+    private void initGetBundle() {
+        try {
+            Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            getArguments().clear();
+        } catch (Exception ignored) {
+            Inv_GUID = "";
+        }
+    }
+
+    private void initSetDataFromBundle() {
+        if (Inv_GUID.equals("")) {
+            ((LauncherActivity) getActivity()).setShowProfileItem(true);
+            String name = company.getInskId().split("ir.kitgroup.")[1];
+            Inv_GUID = sharedPreferences.getString(name, "");
+
+            if (Inv_GUID.equals("")) {
+                Inv_GUID = UUID.randomUUID().toString();
+                sharedPreferences.edit().putString(name, Inv_GUID).apply();
+            }
+        } else {
+            ((LauncherActivity) getActivity()).setShowProfileItem(false);
+        }
+
+        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
+
+
+    }
+
+    private void initSetAnimation() {
+        if (Util.getPackageName(getActivity()).contains("meat"))
+            Glide.with(this).asGif().load(Uri.parse(salein.getGif_url())).into(binding.animationView);
+    }
+
+    private void initCastDialogSync() {
+
+        Account account = Select.from(Account.class).first();
+        dialogSync = new Dialog(getActivity());
+        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogSync.setContentView(R.layout.custom_dialog);
+        dialogSync.setCancelable(false);
+
+        textMessageDialog = dialogSync.findViewById(R.id.tv_message);
+
+        btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
+        btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+        btnNoDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            if (disableAccount) {
+                if (salein == null)
+                    getActivity().finish();
+                else
+                    Navigation.findNavController(binding.getRoot()).popBackStack();
+                return;
+            }
+
+
+        });
+
+
+        btnOkDialog.setOnClickListener(v -> {
+            dialogSync.dismiss();
+            binding.ivFilter.setImageResource(R.drawable.ic_filter);
+            sharedPreferences.edit().putBoolean("discount", false).apply();
+            sharedPreferences.edit().putBoolean("vip", false).apply();
+
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+            productListData.clear();
+            productLevel1List.clear();
+            productLevel2List.clear();
+            productAdapter.notifyDataSetChanged();
+            myViewModel.getProductLevel1(userName, passWord);
+            myViewModel.getInquiryAccount(userName, passWord, account.getM());
+            myViewModel.getUnit(userName, passWord);
+            myViewModel.getSetting(userName, passWord);
+        });
+
+
+    }
+
+    private void initCastDialogDescription() {
+
+        dialogDescription = new Dialog(getActivity());
+        dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogDescription.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogDescription.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialogDescription.setContentView(R.layout.dialog_description);
+        dialogDescription.setCancelable(false);
+        edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
+        MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
+        RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
+
+
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
+        flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
+        recyclerDescription.setLayoutManager(flexboxLayoutManager);
+
+        descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
+        recyclerDescription.setAdapter(descriptionAdapter);
+
+        descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
+            if (click) {
+                descriptionList.get(position).Click = true;
+                String description = edtDescriptionItem.getText().toString();
+                edtDescriptionItem.setText(description + "   " + "'" + desc + "'");
+            } else {
+                descriptionList.get(position).Click = false;
+                if (edtDescriptionItem.getText().toString().contains("'" + desc + "'"))
+
+                    edtDescriptionItem.setText(edtDescriptionItem.getText().toString().replace("   " + "'" + desc + "'", ""));
+            }
+        });
+
+        btnRegisterDescription.setOnClickListener(v -> {
+            InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
+            if (invDetail != null) {
+                invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
+                invDetail.update();
+            }
+            productAdapter.notifyDataSetChanged();
+            dialogDescription.dismiss();
+        });
+
+        edtDescriptionItem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().isEmpty()) {
+                    for (int i = 0; i < descriptionList.size(); i++) {
+                        descriptionList.get(i).Click = false;
+                    }
+                    descriptionAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }
+
+    private void initRecyclerViewProductLevel1() {
+        //region CONFIGURATION DATA PRODUCT_LEVEL1
+        productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        manager.setReverseLayout(true);
+        binding.orderRecyclerViewProductLevel1.setLayoutManager(manager);
+        binding.orderRecyclerViewProductLevel1.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
+
+
+        //region Click Item ProductLevel1
+        productLevel1Adapter.SetOnItemClickListener(GUID -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            isLastPage = false;
+            isLoading = false;
+            currentPage = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item ProductLevel1 And Item ProductLevel2
+            ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
+            CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
+            if (resultPrdGrp1.size() > 0) {
+                productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
+
+
+            //region Click New Item ProductLevel1
+            ArrayList<ProductLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
+            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(GUID));
+            if (resultPrdGroup1_.size() > 0) {
+                productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
+            }
+            //endregion Click New Item ProductLevel1
+
+
+            productLevel1Adapter.notifyDataSetChanged();
+            productList.clear();
+            productListData.clear();
+            productAdapter.notifyDataSetChanged();
+
+            productLevel2List.clear();
+            productLevel2Adapter.notifyDataSetChanged();
+
+
+            //region Full ProductLevel2List Because This Item ProductLevel1 Is True
+            myViewModel.getProductLevel2(userName, passWord, GUID);
+            //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
+        });
+        //endregion Click Item ProductLevel1
+
+
+        //endregion CONFIGURATION DATA PRODUCT_LEVEL1
+    }
+
+    private void initRecyclerViewProductLevel2() {
+        //region CONFIGURATION DATA PRODUCT_LEVEL_2
+        productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
+
+        LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
+        manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        manager2.setReverseLayout(true);
+        binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
+        binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
+
+
+        //region Click Item ProductLevel2
+        productLevel2Adapter.SetOnItemClickListener(GUID -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+
+            productAdapter.notifyDataSetChanged();
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            isLastPage = false;
+            isLoading = false;
+            currentPage = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item
+            ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
+            CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
+            if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
+                productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item
+
+
+            //region Click New Item
+            ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
+            CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
+
+            if (resProductGroupLevel2.size() > 0) {
+                productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
+            }
+            //endregion Click New Item
+
+            productLevel2Adapter.notifyDataSetChanged();
+
+
+            //region Full ProductList Because This Item ProductLevel1 Is True
+            GuidProductLvl2 = GUID;
+            myViewModel.getSettingPrice(userName, passWord);
+            //endregion Full ProductList Because This Item ProductLevel1 Is True
+        });
+
+        //endregion Click Item ProductLevel2
+
+        //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
+    }
+
+    private void initRecyclerViewCustomTab() {
+        //region CONFIGURATION DATA CUSTOM_TAB
+        customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
+
+        LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
+        managerCustom.setOrientation(LinearLayoutManager.HORIZONTAL);
+        managerCustom.setReverseLayout(true);
+        binding.orderRecyclerViewCustomTab.setLayoutManager(managerCustom);
+        binding.orderRecyclerViewCustomTab.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewCustomTab.setAdapter(customTabAdapter);
+
+
+        //region Click Item CustomTab
+        customTabAdapter.SetOnItemClickListener(key -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            isLastPage = false;
+            isLoading = false;
+            currentPage = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item
+            ArrayList<CustomTab> resultCustomTab = new ArrayList<>(customTabList);
+            CollectionUtils.filter(resultCustomTab, r -> r.Click);
+            if (resultCustomTab.size() > 0 && customTabList.size() > 0) {
+                customTabList.get(customTabList.indexOf(resultCustomTab.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item
+
+
+            //region Click New Item
+            ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
+            CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
+
+            if (customTabList.size() > 0) {
+                customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
+            }
+            //endregion Click New Item
+
+            customTabAdapter.notifyDataSetChanged();
+
+
+            //region Full ProductList Because This Item ProductLevel1 Is True
+            keyCustomTab = key;
+            myViewModel.getSettingPrice(userName, passWord);
+            //endregion Full ProductList Because This Item ProductLevel1 Is True
+        });
+
+        //endregion Click Item CustomTab
+
+        //endregion CONFIGURATION DATA CUSTOM_TAB
+    }
+
+    private void initRecyclerViewProduct() {
+        //region CONFIGURATION DATA PRODUCT
+        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api, 1);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
+        binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
+
+
+        binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+
+            @Override
+            protected void loadMoreItems() {
+
+                currentPage++;
+                loadMore();
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+
+
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+        binding.orderRecyclerViewProduct.setAdapter(productAdapter);
+        productAdapter.setOnClickListener((Prd_UID) -> {
+            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+            if (invDetails.size() > 0) {
+                this.counter = invDetails.size();
+                ((LauncherActivity) getActivity()).setCounterOrder(counter);
+            } else
+                ((LauncherActivity) getActivity()).setClearCounterOrder();
+
+
+        });
+
+
+        productAdapter.setOnDescriptionItem((GUID, amount) -> {
+            if (amount > 0) {
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
+                CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
+                if (result.size() > 0) {
+                    edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
+                    descriptionList.clear();
+                    GuidInv = result.get(0).INV_DET_UID;
+                    customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
+                    myViewModel.getDescription(userName, passWord, GUID);
+
+                }
+            } else {
+                Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
+            @Override
+            public void onClick(String Prd_UID) {
+                NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+
+            }
+        });
+        //endregion CONFIGURATION DATA PRODUCT
+    }
+
+    private void initFirstValueOfVariable() {
+        //region First Value Parameter
+        counter = 0;
+        productLevel1List = new ArrayList<>();
+        productLevel2List = new ArrayList<>();
+        customTabList = new ArrayList<>();
+        productList = new ArrayList<>();
+        productListData = new ArrayList<>();
+        descriptionList = new ArrayList<>();
+        closeDayList = new ArrayList<>();
+        //endregion First Value Parameter
+    }
+
+    private void initGetInVoiceById() {
+        //region Get Invoice By Guid Of Order Form
+        Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+        List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+        if (invDetailses.size() > 0) {
+            CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+            counter = invDetailses.size();
+        }
+
+
+        if (counter == 0)
+            ((LauncherActivity) getActivity()).setClearCounterOrder();
+        else
+            ((LauncherActivity) getActivity()).setCounterOrder(counter);
+        //endregion Get Invoice By Guid Of Order Form
     }
 
 }

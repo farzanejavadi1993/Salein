@@ -656,7 +656,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private void navigate() {
         binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
         binding.btnRegisterInformation.setEnabled(true);
-        if (Select.from(Salein.class).first() != null) {
+        if (Select.from(Salein.class).first().getSalein() ){
             NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
