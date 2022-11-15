@@ -5,10 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,6 +56,7 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Product;
 
+import ir.kitgroup.salein.classes.dialog.DialogInstance;
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
@@ -68,7 +64,6 @@ import ir.kitgroup.salein.classes.CustomProgress;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 import ir.kitgroup.salein.classes.PaginationScrollListener;
-import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.models.Description;
@@ -153,6 +148,7 @@ public class HomeFragment extends Fragment {
     public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
     private Salein salein;
+    private DialogInstance dialogInstance;
 
 
     //endregion Parameter
@@ -175,6 +171,8 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         init();
+        initFirstValueOfVariable();
+        clearFilter();
         initGetBundle();
         initSetDataFromBundle();
         initSetAnimation();
@@ -184,7 +182,6 @@ public class HomeFragment extends Fragment {
         initRecyclerViewProductLevel2();
         initRecyclerViewCustomTab();
         initRecyclerViewProduct();
-        initFirstValueOfVariable();
         initGetInVoiceById();
 
 
@@ -199,20 +196,10 @@ public class HomeFragment extends Fragment {
         myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
 
-        binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
-        productList.clear();
-        productListData.clear();
-        customTabList.clear();
-        productLevel1List.clear();
-        productLevel2List.clear();
 
-        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
-            productAdapter.notifyDataSetChanged();
-            customTabAdapter.notifyDataSetChanged();
-            productLevel1Adapter.notifyDataSetChanged();
-            productLevel2Adapter.notifyDataSetChanged();
-        }
+
+        clearDataFromRecyclerView();
 
         binding.orderTxtError.setText("");
         binding.ivFilter.setImageResource(R.drawable.ic_filter);
@@ -320,7 +307,7 @@ public class HomeFragment extends Fragment {
                 productLevel1List.get(0).Click = true;
                 myViewModel.getProductLevel2(userName, passWord, productLevel1List.get(0).getI());
             } else {
-                binding.progressbar.setVisibility(View.GONE);
+
                 binding.animationView.setVisibility(View.GONE);
                 binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
@@ -378,11 +365,8 @@ public class HomeFragment extends Fragment {
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
             } else {
-
-
                 binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.GONE);
                 binding.animationView.setVisibility(View.GONE);
                 productList.clear();
                 productAdapter.notifyDataSetChanged();
@@ -417,7 +401,6 @@ public class HomeFragment extends Fragment {
             } else {
                 binding.orderTxtError.setText("هیچ منویی وجود ندارد.");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.GONE);
                 binding.animationView.setVisibility(View.GONE);
                 productList.clear();
                 productAdapter.notifyDataSetChanged();
@@ -430,7 +413,6 @@ public class HomeFragment extends Fragment {
         });
         myViewModel.getResultProductCustomTab().observe(getViewLifecycleOwner(), result -> {
 
-            binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
             customProgress.hideProgress();
             if (result == null)
@@ -496,11 +478,8 @@ public class HomeFragment extends Fragment {
 
 
         });
-
-
         myViewModel.getResultListProduct().observe(getViewLifecycleOwner(), result -> {
 
-            binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
             customProgress.hideProgress();
             if (result == null)
@@ -551,7 +530,6 @@ public class HomeFragment extends Fragment {
         myViewModel.getResultDiscountProduct().observe(getViewLifecycleOwner(), result -> {
             binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
             customProgress.hideProgress();
-            binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
             if (result == null)
                 return;
@@ -592,7 +570,6 @@ public class HomeFragment extends Fragment {
         myViewModel.getResultVipProduct().observe(getViewLifecycleOwner(), result -> {
             binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
             customProgress.hideProgress();
-            binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
             if (result == null)
                 return;
@@ -625,7 +602,7 @@ public class HomeFragment extends Fragment {
 
             productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
-            binding.progressbar.setVisibility(View.GONE);
+
             binding.animationView.setVisibility(View.GONE);
 
         });
@@ -635,7 +612,6 @@ public class HomeFragment extends Fragment {
                 return;
 
 
-            binding.progressbar.setVisibility(View.GONE);
             customProgress.hideProgress();
 
             if (result.getCode() == -4) {
@@ -646,13 +622,7 @@ public class HomeFragment extends Fragment {
 
             disableAccount = sharedPreferences.getBoolean("disableAccount", false);
             if (disableAccount) {
-                productList.clear();
-                productLevel2List.clear();
-                productLevel1List.clear();
-                productListData.clear();
-                productAdapter.notifyDataSetChanged();
-                productLevel1Adapter.notifyDataSetChanged();
-                productLevel2Adapter.notifyDataSetChanged();
+                clearDataFromRecyclerView();
                 showError(result.getName(), 0);
                 return;
             }
@@ -739,11 +709,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public String appVersion() throws PackageManager.NameNotFoundException {
-        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-        return pInfo.versionName;
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -758,25 +723,13 @@ public class HomeFragment extends Fragment {
     }
 
     public void showData() {
-        sharedPreferences.edit().putBoolean("discount", false).apply();
-        sharedPreferences.edit().putBoolean("vip", false).apply();
-        binding.progressbar.setVisibility(View.VISIBLE);
+
+        clearFilter();
+
         binding.animationView.setVisibility(View.VISIBLE);
-        productList.clear();
-        productListData.clear();
-        customTabList.clear();
-        productLevel1List.clear();
-        productLevel2List.clear();
-
-        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
-            productAdapter.notifyDataSetChanged();
-            customTabAdapter.notifyDataSetChanged();
-            productLevel1Adapter.notifyDataSetChanged();
-            productLevel2Adapter.notifyDataSetChanged();
-        }
-
+        clearDataFromRecyclerView();
         binding.orderTxtError.setText("");
-        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
         myViewModel.getSetting(userName, passWord);
@@ -785,40 +738,32 @@ public class HomeFragment extends Fragment {
     }
 
     private void init() {
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        sharedPreferences.edit().putBoolean("vip", false).apply();
-        sharedPreferences.edit().putBoolean("discount", false).apply();
         sharedPreferences.edit().putString("FNM", "main").apply();
-
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
 
-
+        dialogInstance = DialogInstance.getInstance();
         customProgress = CustomProgress.getInstance();
         company = Select.from(Company.class).first();
         userName = company.getUser();
         passWord = company.getPass();
         salein = Select.from(Salein.class).first();
 
-        binding.ivFilter.setImageResource(R.drawable.ic_filter);
 
         binding.tvNameStore.setText(company.getN());
 
+        Inv_GUID = "";
+
+        Product.deleteAll(Product.class);
+
+
         binding.ivFilter.setOnClickListener(v -> {
-
-            boolean filter = false;
-
-            if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE)
-                filter = true;
-
-
+            boolean filter = binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE;
             NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
             Navigation.findNavController(binding.getRoot()).navigate(action);
-
-
         });
 
         binding.btnCompanyBranches.setOnClickListener(view1 -> {
@@ -827,17 +772,15 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
         });
-
-        Inv_GUID = "";
-        Product.deleteAll(Product.class);
-
     }
 
     private void initGetBundle() {
         try {
+            //when we come to HomeFragment from InvoiceDetailFragment for edit order form
             Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
             getArguments().clear();
         } catch (Exception ignored) {
+            //when we come to HomeFragment to create a order
             Inv_GUID = "";
         }
     }
@@ -845,88 +788,69 @@ public class HomeFragment extends Fragment {
     private void initSetDataFromBundle() {
         if (Inv_GUID.equals("")) {
             ((LauncherActivity) getActivity()).setShowProfileItem(true);
-            String name = company.getInskId().split("ir.kitgroup.")[1];
-            Inv_GUID = sharedPreferences.getString(name, "");
 
+            Inv_GUID = sharedPreferences.getString(company.getI(), "");
             if (Inv_GUID.equals("")) {
                 Inv_GUID = UUID.randomUUID().toString();
-                sharedPreferences.edit().putString(name, Inv_GUID).apply();
+                sharedPreferences.edit().putString(company.getI(), Inv_GUID).apply();
             }
-        } else {
+        } else
             ((LauncherActivity) getActivity()).setShowProfileItem(false);
-        }
 
-        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
-
-
+        //Save GUID Order Form To Use In App
+        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
     }
+
 
     private void initSetAnimation() {
-        if (Util.getPackageName(getActivity()).contains("meat"))
-            Glide.with(this).asGif().load(Uri.parse(salein.getGif_url())).into(binding.animationView);
+        Glide.with(this).asGif().load(Uri.parse(salein.getGif_url())).into(binding.animationView);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initCastDialogSync() {
-
         Account account = Select.from(Account.class).first();
-        dialogSync = new Dialog(getActivity());
-        dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogSync.setContentView(R.layout.custom_dialog);
-        dialogSync.setCancelable(false);
+
+        dialogSync = dialogInstance.dialog(getActivity(), false, R.layout.custom_dialog);
 
         textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-
         btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
         btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
+
         btnNoDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
             if (disableAccount) {
-                if (salein == null)
+
+                if (!salein.getSalein())
                     getActivity().finish();
                 else
                     Navigation.findNavController(binding.getRoot()).popBackStack();
-                return;
             }
-
-
         });
 
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            binding.ivFilter.setImageResource(R.drawable.ic_filter);
-            sharedPreferences.edit().putBoolean("discount", false).apply();
-            sharedPreferences.edit().putBoolean("vip", false).apply();
+
+            clearFilter();
+            clearDataFromRecyclerView();
 
             binding.animationView.setVisibility(View.VISIBLE);
-            binding.progressbar.setVisibility(View.VISIBLE);
-            productList.clear();
-            productListData.clear();
-            productLevel1List.clear();
-            productLevel2List.clear();
-            productAdapter.notifyDataSetChanged();
             myViewModel.getProductLevel1(userName, passWord);
             myViewModel.getInquiryAccount(userName, passWord, account.getM());
             myViewModel.getUnit(userName, passWord);
             myViewModel.getSetting(userName, passWord);
         });
 
-
     }
 
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void initCastDialogDescription() {
 
-        dialogDescription = new Dialog(getActivity());
-        dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogDescription.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogDescription.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialogDescription.setContentView(R.layout.dialog_description);
-        dialogDescription.setCancelable(false);
+        dialogDescription = dialogInstance.dialog(getActivity(), false, R.layout.dialog_description);
+
         edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
         MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
         RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
-
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
         flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -936,23 +860,29 @@ public class HomeFragment extends Fragment {
         recyclerDescription.setLayoutManager(flexboxLayoutManager);
 
         descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
+
         recyclerDescription.setAdapter(descriptionAdapter);
+
 
         descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
             if (click) {
                 descriptionList.get(position).Click = true;
+
                 String description = edtDescriptionItem.getText().toString();
                 edtDescriptionItem.setText(description + "   " + "'" + desc + "'");
-            } else {
+            }
+            else {
                 descriptionList.get(position).Click = false;
-                if (edtDescriptionItem.getText().toString().contains("'" + desc + "'"))
 
+                if (edtDescriptionItem.getText().toString().contains("'" + desc + "'"))
                     edtDescriptionItem.setText(edtDescriptionItem.getText().toString().replace("   " + "'" + desc + "'", ""));
             }
         });
 
+
         btnRegisterDescription.setOnClickListener(v -> {
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
+
             if (invDetail != null) {
                 invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
                 invDetail.update();
@@ -960,6 +890,8 @@ public class HomeFragment extends Fragment {
             productAdapter.notifyDataSetChanged();
             dialogDescription.dismiss();
         });
+
+
 
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
             @Override
@@ -983,26 +915,28 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     private void initRecyclerViewProductLevel1() {
-        //region CONFIGURATION DATA PRODUCT_LEVEL1
+
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager.setReverseLayout(true);
+
         binding.orderRecyclerViewProductLevel1.setLayoutManager(manager);
         binding.orderRecyclerViewProductLevel1.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
 
-
-        //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
             binding.animationView.setVisibility(View.VISIBLE);
-            binding.progressbar.setVisibility(View.VISIBLE);
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
             isLoading = false;
             currentPage = 1;
             binding.orderTxtError.setText("");
+
+
 
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
             ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
@@ -1011,6 +945,7 @@ public class HomeFragment extends Fragment {
                 productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
             }
             //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
+
 
 
             //region Click New Item ProductLevel1
@@ -1023,6 +958,7 @@ public class HomeFragment extends Fragment {
 
 
             productLevel1Adapter.notifyDataSetChanged();
+
             productList.clear();
             productListData.clear();
             productAdapter.notifyDataSetChanged();
@@ -1030,35 +966,32 @@ public class HomeFragment extends Fragment {
             productLevel2List.clear();
             productLevel2Adapter.notifyDataSetChanged();
 
-
             //region Full ProductLevel2List Because This Item ProductLevel1 Is True
             myViewModel.getProductLevel2(userName, passWord, GUID);
             //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
         });
-        //endregion Click Item ProductLevel1
-
-
-        //endregion CONFIGURATION DATA PRODUCT_LEVEL1
     }
 
+
+
+    @SuppressLint("NotifyDataSetChanged")
     private void initRecyclerViewProductLevel2() {
-        //region CONFIGURATION DATA PRODUCT_LEVEL_2
+
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
 
         LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
         manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager2.setReverseLayout(true);
+
         binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
         binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
 
 
-        //region Click Item ProductLevel2
+
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
             binding.animationView.setVisibility(View.VISIBLE);
-            binding.progressbar.setVisibility(View.VISIBLE);
             productList.clear();
-
             productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             isLastPage = false;
@@ -1078,7 +1011,6 @@ public class HomeFragment extends Fragment {
             //region Click New Item
             ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
             CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
-
             if (resProductGroupLevel2.size() > 0) {
                 productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
             }
@@ -1086,20 +1018,18 @@ public class HomeFragment extends Fragment {
 
             productLevel2Adapter.notifyDataSetChanged();
 
-
             //region Full ProductList Because This Item ProductLevel1 Is True
             GuidProductLvl2 = GUID;
             myViewModel.getSettingPrice(userName, passWord);
             //endregion Full ProductList Because This Item ProductLevel1 Is True
         });
 
-        //endregion Click Item ProductLevel2
-
-        //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     private void initRecyclerViewCustomTab() {
-        //region CONFIGURATION DATA CUSTOM_TAB
+
         customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
 
         LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
@@ -1109,11 +1039,8 @@ public class HomeFragment extends Fragment {
         binding.orderRecyclerViewCustomTab.setScrollingTouchSlop(View.FOCUS_LEFT);
         binding.orderRecyclerViewCustomTab.setAdapter(customTabAdapter);
 
-
-        //region Click Item CustomTab
         customTabAdapter.SetOnItemClickListener(key -> {
             binding.animationView.setVisibility(View.VISIBLE);
-            binding.progressbar.setVisibility(View.VISIBLE);
             productList.clear();
             productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
@@ -1134,40 +1061,36 @@ public class HomeFragment extends Fragment {
             //region Click New Item
             ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
             CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
-
             if (customTabList.size() > 0) {
                 customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
             }
             //endregion Click New Item
 
-            customTabAdapter.notifyDataSetChanged();
 
+            customTabAdapter.notifyDataSetChanged();
 
             //region Full ProductList Because This Item ProductLevel1 Is True
             keyCustomTab = key;
             myViewModel.getSettingPrice(userName, passWord);
             //endregion Full ProductList Because This Item ProductLevel1 Is True
         });
-
-        //endregion Click Item CustomTab
-
-        //endregion CONFIGURATION DATA CUSTOM_TAB
     }
 
-    private void initRecyclerViewProduct() {
-        //region CONFIGURATION DATA PRODUCT
-        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api, 1);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
+    private void initRecyclerViewProduct() {
+
+        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api, 1);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
 
         binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
 
             @Override
             protected void loadMoreItems() {
-
                 currentPage++;
                 loadMore();
             }
@@ -1175,8 +1098,6 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean isLastPage() {
                 return isLastPage;
-
-
             }
 
             @Override
@@ -1184,7 +1105,7 @@ public class HomeFragment extends Fragment {
                 return isLoading;
             }
         });
-        binding.orderRecyclerViewProduct.setAdapter(productAdapter);
+
         productAdapter.setOnClickListener((Prd_UID) -> {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
@@ -1194,42 +1115,34 @@ public class HomeFragment extends Fragment {
             } else
                 ((LauncherActivity) getActivity()).setClearCounterOrder();
 
-
         });
-
 
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
                 ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
                 CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
+
                 if (result.size() > 0) {
                     edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
                     descriptionList.clear();
                     GuidInv = result.get(0).INV_DET_UID;
                     customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
                     myViewModel.getDescription(userName, passWord, GUID);
-
                 }
-            } else {
+            }
+            else
                 Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
-            }
         });
 
-
-        productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
-            @Override
-            public void onClick(String Prd_UID) {
-                NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-
-            }
+        productAdapter.setOnClickImageListener(Prd_UID -> {
+            NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
+            Navigation.findNavController(binding.getRoot()).navigate(action);
         });
-        //endregion CONFIGURATION DATA PRODUCT
     }
 
+
     private void initFirstValueOfVariable() {
-        //region First Value Parameter
         counter = 0;
         productLevel1List = new ArrayList<>();
         productLevel2List = new ArrayList<>();
@@ -1238,11 +1151,10 @@ public class HomeFragment extends Fragment {
         productListData = new ArrayList<>();
         descriptionList = new ArrayList<>();
         closeDayList = new ArrayList<>();
-        //endregion First Value Parameter
     }
 
     private void initGetInVoiceById() {
-        //region Get Invoice By Guid Of Order Form
+
         Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
         if (invDetailses.size() > 0) {
@@ -1255,7 +1167,31 @@ public class HomeFragment extends Fragment {
             ((LauncherActivity) getActivity()).setClearCounterOrder();
         else
             ((LauncherActivity) getActivity()).setCounterOrder(counter);
-        //endregion Get Invoice By Guid Of Order Form
+
     }
+
+    private void clearFilter() {
+        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void clearDataFromRecyclerView() {
+        productLevel1List.clear();
+        productLevel2List.clear();
+        productListData.clear();
+        productList.clear();
+        customTabList.clear();
+
+        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
+            productAdapter.notifyDataSetChanged();
+            customTabAdapter.notifyDataSetChanged();
+            productLevel1Adapter.notifyDataSetChanged();
+            productLevel2Adapter.notifyDataSetChanged();
+        }
+
+    }
+
 
 }
