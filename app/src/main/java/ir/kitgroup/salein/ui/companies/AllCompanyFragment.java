@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -47,6 +48,7 @@ import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.R;
 
+import ir.kitgroup.salein.classes.EndlessRecyclerViewScrollListener;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
 
 import ir.kitgroup.salein.databinding.FragmentAllCompanyBinding;
@@ -71,8 +73,8 @@ public class AllCompanyFragment extends Fragment {
     private Company companySelect;
     private CompanyFragment companyFragment;
 
-    private ArrayList<Company> parentCompanies = new ArrayList<>();
-    private ArrayList<Company> childCompany;
+    private final ArrayList<Company> parentCompanies = new ArrayList<>();
+    private ArrayList<Company> childCompany=new ArrayList<>();
 
     private CompanyAdapterList companyAdapterList;
 
@@ -100,12 +102,13 @@ public class AllCompanyFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         init();
+        initAnimation();
         initRecyclerView();
         navigateToSaleinDemo();
         castDialog();
     }
+
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
@@ -122,8 +125,11 @@ public class AllCompanyFragment extends Fragment {
             binding.progressbar.setVisibility(View.VISIBLE);
             mainViewModel.getAllCompany(ParentId, pageMain);
         } catch (Exception ignored) {
-            binding.progressbar.setVisibility(View.VISIBLE);
-            mainViewModel.getAllCompany("", pageMain);
+            if (pageMain == 1 && pageMain * 10 > parentCompanies.size()) {
+                binding.progressbar.setVisibility(View.VISIBLE);
+                mainViewModel.getAllCompany("", pageMain);
+            }
+
         }
 
 
@@ -150,9 +156,12 @@ public class AllCompanyFragment extends Fragment {
             mainViewModel.getResultAllCompany().setValue(null);
 
 
-            if (result.size() > 0) {
+
+            if (pageMain == 1)
                 parentCompanies.clear();
 
+
+            if (result.size() > 0) {
                 if (!ParentId.equals("")) {
                     parentCompanies.addAll(result);
                     companyAdapterList.notifyDataSetChanged();
@@ -164,13 +173,11 @@ public class AllCompanyFragment extends Fragment {
                 for (int i = 0; i < result.size(); i++) {
                     ArrayList<Company> companyArrayList = new ArrayList<>(result);
                     int finalI = i;
-                    CollectionUtils.filter(companyArrayList, r ->
-                            result.get(finalI).getI().equals(r.getPi())
-                    );
-                    if (companyArrayList.size() > 0) {
+                    CollectionUtils.filter(companyArrayList, r -> result.get(finalI).getI().equals(r.getPi()));
+                    if (companyArrayList.size() > 0 ) {
                         result.get(finalI).Parent = true;
+                        if (!childCompany.containsAll(companyArrayList))
                         childCompany.addAll(companyArrayList);
-
                     }
                 }
 
@@ -198,8 +205,21 @@ public class AllCompanyFragment extends Fragment {
                 //endregion Filter list according to companyId That come From Pakhshyab
 
                 parentCompanies.addAll(result);
-                companyAdapterList.notifyDataSetChanged();
+
             }
+
+
+            else if (result.size() == 0) {
+                binding.progressbar.setVisibility(View.GONE);
+                binding.progressBar22.setVisibility(View.GONE);
+
+                if (parentCompanies.size() == 0)
+                    binding.layoutNotFound.setVisibility(View.VISIBLE);
+                else
+                    binding.layoutNotFound.setVisibility(View.GONE);
+            }
+
+            companyAdapterList.notifyDataSetChanged();
         });
 
 
@@ -256,11 +276,6 @@ public class AllCompanyFragment extends Fragment {
         });
     }
 
-
-    public void setCompanyFragment(CompanyFragment companyFragment) {
-        this.companyFragment = companyFragment;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -268,8 +283,13 @@ public class AllCompanyFragment extends Fragment {
     }
 
 
+
+    public void setCompanyFragment(CompanyFragment companyFragment) {
+        this.companyFragment = companyFragment;
+    }
+
     private void init() {
-        childCompany = new ArrayList<>();
+
         connectToServer = new ConnectToServer();
         account = Select.from(Account.class).first();
 
@@ -277,13 +297,29 @@ public class AllCompanyFragment extends Fragment {
                 Navigation.findNavController(binding.getRoot()).popBackStack());
     }
 
-
     private void initRecyclerView() {
+        LinearLayoutManager manager=new LinearLayoutManager(getActivity());
         companyAdapterList = new CompanyAdapterList(parentCompanies, 2);
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.recyclerView.setLayoutManager(manager);
 
         binding.recyclerView.setAdapter(companyAdapterList);
+
+        EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(manager) {
+
+            @Override
+            public void onScrolled(RecyclerView view, int dx, int dy) {
+                super.onScrolled(view, dx, dy);
+            }
+
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView recycleParent) {
+              loadMore();
+            }
+        };
+
+        if (ParentId.equals(""))
+        binding.recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
 
         companyAdapterList.setOnClickItemListener((company, parent, index, delete) ->
         {
@@ -327,9 +363,6 @@ public class AllCompanyFragment extends Fragment {
                 } else
                     action = CompanyFragmentDirections.actionGoToHomeFragment("");
 
-//
-//                if (!parent)
-//                    ParentId = "";
 
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
@@ -338,8 +371,6 @@ public class AllCompanyFragment extends Fragment {
 
             //region If User Is Not Login To Company Selected
             else {
-//                if (!parent)
-//                    ParentId = "";
                 binding.progressbar.setVisibility(View.VISIBLE);
                 NAME = companySelect.getN();
                 companyViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
@@ -351,7 +382,6 @@ public class AllCompanyFragment extends Fragment {
         });
 
     }
-
 
     private void navigateToSaleinDemo() {
         if (companyFragment != null) {
@@ -378,9 +408,7 @@ public class AllCompanyFragment extends Fragment {
         }
     }
 
-
     private void castDialog() {
-
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -392,16 +420,27 @@ public class AllCompanyFragment extends Fragment {
         btnNo.setOnClickListener(v -> dialog.dismiss());
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
-
             binding.progressbar.setVisibility(View.VISIBLE);
             companyViewModel.getSetting(companySelect.getUser(), companySelect.getPass());
         });
 
     }
 
-
     private void connectToServer(String url) {
         connectToServer.connect(sharedPreferences, hostSelectionInterceptor, true, url);
+    }
+
+    private void initAnimation() {
+        binding.progressBar22.setAnimation("loading.json");
+        binding.progressBar22.loop(true);
+        binding.progressBar22.setSpeed(2f);
+        binding.progressBar22.playAnimation();
+    }
+
+    private void loadMore(){
+        binding.progressBar22.setVisibility(View.VISIBLE);
+        pageMain++;
+        mainViewModel.getAllCompany("", pageMain);
     }
 
 }

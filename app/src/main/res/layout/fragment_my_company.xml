@@ -20,12 +20,6 @@
             android:orientation="vertical">
 
 
-
-
-
-
-
-
             <ImageView
                 android:id="@+id/iv_icon_empty"
                 android:layout_width="@dimen/passenger_icon_empty_page"

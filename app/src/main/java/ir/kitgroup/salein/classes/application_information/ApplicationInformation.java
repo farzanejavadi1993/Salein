@@ -15,11 +15,11 @@ public class ApplicationInformation {
                     appInfo.setSaleinApp(true);
                     break;
                 case "ir.kitgroup.saleinmeat":
-                    appInfo.setApplication_code("987654");
+                    appInfo.setApplication_code("1115");
                     appInfo.setGif_url("file:///android_asset/donyavi.gif");
                     break;
                 case "ir.kitgroup.saleinjam":
-                    appInfo.setApplication_code("963258");
+                    appInfo.setApplication_code("1116");
                     break;
             }
             return appInfo;

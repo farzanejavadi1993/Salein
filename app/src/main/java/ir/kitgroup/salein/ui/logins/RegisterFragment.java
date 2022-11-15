@@ -487,9 +487,9 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             this.mapboxMap.addOnMapClickListener(point -> {
                 Util.nameUser = binding.edtName.getText().toString();
                 Util.address = binding.edtAddress.getText().toString();
-                Navigation.findNavController(binding.getRoot()).popBackStack();
-              /*  NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
-                Navigation.findNavController(binding.getRoot()).navigate(action);*/
+                //Navigation.findNavController(binding.getRoot()).popBackStack();
+                NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
+                Navigation.findNavController(binding.getRoot()).navigate(action);
                 return false;
             });
 

@@ -145,16 +145,8 @@ public class HomeFragment extends Fragment {
     //endregion Dialog Sync
 
 
-    //region Variable DialogUpdate
-    private Dialog dialogUpdate;
-    private TextView textUpdate;
-    private MaterialButton btnNo;
-    //endregion Variable DialogUpdate
-
-
     private String maxSales = "0";//For Check Inventory If Its Amount ==1  Default Amount iS 0
     private String Transport_GUID = "";//GUID Of Transport Row , We Create Row Of Transport At Order Form By Using This GUID
-    private String linkUpdate = "";//It is Update Link Get From Server
     private String GuidProductLvl2 = "";//It Is GUID Of ProductLevel2 Item For Get Product By Using This GUID
     private int keyCustomTab = 0;//It Is Number Of CustomTab Item For Get Product By Using This Number
     private Boolean disableAccount = false;
@@ -188,7 +180,7 @@ public class HomeFragment extends Fragment {
 
             sharedPreferences.edit().putBoolean("vip", false).apply();
             sharedPreferences.edit().putBoolean("discount", false).apply();
-            Inv_GUID="";
+            Inv_GUID = "";
 
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             Product.deleteAll(Product.class);
@@ -200,7 +192,7 @@ public class HomeFragment extends Fragment {
             company = Select.from(Company.class).first();
             userName = company.getUser();
             passWord = company.getPass();
-            appInfo=Select.from(Salein.class).first();
+            appInfo = Select.from(Salein.class).first();
             //endregion Config
 
 
@@ -209,8 +201,8 @@ public class HomeFragment extends Fragment {
             try {
                 Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
                 getArguments().clear();
-            }catch (Exception ignored){
-                Inv_GUID="";
+            } catch (Exception ignored) {
+                Inv_GUID = "";
             }
 
             if (Inv_GUID.equals("")) {
@@ -283,7 +275,7 @@ public class HomeFragment extends Fragment {
             btnNoDialog.setOnClickListener(v -> {
                 dialogSync.dismiss();
                 if (disableAccount) {
-                    if (appInfo==null)
+                    if (appInfo == null)
                         getActivity().finish();
                     else
                         Navigation.findNavController(binding.getRoot()).popBackStack();
@@ -381,36 +373,6 @@ public class HomeFragment extends Fragment {
                 }
             });
             //endregion Cast DialogDescription
-
-
-            //region Cast Dialog Update
-            dialogUpdate = new Dialog(getActivity());
-            dialogUpdate.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogUpdate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogUpdate.setContentView(R.layout.custom_dialog);
-            dialogUpdate.setCancelable(false);
-
-            textUpdate = dialogUpdate.findViewById(R.id.tv_message);
-
-
-            MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
-            btnOk.setText("آپدیت");
-            btnNo = dialogUpdate.findViewById(R.id.btn_cancel);
-            btnNo.setText("بعدا");
-
-            btnNo.setOnClickListener(v -> dialogUpdate.dismiss());
-
-            btnOk.setOnClickListener(v -> {
-                btnOk.setEnabled(false);
-
-                if (!linkUpdate.equals("")) {
-                    btnOk.setEnabled(true);
-                    Uri uri = Uri.parse(linkUpdate);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-            });
-            //endregion Cast Dialog Update
 
 
             //region CONFIGURATION DATA PRODUCT_LEVEL1
@@ -673,7 +635,6 @@ public class HomeFragment extends Fragment {
             });
 
 
-
         } catch (Exception e) {
             Toast.makeText(getActivity(), e + "", Toast.LENGTH_SHORT).show();
         }
@@ -757,44 +718,8 @@ public class HomeFragment extends Fragment {
                 //endregion  closeDayList
 
 
-                //region updateApp
-                String update = settingsList.get(0).UPDATE_APP;
-                try {
-                    linkUpdate = settingsList.get(0).LINK_UPDATE;
-                    sharedPreferences.edit().putString("update_link", settingsList.get(0).LINK_UPDATE).apply();
-                } catch (Exception ignored) {
-                }
-
-                String NewVersion = settingsList.get(0).VERSION_APP;
-                String AppVersion = "";
-                try {
-                    AppVersion = appVersion();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                if (!appInfo.getSalein() && update.equals("3") && !AppVersion.equals(NewVersion)) {
-                    textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
-                    btnNo.setVisibility(View.GONE);
-                    dialogUpdate.setCancelable(false);
-                    dialogUpdate.show();
-                    Product.deleteAll(Product.class);
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-                }
-                else if (!appInfo.getSalein() &&update.equals("2") && !AppVersion.equals(NewVersion)) {
-                    textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
-                    btnNo.setVisibility(View.VISIBLE);
-                    dialogUpdate.setCancelable(true);
-                    Product.deleteAll(Product.class);
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-                    dialogUpdate.show();
-                }
-                //endregion updateApp
-
-
                 //region Default Account
                 sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
-
                 //endregion Default Account
 
 
@@ -902,8 +827,7 @@ public class HomeFragment extends Fragment {
                 myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-            }
-            else {
+            } else {
 
 
                 binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
@@ -1278,14 +1202,12 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
     }
 
-    public void showData(){
+    public void showData() {
         sharedPreferences.edit().putBoolean("discount", false).apply();
         sharedPreferences.edit().putBoolean("vip", false).apply();
         binding.progressbar.setVisibility(View.VISIBLE);
