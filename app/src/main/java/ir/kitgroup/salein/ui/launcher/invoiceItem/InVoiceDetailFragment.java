@@ -594,7 +594,7 @@ public class InVoiceDetailFragment extends Fragment {
                     textView.setTextSize(13);
                     return;
                 }
-               NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID);
+                NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
 
 

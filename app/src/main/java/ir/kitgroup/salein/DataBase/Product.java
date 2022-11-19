@@ -76,6 +76,30 @@ public class Product extends SugarRecord {
     @Expose
     private Double coef2;
 
+    public Integer getRe() {
+
+        return Re;
+    }
+
+
+    public void setRe(Integer re) {
+        Re = re;
+    }
+
+    public Integer Re;
+
+
+
+
+    public String getOperate() {
+        return operate;
+    }
+
+    public void setOperate(String operate) {
+        this.operate = operate;
+    }
+
+    public  String operate;
 
     private Double Amount;
 
@@ -180,5 +204,14 @@ public class Product extends SugarRecord {
     }
 
 
+    public int getiIndex() {
+        return iIndex;
+    }
+
+    public void setiIndex(int iIndex) {
+        this.iIndex = iIndex;
+    }
+
+    private int iIndex;
 
 }

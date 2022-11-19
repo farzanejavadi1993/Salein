@@ -7,7 +7,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import ir.kitgroup.salein.classes.Util;
+
 import androidx.annotation.Keep;
+
 @Keep
 public class Product {
 
@@ -72,6 +74,29 @@ public class Product {
     @SerializedName("UM1")
     @Expose
     public String UM1;
+
+
+    public Integer getRe() {
+
+        return Re;
+    }
+
+    public void setRe(Integer re) {
+        Re = re;
+    }
+
+    public Integer Re;
+
+
+    public String getOperate() {
+        return operate;
+    }
+
+    public void setOperate(String operate) {
+        this.operate = operate;
+    }
+
+    public String operate;
 
 
     private Double Amount;
@@ -201,15 +226,15 @@ public class Product {
 
 
     public Double getCoef1() {
-        double co =1.0;
-        if (coef != null && coef>0.0)
+        double co = 1.0;
+        if (coef != null && coef > 0.0)
             co = coef;
         return co;
     }
 
     public Double getCoef2() {
-        double co =0.0;
-        if (coef2 != null && coef2>0.0)
+        double co = 0.0;
+        if (coef2 != null && coef2 > 0.0)
             co = coef2;
         return co;
     }
@@ -220,9 +245,9 @@ public class Product {
     }
 
     public Integer getKey() {
-        int key1=0;
-        if (key!=null)
-            key1=key;
+        int key1 = 0;
+        if (key != null)
+            key1 = key;
         return
                 key1;
     }
@@ -230,5 +255,15 @@ public class Product {
     public void setKey(Integer key) {
         this.key = key;
     }
+
+    public int getiIndex() {
+        return iIndex;
+    }
+
+    public void setiIndex(int iIndex) {
+        this.iIndex = iIndex;
+    }
+
+    private int iIndex;
 
 }

@@ -36,7 +36,6 @@ import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.models.Invoice;
 import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.models.ModelAccount;
-import ir.kitgroup.salein.models.ModelCompany;
 import ir.kitgroup.salein.models.ModelCustomTab;
 import ir.kitgroup.salein.models.ModelDesc;
 import ir.kitgroup.salein.models.ModelInvoice;
@@ -662,6 +661,7 @@ public class CompanyViewModel extends ViewModel {
     public MutableLiveData<Integer> getResultMaxSale() {
         return resultMaxSale;
     }
+
 
 
     public void getAllInvoice(String user, String passWord, String accId, String date) {

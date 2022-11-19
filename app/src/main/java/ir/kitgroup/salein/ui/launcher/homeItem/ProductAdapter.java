@@ -6,6 +6,7 @@ import android.app.Activity;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
@@ -220,10 +221,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
         if (productsList.get(position) != null) {
-           if (type==1)
-               try {
-                   setFadeAnimation(holder.itemView);
-               }catch (Exception ignored){}
+            if (type==1)
+                try {
+                    setFadeAnimation(holder.itemView);
+                }catch (Exception ignored){}
 
 
             holder.error.setText("");
@@ -250,8 +251,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             try{
 
                 String input_id = "ic_" + company.getInskId().split("ir.kitgroup.salein")[1];
-              if (imageId==0)
-                imageId = context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
+                if (imageId==0)
+                    imageId = context.getResources().getIdentifier(input_id, "mipmap", context.getPackageName());
             }
             catch (Exception ignore){}
 
@@ -288,15 +289,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.layoutDiscount.setVisibility(View.GONE);
                 holder.productDiscountPercent.setVisibility(View.GONE);
                 holder.productOldPrice.setVisibility(View.GONE);
-                holder.Line.setVisibility(View.GONE);
+
                 if (productsList.get(holder.getAdapterPosition()).getPercDis() != 0.0) {
                     holder.layoutDiscount.setVisibility(View.VISIBLE);
                     holder.productDiscountPercent.setVisibility(View.VISIBLE);
                     holder.productOldPrice.setVisibility(View.VISIBLE);
-                    holder.Line.setVisibility(View.VISIBLE);
+                    holder.productOldPrice.setPaintFlags(holder.productOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.productDiscountPercent.setText(format.format(productsList.get(holder.getAdapterPosition()).getPercDis()) + "%");
                     holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
-                    holder.Line.setText("---------------");
                     double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (productsList.get(position).getPercDis() / 100);
                     double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                     holder.productPrice.setText(format.format(newPrice) + " ریال ");
@@ -330,11 +330,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                             holder.layoutDiscount.setVisibility(View.VISIBLE);
                             holder.productDiscountPercent.setVisibility(View.VISIBLE);
                             holder.productOldPrice.setVisibility(View.VISIBLE);
-                            holder.Line.setVisibility(View.VISIBLE);
+                            holder.productOldPrice.setPaintFlags(holder.productOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
                             holder.productDiscountPercent.setText(format.format(ivDetail.INV_DET_PERCENT_DISCOUNT) + "%");
                             holder.productOldPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)));
-                            holder.Line.setText("------------");
+
                             double discountPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) * (ivDetail.INV_DET_PERCENT_DISCOUNT / 100);
                             double newPrice = productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences) - discountPrice;
                             holder.productPrice.setText(format.format(newPrice) + " ریال ");
@@ -344,7 +344,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                             holder.productDiscountPercent.setVisibility(View.GONE);
                             holder.layoutDiscount.setVisibility(View.GONE);
                             holder.productOldPrice.setVisibility(View.GONE);
-                            holder.Line.setVisibility(View.GONE);
                             holder.productPrice.setText(format.format(productsList.get(holder.getAdapterPosition()).getPrice(sharedPreferences)) + " ریال ");
                         }
                     }
@@ -536,7 +535,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         private final TextView productPrice;
         private final TextView productOldPrice;
         private final TextView productDiscountPercent;
-        private final TextView Line;
+
         private final EditText ProductAmountTxt;
         private final TextView edtDesc;
         private final RelativeLayout cardEdit;
@@ -568,7 +567,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             productPrice = itemView.findViewById(R.id.order_recycle_item_product_price);
             productOldPrice = itemView.findViewById(R.id.order_recycle_item_product_old_price);
             productDiscountPercent = itemView.findViewById(R.id.order_recycle_item_product_discountPercent);
-            Line = itemView.findViewById(R.id.order_recycle_item_product_line);
+
 
 
             productImage = itemView.findViewById(R.id.order_recycle_item_product_img);
