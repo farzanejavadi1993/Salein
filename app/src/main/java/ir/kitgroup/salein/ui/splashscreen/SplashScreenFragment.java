@@ -224,7 +224,8 @@ public class SplashScreenFragment extends Fragment {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (account != null  && !account.getVersion().equals(newVersionUpdate)) {
+        }
+        else if (account != null  && !account.getVersion().equals(newVersionUpdate)) {
 
             if (!messageUpdate.equals(""))
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);

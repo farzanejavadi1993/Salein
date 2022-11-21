@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 
+import com.google.android.material.button.MaterialButton;
+
+import ir.kitgroup.salein.R;
 
 
 public class DialogInstance implements Dialogs {
@@ -18,14 +23,17 @@ public class DialogInstance implements Dialogs {
     private static DialogInstance dialogInstance;
 
     public static DialogInstance getInstance() {
-        if (dialogInstance== null)
+        if (dialogInstance == null)
             dialogInstance = new DialogInstance();
 
         return dialogInstance;
     }
 
+
+
+
     @Override
-    public Dialog dialog(Activity activity,boolean cancelable, @LayoutRes int res) {
+    public Dialog dialog(Activity activity, boolean cancelable, @LayoutRes int res) {
         mDialog = new android.app.Dialog(activity);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -33,9 +41,10 @@ public class DialogInstance implements Dialogs {
         mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDialog.setContentView(res);
         mDialog.setCancelable(cancelable);
+
+
         return mDialog;
     }
-
 
 
 }

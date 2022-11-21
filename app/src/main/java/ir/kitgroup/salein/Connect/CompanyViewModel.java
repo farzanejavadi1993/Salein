@@ -80,7 +80,7 @@ public class CompanyViewModel extends ViewModel {
     private final MutableLiveData<ModelLog> resultSendFeedBack = new MutableLiveData<>();
     private final MutableLiveData<ModelInvoice> resultInvoice = new MutableLiveData<>();
     private final MutableLiveData<ModelLog> resultLog = new MutableLiveData<>();
-    private final MutableLiveData<Integer> resultMaxSale = new MutableLiveData<>();
+    private final MutableLiveData<Product> resultMaxSale = new MutableLiveData<>();
     private final MutableLiveData<Boolean> resultAddAccount = new MutableLiveData<>();
 
     private final MutableLiveData<ModelTypeOrder> resultTypeOrder = new MutableLiveData<>();
@@ -633,10 +633,10 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void getMaxSale(String user, String passWord, String Prd_prd) {
+    public void getMaxSale(String user, String passWord, Product product,int position,String operation) {
 
         compositeDisposable.add(
-                myRepository.getMaxSales(user, passWord, Prd_prd)
+                myRepository.getMaxSales(user, passWord, product.getI())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -648,7 +648,11 @@ public class CompanyViewModel extends ViewModel {
                             int remain;
                             try {
                                 remain = Integer.parseInt(jsonElement);
-                                resultMaxSale.setValue(remain);
+                                product.setRe(remain);
+                                product.setiIndex(position);
+                                product.setOperate(operation);
+                                resultMaxSale.setValue(product);
+
                             } catch (Exception ignored) {
                                 ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
                                 resultLog.setValue(iDs);
@@ -658,7 +662,7 @@ public class CompanyViewModel extends ViewModel {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت مانده کالا", ""))));
     }
 
-    public MutableLiveData<Integer> getResultMaxSale() {
+    public MutableLiveData<Product> getResultMaxSale() {
         return resultMaxSale;
     }
 

@@ -411,7 +411,8 @@ public class InVoiceDetailFragment extends Fragment {
                 if (maxSales.equals("1")) {
                     Prd_UID = Prd_GUID;
                     sWord = s;
-                    myViewModel.getMaxSale(userName, passWord, Prd_GUID);
+                    //farzane change please
+                    /*myViewModel.getMaxSale(userName, passWord, Prd_GUID);*/
                 } else {
 
                     List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -869,7 +870,8 @@ public class InVoiceDetailFragment extends Fragment {
             customProgress.hideProgress();
 
         });
-        myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), res -> {
+        //farzane change please
+        /*myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), res -> {
 
             if (res == null)
                 return;
@@ -930,7 +932,7 @@ public class InVoiceDetailFragment extends Fragment {
 
             }
 
-        });
+        });*/
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             customProgress.hideProgress();
             if (result == null)

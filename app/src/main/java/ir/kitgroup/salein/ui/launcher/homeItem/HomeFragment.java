@@ -2,28 +2,25 @@ package ir.kitgroup.salein.ui.launcher.homeItem;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -47,37 +45,41 @@ import com.orm.query.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.LauncherActivity;
-import ir.kitgroup.salein.Connect.CompanyAPI;
+import ir.kitgroup.salein.BR;
 
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.DataBase.Product;
 
+import ir.kitgroup.salein.DataBase.Unit;
+import ir.kitgroup.salein.adapter.UniversalAdapter2;
+import ir.kitgroup.salein.classes.Util;
+import ir.kitgroup.salein.classes.dialog.DialogInstance;
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
 import ir.kitgroup.salein.models.CustomTab;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.classes.CustomProgress;
 
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.classes.PaginationScrollListener;
-import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.models.Setting;
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.models.ProductLevel1;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.models.ProductLevel2;
-
-import static java.lang.Math.min;
+import ir.kitgroup.salein.ui.launcher.searchItem.SearchProductFragmentDirections;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
@@ -86,15 +88,10 @@ public class HomeFragment extends Fragment {
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
-    @Inject
-    CompanyAPI api;
-    private HomeFragmentBinding binding;
-    private CompanyViewModel myViewModel;
-    private Company company;
-    private String userName;
-    private String passWord;
 
-    private CustomProgress customProgress;
+    private HomeFragmentBinding binding;
+
+    private CompanyViewModel myViewModel;
 
 
     private ArrayList<ProductLevel1> productLevel1List;
@@ -109,66 +106,73 @@ public class HomeFragment extends Fragment {
     private CustomTabAdapter customTabAdapter;
 
 
-    private ArrayList<ir.kitgroup.salein.models.Product> productListData;//All Product
-    private ArrayList<ir.kitgroup.salein.models.Product> productList;//Filter Of All Product
-    private ProductAdapter productAdapter;
+    private ArrayList<ir.kitgroup.salein.models.Product> productList;
+    private UniversalAdapter2 productAdapter;
 
-
-    private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
-
-
-    //region Variable Pager For ProductList
-    private boolean isLastPage;
-    private boolean isLoading;
-    private int currentPage = 1;
-    private int totalPage;
-    //endregion Variable Pager For ProductList
+    private TextView txtError;
+    private EditText productAmountTxt;
+    private TextWatcher textWatcher1 = null;
+    private ImageView ivMax;
+    private ImageView ivMinus;
+    private ProgressBar  progressBar;
 
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
-    private EditText edtDescriptionItem;
+    private EditText edtDescription;
     private ArrayList<Description> descriptionList;
     private DescriptionAdapter descriptionAdapter;
     private String GuidInv;
     //endregion Variable Dialog Description
 
 
-    //region Dialog Sync
-    private Dialog dialogSync;
-    private TextView textMessageDialog;
-    private MaterialButton btnOkDialog;
-    private MaterialButton btnNoDialog;
-    //endregion Dialog Sync
+    private Dialog dialogRequestAgain;
 
 
-    //region Variable DialogUpdate
-    private Dialog dialogUpdate;
-    private TextView textUpdate;
-    private MaterialButton btnNo;
-    //endregion Variable DialogUpdate
+    private String checkRemainProduct = "0";//For Check Inventory If Its Amount ==1  Default Amount iS 0
 
-
-    private String maxSales = "0";//For Check Inventory If Its Amount ==1  Default Amount iS 0
-    private String Transport_GUID = "";//GUID Of Transport Row , We Create Row Of Transport At Order Form By Using This GUID
-    private String linkUpdate = "";//It is Update Link Get From Server
     private String GuidProductLvl2 = "";//It Is GUID Of ProductLevel2 Item For Get Product By Using This GUID
+
+    private String Transport_GUID = "";
+
     private int keyCustomTab = 0;//It Is Number Of CustomTab Item For Get Product By Using This Number
-    private Boolean disableAccount = false;
 
-    public int counter = 0;//Number Of Order Rows
     private String Inv_GUID = "";
+
     private Salein appInfo;
+    private Company company;
+    private String userName;
+    private String passWord;
+    private Boolean disableAccount;
 
+    private CustomProgress customProgress;
+    private DecimalFormat format;
+    private DecimalFormat df;
+    private String defaultCoff;
 
+    private String valueOfCloseDay;
+    private ArrayList<String> closeDayList;
+
+    DialogInstance dialogInstance;
+    int pageMain = 1;
+
+    private  String sWord="";
+
+     MaterialButton btnOk;
+     MaterialButton btnNo;
+     TextView tvMessage;
+
+    public HomeFragment() {
+    }
     //endregion Parameter
+
+    //region Override Method
 
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         binding = HomeFragmentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
@@ -180,501 +184,17 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            //region Config
+        init();
+        resetFilter();
+        createOrderForm();
+        setCounterForAmountOfOrder();
+        castDialogRequestAgain();
+        castDialogDescription();
+        castRecyclerViewProductLevel1();
+        castRecyclerViewProductLevel2();
+        castRecyclerViewCustomProduct();
+        castRecyclerViewProduct();
 
-            sharedPreferences.edit().putBoolean("vip", false).apply();
-            sharedPreferences.edit().putBoolean("discount", false).apply();
-
-
-            Inv_GUID="";
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            Product.deleteAll(Product.class);
-
-            customProgress = CustomProgress.getInstance();
-            sharedPreferences.edit().putString("FNM", "main").apply();
-            Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
-            binding.ivFilter.setImageResource(R.drawable.ic_filter);
-            company = Select.from(Company.class).first();
-            userName = company.getUser();
-            passWord = company.getPass();
-            appInfo=Select.from(Salein.class).first();
-            //endregion Config
-
-
-            //region Create Order
-
-            try {
-                Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
-                getArguments().clear();
-            }catch (Exception ignored){
-                Inv_GUID="";
-            }
-
-            if (Inv_GUID.equals("")) {
-                ((LauncherActivity) getActivity()).setShowProfileItem(true);
-                String name = company.getInskId().split("ir.kitgroup.")[1];
-                Inv_GUID = sharedPreferences.getString(name, "");
-
-                if (Inv_GUID.equals("")) {
-                    Inv_GUID = UUID.randomUUID().toString();
-                    sharedPreferences.edit().putString(name, Inv_GUID).apply();
-                }
-            } else {
-                ((LauncherActivity) getActivity()).setShowProfileItem(false);
-            }
-
-            sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();//Save GUID Order Form To Use In App
-
-            //endregion Create Order
-
-
-            //region Set Animation Instead Of ProgressBar By Using PackageName In special cases
-            if (Util.getPackageName(getActivity()).contains("meat"))
-                Glide.with(this).asGif().load(Uri.parse("file:///android_asset/donyavi.gif")).into(binding.animationView);
-            //endregion Set Animation Instead Of ProgressBar By Using PackageName In special cases
-
-            //region First Value Parameter
-            counter = 0;
-            productLevel1List = new ArrayList<>();
-            productLevel2List = new ArrayList<>();
-            customTabList = new ArrayList<>();
-            productList = new ArrayList<>();
-            productListData = new ArrayList<>();
-            descriptionList = new ArrayList<>();
-            closeDayList = new ArrayList<>();
-            //endregion First Value Parameter
-
-            //region Get Invoice By Guid Of Order Form
-            Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
-            List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-            if (invDetailses.size() > 0) {
-                CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
-                counter = invDetailses.size();
-            }
-
-
-            if (counter == 0)
-                ((LauncherActivity) getActivity()).setClearCounterOrder();
-            else
-                ((LauncherActivity) getActivity()).setCounterOrder(counter);
-            //endregion Get Invoice By Guid Of Order Form
-
-            //region Set Title To TextView
-            binding.tvNameStore.setText(company.getN());
-            //endregion Set Title To TextView
-
-            Account account = Select.from(Account.class).first();
-
-
-            //region Cast Variable Dialog Sync
-            dialogSync = new Dialog(getActivity());
-            dialogSync.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogSync.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogSync.setContentView(R.layout.custom_dialog);
-            dialogSync.setCancelable(false);
-
-            textMessageDialog = dialogSync.findViewById(R.id.tv_message);
-
-            btnOkDialog = dialogSync.findViewById(R.id.btn_ok);
-            btnNoDialog = dialogSync.findViewById(R.id.btn_cancel);
-            btnNoDialog.setOnClickListener(v -> {
-                dialogSync.dismiss();
-                if (disableAccount) {
-                    if (!appInfo.getSalein())
-                        getActivity().finish();
-                    else
-                        Navigation.findNavController(binding.getRoot()).popBackStack();
-                    return;
-                }
-
-
-            });
-
-
-            btnOkDialog.setOnClickListener(v -> {
-                dialogSync.dismiss();
-                binding.ivFilter.setImageResource(R.drawable.ic_filter);
-                sharedPreferences.edit().putBoolean("discount", false).apply();
-                sharedPreferences.edit().putBoolean("vip", false).apply();
-
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-                productListData.clear();
-                productLevel1List.clear();
-                productLevel2List.clear();
-                productAdapter.notifyDataSetChanged();
-                myViewModel.getProductLevel1(userName, passWord);
-                myViewModel.getInquiryAccount(userName, passWord, account.getM());
-                myViewModel.getUnit(userName, passWord);
-                myViewModel.getSetting(userName, passWord);
-            });
-
-            //endregion Cast Variable Dialog Sync
-
-
-            //region Cast DialogDescription
-            dialogDescription = new Dialog(getActivity());
-            dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogDescription.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogDescription.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialogDescription.setContentView(R.layout.dialog_description);
-            dialogDescription.setCancelable(false);
-            edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
-            MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
-            RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
-
-
-            FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
-            flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
-            flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
-            flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
-            flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
-            recyclerDescription.setLayoutManager(flexboxLayoutManager);
-
-            descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
-            recyclerDescription.setAdapter(descriptionAdapter);
-
-            descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
-                if (click) {
-                    descriptionList.get(position).Click = true;
-                    String description = edtDescriptionItem.getText().toString();
-                    edtDescriptionItem.setText(description + "   " + "'" + desc + "'");
-                } else {
-                    descriptionList.get(position).Click = false;
-                    if (edtDescriptionItem.getText().toString().contains("'" + desc + "'"))
-
-                        edtDescriptionItem.setText(edtDescriptionItem.getText().toString().replace("   " + "'" + desc + "'", ""));
-                }
-            });
-
-            btnRegisterDescription.setOnClickListener(v -> {
-                InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
-                if (invDetail != null) {
-                    invDetail.INV_DET_DESCRIBTION = edtDescriptionItem.getText().toString();
-                    invDetail.update();
-                }
-                productAdapter.notifyDataSetChanged();
-                dialogDescription.dismiss();
-            });
-
-            edtDescriptionItem.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.toString().isEmpty()) {
-                        for (int i = 0; i < descriptionList.size(); i++) {
-                            descriptionList.get(i).Click = false;
-                        }
-                        descriptionAdapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-            //endregion Cast DialogDescription
-
-
-            //region Cast Dialog Update
-            dialogUpdate = new Dialog(getActivity());
-            dialogUpdate.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialogUpdate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialogUpdate.setContentView(R.layout.custom_dialog);
-            dialogUpdate.setCancelable(false);
-
-            textUpdate = dialogUpdate.findViewById(R.id.tv_message);
-
-
-            MaterialButton btnOk = dialogUpdate.findViewById(R.id.btn_ok);
-            btnOk.setText("آپدیت");
-            btnNo = dialogUpdate.findViewById(R.id.btn_cancel);
-            btnNo.setText("بعدا");
-
-            btnNo.setOnClickListener(v -> dialogUpdate.dismiss());
-
-            btnOk.setOnClickListener(v -> {
-                btnOk.setEnabled(false);
-
-                if (!linkUpdate.equals("")) {
-                    btnOk.setEnabled(true);
-                    Uri uri = Uri.parse(linkUpdate);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-            });
-            //endregion Cast Dialog Update
-
-
-            //region CONFIGURATION DATA PRODUCT_LEVEL1
-            productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager.setReverseLayout(true);
-            binding.orderRecyclerViewProductLevel1.setLayoutManager(manager);
-            binding.orderRecyclerViewProductLevel1.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
-
-
-            //region Click Item ProductLevel1
-            productLevel1Adapter.SetOnItemClickListener(GUID -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item ProductLevel1 And Item ProductLevel2
-                ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
-                CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
-                if (resultPrdGrp1.size() > 0) {
-                    productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
-
-
-                //region Click New Item ProductLevel1
-                ArrayList<ProductLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
-                CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(GUID));
-                if (resultPrdGroup1_.size() > 0) {
-                    productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
-                }
-                //endregion Click New Item ProductLevel1
-
-
-                productLevel1Adapter.notifyDataSetChanged();
-                productList.clear();
-                productListData.clear();
-                productAdapter.notifyDataSetChanged();
-
-                productLevel2List.clear();
-                productLevel2Adapter.notifyDataSetChanged();
-
-
-                //region Full ProductLevel2List Because This Item ProductLevel1 Is True
-                myViewModel.getProductLevel2(userName, passWord, GUID);
-                //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
-            });
-            //endregion Click Item ProductLevel1
-
-
-            //endregion CONFIGURATION DATA PRODUCT_LEVEL1
-
-            //region CONFIGURATION DATA PRODUCT_LEVEL_2
-            productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
-
-            LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
-            manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager2.setReverseLayout(true);
-            binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
-            binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
-
-
-            //region Click Item ProductLevel2
-            productLevel2Adapter.SetOnItemClickListener(GUID -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-
-                productAdapter.notifyDataSetChanged();
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item
-                ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
-                CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
-                if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
-                    productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item
-
-
-                //region Click New Item
-                ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
-                CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
-
-                if (resProductGroupLevel2.size() > 0) {
-                    productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
-                }
-                //endregion Click New Item
-
-                productLevel2Adapter.notifyDataSetChanged();
-
-
-                //region Full ProductList Because This Item ProductLevel1 Is True
-                GuidProductLvl2 = GUID;
-                myViewModel.getSettingPrice(userName, passWord);
-                //endregion Full ProductList Because This Item ProductLevel1 Is True
-            });
-
-            //endregion Click Item ProductLevel2
-
-            //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
-
-            //region CONFIGURATION DATA CUSTOM_TAB
-            customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
-
-            LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
-            managerCustom.setOrientation(LinearLayoutManager.HORIZONTAL);
-            managerCustom.setReverseLayout(true);
-            binding.orderRecyclerViewCustomTab.setLayoutManager(managerCustom);
-            binding.orderRecyclerViewCustomTab.setScrollingTouchSlop(View.FOCUS_LEFT);
-            binding.orderRecyclerViewCustomTab.setAdapter(customTabAdapter);
-
-
-            //region Click Item CustomTab
-            customTabAdapter.SetOnItemClickListener(key -> {
-                binding.animationView.setVisibility(View.VISIBLE);
-                binding.progressbar.setVisibility(View.VISIBLE);
-                productList.clear();
-                productAdapter.notifyDataSetChanged();
-                binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-                isLastPage = false;
-                isLoading = false;
-                currentPage = 1;
-                binding.orderTxtError.setText("");
-
-                //region UnClick Old Item
-                ArrayList<CustomTab> resultCustomTab = new ArrayList<>(customTabList);
-                CollectionUtils.filter(resultCustomTab, r -> r.Click);
-                if (resultCustomTab.size() > 0 && customTabList.size() > 0) {
-                    customTabList.get(customTabList.indexOf(resultCustomTab.get(0))).Click = false;
-                }
-                //endregion UnClick Old Item
-
-
-                //region Click New Item
-                ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
-                CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
-
-                if (customTabList.size() > 0) {
-                    customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
-                }
-                //endregion Click New Item
-
-                customTabAdapter.notifyDataSetChanged();
-
-
-                //region Full ProductList Because This Item ProductLevel1 Is True
-                keyCustomTab = key;
-                myViewModel.getSettingPrice(userName, passWord);
-                //endregion Full ProductList Because This Item ProductLevel1 Is True
-            });
-
-            //endregion Click Item CustomTab
-
-            //endregion CONFIGURATION DATA CUSTOM_TAB
-
-
-            //region CONFIGURATION DATA PRODUCT
-            productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api, 1);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-            binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
-            binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
-
-
-            binding.orderRecyclerViewProduct.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-
-                @Override
-                protected void loadMoreItems() {
-
-                    currentPage++;
-                    loadMore();
-                }
-
-                @Override
-                public boolean isLastPage() {
-                    return isLastPage;
-
-
-                }
-
-                @Override
-                public boolean isLoading() {
-                    return isLoading;
-                }
-            });
-            binding.orderRecyclerViewProduct.setAdapter(productAdapter);
-            productAdapter.setOnClickListener((Prd_UID) -> {
-                List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                if (invDetails.size() > 0) {
-                    this.counter = invDetails.size();
-                    ((LauncherActivity) getActivity()).setCounterOrder(counter);
-                } else
-                    ((LauncherActivity) getActivity()).setClearCounterOrder();
-
-
-            });
-
-
-            productAdapter.setOnDescriptionItem((GUID, amount) -> {
-                if (amount > 0) {
-                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
-                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(GUID));
-                    if (result.size() > 0) {
-                        edtDescriptionItem.setText(result.get(0).INV_DET_DESCRIBTION);
-                        descriptionList.clear();
-                        GuidInv = result.get(0).INV_DET_UID;
-                        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
-                        myViewModel.getDescription(userName, passWord, GUID);
-
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
-            productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
-                @Override
-                public void onClick(String Prd_UID) {
-                    NavDirections action = HomeFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-
-                }
-            });
-            //endregion CONFIGURATION DATA PRODUCT
-
-            binding.ivFilter.setOnClickListener(v -> {
-
-                boolean filter = false;
-
-                if (binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE)
-                    filter = true;
-
-
-                NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-
-
-            });
-
-            binding.btnCompanyBranches.setOnClickListener(view1 -> {
-                if (company.Parent!=null) {
-                    NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-            });
-
-
-
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e + "", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -689,7 +209,6 @@ public class HomeFragment extends Fragment {
         binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
         productList.clear();
-        productListData.clear();
         customTabList.clear();
         productLevel1List.clear();
         productLevel2List.clear();
@@ -751,43 +270,8 @@ public class HomeFragment extends Fragment {
                 if (!CloseDay.equals("")) {
                     closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
                 }
-                productAdapter.setCloseListDate(closeDayList);
+
                 //endregion  closeDayList
-
-
-                //region updateApp
-                String update = settingsList.get(0).UPDATE_APP;
-                try {
-                    linkUpdate = settingsList.get(0).LINK_UPDATE;
-                    sharedPreferences.edit().putString("update_link", settingsList.get(0).LINK_UPDATE).apply();
-                } catch (Exception ignored) {
-                }
-
-                String NewVersion = settingsList.get(0).VERSION_APP;
-                String AppVersion = "";
-                try {
-                    AppVersion = appVersion();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                if (!appInfo.getSalein() && update.equals("3") && !AppVersion.equals(NewVersion)) {
-                    textUpdate.setText("آپدیت جدید از برنامه موجود است.برای ادامه دادن  برنامه را از بازار آپدیت کنید.");
-                    btnNo.setVisibility(View.GONE);
-                    dialogUpdate.setCancelable(false);
-                    dialogUpdate.show();
-                    Product.deleteAll(Product.class);
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-                }
-                else if (!appInfo.getSalein() &&update.equals("2") && !AppVersion.equals(NewVersion)) {
-                    textUpdate.setText("آپدیت جدید از برنامه موجود است.برای بهبود عملکرد  برنامه را  از بازار آپدیت کنید.");
-                    btnNo.setVisibility(View.VISIBLE);
-                    dialogUpdate.setCancelable(true);
-                    Product.deleteAll(Product.class);
-                    InvoiceDetail.deleteAll(InvoiceDetail.class);
-                    dialogUpdate.show();
-                }
-                //endregion updateApp
 
 
                 //region Default Account
@@ -813,7 +297,7 @@ public class HomeFragment extends Fragment {
             descriptionList.addAll(result);
 
             for (int i = 0; i < descriptionList.size(); i++) {
-                if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                if (edtDescription.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
                     descriptionList.get(i).Click = true;
                 }
 
@@ -900,8 +384,7 @@ public class HomeFragment extends Fragment {
                 myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
 
-            }
-            else {
+            } else {
 
 
                 binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
@@ -983,13 +466,8 @@ public class HomeFragment extends Fragment {
                 }
 
 
-            productListData.clear();
-            productListData.addAll(resultPrd_);
-            if (resultPrd_.size() > 0)
-                for (int i = 0; i < 18; i++) {
-                    if (resultPrd_.size() > i)
-                        productList.add(resultPrd_.get(i));
-                }
+            productList.clear();
+            productList.addAll(resultPrd_);
 
 
             if (productList.size() == 0) {
@@ -998,7 +476,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+            // productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1008,8 +486,9 @@ public class HomeFragment extends Fragment {
                 return;
             myViewModel.getResultSettingPrice().setValue(null);
             sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
-            maxSales = result.get(0).MAX_SALE;
-            sharedPreferences.edit().putString("maxSale", maxSales).apply();
+            checkRemainProduct = result.get(0).MAX_SALE;
+            sharedPreferences.edit().putString("maxSale", checkRemainProduct).apply();
+
 
             String menu = sharedPreferences.getString("menu", "");
             if (!menu.equals("0"))
@@ -1053,13 +532,8 @@ public class HomeFragment extends Fragment {
                 }
 
 
-            productListData.clear();
-            productListData.addAll(resultPrd_);
-            if (resultPrd_.size() > 0)
-                for (int i = 0; i < 18; i++) {
-                    if (resultPrd_.size() > i)
-                        productList.add(resultPrd_.get(i));
-                }
+            productList.clear();
+            productList.addAll(resultPrd_);
 
 
             if (productList.size() == 0) {
@@ -1068,7 +542,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+            //  productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
@@ -1092,13 +566,8 @@ public class HomeFragment extends Fragment {
                     !i.getI().equalsIgnoreCase(Transport_GUID));
 
 
-            productListData.clear();
-            productListData.addAll(result);
-            if (result.size() > 0)
-                for (int i = 0; i < 18; i++) {
-                    if (result.size() > i)
-                        productList.add(result.get(i));
-                }
+            productList.clear();
+            productList.addAll(result);
 
 
             if (productList.size() == 0) {
@@ -1108,7 +577,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-            productAdapter.setMaxSale(maxSales);
+            // productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
 
@@ -1132,8 +601,8 @@ public class HomeFragment extends Fragment {
             CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() && !i.getI().equalsIgnoreCase(Transport_GUID));
 
 
-            productListData.clear();
-            productListData.addAll(result);
+            productList.clear();
+            productList.addAll(result);
             if (result.size() > 0)
                 for (int i = 0; i < 18; i++) {
                     if (result.size() > i)
@@ -1147,12 +616,47 @@ public class HomeFragment extends Fragment {
                 binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
             }
 
-            productAdapter.setMaxSale(maxSales);
+            // productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
 
         });
+
+
+        myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            myViewModel.getResultMaxSale().setValue(null);
+
+            double remain=result.getRe();
+
+            String type=result.getOperate();
+            int position=result.getiIndex();
+
+
+            progressBar.setVisibility(View.GONE);
+
+            if (remain <= 0) {
+                productList.get(result.getiIndex()).setAmount(0.0);
+                if (!result.getOperate().equals("")) {
+                    productAmountTxt.removeTextChangedListener(textWatcher1);
+                    productAmountTxt.setText("");
+                    productAmountTxt.addTextChangedListener(textWatcher1);
+                    ivMax.setVisibility(View.GONE);
+                    ivMinus.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);
+                }
+
+                txtError.setText("این کالا موجود نمی باشد");
+
+            }
+
+            calculate(position,type);
+
+        });
+
+
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
@@ -1173,7 +677,6 @@ public class HomeFragment extends Fragment {
                 productList.clear();
                 productLevel2List.clear();
                 productLevel1List.clear();
-                productListData.clear();
                 productAdapter.notifyDataSetChanged();
                 productLevel1Adapter.notifyDataSetChanged();
                 productLevel2Adapter.notifyDataSetChanged();
@@ -1189,107 +692,43 @@ public class HomeFragment extends Fragment {
 
     }
 
-
-    private void showError(String error, int type) {
-
-
-        textMessageDialog.setText(error);
-        btnNoDialog.setText("بستن");
-        btnOkDialog.setText("سینک مجدد");
-        dialogSync.dismiss();
-        if (type == 0)
-            btnOkDialog.setVisibility(View.GONE);
-        else if (type == 1)
-            btnOkDialog.setVisibility(View.VISIBLE);
-        else {
-            btnOkDialog.setVisibility(View.GONE);
-            dialogSync.setCancelable(false);
-        }
-
-        dialogSync.show();
-        customProgress.hideProgress();
-
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void loadMore() {
-        int pageSize = 18;
-        isLoading = true;
-
-        final ArrayList<ir.kitgroup.salein.models.Product> items = new ArrayList<>();
-        totalPage = (productListData.size() + pageSize - 1) / pageSize;
-
-        if (totalPage > 1) {
-
-            int start = ((currentPage * pageSize) - (pageSize - 1)) - 1;
-            int end = (min((start + 1) + pageSize - 1, productListData.size())) - 1;
-
-            new Handler().postDelayed(() -> {
-                try {
-
-
-                    items.addAll(productListData.subList(start, end + 1));
-
-                    if (currentPage != 2)
-                        productAdapter.removeLoadingView();
-
-
-                    if (productListData.size() - end < pageSize)
-                        items.addAll(productListData.subList(end, productListData.size()));
-
-                    for (int i = 0; i < items.size(); i++) {
-                        if (!productList.contains(items.get(i))) {
-                            productList.add(items.get(i));
-                        }
-                    }
-
-
-                    productAdapter.notifyDataSetChanged();
-
-
-                    if (currentPage < totalPage) {
-                        productAdapter.addLoadingView();
-                    } else {
-                        isLastPage = true;
-                    }
-
-                    isLoading = false;
-                } catch (Exception e) {
-
-                    Toast.makeText(getActivity(), "لطفا صبر کنید...", Toast.LENGTH_SHORT).show();
-                }
-
-            }, 500);
-        }
-    }
-
-    public String appVersion() throws PackageManager.NameNotFoundException {
-        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-        return pInfo.versionName;
-    }
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+    //endregion Override Method
 
+    //region Custom Method
 
+    private void showError(String error, int type) {
+        tvMessage.setText(error);
+        btnNo.setText("بستن");
+        btnOk.setText("سینک مجدد");
+        dialogRequestAgain.dismiss();
+        if (type == 0)
+            btnOk.setVisibility(View.GONE);
+        else if (type == 1)
+            btnOk.setVisibility(View.VISIBLE);
+        else {
+            btnOk.setVisibility(View.GONE);
+            dialogRequestAgain.setCancelable(false);
+        }
 
+        dialogRequestAgain.show();
+        customProgress.hideProgress();
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
     }
 
-    public void showData(){
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void showData() {
         sharedPreferences.edit().putBoolean("discount", false).apply();
         sharedPreferences.edit().putBoolean("vip", false).apply();
         binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
         productList.clear();
-        productListData.clear();
+
         customTabList.clear();
         productLevel1List.clear();
         productLevel2List.clear();
@@ -1311,5 +750,826 @@ public class HomeFragment extends Fragment {
 
 
     }
+
+    private void getValueOfCloseDay() {
+        Calendar calendar = Calendar.getInstance();
+        switch (calendar.getTime().getDay()) {
+
+            case 0:
+                valueOfCloseDay = "1";
+                break;
+            case 1:
+                valueOfCloseDay = "2";
+                break;
+            case 2:
+                valueOfCloseDay = "3";
+                break;
+            case 3:
+                valueOfCloseDay = "4";
+                break;
+            case 4:
+                valueOfCloseDay = "5";
+                break;
+            case 5:
+                valueOfCloseDay = "6";
+                break;
+            case 6:
+                valueOfCloseDay = "0";
+                break;
+        }
+
+    }
+
+
+    private void init() {
+        Inv_GUID = "";
+
+        format = new DecimalFormat("#,###,###,###");
+        df = new DecimalFormat();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        Product.deleteAll(Product.class);
+
+        customProgress = CustomProgress.getInstance();
+
+        Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
+
+        company = Select.from(Company.class).first();
+        userName = company.getUser();
+        passWord = company.getPass();
+        appInfo = Select.from(Salein.class).first();
+
+
+        binding.tvNameStore.setText(company.getN());
+
+        Glide.with(this).asGif().load(Uri.parse(appInfo.getGif_url())).into(binding.animationView);
+
+        productLevel1List = new ArrayList<>();
+        productLevel2List = new ArrayList<>();
+        customTabList = new ArrayList<>();
+        productList = new ArrayList<>();
+        descriptionList = new ArrayList<>();
+        closeDayList = new ArrayList<>();
+
+        dialogInstance = DialogInstance.getInstance();
+        defaultCoff = sharedPreferences.getString("coff", "0");
+
+
+        binding.ivFilter.setOnClickListener(v -> {
+            boolean filter = binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE;
+            NavDirections action = HomeFragmentDirections.actionGoToFilterFragment(filter);
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
+
+        binding.btnCompanyBranches.setOnClickListener(view1 -> {
+            if (company.Parent != null) {
+                NavDirections action = HomeFragmentDirections.actionGoToAllCompanyFragment(company.getPi());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+            }
+        });
+    }
+
+    private void resetFilter() {
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+    }
+
+    private void createOrderForm() {
+
+        try {
+            Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
+            getArguments().clear();
+        } catch (Exception ignored) {
+            Inv_GUID = "";
+        }
+
+
+        if (Inv_GUID.equals("")) {
+            ((LauncherActivity) getActivity()).setShowProfileItem(true);
+
+
+            Inv_GUID = sharedPreferences.getString(company.getI(), "");
+
+            if (Inv_GUID.equals("")) {
+                Inv_GUID = UUID.randomUUID().toString();
+                sharedPreferences.edit().putString(company.getI(), Inv_GUID).apply();
+            }
+        } else {
+            ((LauncherActivity) getActivity()).setShowProfileItem(false);
+        }
+
+        //Save GUID Order Form To Use In App
+        sharedPreferences.edit().putString("Inv_GUID", Inv_GUID).apply();
+    }
+
+    private void setCounterForAmountOfOrder() {
+
+        Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
+        int counter = 0;
+        List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+        if (invDetailses.size() > 0) {
+            CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+            counter = invDetailses.size();
+        }
+
+
+        if (counter == 0)
+            ((LauncherActivity) getActivity()).setClearCounterOrder();
+        else
+            ((LauncherActivity) getActivity()).setCounterOrder(counter);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void castDialogRequestAgain() {
+        Account account = Select.from(Account.class).first();
+
+        dialogRequestAgain = dialogInstance.dialog(getActivity(), false, R.layout.custom_dialog);
+
+        MaterialButton btnOk = dialogRequestAgain.findViewById(R.id.btn_ok);
+
+        MaterialButton btnNo = dialogRequestAgain.findViewById(R.id.btn_cancel);
+
+        btnOk.setOnClickListener(view -> {
+            dialogRequestAgain.dismiss();
+
+            resetFilter();
+            resetData();
+
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+
+            myViewModel.getProductLevel1(userName, passWord);
+            myViewModel.getInquiryAccount(userName, passWord, account.getM());
+            myViewModel.getUnit(userName, passWord);
+            myViewModel.getSetting(userName, passWord);
+        });
+
+        btnNo.setOnClickListener(view -> {
+            dialogRequestAgain.dismiss();
+
+            if (disableAccount) {
+                if (!appInfo.getSalein())
+                    getActivity().finish();
+                else
+                    Navigation.findNavController(binding.getRoot()).popBackStack();
+            }
+        });
+
+
+    }
+
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
+    private void castDialogDescription() {
+
+        DialogInstance dialogInstance = DialogInstance.getInstance();
+
+        dialogDescription = dialogInstance.dialog(getActivity(), false, R.layout.dialog_description);
+
+        edtDescription = dialogDescription.findViewById(R.id.edt_description);
+        MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
+
+        RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getActivity());
+        flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.CENTER);
+        flexboxLayoutManager.setAlignItems(AlignItems.BASELINE);
+        recyclerDescription.setLayoutManager(flexboxLayoutManager);
+
+        descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
+
+        recyclerDescription.setAdapter(descriptionAdapter);
+
+        descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
+            if (click) {
+                descriptionList.get(position).Click = true;
+                String description = edtDescription.getText().toString();
+                edtDescription.setText(description + "   " + "'" + desc + "'");
+            } else {
+                descriptionList.get(position).Click = false;
+                if (edtDescription.getText().toString().contains("'" + desc + "'"))
+
+                    edtDescription.setText(edtDescription.getText().toString().replace("   " + "'" + desc + "'", ""));
+            }
+        });
+
+        btnRegisterDescription.setOnClickListener(v -> {
+            InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
+            if (invDetail != null) {
+                invDetail.INV_DET_DESCRIBTION = edtDescription.getText().toString();
+                invDetail.update();
+            }
+            productAdapter.notifyDataSetChanged();
+            dialogDescription.dismiss();
+        });
+
+        edtDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().isEmpty()) {
+                    for (int i = 0; i < descriptionList.size(); i++) {
+                        descriptionList.get(i).Click = false;
+                    }
+                    descriptionAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void castRecyclerViewProductLevel1() {
+
+        productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        manager.setReverseLayout(true);
+        binding.orderRecyclerViewProductLevel1.setLayoutManager(manager);
+        binding.orderRecyclerViewProductLevel1.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
+
+
+        //region Click Item ProductLevel1
+        productLevel1Adapter.SetOnItemClickListener(GUID -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            pageMain = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item ProductLevel1 And Item ProductLevel2
+            ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
+            CollectionUtils.filter(resultPrdGrp1, r -> r.Click);
+            if (resultPrdGrp1.size() > 0) {
+                productLevel1List.get(productLevel1List.indexOf(resultPrdGrp1.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
+
+
+            //region Click New Item ProductLevel1
+            ArrayList<ProductLevel1> resultPrdGroup1_ = new ArrayList<>(productLevel1List);
+            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(GUID));
+            if (resultPrdGroup1_.size() > 0) {
+                productLevel1List.get(productLevel1List.indexOf(resultPrdGroup1_.get(0))).Click = true;
+            }
+            //endregion Click New Item ProductLevel1
+
+
+            productLevel1Adapter.notifyDataSetChanged();
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+
+            productLevel2List.clear();
+            productLevel2Adapter.notifyDataSetChanged();
+
+
+            //region Full ProductLevel2List Because This Item ProductLevel1 Is True
+            myViewModel.getProductLevel2(userName, passWord, GUID);
+            //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
+        });
+        //endregion Click Item ProductLevel1
+
+
+        //endregion CONFIGURATION DATA PRODUCT_LEVEL1
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void castRecyclerViewProductLevel2() {
+
+        productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
+
+        LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
+        manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        manager2.setReverseLayout(true);
+        binding.orderRecyclerViewProductLevel2.setLayoutManager(manager2);
+        binding.orderRecyclerViewProductLevel2.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
+
+
+        //region Click Item ProductLevel2
+        productLevel2Adapter.SetOnItemClickListener(GUID -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+
+            productAdapter.notifyDataSetChanged();
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            pageMain = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item
+            ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
+            CollectionUtils.filter(resultProductGroupLevel2, r -> r.Click);
+            if (resultProductGroupLevel2.size() > 0 && productLevel2List.size() > 0) {
+                productLevel2List.get(productLevel2List.indexOf(resultProductGroupLevel2.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item
+
+
+            //region Click New Item
+            ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
+            CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
+
+            if (resProductGroupLevel2.size() > 0) {
+                productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
+            }
+            //endregion Click New Item
+
+            productLevel2Adapter.notifyDataSetChanged();
+
+
+
+            //region Full ProductList Because This Item ProductLevel1 Is True
+            GuidProductLvl2 = GUID;
+            myViewModel.getSettingPrice(userName, passWord);
+
+        });
+
+        //endregion Click Item ProductLevel2
+
+        //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void castRecyclerViewCustomProduct() {
+
+        customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
+
+        LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
+        managerCustom.setOrientation(LinearLayoutManager.HORIZONTAL);
+        managerCustom.setReverseLayout(true);
+        binding.orderRecyclerViewCustomTab.setLayoutManager(managerCustom);
+        binding.orderRecyclerViewCustomTab.setScrollingTouchSlop(View.FOCUS_LEFT);
+        binding.orderRecyclerViewCustomTab.setAdapter(customTabAdapter);
+
+
+        customTabAdapter.SetOnItemClickListener(key -> {
+            binding.animationView.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.VISIBLE);
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+            binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
+            pageMain = 1;
+            binding.orderTxtError.setText("");
+
+            //region UnClick Old Item
+            ArrayList<CustomTab> resultCustomTab = new ArrayList<>(customTabList);
+            CollectionUtils.filter(resultCustomTab, r -> r.Click);
+            if (resultCustomTab.size() > 0 && customTabList.size() > 0) {
+                customTabList.get(customTabList.indexOf(resultCustomTab.get(0))).Click = false;
+            }
+            //endregion UnClick Old Item
+
+
+            //region Click New Item
+            ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
+            CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
+
+            if (customTabList.size() > 0) {
+                customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
+            }
+            //endregion Click New Item
+
+            customTabAdapter.notifyDataSetChanged();
+
+
+            //region Full ProductList Because This Item ProductLevel1 Is True
+            keyCustomTab = key;
+            myViewModel.getSettingPrice(userName, passWord);
+            //endregion Full ProductList Because This Item ProductLevel1 Is True
+        });
+
+        //endregion Click Item CustomTab
+
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void castRecyclerViewProduct() {
+
+        productAdapter = new UniversalAdapter2(R.layout.order_recycle_products_item_mobile, productList, BR.product);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
+        binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
+
+
+        binding.orderRecyclerViewProduct.setAdapter(productAdapter);
+
+        productAdapter.setOnItemBindListener((binAdapter, position) -> {
+
+            View viewAdapter = binAdapter.getRoot();
+
+            getValueOfCloseDay();
+
+            txtError = viewAdapter.findViewById(R.id.error);
+            productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+            RelativeLayout cardEdit = viewAdapter.findViewById(R.id.card_edit);
+            TextView edtDesc = viewAdapter.findViewById(R.id.edt_description_temp);
+            RelativeLayout layoutDiscount = viewAdapter.findViewById(R.id.layout_discount);
+            TextView unit = viewAdapter.findViewById(R.id.unit);
+            TextView productPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_price);
+            TextView productOldPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_old_price);
+            TextView productDiscountPercent = viewAdapter.findViewById(R.id.order_recycle_item_product_discountPercent);
+
+            RoundedImageView productImage = viewAdapter.findViewById(R.id.order_recycle_item_product_img);
+            ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+            ivMax = viewAdapter.findViewById(R.id.iv_max);
+             progressBar = viewAdapter.findViewById(R.id.progress);
+
+
+            txtError.setText("");
+
+            productAmountTxt.setEnabled(closeDayList == null || closeDayList.size() <= 0 || !closeDayList.contains(valueOfCloseDay));
+
+            InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productList.get(position).getI() + "'").first();
+
+
+            List<Unit> unitList = Select.from(Unit.class).list();
+            ArrayList<Unit> units = new ArrayList<>(unitList);
+            CollectionUtils.filter(units, u -> u.getUomUid().equals(productList.get(position).UM1));
+            if (units.size() > 0)
+                unit.setText(units.get(0).getUomName());
+            else
+                unit.setText("");
+
+
+            if (productList.get(position).getPrice(sharedPreferences) > 0) {
+                productPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)) + " ریال ");
+                productDiscountPercent.setText("");
+                productOldPrice.setText("");
+                layoutDiscount.setVisibility(View.GONE);
+                productDiscountPercent.setVisibility(View.GONE);
+                productOldPrice.setVisibility(View.GONE);
+
+                if (productList.get(position).getPercDis() != 0.0) {
+                    layoutDiscount.setVisibility(View.VISIBLE);
+                    productDiscountPercent.setVisibility(View.VISIBLE);
+                    productOldPrice.setVisibility(View.VISIBLE);
+                    productOldPrice.setPaintFlags(productOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    productDiscountPercent.setText(format.format(productList.get(position).getPercDis()) + "%");
+                    productOldPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)));
+                    double discountPrice = productList.get(position).getPrice(sharedPreferences) * (productList.get(position).getPercDis() / 100);
+                    double newPrice = productList.get(position).getPrice(sharedPreferences) - discountPrice;
+                    productPrice.setText(format.format(newPrice) + " ریال ");
+                }
+            }
+
+
+            AtomicInteger tab = new AtomicInteger();
+            productImage.setOnClickListener(view1 -> {
+                tab.getAndIncrement();
+                if (tab.get() == 2) {
+                    tab.set(0);
+                    NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(productList.get(position).getI());
+                    Navigation.findNavController(binding.getRoot()).navigate(action);
+                }
+            });
+
+
+            double amount;
+            if (ivDetail != null && ivDetail.INV_DET_QUANTITY != null)
+                amount = ivDetail.INV_DET_QUANTITY;
+            else
+                amount = 0.0;
+
+            productList.get(position).setAmount(amount);
+
+            if (amount > 0) {
+                ivMinus.setVisibility(View.VISIBLE);
+                productAmountTxt.setVisibility(View.VISIBLE);
+            } else {
+                ivMinus.setVisibility(View.GONE);
+                productAmountTxt.setVisibility(View.GONE);
+            }
+
+
+//            if (checkRemainProduct.equals("1"))
+//                myViewModel.getMaxSale(userName, passWord, productList.get(position));
+
+
+            String description;
+            if (ivDetail != null && ivDetail.INV_DET_DESCRIBTION != null)
+                description = ivDetail.INV_DET_DESCRIBTION;
+            else
+                description = "";
+            edtDesc.setText(description);
+
+
+            ivMax.setOnClickListener(v -> {
+                if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
+                    showAlertDialog("فروشگاه تعطیل می باشد.");
+                    return;
+                }
+                productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                ivMax = viewAdapter.findViewById(R.id.iv_max);
+                ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                txtError = viewAdapter.findViewById(R.id.error);
+                progressBar = viewAdapter.findViewById(R.id.progress);
+                txtError.setText("");
+
+                if (checkRemainProduct.equals("1"))
+                    myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "max");
+                else
+                    calculate(position, "max");
+
+            });
+
+
+            ivMinus.setOnClickListener(v -> {
+                if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
+                    showAlertDialog("فروشگاه تعطیل می باشد.");
+                    return;
+                }
+                productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                ivMax = viewAdapter.findViewById(R.id.iv_max);
+                ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                txtError = viewAdapter.findViewById(R.id.error);
+                progressBar = viewAdapter.findViewById(R.id.progress);
+                txtError.setText("");
+
+                if (checkRemainProduct.equals("1"))
+                    myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "min");
+                else
+                    calculate(position, "min");
+            });
+
+
+            productAmountTxt.setOnFocusChangeListener((view1, b) -> {
+                productAmountTxt.setCursorVisible(true);
+            });
+
+
+            if (textWatcher1 == null) {
+                textWatcher1 = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                        if (!charSequence.toString().isEmpty())
+                            productAmountTxt.setCursorVisible(true);
+                        String s = Util.toEnglishNumber(charSequence.toString());
+                        s = s.contains("٫") ? s.replace("٫", ".") : s;
+                        s = s.contains(",") ? s.replace(",", "") : s;
+                        if (!s.isEmpty()) {
+                            if (s.contains(".") && s.indexOf(".") == s.length() - 1) {
+                                return;
+                            } else if (s.contains("٫") && s.indexOf("٫") == s.length() - 1) {
+                                return;
+                            }
+                        }
+
+
+                        sWord=s;
+                        productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                        ivMax = viewAdapter.findViewById(R.id.iv_max);
+                        ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                        txtError = viewAdapter.findViewById(R.id.error);
+                        progressBar = viewAdapter.findViewById(R.id.progress);
+                        txtError.setText("");
+
+                        if (checkRemainProduct.equals("1"))
+                            myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "");
+                        else
+                            calculate(position, "");
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                };
+            }
+
+
+            productAmountTxt.removeTextChangedListener(textWatcher1);
+            productAmountTxt.setText(df.format(amount));
+            productAmountTxt.addTextChangedListener(textWatcher1);
+
+
+            cardEdit.setOnClickListener(v -> {
+
+                String idProduct = productList.get(position).getI();
+
+                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+
+                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
+                CollectionUtils.filter(result, r -> r.PRD_UID.equals(idProduct));
+
+                if (result.size() > 0 && result.get(0).getQuantity() > 0) {
+                    edtDescription.setText(result.get(0).INV_DET_DESCRIBTION);
+                    descriptionList.clear();
+                    GuidInv = result.get(0).INV_DET_UID;
+                    customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
+                    myViewModel.getDescription(userName, passWord, idProduct);
+                    return;
+                }
+                showAlertDialog("برای نوشتن توضیحات برای کالا مقدار ثبت کنید.");
+
+            });
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void resetData() {
+        productLevel1List.clear();
+        productLevel2List.clear();
+        productList.clear();
+        productLevel1Adapter.notifyDataSetChanged();
+        productLevel2Adapter.notifyDataSetChanged();
+        productAdapter.notifyDataSetChanged();
+    }
+
+
+    private void calculate(int position, String type) {
+        productAmountTxt.setCursorVisible(false);
+
+        double amount = productList.get(position).getAmount();
+        double mainCoef1 = productList.get(position).getCoef1();
+
+        double coef1 = productList.get(position).getCoef1();
+        double coef2 = productList.get(position).getCoef2();
+
+        if (defaultCoff.equals("1")) {
+            coef2 = productList.get(position).getCoef1();
+        } else if (defaultCoff.equals("2")) {
+            coef1 = productList.get(position).getCoef2();
+        }
+
+
+        if (type.equals("max")) {
+            if (amount > 0.0 && coef2 != 0.0)
+                coef1 = coef2;
+            amount = amount + coef1;
+        } else if (type.equals("min")) {
+            if (amount > coef1 && coef2 != 0.0)
+                amount = amount - coef2;
+            else if (amount >= coef1)
+                amount = amount - coef1;
+            else
+                return;
+        } else {
+            try {
+                amount = Float.parseFloat(sWord);
+                if (
+                        (coef2 != 0.0 && amount < coef1)
+                                || (coef2 == 0 && amount % coef1 != 0)
+                                || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                ) {
+
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                            .setMessage(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.")
+                            .setPositiveButton("بستن", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+
+                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+                    textView.setTypeface(face);
+                    textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                    textView.setTextSize(13);
+
+                    amount = 0;
+                    productAmountTxt.removeTextChangedListener(textWatcher1);
+                    productAmountTxt.setText("");
+
+                    productAmountTxt.addTextChangedListener(textWatcher1);
+                    ivMinus.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+
+        productList.get(position).setAmount(amount);
+        List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+        ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
+        CollectionUtils.filter(result, r -> r.PRD_UID.equals(productList.get(position).getI()));
+
+
+        if (checkRemainProduct.equals("1")){
+            double remain=productList.get(position).getRe();
+            if ( remain- amount < 0) {
+                showAlertDialog("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : ");
+
+                if (remain % mainCoef1 != 0)
+                    remain = 0;
+
+
+                productList.get(position).setAmount(remain);
+                productAmountTxt.removeTextChangedListener(textWatcher1);
+                productAmountTxt.setText(df.format(remain));
+                productAmountTxt.addTextChangedListener(textWatcher1);
+                productAmountTxt.setCursorVisible(false);
+
+                if (result.size() > 0) {
+                    InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+                    if (invoiceDetail != null) {
+                        invoiceDetail.INV_DET_QUANTITY = remain;
+                        if (remain != 0.0)
+                            invoiceDetail.update();
+                        else
+                            invoiceDetail.delete();
+
+                        setCounterForAmountOfOrder();
+                    }
+                }
+
+                progressBar.setVisibility(View.GONE);
+
+                return;
+            }
+        }
+
+
+        //edit
+        if (result.size() > 0) {
+
+            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
+
+            if (amount == 0) {
+
+                if (invoiceDetail != null)
+                    invoiceDetail.delete();
+
+                if (!type.equals("")) {
+                    productAmountTxt.removeTextChangedListener(textWatcher1);
+                    productAmountTxt.setText("");
+                    productAmountTxt.addTextChangedListener(textWatcher1);
+
+                    ivMinus.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);
+                }
+                productAmountTxt.setCursorVisible(false);
+                setCounterForAmountOfOrder();
+                return;
+            }
+
+            if (invoiceDetail != null) {
+
+                invoiceDetail.INV_DET_QUANTITY = amount;
+                invoiceDetail.update();
+            }
+
+        }
+
+        //Create
+        else {
+
+            if (amount != 0.0) {
+                InvoiceDetail invoicedetail = new InvoiceDetail();
+                invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
+                invoicedetail.INV_UID = Inv_GUID;
+                invoicedetail.INV_DET_QUANTITY = amount;
+                invoicedetail.PRD_UID = productList.get(position).getI();
+                invoicedetail.save();
+            }
+
+        }
+        if (!type.equals("")) {
+
+            productAmountTxt.removeTextChangedListener(textWatcher1);
+            productAmountTxt.setText(df.format(amount));
+            productAmountTxt.addTextChangedListener(textWatcher1);
+        }
+        setCounterForAmountOfOrder();
+
+        ivMinus.setVisibility(View.VISIBLE);
+        productAmountTxt.setVisibility(View.VISIBLE);
+
+
+    }
+
+
+    private void showAlertDialog(String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).setMessage(message).setPositiveButton("بستن", (dialog, which) -> {
+            dialog.dismiss();
+        }).show();
+
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+        textView.setTypeface(face);
+        textView.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+        textView.setTextSize(13);
+    }
+
+
+
+    //endregion Custom Method
+
 
 }

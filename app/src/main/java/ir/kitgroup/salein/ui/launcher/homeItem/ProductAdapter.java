@@ -221,13 +221,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
 
         if (productsList.get(position) != null) {
-            if (type==1)
-                try {
-                    setFadeAnimation(holder.itemView);
-                }catch (Exception ignored){}
+//            if (type==1)
+//                try {
+//                    setFadeAnimation(holder.itemView);
+//                }catch (Exception ignored){}
 
 
             holder.error.setText("");
+
 
             if (closeDateList!=null && closeDateList.size()>0 && closeDateList.contains(valueOfDay))
                 holder.ProductAmountTxt.setEnabled(false);
@@ -276,6 +277,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 holder.unit.setText(units.get(0).getUomName());
             else
                 holder.unit.setText("");
+
 
 
             holder.productName.setText(productsList.get(holder.getAdapterPosition()).getN().trim());
@@ -858,13 +860,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                                 }
 
 
-                                            } else if (remain > 0 && remain < amount) {
+                                            }
+
+                                            else if (remain > 0 && remain < amount) {
                                                 InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("PRDUID ='" + Prd_GUID + "'").first();
                                                 if (invoiceDetail != null) {
                                                     invoiceDetail.INV_DET_QUANTITY = remain;
                                                     invoiceDetail.update();
                                                 }
-                                            } else {
+                                            }
+
+                                            else {
                                                 txtError.setText("");
                                                 layoutAmount.setVisibility(View.VISIBLE);
                                             }
