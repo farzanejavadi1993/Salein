@@ -63,9 +63,6 @@ public class Util {
         }
     }
 
-    public static final int VIEW_TYPE_ITEM = 0;
-    public static final int VIEW_TYPE_LOADING = 1;
-
     public static boolean isValid(String s) {
 
         Pattern p = Pattern.compile("(0/9)?[0-9]{11}");

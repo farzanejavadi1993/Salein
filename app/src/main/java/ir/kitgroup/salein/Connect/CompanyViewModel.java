@@ -93,7 +93,6 @@ public class CompanyViewModel extends ViewModel {
         this.sharedPreferences = sharedPreferences;
     }
 
-
     public void getSmsLogin(String user, String passWord, String message, String mobile) {
         compositeDisposable.clear();
         compositeDisposable.add(
@@ -112,13 +111,6 @@ public class CompanyViewModel extends ViewModel {
     public MutableLiveData<String> getResultSmsLogin() {
         return resultSendSms;
     }
-
-
-
-
-
-
-
 
     public void getInquiryAccount(String user, String passWord, String mobile) {
 

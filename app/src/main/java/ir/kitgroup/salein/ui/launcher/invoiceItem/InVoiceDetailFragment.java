@@ -71,18 +71,19 @@ import ir.kitgroup.salein.databinding.FragmentInvoiceDetailMobileBinding;
 @AndroidEntryPoint
 
 public class InVoiceDetailFragment extends Fragment {
-
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
+
     private FragmentInvoiceDetailMobileBinding binding;
+
     private CompanyViewModel myViewModel;
+
     private Company company;
     private String userName;
     private String passWord;
 
     private CustomProgress customProgress;
-
 
     private String Prd_UID;
     private String sWord;

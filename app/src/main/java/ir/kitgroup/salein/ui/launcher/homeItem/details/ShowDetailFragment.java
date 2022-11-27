@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -29,7 +32,7 @@ public class ShowDetailFragment extends Fragment {
 
     private ActivityDetailBinding binding;
     private Company company;
-    private  String Id;
+    private String Id;
 
     private CompanyViewModel myViewModel;
 
@@ -39,27 +42,22 @@ public class ShowDetailFragment extends Fragment {
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       // ((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
-
-        company = Select.from(Company.class).first();
 
         Id = ShowDetailFragmentArgs.fromBundle(getArguments()).getId();
 
-
-
+        company = Select.from(Company.class).first();
         String ip = company.getIp1();
 
         Picasso.get()
-                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + (int) Util.height/2 + "&height=" + (int) Util.height / 2)
-                .error(R.drawable.loading)
+                .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + 600 + "&height=" + 600)
+                .error(R.drawable.nopic)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
-
-
     }
 
 
@@ -68,23 +66,23 @@ public class ShowDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
-        myViewModel.getProduct(company.getUser(),company.getPass(),Id);
-
+        myViewModel.getProduct(company.getUser(), company.getPass(), Id);
         myViewModel.getResultProduct().observe(getViewLifecycleOwner(), result -> {
-
-
             if (result == null) {
-             binding.progressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 return;
             }
 
             myViewModel.getResultProduct().setValue(null);
 
             if (result.size() > 0) {
+                if (!result.get(0).getDes().equals(""))
+                binding.tvDesc.setVisibility(View.VISIBLE);
+
                 binding.tvDescriptionProduct.setText(result.get(0).getDes());
-            } else {
+            } else
                 Toast.makeText(getActivity(), "لیست دریافت شده از کالا ها نامعتبر است", Toast.LENGTH_SHORT).show();
-            }
+
             binding.progressBar.setVisibility(View.GONE);
 
         });
@@ -94,7 +92,6 @@ public class ShowDetailFragment extends Fragment {
 
             if (result == null)
                 return;
-         //   myViewModel.getResultMessage().setValue(null);
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
 
@@ -103,7 +100,6 @@ public class ShowDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-      //  ((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
         binding = null;
     }
 

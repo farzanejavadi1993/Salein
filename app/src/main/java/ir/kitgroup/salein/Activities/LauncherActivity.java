@@ -6,13 +6,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+
 import com.orm.query.Select;
+
 import java.util.Objects;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.R;
@@ -50,15 +55,15 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         switch (navController.getCurrentDestination().getId()) {
-            case R.id.HomeFragment:
-                if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false)) {
-                  getDoActionInHomeFragment();
-                }
+
+                case R.id.HomeFragment:
+                if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false))
+                    getDoActionInHomeFragment();
 
                 else {
 
                     if (!Select.from(Salein.class).first().getSalein() && navController.getBackQueue().size() == 2)
-                   finishApp();
+                        finishApp();
 
                     else
                         super.onBackPressed();
@@ -69,7 +74,7 @@ public class LauncherActivity extends AppCompatActivity {
                 finishApp();
                 break;
 
-                default:
+            default:
                 super.onBackPressed();
                 break;
         }
@@ -80,7 +85,7 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         // if (sharedPreferences.getBoolean("loginSuccess", false))
-       // finish();
+        // finish();
     }
     //endregion Override Method
 
@@ -121,6 +126,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.PaymentFragment:
                 case R.id.AllCompanyFragment:
                 case R.id.SplashScreenFragment:
+                case R.id.ShowDetailFragment:
                 case R.id.MoreFragment:
                     binding.navView.setVisibility(View.GONE);
                     break;
@@ -158,13 +164,12 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-    private Fragment getFragment(){
-        return  (NavHostFragment) getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getPrimaryNavigationFragment();
+    private Fragment getFragment() {
+        return  getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getPrimaryNavigationFragment();
     }
 
-    private void getDoActionInHomeFragment(){
-        Fragment fragment=getFragment();
-
+    private void getDoActionInHomeFragment() {
+        Fragment fragment = getFragment();
         if (fragment instanceof HomeFragment) {
             ((HomeFragment) fragment).showData();
         }

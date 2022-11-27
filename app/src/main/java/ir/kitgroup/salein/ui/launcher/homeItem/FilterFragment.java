@@ -18,14 +18,15 @@ import ir.kitgroup.salein.databinding.FilterFragmentBinding;
 
 @AndroidEntryPoint
 public class FilterFragment extends Fragment {
-
-
     @Inject
     SharedPreferences sharedPreferences;
     private FilterFragmentBinding binding;
+
     private boolean filterDiscount = false;
     private boolean filterVip = false;
 
+
+    //region Override Method
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,20 +38,27 @@ public class FilterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //((LauncherActivity) getActivity()).getVisibilityBottomBar(false);
+        init();
+        setData();
+
+    }
+
+    //endregion Override Method
 
 
+    //region Custom Method
+    private void setData() {
         filterDiscount = sharedPreferences.getBoolean("discount", false);
         filterVip = sharedPreferences.getBoolean("vip", false);
-
 
         if (filterDiscount) {
             binding.switchDiscount.setChecked(true);
         } else if (filterVip) {
             binding.switchVip.setChecked(true);
         }
+    }
 
-
+    private void init(){
         binding.tvDeleteFilter.setOnClickListener(v -> {
             sharedPreferences.edit().putBoolean("vip", false).apply();
             sharedPreferences.edit().putBoolean("discount", false).apply();
@@ -94,14 +102,5 @@ public class FilterFragment extends Fragment {
             }
         });
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-    }
-
-
-
-
+    //endregion Custom Method
 }
