@@ -757,8 +757,3 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     //endregion Custom Method
 
 }
-
-
-
-
-
