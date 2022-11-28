@@ -36,7 +36,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="4dp"
-
                 android:textColor="@color/black_light"
                 android:textSize="11dp" />
 
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@+id/order_list_item_recycle_txt_name"
-
                 android:textColor="@color/invite_friend_color"
                 android:textSize="11dp" />
         </RelativeLayout>
@@ -62,10 +60,10 @@
             android:layout_marginRight="12dp">
 
             <RelativeLayout
-                android:layout_alignParentRight="true"
                 android:id="@+id/layout_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
                 <ImageView
@@ -78,11 +76,11 @@
                     app:srcCompat="@drawable/ic_minus_red" />
 
                 <EditText
-                    android:layout_toLeftOf="@+id/iv_max_invoice"
                     android:id="@+id/order_list_item_recycle_editText"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_max_invoice"
 
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/iransans"
@@ -103,7 +101,18 @@
                     android:background="@drawable/plus_background"
                     app:srcCompat="@drawable/ic_plus_white" />
 
+                <TextView
+                    android:id="@+id/txtError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/iv_minus_invoice"
+                    android:textColor="@color/invite_friend_color"
+                    android:textSize="11dp" />
+
             </RelativeLayout>
+
 
             <TextView
 
@@ -112,7 +121,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="12dp"
-
                 android:textColor="@color/black_l"
                 android:textSize="@dimen/order_list_item_recycle_txt_price_size" />
 

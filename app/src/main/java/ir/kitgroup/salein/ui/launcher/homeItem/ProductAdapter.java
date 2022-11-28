@@ -116,6 +116,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     //endregion InterfaceClickDescription
 
 
+
     //region InterFaceClickImage
     public interface ClickImage {
         void onClick(String Prd_UID);
@@ -377,6 +378,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     public void afterTextChanged(Editable s) {}
                 };
             }
+
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher1);
             holder.ProductAmountTxt.setText(df.format(amount));
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher1);
@@ -418,6 +420,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         private final RelativeLayout layoutDiscount;
 
 
+
         public viewHolder(View itemView) {
             super(itemView);
             cardEdit = itemView.findViewById(R.id.card_edit);
@@ -440,6 +443,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             ivMinus = itemView.findViewById(R.id.iv_minus);
             ivMax = itemView.findViewById(R.id.iv_max);
             progressBar = itemView.findViewById(R.id.progress);
+
         }
     }
     //endregion Override Method
