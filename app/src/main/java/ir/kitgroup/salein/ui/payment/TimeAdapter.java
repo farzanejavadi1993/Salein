@@ -23,24 +23,18 @@ import ir.kitgroup.salein.R;
 
 
 public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
-
     private final List<String> list;
-    private final Context context;
-
 
     public void setOnClickItemListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
-
     public interface ClickItem {
         void onRowClick(String Name);
     }
-
     private ClickItem clickItem;
 
 
-    public TimeAdapter(Context context, List<String> list) {
-        this.context = context;
+    public TimeAdapter( List<String> list) {
         this.list = list;
     }
 
@@ -60,7 +54,6 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
 
         holder.itemView.setOnClickListener(view -> {
             clickItem.onRowClick(time);
-
         });
 
 
@@ -68,33 +61,15 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.viewHolder> {
 
     @Override
     public int getItemCount() {
-
         return list.size();
-
     }
 
     static class viewHolder extends RecyclerView.ViewHolder {
-
         private final TextView tvTime;
-
 
         public viewHolder(View itemView) {
             super(itemView);
-
             tvTime = itemView.findViewById(R.id.tv_time);
-
-
-
-
-
         }
     }
-
-
 }
-
-
-
-
-
-

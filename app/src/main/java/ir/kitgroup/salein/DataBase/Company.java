@@ -157,16 +157,26 @@ public class Company extends SugarRecord {
         this.m1 = m1;
     }
 
-    public String getLong() {
-        return _long;
+    public Double getLong() {
+        double longitude = 0.0;
+        if (!_long.equals("") && !_long.equals("-") && _long != null)
+            longitude = Double.parseDouble(_long);
+
+        return longitude;
     }
 
     public void setLong(String _long) {
         this._long = _long;
     }
 
-    public String getLat() {
-        return lat;
+    public Double getLat() {
+
+            double latitude = 0.0;
+            if (!lat.equals("") && !lat.equals("-") && lat != null)
+                latitude = Double.parseDouble(lat);
+
+            return latitude;
+
     }
 
     public void setLat(String lat) {
