@@ -28,12 +28,9 @@ import ir.kitgroup.salein.DataBase.Company;
 
 @AndroidEntryPoint
 public class ShowDetailFragment extends Fragment {
-
-
     private ActivityDetailBinding binding;
     private Company company;
     private String Id;
-
     private CompanyViewModel myViewModel;
 
     @Nullable
@@ -51,6 +48,7 @@ public class ShowDetailFragment extends Fragment {
         Id = ShowDetailFragmentArgs.fromBundle(getArguments()).getId();
 
         company = Select.from(Company.class).first();
+
         String ip = company.getIp1();
 
         Picasso.get()

@@ -479,7 +479,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                             coef1 = coef2;
                                         }
 
-                                        double amount = 0;
+                                        double amount ;
 
                                         if (remain <= 0) {
                                             productsList.get(position).setAmount(0.0);
@@ -488,7 +488,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                         }
 
 
-                                        if (MinOrPlus == 1) {
+                                        else if (MinOrPlus == 1) {
                                             if (currentAmount > 0.0 && coef2 != 0.0)
                                                 coef1 = coef2;
                                             amount = currentAmount + coef1;
@@ -540,7 +540,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                                 clickItem.onClick(Prd_GUID);
 
                                             }
-                                            ;
                                             return;
                                         }
 
@@ -650,7 +649,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             getMaxSales(position, s, MinOrPlus);
 
         else {
-            double amount = 0.0;
+            double amount ;
             double mainCoef1 = productsList.get(position).getCoef1();
             double coef1 = mainCoef1;
             double coef2 = productsList.get(position).getCoef2();
