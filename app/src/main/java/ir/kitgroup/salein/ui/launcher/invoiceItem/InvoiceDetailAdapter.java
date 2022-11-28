@@ -1,4 +1,5 @@
 package ir.kitgroup.salein.ui.launcher.invoiceItem;
+
 import android.annotation.SuppressLint;
 
 import android.app.Activity;
@@ -52,6 +53,7 @@ import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.models.ModelLog;
 import ir.kitgroup.salein.models.Product;
+
 public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdapter.viewHolder> {
 
     //region Parameter
@@ -287,6 +289,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
+
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                     if (!charSequence.toString().isEmpty())
@@ -305,9 +308,14 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                             return;
                         }
                     }
+
+                    if (checkRemainProduct.equals("1"))
+                        holder.progressBar.setVisibility(View.VISIBLE);
+
                     if (holder.getAdapterPosition() < orderDetailList.size())
                         doAction(holder.getAdapterPosition(), s, 3);
                 }
+
                 @Override
                 public void afterTextChanged(Editable s) {
                 }
@@ -480,7 +488,6 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
     private void getMaxSales(int position, String s, int MinOrPlus) {
         String Prd_GUID = orderDetailList.get(position).PRD_UID;
 
-
         Gson gson = new Gson();
         Type typeIDs = new TypeToken<ModelLog>() {
         }.getType();
@@ -507,15 +514,11 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                                         }
 
 
-
-
                                         String INV_DET_UID = orderDetailList.get(position).INV_DET_UID;
 
                                         InvoiceDetail resultInvoice = Select.from(InvoiceDetail.class).where("INVDETUID ='" + INV_DET_UID + "'").first();
 
-
                                         Product product = Select.from(Product.class).where("I ='" + Prd_GUID + "'").first();
-
 
                                         double currentAmount = resultInvoice.getQuantity();
 
@@ -534,35 +537,30 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                                         if (remain <= 0) {
                                             showAlert("ناموجود");
                                             amount = 0.0;
-                                        }
-
-                                       else if (MinOrPlus == 1) {
+                                        } else if (MinOrPlus == 1) {
                                             if (currentAmount > 0.0 && coef2 != 0.0)
                                                 coef1 = coef2;
                                             amount = currentAmount + coef1;
-                                        }
-                                        else if (MinOrPlus == 2) {
+                                        } else if (MinOrPlus == 2) {
                                             if (currentAmount > coef1 && coef2 != 0.0 && currentAmount < coef1 + coef2) {
                                                 amount = 0.0;
-                                            }
-                                            else if (currentAmount > coef1 && coef2 != 0.0)
+                                            } else if (currentAmount > coef1 && coef2 != 0.0)
                                                 amount = currentAmount - coef2;
                                             else if (currentAmount >= coef1)
                                                 amount = currentAmount - coef1;
                                             else
                                                 return;
-                                        }
-                                        else {
-                                            amount = Float.parseFloat(s.equals("")?"0":s);
-                                                if (
-                                                        (coef2 != 0.0 && amount < coef1)
-                                                                || (coef2 == 0 && amount % coef1 != 0)
-                                                                || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
-                                                ) {
+                                        } else {
+                                            amount = Float.parseFloat(s.equals("") ? "0" : s);
+                                            if (
+                                                    (coef2 != 0.0 && amount < coef1)
+                                                            || (coef2 == 0 && amount % coef1 != 0)
+                                                            || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                                            ) {
 
-                                                    showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ");
-                                                    amount = 0.0;
-                                                }
+                                                showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ");
+                                                amount = 0.0;
+                                            }
 
                                         }
 
@@ -573,22 +571,18 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                                             if (remain % mainCoef1 != 0)
                                                 remain = 0.0;
 
-                                                if (resultInvoice != null) {
-                                                    resultInvoice.INV_DET_QUANTITY = remain;
-                                                    resultInvoice.update();
+                                            if (resultInvoice != null) {
+                                                resultInvoice.INV_DET_QUANTITY = remain;
+                                                resultInvoice.update();
 
-
-
-                                                    clickItem.onClick(Prd_GUID);
-                                                    notifyItemChanged(position);
-
-                                                }
-
+                                                clickItem.onClick(Prd_GUID);
+                                                notifyItemChanged(position);
+                                            }
 
                                             return;
                                         }
                                         //region Edit InvoiceDetail
-                                        if (resultInvoice!=null ) {
+                                        if (resultInvoice != null) {
                                             if (resultInvoice != null) {
                                                 resultInvoice.INV_DET_QUANTITY = amount;
                                                 resultInvoice.update();
@@ -614,12 +608,13 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
                                         clickItem.onClick(Prd_GUID);
                                     }
                                     , throwable -> {
-                                        showAlert( "خطا در دریافت اطلاعات مانده کالا");
+                                        showAlert("خطا در دریافت اطلاعات مانده کالا");
+                                        notifyItemChanged(position);
 
-                            }));
+                                    }));
         } catch (Exception e) {
-            showAlert( "خطا در دریافت اطلاعات مانده کالا");
-
+            showAlert("خطا در دریافت اطلاعات مانده کالا");
+            notifyItemChanged(position);
 
         }
     }

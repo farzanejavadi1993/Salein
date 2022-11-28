@@ -116,7 +116,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     //endregion InterfaceClickDescription
 
 
-
     //region InterFaceClickImage
     public interface ClickImage {
         void onClick(String Prd_UID);
@@ -193,6 +192,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         if (productsList.get(position) != null) {
 
             holder.error.setText("");
+            holder.progressBar.setVisibility(View.GONE);
+            holder.ivMax.setEnabled(true);
+            holder.ivMinus.setEnabled(true);
 
             holder.ProductAmountTxt.setEnabled(closeDateList == null || closeDateList.size() <= 0 || !closeDateList.contains(valueOfDay));
 
@@ -236,14 +238,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             }
 
 
-
             ArrayList<Unit> units = new ArrayList<>(unitList);
             CollectionUtils.filter(units, u -> u.getUomUid().equals(productsList.get(holder.getAdapterPosition()).UM1));
             if (units.size() > 0)
                 holder.unit.setText(units.get(0).getUomName());
             else
                 holder.unit.setText("");
-
 
 
             holder.tab = 0;
@@ -273,7 +273,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             }
 
 
-
             String description;
             if (ivDetail != null && ivDetail.INV_DET_DESCRIBTION != null)
                 description = ivDetail.INV_DET_DESCRIBTION;
@@ -282,54 +281,42 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             holder.edtDesc.setText(description);
 
 
-
-
             holder.ivMax.setOnClickListener(view -> {
-                if (closeDateList!=null && closeDateList.size() > 0 && closeDateList.contains(valueOfDay)) {
+                if (closeDateList != null && closeDateList.size() > 0 && closeDateList.contains(valueOfDay)) {
                     Toasty.warning(activity, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 holder.ProductAmountTxt.setCursorVisible(false);
 
+                if (checkRemainProduct.equals("1"))
+                    holder.progressBar.setVisibility(View.VISIBLE);
+
+                holder.ivMax.setEnabled(false);
                 if (holder.getAdapterPosition() < productsList.size())
-                    doAction(
-                            productsList.get(holder.getAdapterPosition()).getAmount(),
-                            holder.getAdapterPosition(),
-                            holder.error,
-                            holder.progressBar,
-                            holder.textWatcher1,
-                            holder.ProductAmountTxt,
-                            holder.ivMinus,
-                            company,
-                            checkRemainProduct,
-                            productsList.get(holder.getAdapterPosition()).getI(),
+                    doAction(holder.getAdapterPosition(),
                             "",
                             1);
             });
 
 
-
             holder.ivMinus.setOnClickListener(v -> {
-                if (closeDateList!=null&&closeDateList.size() > 0 && closeDateList.contains(valueOfDay)) {
+                if (closeDateList != null && closeDateList.size() > 0 && closeDateList.contains(valueOfDay)) {
                     Toasty.warning(activity, "فروشگاه تعطیل می باشد.", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
+
+                if (checkRemainProduct.equals("1"))
+                    holder.progressBar.setVisibility(View.VISIBLE);
+
+                holder.ivMinus.setEnabled(false);
+
                 holder.ProductAmountTxt.setCursorVisible(false);
                 if (holder.getAdapterPosition() < productsList.size())
-                    doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
-                            holder.getAdapterPosition(),
-                            holder.error,
-                            holder.progressBar,
-                            holder.textWatcher1,
-                            holder.ProductAmountTxt,
-                            holder.ivMinus,
-                            company,
-                            checkRemainProduct,
-                            productsList.get(holder.getAdapterPosition()).getI(),
+                    doAction(holder.getAdapterPosition(),
                             "",
                             2);
-            });
 
+            });
 
 
             holder.ProductAmountTxt.setOnFocusChangeListener((view1, b) -> {
@@ -337,11 +324,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             });
 
 
-
             if (holder.textWatcher1 == null) {
                 holder.textWatcher1 = new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                         if (!charSequence.toString().isEmpty())
@@ -360,30 +348,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                 return;
                             }
                         }
+                        if (checkRemainProduct.equals("1"))
+                            holder.progressBar.setVisibility(View.VISIBLE);
+
                         if (holder.getAdapterPosition() < productsList.size())
-                            doAction(productsList.get(holder.getAdapterPosition()).getAmount(),
+                            doAction(
                                     holder.getAdapterPosition(),
-                                    holder.error,
-                                    holder.progressBar,
-                                    holder.textWatcher1,
-                                    holder.ProductAmountTxt,
-                                    holder.ivMinus,
-                                    company,
-                                    checkRemainProduct,
-                                    productsList.get(holder.getAdapterPosition()).getI(),
                                     s,
                                     3
                             );}
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                    }
                 };
             }
 
             holder.ProductAmountTxt.removeTextChangedListener(holder.textWatcher1);
             holder.ProductAmountTxt.setText(df.format(amount));
             holder.ProductAmountTxt.addTextChangedListener(holder.textWatcher1);
-
-
+            holder.ProductAmountTxt.setSelection(holder.ProductAmountTxt.getText().toString().length());
 
             holder.cardEdit.setOnClickListener(v -> {
                 if (productsList.get(holder.getAdapterPosition()).getAmount() != null) {
@@ -420,7 +403,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         private final RelativeLayout layoutDiscount;
 
 
-
         public viewHolder(View itemView) {
             super(itemView);
             cardEdit = itemView.findViewById(R.id.card_edit);
@@ -454,12 +436,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         this.closeDateList = closeDateList;
     }
 
-    private void getMaxSales(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, Company company, String Prd_GUID, String s, int MinOrPlus) {
+    private void getMaxSales(int position, String s, int MinOrPlus) {
+        String Prd_GUID = productsList.get(position).getI();
         Gson gson = new Gson();
         Type typeIDs = new TypeToken<ModelLog>() {
         }.getType();
 
-        progressBar.setVisibility(View.VISIBLE);
 
         try {
             compositeDisposable.add(
@@ -469,8 +451,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                             .doOnSubscribe(disposable -> {
                             })
                             .subscribe(jsonElement -> {
-                                        progressBar.setVisibility(View.GONE);
 
+                                        double currentAmount = productsList.get(position).getAmount();
                                         double remain;
                                         try {
                                             assert jsonElement != null;
@@ -483,81 +465,58 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                             return;
                                         }
 
-                                        List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-                                        ArrayList<InvoiceDetail> resultInvoice = new ArrayList<>(invDetails);
-                                        CollectionUtils.filter(resultInvoice, r -> r.PRD_UID.equals(Prd_GUID));
+
+                                        InvoiceDetail invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "' AND PRDUID ='" + Prd_GUID + "'").first();
 
 
                                         double mainCoef1 = productsList.get(position).getCoef1();
-                                        double coef1 = productsList.get(position).getCoef1();
+                                        double coef1 = mainCoef1;
                                         double coef2 = productsList.get(position).getCoef2();
 
                                         if (defaultCoff.equals("1")) {
-                                            coef2 = productsList.get(position).getCoef1();
+                                            coef2 = mainCoef1;
                                         } else if (defaultCoff.equals("2")) {
-                                            coef1 = productsList.get(position).getCoef2();
+                                            coef1 = coef2;
                                         }
 
                                         double amount = 0;
 
                                         if (remain <= 0) {
                                             productsList.get(position).setAmount(0.0);
-                                            if (MinOrPlus != 3) {
-                                                ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                ProductAmountTxt.setText("");
-
-                                                ProductAmountTxt.addTextChangedListener(textWatcher);
-                                                ivMinus.setVisibility(View.GONE);
-                                                ProductAmountTxt.setVisibility(View.GONE);
-                                            }
-                                            error.setText("ناموجود");
-                                            progressBar.setVisibility(View.GONE);
+                                            showAlert("ناموجود");
                                             amount = 0.0;
                                         }
 
 
                                         if (MinOrPlus == 1) {
-                                            if (amount1 > 0.0 && coef2 != 0.0)
+                                            if (currentAmount > 0.0 && coef2 != 0.0)
                                                 coef1 = coef2;
-                                            amount = amount1 + coef1;
-                                        }
-
-                                        else if (MinOrPlus == 2) {
-                                            if (amount1 > coef1 && coef2 != 0.0 && amount1 < coef1 + coef2) {
+                                            amount = currentAmount + coef1;
+                                        } else if (MinOrPlus == 2) {
+                                            if (currentAmount > coef1 && coef2 != 0.0 && currentAmount < coef1 + coef2) {
                                                 amount = 0.0;
-                                            } else if (amount1 > coef1 && coef2 != 0.0)
-                                                amount = amount1 - coef2;
-                                            else if (amount1 >= coef1)
-                                                amount = amount1 - coef1;
+                                            } else if (currentAmount > coef1 && coef2 != 0.0)
+                                                amount = currentAmount - coef2;
+                                            else if (currentAmount >= coef1)
+                                                amount = currentAmount - coef1;
 
                                             else
                                                 return;
+                                        } else {
+
+                                            amount = Float.parseFloat(s.equals("") ? "0" : s);
+                                            if (
+                                                    (coef2 != 0.0 && amount < coef1)
+                                                            || (coef2 == 0 && amount % coef1 != 0)
+                                                            || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                                            ) {
+
+                                                showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ");
+                                                productsList.get(position).setAmount(0.0);
+                                                amount = 0.0;
+                                            }
+
                                         }
-
-                                        else {
-                                            try {
-                                                amount = Float.parseFloat(s);
-                                                if (
-                                                        (coef2 != 0.0 && amount < coef1)
-                                                                || (coef2 == 0 && amount % coef1 != 0)
-                                                                || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
-                                                ) {
-
-                                                    showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد ");
-
-                                                    ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                    ProductAmountTxt.setText("");
-                                                    ProductAmountTxt.addTextChangedListener(textWatcher);
-
-                                                    ivMinus.setVisibility(View.GONE);
-                                                    ProductAmountTxt.setVisibility(View.GONE);
-                                                    productsList.get(position).setAmount(0.0);
-                                                    amount = 0.0;}
-
-
-                                            } catch (Exception ignored) {}
-                                        }
-
 
 
                                         productsList.get(position).setAmount(amount);
@@ -567,53 +526,38 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                             if (remain % mainCoef1 != 0)
                                                 remain = 0.0;
                                             productsList.get(position).setAmount(remain);
-                                            ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                            ProductAmountTxt.setText(df.format(remain));
-                                            ProductAmountTxt.addTextChangedListener(textWatcher);
-                                            ProductAmountTxt.setCursorVisible(false);
 
-                                            if (resultInvoice.size() > 0) {
-                                                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
-                                                if (invoiceDetail != null) {
-                                                    invoiceDetail.INV_DET_QUANTITY = remain;
-                                                    if (remain != 0.0)
-                                                        invoiceDetail.update();
-                                                    else
-                                                        invoiceDetail.delete();
 
-                                                    clickItem.onClick(Prd_GUID);
-                                                }
+                                            if (invDetails != null) {
+
+                                                invDetails.INV_DET_QUANTITY = remain;
+                                                if (remain != 0.0)
+                                                    invDetails.update();
+                                                else
+                                                    invDetails.delete();
+
+                                                notifyItemChanged(position);
+                                                clickItem.onClick(Prd_GUID);
+
                                             }
-                                            progressBar.setVisibility(View.GONE);
+                                            ;
                                             return;
                                         }
 
                                         //region Edit InvoiceDetail
-                                        if (resultInvoice.size() > 0) {
-                                            InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + resultInvoice.get(0).INV_DET_UID + "'").first();
+                                        if (invDetails != null) {
+
                                             if (amount == 0) {
-                                                if (invoiceDetail != null)
-                                                    invoiceDetail.delete();
-
-                                                if (MinOrPlus != 3) {
-                                                    ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                                    ProductAmountTxt.setText("");
-                                                    ProductAmountTxt.addTextChangedListener(textWatcher);
-                                                    ivMinus.setVisibility(View.GONE);
-                                                    ProductAmountTxt.setVisibility(View.GONE);
-                                                }
-
+                                                invDetails.delete();
+                                                notifyItemChanged(position);
                                                 clickItem.onClick(Prd_GUID);
                                                 return;
                                             }
 
-                                            if (invoiceDetail != null) {
-                                                invoiceDetail.INV_DET_QUANTITY = amount;
-                                                invoiceDetail.update();
-                                            }
+                                            invDetails.INV_DET_QUANTITY = amount;
+                                            invDetails.update();
                                         }
                                         //endregion Edit InvoiceDetail
-
 
 
                                         //region Create InvoiceDetail
@@ -630,25 +574,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                         //endregion Create InvoiceDetail
 
 
-                                        if (MinOrPlus != 3) {
-                                            ProductAmountTxt.removeTextChangedListener(textWatcher);
-                                            ProductAmountTxt.setText(df.format(amount));
-                                            ProductAmountTxt.addTextChangedListener(textWatcher);
-
-                                        }
-
-                                        ivMinus.setVisibility(View.VISIBLE);
-                                        ProductAmountTxt.setVisibility(View.VISIBLE);
+                                        notifyItemChanged(position);
                                         clickItem.onClick(Prd_GUID);
-                                        }
+                                    }
                                     , throwable -> {
-                                        Toast.makeText(activity, "خطا در دریافت اطلاعات مانده کالا", Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.GONE);
+                                        showAlert("خطا در دریافت اطلاعات مانده کالا");
+                                        notifyItemChanged(position);
 
-                            }));
+                                    }));
         } catch (Exception e) {
-            Toast.makeText(activity, "خطا در دریافت اطلاعات مانده کالا", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
+            showAlert( "خطا در دریافت اطلاعات مانده کالا");
+            notifyItemChanged(position);
         }
     }
 
@@ -674,18 +610,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                                 if (invoiceDetail != null) {
                                                     InvoiceDetail.deleteInTx(invoiceDetail);
                                                 }
-                                            }
-
-
-                                            else if (remain > 0 && remain < amount) {
+                                            } else if (remain > 0 && remain < amount) {
                                                 InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("PRDUID ='" + Prd_GUID + "'").first();
                                                 if (invoiceDetail != null) {
                                                     invoiceDetail.INV_DET_QUANTITY = remain;
                                                     invoiceDetail.update();
                                                 }
-                                            }
-
-                                            else {
+                                            } else {
                                                 txtError.setText("");
                                                 layoutAmount.setVisibility(View.VISIBLE);
                                             }
@@ -700,50 +631,51 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                             String description = iDs.getLogs().get(0).getDescription();
                                             if (message != 1)
                                                 Toast.makeText(activity, description, Toast.LENGTH_SHORT).show();
-                                        }}
-                                    , throwable -> {})
+                                        }
+                                    }
+                                    , throwable -> {
+
+                                    })
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
 
+    private void doAction(int position, String s, int MinOrPlus) {
 
-    private void doAction(double amount1, int position, TextView error, ProgressBar progressBar, TextWatcher textWatcher, EditText ProductAmountTxt, ImageView ivMinus, Company company, String checkRemainProduct, String Prd_GUID, String s, int MinOrPlus) {
-        error.setText("");
-
-        if (position < 0)
-            return;
+        double currentAmount = productsList.get(position).getAmount();
 
         if (checkRemainProduct.equals("1"))
-            getMaxSales(amount1, position, error, progressBar, textWatcher, ProductAmountTxt, ivMinus, company, Prd_GUID, s, MinOrPlus);
+            getMaxSales(position, s, MinOrPlus);
 
         else {
             double amount = 0.0;
             double mainCoef1 = productsList.get(position).getCoef1();
-            double coef1 = productsList.get(position).getCoef1();
+            double coef1 = mainCoef1;
             double coef2 = productsList.get(position).getCoef2();
 
             if (defaultCoff.equals("1"))
-                coef2 = productsList.get(position).getCoef1();
-             else if (defaultCoff.equals("2"))
-                coef1 = productsList.get(position).getCoef2();
+                coef2 = mainCoef1;
+            else if (defaultCoff.equals("2"))
+                coef1 = coef2;
 
 
             //region MaxAmount
             if (MinOrPlus == 1) {
-                if (amount1 > 0.0 && coef2 != 0.0)
+                if (currentAmount > 0.0 && coef2 != 0.0)
                     coef1 = coef2;
-                amount = amount1 + coef1;
+                amount = currentAmount + coef1;
             }
             //endregion MaxAmount
 
 
             //region MinAmount
             else if (MinOrPlus == 2) {
-                if (amount1 > coef1 && coef2 != 0.0)
-                    amount = amount1 - coef2;
-                else if (amount1 >= coef1)
-                    amount = amount1 - coef1;
+                if (currentAmount > coef1 && coef2 != 0.0)
+                    amount = currentAmount - coef2;
+                else if (currentAmount >= coef1)
+                    amount = currentAmount - coef1;
 
                 else
                     return;
@@ -753,60 +685,39 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             //region EditAmount
             else {
-                try {
-                    amount = Float.parseFloat(s);
-                    if (
-                            (coef2 != 0.0 && amount < coef1)
-                                    || (coef2 == 0 && amount % coef1 != 0)
-                                    || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
-                    ) {
+                amount = Float.parseFloat(s.equals("") ? "0" : s);
+                if (
+                        (coef2 != 0.0 && amount < coef1)
+                                || (coef2 == 0 && amount % coef1 != 0)
+                                || (coef2 == 0 && amount % coef1 == 0 && amount < coef1)
+                ) {
 
-                        showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.");
+                    showAlert(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.");
+                    amount = 0;
+                }
 
-                        amount = 0;
-                        ProductAmountTxt.removeTextChangedListener(textWatcher);
-                        ProductAmountTxt.setText("");
-
-                        ProductAmountTxt.addTextChangedListener(textWatcher);
-                        ivMinus.setVisibility(View.GONE);
-                        ProductAmountTxt.setVisibility(View.GONE);
-                    }
-                } catch (Exception ignored) {}
             }
             //endregion EditAmount
 
 
             productsList.get(position).setAmount(amount);
-            List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-            ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
-            CollectionUtils.filter(result, r -> r.PRD_UID.equals(Prd_GUID));
+
+            String Prd_GUID = productsList.get(position).getI();
+            InvoiceDetail invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "' AND PRDUID ='" + Prd_GUID + "'").first();
 
             //region Edit InvoiceDetail
-            if (result.size() > 0) {
-
-                InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-
+            if (invDetails != null) {
                 if (amount == 0) {
+                    invDetails.delete();
 
-                    if (invoiceDetail != null)
-                        invoiceDetail.delete();
-
-                    if (MinOrPlus != 3) {
-                        ProductAmountTxt.removeTextChangedListener(textWatcher);
-                        ProductAmountTxt.setText("");
-                        ProductAmountTxt.addTextChangedListener(textWatcher);
-
-                        ivMinus.setVisibility(View.GONE);
-                        ProductAmountTxt.setVisibility(View.GONE);
-                    }
-                    ProductAmountTxt.setCursorVisible(false);
+                    notifyItemChanged(position);
                     clickItem.onClick(Prd_GUID);
                     return;
                 }
 
-                if (invoiceDetail != null) {
-                    invoiceDetail.INV_DET_QUANTITY = amount;
-                    invoiceDetail.update();
+                if (invDetails != null) {
+                    invDetails.INV_DET_QUANTITY = amount;
+                    invDetails.update();
                 }
             }
             //endregion Edit InvoiceDetail
@@ -822,21 +733,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     invoicedetail.PRD_UID = Prd_GUID;
                     invoicedetail.save();
                 }
-
             }
             //endregion Create InvoiceDetail
-
-
-
-            if (MinOrPlus != 3) {
-                ProductAmountTxt.removeTextChangedListener(textWatcher);
-                ProductAmountTxt.setText(df.format(amount));
-                ProductAmountTxt.addTextChangedListener(textWatcher);
-            }
+            notifyItemChanged(position);
             clickItem.onClick(Prd_GUID);
-            ivMinus.setVisibility(View.VISIBLE);
-            ProductAmountTxt.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -848,7 +748,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 })
                 .show();
 
-        TextView textView =alertDialog.findViewById(android.R.id.message);
+        TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(activity.getAssets(), "iransans.ttf");
         textView.setTypeface(face);
         textView.setTextColor(activity.getResources().getColor(R.color.red_table));
