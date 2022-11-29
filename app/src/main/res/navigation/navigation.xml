@@ -5,7 +5,6 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/SplashScreenFragment">
 
-
     <fragment
         android:id="@+id/SplashScreenFragment"
         android:name="ir.kitgroup.salein.ui.splashscreen.SplashScreenFragment"
@@ -33,7 +32,6 @@
 
     </fragment>
 
-
     <fragment
         android:id="@+id/CompanyFragment"
         android:name="ir.kitgroup.salein.ui.companies.CompanyFragment"
@@ -44,7 +42,6 @@
 
 
     </fragment>
-
 
     <fragment
         android:id="@+id/AllCompanyFragment"
@@ -88,11 +85,6 @@
             app:destination="@id/RulesFragment" />
     </fragment>
 
-
-
-
-
-
     <fragment
         android:id="@+id/PaymentFragment"
         android:name="ir.kitgroup.salein.ui.payment.PaymentFragment"
@@ -108,8 +100,6 @@
 
 
     </fragment>
-
-
 
     <fragment
         android:tag="ShowDetailFragment"
@@ -144,8 +134,6 @@
             app:argType="string" />
     </fragment>
 
-
-
     <fragment
         android:id="@+id/InvoiceFragment"
         android:name="ir.kitgroup.salein.ui.launcher.invoiceItem.InVoiceDetailFragment"
@@ -169,7 +157,6 @@
 
 
     </fragment>
-
 
     <fragment
         android:id="@+id/FilterFragment"
@@ -204,7 +191,6 @@
             app:destination="@id/OrderFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="ir.kitgroup.salein.ui.launcher.moreItem.ProfileFragment"
@@ -226,12 +212,10 @@
             app:argType="string" />
     </fragment>
 
-
     <fragment
         android:id="@+id/AboutUsFragment"
         android:name="ir.kitgroup.salein.ui.launcher.moreItem.AboutUsFragment"
         tools:layout="@layout/about_us_fragment" />
-
 
     <fragment
         android:id="@+id/OrderFragment"
@@ -273,14 +257,12 @@
 
     </fragment>
 
-
     <fragment
         android:id="@+id/RulesFragment"
         android:name="ir.kitgroup.salein.ui.logins.RulesFragment"
         tools:layout="@layout/fragment_rules">
 
     </fragment>
-
 
     <fragment
         android:id="@+id/MapFragment"
@@ -291,6 +273,7 @@
             app:argType="string" />
 
     </fragment>
+
     <fragment
         android:id="@+id/VerifyFragment"
         android:name="ir.kitgroup.salein.ui.logins.VerifyFragment"
