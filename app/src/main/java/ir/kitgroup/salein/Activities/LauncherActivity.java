@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
 
 import com.orm.query.Select;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Salein;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
@@ -34,6 +36,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ActivityLauncherBinding binding;
     private NavController navController;
     private int count;
+    private PowerManager powerManager;
     //endregion Parameter
 
 
@@ -45,6 +48,8 @@ public class LauncherActivity extends AppCompatActivity {
 
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 
         getBundle();
         navigationHandler();
@@ -81,12 +86,24 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
+
+
+
     @Override
     protected void onPause() {
         super.onPause();
-        // if (sharedPreferences.getBoolean("loginSuccess", false))
-        // finish();
+        boolean isScreenOn = powerManager.isScreenOn();
+        if (isScreenOn &&  sharedPreferences.getBoolean("loginSuccess", false))
+            finish();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Select.from(Account.class).first() != null)
+            sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+    }
+
     //endregion Override Method
 
 

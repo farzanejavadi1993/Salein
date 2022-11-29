@@ -2,6 +2,7 @@ package ir.kitgroup.salein.ui.logins;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -74,6 +75,8 @@ public class VerifyFragment extends Fragment {
     private CountDownTimer countDownTimer;
     private boolean resendCode = false;
     private long timer_left = 180000;
+
+    private String applicationVersion="";
     //endregion Parameter
 
 
@@ -93,6 +96,11 @@ public class VerifyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getBundle();
+        try {
+            appVersion();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         getCodeFromSms();
         init();
         startTimer();
@@ -118,12 +126,12 @@ public class VerifyFragment extends Fragment {
 
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
         });
+
         mainViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
             navigate();
         });
-
 
         companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
@@ -134,6 +142,7 @@ public class VerifyFragment extends Fragment {
 
             if (result.size() > 0) {
                 Account.deleteAll(Account.class);
+                result.get(0).setVersion(applicationVersion);
                 Account.saveInTx(result);
                 mainViewModel.getCustomerFromServer(mobile);
             } else {
@@ -339,6 +348,10 @@ public class VerifyFragment extends Fragment {
 
         task.addOnFailureListener(e -> {
         });
+    }
+
+    public void appVersion() throws PackageManager.NameNotFoundException {
+        applicationVersion= getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
     }
     //endregion Method
 

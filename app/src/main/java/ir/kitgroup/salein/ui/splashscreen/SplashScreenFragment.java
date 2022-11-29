@@ -32,9 +32,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.InvoiceDetail;
-import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.DataBase.Unit;
 
 import ir.kitgroup.salein.classes.CustomDialog;
 import ir.kitgroup.salein.classes.Util;
@@ -63,7 +60,7 @@ public class SplashScreenFragment extends Fragment {
     private FragmentSplashScreenBinding binding;
     private MainViewModel mainViewModel;
 
-    private final String appVersion = "";
+    private String appVersion = "";
     private String linkUpdate = "";
     private String newVersionUpdate = "";
     private String titleUpdate = "";
@@ -115,8 +112,12 @@ public class SplashScreenFragment extends Fragment {
             if (result == null)
                 return;
 
-            if (company != null)
+            if (result.getCode()==110 || result.getCode()==111){
+                checkUpdate();
+            }
+            else if (company != null)
                 navigate();
+
             else
                 showError(result.getDescription());
 
@@ -152,41 +153,6 @@ public class SplashScreenFragment extends Fragment {
 
         });
 
-        mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null)
-                return;
-            mainViewModel.getResultCustomerFromServer().setValue(null);
-
-            if (result.size() > 0) {
-                List<AppDetail> Apps = result.get(0).getApps();
-                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
-
-                if (Apps.size() > 0) {
-                    if (!Apps.get(0).getIsActive()) {
-                        showError("با این تلفن نمیتوانید وارد نرم افزار شوید.");
-                        return;
-                    }
-                }
-                else {
-                    addCustomerToSerVer();
-                }
-            }
-
-            else {
-                addCustomerToSerVer();
-            }
-            checkUpdate();
-        });
-
-        mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null)
-                return;
-            mainViewModel.getResultAddAccountToServer().setValue(null);
-            checkUpdate();
-        });
-
         mainViewModel.getResultCompany().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
@@ -199,6 +165,39 @@ public class SplashScreenFragment extends Fragment {
                 showError("شرکت یافت نشد.");
 
         });
+
+        mainViewModel.getResultCustomerFromServer().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            mainViewModel.getResultCustomerFromServer().setValue(null);
+
+            if (result.size() > 0) {
+                List<AppDetail> Apps = result.get(0).getApps();
+                CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
+
+                if (Apps.size() > 0) {
+                    if (!Apps.get(0).getIsActive()) {
+                        showError("با این تلفن نمیتوانید وارد نرم افزار شوید.");
+                    }
+                    else
+                        checkUpdate();
+                }
+                else
+                    addCustomerToSerVer();
+            }
+            else
+                addCustomerToSerVer();
+        });
+
+        mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
+
+            if (result == null)
+                return;
+            mainViewModel.getResultAddAccountToServer().setValue(null);
+            checkUpdate();
+        });
+
+
     }
 
 
@@ -212,19 +211,23 @@ public class SplashScreenFragment extends Fragment {
 
     //region Custom Method
     public String appVersion() throws PackageManager.NameNotFoundException {
-        return getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        appVersion= getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+    return appVersion;
     }
+
 
     private void checkUpdate() {
         if (forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), titleUpdate, false, "", "آپدیت", true, false);
 
 
-        } else if (!forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
+        }
+        else if (!forcedUpdate && !newVersionUpdate.equals("") && !appVersion.equals(newVersionUpdate)) {
             customDialog.showDialog(getActivity(), titleUpdate, false, "بعدا", "آپدیت", true, true);
 
 
-        } else if (account != null  && !account.getVersion().equals(newVersionUpdate)) {
+        }
+        else if (account != null  && account.getVersion()!=null && !account.getVersion().equals(newVersionUpdate)) {
 
             if (!messageUpdate.equals(""))
             customDialog.showDialog(getActivity(), messageUpdate, false, "بستن و ادامه", "", false, true);
@@ -235,9 +238,8 @@ public class SplashScreenFragment extends Fragment {
                 binding.animationView.setVisibility(View.VISIBLE);
                 mainViewModel.getCompany(companyGuid);
             }
-
-
-        } else
+        }
+        else
             mainViewModel.getCompany(companyGuid);
     }
 
@@ -263,6 +265,7 @@ public class SplashScreenFragment extends Fragment {
 
     private void iniAppVersion() {
         try {
+
             binding.tvversion.setText(String.format("%s%s", getString(R.string.application_version), appVersion()));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -328,10 +331,6 @@ public class SplashScreenFragment extends Fragment {
             accounts.add(account);
             jsonObjectAcc.Account = accounts;
             mainViewModel.addAccountToServer(jsonObjectAcc);
-        }else {
-
-
-
         }
     }
 
@@ -342,16 +341,7 @@ public class SplashScreenFragment extends Fragment {
         binding.txtErrorr.setText(error);
     }
 
-    private void clearData() {
-        sharedPreferences.edit().clear().apply();
-        Account.deleteAll(Account.class);
-        Company.deleteAll(Company.class);
-        InvoiceDetail.deleteAll(InvoiceDetail.class);
-        Company.deleteAll(Company.class);
-        Product.deleteAll(Product.class);
-        Unit.deleteAll(Unit.class);
-        Account.deleteAll(Account.class);
-    }
+
 
 
     //endregion Custom Method

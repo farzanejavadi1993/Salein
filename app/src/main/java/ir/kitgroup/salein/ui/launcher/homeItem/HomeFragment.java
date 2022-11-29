@@ -572,7 +572,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void init() {
-
+        sharedPreferences.edit().putBoolean("loginSuccess",false).apply();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Product.deleteAll(Product.class);

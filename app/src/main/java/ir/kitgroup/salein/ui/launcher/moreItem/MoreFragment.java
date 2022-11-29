@@ -146,13 +146,6 @@ public class MoreFragment extends Fragment {
             if (Company.count(Company.class) > 0)
                 Company.deleteAll(Company.class);
 
-
-
-
-
-
-
-
             getActivity().finish();
             startActivity(getActivity().getIntent());
 

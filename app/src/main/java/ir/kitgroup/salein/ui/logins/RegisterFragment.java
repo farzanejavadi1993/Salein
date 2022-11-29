@@ -3,6 +3,7 @@ package ir.kitgroup.salein.ui.logins;
 import static android.os.Looper.getMainLooper;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
+
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
@@ -94,6 +95,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private LocationEngine locationEngine = null;
     private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
     private PermissionsManager permissionsManager;
+    private String applicationVersion="";
     //endregion Variable
 
 
@@ -112,6 +114,11 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
         initMap(savedInstanceState);
         getBundle();
+        try {
+            appVersion();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         setDataBundle();
         init();
     }
@@ -160,6 +167,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 String accStp = settingsList.get(0).ACC_STATUS_APP;
                 ACCSTP = !accStp.equals("0");
                 accountsList.get(0).STAPP = ACCSTP;
+                accountsList.get(0).setVersion(applicationVersion);
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
                 companyViewModel.addAccount(userName, passWord, accountsList);
@@ -668,6 +676,11 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             Navigation.findNavController(binding.getRoot()).navigate(action);
         }
 
+    }
+
+
+    public void appVersion() throws PackageManager.NameNotFoundException {
+        applicationVersion= getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
     }
     //endregion Method
 
