@@ -140,8 +140,6 @@ public class PaymentFragment extends Fragment {
     private ArrayList<ModelDate> allDateDelivery;
     private ArrayList<ModelDate> availableDateDelivery;
 
-    private Date todayDate;
-
     private Date chooseDayDelivery;
     //endregion Time Dialog
 
@@ -154,6 +152,8 @@ public class PaymentFragment extends Fragment {
     private Utilities util;
     private Locale loc;
 
+
+
     //endregion Parameter
 
     //region Override Method
@@ -165,6 +165,7 @@ public class PaymentFragment extends Fragment {
         binding = FragmentPaymentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
+
     @SuppressLint({"SetTextI18n", "RestrictedApi", "NotifyDataSetChanged", "StaticFieldLeak"})
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -280,7 +281,9 @@ public class PaymentFragment extends Fragment {
 
 
             deliveryOrderAdapter.notifyDataSetChanged();
+
             if ((deliveryList.size() == 1)) {
+
                 binding.tvTransport.setText(format.format(transportCost) + " ریال ");
                 binding.tvSumPurePrice.setText(format.format(sumPurePrice + transportCost) + "ریال");
             }
@@ -385,6 +388,7 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -392,7 +396,6 @@ public class PaymentFragment extends Fragment {
         ChooseAddress2 = false;
     }
     //endregion Override Method
-
 
     //region Custom Method
     public static class JsonObject {
@@ -417,14 +420,19 @@ public class PaymentFragment extends Fragment {
     private double getTransportCost(double distance) {
         double priceTransport;
         try {
-            if ("ir.kitgroup.saleinmeat".equals(company.getInskId())) {
+            if ("ir.kitgroup.saleinmeat".equals(company.getInskId()))
+            {
                 if (0 < distance && distance <= 1) {
                     priceTransport = 50000;
                 } else {
                     priceTransport = 150000;
                 }
 
-            } else
+            } else if ("ir.kitgroup.saleinjam".equals(company.getInskId())){
+                priceTransport=0;
+            }
+
+            else
                 priceTransport = detailTransportCost(distance);
 
 
@@ -479,7 +487,6 @@ public class PaymentFragment extends Fragment {
     }
 
     private void init() {
-
         account = Select.from(Account.class).first();
         latitude1 = account.getLAT();
         longitude1 = account.getLNG();
@@ -511,11 +518,12 @@ public class PaymentFragment extends Fragment {
         allDateDelivery = new ArrayList<>();
         availableDateDelivery = new ArrayList<>();
 
-        todayDate = Calendar.getInstance().getTime();
-
-        chooseDayDelivery = todayDate;
-
         sumPurePrice = 0;
+
+        typeAddress = 0;
+        ValidAddress = "";
+
+        chooseDayDelivery=Calendar.getInstance().getTime();
 
         util = new Utilities();
         loc = new Locale("en_US");
@@ -551,8 +559,6 @@ public class PaymentFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void castDialogAddress() {
-
-
         dialogAddress = dialogInstance.dialog(getActivity(), true, R.layout.dialog_address);
 
         radioAddress1 = dialogAddress.findViewById(R.id.radioAddress1);
@@ -561,6 +567,8 @@ public class PaymentFragment extends Fragment {
 
         radioAddress1.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+                dialogAddress.dismiss();
+
                 if (latitude1 == 0 && longitude1 == 0)
                     showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
 
@@ -573,12 +581,12 @@ public class PaymentFragment extends Fragment {
                 typeAddress = 1;
                 ValidAddress = radioAddress1.getText().toString();
                 binding.edtAddress.setText(ValidAddress);
-                dialogAddress.dismiss();
             }
         });
 
         radioAddress2.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+                dialogAddress.dismiss();
                 if (latitude2 == 0.0 || longitude2 == 0.0)
                     showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
 
@@ -588,10 +596,11 @@ public class PaymentFragment extends Fragment {
 
                 setDataTransport(price);
 
+
                 typeAddress = 2;
                 ValidAddress = radioAddress2.getText().toString();
                 binding.edtAddress.setText(ValidAddress);
-                dialogAddress.dismiss();
+
             }
         });
 
@@ -604,25 +613,36 @@ public class PaymentFragment extends Fragment {
             NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(), -1);
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
-
     }
 
     private void setAddress() {
 
-        //region SetAddress
         if (account != null) {
-            if (!account.getAdr().equals(""))
+
+            if (!account.getAdr().equals("")) {
                 radioAddress1.setVisibility(View.VISIBLE);
+                radioAddress1.setText(account.getAdr());
+            }
             else
                 radioAddress1.setVisibility(View.GONE);
 
+            if (!account.getAdr2().equals("")) {
+                radioAddress2.setVisibility(View.VISIBLE);
+                radioAddress2.setText(account.getAdr2());
+            }
+            else
+                radioAddress2.setVisibility(View.GONE);
 
-            radioAddress1.setText(account.getAdr());
 
             if (!ChooseAddress2) {
                 if (latitude1 == 0.0 || longitude1 == 0.0)
                     showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
 
+                if (!account.getAdr().equals("")){
+                    binding.edtAddress.setText(account.getAdr());
+                    typeAddress = 1;
+                    ValidAddress = account.getAdr();
+                }
 
                 double distance = getDistanceMeters(new LatLng(latitude1, longitude1), new LatLng(companyLat, company.getLong()));
 
@@ -630,43 +650,22 @@ public class PaymentFragment extends Fragment {
 
                 setDataTransport(price);
             }
-        }
 
-
-        if (account != null) {
-            if (!account.getAdr2().equals(""))
-                radioAddress2.setVisibility(View.VISIBLE);
-            else
-                radioAddress2.setVisibility(View.GONE);
-
-            radioAddress2.setText(account.getAdr2());
-
-            if (ChooseAddress2) {
+            else {
                 if ((latitude2 == 0.0 || longitude2 == 0.0))
                     showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
+
+                if (!account.getAdr2().equals("")){
+                    binding.edtAddress.setText(account.getAdr2());
+                    typeAddress = 2;
+                    ValidAddress = account.getAdr2();
+                }
 
                 double distance = getDistanceMeters(new LatLng(latitude2, longitude2), new LatLng(companyLat, company.getLong()));
                 double price = getTransportCost(distance / 1000);
                 setDataTransport(price);
             }
-
         }
-
-
-        if (account != null && !account.getAdr().equals("") && !ChooseAddress2) {
-            binding.edtAddress.setText(account.getAdr());
-            typeAddress = 1;
-            ValidAddress = account.getAdr();
-
-        } else if (account != null && !account.getAdr2().equals("")) {
-            binding.edtAddress.setText(account.getAdr2());
-            typeAddress = 2;
-            ValidAddress = account.getAdr2();
-        } else {
-            typeAddress = 0;
-            ValidAddress = "";
-        }
-
 
         binding.layoutAddress.setOnClickListener(v -> {
             if (typeAddress != 0) {
@@ -680,14 +679,13 @@ public class PaymentFragment extends Fragment {
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 
-        //endregion SetAddress
+
     }
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void castDialogTime() {
 
-        // availableTimeDelivery.addAll(filterTimes);
-
+        availableTimeDelivery.addAll(filterTimes);
         dialogTime = dialogInstance.dialog(getActivity(), true, R.layout.dialog_time);
 
         timeDeliveryAdapter = new TimeAdapter(availableTimeDelivery);
@@ -697,8 +695,14 @@ public class PaymentFragment extends Fragment {
 
         timeDeliveryAdapter.setOnClickItemListener(time -> {
             try {
+
+                Date todayDate  =Calendar.getInstance().getTime();
+
                 int hour;
                 hour = Integer.parseInt(time.split("-")[0]);
+
+                chooseTimeDelivery = time;
+
                 if (hour < todayDate.getHours() &&
                         todayDate.getDate() == chooseDayDelivery.getDate() &&
                         todayDate.getDay() == chooseDayDelivery.getDay() &&
@@ -708,12 +712,11 @@ public class PaymentFragment extends Fragment {
                     showAlert("در این بازه زمانی سفارش ارسال نمی شود.");
                     return;
                 }
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) {}
+
 
             dialogTime.dismiss();
 
-            chooseTimeDelivery = time;
 
             Utilities.SolarCalendar sc = util.new SolarCalendar(chooseDayDelivery);
 
@@ -751,7 +754,8 @@ public class PaymentFragment extends Fragment {
                     }
                 }
 
-            } else
+            }
+            else
                 filterTimes.addAll(AllTimeDelivery);
 
             availableTimeDelivery.clear();
@@ -760,7 +764,7 @@ public class PaymentFragment extends Fragment {
         });
 
         binding.layoutTime.setOnClickListener(v -> {
-            chooseDayDelivery = todayDate;
+
 
             availableDateDelivery.clear();
 
@@ -768,11 +772,15 @@ public class PaymentFragment extends Fragment {
             CollectionUtils.filter(arrayList, a -> a.Click);
             if (arrayList.size() > 0)
                 allDateDelivery.get(allDateDelivery.indexOf(arrayList.get(0))).Click = false;
+
+
             if (allDateDelivery.size() > 0)
                 allDateDelivery.get(0).Click = true;
 
+
             availableDateDelivery.addAll(allDateDelivery);
             dateDeliveryAdapter.notifyDataSetChanged();
+
             filterTimes.clear();
 
             if (AllTimeDelivery.size() == 0 || AllTimeDelivery.get(0).equals(""))
@@ -789,8 +797,7 @@ public class PaymentFragment extends Fragment {
                             if ((hour - date.getHours() != 1) || date.getMinutes() <= 45) {
                                 filterTimes.add(AllTimeDelivery.get(i));
                             }
-                    } catch (Exception ignore) {
-                    }
+                    } catch (Exception ignore) {}
                 }
 
                 availableTimeDelivery.clear();
@@ -895,7 +902,7 @@ public class PaymentFragment extends Fragment {
     private void calculateSumPriceOrder() {
 
         invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-        CollectionUtils.filter(invDetails,inv->!inv.PRD_UID.equals(Transport_GUID));
+        CollectionUtils.filter(invDetails, inv -> !inv.PRD_UID.equals(Transport_GUID));
 
         double sumPriceItem;
         double sumDiscountItem;
@@ -987,7 +994,8 @@ public class PaymentFragment extends Fragment {
 
                 if (transportCost != 0)
                     InvoiceDetail.save(invoiceDetailTransport);
-            } else {
+            }
+            else {
                 invoiceDetailTransport.INV_UID = Inv_GUID;
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(transportCost);
@@ -999,7 +1007,7 @@ public class PaymentFragment extends Fragment {
                     InvoiceDetail.delete(invoiceDetailTransport);
             }
 
-           // CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+
 
             for (int i = 0; i < invDetails.size(); i++) {
                 Product product = Select.from(Product.class).where("I ='" + invDetails.get(i).PRD_UID + "'").first();
@@ -1096,6 +1104,8 @@ public class PaymentFragment extends Fragment {
                 remain = size - 2;
 
 
+            sharedPreferences.edit().putBoolean("vip",false).apply();
+            sharedPreferences.edit().putBoolean("discount",false).apply();
             dialogSendOrder.dismiss();
             for (int i = 0; i < remain; i++) {
                 Navigation.findNavController(binding.getRoot()).popBackStack();
@@ -1112,14 +1122,21 @@ public class PaymentFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void setDataTransport(double price) {
+
         if (price == -1.0) {
             binding.tvError.setText("سفارش خارج از محدوده است.");
             dialogAddress.dismiss();
             return;
         } else {
             transportCost = price;
+            if (price>0){
+                binding.tvTransport.setVisibility(View.VISIBLE);
+                binding.tvTransport.setText(format.format(transportCost) + " ریال ");
+            }else
+                binding.tvTransport.setVisibility(View.GONE);
+
             binding.tvSumPurePrice.setText(format.format(sumPurePrice + transportCost) + "ریال");
-            binding.tvTransport.setText(format.format(transportCost) + " ریال ");
+
         }
     }
     //endregion Custom Method

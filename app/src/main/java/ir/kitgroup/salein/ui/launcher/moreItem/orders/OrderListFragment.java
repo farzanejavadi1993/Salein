@@ -201,14 +201,15 @@ public class OrderListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
+        binding.progressBar.setVisibility(View.VISIBLE);
         myViewModel.getAllInvoice(company.getUser(), company.getPass(), accGUID, datVip);
         myViewModel.getResultAllInvoice().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
-                customProgress.hideProgress();
-                binding.progressBar.setVisibility(View.GONE);
+
+            if (result == null)
                 return;
 
-            }
+            customProgress.hideProgress();
+            binding.progressBar.setVisibility(View.GONE);
 
             myViewModel.getResultAllInvoice().setValue(null);
             list.clear();
@@ -225,12 +226,11 @@ public class OrderListFragment extends Fragment {
 
         });
         myViewModel.getResultFeedBack().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
-                customProgress.hideProgress();
-                binding.progressBar.setVisibility(View.GONE);
+            if (result == null)
                 return;
 
-            }
+            customProgress.hideProgress();
+            binding.progressBar.setVisibility(View.GONE);
 
             myViewModel.getResultFeedBack().setValue(null);
             customProgress.hideProgress();

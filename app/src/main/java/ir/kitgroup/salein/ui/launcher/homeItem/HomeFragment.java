@@ -93,8 +93,6 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<String> closeDayList = new ArrayList<>();
 
-    private int currentPage = 1;
-
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
@@ -150,7 +148,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
+
             init();
             createOrder();
             setAnimation();
@@ -161,8 +159,7 @@ public class HomeFragment extends Fragment {
             initRecyclerViewProductLevel2();
             initRecyclerViewCustomProduct();
             initRecyclerViewProduct();
-        } catch (Exception ignored) {
-        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -578,8 +575,6 @@ public class HomeFragment extends Fragment {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-
         Product.deleteAll(Product.class);
 
         Inv_GUID = "";
@@ -636,7 +631,7 @@ public class HomeFragment extends Fragment {
     private void createOrder() {
         try {
             Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
-            getArguments().clear();
+//            getArguments().clear();
         } catch (Exception ignored) {
             Inv_GUID = "";
         }
@@ -785,6 +780,9 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void initRecyclerViewProductLevel1() {
+        if (productLevel1List.size()==1)
+            binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+
         productLevel1Adapter = new ProductLevel1Adapter(getActivity(), productLevel1List);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -796,7 +794,6 @@ public class HomeFragment extends Fragment {
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
             showProgressBar();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-            currentPage = 1;
             binding.orderTxtError.setText("");
 
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
@@ -846,7 +843,6 @@ public class HomeFragment extends Fragment {
             productAdapter.notifyDataSetChanged();
 
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-            currentPage = 1;
             binding.orderTxtError.setText("");
 
             //region UnClick Old Item
@@ -886,7 +882,6 @@ public class HomeFragment extends Fragment {
             productList.clear();
             productAdapter.notifyDataSetChanged();
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
-            currentPage = 1;
             binding.orderTxtError.setText("");
 
             //region UnClick Old Item
