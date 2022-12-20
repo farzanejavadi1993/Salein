@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment;
@@ -67,7 +66,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                 else {
 
-                    if (!Select.from(Salein.class).first().getSalein() && navController.getBackQueue().size() == 2)
+                    if (!Select.from(SaleinShop.class).first().isPublicApp() && navController.getBackQueue().size() == 2)
                         finishApp();
 
                     else

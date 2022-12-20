@@ -41,7 +41,7 @@ import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.classes.AppSMSBroadcastReceiver;
 import ir.kitgroup.salein.databinding.FragmentVerifyBinding;
@@ -96,13 +96,11 @@ public class VerifyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getBundle();
-        try {
-            appVersion();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        appVersion();
         getCodeFromSms();
+        getCompany();
         init();
+        initTextWatcher();
         startTimer();
     }
 
@@ -110,11 +108,12 @@ public class VerifyFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        companyViewModel.getResultMessage().setValue(null);
-        mainViewModel.getResultMessage().setValue(null);
+
+        nullTheMutable();
 
 
         companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
@@ -133,11 +132,13 @@ public class VerifyFragment extends Fragment {
             navigate();
         });
 
+
         companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
             companyViewModel.getResultInquiryAccount().setValue(null);
+
             sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
             if (result.size() > 0) {
@@ -145,7 +146,9 @@ public class VerifyFragment extends Fragment {
                 result.get(0).setVersion(applicationVersion);
                 Account.saveInTx(result);
                 mainViewModel.getCustomerFromServer(mobile);
-            } else {
+            }
+
+            else {
                 binding.progressBar.setVisibility(View.GONE);
                 NavDirections action = VerifyFragmentDirections.actionGoToRegisterFragment("VerifyFragment", mobile, -1);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
@@ -170,7 +173,8 @@ public class VerifyFragment extends Fragment {
                 else
                     addCustomerToSerVer();
 
-            } else {
+            }
+            else {
                 addCustomerToSerVer();
             }
 
@@ -195,7 +199,6 @@ public class VerifyFragment extends Fragment {
     }
     //endregion Override Method
 
-
     //region Method
     private void startTimer() {
         countDownTimer = new CountDownTimer(timer_left, 1000) {
@@ -204,7 +207,6 @@ public class VerifyFragment extends Fragment {
                 timer_left = millisUntilFinished;
                 updateTimerText();
             }
-
             @Override
             public void onFinish() {
                 code = -10;
@@ -222,8 +224,8 @@ public class VerifyFragment extends Fragment {
         binding.tvTimer.setText("دریافت مجدد کد تایید تا " + timeLeftFormatted);
     }
 
-    private Company getCompany() {
-        return Select.from(Company.class).first();
+    private void getCompany() {
+        company= Select.from(Company.class).first();
     }
 
     private void getBundle() {
@@ -233,10 +235,12 @@ public class VerifyFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        company=getCompany();
         userName = company.getUser();
         passWord = company.getPass();
+
+
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
+
 
         Picasso.get()
                 .load(Util.Main_Url_IMAGE + "/GetCompanyImage?id=" +
@@ -246,31 +250,7 @@ public class VerifyFragment extends Fragment {
                 .into(binding.imageLogo);
 
 
-        binding.otpView.setOtpListener(new OTPListener() {
-            @Override
-            public void onInteractionListener() {
-                binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                binding.tvEnterCode.setText("کد تایید 5 رقمی را وارد کنید");
-            }
 
-            @Override
-            public void onOTPComplete(String otp) {
-
-                if (Integer.parseInt(otp) == code) {
-                    binding.otpView.showSuccess();
-                    binding.otpView.setEnabled(false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                    companyViewModel.getInquiryAccount(userName, passWord, mobile);
-                }
-                else {
-                    binding.otpView.showError();
-                    binding.otpView.resetState();
-                    binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
-                    binding.tvEnterCode.setText("کد وارد شده اشتباه است.");
-                }
-
-            }
-        });
 
         binding.ivBackFragment.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
 
@@ -284,7 +264,31 @@ public class VerifyFragment extends Fragment {
                 String messageCode = String.valueOf(code);
                 binding.progressResendCode.setVisibility(View.VISIBLE);
                 companyViewModel.getSmsLogin(userName, passWord, messageCode, mobile);
+            }
+        });
+    }
+    private void initTextWatcher(){
+        binding.otpView.setOtpListener(new OTPListener() {
+            @Override
+            public void onInteractionListener() {
+                binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+                binding.tvEnterCode.setText("کد تایید 5 رقمی را وارد کنید");
+            }
 
+            @Override
+            public void onOTPComplete(String otp) {
+                if (Integer.parseInt(otp) == code) {
+                    binding.otpView.showSuccess();
+                    binding.otpView.setEnabled(false);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    companyViewModel.getInquiryAccount(userName, passWord, mobile);
+                }
+                else {
+                    binding.otpView.showError();
+                    binding.otpView.resetState();
+                    binding.tvEnterCode.setTextColor(getActivity().getResources().getColor(R.color.red));
+                    binding.tvEnterCode.setText("کد وارد شده اشتباه است.");
+                }
             }
         });
     }
@@ -300,22 +304,18 @@ public class VerifyFragment extends Fragment {
             accounts.add(account);
             jsonObjectAcc.Account = accounts;
             mainViewModel.addAccountToServer(jsonObjectAcc);
-
         }
-
     }
 
     private void navigate() {
         binding.progressBar.setVisibility(View.GONE);
-        if (Select.from(Salein.class).first().getSalein()) {
+        if (Select.from(SaleinShop.class).first().isPublicApp()) {
             NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
             NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
             Navigation.findNavController(binding.getRoot()).navigate(action);
-
         }
-
     }
 
     private void getCodeFromSms() {
@@ -327,22 +327,15 @@ public class VerifyFragment extends Fragment {
     }
 
     private void initBroadCast() {
-
         AppSMSBroadcastReceiver appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
         appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
             binding.otpView.setOTP(code);
-//            new android.os.Handler(Looper.getMainLooper()).postDelayed(
-//                    () ->
-//                            binding.btnEnter.performClick(),
-//                    600);
         });
     }
 
     private void smsListener() {
-
         SmsRetrieverClient client = SmsRetriever.getClient(getContext());
         Task<Void> task = client.startSmsRetriever();
-
         task.addOnSuccessListener(aVoid -> {
         });
 
@@ -350,8 +343,19 @@ public class VerifyFragment extends Fragment {
         });
     }
 
-    public void appVersion() throws PackageManager.NameNotFoundException {
+    public void appVersion(){
+    try {
         applicationVersion= getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+    } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+    }
+    }
+    private void nullTheMutable(){
+        companyViewModel.getResultMessage().setValue(null);
+        mainViewModel.getResultMessage().setValue(null);
+        companyViewModel.getResultInquiryAccount().setValue(null);
+        mainViewModel.getResultCustomerFromServer().setValue(null);
+        mainViewModel.getResultAddAccountToServer().setValue(null);
     }
     //endregion Method
 

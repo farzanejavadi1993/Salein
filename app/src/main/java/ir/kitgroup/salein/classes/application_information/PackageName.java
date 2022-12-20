@@ -5,14 +5,13 @@ import android.content.pm.PackageManager;
 
 public class PackageName {
 
-
     public String getPackageName(Activity activity) {
-      String pakageName="";
+      String packageName ="";
         try {
-           pakageName= activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).packageName;
+           packageName = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).packageName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return pakageName;
+        return packageName;
     }
 }

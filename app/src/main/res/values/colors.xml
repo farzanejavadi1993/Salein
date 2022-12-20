@@ -6,10 +6,18 @@
     <color name="light_background">#F6F6F6</color>
 
 
+<!--
     <color name="purple_200">#ffbcaf</color>
     <color name="purple_500">#ff8a80</color>
     <color name="purple_700">#c85a54</color>
+    <color name="teal_200">#fff</color>-->
+
+
+    <color name="purple_200">#53d47b</color>
+    <color name="purple_500">#01A24E</color>
+    <color name="purple_700">#007223</color>
     <color name="teal_200">#fff</color>
+
 
    <!-- color productLevel1-->
     <color name="brown_primary_dark">#cbae82</color>

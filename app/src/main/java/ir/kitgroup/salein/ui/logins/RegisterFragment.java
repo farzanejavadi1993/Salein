@@ -59,7 +59,7 @@ import ir.kitgroup.salein.Connect.CompanyViewModel;
 
 import ir.kitgroup.salein.Connect.MainViewModel;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 
 import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.RegisterFragmentBinding;
@@ -95,7 +95,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private LocationEngine locationEngine = null;
     private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
     private PermissionsManager permissionsManager;
-    private String applicationVersion="";
+    private String applicationVersion = "";
     //endregion Variable
 
 
@@ -114,12 +114,9 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
         initMap(savedInstanceState);
         getBundle();
-        try {
-            appVersion();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        appVersion();
         setDataBundle();
+        getAccount();
         init();
     }
 
@@ -167,7 +164,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 String accStp = settingsList.get(0).ACC_STATUS_APP;
                 ACCSTP = !accStp.equals("0");
                 accountsList.get(0).STAPP = ACCSTP;
-                accountsList.get(0).setVersion(applicationVersion);
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
                 companyViewModel.addAccount(userName, passWord, accountsList);
@@ -466,11 +462,10 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                                     return;
                                 }
 
-                                //Add marker to map
                                 if (mapboxMap.getStyle() != null) {
                                     enableLocationComponent(mapboxMap.getStyle());
                                 }
-                                //  toggleCurrentLocationButton();
+
 
                                 if (Util.latitude != 0 && Util.longitude != 0)
                                     addMarkerToMapViewAtPosition(new LatLng(Util.latitude, Util.longitude));
@@ -491,11 +486,10 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                             .zoom(15)
                             .build());
 
-            //Set a touch event listener on the map
+
             this.mapboxMap.addOnMapClickListener(point -> {
                 Util.nameUser = binding.edtName.getText().toString();
                 Util.address = binding.edtAddress.getText().toString();
-                //Navigation.findNavController(binding.getRoot()).popBackStack();
                 NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
                 Navigation.findNavController(binding.getRoot()).navigate(action);
                 return false;
@@ -525,15 +519,15 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         }
     }
 
-    private Account getAccount() {
-        return Select.from(Account.class).first();
+    private void getAccount() {
+        account = Select.from(Account.class).first();
     }
 
     private void init() {
         accountsList = new ArrayList<>();
-        account = getAccount();
 
         accounts = new ArrayList<>();
+
         binding.edtAddress.setText(Util.address);
         binding.edtName.setText(Util.nameUser);
 
@@ -570,14 +564,16 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                     ||
                     radioValue == -1
             ) {
-
                 Toasty.error(requireActivity(), "لطفا فیلدهای ستاره دار را پر کنید.", Toast.LENGTH_SHORT, true).show();
                 return;
             }
+
             Account acc = new Account();
 
             //region Add Account
             if (from.equals("VerifyFragment")) {
+                String IMEI = Util.getAndroidID(getActivity());
+                acc.setVersion(applicationVersion);
                 acc.setI(UUID.randomUUID().toString());
                 acc.setN(binding.edtName.getText().toString());
                 acc.setM(mobile);
@@ -664,7 +660,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private void navigate() {
         binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
         binding.btnRegisterInformation.setEnabled(true);
-        if (Select.from(Salein.class).first().getSalein() ){
+        if (Select.from(SaleinShop.class).first().isPublicApp()) {
             NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
@@ -679,8 +675,13 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     }
 
 
-    public void appVersion() throws PackageManager.NameNotFoundException {
-        applicationVersion= getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+    public void appVersion() {
+        try {
+            applicationVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
     //endregion Method
 

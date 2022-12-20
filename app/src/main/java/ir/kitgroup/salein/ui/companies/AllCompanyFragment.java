@@ -292,7 +292,7 @@ public class AllCompanyFragment extends Fragment {
     }
 
     private void init() {
-        sharedPreferences.edit().putBoolean("loginSuccess",false).apply();
+        sharedPreferences.edit().putBoolean("loginSuccess",true).apply();
         connectToServer = new ConnectToServer();
         account = Select.from(Account.class).first();
 

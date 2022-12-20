@@ -50,7 +50,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.salein.Activities.LauncherActivity;
 import ir.kitgroup.salein.Connect.CompanyAPI;
 import ir.kitgroup.salein.DataBase.Account;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 import ir.kitgroup.salein.DataBase.Product;
 import ir.kitgroup.salein.classes.dialog.DialogInstance;
 import ir.kitgroup.salein.databinding.HomeFragmentBinding;
@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
     private Integer keyCustomTab = 0;
     private Boolean disableAccount = false;
     private String Inv_GUID = "";
-    private Salein appInfo;
+    private SaleinShop appInfo;
     private Company company;
     private String userName;
     private String passWord;
@@ -572,7 +572,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void init() {
-        sharedPreferences.edit().putBoolean("loginSuccess",false).apply();
+        sharedPreferences.edit().putBoolean("loginSuccess",true).apply();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Product.deleteAll(Product.class);
@@ -586,7 +586,7 @@ public class HomeFragment extends Fragment {
 
         account = Select.from(Account.class).first();
 
-        appInfo = Select.from(Salein.class).first();
+        appInfo = Select.from(SaleinShop.class).first();
 
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
 
@@ -684,7 +684,7 @@ public class HomeFragment extends Fragment {
         btnNoDialog.setOnClickListener(v -> {
             dialogRequestAgain.dismiss();
             if (disableAccount) {
-                if (!appInfo.getSalein())
+                if (!appInfo.isPublicApp())
                     getActivity().finish();
                 else
                     Navigation.findNavController(binding.getRoot()).popBackStack();

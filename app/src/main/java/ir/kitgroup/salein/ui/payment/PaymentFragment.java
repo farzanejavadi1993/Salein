@@ -47,7 +47,7 @@ import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Product;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 import ir.kitgroup.salein.classes.Utilities;
 import ir.kitgroup.salein.DataBase.Company;
 
@@ -1094,7 +1094,7 @@ public class PaymentFragment extends Fragment {
 
 
         btnReturned.setOnClickListener(v -> {
-            boolean saleinApp = Select.from(Salein.class).first().getSalein();
+            boolean saleinApp = Select.from(SaleinShop.class).first().isPublicApp();
 
             int size = Navigation.findNavController(binding.getRoot()).getBackQueue().size();
             int remain;

@@ -23,6 +23,7 @@ import ir.kitgroup.salein.databinding.FragmentRulesBinding;
 
 @AndroidEntryPoint
 public class RulesFragment extends Fragment {
+
     private FragmentRulesBinding binding;
 
     @Nullable
@@ -38,6 +39,7 @@ public class RulesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         Company company = Select.from(Company.class).first();
 
 

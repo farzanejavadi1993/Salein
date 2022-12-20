@@ -24,7 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -144,7 +144,7 @@ public class CompanyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (!Select.from(Salein.class).first().getSalein())
+                                        if (!Select.from(SaleinShop.class).first().isPublicApp())
                                             compositeDisposable.dispose();
                                     }
                                 } else {

@@ -2,14 +2,14 @@ package ir.kitgroup.salein.DataBase;
 
 import com.orm.SugarRecord;
 
-public class Salein extends SugarRecord {
+public class SaleinShop extends SugarRecord {
 
   private   String application_code="";
   private String gif_url="";
   private boolean saleinApp =false;
 
 
-  public boolean getSalein() {
+  public boolean isPublicApp() {
     return saleinApp;
   }
 
