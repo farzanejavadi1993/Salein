@@ -20,7 +20,7 @@ public interface MainApi {
     @POST("GetApp")
     Observable<List<AppDetail>> getApp(@Query("id") String id);
 
-  @POST("GetAccount")
+    @POST("GetAccountDetailById")
     Observable<List<Company>> getCompany(@Query("id") String id);
 
    @GET("GetCustomerFromServer")
