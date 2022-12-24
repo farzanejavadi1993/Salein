@@ -1,11 +1,10 @@
 package ir.kitgroup.salein.ui.launcher.searchItem;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,11 +12,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +48,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Activities.LauncherActivity;
+import ir.kitgroup.salein.classes.dialog.DialogInstance;
 import ir.kitgroup.salein.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.salein.ui.launcher.homeItem.ProductAdapter;
 import ir.kitgroup.salein.Connect.CompanyAPI;
@@ -69,7 +68,6 @@ import ir.kitgroup.salein.models.Product;
 @AndroidEntryPoint
 public class SearchProductFragment extends Fragment {
 
-
     @Inject
     SharedPreferences sharedPreferences;
 
@@ -77,20 +75,22 @@ public class SearchProductFragment extends Fragment {
     CompanyAPI api;
 
     private String sWord = "";
-    private CompanyViewModel myViewModel;
+
     private FragmentSearchProductBinding binding;
-    private Company company;
+    private CompanyViewModel myViewModel;
+
     private String userName;
     private String passWord;
 
-    private String Transport_GUID = "";//It Is GUID Of Transport Or GUID Of Row Transport In Order Form That Get From Server And Save In Local With SharedPreferences
-    private String Inv_GUID = "";//It Is GUID Of Order Form
-    private ArrayList<String> closeDayList;//This Variable Is For Get holidays From Server
-    private ProductAdapter productAdapter;
+    private String Transport_GUID = "";
+    private String Inv_GUID = "";
 
     private ArrayList<Product> productList;
-    private String maxSales = "0";//It Is For Check Inventory
+    private ProductAdapter productAdapter;
+
     private CustomProgress customProgress;
+
+    private DialogInstance dialogInstance;
 
     //region Variable Dialog Description
     private Dialog dialogDescription;
@@ -100,7 +100,7 @@ public class SearchProductFragment extends Fragment {
     private String GuidInv;
     //endregion Variable Dialog Description
 
-
+    //region Override Method
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
@@ -114,34 +114,98 @@ public class SearchProductFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        init();
+        castDialogDescription();
+        initSearchView();
+        castRecyclerViewProduct();
+        setCloseDay();
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
-        //region Config
+        myViewModel.getResultSearchProduct().observe(getViewLifecycleOwner(), result -> {
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+
+            if (result == null) {
+                binding.pro.setVisibility(View.GONE);
+                return;
+            }
+
+            if (sWord.length() >= 2 && result != null && result.size() > 0) {
+                CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() && !i.getI().equals(Transport_GUID));
+
+                productList.addAll(result);
+            }
+
+            if (productList.size() > 0)
+                binding.txtError.setText("");
+            else
+                binding.txtError.setText("کالایی یافت نشد");
+
+            productAdapter.notifyDataSetChanged();
+            binding.pro.setVisibility(View.GONE);
+        });
+
+        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) {
+                binding.pro.setVisibility(View.GONE);
+                customProgress.hideProgress();
+                return;
+            }
+
+            myViewModel.getResultDescription().setValue(null);
+
+            descriptionList.clear();
+            descriptionList.addAll(result);
+
+            for (int i = 0; i < descriptionList.size(); i++) {
+                if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                    descriptionList.get(i).Click = true;
+                }
+            }
+            descriptionAdapter.notifyDataSetChanged();
+            customProgress.hideProgress();
+            dialogDescription.show();
+            binding.pro.setVisibility(View.GONE);
+        });
+
+        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
+            binding.pro.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            if (result == null)
+                return;
+            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+    //endregion Override Method
+
+    //region Custom Method
+    private void init() {
+        dialogInstance = DialogInstance.getInstance();
         productList = new ArrayList<>();
-        closeDayList = new ArrayList<>();
-
         customProgress = CustomProgress.getInstance();
         Transport_GUID = sharedPreferences.getString("Transport_GUID", "");
         Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
-        maxSales = sharedPreferences.getString("maxSale", "0");
-        String CloseDay = sharedPreferences.getString("close_day", "");
-        closeDayList.clear();
-        if (!CloseDay.equals("")) {
-            closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
-        }
-        company = Select.from(Company.class).first();
-
+        Company company = Select.from(Company.class).first();
         userName = company.getUser();
         passWord = company.getPass();
-        //endregion Config
+    }
 
-
-        //region Cast DialogDescription
-        dialogDescription = new Dialog(getActivity());
-        dialogDescription.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogDescription.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogDescription.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialogDescription.setContentView(R.layout.dialog_description);
-        dialogDescription.setCancelable(false);
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    private void castDialogDescription() {
+        dialogDescription = dialogInstance.dialog(getActivity(), false, R.layout.dialog_description);
         edtDescriptionItem = dialogDescription.findViewById(R.id.edt_description);
         MaterialButton btnRegisterDescription = dialogDescription.findViewById(R.id.btn_register_description);
         RecyclerView recyclerDescription = dialogDescription.findViewById(R.id.recyclerView_description);
@@ -155,6 +219,7 @@ public class SearchProductFragment extends Fragment {
         descriptionAdapter = new DescriptionAdapter(getActivity(), descriptionList);
         recyclerDescription.setAdapter(descriptionAdapter);
         binding.txtError.setText("کالای مورد نظر خود را جستجو کنید");
+
         descriptionAdapter.setOnClickItemListener((desc, click, position) -> {
             if (click) {
                 descriptionList.get(position).Click = true;
@@ -166,6 +231,7 @@ public class SearchProductFragment extends Fragment {
                     edtDescriptionItem.setText(edtDescriptionItem.getText().toString().replace("   " + "'" + desc + "'", ""));
             }
         });
+
         btnRegisterDescription.setOnClickListener(v -> {
             InvoiceDetail invDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + GuidInv + "'").first();
             if (invDetail != null) {
@@ -176,15 +242,13 @@ public class SearchProductFragment extends Fragment {
             dialogDescription.dismiss();
         });
 
-
         edtDescriptionItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 if (s.toString().isEmpty()) {
                     for (int i = 0; i < descriptionList.size(); i++) {
                         descriptionList.get(i).Click = false;
@@ -192,14 +256,14 @@ public class SearchProductFragment extends Fragment {
                     descriptionAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        //endregion Cast DialogDescription
 
-        //region config SearchView
+    }
+
+    private void initSearchView() {
         try {
             LinearLayout linearLayout1 = (LinearLayout) binding.searchView.getChildAt(0);
             LinearLayout linearLayout2;
@@ -215,7 +279,6 @@ public class SearchProductFragment extends Fragment {
             } catch (Exception ignore) {
                 linearLayout3 = (LinearLayout) linearLayout2.getChildAt(0);
             }
-
 
             AutoCompleteTextView autoComplete;
             try {
@@ -239,34 +302,30 @@ public class SearchProductFragment extends Fragment {
                     binding.searchView.clearFocus();
                 } catch (Exception ignored) {
                 }
-
                 return true;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public boolean onQueryTextChange(final String newText) {
-
                 try {
                     productList.clear();
                     productAdapter.notifyDataSetChanged();
-
                     if (newText.length() != 1 || newText.trim().equals("")) {
                         sWord = newText;
                         binding.pro.setVisibility(View.VISIBLE);
                         myViewModel.getSearchProduct(userName, passWord, Util.toEnglishNumber(newText));
                     }
-                } catch (Exception ignored) {}
-
+                } catch (Exception ignored) {
+                }
 
                 return false;
             }
         });
+    }
 
-        //endregion config SearchView
-
-
-        //region Config RecyclerView And Its Adapter
-       // productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api,2);
+    private void castRecyclerViewProduct() {
+        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, api);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -277,10 +336,8 @@ public class SearchProductFragment extends Fragment {
             List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
 
             CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
-            int counter = 0;
-            if (invDetails.size() > 0) {
-                counter = invDetails.size();
-            }
+            int counter = invDetails.size();
+
             if (counter == 0)
 
                 ((LauncherActivity) getActivity()).setClearCounterOrder();
@@ -289,14 +346,12 @@ public class SearchProductFragment extends Fragment {
 
 
         });
-        productAdapter.setOnClickImageListener(new ProductAdapter.ClickImage() {
-            @Override
-            public void onClick(String Prd_UID) {
-                NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
 
-            }
+        productAdapter.setOnClickImageListener(Prd_UID -> {
+            NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(Prd_UID);
+            Navigation.findNavController(binding.getRoot()).navigate(action);
         });
+
         productAdapter.setOnDescriptionItem((GUID, amount) -> {
             if (amount > 0) {
                 List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -309,87 +364,33 @@ public class SearchProductFragment extends Fragment {
                     customProgress.showProgress(getActivity(), "در حال دریافت اطلاعات از سرور", false);
                     myViewModel.getDescription(userName, passWord, GUID);
                 }
-            } else {
-                Toast.makeText(getActivity(), "برای نوشتن توضیحات برای کالا مقدار ثبت کنید.", Toast.LENGTH_SHORT).show();
-            }
+            } else
+                showAlert();
         });
-        //endregion Config RecyclerView And Its Adapter
-
     }
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
-
-        myViewModel.getResultSearchProduct().observe(getViewLifecycleOwner(), result -> {
-
-            productList.clear();
-            productAdapter.notifyDataSetChanged();
-            if (result == null) {
-                binding.pro.setVisibility(View.GONE);
-                return;
-
-            }
-
-
-            if (sWord.length() >= 2 && result != null && result.size() > 0) {
-                CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts() && !i.getI().equals(Transport_GUID));
-
-                productList.addAll(result);
-            }
-            if (productList.size() > 0)
-                binding.txtError.setText("");
-            else
-                binding.txtError.setText("کالایی یافت نشد");
-            productAdapter.setMaxSale(maxSales);
-            productAdapter.notifyDataSetChanged();
-            binding.pro.setVisibility(View.GONE);
-
-        });
-
-        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
-                binding.pro.setVisibility(View.GONE);
-                customProgress.hideProgress();
-                return;
-
-            }
-            myViewModel.getResultDescription().setValue(null);
-            descriptionList.clear();
-            descriptionList.addAll(result);
-            for (int i = 0; i < descriptionList.size(); i++) {
-                if (edtDescriptionItem.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
-                    descriptionList.get(i).Click = true;
-                }
-            }
-            descriptionAdapter.notifyDataSetChanged();
-            customProgress.hideProgress();
-            dialogDescription.show();
-            binding.pro.setVisibility(View.GONE);
-        });
-
-        myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-            productList.clear();
-            productAdapter.notifyDataSetChanged();
-            binding.pro.setVisibility(View.GONE);
-            customProgress.hideProgress();
-            if (result == null)
-                return;
-
-            Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-        });
-
-
+    private void setCloseDay(){
+        String CloseDay=sharedPreferences.getString("close_day", "");
+        ArrayList<String> closeDayList=new ArrayList<>();
+        if (!CloseDay.equals("")) {
+            closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
+        }
+        productAdapter.setCloseListDate(closeDayList);
     }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void showAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setMessage("برای نوشتن توضیحات برای کالا مقدار ثبت کنید.")
+                .setPositiveButton("بستن", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+        TextView textView = alertDialog.findViewById(android.R.id.message);
+        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+        textView.setTypeface(face);
+        textView.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+        textView.setTextSize(13);
     }
+    //endregion Custom Method
+
 
 }

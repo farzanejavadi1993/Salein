@@ -308,7 +308,6 @@
                         android:textColor="#fff"
                         android:textSize="12dp"
                         app:backgroundTint="@null"
-
                         app:cornerRadius="12dp">
 
 

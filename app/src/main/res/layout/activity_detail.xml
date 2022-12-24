@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
-
-<RelativeLayout
+    <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:focusable="true"
         android:clickable="true"
@@ -17,49 +14,35 @@
         >
 
 
-        <ProgressBar
-            android:layout_centerInParent="true"
-            android:id="@+id/progressBar"
-            android:background="@color/white"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
 
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                android:layout_weight="0.65"
-                android:id="@+id/iv_product"
-
-                android:layout_marginBottom="15dp"
-
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-
-
-
-                />
-            <androidx.core.widget.NestedScrollView
-                android:layout_weight="0.35"
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_marginBottom="35dp"
-                    android:layout_marginRight="22dp"
-                    android:layout_marginLeft="22dp"
-
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:orientation="vertical">
-
+                    <com.github.siyamed.shapeimageview.RoundedImageView
+                        android:id="@+id/iv_product"
+                        android:src="@drawable/nopic"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:scaleType="fitXY"
+                        />
+                    <ProgressBar
+                        android:layout_gravity="center"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/progressBar"
+                        android:background="@color/white"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"/>
                     <TextView
-
+                        android:visibility="gone"
+                        android:id="@+id/tvDesc"
+                        android:layout_marginRight="22dp"
+                        android:layout_marginLeft="22dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin10"
@@ -68,8 +51,9 @@
                         android:textColor="#6C6A6A"
                         android:textSize="13dp"
                         android:textStyle="bold" />
-
                     <TextView
+                        android:layout_marginRight="22dp"
+                        android:layout_marginLeft="22dp"
                         android:gravity="right"
                         android:id="@+id/tv_description_product"
                         android:layout_width="match_parent"
@@ -77,20 +61,8 @@
                         android:layout_marginTop="5dp"
                         android:textColor="#6C6A6A"
                         android:textSize="13dp" />
-
-
-
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
-
-
-
-        </LinearLayout>
-
-
-
-
-
 
     </RelativeLayout>
 

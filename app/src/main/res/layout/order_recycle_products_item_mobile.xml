@@ -1,291 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_home"
+    android:id="@+id/order_recycle_item_product_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp">
 
-        <variable
-            name="product"
-            type="ir.kitgroup.salein.models.Product" />
-    </data>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@drawable/background_home"
-        android:id="@+id/order_recycle_item_product_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp">
-
-        <RelativeLayout
-            android:id="@+id/layout_Image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+         android:id="@+id/layout_Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
 
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                setImageProduct="@{product.i}"
-                android:id="@+id/order_recycle_item_product_img"
-                android:layout_width="120dp"
-                android:src="@drawable/nopic"
-                android:layout_height="120dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="@dimen/margin10"
-                android:layout_marginBottom="@dimen/margin10"
-                app:siRadius="15dp" />
-
-            <RelativeLayout
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="@dimen/margin10"
-                android:layout_marginBottom="@dimen/margin10"
-                android:background="@drawable/picture_shape"
-                app:siRadius="15dp" />
-
-            <RelativeLayout
-                android:id="@+id/layout_discount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="@dimen/margin10"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/iv_discount"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:rotationY="180"
-                    app:srcCompat="@drawable/ic_discount" />
-
-                <TextView
-                    android:id="@+id/order_recycle_item_product_discountPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textColor="@color/white"
-                    android:textSize="11dp" />
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-        <TextView
-            android:text="@{product.n}"
-            android:id="@+id/order_recycle_item_product_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="12dp"
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/order_recycle_item_product_img"
+            android:layout_width="120dp"
+            android:src="@drawable/nopic"
+            android:layout_height="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
             android:layout_marginTop="@dimen/margin10"
-            android:layout_marginEnd="12dp"
-            android:layout_toRightOf="@+id/layout_Image"
-            android:gravity="right"
-            android:lineSpacingExtra="10dp"
-
-            android:textColor="@color/medium_color"
-            android:textSize="13dp"
-            android:textStyle="bold" />
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/l_Price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/order_recycle_item_product_name"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="@dimen/margin8"
-            android:layout_marginRight="12dp"
-            android:layout_toRightOf="@+id/layout_Image">
-
-
-            <TextView
-                android:id="@+id/order_recycle_item_product_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/order_recycle_item_product_old_price"
-                android:gravity="right"
-
-                android:textColor="@color/medium_color"
-                android:textSize="12dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/order_recycle_item_product_old_price"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-
-                android:id="@+id/order_recycle_item_product_old_price"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textColor="#A5A5A5"
-                android:textSize="13dp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/card_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/order_recycle_item_product_bottom_card"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_marginBottom="@dimen/margin10"
-            android:layout_toRightOf="@+id/layout_Image">
+            app:siRadius="15dp" />
 
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginBottom="@dimen/margin10"
+            android:background="@drawable/picture_shape"
+            app:siRadius="15dp" />
+
+        <RelativeLayout
+            android:id="@+id/layout_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/margin10"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_discount"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:rotationY="180"
+                app:srcCompat="@drawable/ic_discount" />
 
             <TextView
-                android:id="@+id/edt_description_temp"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="false"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/transparent"
-                android:enabled="false"
-                android:fontFamily="@font/iransans"
-                android:hint="توضیحات شما"
-                android:singleLine="true"
-                android:textColor="#474747"
-                android:textSize="@dimen/text_medium_mobile_size" />
+                android:id="@+id/order_recycle_item_product_discountPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:textSize="11dp" />
         </RelativeLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/order_recycle_item_product_bottom_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/l_Price"
-            android:layout_marginTop="@dimen/margin10"
-            android:layout_toRightOf="@+id/layout_Image">
 
-
-            <TextView
-                android:id="@+id/unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="2dp"
-                android:layout_marginRight="@dimen/margin4"
-                android:singleLine="true"
-                android:textColor="@color/medium_color"
-                android:textSize="11dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"
-
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="12dp"
-                android:singleLine="true"
-                android:textColor="@color/red_table"
-                android:textSize="11dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/unit"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-
-                    android:id="@+id/iv_minus"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="4dp"
-                    android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
-                    android:background="@drawable/minus_background"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/order_recycle_item_product_txt_amount"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/ic_minus_red" />
-
-
-                <EditText
-                    android:id="@+id/order_recycle_item_product_txt_amount"
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="4dp"
-                    android:layout_toLeftOf="@+id/iv_max"
-                    android:background="@drawable/background_edittext"
-                    android:cursorVisible="true"
-                    android:fontFamily="@font/iransans"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:text="0"
-                    android:textColor="@color/medium_color"
-                    android:textDirection="ltr"
-                    android:textSize="11dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_max"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/iv_max"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/plus_background"
-                    app:layout_constraintBottom_toBottomOf="parent"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_plus_white" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="35dp"
-            android:background="#ccc" />
     </RelativeLayout>
 
-</layout>
+    <TextView
+        android:id="@+id/order_recycle_item_product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="@dimen/margin10"
+        android:layout_marginEnd="12dp"
+        android:layout_toRightOf="@+id/layout_Image"
+        android:gravity="right"
+        android:lineSpacingExtra="10dp"
 
+        android:textColor="@color/medium_color"
+        android:textSize="13dp"
+        android:textStyle="bold" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/l_Price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/order_recycle_item_product_name"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="@dimen/margin8"
+        android:layout_marginRight="12dp"
+        android:layout_toRightOf="@+id/layout_Image">
+
+
+        <TextView
+            android:id="@+id/order_recycle_item_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/order_recycle_item_product_old_price"
+            android:gravity="right"
+
+            android:textColor="@color/medium_color"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/order_recycle_item_product_old_price"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+
+            android:id="@+id/order_recycle_item_product_old_price"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="#A5A5A5"
+            android:textSize="@dimen/text_medium_mobile_size"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/card_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/order_recycle_item_product_bottom_card"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="@dimen/margin10"
+        android:layout_toRightOf="@+id/layout_Image">
+
+
+        <TextView
+            android:id="@+id/edt_description_temp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="false"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:fontFamily="@font/iransans"
+            android:hint="توضیحات شما"
+            android:singleLine="true"
+            android:textColor="#474747"
+            android:textSize="@dimen/text_medium_mobile_size" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/order_recycle_item_product_bottom_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l_Price"
+        android:layout_marginTop="@dimen/margin10"
+        android:layout_toRightOf="@+id/layout_Image">
+
+
+        <TextView
+            android:id="@+id/unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="@dimen/margin4"
+            android:singleLine="true"
+            android:textColor="@color/medium_color"
+            android:textSize="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
+
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="12dp"
+            android:singleLine="true"
+            android:textColor="@color/red_table"
+            android:textSize="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/unit"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+
+                android:id="@+id/iv_minus"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
+                android:background="@drawable/minus_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/order_recycle_item_product_txt_amount"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_minus_red" />
+
+
+            <EditText
+                android:id="@+id/order_recycle_item_product_txt_amount"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_toLeftOf="@+id/iv_max"
+                android:background="@drawable/background_edittext"
+                android:cursorVisible="true"
+                android:fontFamily="@font/iransans"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text="0"
+                android:textColor="@color/medium_color"
+                android:textDirection="ltr"
+                android:textSize="11dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_max"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_max"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/plus_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_plus_white" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:background="#ccc" />
+</RelativeLayout>
 
 
 

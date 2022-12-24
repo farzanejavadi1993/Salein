@@ -4,17 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
+
 import com.orm.query.Select;
+
 import java.util.Objects;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.Account;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 import ir.kitgroup.salein.R;
 import ir.kitgroup.salein.databinding.ActivityLauncherBinding;
 import ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment;
@@ -29,6 +35,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ActivityLauncherBinding binding;
     private NavController navController;
     private int count;
+    private PowerManager powerManager;
     //endregion Parameter
 
 
@@ -41,6 +48,8 @@ public class LauncherActivity extends AppCompatActivity {
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
         getBundle();
         navigationHandler();
     }
@@ -50,15 +59,15 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         switch (navController.getCurrentDestination().getId()) {
-            case R.id.HomeFragment:
-                if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false)) {
-                  getDoActionInHomeFragment();
-                }
+
+                case R.id.HomeFragment:
+                if (sharedPreferences.getBoolean("vip", false) || sharedPreferences.getBoolean("discount", false))
+                    getDoActionInHomeFragment();
 
                 else {
 
-                    if (!Select.from(Salein.class).first().getSalein() && navController.getBackQueue().size() == 2)
-                   finishApp();
+                    if (!Select.from(SaleinShop.class).first().isPublicApp() && navController.getBackQueue().size() == 2)
+                        finishApp();
 
                     else
                         super.onBackPressed();
@@ -69,19 +78,31 @@ public class LauncherActivity extends AppCompatActivity {
                 finishApp();
                 break;
 
-                default:
+            default:
                 super.onBackPressed();
                 break;
         }
     }
 
 
+
+
+
     @Override
     protected void onPause() {
         super.onPause();
-        // if (sharedPreferences.getBoolean("loginSuccess", false))
-       // finish();
+        boolean isScreenOn = powerManager.isScreenOn();
+        if (isScreenOn &&  sharedPreferences.getBoolean("loginSuccess", false))
+            finish();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Select.from(Account.class).first() != null)
+            sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+    }
+
     //endregion Override Method
 
 
@@ -121,6 +142,7 @@ public class LauncherActivity extends AppCompatActivity {
                 case R.id.PaymentFragment:
                 case R.id.AllCompanyFragment:
                 case R.id.SplashScreenFragment:
+                case R.id.ShowDetailFragment:
                 case R.id.MoreFragment:
                     binding.navView.setVisibility(View.GONE);
                     break;
@@ -158,13 +180,12 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
 
-    private Fragment getFragment(){
-        return  (NavHostFragment) getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getPrimaryNavigationFragment();
+    private Fragment getFragment() {
+        return  getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getPrimaryNavigationFragment();
     }
 
-    private void getDoActionInHomeFragment(){
-        Fragment fragment=getFragment();
-
+    private void getDoActionInHomeFragment() {
+        Fragment fragment = getFragment();
         if (fragment instanceof HomeFragment) {
             ((HomeFragment) fragment).showData();
         }

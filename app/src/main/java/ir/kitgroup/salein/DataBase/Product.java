@@ -88,6 +88,9 @@ public class Product extends SugarRecord {
 
     public Integer Re;
 
+
+
+
     public String getOperate() {
         return operate;
     }

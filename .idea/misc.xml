@@ -184,6 +184,13 @@
         <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/item_loading.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.15" />
         <entry key="..\:/SaleInApp folder/new project/Salein/app/src/main/res/layout/progress_loading.xml" value="0.1078125" />
+        <entry key="..\:/my project/Salein/app/src/main/res/drawable/ic_logout.xml" value="0.1" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/activity_detail.xml" value="0.1" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/fragment_invoice_detail_mobile.xml" value="0.1" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/fragment_payment.xml" value="0.18" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/fragment_splash_screen.xml" value="0.10075136612021858" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/invoice_list_item_recycle.xml" value="0.1" />
+        <entry key="..\:/my project/Salein/app/src/main/res/layout/order_recycle_products_item_mobile.xml" value="0.140625" />
       </map>
     </option>
   </component>

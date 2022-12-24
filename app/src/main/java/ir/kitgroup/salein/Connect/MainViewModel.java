@@ -26,6 +26,7 @@ import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Log;
 import ir.kitgroup.salein.models.Message;
 import ir.kitgroup.salein.models.ModelCompany;
+import ir.kitgroup.salein.models.ModelInvoice;
 import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 
 
@@ -48,10 +49,10 @@ public class MainViewModel extends ViewModel {
 
 
     @Inject
-    public MainViewModel(MainRepository mainRepository, SharedPreferences sharedPreferences,NetWorkHelper1 networkHelper) {
+    public MainViewModel(MainRepository mainRepository, SharedPreferences sharedPreferences, NetWorkHelper1 networkHelper) {
         this.mainRepository = mainRepository;
         this.sharedPreferences = sharedPreferences;
-        this.networkHelper=networkHelper;
+        this.networkHelper = networkHelper;
     }
 
     public void addAccountToServer(Util.JsonObjectAccount accounts) {
@@ -71,10 +72,10 @@ public class MainViewModel extends ViewModel {
                                 throwable ->
                                         eMessage.setValue(new Message(111, "", "خطا در ثبت اطلاعات مشتری"))));
     }
+
     public MutableLiveData<List<Log>> getResultAddAccountToServer() {
         return resultAddAccountToServer;
     }
-
 
 
     public void getApp(String id) {
@@ -88,7 +89,7 @@ public class MainViewModel extends ViewModel {
                         })
                         .subscribe(
                                 resultApp::setValue,
-                                throwable ->{
+                                throwable -> {
 
                                     if (!networkHelper.isNetworkConnected1())
                                         eMessage.setValue(new Message(3, "", "خطا در اتصال اینترنت"));
@@ -100,10 +101,10 @@ public class MainViewModel extends ViewModel {
 
 
     }
+
     public MutableLiveData<List<AppDetail>> getResultGetApp() {
         return resultApp;
     }
-
 
 
     public void getCustomerFromServer(String mobile) {
@@ -119,12 +120,13 @@ public class MainViewModel extends ViewModel {
                                 throwable ->
                                         eMessage.setValue(new Message(110, "", "خطا در دریافت اطلاعات کاربر"))));
     }
+
     public MutableLiveData<List<Account>> getResultCustomerFromServer() {
         return resultCustomerFromServer;
     }
 
 
-        public void getCompany(String id) {
+    public void getCompany(String id) {
         compositeDisposable.add(
                 mainRepository.getCompany(id)
                         .subscribeOn(Schedulers.io())
@@ -148,10 +150,9 @@ public class MainViewModel extends ViewModel {
     }
 
 
-
-    public void getAllCompany(String parentAccountId,int page) {
+    public void getAllCompany(String parentAccountId, int page) {
         compositeDisposable.add(
-                mainRepository.getAllCompany(parentAccountId,page)
+                mainRepository.getAllCompany(parentAccountId, page)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -179,4 +180,7 @@ public class MainViewModel extends ViewModel {
         return resultAllCompany;
     }
 
-}
+    public void clearData() {
+        compositeDisposable.clear();
+    }
+    }

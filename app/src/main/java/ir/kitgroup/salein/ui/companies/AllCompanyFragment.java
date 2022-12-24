@@ -239,6 +239,8 @@ public class AllCompanyFragment extends Fragment {
                 Company.saveInTx(companySelect);
 
                 sharedPreferences.edit().putString(NAME, "login").apply();
+                resetFilter();
+
                 NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
@@ -271,6 +273,7 @@ public class AllCompanyFragment extends Fragment {
             companyViewModel.getResultAddAccount().setValue(null);
             Company.deleteAll(Company.class);
             Company.saveInTx(companySelect);
+            resetFilter();
             NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
@@ -289,7 +292,7 @@ public class AllCompanyFragment extends Fragment {
     }
 
     private void init() {
-
+        sharedPreferences.edit().putBoolean("loginSuccess",true).apply();
         connectToServer = new ConnectToServer();
         account = Select.from(Account.class).first();
 
@@ -357,6 +360,8 @@ public class AllCompanyFragment extends Fragment {
             if (!nameSave.equals("")) {
                 Company.deleteAll(Company.class);
                 Company.saveInTx(company);
+
+                resetFilter();
                 NavDirections action;
                 if (!ParentId.equals("")) {
                     action = AllCompanyFragmentDirections.actionGoToHomeFragment("");
@@ -441,6 +446,12 @@ public class AllCompanyFragment extends Fragment {
         binding.progressBar22.setVisibility(View.VISIBLE);
         pageMain++;
         mainViewModel.getAllCompany("", pageMain);
+    }
+
+    private void resetFilter(){
+        mainViewModel.clearData();
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
     }
 
 }

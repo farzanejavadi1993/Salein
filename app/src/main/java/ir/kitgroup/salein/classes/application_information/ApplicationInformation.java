@@ -2,26 +2,26 @@ package ir.kitgroup.salein.classes.application_information;
 
 import android.app.Activity;
 
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 
 
 public class ApplicationInformation {
-    public Salein getInformation(PackageName packageName , Activity activity) {
+    public SaleinShop getInformation(PackageName packageName , Activity activity) {
 
-        Salein appInfo = new Salein();
+        SaleinShop appInfo = new SaleinShop();
             switch (packageName.getPackageName(activity)) {
                 case "ir.kitgroup.salein":
-                    appInfo.setApplication_code("12345678");
-                    appInfo.setGif_url("file:///android_asset/loading.json");
+                    appInfo.setApplication_code("1111");
+                    appInfo.setGif_url("file:///android_asset/donyavi.gif");
                     appInfo.setSaleinApp(true);
                     break;
                 case "ir.kitgroup.saleinmeat":
-                    appInfo.setApplication_code("1115");
+                    appInfo.setApplication_code("1113");
                     appInfo.setGif_url("file:///android_asset/donyavi.gif");
                     break;
                 case "ir.kitgroup.saleinjam":
-                    appInfo.setApplication_code("1116");
-                    appInfo.setGif_url("file:///android_asset/loading.json");
+                    appInfo.setApplication_code("1114");
+                    appInfo.setGif_url("file:///android_asset/donyavi.gif");
                     break;
             }
             return appInfo;

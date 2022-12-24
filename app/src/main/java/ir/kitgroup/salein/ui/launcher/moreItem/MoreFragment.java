@@ -54,7 +54,6 @@ public class MoreFragment extends Fragment {
 
 
     private MoreFragmentBinding binding;
-    private Company company;
     private String userName;
     private String passWord;
 
@@ -89,10 +88,10 @@ public class MoreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        company = Select.from(Company.class).first();
+       Company company = Select.from(Company.class).first();
 
-        userName=company.getUser();
-        passWord=company.getPass();
+        userName= company.getUser();
+        passWord= company.getPass();
         linkPayment = sharedPreferences.getString("payment_link", "");
 
         account = Select.from(Account.class).first();
@@ -145,13 +144,6 @@ public class MoreFragment extends Fragment {
 
             if (Company.count(Company.class) > 0)
                 Company.deleteAll(Company.class);
-
-
-
-
-
-
-
 
             getActivity().finish();
             startActivity(getActivity().getIntent());

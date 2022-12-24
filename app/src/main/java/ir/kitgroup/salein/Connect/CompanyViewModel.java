@@ -24,7 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ir.kitgroup.salein.DataBase.Account;
 
-import ir.kitgroup.salein.DataBase.Salein;
+import ir.kitgroup.salein.DataBase.SaleinShop;
 
 import ir.kitgroup.salein.DataBase.Company;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
@@ -80,7 +80,7 @@ public class CompanyViewModel extends ViewModel {
     private final MutableLiveData<ModelLog> resultSendFeedBack = new MutableLiveData<>();
     private final MutableLiveData<ModelInvoice> resultInvoice = new MutableLiveData<>();
     private final MutableLiveData<ModelLog> resultLog = new MutableLiveData<>();
-    private final MutableLiveData<Product> resultMaxSale = new MutableLiveData<>();
+    private final MutableLiveData<Integer> resultMaxSale = new MutableLiveData<>();
     private final MutableLiveData<Boolean> resultAddAccount = new MutableLiveData<>();
 
     private final MutableLiveData<ModelTypeOrder> resultTypeOrder = new MutableLiveData<>();
@@ -92,7 +92,6 @@ public class CompanyViewModel extends ViewModel {
         this.myRepository = myRepository;
         this.sharedPreferences = sharedPreferences;
     }
-
 
     public void getSmsLogin(String user, String passWord, String message, String mobile) {
         compositeDisposable.clear();
@@ -112,8 +111,6 @@ public class CompanyViewModel extends ViewModel {
     public MutableLiveData<String> getResultSmsLogin() {
         return resultSendSms;
     }
-
-
 
     public void getInquiryAccount(String user, String passWord, String mobile) {
 
@@ -147,7 +144,7 @@ public class CompanyViewModel extends ViewModel {
                                         }
                                         sharedPreferences.edit().putBoolean("disableAccount", false).apply();
 
-                                        if (!Select.from(Salein.class).first().getSalein())
+                                        if (!Select.from(SaleinShop.class).first().isPublicApp())
                                             compositeDisposable.dispose();
                                     }
                                 } else {
@@ -628,10 +625,10 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void getMaxSale(String user, String passWord, Product product,int position,String operation) {
+    public void getMaxSale(String user, String passWord, String Prd_prd) {
 
         compositeDisposable.add(
-                myRepository.getMaxSales(user, passWord, product.getI())
+                myRepository.getMaxSales(user, passWord, Prd_prd)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> {
@@ -643,11 +640,7 @@ public class CompanyViewModel extends ViewModel {
                             int remain;
                             try {
                                 remain = Integer.parseInt(jsonElement);
-                                product.setRe(remain);
-                                product.setiIndex(position);
-                                product.setOperate(operation);
-                                resultMaxSale.setValue(product);
-
+                                resultMaxSale.setValue(remain);
                             } catch (Exception ignored) {
                                 ModelLog iDs = gson.fromJson(jsonElement, typeIDs);
                                 resultLog.setValue(iDs);
@@ -657,7 +650,7 @@ public class CompanyViewModel extends ViewModel {
                                 eMessage.setValue(new Message(-1, "خطا در دریافت مانده کالا", ""))));
     }
 
-    public MutableLiveData<Product> getResultMaxSale() {
+    public MutableLiveData<Integer> getResultMaxSale() {
         return resultMaxSale;
     }
 
@@ -847,8 +840,6 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-
-
     public MutableLiveData<Message> getResultMessage() {
         return eMessage;
     }
@@ -921,8 +912,5 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
-    public void clear() {
-        compositeDisposable.clear();
-    }
 
 }

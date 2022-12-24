@@ -1,6 +1,7 @@
 package ir.kitgroup.salein.ui.launcher.homeItem;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import android.view.LayoutInflater;
@@ -10,19 +11,16 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
 import ir.kitgroup.salein.models.Description;
 import ir.kitgroup.salein.R;
 
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.viewHolder> {
-
-    private List<Description> list = new ArrayList<>();
-    private Activity context;
+    private final List<Description> list;
+    private final Activity context;
 
 
     public void setOnClickItemListener(ClickItem clickItem) {
@@ -30,32 +28,31 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     }
 
     public interface ClickItem {
-        void onRowClick(String desc, boolean choose,int position);
+        void onRowClick(String desc, boolean choose, int position);
     }
 
     private ClickItem clickItem;
 
 
-        public DescriptionAdapter(Activity context, List<Description> list) {
+    public DescriptionAdapter(Activity context, List<Description> list) {
         this.context = context;
         this.list = list;
-
     }
 
+    @NonNull
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false);
-        return new viewHolder(view);
+        return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false));
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
         final Description description = list.get(position);
 
-
         holder.tableName.setText(description.DSC);
         holder.tableName.setTextColor(context.getResources().getColor(R.color.black));
+
         holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_card_background));
 
 
@@ -71,30 +68,15 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         holder.itemView.setOnClickListener(view -> {
 
             if (!description.Click) {
-//            if(LauncherActivity.screenInches>=7)
-//                OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = true;
-//            else
-
-
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.white));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_reserve_card_background));
-                clickItem.onRowClick(list.get(position).DSC, true,holder.getAdapterPosition());
-            }
-            else {
-               /* if(LauncherActivity.screenInches>=7)
-                OrderFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
-                else*/
-                  //  MainOrderMobileFragment.descriptionList.get(holder.getAdapterPosition()).Click = false;
-
+                clickItem.onRowClick(list.get(position).DSC, true, holder.getAdapterPosition());
+            } else {
                 holder.tableName.setTextColor(context.getResources().getColor(R.color.black));
                 holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.launcher_item_recycle_table_card_background));
-                clickItem.onRowClick(list.get(position).DSC, false,holder.getAdapterPosition());
+                clickItem.onRowClick(list.get(position).DSC, false, holder.getAdapterPosition());
             }
-
-
         });
-
-
     }
 
     @Override
@@ -103,29 +85,14 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     }
 
     class viewHolder extends RecyclerView.ViewHolder {
-
-
-        private TextView tableName;
-        private RelativeLayout cardView;
-
+        private final TextView tableName;
+        private final RelativeLayout cardView;
 
         public viewHolder(View itemView) {
             super(itemView);
-
             tableName = itemView.findViewById(R.id.launcher_recycle_table_txt_name);
             cardView = itemView.findViewById(R.id.launcher_recycle_table_card);
-
-
-
         }
     }
 
-
 }
-
-
-
-
-
-
-

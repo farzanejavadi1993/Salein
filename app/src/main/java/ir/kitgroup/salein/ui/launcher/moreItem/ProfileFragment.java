@@ -34,15 +34,9 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-
-
         binding.ivBackFragment.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
-
-
-       Account user = Select.from(Account.class).first();
+        Account user = Select.from(Account.class).first();
         if (user != null) {
             binding.txtName.setText(user.getN());
             binding.tvPhone.setText(user.getM());

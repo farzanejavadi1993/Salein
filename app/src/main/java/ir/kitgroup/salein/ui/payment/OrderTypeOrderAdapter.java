@@ -1,7 +1,5 @@
 package ir.kitgroup.salein.ui.payment;
 
-
-
 import android.app.Activity;
 
 import android.view.LayoutInflater;
@@ -23,21 +21,15 @@ import ir.kitgroup.salein.models.OrderType;
 
 
 import ir.kitgroup.salein.R;
-
-
 public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAdapter.viewHolder> {
-
     private  final List<OrderType> list;
     private final Activity context;
-
 
 
     public interface ClickItem {
         void onRowClick(String GUID,Integer code);
     }
-
     private ClickItem clickItem;
-
     public void setOnClickListener(ClickItem clickItem) {
         this.clickItem = clickItem;
     }
@@ -50,17 +42,12 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
 
     @Override
     public @NotNull viewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-
         return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycle_subgroup_item_mobile, parent, false));
-
-
     }
-
 
     @Override
     public void onBindViewHolder(viewHolder holder, final int position) {
         final OrderType orderType = list.get(position);
-
         holder.name.setText(orderType.getN());
 
         if (orderType.Click) {
@@ -68,17 +55,13 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
             holder.name.setTextColor(context.getResources().getColor(R.color.white));
 
         } else if (!orderType.Click) {
-
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_subgroup_mobile));
             holder.name.setTextColor(context.getResources().getColor(R.color.medium_color));
-
         }
 
-
         holder.itemView.setOnClickListener(view -> clickItem.onRowClick(orderType.getI(),orderType.getC()));
-
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -86,27 +69,13 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
     }
 
     static class viewHolder extends RecyclerView.ViewHolder {
-
         private final TextView name;
         private final MaterialCardView cardView;
 
-
         public viewHolder(View itemView) {
             super(itemView);
-
             cardView = itemView.findViewById(R.id.order_item_recycle_card);
             name = itemView.findViewById(R.id.order_item_recycle_subgroup_txt_name);
-
-
         }
     }
-
-
 }
-
-
-
-
-
-
-

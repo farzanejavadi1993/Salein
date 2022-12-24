@@ -140,32 +140,48 @@ public class Account extends SugarRecord {
         this.PC = PC;
     }
 
-    public String getLAT() {
-        return LAT;
+    public Double getLAT() {
+        double lat = 0.0;
+        if (!LAT.equals("") && !LAT.equals("-") && LAT != null)
+            lat = Double.parseDouble(LAT);
+
+        return lat;
     }
 
     public void setLAT(String LAT) {
         this.LAT = LAT;
     }
 
-    public String getLNG() {
-        return LNG;
+    public Double getLNG() {
+        double lng = 0.0;
+        if (!LNG.equals("") && !LNG.equals("-") && LNG != null)
+            lng = Double.parseDouble(LNG);
+
+        return lng;
     }
 
     public void setLNG(String LNG) {
         this.LNG = LNG;
     }
 
-    public String getLAT1() {
-        return LAT1;
+    public Double getLAT1() {
+        double lat = 0.0;
+        if (!LAT1.equals("") && !LAT1.equals("-") && LAT1 != null)
+            lat = Double.parseDouble(LAT1);
+
+        return lat;
     }
 
     public void setLAT1(String LAT1) {
         this.LAT1 = LAT1;
     }
 
-    public String getLNG1() {
-        return LNG1;
+    public Double getLNG1() {
+        double lng = 0.0;
+        if (!LNG1.equals("") && !LNG1.equals("-") && LNG1 != null)
+            lng = Double.parseDouble(LNG1);
+
+        return lng;
     }
 
     public void setLNG1(String LNG1) {
@@ -203,7 +219,6 @@ public class Account extends SugarRecord {
     }
 
 
-
     public String getImei() {
         return imei;
     }
@@ -211,7 +226,6 @@ public class Account extends SugarRecord {
     public void setImei(String imei) {
         this.imei = imei;
     }
-
 
 
     public String getAppId() {
@@ -223,7 +237,6 @@ public class Account extends SugarRecord {
     }
 
 
-
     public String getPm() {
         return pm;
     }
@@ -231,7 +244,6 @@ public class Account extends SugarRecord {
     public void setPm(String pm) {
         this.pm = pm;
     }
-
 
 
     public String getI() {
@@ -275,7 +287,10 @@ public class Account extends SugarRecord {
     }
 
     public String getAdr() {
-        return adr;
+        String address="";
+        if (adr!=null && !adr.equals("-") )
+            address=adr;
+        return address;
     }
 
     public void setAdr(String adr) {
@@ -283,13 +298,15 @@ public class Account extends SugarRecord {
     }
 
     public String getAdr2() {
-        return adr2;
+        String address="";
+        if (adr2!=null && !adr2.equals("-") )
+            address=adr2;
+        return address;
     }
 
     public void setAdr2(String adr2) {
         this.adr2 = adr2;
     }
-
 
 
 }
