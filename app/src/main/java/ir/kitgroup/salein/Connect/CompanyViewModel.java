@@ -115,11 +115,6 @@ public class CompanyViewModel extends ViewModel {
 
 
 
-
-
-
-
-
     public void getInquiryAccount(String user, String passWord, String mobile) {
 
         List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).list();
@@ -852,6 +847,8 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
+
+
     public MutableLiveData<Message> getResultMessage() {
         return eMessage;
     }
@@ -924,5 +921,8 @@ public class CompanyViewModel extends ViewModel {
     }
 
 
+    public void clear() {
+        compositeDisposable.clear();
+    }
 
 }

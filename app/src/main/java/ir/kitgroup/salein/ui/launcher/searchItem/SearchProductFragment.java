@@ -266,7 +266,7 @@ public class SearchProductFragment extends Fragment {
 
 
         //region Config RecyclerView And Its Adapter
-        productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api,2);
+       // productAdapter = new ProductAdapter(getActivity(), productList, sharedPreferences, closeDayList, api,2);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
         binding.recyclerView.setLayoutManager(linearLayoutManager);

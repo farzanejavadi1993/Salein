@@ -25,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
@@ -44,6 +45,7 @@ import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,8 +85,6 @@ import ir.kitgroup.salein.ui.launcher.searchItem.SearchProductFragmentDirections
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-
-
     //region Parameter
     @Inject
     SharedPreferences sharedPreferences;
@@ -109,12 +109,12 @@ public class HomeFragment extends Fragment {
     private ArrayList<ir.kitgroup.salein.models.Product> productList;
     private UniversalAdapter2 productAdapter;
 
-    private TextView txtError;
-    private EditText productAmountTxt;
-    private TextWatcher textWatcher1 = null;
-    private ImageView ivMax;
-    private ImageView ivMinus;
-    private ProgressBar  progressBar;
+
+    //    private TextView txtError;
+//    private EditText productAmountTxt;
+//    private ImageView ivMax;
+//    private ImageView ivMinus;
+    private ProgressBar progressBarCheckRemainProduct;
 
 
     //region Variable Dialog Description
@@ -156,18 +156,16 @@ public class HomeFragment extends Fragment {
     DialogInstance dialogInstance;
     int pageMain = 1;
 
-    private  String sWord="";
+    private String sWord = "";
 
-     MaterialButton btnOk;
-     MaterialButton btnNo;
-     TextView tvMessage;
+    MaterialButton btnOk;
+    MaterialButton btnNo;
+    TextView tvMessage;
 
-    public HomeFragment() {
-    }
     //endregion Parameter
 
-    //region Override Method
 
+    //region Override Method
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Nullable
     @Override
@@ -194,7 +192,6 @@ public class HomeFragment extends Fragment {
         castRecyclerViewProductLevel2();
         castRecyclerViewCustomProduct();
         castRecyclerViewProduct();
-
     }
 
 
@@ -205,25 +202,15 @@ public class HomeFragment extends Fragment {
 
         myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
 
-
         binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
-        productList.clear();
-        customTabList.clear();
-        productLevel1List.clear();
-        productLevel2List.clear();
 
-        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
-            productAdapter.notifyDataSetChanged();
-            customTabAdapter.notifyDataSetChanged();
-            productLevel1Adapter.notifyDataSetChanged();
-            productLevel2Adapter.notifyDataSetChanged();
-        }
+        resetData();
 
         binding.orderTxtError.setText("");
-        binding.ivFilter.setImageResource(R.drawable.ic_filter);
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
+
         myViewModel.getSetting(userName, passWord);
         myViewModel.getUnit(userName, passWord);
         myViewModel.getInquiryAccount(userName, passWord, Select.from(Account.class).first().getM());
@@ -233,35 +220,10 @@ public class HomeFragment extends Fragment {
 
             if (result == null)
                 return;
-
             myViewModel.getResultSetting().setValue(null);
+
             List<Setting> settingsList = new ArrayList<>(result);
-
             if (settingsList.size() > 0) {
-
-
-                //region menu
-                sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("") ? settingsList.get(0).MENU : "0").apply();
-                String menu = sharedPreferences.getString("menu", "0");
-                if (!menu.equals("0")) {
-                    myViewModel.getCustomTab(userName, passWord);
-                    binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
-                    binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
-                    binding.orderRecyclerViewCustomTab.setVisibility(View.VISIBLE);
-                } else {
-
-                    if (sharedPreferences.getBoolean("discount", false))
-                        myViewModel.getDiscountProduct(userName, passWord);
-                    else if (sharedPreferences.getBoolean("vip", false))
-                        myViewModel.getVipProduct(userName, passWord, Select.from(Account.class).first().getI());
-                    else
-                        myViewModel.getProductLevel1(userName, passWord);
-
-                    binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
-                    binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
-                    binding.orderRecyclerViewCustomTab.setVisibility(View.GONE);
-                }
-                //endregion menu
 
                 //region  closeDayList
                 String CloseDay = settingsList.get(0).CLOSE_DAY;
@@ -270,56 +232,62 @@ public class HomeFragment extends Fragment {
                 if (!CloseDay.equals("")) {
                     closeDayList = new ArrayList<>(Arrays.asList(CloseDay.split(",")));
                 }
-
                 //endregion  closeDayList
 
-
-                //region Default Account
                 sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
 
-                //endregion Default Account
+                sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT != null ? settingsList.get(0).LINK_PAYMENT : "").apply();
 
-
-                if (settingsList.get(0).LINK_PAYMENT != null)
-                    sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
                 sharedPreferences.edit().putString("coff", settingsList.get(0).COEF != null ? settingsList.get(0).COEF : "0").apply();
-                sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
 
-            }
+                sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK != null ? settingsList.get(0).PEYK : "").apply();
 
-        });
-        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
-            customProgress.hideProgress();
-            if (result == null)
-                return;
-            myViewModel.getResultDescription().setValue(null);
-            descriptionList.clear();
-            descriptionList.addAll(result);
+                //region menu
+                sharedPreferences.edit().putString("menu",
+                        settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("")
+                                ? settingsList.get(0).MENU
+                                : "0").apply();
 
-            for (int i = 0; i < descriptionList.size(); i++) {
-                if (edtDescription.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
-                    descriptionList.get(i).Click = true;
+                String menu = sharedPreferences.getString("menu", "0");
+
+                if (!menu.equals("0")) {
+                    myViewModel.getCustomTab(userName, passWord);
+                    binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                    binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
+                    binding.orderRecyclerViewCustomTab.setVisibility(View.VISIBLE);
+                } else {
+                    if (sharedPreferences.getBoolean("discount", false))
+                        myViewModel.getDiscountProduct(userName, passWord);
+
+                    else if (sharedPreferences.getBoolean("vip", false))
+                        myViewModel.getVipProduct(userName, passWord, Select.from(Account.class).first().getI());
+
+                    else
+                        myViewModel.getProductLevel1(userName, passWord);
+
+                    binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
+                    binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
+                    binding.orderRecyclerViewCustomTab.setVisibility(View.GONE);
                 }
-
+                //endregion menu
             }
-            descriptionAdapter.notifyDataSetChanged();
-
-            dialogDescription.show();
         });
         myViewModel.getResultProductLevel1().observe(getViewLifecycleOwner(), result -> {
-
             if (result == null)
                 return;
+            myViewModel.getResultProductLevel1().setValue(null);
 
             binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
             binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
             binding.orderTxtError.setVisibility(View.GONE);
-            myViewModel.getResultProductLevel1().setValue(null);
+
             productLevel1List.clear();
             productLevel1List.addAll(result);
+
             CollectionUtils.filter(result, ProductLevel1::getSts);
             if (productLevel1List.size() == 1)
                 binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+
             productLevel1Adapter.notifyDataSetChanged();
 
 
@@ -335,19 +303,19 @@ public class HomeFragment extends Fragment {
 
         });
         myViewModel.getResultProductLevel2().observe(getViewLifecycleOwner(), result -> {
-
             if (result == null)
                 return;
             myViewModel.getResultProductLevel2().setValue(null);
+
             binding.orderTxtError.setVisibility(View.GONE);
             productLevel2List.clear();
             CollectionUtils.filter(result, ProductLevel2::getSts);
             productLevel2List.addAll(result);
 
-
             if (productLevel2List.size() > 0) {
                 ArrayList<ProductLevel2> list = new ArrayList<>(productLevel2List);
                 CollectionUtils.filter(list, l -> l.getTkn() != 0);
+
                 if (list.size() > 0) {
                     try {
                         ArrayList<ProductLevel2> fulList = new ArrayList<>(list);
@@ -373,8 +341,8 @@ public class HomeFragment extends Fragment {
                         }
                     } catch (Exception ignored) {
                     }
-
                 }
+
                 if (productLevel2List.size() > 0) {
                     productLevel2List.get(0).Click = true;
                 }
@@ -383,25 +351,74 @@ public class HomeFragment extends Fragment {
                 GuidProductLvl2 = productLevel2List.get(0).getI();
                 myViewModel.getSettingPrice(userName, passWord);
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
-
             } else {
-
-
-                binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
-                binding.orderTxtError.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.GONE);
                 binding.animationView.setVisibility(View.GONE);
+                binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
+                binding.orderTxtError.setVisibility(View.VISIBLE);
                 productList.clear();
                 productAdapter.notifyDataSetChanged();
                 productLevel2List.clear();
-
             }
-
             productLevel2Adapter.notifyDataSetChanged();
+        });
+        myViewModel.getResultSettingPrice().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            myViewModel.getResultSettingPrice().setValue(null);
 
+            customProgress.hideProgress();
+            sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
+            checkRemainProduct = result.get(0).MAX_SALE;
+            sharedPreferences.edit().putString("maxSale", checkRemainProduct).apply();
+
+
+            String menu = sharedPreferences.getString("menu", "");
+            if (!menu.equals("0"))
+                myViewModel.getProductCustomTab(userName, passWord, keyCustomTab);
+            else
+                myViewModel.getListProduct(userName, passWord, GuidProductLvl2);
+        });
+        myViewModel.getResultListProduct().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            myViewModel.getResultListProduct().setValue(null);
+
+            binding.progressbar.setVisibility(View.GONE);
+            binding.animationView.setVisibility(View.GONE);
+            customProgress.hideProgress();
+            binding.orderTxtError.setVisibility(View.GONE);
+            productList.clear();
+
+            CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
+            ArrayList<ir.kitgroup.salein.models.Product> resultPrd_ = new ArrayList<>(result);
+            ArrayList<ir.kitgroup.salein.models.Product> listPrd = new ArrayList<>(resultPrd_);
+            CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
+            if (listPrd.size() > 0)
+                for (int i = 0; i < listPrd.size(); i++) {
+                    int position = listPrd.get(i).getKey() - 1;//new position
+                    int index = resultPrd_.indexOf(listPrd.get(i));//old position
+                    if (resultPrd_.size() > position) {
+                        ir.kitgroup.salein.models.Product itemProduct = resultPrd_.get(position);
+                        if (index != position) {
+                            resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
+                            resultPrd_.set(index, itemProduct);
+
+                        }
+                    }
+                }
+
+            productList.clear();
+            productList.addAll(resultPrd_);
+
+
+            if (productList.size() == 0) {
+                binding.orderTxtError.setVisibility(View.VISIBLE);
+                binding.orderTxtError.setText("هیچ کالایی موجود نیست");
+            }
+            productAdapter.notifyDataSetChanged();
         });
         myViewModel.geResultCustomTab().observe(getViewLifecycleOwner(), result -> {
-
             if (result == null)
                 return;
             myViewModel.geResultCustomTab().setValue(null);
@@ -431,9 +448,7 @@ public class HomeFragment extends Fragment {
                 customTabList.clear();
 
             }
-
             customTabAdapter.notifyDataSetChanged();
-
         });
         myViewModel.getResultProductCustomTab().observe(getViewLifecycleOwner(), result -> {
 
@@ -474,77 +489,26 @@ public class HomeFragment extends Fragment {
                 binding.orderTxtError.setVisibility(View.VISIBLE);
                 binding.orderTxtError.setText("هیچ کالایی موجود نیست");
             }
-
-
-            // productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
 
         });
-        myViewModel.getResultSettingPrice().observe(getViewLifecycleOwner(), result -> {
+        myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
             customProgress.hideProgress();
             if (result == null)
                 return;
-            myViewModel.getResultSettingPrice().setValue(null);
-            sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
-            checkRemainProduct = result.get(0).MAX_SALE;
-            sharedPreferences.edit().putString("maxSale", checkRemainProduct).apply();
+            myViewModel.getResultDescription().setValue(null);
+            descriptionList.clear();
+            descriptionList.addAll(result);
 
-
-            String menu = sharedPreferences.getString("menu", "");
-            if (!menu.equals("0"))
-                myViewModel.getProductCustomTab(userName, passWord, keyCustomTab);
-
-            else
-                myViewModel.getListProduct(userName, passWord, GuidProductLvl2);
-
-
-        });
-
-
-        myViewModel.getResultListProduct().observe(getViewLifecycleOwner(), result -> {
-
-            binding.progressbar.setVisibility(View.GONE);
-            binding.animationView.setVisibility(View.GONE);
-            customProgress.hideProgress();
-            if (result == null)
-                return;
-
-            myViewModel.getResultListProduct().setValue(null);
-            binding.orderTxtError.setVisibility(View.GONE);
-            productList.clear();
-
-            CollectionUtils.filter(result, i -> i.getPrice(sharedPreferences) > 0.0 && i.getSts());
-            ArrayList<ir.kitgroup.salein.models.Product> resultPrd_ = new ArrayList<>(result);
-            ArrayList<ir.kitgroup.salein.models.Product> listPrd = new ArrayList<>(resultPrd_);
-            CollectionUtils.filter(listPrd, l -> l.getKey() != 0);
-            if (listPrd.size() > 0)
-                for (int i = 0; i < listPrd.size(); i++) {
-                    int position = listPrd.get(i).getKey() - 1;//new position
-                    int index = resultPrd_.indexOf(listPrd.get(i));//old position
-                    if (resultPrd_.size() > position) {
-                        ir.kitgroup.salein.models.Product itemProduct = resultPrd_.get(position);
-                        if (index != position) {
-                            resultPrd_.set(position, resultPrd_.get(resultPrd_.indexOf(listPrd.get(i))));
-                            resultPrd_.set(index, itemProduct);
-
-                        }
-                    }
+            for (int i = 0; i < descriptionList.size(); i++) {
+                if (edtDescription.getText().toString().contains("'" + descriptionList.get(i).DSC + "'")) {
+                    descriptionList.get(i).Click = true;
                 }
 
-
-            productList.clear();
-            productList.addAll(resultPrd_);
-
-
-            if (productList.size() == 0) {
-                binding.orderTxtError.setVisibility(View.VISIBLE);
-                binding.orderTxtError.setText("هیچ کالایی موجود نیست");
             }
+            descriptionAdapter.notifyDataSetChanged();
 
-
-            //  productAdapter.setMaxSale(maxSales);
-            productAdapter.notifyDataSetChanged();
-
+            dialogDescription.show();
         });
         myViewModel.getResultDiscountProduct().observe(getViewLifecycleOwner(), result -> {
             binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
@@ -616,47 +580,11 @@ public class HomeFragment extends Fragment {
                 binding.orderTxtError.setText("هیچ کالایی موجود نیست ، برای مشاهده کامل کالاها فیلترها را حذف کنید.");
             }
 
-            // productAdapter.setMaxSale(maxSales);
             productAdapter.notifyDataSetChanged();
             binding.progressbar.setVisibility(View.GONE);
             binding.animationView.setVisibility(View.GONE);
 
         });
-
-
-        myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), result -> {
-            if (result == null)
-                return;
-            myViewModel.getResultMaxSale().setValue(null);
-
-            double remain=result.getRe();
-
-            String type=result.getOperate();
-            int position=result.getiIndex();
-
-
-            progressBar.setVisibility(View.GONE);
-
-            if (remain <= 0) {
-                productList.get(result.getiIndex()).setAmount(0.0);
-                if (!result.getOperate().equals("")) {
-                    productAmountTxt.removeTextChangedListener(textWatcher1);
-                    productAmountTxt.setText("");
-                    productAmountTxt.addTextChangedListener(textWatcher1);
-                    ivMax.setVisibility(View.GONE);
-                    ivMinus.setVisibility(View.GONE);
-                    productAmountTxt.setVisibility(View.GONE);
-                }
-
-                txtError.setText("این کالا موجود نمی باشد");
-
-            }
-
-            calculate(position,type);
-
-        });
-
-
         myViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
@@ -689,7 +617,6 @@ public class HomeFragment extends Fragment {
 
 
         });
-
     }
 
     @Override
@@ -699,8 +626,8 @@ public class HomeFragment extends Fragment {
     }
     //endregion Override Method
 
-    //region Custom Method
 
+    //region Custom Method
     private void showError(String error, int type) {
         tvMessage.setText(error);
         btnNo.setText("بستن");
@@ -720,28 +647,12 @@ public class HomeFragment extends Fragment {
 
     }
 
-
     @SuppressLint("NotifyDataSetChanged")
     public void showData() {
-        sharedPreferences.edit().putBoolean("discount", false).apply();
-        sharedPreferences.edit().putBoolean("vip", false).apply();
+        resetFilter();
         binding.progressbar.setVisibility(View.VISIBLE);
         binding.animationView.setVisibility(View.VISIBLE);
-        productList.clear();
-
-        customTabList.clear();
-        productLevel1List.clear();
-        productLevel2List.clear();
-
-        if (productAdapter != null && productLevel1Adapter != null && productLevel2Adapter != null && customTabAdapter != null) {
-            productAdapter.notifyDataSetChanged();
-            customTabAdapter.notifyDataSetChanged();
-            productLevel1Adapter.notifyDataSetChanged();
-            productLevel2Adapter.notifyDataSetChanged();
-        }
-
-        binding.orderTxtError.setText("");
-        binding.ivFilter.setImageResource(R.drawable.ic_filter);
+        resetData();
         binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
         binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
         myViewModel.getSetting(userName, passWord);
@@ -780,12 +691,12 @@ public class HomeFragment extends Fragment {
 
     }
 
-
     private void init() {
         Inv_GUID = "";
 
         format = new DecimalFormat("#,###,###,###");
         df = new DecimalFormat();
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Product.deleteAll(Product.class);
@@ -799,7 +710,6 @@ public class HomeFragment extends Fragment {
         passWord = company.getPass();
         appInfo = Select.from(Salein.class).first();
 
-
         binding.tvNameStore.setText(company.getN());
 
         Glide.with(this).asGif().load(Uri.parse(appInfo.getGif_url())).into(binding.animationView);
@@ -812,8 +722,8 @@ public class HomeFragment extends Fragment {
         closeDayList = new ArrayList<>();
 
         dialogInstance = DialogInstance.getInstance();
-        defaultCoff = sharedPreferences.getString("coff", "0");
 
+        defaultCoff = sharedPreferences.getString("coff", "0");
 
         binding.ivFilter.setOnClickListener(v -> {
             boolean filter = binding.orderRecyclerViewProductLevel2.getVisibility() == View.GONE;
@@ -836,7 +746,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void createOrderForm() {
-
         try {
             Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
             getArguments().clear();
@@ -864,7 +773,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void setCounterForAmountOfOrder() {
-
         Inv_GUID = sharedPreferences.getString("Inv_GUID", "");
         int counter = 0;
         List<InvoiceDetail> invDetailses = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
@@ -872,7 +780,6 @@ public class HomeFragment extends Fragment {
             CollectionUtils.filter(invDetailses, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
             counter = invDetailses.size();
         }
-
 
         if (counter == 0)
             ((LauncherActivity) getActivity()).setClearCounterOrder();
@@ -895,14 +802,30 @@ public class HomeFragment extends Fragment {
 
             resetFilter();
             resetData();
-
             binding.animationView.setVisibility(View.VISIBLE);
             binding.progressbar.setVisibility(View.VISIBLE);
 
-            myViewModel.getProductLevel1(userName, passWord);
+
             myViewModel.getInquiryAccount(userName, passWord, account.getM());
             myViewModel.getUnit(userName, passWord);
             myViewModel.getSetting(userName, passWord);
+
+
+           /* String menu = sharedPreferences.getString("menu", "0");
+            if (!menu.equals("0")) {
+                myViewModel.getCustomTab(userName, passWord);
+                binding.orderRecyclerViewProductLevel1.setVisibility(View.GONE);
+                binding.orderRecyclerViewProductLevel2.setVisibility(View.GONE);
+                binding.orderRecyclerViewCustomTab.setVisibility(View.VISIBLE);
+            }
+
+            else {
+                myViewModel.getProductLevel1(userName, passWord);
+                binding.orderRecyclerViewProductLevel1.setVisibility(View.VISIBLE);
+                binding.orderRecyclerViewProductLevel2.setVisibility(View.VISIBLE);
+                binding.orderRecyclerViewCustomTab.setVisibility(View.GONE);
+            }*/
+
         });
 
         btnNo.setOnClickListener(view -> {
@@ -915,13 +838,10 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot()).popBackStack();
             }
         });
-
-
     }
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void castDialogDescription() {
-
         DialogInstance dialogInstance = DialogInstance.getInstance();
 
         dialogDescription = dialogInstance.dialog(getActivity(), false, R.layout.dialog_description);
@@ -997,13 +917,14 @@ public class HomeFragment extends Fragment {
         binding.orderRecyclerViewProductLevel1.setAdapter(productLevel1Adapter);
 
 
-        //region Click Item ProductLevel1
         productLevel1Adapter.SetOnItemClickListener(GUID -> {
+            myViewModel.clear();
             binding.animationView.setVisibility(View.VISIBLE);
             binding.progressbar.setVisibility(View.VISIBLE);
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             pageMain = 1;
             binding.orderTxtError.setText("");
+
 
             //region UnClick Old Item ProductLevel1 And Item ProductLevel2
             ArrayList<ProductLevel1> resultPrdGrp1 = new ArrayList<>(productLevel1List);
@@ -1024,20 +945,17 @@ public class HomeFragment extends Fragment {
 
 
             productLevel1Adapter.notifyDataSetChanged();
+
             productList.clear();
             productAdapter.notifyDataSetChanged();
 
             productLevel2List.clear();
             productLevel2Adapter.notifyDataSetChanged();
 
-
             //region Full ProductLevel2List Because This Item ProductLevel1 Is True
             myViewModel.getProductLevel2(userName, passWord, GUID);
             //endregion Full ProductLevel2List Because This Item ProductLevel1 Is True
         });
-        //endregion Click Item ProductLevel1
-
-
         //endregion CONFIGURATION DATA PRODUCT_LEVEL1
     }
 
@@ -1045,7 +963,6 @@ public class HomeFragment extends Fragment {
     private void castRecyclerViewProductLevel2() {
 
         productLevel2Adapter = new ProductLevel2Adapter(getActivity(), productLevel2List);
-
         LinearLayoutManager manager2 = new LinearLayoutManager(getContext());
         manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager2.setReverseLayout(true);
@@ -1054,16 +971,18 @@ public class HomeFragment extends Fragment {
         binding.orderRecyclerViewProductLevel2.setAdapter(productLevel2Adapter);
 
 
-        //region Click Item ProductLevel2
         productLevel2Adapter.SetOnItemClickListener(GUID -> {
+            myViewModel.clear();
             binding.animationView.setVisibility(View.VISIBLE);
             binding.progressbar.setVisibility(View.VISIBLE);
-            productList.clear();
 
+            productList.clear();
             productAdapter.notifyDataSetChanged();
+
             binding.orderRecyclerViewProduct.post(() -> binding.orderRecyclerViewProduct.scrollToPosition(0));
             pageMain = 1;
             binding.orderTxtError.setText("");
+
 
             //region UnClick Old Item
             ArrayList<ProductLevel2> resultProductGroupLevel2 = new ArrayList<>(productLevel2List);
@@ -1077,24 +996,19 @@ public class HomeFragment extends Fragment {
             //region Click New Item
             ArrayList<ProductLevel2> resProductGroupLevel2 = new ArrayList<>(productLevel2List);
             CollectionUtils.filter(resProductGroupLevel2, r -> r.getI().equals(GUID));
-
             if (resProductGroupLevel2.size() > 0) {
                 productLevel2List.get(productLevel2List.indexOf(resProductGroupLevel2.get(0))).Click = true;
             }
             //endregion Click New Item
 
+
             productLevel2Adapter.notifyDataSetChanged();
 
-
-
-            //region Full ProductList Because This Item ProductLevel1 Is True
+            //regionFull ProductList Because This Item ProductLevel1 Is True
             GuidProductLvl2 = GUID;
             myViewModel.getSettingPrice(userName, passWord);
-
+            //endregionFull ProductList Because This Item ProductLevel1 Is True
         });
-
-        //endregion Click Item ProductLevel2
-
         //endregion CONFIGURATION DATA PRODUCT_LEVEL_2
     }
 
@@ -1102,7 +1016,6 @@ public class HomeFragment extends Fragment {
     private void castRecyclerViewCustomProduct() {
 
         customTabAdapter = new CustomTabAdapter(getActivity(), customTabList);
-
         LinearLayoutManager managerCustom = new LinearLayoutManager(getContext());
         managerCustom.setOrientation(LinearLayoutManager.HORIZONTAL);
         managerCustom.setReverseLayout(true);
@@ -1120,6 +1033,7 @@ public class HomeFragment extends Fragment {
             pageMain = 1;
             binding.orderTxtError.setText("");
 
+
             //region UnClick Old Item
             ArrayList<CustomTab> resultCustomTab = new ArrayList<>(customTabList);
             CollectionUtils.filter(resultCustomTab, r -> r.Click);
@@ -1132,14 +1046,13 @@ public class HomeFragment extends Fragment {
             //region Click New Item
             ArrayList<CustomTab> resCustomTab = new ArrayList<>(customTabList);
             CollectionUtils.filter(resCustomTab, r -> r.getT() == key);
-
             if (customTabList.size() > 0) {
                 customTabList.get(customTabList.indexOf(resCustomTab.get(0))).Click = true;
             }
             //endregion Click New Item
 
-            customTabAdapter.notifyDataSetChanged();
 
+            customTabAdapter.notifyDataSetChanged();
 
             //region Full ProductList Because This Item ProductLevel1 Is True
             keyCustomTab = key;
@@ -1154,248 +1067,242 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void castRecyclerViewProduct() {
-
         productAdapter = new UniversalAdapter2(R.layout.order_recycle_products_item_mobile, productList, BR.product);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
         binding.orderRecyclerViewProduct.setLayoutManager(linearLayoutManager);
         binding.orderRecyclerViewProduct.setScrollingTouchSlop(View.FOCUS_LEFT);
-
-
         binding.orderRecyclerViewProduct.setAdapter(productAdapter);
 
+
         productAdapter.setOnItemBindListener((binAdapter, position) -> {
-
-            View viewAdapter = binAdapter.getRoot();
-
-            getValueOfCloseDay();
-
-            txtError = viewAdapter.findViewById(R.id.error);
-            productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
-            RelativeLayout cardEdit = viewAdapter.findViewById(R.id.card_edit);
-            TextView edtDesc = viewAdapter.findViewById(R.id.edt_description_temp);
-            RelativeLayout layoutDiscount = viewAdapter.findViewById(R.id.layout_discount);
-            TextView unit = viewAdapter.findViewById(R.id.unit);
-            TextView productPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_price);
-            TextView productOldPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_old_price);
-            TextView productDiscountPercent = viewAdapter.findViewById(R.id.order_recycle_item_product_discountPercent);
-
-            RoundedImageView productImage = viewAdapter.findViewById(R.id.order_recycle_item_product_img);
-            ivMinus = viewAdapter.findViewById(R.id.iv_minus);
-            ivMax = viewAdapter.findViewById(R.id.iv_max);
-             progressBar = viewAdapter.findViewById(R.id.progress);
+            if (position < productList.size()) {
+                View viewAdapter = binAdapter.getRoot();
+                getValueOfCloseDay();
 
 
-            txtError.setText("");
-
-            productAmountTxt.setEnabled(closeDayList == null || closeDayList.size() <= 0 || !closeDayList.contains(valueOfCloseDay));
-
-            InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productList.get(position).getI() + "'").first();
-
-
-            List<Unit> unitList = Select.from(Unit.class).list();
-            ArrayList<Unit> units = new ArrayList<>(unitList);
-            CollectionUtils.filter(units, u -> u.getUomUid().equals(productList.get(position).UM1));
-            if (units.size() > 0)
-                unit.setText(units.get(0).getUomName());
-            else
-                unit.setText("");
-
-
-            if (productList.get(position).getPrice(sharedPreferences) > 0) {
-                productPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)) + " ریال ");
-                productDiscountPercent.setText("");
-                productOldPrice.setText("");
-                layoutDiscount.setVisibility(View.GONE);
-                productDiscountPercent.setVisibility(View.GONE);
-                productOldPrice.setVisibility(View.GONE);
-
-                if (productList.get(position).getPercDis() != 0.0) {
-                    layoutDiscount.setVisibility(View.VISIBLE);
-                    productDiscountPercent.setVisibility(View.VISIBLE);
-                    productOldPrice.setVisibility(View.VISIBLE);
-                    productOldPrice.setPaintFlags(productOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    productDiscountPercent.setText(format.format(productList.get(position).getPercDis()) + "%");
-                    productOldPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)));
-                    double discountPrice = productList.get(position).getPrice(sharedPreferences) * (productList.get(position).getPercDis() / 100);
-                    double newPrice = productList.get(position).getPrice(sharedPreferences) - discountPrice;
-                    productPrice.setText(format.format(newPrice) + " ریال ");
-                }
-            }
+                TextView txtError = viewAdapter.findViewById(R.id.error);
+                EditText productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                RelativeLayout cardEdit = viewAdapter.findViewById(R.id.card_edit);
+                TextView edtDesc = viewAdapter.findViewById(R.id.edt_description_temp);
+                RelativeLayout layoutDiscount = viewAdapter.findViewById(R.id.layout_discount);
+                TextView unit = viewAdapter.findViewById(R.id.unit);
+                TextView productPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_price);
+                TextView productOldPrice = viewAdapter.findViewById(R.id.order_recycle_item_product_old_price);
+                TextView productDiscountPercent = viewAdapter.findViewById(R.id.order_recycle_item_product_discountPercent);
+                RoundedImageView productImage = viewAdapter.findViewById(R.id.order_recycle_item_product_img);
+                ImageView ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                ImageView ivMax = viewAdapter.findViewById(R.id.iv_max);
+                progressBarCheckRemainProduct = viewAdapter.findViewById(R.id.progress);
 
 
-            AtomicInteger tab = new AtomicInteger();
-            productImage.setOnClickListener(view1 -> {
-                tab.getAndIncrement();
-                if (tab.get() == 2) {
-                    tab.set(0);
-                    NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(productList.get(position).getI());
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
-                }
-            });
-
-
-            double amount;
-            if (ivDetail != null && ivDetail.INV_DET_QUANTITY != null)
-                amount = ivDetail.INV_DET_QUANTITY;
-            else
-                amount = 0.0;
-
-            productList.get(position).setAmount(amount);
-
-            if (amount > 0) {
-                ivMinus.setVisibility(View.VISIBLE);
-                productAmountTxt.setVisibility(View.VISIBLE);
-            } else {
-                ivMinus.setVisibility(View.GONE);
-                productAmountTxt.setVisibility(View.GONE);
-            }
-
-
-//            if (checkRemainProduct.equals("1"))
-//                myViewModel.getMaxSale(userName, passWord, productList.get(position));
-
-
-            String description;
-            if (ivDetail != null && ivDetail.INV_DET_DESCRIBTION != null)
-                description = ivDetail.INV_DET_DESCRIBTION;
-            else
-                description = "";
-            edtDesc.setText(description);
-
-
-            ivMax.setOnClickListener(v -> {
-                if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
-                    showAlertDialog("فروشگاه تعطیل می باشد.");
-                    return;
-                }
-                productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
-                ivMax = viewAdapter.findViewById(R.id.iv_max);
-                ivMinus = viewAdapter.findViewById(R.id.iv_minus);
-                txtError = viewAdapter.findViewById(R.id.error);
-                progressBar = viewAdapter.findViewById(R.id.progress);
                 txtError.setText("");
 
-                if (checkRemainProduct.equals("1"))
-                    myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "max");
+                productAmountTxt.setEnabled(closeDayList == null || closeDayList.size() <= 0 || !closeDayList.contains(valueOfCloseDay));
+
+
+                InvoiceDetail ivDetail = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "' AND PRDUID ='" + productList.get(position).getI() + "'").first();
+
+
+                List<Unit> unitList = Select.from(Unit.class).list();
+                ArrayList<Unit> units = new ArrayList<>(unitList);
+                CollectionUtils.filter(units, u -> u.getUomUid().equals(productList.get(position).UM1));
+                if (units.size() > 0)
+                    unit.setText(units.get(0).getUomName());
                 else
-                    calculate(position, "max");
-
-            });
+                    unit.setText("");
 
 
-            ivMinus.setOnClickListener(v -> {
-                if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
-                    showAlertDialog("فروشگاه تعطیل می باشد.");
-                    return;
+                if (productList.get(position).getPrice(sharedPreferences) > 0) {
+                    productPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)) + " ریال ");
+                    productDiscountPercent.setText("");
+                    productOldPrice.setText("");
+                    layoutDiscount.setVisibility(View.GONE);
+                    productDiscountPercent.setVisibility(View.GONE);
+                    productOldPrice.setVisibility(View.GONE);
+
+                    if (productList.get(position).getPercDis() != 0.0) {
+                        layoutDiscount.setVisibility(View.VISIBLE);
+                        productDiscountPercent.setVisibility(View.VISIBLE);
+                        productOldPrice.setVisibility(View.VISIBLE);
+                        productOldPrice.setPaintFlags(productOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        productDiscountPercent.setText(format.format(productList.get(position).getPercDis()) + "%");
+                        productOldPrice.setText(format.format(productList.get(position).getPrice(sharedPreferences)));
+                        double discountPrice = productList.get(position).getPrice(sharedPreferences) * (productList.get(position).getPercDis() / 100);
+                        double newPrice = productList.get(position).getPrice(sharedPreferences) - discountPrice;
+                        productPrice.setText(format.format(newPrice) + " ریال ");
+                    }
                 }
-                productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
-                ivMax = viewAdapter.findViewById(R.id.iv_max);
-                ivMinus = viewAdapter.findViewById(R.id.iv_minus);
-                txtError = viewAdapter.findViewById(R.id.error);
-                progressBar = viewAdapter.findViewById(R.id.progress);
-                txtError.setText("");
+
+
+                AtomicInteger tab = new AtomicInteger();
+                productImage.setOnClickListener(view1 -> {
+                    tab.getAndIncrement();
+                    if (tab.get() == 2) {
+                        tab.set(0);
+                        NavDirections action = SearchProductFragmentDirections.actionGoToShowDetailFragment(productList.get(position).getI());
+                        Navigation.findNavController(binding.getRoot()).navigate(action);
+                    }
+                });
+
+
+                double amount;
+                if (ivDetail != null && ivDetail.INV_DET_QUANTITY != null)
+                    amount = ivDetail.INV_DET_QUANTITY;
+                else
+                    amount = 0.0;
+
+
+                if (amount > 0) {
+                    ivMinus.setVisibility(View.VISIBLE);
+                    productAmountTxt.setVisibility(View.VISIBLE);
+                }
+                else {
+                    ivMinus.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);
+                }
+
+
+                String description;
+                if (ivDetail != null && ivDetail.INV_DET_DESCRIBTION != null)
+                    description = ivDetail.INV_DET_DESCRIBTION;
+                else
+                    description = "";
+                edtDesc.setText(description);
+
+
+                productAmountTxt.setOnFocusChangeListener((view1, b) -> {
+                   // productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                    productAmountTxt.setCursorVisible(true);
+                });
+                productAmountTxt.setText(df.format(amount));
+
 
                 if (checkRemainProduct.equals("1"))
-                    myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "min");
-                else
-                    calculate(position, "min");
-            });
+                    myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "remain");
 
 
-            productAmountTxt.setOnFocusChangeListener((view1, b) -> {
-                productAmountTxt.setCursorVisible(true);
-            });
-
-
-            if (textWatcher1 == null) {
-                textWatcher1 = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                ivMax.setOnClickListener(v -> {
+                    if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
+                        showAlertDialog("فروشگاه تعطیل می باشد.");
+                        return;
                     }
 
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                        if (!charSequence.toString().isEmpty())
-                            productAmountTxt.setCursorVisible(true);
-                        String s = Util.toEnglishNumber(charSequence.toString());
-                        s = s.contains("٫") ? s.replace("٫", ".") : s;
-                        s = s.contains(",") ? s.replace(",", "") : s;
-                        if (!s.isEmpty()) {
-                            if (s.contains(".") && s.indexOf(".") == s.length() - 1) {
-                                return;
-                            } else if (s.contains("٫") && s.indexOf("٫") == s.length() - 1) {
-                                return;
-                            }
-                        }
+                   /* productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                    ivMax = viewAdapter.findViewById(R.id.iv_max);
+                    ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                    txtError = viewAdapter.findViewById(R.id.error);
+                    progressBarCheckRemainProduct = viewAdapter.findViewById(R.id.progress);*/
+                    txtError.setText("");
 
-
-                        sWord=s;
-                        productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
-                        ivMax = viewAdapter.findViewById(R.id.iv_max);
-                        ivMinus = viewAdapter.findViewById(R.id.iv_minus);
-                        txtError = viewAdapter.findViewById(R.id.error);
-                        progressBar = viewAdapter.findViewById(R.id.progress);
-                        txtError.setText("");
-
-                        if (checkRemainProduct.equals("1"))
-                            myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "");
-                        else
-                            calculate(position, "");
+                    if (checkRemainProduct.equals("1"))
+                        myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "max");
+                    else {
+                        productAmountTxt.setCursorVisible(false);
+                        calculate(position, "max");
                     }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
+                });
 
+                ivMinus.setOnClickListener(v -> {
+                    if (closeDayList.size() > 0 && closeDayList.contains(valueOfCloseDay)) {
+                        showAlertDialog("فروشگاه تعطیل می باشد.");
+                        return;
                     }
-                };
+                  /*  productAmountTxt = viewAdapter.findViewById(R.id.order_recycle_item_product_txt_amount);
+                    ivMax = viewAdapter.findViewById(R.id.iv_max);
+                    ivMinus = viewAdapter.findViewById(R.id.iv_minus);
+                    txtError = viewAdapter.findViewById(R.id.error);
+                    progressBarCheckRemainProduct = viewAdapter.findViewById(R.id.progress);*/
+                    txtError.setText("");
+
+                    if (checkRemainProduct.equals("1"))
+                        myViewModel.getMaxSale(userName, passWord, productList.get(position), position, "min");
+                    else {
+                        productAmountTxt.setCursorVisible(false);
+                        calculate(position, "min");
+                    }
+
+
+                });
+
+                cardEdit.setOnClickListener(v -> {
+                    String idProduct = productList.get(position).getI();
+
+                    List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
+                    ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
+                    CollectionUtils.filter(result, r -> r.PRD_UID.equals(idProduct));
+
+                    if (result.size() > 0 && result.get(0).getQuantity() > 0) {
+                        edtDescription.setText(result.get(0).INV_DET_DESCRIBTION);
+                        descriptionList.clear();
+                        GuidInv = result.get(0).INV_DET_UID;
+                        customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
+                        myViewModel.getDescription(userName, passWord, idProduct);
+                        return;
+                    }
+                    showAlertDialog("برای نوشتن توضیحات برای کالا مقدار ثبت کنید.");
+                });
+
+
+                myViewModel.getResultMaxSale().observe(getViewLifecycleOwner(), result -> {
+                    if (result == null)
+                        return;
+                    myViewModel.getResultMaxSale().setValue(null);
+
+
+                    productAmountTxt.setText("");
+                    ivMinus.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);
+
+
+                    double remain = result.getRe();
+                    String type = result.getOperate();
+
+
+                    progressBarCheckRemainProduct.setVisibility(View.GONE);
+                    ArrayList<ir.kitgroup.salein.models.Product> resPr = new ArrayList<>(productList);
+                    CollectionUtils.filter(resPr, r -> r.getI().equals(result.getI()));
+
+                    if (remain <= 0 && resPr.size() >= 0) {
+                        productList.get(productList.indexOf(resPr.get(0))).setAmount(0.0);
+                        ivMax.setVisibility(View.GONE);
+                        txtError.setText("ناموجود");
+                    }
+                    else
+                        ivMax.setVisibility(View.VISIBLE);
+
+
+                    if (resPr.size() > 0)
+                        calculate(productList.indexOf(resPr.get(0)), type);
+                });
             }
 
-
-            productAmountTxt.removeTextChangedListener(textWatcher1);
-            productAmountTxt.setText(df.format(amount));
-            productAmountTxt.addTextChangedListener(textWatcher1);
-
-
-            cardEdit.setOnClickListener(v -> {
-
-                String idProduct = productList.get(position).getI();
-
-                List<InvoiceDetail> invoiceDetails = Select.from(InvoiceDetail.class).where("INVUID ='" + Inv_GUID + "'").list();
-
-                ArrayList<InvoiceDetail> result = new ArrayList<>(invoiceDetails);
-                CollectionUtils.filter(result, r -> r.PRD_UID.equals(idProduct));
-
-                if (result.size() > 0 && result.get(0).getQuantity() > 0) {
-                    edtDescription.setText(result.get(0).INV_DET_DESCRIBTION);
-                    descriptionList.clear();
-                    GuidInv = result.get(0).INV_DET_UID;
-                    customProgress.showProgress(getActivity(), "در حال دریافت توضیحات", true);
-                    myViewModel.getDescription(userName, passWord, idProduct);
-                    return;
-                }
-                showAlertDialog("برای نوشتن توضیحات برای کالا مقدار ثبت کنید.");
-
-            });
         });
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void resetData() {
         productLevel1List.clear();
         productLevel2List.clear();
+        customTabList.clear();
         productList.clear();
+
         productLevel1Adapter.notifyDataSetChanged();
         productLevel2Adapter.notifyDataSetChanged();
+        customTabAdapter.notifyDataSetChanged();
         productAdapter.notifyDataSetChanged();
     }
 
-
     private void calculate(int position, String type) {
-        productAmountTxt.setCursorVisible(false);
 
-        double amount = productList.get(position).getAmount();
+
+        List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
+        ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
+        CollectionUtils.filter(result, r -> r.PRD_UID.equals(productList.get(position).getI()));
+
+
+        double amount = result.size() > 0 && result.get(0).getQuantity() != null ? result.get(0).getQuantity() : 0;
         double mainCoef1 = productList.get(position).getCoef1();
 
         double coef1 = productList.get(position).getCoef1();
@@ -1419,7 +1326,7 @@ public class HomeFragment extends Fragment {
                 amount = amount - coef1;
             else
                 return;
-        } else {
+        } else if (type.equals("")) {
             try {
                 amount = Float.parseFloat(sWord);
                 if (
@@ -1429,52 +1336,29 @@ public class HomeFragment extends Fragment {
                 ) {
 
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                            .setMessage(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.")
-                            .setPositiveButton("بستن", (dialog, which) -> {
-                                dialog.dismiss();
-                            })
-                            .show();
-
-                    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                    textView.setTypeface(face);
-                    textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                    textView.setTextSize(13);
-
+                    showAlertDialog(" مقدار وارد شده باید ضریبی از " + mainCoef1 + " باشد.");
                     amount = 0;
-                    productAmountTxt.removeTextChangedListener(textWatcher1);
-                    productAmountTxt.setText("");
+                   /* productAmountTxt.setText("");
 
-                    productAmountTxt.addTextChangedListener(textWatcher1);
+
                     ivMinus.setVisibility(View.GONE);
-                    productAmountTxt.setVisibility(View.GONE);
+                    productAmountTxt.setVisibility(View.GONE);*/
                 }
             } catch (Exception ignored) {
             }
         }
 
 
-        productList.get(position).setAmount(amount);
-        List<InvoiceDetail> invDetails = Select.from(InvoiceDetail.class).where("INVUID = '" + Inv_GUID + "'").list();
-        ArrayList<InvoiceDetail> result = new ArrayList<>(invDetails);
-        CollectionUtils.filter(result, r -> r.PRD_UID.equals(productList.get(position).getI()));
-
-
-        if (checkRemainProduct.equals("1")){
-            double remain=productList.get(position).getRe();
-            if ( remain- amount < 0) {
-                showAlertDialog("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : ");
+        if (checkRemainProduct.equals("1")) {
+            double remain = productList.get(position).getRe();
+            if (remain - amount < 0) {
+                showAlertDialog("مقدار انتخاب شده بیشتر از موجودی کالا می باشد ، موجودی : " + format.format(remain));
 
                 if (remain % mainCoef1 != 0)
                     remain = 0;
 
-
-                productList.get(position).setAmount(remain);
-                productAmountTxt.removeTextChangedListener(textWatcher1);
-                productAmountTxt.setText(df.format(remain));
-                productAmountTxt.addTextChangedListener(textWatcher1);
-                productAmountTxt.setCursorVisible(false);
+              /*  productAmountTxt.setText(df.format(remain));
+                productAmountTxt.setCursorVisible(false);*/
 
                 if (result.size() > 0) {
                     InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
@@ -1489,7 +1373,8 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
-                progressBar.setVisibility(View.GONE);
+                productAdapter.notifyItemChanged(position);
+                progressBarCheckRemainProduct.setVisibility(View.GONE);
 
                 return;
             }
@@ -1498,38 +1383,30 @@ public class HomeFragment extends Fragment {
 
         //edit
         if (result.size() > 0) {
-
             InvoiceDetail invoiceDetail = Select.from(InvoiceDetail.class).where("INVDETUID ='" + result.get(0).INV_DET_UID + "'").first();
-
             if (amount == 0) {
 
                 if (invoiceDetail != null)
                     invoiceDetail.delete();
 
-                if (!type.equals("")) {
-                    productAmountTxt.removeTextChangedListener(textWatcher1);
+                productAdapter.notifyItemChanged(position);
+              /*  if (!type.equals("")) {
                     productAmountTxt.setText("");
-                    productAmountTxt.addTextChangedListener(textWatcher1);
-
                     ivMinus.setVisibility(View.GONE);
                     productAmountTxt.setVisibility(View.GONE);
                 }
-                productAmountTxt.setCursorVisible(false);
+                productAmountTxt.setCursorVisible(false);*/
                 setCounterForAmountOfOrder();
                 return;
             }
-
             if (invoiceDetail != null) {
-
                 invoiceDetail.INV_DET_QUANTITY = amount;
                 invoiceDetail.update();
             }
-
         }
 
         //Create
         else {
-
             if (amount != 0.0) {
                 InvoiceDetail invoicedetail = new InvoiceDetail();
                 invoicedetail.INV_DET_UID = UUID.randomUUID().toString();
@@ -1538,38 +1415,31 @@ public class HomeFragment extends Fragment {
                 invoicedetail.PRD_UID = productList.get(position).getI();
                 invoicedetail.save();
             }
-
         }
-        if (!type.equals("")) {
 
-            productAmountTxt.removeTextChangedListener(textWatcher1);
-            productAmountTxt.setText(df.format(amount));
-            productAmountTxt.addTextChangedListener(textWatcher1);
-        }
+
+       /* if (!type.equals(""))
+            productAmountTxt.setText(df.format(amount));*/
+
+
         setCounterForAmountOfOrder();
-
-        ivMinus.setVisibility(View.VISIBLE);
-        productAmountTxt.setVisibility(View.VISIBLE);
-
-
+        productAdapter.notifyItemChanged(position);
+//        if (amount > 0) {
+//            ivMinus.setVisibility(View.VISIBLE);
+//            productAmountTxt.setVisibility(View.VISIBLE);
+//        }
     }
-
 
     private void showAlertDialog(String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).setMessage(message).setPositiveButton("بستن", (dialog, which) -> {
             dialog.dismiss();
         }).show();
-
-        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
         textView.setTypeface(face);
         textView.setTextColor(getActivity().getResources().getColor(R.color.red_table));
         textView.setTextSize(13);
     }
 
-
-
     //endregion Custom Method
-
-
 }

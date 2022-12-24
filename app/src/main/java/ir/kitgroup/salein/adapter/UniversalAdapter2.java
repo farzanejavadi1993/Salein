@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniversalAdapter2 extends RecyclerView.Adapter<UniversalAdapter2.MyHolder> {
-
-    private final Object mLock = new Object();
-    private ArrayList<?> mOriginalValues;
     int viewID;
     List list;
     int variableID;
@@ -61,34 +59,15 @@ public class UniversalAdapter2 extends RecyclerView.Adapter<UniversalAdapter2.My
                 e.printStackTrace();
             }
         });
+
+
+
         try {
             onItemBindListener.onBind(holder.binding, position);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void clearList() {
-
-        list.clear();
-
-        try {
-           notifyDataSetChanged();
-        }catch (Exception ignored){}
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void update(List<?> objects) {
-        list.addAll(objects);
-        try {
-        notifyDataSetChanged();
-        }catch (Exception ignored){}
-
-
-    }
-
 
     @Override
     public int getItemCount() {
@@ -109,7 +88,6 @@ public class UniversalAdapter2 extends RecyclerView.Adapter<UniversalAdapter2.My
     }
 
     public void setOnTouchListener(OnItemTouchListener touchListener) {
-
         this.touchListener = touchListener;
     }
 
@@ -126,14 +104,13 @@ public class UniversalAdapter2 extends RecyclerView.Adapter<UniversalAdapter2.My
 
     }
 
-    public interface OnItemTouchListener {
-        void onTouch(View view, int position, MotionEvent motionEvent);
+    public interface OnItemBindListener {
+        void onBind(ViewDataBinding binding, int position);
     }
 
 
-    public interface OnItemBindListener {
-        void onBind(ViewDataBinding binding, int position);
-
+    public interface OnItemTouchListener {
+        void onTouch(View view, int position);
     }
 
 

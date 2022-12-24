@@ -121,7 +121,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
 
-    public ProductAdapter(Activity context, List<Product> productsList, SharedPreferences sharedPreferences, ArrayList<String> closeDateList, CompanyAPI api, int type) {
+    public ProductAdapter(Activity context, List<Product> productsList, SharedPreferences sharedPreferences, CompanyAPI api, int type) {
         this.closeDateList=closeDateList;
         this.api = api;
         this.type=type;
