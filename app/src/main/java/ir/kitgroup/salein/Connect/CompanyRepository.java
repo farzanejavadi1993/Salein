@@ -12,7 +12,6 @@ import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.InvoiceDetail;
 
 import ir.kitgroup.salein.classes.Util;
-import ir.kitgroup.salein.ui.companies.AllCompanyFragment;
 import ir.kitgroup.salein.ui.map.MapFragment;
 import ir.kitgroup.salein.ui.launcher.moreItem.orders.OrderListFragment;
 import ir.kitgroup.salein.models.Invoice;

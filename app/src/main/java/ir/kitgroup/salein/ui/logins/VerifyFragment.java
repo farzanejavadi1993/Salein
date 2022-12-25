@@ -77,6 +77,7 @@ public class VerifyFragment extends Fragment {
     private long timer_left = 180000;
 
     private String applicationVersion="";
+    private Account account;
     //endregion Parameter
 
 
@@ -164,6 +165,9 @@ public class VerifyFragment extends Fragment {
 
             //region Information Account From Server
             if (result.size() > 0) {
+                account.setiServer(result.get(0).getI());
+                account.save();
+
                 String IMEI = Util.getAndroidID(getActivity());
                 List<AppDetail> Apps = result.get(0).getApps();
                 CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
@@ -185,6 +189,8 @@ public class VerifyFragment extends Fragment {
 
             if (result == null)
                 return;
+            account.setiServer(result.get(0).getCurrent());
+            account.save();
             mainViewModel.getResultAddAccountToServer().setValue(null);
             navigate();
         });
@@ -235,6 +241,7 @@ public class VerifyFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void init() {
+
         userName = company.getUser();
         passWord = company.getPass();
 
@@ -294,8 +301,7 @@ public class VerifyFragment extends Fragment {
     }
 
     private void addCustomerToSerVer() {
-        Account account = Select.from(Account.class).first();
-
+        account = Select.from(Account.class).first();
         if (account != null) {
             account.setImei(Util.getAndroidID(getActivity()));
             account.setAppId(Util.APPLICATION_ID);

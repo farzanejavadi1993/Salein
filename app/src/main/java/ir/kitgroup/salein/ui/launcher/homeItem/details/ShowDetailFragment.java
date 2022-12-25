@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.R;
-import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.ActivityDetailBinding;
 import ir.kitgroup.salein.DataBase.Company;
 

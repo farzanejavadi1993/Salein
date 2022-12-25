@@ -4,14 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
-
-import com.google.android.material.button.MaterialButton;
 
 import ir.kitgroup.salein.R;
 

@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ir.kitgroup.salein.DataBase.Account;
-
 
 public class Util {
 

@@ -3,8 +3,6 @@ package ir.kitgroup.salein.classes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.flexbox.FlexboxLayoutManager;
-
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 
     private int currentPage = 0;

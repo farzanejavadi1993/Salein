@@ -57,7 +57,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="322" />
+            android:value="324" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -81,7 +81,7 @@
         </service>
 
         <receiver
-            android:name=".classes.AppSMSBroadcastReceiver"
+            android:name="ir.kitgroup.salein.classes.AppSMSBroadcastReceiver"
             android:exported="true"
             android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
             <intent-filter>

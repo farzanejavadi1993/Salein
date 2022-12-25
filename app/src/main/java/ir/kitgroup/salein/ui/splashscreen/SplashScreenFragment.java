@@ -182,6 +182,8 @@ public class SplashScreenFragment extends Fragment {
             mainViewModel.getResultCustomerFromServer().setValue(null);
 
             if (result.size() > 0) {
+                account.setiServer(result.get(0).getI());
+                account.save();
                 List<AppDetail> Apps = result.get(0).getApps();
                 CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
 
@@ -199,6 +201,8 @@ public class SplashScreenFragment extends Fragment {
         mainViewModel.getResultAddAccountToServer().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
                 return;
+            account.setiServer(result.get(0).getCurrent());
+            account.save();
             mainViewModel.getResultAddAccountToServer().setValue(null);
             checkUpdate();
         });

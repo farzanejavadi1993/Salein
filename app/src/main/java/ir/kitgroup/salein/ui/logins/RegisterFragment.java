@@ -213,6 +213,8 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             mainViewModel.getResultCustomerFromServer().setValue(null);
 
             if (result.size() > 0) {
+                account.setiServer(result.get(0).getI());
+                account.save();
                 String IMEI = Util.getAndroidID(getActivity());
                 List<AppDetail> Apps = result.get(0).getApps();
                 CollectionUtils.filter(Apps, l -> l.getAppId().equals(Util.APPLICATION_ID) && l.getIemi().equals(IMEI));
@@ -232,6 +234,8 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
             if (result == null)
                 return;
+            account.setiServer(result.get(0).getCurrent());
+            account.save();
             mainViewModel.getResultAddAccountToServer().setValue(null);
             navigate();
         });

@@ -23,6 +23,11 @@ public class ApplicationInformation {
                     appInfo.setApplication_code("1114");
                     appInfo.setGif_url("file:///android_asset/donyavi.gif");
                     break;
+
+                case "ir.kitgroup.saleinfingilkabab":
+                    appInfo.setApplication_code("1115");
+                    appInfo.setGif_url("file:///android_asset/loadingfood.gif");
+                    break;
             }
             return appInfo;
 
