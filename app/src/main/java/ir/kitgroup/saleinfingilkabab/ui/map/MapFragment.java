@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -79,6 +80,7 @@ import ir.kitgroup.saleinfingilkabab.classes.Util;
 import ir.kitgroup.saleinfingilkabab.classes.CustomProgress;
 import ir.kitgroup.saleinfingilkabab.databinding.FragmentMapBinding;
 import ir.kitgroup.saleinfingilkabab.DataBase.Company;
+import ir.kitgroup.saleinfingilkabab.ui.logins.RegisterFragmentDirections;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
@@ -166,6 +168,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
         }
 
 
+
+
+
         binding.mapView.getMapAsync(mapboxMap -> {
             this.mMapboxMap = mapboxMap;
 
@@ -212,6 +217,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
             binding.floating.setOnClickListener(v -> setupCurrentLocationButton());
 
         });
+
+
+
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(mLinearLayoutManager);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(binding.recyclerView.getContext(), mLinearLayoutManager.getOrientation());

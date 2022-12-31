@@ -577,7 +577,7 @@ public class PaymentFragment extends Fragment {
                 ChooseAddress2 = false;
 
                 if (latitude1 == 0 && longitude1 == 0)
-                    showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
+                    showAlert("هزینه توزیع محاسبه نشده است");
                 else
                     getTransportCost();
 

@@ -55,6 +55,8 @@ public class ShowDetailFragment extends Fragment {
                 .error(R.drawable.nopic)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
+
+
     }
 
 
@@ -73,8 +75,10 @@ public class ShowDetailFragment extends Fragment {
             myViewModel.getResultProduct().setValue(null);
 
             if (result.size() > 0) {
+                binding.tvName.setText(result.get(0).getN().trim());
                 if (!result.get(0).getDes().equals(""))
                 binding.tvDesc.setVisibility(View.VISIBLE);
+
 
                 binding.tvDescriptionProduct.setText(result.get(0).getDes());
             } else

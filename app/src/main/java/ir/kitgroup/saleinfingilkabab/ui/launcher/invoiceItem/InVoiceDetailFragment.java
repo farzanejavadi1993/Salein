@@ -54,6 +54,7 @@ import ir.kitgroup.saleinfingilkabab.Connect.CompanyAPI;
 import ir.kitgroup.saleinfingilkabab.Connect.CompanyViewModel;
 import ir.kitgroup.saleinfingilkabab.DataBase.Product;
 import ir.kitgroup.saleinfingilkabab.classes.dialog.DialogInstance;
+import ir.kitgroup.saleinfingilkabab.models.ModelInvoice;
 import ir.kitgroup.saleinfingilkabab.ui.launcher.homeItem.DescriptionAdapter;
 import ir.kitgroup.saleinfingilkabab.classes.CustomProgress;
 import ir.kitgroup.saleinfingilkabab.classes.Utilities;
@@ -223,6 +224,15 @@ public class InVoiceDetailFragment extends Fragment {
                 binding.txtDate.setText(result.getInvoice().get(0).INV_DUE_DATE_PERSIAN);
 
 
+            ArrayList<InvoiceDetail> resultPeyk = new ArrayList<>(result.getInvoiceDetail());
+            CollectionUtils.filter(resultPeyk, i -> i.PRD_UID.equalsIgnoreCase(Transport_GUID));
+            if (resultPeyk.size() > 0) {
+                sumTransport = Double.parseDouble(resultPeyk.get(0).INV_DET_TOTAL_AMOUNT);
+                binding.layoutTransport.setVisibility(View.VISIBLE);
+                binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
+            }
+
+
             CollectionUtils.filter(result.getInvoiceDetail(), i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
             invDetails.clear();
             invDetails.addAll(result.getInvoiceDetail());
@@ -255,8 +265,8 @@ public class InVoiceDetailFragment extends Fragment {
 
             if (counter == invDetails.size()) {
 
-                if (invDetails.size() > 0) {
-                    ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
+               if (invDetails.size() > 0) {
+                   /* ArrayList<InvoiceDetail> invDtls = new ArrayList<>(invDetails);
                     CollectionUtils.filter(invDtls, i -> i.PRD_UID.equalsIgnoreCase(Transport_GUID));
 
                     if (invDtls.size() > 0) {
@@ -265,7 +275,7 @@ public class InVoiceDetailFragment extends Fragment {
                             binding.tvSumTransport.setText(format.format(sumTransport) + " ریال ");
                             binding.layoutTransport.setVisibility(View.VISIBLE);
                         }
-                    }
+                    }*/
 
                     CollectionUtils.filter(invDetails, i -> !i.PRD_UID.equalsIgnoreCase(Transport_GUID));
                 }
@@ -472,8 +482,7 @@ public class InVoiceDetailFragment extends Fragment {
             if (invoiceDetailList.size() == 0) {
                 showAlert("سفارشی وجود ندارد");
                 return;
-            }
-            else if (invoiceDetails.size() > 0) {
+            } else if (invoiceDetails.size() > 0) {
                 showAlert("برای ردیف های سفارش مقدار وارد کنید و یا ردیف با مقدار صفر را حذف کنید .");
                 return;
             }
@@ -662,16 +671,16 @@ public class InVoiceDetailFragment extends Fragment {
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void initRecyclerViewInvoiceDetail() {
         invoiceDetailList.clear();
-        invoiceDetailAdapter = new InvoiceDetailAdapter(getActivity(), invoiceDetailList, type, sharedPreferences,api,Inv_GUID);
+        invoiceDetailAdapter = new InvoiceDetailAdapter(getActivity(), invoiceDetailList, type, sharedPreferences, api, Inv_GUID);
         binding.recyclerDetailInvoice.setAdapter(invoiceDetailAdapter);
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerDetailInvoice.setHasFixedSize(false);
         binding.recyclerDetailInvoice.setNestedScrollingEnabled(false);
 
-         invoiceDetailAdapter.setOnClickListener(Prd_UID ->
-                 setNumberOfOrderRow()
-         );
+        invoiceDetailAdapter.setOnClickListener(Prd_UID ->
+                setNumberOfOrderRow()
+        );
 
         invoiceDetailAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

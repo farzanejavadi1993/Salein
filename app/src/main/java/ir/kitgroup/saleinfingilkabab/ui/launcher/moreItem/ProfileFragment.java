@@ -85,9 +85,5 @@ public class ProfileFragment extends Fragment {
         sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        sharedPreferences.edit().putBoolean("loginSuccess", false).apply();
-    }
+
 }

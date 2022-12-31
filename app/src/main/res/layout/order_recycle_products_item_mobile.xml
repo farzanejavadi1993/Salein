@@ -48,6 +48,7 @@
         </RelativeLayout>
 
         <TextView
+            android:singleLine="true"
             android:id="@+id/order_recycle_item_product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
