@@ -11,7 +11,7 @@
         <shape android:shape="oval">
             <gradient android:endColor="@color/purple_700"
                 android:centerColor="@color/purple_500"
-                android:startColor="@color/purple_200"/>
+                android:startColor="@color/purple_500"/>
         </shape>
     </item>
 </layer-list>

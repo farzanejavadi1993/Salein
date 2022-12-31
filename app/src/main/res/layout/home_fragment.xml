@@ -11,7 +11,6 @@
         android:focusable="true">
 
 
-
         <LinearLayout
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
@@ -20,109 +19,98 @@
             android:orientation="vertical">
 
 
-            <LinearLayout
+            <RelativeLayout
+                android:background="@color/purple_700"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gradient_home"
-                android:orientation="vertical">
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <RelativeLayout
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_gravity="center_vertical"
+                    android:id="@+id/btn_company_branches"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginRight="12dp">
 
-                    <RelativeLayout
-
-                        android:id="@+id/btn_company_branches"
+                    <TextView
+                        android:id="@+id/tvTitleStore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="75dp"
-                        android:layout_marginRight="12dp">
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@+id/iv_store_left"
+                        android:singleLine="true"
+                        android:text="خرید از فروشگاه"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
 
-                        <TextView
-                            android:id="@+id/tvTitleStore"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="8dp"
-                            android:layout_toLeftOf="@+id/iv_store_left"
-                            android:singleLine="true"
-                            android:text="خرید از فروشگاه"
-                            android:textColor="@color/white"
-                            android:textSize="12dp" />
-
-                        <TextView
-                            android:id="@+id/tvNameStore"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/tvTitleStore"
-                            android:layout_marginRight="8dp"
-                            android:layout_toLeftOf="@+id/iv_store_left"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textSize="12dp"
-                            android:textStyle="bold"
-                            tools:text="گوشت دنیوی" />
-
-                        <ImageView
-                            android:id="@+id/iv_store_left"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:padding="@dimen/margin4"
-                            android:rotation="270"
-                            app:srcCompat="@drawable/ic_left_icon" />
-                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvNameStore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvTitleStore"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@+id/iv_store_left"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        tools:text="گوشت دنیوی" />
 
                     <ImageView
-                        android:id="@+id/iv_filter"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerInParent="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:srcCompat="@drawable/ic_filter" />
-
+                        android:id="@+id/iv_store_left"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="@dimen/margin4"
+                        android:rotation="270"
+                        app:srcCompat="@drawable/ic_left_icon" />
                 </RelativeLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/order_recyclerView_productLevel1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="9.5dp" />
+                <ImageView
+                    android:layout_marginLeft="12dp"
+                    android:id="@+id/iv_filter"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/ic_filter" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginRight="25dp"
-                    android:layout_marginBottom="@dimen/margin10"
-                    android:id="@+id/order_recyclerView_productLevel2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin8"
-                    android:layout_marginEnd="9.5dp"
-                    android:layoutDirection="rtl" />
-            </LinearLayout>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:background="@color/purple_500"
+                android:id="@+id/order_recyclerView_productLevel1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:elevation="@dimen/margin4"
+                android:id="@+id/order_recyclerView_productLevel2"
+                android:layout_width="match_parent"
+                android:paddingTop="@dimen/margin10"
+                android:paddingBottom="@dimen/margin10"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layoutDirection="rtl" />
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:background="@color/purple_200"
                 android:orientation="vertical">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:background="@drawable/background_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <androidx.recyclerview.widget.RecyclerView
+
+                <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/order_recyclerView_customTab"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -134,12 +122,11 @@
                         android:id="@+id/order_recyclerView_product"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="8dp"
                         android:layout_marginBottom="54dp"
                         android:layoutDirection="rtl"
 
                         />
-                </LinearLayout>
+
 
                 <ProgressBar
                     android:id="@+id/progressbar"

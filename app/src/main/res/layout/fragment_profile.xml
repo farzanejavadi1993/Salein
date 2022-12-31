@@ -3,20 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
+        android:orientation="vertical">
+
         <RelativeLayout
-            android:id="@+id/relativeLayout3"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-
-            android:elevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:targetApi="lollipop">
+            android:background="@color/purple_500">
 
             <ImageView
                 android:id="@+id/iv_back_fragment"
@@ -30,236 +25,158 @@
                 android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
-         />
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
             <TextView
-
-                android:textColor="@color/white"
                 style="@style/launcher_toolbar_TextView"
                 android:layout_centerInParent="true"
                 android:layout_marginEnd="@dimen/margin10"
                 android:layout_toLeftOf="@+id/iv_back_fragment"
                 android:gravity="center"
                 android:text="حساب کاربری"
+                android:textColor="@color/medium_color"
                 android:textStyle="bold" />
 
-
         </RelativeLayout>
-        <LinearLayout
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            app:cardCornerRadius="12dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="@dimen/margin10"
+            android:layout_margin="25dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:background="@drawable/curve_background" >
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="8">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="22dp"
-                    android:layout_weight="1"
-                    android:text="Button"
-                    app:cardCornerRadius="15dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardElevation="15dp"
-                  >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="55dp"
-                            android:gravity="center"
-                            android:id="@+id/txtName"
-                            android:textColor="@color/medium_color"
-                            android:textSize="13dp"
-                            android:textStyle="bold" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="35dp"
-                            android:layout_marginRight="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="16dp"
-                                android:layout_toLeftOf="@+id/ivPhone"
-                                android:gravity="right"
-                                android:text="شماره تلفن"
-                                android:textColor="#818181"
-                                android:textSize="13dp" />
-
-
-                            <TextView
-                                android:id="@+id/tvPhone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="16dp"
-                                android:layout_toLeftOf="@+id/ivPhone"
-                                android:gravity="right"
-                                android:textColor="@color/medium_color"
-                                android:textSize="13dp"
-                                android:textStyle="bold" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginLeft="35dp"
-                                android:layout_marginTop="@dimen/margin10"
-                                android:layout_marginRight="35dp"
-                                android:background="#eee" />
-                        </LinearLayout>
-
-
-                        <RelativeLayout
-
-                            android:id="@+id/cardAddress1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginRight="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/address1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="16dp"
-                                android:gravity="right"
-                                android:text="آدرس 1"
-                                android:textColor="#818181"
-                                android:textSize="13dp" />
-
-
-
-                            <TextView
-
-                                android:id="@+id/tvAddress1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/address1"
-                                android:layout_marginRight="16dp"
-                                android:layout_toLeftOf="@+id/ivPhone"
-                                android:textColor="@color/medium_color"
-                                android:textSize="13dp"
-                                android:textStyle="bold" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_below="@+id/tvAddress1"
-                                android:layout_marginLeft="35dp"
-                                android:layout_marginTop="@dimen/margin10"
-                                android:layout_marginRight="35dp"
-                                android:background="#eee" />
-
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                           android:visibility="gone"
-                            android:id="@+id/cardAddress2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginRight="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/address2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="16dp"
-                                android:gravity="right"
-                                android:text="آدرس 2"
-                                android:textColor="#818181"
-                                android:textSize="13dp" />
-
-
-                            <TextView
-
-                                android:id="@+id/tvAddress2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/address2"
-                                android:layout_marginRight="16dp"
-                                android:layout_toLeftOf="@+id/ivPhone"
-                                android:textColor="@color/medium_color"
-                                android:textSize="13dp"
-                                android:textStyle="bold" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_below="@+id/tvAddress2"
-                                android:layout_marginLeft="35dp"
-                                android:layout_marginTop="@dimen/margin10"
-                                android:layout_marginRight="35dp"
-                                android:background="#eee" />
-
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="8.5">
+                android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    app:srcCompat="@drawable/profile"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_marginTop="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/profile" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/medium_color"
+                    android:textSize="@dimen/text_medium_mobile_size"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:hint="شماره تلفن همراه"
+                    android:layoutDirection="rtl"
+                    android:textColorHint="@color/medium_color"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:helperTextTextAppearance="@style/MyHelperTextInputLayout"
+                   >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtMobile"
+                        android:enabled="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/iransans"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:textAlignment="center"
+                        android:textDirection="ltr"
+                        android:textSize="14sp"
+                        tools:text="09159999999" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:id="@+id/cardAddress1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    app:cardElevation="@dimen/margin10"
+                    android:hint="آدرس 1"
+                    app:cardCornerRadius="@dimen/margin10"
+                    >
+                    <RelativeLayout
+                        android:layout_marginLeft="@dimen/margin10"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp">
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:id="@+id/edtAddress1"
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/medium_color"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13dp"
+                            tools:text="مشهد خیام جانباز 3" />
+                        <ImageView
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_edit"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+                    </RelativeLayout>
 
 
-    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:id="@+id/cardAddress2"
+                    app:cardElevation="@dimen/margin10"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:hint="آدرس 1"
+                    app:cardCornerRadius="@dimen/margin10"
+                    >
+                    <RelativeLayout
+                        android:layout_marginLeft="@dimen/margin10"
+                        android:layout_marginRight="@dimen/margin10"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp">
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:id="@+id/edtAddress2"
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/medium_color"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13dp"
+                            tools:text="مشهد خیام جانباز 3" />
+                        <ImageView
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_edit"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+                    </RelativeLayout>
+
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </layout>

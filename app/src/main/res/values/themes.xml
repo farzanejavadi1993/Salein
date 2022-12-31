@@ -25,6 +25,13 @@
         <item name="android:textColor">#474747</item>
     </style>
 
+    <style name="MyHelperTextInputLayout" >
+        <item name="fontFamily">@font/iransans</item>
+        <item name="android:textDirection">rtl</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/medium_color</item>
+    </style>
 
     <style name="Widget.BottomNavigationView"
         parent="Widget.Design.BottomNavigationView">

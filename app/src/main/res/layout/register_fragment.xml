@@ -386,7 +386,7 @@
                     android:fontFamily="@font/iransans"
                     android:lineSpacingExtra="10dp"
                     android:text="ثبت و ادامه"
-                    android:textColor="#fff"
+                    android:textColor="@color/medium_color"
                     android:textSize="14dp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"

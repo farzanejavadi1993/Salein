@@ -13,10 +13,9 @@
     <color name="teal_200">#fff</color>-->
 
 
-    <color name="purple_200">#FFC107</color>
-    <color name="purple_500">#FFC107</color>
-    <color name="purple_700">#FF9800</color>
-    <color name="teal_200">#fff</color>
+    <color name="purple_200">#E8262E</color>
+    <color name="purple_500">#FCDC65</color>
+    <color name="purple_700">#FDC300</color>
 
 
    <!-- color productLevel1-->
@@ -50,7 +49,7 @@
     <color name="favorite_color">#FFE716</color>
     <color name="invite_friend_color">#FF0000</color>
     <color name="black_l">#6C6C6C</color>
-    <color name="black_light">#2f2f2f</color>
+    <color name="black_light">#272928</color>
     <color name="colorGreenLight">#12E613</color>
     <color name="color_svg">#333333</color>
     <color name="invalid_name_color">#8a8a8a</color>

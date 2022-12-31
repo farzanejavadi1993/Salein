@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,34 +11,43 @@
     android:orientation="vertical">
 
     <RelativeLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
-
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/order_list_item_recycle_img"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            app:siBorderColor="@color/white"
+            app:siBorderWidth="0.5dp"
+            app:siRadius="@dimen/margin8" />
         <RelativeLayout
+            android:layout_toLeftOf="@+id/order_list_item_recycle_img"
             android:id="@+id/rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="12dp"
             android:layout_toRightOf="@+id/order_list_item_recycle_img_delete"
-
             android:gravity="right"
             android:orientation="horizontal">
 
             <TextView
+                tools:text="رب گوجه فرنگی مهرام"
                 android:id="@+id/order_list_item_recycle_txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="4dp"
-                android:textColor="@color/black_light"
-                android:textSize="11dp" />
+                android:textColor="@color/medium_color"
+                android:textSize="13dp"
+                android:textStyle="bold" />
 
             <TextView
+                tools:text="25%"
                 android:id="@+id/order_list_item_recycle_txt_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,6 +59,7 @@
 
 
         <RelativeLayout
+            android:layout_toLeftOf="@+id/order_list_item_recycle_img"
             android:id="@+id/rll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,28 +69,28 @@
             android:layout_marginRight="12dp">
 
             <RelativeLayout
+                android:background="@drawable/background_botton"
                 android:id="@+id/layout_amount"
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
                 <ImageView
+                    android:layout_marginLeft="5dp"
                     android:id="@+id/iv_minus_invoice"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/order_list_item_recycle_editText"
-                    android:background="@drawable/minus_background"
+                 android:layout_alignParentLeft="true"
                     app:srcCompat="@drawable/ic_minus_red" />
 
                 <EditText
+                    android:layout_centerInParent="true"
                     android:id="@+id/order_list_item_recycle_editText"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/iv_max_invoice"
-
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/iransans"
                     android:gravity="center"
@@ -98,24 +107,24 @@
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/plus_background"
+                    android:layout_marginRight="5dp"
                     app:srcCompat="@drawable/ic_plus_white" />
-
-                <TextView
-                    android:id="@+id/txtError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/iv_minus_invoice"
-                    android:textColor="@color/invite_friend_color"
-                    android:textSize="11dp" />
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/layout_amount"
+                android:textColor="@color/invite_friend_color"
+                android:textSize="11dp"
+                tools:text="خطا در دریافت مانده" />
 
             <TextView
-
+                tools:text="45000 ریال"
                 android:id="@+id/order_list_item_recycle_txt_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,7 +134,7 @@
                 android:textSize="@dimen/order_list_item_recycle_txt_price_size" />
 
             <TextView
-
+                tools:text="120000 ریال"
                 android:id="@+id/order_list_item_recycle_txt_sumPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
