@@ -106,6 +106,8 @@ public class LoginFragment extends Fragment {
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
+//            NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
+//            Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 
         companyViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {

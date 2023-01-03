@@ -367,7 +367,7 @@ public class PaymentFragment extends Fragment {
                 InvoiceDetail.deleteInTx(invoiceDetails);
 
                 //region Delete Inv_GUID
-                String name = company.getInskId().split("ir.kitgroup.")[1];
+                String name = company.getI();
                 Inv_GUID = sharedPreferences.getString(name, "");
                 sharedPreferences.edit().putString("Inv_GUID", "").apply();
                 sharedPreferences.edit().putString(name, "").apply();
@@ -935,7 +935,7 @@ public class PaymentFragment extends Fragment {
             } else if (AllTimeDelivery.size() > 0 && !AllTimeDelivery.get(0).equals("") && chooseTimeDelivery.equals("")) {
                 Toasty.warning(getActivity(), "زمان ارسال سفارش را تعیین کنید", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (!isCalculateTransport) {
+            } else if (!isCalculateTransport/* && Ord_TYPE!=OrderTypeApp*/) {
                 Toasty.warning(getActivity(), "برای محاسبه هزینه ارسال آدرس دارای مشخصات جغرافیای را انتخاب کنید.", Toast.LENGTH_LONG).show();
                 return;
             } else {
@@ -1095,7 +1095,7 @@ public class PaymentFragment extends Fragment {
             sharedPreferences.edit().putBoolean("vip", false).apply();
             sharedPreferences.edit().putBoolean("discount", false).apply();
             dialogSendOrder.dismiss();
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < remain; i++) {
                 Navigation.findNavController(binding.getRoot()).popBackStack();
             }
         });

@@ -43,7 +43,8 @@ public class CompanyRepository {
         Gson gson1 = new Gson();
         Type typeJsonObject = new TypeToken<Util.JsonObjectAccount>() {
         }.getType();
-        return api.addAccount(user,passWord,gson1.toJson(jsonObjectAcc, typeJsonObject),"");
+        gson1.toJson(jsonObjectAcc, typeJsonObject);
+        return api.addAccount(user,passWord,jsonObjectAcc);
     }
 
     public Observable<Integer> getTransportationCost(double latCustomer,double longCustomer,double latCompany,double longCompany,double invoicePrice) {

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 
 import io.reactivex.Observable;
 
+import ir.kitgroup.saleinfingilkabab.classes.Util;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -33,7 +34,7 @@ public interface CompanyAPI {
 
     @POST("CreateAccount")
     Observable<String> addAccount(@Query("userName") String userName, @Query("password") String password
-            , @Body() String jsonObject, @Query("virtualParam") String virtualParam);
+            , @Body() Util.JsonObjectAccount jsonObject);
 
     @GET("CalculateDelivery")
     Observable<Integer> getTransportationCost(@Query("latCustomer") double latCustomer, @Query("longCustomer") double longCustomer, @Query("latCompany") double latCompany,

@@ -393,6 +393,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         locations.setLatitude(latitude);
         locations.setLongitude(longitude);
 
+        location=locations;
         locations.save();
     }
 

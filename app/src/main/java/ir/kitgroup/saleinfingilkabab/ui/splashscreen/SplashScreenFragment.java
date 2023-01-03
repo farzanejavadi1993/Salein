@@ -266,7 +266,7 @@ public class SplashScreenFragment extends Fragment {
 
     private void iniAppVersion() {
         try {
-            binding.tvversion.setText(String.format("%s%s", getString(R.string.application_version), appVersion()));
+            binding.tvversion.setText(String.format("%s%s", getString(R.string.application_version)+" ", appVersion()));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

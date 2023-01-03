@@ -67,11 +67,10 @@ public class LauncherActivity extends AppCompatActivity {
                     getDoActionInHomeFragment();
 
                 else {
-                   // if (!Select.from(SaleinShop.class).first().isPublicApp() && navController.getBackQueue().size() == 2)
+                    if (!Select.from(SaleinShop.class).first().isPublicApp())
                         finishApp();
-
-                  //  else
-                       // super.onBackPressed();
+                    else
+                       super.onBackPressed();
                 }
                 break;
 

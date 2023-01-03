@@ -240,6 +240,8 @@
             app:popUpTo="@id/RegisterFragment"
             app:popUpToInclusive="true" />
         <action
+            app:popUpTo="@id/LoginFragment"
+            app:popUpToInclusive="true"
             android:id="@+id/actionGoToHomeFragment"
             app:destination="@id/HomeFragment" />
         <action
@@ -295,7 +297,7 @@
         <action
             android:id="@+id/actionGoToRegisterFragment"
             app:destination="@id/RegisterFragment"
-            app:popUpTo="@id/VerifyFragment"
+            app:popUpTo="@id/RegisterFragment"
             app:popUpToInclusive="true" />
         <argument
             android:name="mobile"
