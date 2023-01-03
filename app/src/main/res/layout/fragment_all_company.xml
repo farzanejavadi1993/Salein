@@ -86,6 +86,7 @@
 
         </LinearLayout>
         <ProgressBar
+            android:indeterminateTint="@color/color_accent"
             android:visibility="gone"
             android:id="@+id/progressbar"
             android:layout_centerInParent="true"

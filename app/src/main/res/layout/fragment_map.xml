@@ -97,6 +97,7 @@
                 >
 
                 <ProgressBar
+                    android:indeterminateTint="@color/color_accent"
                     android:id="@+id/search_progress_bar"
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
@@ -164,6 +165,7 @@
 
 
                     <ProgressBar
+                        android:indeterminateTint="@color/color_accent"
                         android:id="@+id/pro"
                         android:layout_width="30dp"
                         android:layout_height="30dp"

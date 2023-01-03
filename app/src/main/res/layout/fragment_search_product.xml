@@ -49,6 +49,7 @@
         </RelativeLayout>
 
         <ProgressBar
+            android:indeterminateTint="@color/color_accent"
             android:id="@+id/pro"
             android:visibility="gone"
             android:layout_centerInParent="true"

@@ -5,7 +5,7 @@
     android:id="@+id/order_recycle_item_product_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
+    android:layout_margin="3dp"
     android:background="@drawable/background_home"
     app:cardElevation="@dimen/margin2">
 
@@ -108,15 +108,17 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/l_Price"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="@dimen/margin10"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="12dp">
 
 
             <TextView
+
                 android:id="@+id/edt_description_temp"
                 style="@style/normal_text"
+
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="@dimen/margin10"
                 android:background="@android:color/transparent"
@@ -137,6 +139,7 @@
             android:layout_toRightOf="@+id/layout_Image">
 
             <ProgressBar
+                android:indeterminateTint="@color/color_accent"
                 android:id="@+id/progress"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

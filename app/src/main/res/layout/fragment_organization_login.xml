@@ -148,6 +148,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ProgressBar
+                    android:indeterminateTint="@color/color_accent"
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="30dp"

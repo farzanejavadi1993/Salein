@@ -107,6 +107,7 @@
 
 
         <ProgressBar
+
             android:indeterminateTint="@color/color_accent"
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
@@ -128,6 +129,7 @@
             android:layout_marginBottom="25dp">
 
             <ProgressBar
+                android:indeterminateTint="@color/color_accent"
                 android:id="@+id/progressResendCode"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="22dp"

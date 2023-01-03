@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+
         android:clickable="true"
         android:focusable="true">
 
@@ -15,7 +15,7 @@
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="#F1F1F1"
             android:orientation="vertical">
 
 
@@ -93,6 +93,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:elevation="@dimen/margin4"
+                android:layout_marginRight="3dp"
+                android:layout_marginLeft="3dp"
                 android:id="@+id/order_recyclerView_productLevel2"
                 android:layout_width="match_parent"
                 android:paddingTop="@dimen/margin10"
@@ -127,6 +129,7 @@
 
 
                 <ProgressBar
+
                     android:indeterminateTint="@color/color_accent"
                     android:id="@+id/progressbar"
                     android:layout_width="30dp"

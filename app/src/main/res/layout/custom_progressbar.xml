@@ -21,6 +21,7 @@
 
 
     <ProgressBar
+        android:indeterminateTint="@color/color_accent"
         android:layout_centerVertical="true"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/spin_kit"
