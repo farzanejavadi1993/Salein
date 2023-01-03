@@ -100,11 +100,11 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="22dp"
                     android:layout_marginBottom="15dp"
-                    android:background="@drawable/background_return"
+                    android:background="@drawable/bottom_background"
+                    app:backgroundTint="@null"
                     android:fontFamily="@font/iransans"
                     android:text="@string/returned"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
+                  style="@style/bold_text_bottom"
                     android:visibility="gone"
                     app:cornerRadius="@dimen/margin10" />
             </RelativeLayout>

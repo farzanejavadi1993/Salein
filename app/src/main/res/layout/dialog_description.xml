@@ -83,17 +83,16 @@
 
 
                         <com.google.android.material.button.MaterialButton
-                           android:layout_centerInParent="true"
                             android:id="@+id/btn_register_description"
-                            android:backgroundTint="@color/white"
-                            app:strokeWidth="1dp"
-                            app:cornerRadius="15dp"
-                            android:text="ثبت"
-                            android:textColor="@color/colorGreenLight"
-                            app:strokeColor="@color/colorGreenLight"
                             android:layout_width="100dp"
-                            android:layout_height="wrap_content">
-                        </com.google.android.material.button.MaterialButton>
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:backgroundTint="@color/white"
+                            android:text="ثبت"
+                            android:textColor="@color/color_accent"
+                            app:cornerRadius="15dp"
+                            app:strokeColor="@color/color_accent"
+                            app:strokeWidth="1dp"></com.google.android.material.button.MaterialButton>
 
                     </RelativeLayout>
 

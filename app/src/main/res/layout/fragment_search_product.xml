@@ -56,12 +56,12 @@
             android:layout_height="30dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginBottom="54dp"
-            android:layout_marginTop="@dimen/margin10"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
-            android:layout_height="match_parent"/>
+
+            android:layout_marginBottom="54dp" />
         <TextView
             android:id="@+id/txtError"
             android:textSize="12dp"

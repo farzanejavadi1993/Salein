@@ -16,35 +16,30 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
+
                 <TextView
-                    android:layout_alignParentRight="true"
                     android:id="@+id/tvTitle"
+                    style="@style/bold_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="22dp"
                     android:lineSpacingExtra="16dp"
-                    android:text="فیلترها"
-                    android:textColor="@color/medium_color"
-                    android:textSize="14dp"
-                    android:textStyle="bold" />
+                    android:text="فیلترها" />
 
 
                 <TextView
                     android:id="@+id/tvDeleteFilter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/bold_text"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="22dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:lineSpacingExtra="12dp"
                     android:text="حذف فیلتر ها"
-                    android:textColor="@color/purple_700"
-                    android:textSize="12dp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_accent" />
 
 
 
@@ -152,6 +147,7 @@
 
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:theme="@style/SCBSwitch"
                     android:id="@+id/switchVip"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
@@ -193,6 +189,7 @@
 
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:theme="@style/SCBSwitch"
                     android:id="@+id/switchDiscount"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"

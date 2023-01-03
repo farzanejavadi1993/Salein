@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+
+    <dimen name="normal_size">13dp</dimen>
+    <dimen name="large_size">14dp</dimen>
+    <dimen name="x_large_size">16dp</dimen>
+
+
+
     <dimen name="login_toolbar_elevation">4dp</dimen>
     <dimen name="login_logo_size">300dp</dimen>
     <dimen name="login_logo_margin_left_right">48dp</dimen>
     <dimen name="normal_margin_top">18dp</dimen>
     <dimen name="icon_normal_size">30dp</dimen>
     <dimen name="icon_normal_padding_size">5dp</dimen>
-    <dimen name="text_normal_mobile_size">12dp</dimen>
+    <dimen name="text_normal_mobile_size">13dp</dimen>
+
     <dimen name="text_medium_mobile_size">11dp</dimen>
     <dimen name="text_x_large_mobile_size">14dp</dimen>
     <dimen name="text_large_mobile_size">13dp</dimen>
@@ -15,8 +23,6 @@
     <dimen name="normal_left_right_child_margin">16dp</dimen>
     <dimen name="normal_top_bottom_child_margin">12dp</dimen>
 
-    <dimen name="text_normal_tablet_size">12dp</dimen>
-    <dimen name="text_xx_large_mobile_size">15dp</dimen>
     <dimen name="box_radius">12dp</dimen>
     <dimen name="bottom_height_size">60dp</dimen>
     <dimen name="normal_left_right_margin">22dp</dimen>

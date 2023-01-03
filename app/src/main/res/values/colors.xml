@@ -12,10 +12,11 @@
     <color name="purple_700">#c85a54</color>
     <color name="teal_200">#fff</color>-->
 
-
-    <color name="purple_200">#E8262E</color>
-    <color name="purple_500">#FCDC65</color>
-    <color name="purple_700">#FDC300</color>
+    <color name="medium_color">#474747</color>
+    <color name="color_text_screen">#000000</color>
+    <color name="color_accent">#FF018786</color>
+    <color name="color_primary">#FCDC65</color>
+    <color name="color_primary_dark">#FDC300</color>
 
 
    <!-- color productLevel1-->
@@ -31,7 +32,6 @@
 
 
 
-    <color name="teal_700">#FF018786</color>
 
     <color name="black">#000</color>
 
@@ -64,7 +64,7 @@
     <color name="linear_print_background_color">#259A8F</color>
     <color name="very_light_pink">#c4c4c4</color>
     <color name="pale_gray">#f3f2f8</color>
-    <color name="medium_color">#474747</color>
+
     <color name="stroke_color">#ddd</color>
     <color name="colorcode">#232323</color>
 
@@ -79,7 +79,7 @@
     <color name="red_table">#E92228</color>
     <color name="pink_table">#9C27B0</color>
     <color name="blue_table">#00BFFF</color>
-    <color name="green_table">#56B156</color>
+    <color name="green_table">#4CAF50</color>
     <color name="yellow_table">#FFEB3B</color>
     <color name="white_light">#fafafa</color>
     <color name="orange_light">#F39E83</color>

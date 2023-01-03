@@ -32,9 +32,6 @@ public class CompanyRepository {
     }
 
 
-
-
-
     public Observable<String> getInquiryAccount(String user,String passWord,String mobile) {
         return api.getInquiryAccount1(user,passWord, mobile,"", "", 1, 1);
     }
@@ -135,7 +132,6 @@ public class CompanyRepository {
 
 
     public Observable<String> sendOrder(String user,String passWord,String json,String numberPos) {
-
         return api.sendOrder(user,passWord,json,"",numberPos);
     }
 

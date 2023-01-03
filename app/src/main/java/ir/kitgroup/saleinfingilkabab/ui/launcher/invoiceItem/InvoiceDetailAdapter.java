@@ -180,8 +180,8 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         if (prd1.size() > 0) {
             Picasso.get()
                     .load("http://" + company.getIp1() + "/GetImage?productId=" + prd1.get(0).getI() + "&width=200&height=200")
-                    .error(R.drawable.nopic)
-                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.loading)
+                    .placeholder(R.drawable.loading)
                     .into(holder.imageView);
 
 

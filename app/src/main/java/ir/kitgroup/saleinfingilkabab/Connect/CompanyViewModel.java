@@ -32,7 +32,6 @@ import ir.kitgroup.saleinfingilkabab.DataBase.InvoiceDetail;
 
 import ir.kitgroup.saleinfingilkabab.DataBase.Unit;
 
-import ir.kitgroup.saleinfingilkabab.classes.Util;
 import ir.kitgroup.saleinfingilkabab.models.CustomTab;
 import ir.kitgroup.saleinfingilkabab.models.Description;
 import ir.kitgroup.saleinfingilkabab.models.Invoice;

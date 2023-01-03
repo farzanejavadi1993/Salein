@@ -1,7 +1,6 @@
 package ir.kitgroup.saleinfingilkabab.ui.launcher.moreItem;
 
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinfingilkabab.DataBase.Account;
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.R;
 import ir.kitgroup.saleinfingilkabab.databinding.FragmentProfileBinding;
 @AndroidEntryPoint
@@ -65,11 +65,13 @@ public class ProfileFragment extends Fragment {
 
 
             binding.cardAddress1.setOnClickListener(view1 -> {
+                Locations.deleteAll(Locations.class);
               NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),1);
               Navigation.findNavController(binding.getRoot()).navigate(action);
           });
 
             binding.cardAddress2.setOnClickListener(view1 -> {
+                Locations.deleteAll(Locations.class);
                 NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),2);
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             });

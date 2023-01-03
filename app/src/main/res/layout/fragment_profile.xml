@@ -11,7 +11,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/purple_500">
+            android:background="@color/color_primary">
 
             <ImageView
                 android:id="@+id/iv_back_fragment"
@@ -28,14 +28,13 @@
                 app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
             <TextView
-                style="@style/launcher_toolbar_TextView"
+                style="@style/bold_text"
                 android:layout_centerInParent="true"
                 android:layout_marginEnd="@dimen/margin10"
                 android:layout_toLeftOf="@+id/iv_back_fragment"
                 android:gravity="center"
                 android:text="حساب کاربری"
-                android:textColor="@color/medium_color"
-                android:textStyle="bold" />
+                />
 
         </RelativeLayout>
 
@@ -76,8 +75,8 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="24dp"
                     android:hint="شماره تلفن همراه"
+
                     android:layoutDirection="rtl"
-                    android:textColorHint="@color/medium_color"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -93,15 +92,18 @@
                         android:fontFamily="@font/iransans"
                         android:inputType="number"
                         android:maxLength="11"
+
                         android:textAlignment="center"
                         android:textDirection="ltr"
-                        android:textSize="14sp"
+                        android:textColor="#88494848"
+                        style="@style/large_bold_text"
                         tools:text="09159999999" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
+                    android:layout_marginBottom="24dp"
                     android:id="@+id/cardAddress1"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -116,16 +118,20 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_width="match_parent"
                         android:layout_height="56dp">
+
                         <TextView
-                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
+                            android:layout_toRightOf="@+id/edit1"
                             android:id="@+id/edtAddress1"
-                            android:layout_alignParentRight="true"
-                            android:textColor="@color/medium_color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/medium_color"
                             android:textSize="13dp"
                             tools:text="مشهد خیام جانباز 3" />
                         <ImageView
+                            android:id="@+id/edit1"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_edit"
@@ -143,7 +149,7 @@
                     app:cardElevation="@dimen/margin10"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="-16dp"
                     android:layout_marginEnd="24dp"
                     android:layout_marginBottom="24dp"
                     android:hint="آدرس 1"
@@ -154,16 +160,21 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_width="match_parent"
                         android:layout_height="56dp">
+
                         <TextView
-                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
+                            android:layout_toRightOf="@+id/edit2"
                             android:id="@+id/edtAddress2"
-                            android:layout_alignParentRight="true"
-                            android:textColor="@color/medium_color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/medium_color"
                             android:textSize="13dp"
                             tools:text="مشهد خیام جانباز 3" />
                         <ImageView
+
+                            android:id="@+id/edit2"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_edit"

@@ -28,11 +28,11 @@
 
 
             <ImageView
-                android:layout_alignParentRight="true"
                 android:id="@+id/iv_back"
                 android:layout_width="@dimen/icon_normal_size"
                 android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -40,15 +40,16 @@
                 android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
+
             <androidx.appcompat.widget.SearchView
-                android:layout_toLeftOf="@+id/iv_back"
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/iv_back"
                 android:backgroundTint="@android:color/transparent" />
         </RelativeLayout>
 
@@ -139,7 +140,7 @@
                 android:layout_marginEnd="6dp"
                 android:backgroundTint="#eee"
                 app:cardCornerRadius="12dp"
-                app:strokeColor="@color/purple_700"
+                app:strokeColor="@color/color_primary_dark"
                 app:strokeWidth="0.5dp">
 
                 <RelativeLayout
@@ -147,8 +148,8 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-
                         android:id="@+id/edt_address"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -159,10 +160,7 @@
                         android:hint=""
                         android:inputType="textShortMessage|textMultiLine"
                         android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:textColor="#000"
-                        android:textSize="12dp"
-                        android:textStyle="bold" />
+                        android:paddingEnd="5dp" />
 
 
                     <ProgressBar
@@ -184,32 +182,30 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="22dp"
             android:padding="@dimen/margin10"
-            app:srcCompat="@drawable/ic_cross"
             app:elevation="6dp"
             app:fabSize="normal"
             app:layout_constraintBottom_toTopOf="@+id/btn_register_information"
             app:layout_constraintStart_toStartOf="parent"
-            app:pressedTranslationZ="12dp" />
+            app:pressedTranslationZ="12dp"
+            app:srcCompat="@drawable/ic_cross" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register_information"
+            style="@style/bold_text_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/normal_left_right_margin"
             android:layout_marginLeft="22dp"
             android:layout_marginEnd="@dimen/normal_left_right_margin"
             android:layout_marginRight="22dp"
             android:layout_marginBottom="12dp"
-            app:backgroundTint="@null"
             android:background="@drawable/bottom_background"
             android:fontFamily="@font/iransans"
             android:text="@string/register_gps"
-            android:textColor="@color/white"
+            app:backgroundTint="@null"
             app:cornerRadius="@dimen/box_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="UnusedAttribute" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

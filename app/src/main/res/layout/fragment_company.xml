@@ -59,7 +59,7 @@
                 android:layout_marginLeft="16dp"
                 android:lineSpacingExtra="16dp"
                 android:text="ورود به دمو"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/color_primary"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 

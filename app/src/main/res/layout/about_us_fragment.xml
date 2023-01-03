@@ -38,13 +38,13 @@
 
             <TextView
                 android:id="@+id/txt_title_toolbar"
-                style="@style/launcher_toolbar_TextView"
+                style="@style/bold_text"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin10"
                 android:layout_toLeftOf="@+id/iv_back_fragment"
                 android:gravity="center"
                 android:text="درباره ما"
-                android:textStyle="bold" />
+            />
 
 
         </RelativeLayout>
@@ -58,6 +58,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    style="@style/normal_text"
                     android:id="@+id/txtDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,9 +67,8 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginRight="22dp"
                     android:layout_marginBottom="12dp"
-                    android:lineSpacingExtra="12dp"
-                    android:textColor="#2f2f2f"
-                    android:textSize="13dp" />
+
+                 />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -86,9 +86,6 @@
 
                     <TextView
                         android:id="@+id/txtVersion"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="22dp"
@@ -96,9 +93,7 @@
                         android:layout_marginRight="22dp"
                         android:layout_marginBottom="12dp"
                         android:lineSpacingExtra="12dp"
-                        android:textColor="#2f2f2f"
-                        android:textSize="13dp"
-                        android:textStyle="bold" />
+                       style="@style/normal_text" />
                 </RelativeLayout>
 
 

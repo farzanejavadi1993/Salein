@@ -14,10 +14,11 @@
 
 
         <ProgressBar
-            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/color_accent"
             android:id="@+id/progressBar"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_centerInParent="true"
             android:background="@drawable/ic_circle" />
 
         <RelativeLayout
@@ -27,12 +28,12 @@
             android:elevation="@dimen/margin4">
 
             <ImageView
-                android:layout_marginRight="12dp"
                 android:id="@+id/iv_back"
                 android:layout_width="@dimen/icon_normal_size"
                 android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
@@ -43,14 +44,10 @@
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/bold_text"
                 android:layout_centerInParent="true"
                 android:lineSpacingExtra="16dp"
-                android:text="@string/confirm_pay"
-                android:textColor="@color/medium_color"
-                android:textSize="14dp"
-                android:textStyle="bold" />
+                android:text="@string/confirm_pay" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -61,8 +58,6 @@
             android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin8"
             android:layout_marginRight="22dp">
-
-
 
 
             <com.google.android.material.card.MaterialCardView
@@ -83,14 +78,11 @@
 
                     <TextView
                         android:id="@+id/edt_address"
+                        style="@style/bold_text"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:gravity="right"
                         android:hint="آدرس خود را وارد کنید"
-                        android:textColor="@color/black_l"
-                        android:textSize="11dp"
-                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/tv_add_address"
@@ -111,6 +103,7 @@
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/layout_type_order"
             android:layout_width="match_parent"
@@ -124,33 +117,29 @@
 
             <TextView
                 android:id="@+id/tv_type_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/bold_text"
                 android:layout_alignParentRight="true"
-                android:text="@string/type_order"
-                android:textColor="@color/black"
-                android:textSize="12dp"
-                android:textStyle="bold" />
+                android:text="@string/type_order" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_delivary_order"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_type_order"
-                android:layout_marginTop="4dp"
-                />
+                android:layout_marginTop="4dp" />
 
 
         </RelativeLayout>
+
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/layoutTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_type_order"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="22dp">
+            android:layout_marginRight="22dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_time"
@@ -161,6 +150,7 @@
                 android:textColor="@color/black"
                 android:textSize="12dp"
                 android:textStyle="bold" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/timeLayout"
                 android:layout_width="match_parent"
@@ -199,16 +189,17 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginLeft="4dp"
-                        app:srcCompat="@drawable/ic_plus_new"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_plus_new" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/layoutPayment"
             android:layout_width="match_parent"
@@ -220,13 +211,9 @@
 
             <TextView
                 android:id="@+id/tv_payment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/bold_text"
                 android:layout_alignParentRight="true"
-                android:text="@string/type_pay"
-                android:textColor="@color/black"
-                android:textSize="12dp"
-                android:textStyle="bold" />
+                android:text="@string/type_pay" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,11 +224,11 @@
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                  android:visibility="gone"
                     android:id="@+id/btn_on_site_payment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/iv_on_site_payment"
@@ -249,21 +236,17 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_pay_place"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_pay_place"
                         tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/tvTitleOnSitePayment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/normal_text"
                         android:layout_marginRight="@dimen/margin10"
                         android:text="@string/pay_place"
-                        android:textColor="@color/black_l"
-                        android:textSize="11dp"
-                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_on_site_payment"
                         app:layout_constraintEnd_toStartOf="@+id/iv_on_site_payment"
                         app:layout_constraintTop_toTopOf="@+id/iv_on_site_payment" />
@@ -275,11 +258,11 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_tik"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_tik"
                         tools:ignore="ContentDescription" />
 
 
@@ -291,11 +274,11 @@
                     android:background="#eee" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                  android:visibility="gone"
                     android:id="@+id/btn_club_payment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/iv_club_payment"
@@ -303,32 +286,27 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_cradit"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_cradit"
                         tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/tvTitleclubPayment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/normal_text"
                         android:layout_marginRight="@dimen/margin10"
                         android:text="استفاده از اعتبار باشگاه"
-                        android:textColor="@color/black_l"
-                        android:textSize="11dp"
-                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_club_payment"
                         app:layout_constraintEnd_toStartOf="@+id/iv_club_payment"
                         app:layout_constraintTop_toTopOf="@+id/iv_club_payment" />
 
                     <TextView
                         android:id="@+id/tvCredit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
+                        style="@style/normal_text"
                         android:layout_marginEnd="8dp"
                         android:text="موجودی : 0 ریال"
-                        android:textColor="#6E6E6E"
                         android:textSize="11dp"
                         app:layout_constraintBottom_toBottomOf="@+id/tvTitleclubPayment"
                         app:layout_constraintEnd_toStartOf="@+id/tvTitleclubPayment"
@@ -340,18 +318,17 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_tik"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_tik"
                         tools:ignore="ContentDescription" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
 
         </RelativeLayout>
-
 
 
         <LinearLayout
@@ -375,8 +352,7 @@
                 android:gravity="center"
                 android:textColor="@color/red_table"
                 android:textSize="13dp"
-                android:textStyle="bold"
-            />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_successFull_pay_online"
@@ -409,60 +385,48 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="8dp">
 
-              <RelativeLayout
-                  android:id="@+id/layout_peyk"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
-                  <TextView
-                      android:id="@+id/order_list_transport_tv"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_alignParentRight="true"
-                      android:layout_marginRight="8dp"
-                      android:text="هزینه ارسال"
-                      android:textColor="@color/black_l"
-                      android:textSize="@dimen/text_normal_mobile_size"
-                      tools:ignore="RelativeOverlap" />
+                <RelativeLayout
+                    android:id="@+id/layout_peyk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                  <TextView
-                      android:id="@+id/tv_transport"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_alignParentLeft="true"
-                      android:layout_marginLeft="@dimen/margin8"
-                      android:layout_marginRight="8dp"
-                      android:text="@string/rial_0"
-                      android:textColor="@color/black_light"
-                      android:textSize="13dp"
-                      android:textStyle="bold" />
-              </RelativeLayout>
+                    <TextView
+                        android:id="@+id/order_list_transport_tv"
+                        style="@style/bold_text"
+
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="8dp"
+                        android:text="هزینه ارسال"
+                        tools:ignore="RelativeOverlap" />
+
+                    <TextView
+                        android:id="@+id/tv_transport"
+
+                        style="@style/large_bold_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="@dimen/margin8"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/rial_0" />
+                </RelativeLayout>
 
 
                 <TextView
                     android:id="@+id/order_list_purePrice_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/bold_text"
                     android:layout_below="@+id/layout_peyk"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/margin8"
                     android:layout_marginRight="8dp"
-                    android:text="مبلغ قابل پرداخت"
-                    android:textColor="@color/black_l"
-                    android:textSize="12dp"
-                    tools:ignore="RelativeOverlap" />
+                    android:text="مبلغ قابل پرداخت" />
 
 
                 <TextView
                     android:id="@+id/tvSumPurePrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/large_bold_text"
                     android:layout_below="@+id/layout_peyk"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="8dp"
-                    android:text="@string/rial_0"
-                    android:textColor="@color/black_light"
-                    android:textSize="13dp"
-                    android:textStyle="bold" />
+                    android:text="@string/rial_0" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -474,6 +438,7 @@
 
                 <EditText
                     android:id="@+id/edt_description"
+                    style="@style/normal_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -485,37 +450,31 @@
                     android:inputType="text"
                     android:padding="10dp"
                     android:textAlignment="textStart"
-                    android:textColor="@color/black_l"
                     android:textDirection="firstStrongRtl"
-                    android:textSize="@dimen/text_medium_mobile_size"
                     tools:ignore="Autofill" />
 
 
             </RelativeLayout>
 
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_marginBottom="13dp"
-                    android:id="@+id/btn_register_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    app:backgroundTint="@null"
-                   android:background="@drawable/bottom_background"
-                    android:fontFamily="@font/iransans"
-                    android:text="ارسال سفارش"
-                    android:textStyle="bold"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12dp"
-                    app:cornerRadius="12dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_register_order"
+                style="@style/bold_text_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="13dp"
+                android:background="@drawable/bottom_background"
+                android:fontFamily="@font/iransans"
+                android:text="ارسال سفارش"
+                app:backgroundTint="@null"
+                app:cornerRadius="12dp">
 
 
-                </com.google.android.material.button.MaterialButton>
-
-
+            </com.google.android.material.button.MaterialButton>
 
 
         </LinearLayout>

@@ -67,12 +67,11 @@ public class LauncherActivity extends AppCompatActivity {
                     getDoActionInHomeFragment();
 
                 else {
-
-                    if (!Select.from(SaleinShop.class).first().isPublicApp() && navController.getBackQueue().size() == 2)
+                   // if (!Select.from(SaleinShop.class).first().isPublicApp() && navController.getBackQueue().size() == 2)
                         finishApp();
 
-                    else
-                        super.onBackPressed();
+                  //  else
+                       // super.onBackPressed();
                 }
                 break;
 
@@ -123,7 +122,7 @@ public class LauncherActivity extends AppCompatActivity {
     private void navigationHandler() {
         binding.navView.getOrCreateBadge(R.id.InvoiceFragment).clearNumber();
 
-        binding.navView.getOrCreateBadge(R.id.InvoiceFragment).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        binding.navView.getOrCreateBadge(R.id.InvoiceFragment).setBackgroundColor(getResources().getColor(R.color.color_accent));
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 

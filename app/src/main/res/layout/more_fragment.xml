@@ -3,13 +3,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="vertical">
 
 
         <RelativeLayout
@@ -35,28 +36,27 @@
                 tools:ignore="ContentDescription" />
 
 
-
             <ImageView
                 android:id="@+id/iv_power"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_centerVertical="true"
-                app:srcCompat="@drawable/ic_power"
-                android:layout_marginLeft="22dp"
-                android:layout_alignParentLeft="true"
-                android:layout_width="30dp"
-                android:layout_height="30dp"/>
+                app:srcCompat="@drawable/ic_power" />
         </RelativeLayout>
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            app:cardElevation="8dp"
             android:id="@+id/cardProfile"
-            android:layout_marginRight="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
             app:cardCornerRadius="15dp"
-            android:layout_height="wrap_content">
+            app:cardElevation="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -64,17 +64,17 @@
 
                 <ImageView
                     android:id="@+id/ivProfile"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="12dp"
-                    app:srcCompat="@drawable/profile"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/profile" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -82,47 +82,43 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:padding="5dp"
-                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
                 <TextView
                     android:id="@+id/tvProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/normal_text"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="12dp"
                     android:text="پروفایل"
-                    android:textColor="@color/medium_color"
-                    android:textSize="13dp"
                     app:layout_constraintEnd_toStartOf="@+id/ivProfile"
                     app:layout_constraintTop_toTopOf="@+id/ivProfile" />
 
                 <TextView
                     android:id="@+id/tvDescriptionProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/normal_text"
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="12dp"
                     android:text="مشاهده و ویرایش اطلاعات کاربری"
                     android:textColor="#919191"
-                    android:textSize="11dp"
                     app:layout_constraintEnd_toStartOf="@+id/ivProfile"
                     app:layout_constraintTop_toBottomOf="@+id/tvProfile" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            app:cardElevation="8dp"
             android:id="@+id/cardOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             app:cardCornerRadius="15dp"
-            android:layout_height="wrap_content">
+            app:cardElevation="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -130,17 +126,17 @@
 
                 <ImageView
                     android:id="@+id/ivBuy"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="12dp"
-                    app:srcCompat="@drawable/basketbuy"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/basketbuy" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -148,33 +144,28 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:padding="5dp"
-                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
                 <TextView
                     android:id="@+id/tvBuy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/normal_text"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="12dp"
                     android:text="پیگیری سفارشات"
-                    android:textColor="@color/medium_color"
-                    android:textSize="13dp"
                     app:layout_constraintEnd_toStartOf="@+id/ivBuy"
                     app:layout_constraintTop_toTopOf="@+id/ivBuy" />
 
                 <TextView
                     android:id="@+id/tvDescriptionBuy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/normal_text"
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="12dp"
                     android:text="مشاهده و ویرایش لیست سفارشات"
                     android:textColor="#919191"
-                    android:textSize="11dp"
                     app:layout_constraintEnd_toStartOf="@+id/ivBuy"
                     app:layout_constraintTop_toBottomOf="@+id/tvBuy" />
 
@@ -184,85 +175,89 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            app:cardElevation="8dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
             android:layout_marginTop="35dp"
             android:layout_marginRight="22dp"
-            android:layout_marginLeft="22dp"
             app:cardCornerRadius="15dp"
-            android:layout_height="wrap_content">
+            app:cardElevation="8dp">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
                 <RelativeLayout
                     android:id="@+id/cardCredit"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp">
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp">
+
                     <ImageView
-                        android:layout_centerVertical="true"
                         android:id="@+id/credit"
-                        android:layout_alignParentRight="true"
-                        app:srcCompat="@drawable/ic_cradit"
                         android:layout_width="24dp"
-                        android:layout_height="24dp"/>
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/ic_cradit" />
 
                     <TextView
                         android:id="@+id/tvCredits"
+                        style="@style/normal_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_toLeftOf="@+id/credit"
-                        android:text="افزایش اعتبار"
-                        android:textColor="@color/medium_color"
-                        android:textSize="13dp" />
+                        android:text="افزایش اعتبار" />
+
                     <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
-                        android:background="#eee"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"/>
+                        android:background="#eee" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/cardShare"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp">
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp">
+
                     <ImageView
-                        android:layout_centerVertical="true"
                         android:id="@+id/share"
-                        android:layout_alignParentRight="true"
-                        app:srcCompat="@drawable/ic_share"
                         android:layout_width="24dp"
-                        android:layout_height="24dp"/>
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/ic_share" />
+
                     <TextView
                         android:layout_centerVertical="true"
-                        android:text="دعوت از دوستان"
-                        android:textSize="13dp"
-                        android:textColor="@color/medium_color"
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_toLeftOf="@+id/share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:text="دعوت از دوستان"
+                        style="@style/normal_text" />
+
                     <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
-                        android:background="#eee"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"/>
+                        android:background="#eee" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/cardContactUs"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp">
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp">
 
                     <ImageView
                         android:id="@+id/contactUs"
@@ -271,58 +266,61 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/ic_support" />
+
                     <TextView
+                        style="@style/normal_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="تماس با ما"
-                        android:textSize="13dp"
-                        android:textColor="@color/medium_color"
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_toLeftOf="@+id/contactUs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:text="تماس با ما" />
+
                     <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
-                        android:background="#eee"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"/>
+                        android:background="#eee" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/cardAboutUs"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp">
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp">
+
                     <ImageView
-                        android:layout_centerVertical="true"
                         android:id="@+id/aboutUs"
-                        android:layout_alignParentRight="true"
-                        app:srcCompat="@drawable/ic_aboout_us"
                         android:layout_width="24dp"
-                        android:layout_height="24dp"/>
-                    <TextView
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="درباره ما"
-                        android:textSize="13dp"
-                        android:textColor="@color/medium_color"
+                        app:srcCompat="@drawable/ic_aboout_us" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_toLeftOf="@+id/aboutUs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:text="درباره ما"
+                       style="@style/normal_text" />
+
                     <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
-                        android:background="#eee"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"/>
+                        android:background="#eee" />
                 </RelativeLayout>
 
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
 
 
     </LinearLayout>

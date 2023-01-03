@@ -5,7 +5,6 @@ import static android.os.Looper.getMainLooper;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,9 +19,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.CedarMapsStyle;
 import com.cedarstudios.cedarmapssdk.CedarMapsStyleConfigurator;
 import com.cedarstudios.cedarmapssdk.listeners.OnStyleConfigurationListener;
+import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
+import com.cedarstudios.cedarmapssdk.model.geocoder.reverse.ReverseGeocode;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -30,19 +32,15 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -62,6 +60,7 @@ import ir.kitgroup.saleinfingilkabab.Connect.CompanyViewModel;
 
 import ir.kitgroup.saleinfingilkabab.Connect.MainViewModel;
 import ir.kitgroup.saleinfingilkabab.DataBase.Account;
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.DataBase.SaleinShop;
 
 import ir.kitgroup.saleinfingilkabab.classes.Util;
@@ -93,13 +92,17 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     private String from;
     private String mobile;
 
-    private List<Account> accounts;
 
     private MapboxMap mapboxMap;
     private LocationEngine locationEngine = null;
     private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
     private PermissionsManager permissionsManager;
     private String applicationVersion = "";
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private String address = "";
+    private Locations location;
     //endregion Variable
 
 
@@ -115,13 +118,19 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        try {
+            getBundle();
+            setDataBundle();
+            appVersion();
+            initLocation();
+            getAccount();
+            initMap(savedInstanceState);
+            init();
+            onClickBtnRegister();
+            initRadioButton();
+        } catch (Exception ignored) {
+        }
 
-        initMap(savedInstanceState);
-        getBundle();
-        appVersion();
-        setDataBundle();
-        getAccount();
-        init();
     }
 
 
@@ -192,11 +201,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
                 if (message == 1) {
                     Account.deleteAll(Account.class);
-                    Account.saveInTx(accounts);
-                    Util.longitude = 0;
-                    Util.latitude = 0;
-                    Util.address = "";
-                    Util.nameUser = "";
+                    Account.saveInTx(accountsList);
                     Navigation.findNavController(binding.getRoot()).popBackStack();
 
                 } else {
@@ -319,7 +324,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         if (granted) {
             if (mapboxMap.getStyle() != null) {
                 enableLocationComponent(mapboxMap.getStyle());
-                // toggleCurrentLocationButton();
+
             }
         } else {
             Toast.makeText(getActivity(), "برنامه نیاز به دسترسی دارد", Toast.LENGTH_LONG).show();
@@ -330,184 +335,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
 
     //region Method
-    private void addMarkerToMapViewAtPosition(LatLng coordinate) {
-        if (mapboxMap != null && mapboxMap.getStyle() != null) {
-            Style style = mapboxMap.getStyle();
-
-            if (style.getImage(Util.MARKER_ICON_ID) == null) {
-                style.addImage(Util.MARKER_ICON_ID,
-                        BitmapFactory.decodeResource(
-                                getResources(), R.drawable.ic_location_marker));
-            }
-
-            GeoJsonSource geoJsonSource;
-            if (style.getSource(Util.MARKERS_SOURCE) == null) {
-                geoJsonSource = new GeoJsonSource(Util.MARKERS_SOURCE);
-                style.addSource(geoJsonSource);
-            } else {
-                geoJsonSource = (GeoJsonSource) style.getSource(Util.MARKERS_SOURCE);
-            }
-            if (geoJsonSource == null) {
-                return;
-            }
-
-            Feature feature = Feature.fromGeometry(
-                    Point.fromLngLat(coordinate.getLongitude(), coordinate.getLatitude()));
-            geoJsonSource.setGeoJson(feature);
-
-            style.removeLayer(Util.MARKERS_LAYER);
-
-            SymbolLayer symbolLayer = new SymbolLayer(Util.MARKERS_LAYER, Util.MARKERS_SOURCE);
-            symbolLayer.withProperties(
-                    PropertyFactory.iconImage(Util.MARKER_ICON_ID),
-                    PropertyFactory.iconAllowOverlap(true)
-            );
-            style.addLayer(symbolLayer);
-        }
-    }
-
-    private void animateToCoordinate(LatLng coordinate) {
-        CameraPosition position = new CameraPosition.Builder()
-                .target(coordinate)
-                .zoom(16)
-                .build();
-        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-    }
-
-
-    @SuppressWarnings({"MissingPermission"})
-    private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-        if (getActivity() == null) {
-            return;
-        }
-        // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
-
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-            LocationComponentActivationOptions locationComponentActivationOptions =
-                    LocationComponentActivationOptions.builder(getActivity(), loadedMapStyle)
-                            .useDefaultLocationEngine(true)
-                            .build();
-
-            locationComponent.activateLocationComponent(locationComponentActivationOptions);
-            locationComponent.setLocationComponentEnabled(true);
-
-            initializeLocationEngine();
-        } else {
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(getActivity());
-        }
-    }
-
-    @SuppressWarnings({"MissingPermission"})
-    private void initializeLocationEngine() {
-        if (getActivity() == null) {
-            return;
-        }
-
-        locationEngine = LocationEngineProvider.getBestLocationEngine(getActivity());
-
-        long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
-        long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
-        LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-
-        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
-        locationEngine.getLastLocation(callback);
-    }
-
-    private static class MapFragmentLocationCallback implements LocationEngineCallback<LocationEngineResult> {
-
-        private final WeakReference<RegisterFragment> fragmentWeakReference;
-
-        MapFragmentLocationCallback(RegisterFragment fragment) {
-            fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-
-        @Override
-        public void onSuccess(LocationEngineResult result) {
-            RegisterFragment fragment = fragmentWeakReference.get();
-
-            if (fragment != null) {
-                Location location = result.getLastLocation();
-
-                if (location == null) {
-                    return;
-                }
-
-                if (fragment.mapboxMap != null && result.getLastLocation() != null) {
-                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(@NonNull Exception exception) {
-            //String message = exception.getLocalizedMessage();
-        }
-    }
-
-    private Company getCompany() {
-        return Select.from(Company.class).first();
-    }
-
-    private void initMap(Bundle savedInstanceState) {
-        try {
-            binding.mapView.onCreate(savedInstanceState);
-        } catch (Exception ignore) {
-        }
-
-
-        binding.mapView.getMapAsync(mapboxMap -> {
-            this.mapboxMap = mapboxMap;
-
-            CedarMapsStyleConfigurator.configure(
-                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
-                        @Override
-                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
-                            mapboxMap.setStyle(styleBuilder, style -> {
-                                if (getActivity() == null) {
-                                    return;
-                                }
-
-                                if (mapboxMap.getStyle() != null) {
-                                    enableLocationComponent(mapboxMap.getStyle());
-                                }
-
-
-                                if (Util.latitude != 0 && Util.longitude != 0)
-                                    addMarkerToMapViewAtPosition(new LatLng(Util.latitude, Util.longitude));
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull String errorMessage) {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            this.mapboxMap.setMaxZoomPreference(18);
-            this.mapboxMap.setMinZoomPreference(6);
-            this.mapboxMap.setCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(new LatLng(Util.latitude, Util.longitude))
-                            .zoom(15)
-                            .build());
-
-
-            this.mapboxMap.addOnMapClickListener(point -> {
-                Util.nameUser = binding.edtName.getText().toString();
-                Util.address = binding.edtAddress.getText().toString();
-                NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-                return false;
-            });
-
-        });
-    }
 
     private void getBundle() {
         from = RegisterFragmentArgs.fromBundle(getArguments()).getFrom();
@@ -530,43 +357,241 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         }
     }
 
+    public void appVersion() {
+        try {
+            applicationVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void getAccount() {
         account = Select.from(Account.class).first();
+        if (account != null) {
+            binding.edtName.setText(account.getN());
+
+            if (location == null)
+                createLocation();
+        }
+    }
+
+    private void createLocation() {
+        Locations.deleteAll(Locations.class);
+
+        if (from.equals("ProfileFragment") && radioValue == 2) {
+            latitude = account.getLAT1();
+            longitude = account.getLNG1();
+            address = account.getAdr2();
+        } else {
+            address = account.getAdr();
+            latitude = account.getLAT();
+            longitude = account.getLNG();
+        }
+        binding.edtAddress.setText(address);
+        Locations locations = new Locations();
+        locations.setAddress(address);
+        locations.setLatitude(latitude);
+        locations.setLongitude(longitude);
+
+        locations.save();
+    }
+
+    private void initLocation() {
+        location = Select.from(Locations.class).first();
+    }
+
+    private void initMap(Bundle savedInstanceState) {
+        try {
+            binding.mapView.onCreate(savedInstanceState);
+        } catch (Exception ignore) {
+        }
+
+        binding.mapView.getMapAsync(mapboxMap -> {
+            this.mapboxMap = mapboxMap;
+
+            CedarMapsStyleConfigurator.configure(
+                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
+                        @Override
+                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
+
+                            mapboxMap.setStyle(styleBuilder, style -> {
+                                if (getActivity() == null) {
+                                    return;
+                                }
+
+                                setupCurrentLocationButton();
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull String errorMessage) {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            this.mapboxMap.setMaxZoomPreference(18);
+            this.mapboxMap.setMinZoomPreference(6);
+            this.mapboxMap.setCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(new LatLng(latitude, longitude))
+                            .zoom(12)
+                            .build());
+
+        });
+
+        binding.layoutMap.setOnClickListener(view -> {
+            NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
+
+        binding.mapView.setOnClickListener(view -> {
+            NavDirections action = RegisterFragmentDirections.actionGoToMapFragment("RegisterFragment");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
+    }
+
+
+    private void setupCurrentLocationButton() {
+        if (getView() == null) {
+            return;
+        }
+        if (mapboxMap.getStyle() != null)
+            enableLocationComponent(mapboxMap.getStyle());
+
+        toggleCurrentLocationButton();
+
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void enableLocationComponent(@NonNull Style loadedMapStyle) {
+        if (getActivity() == null)
+            return;
+
+
+        if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
+            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+            LocationComponentActivationOptions locationComponentActivationOptions =
+                    LocationComponentActivationOptions.builder(getActivity(), loadedMapStyle)
+                            .useDefaultLocationEngine(true)
+                            .build();
+
+            locationComponent.activateLocationComponent(locationComponentActivationOptions);
+            locationComponent.setLocationComponentEnabled(true);
+
+            initializeLocationEngine();
+        } else {
+            permissionsManager = new PermissionsManager(this);
+            permissionsManager.requestLocationPermissions(getActivity());
+        }
+    }
+
+    private static class MapFragmentLocationCallback implements LocationEngineCallback<LocationEngineResult> {
+
+        private final WeakReference<RegisterFragment> fragmentWeakReference;
+
+        MapFragmentLocationCallback(RegisterFragment fragment) {
+            fragmentWeakReference = new WeakReference<>(fragment);
+        }
+
+
+        @Override
+        public void onSuccess(LocationEngineResult result) {
+            RegisterFragment fragment = fragmentWeakReference.get();
+
+            if (fragment != null) {
+                Location location = result.getLastLocation();
+
+                if (location == null)
+                    return;
+
+                if (fragment.mapboxMap != null && result.getLastLocation() != null)
+                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+            //String message = exception.getLocalizedMessage();
+        }
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void initializeLocationEngine() {
+        if (getActivity() == null) {
+            return;
+        }
+
+        locationEngine = LocationEngineProvider.getBestLocationEngine(getActivity());
+
+        long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
+        long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+        LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
+                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
+
+        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
+        locationEngine.getLastLocation(callback);
+    }
+
+    private void toggleCurrentLocationButton() {
+        if (!mapboxMap.getLocationComponent().isLocationComponentActivated() || !mapboxMap.getLocationComponent().isLocationComponentEnabled()) {
+            return;
+        }
+
+        if (location != null) {
+            address = location.getAddress();
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            binding.edtAddress.setText(address);
+        }
+        else {
+            Location location = mapboxMap.getLocationComponent().getLastKnownLocation();
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+
+        animateToCoordinate(new LatLng(latitude, longitude));
+
+        switch (mapboxMap.getLocationComponent().getRenderMode()) {
+            case RenderMode.NORMAL:
+                mapboxMap.getLocationComponent().setRenderMode(RenderMode.COMPASS);
+                break;
+            case RenderMode.GPS:
+            case RenderMode.COMPASS:
+                mapboxMap.getLocationComponent().setRenderMode(RenderMode.NORMAL);
+                break;
+        }
+    }
+
+    private void animateToCoordinate(LatLng coordinate) {
+        CameraPosition position = new CameraPosition.Builder()
+                .target(coordinate)
+                .zoom(16)
+                .build();
+        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+        mapboxMap.getLocationComponent().setRenderMode(RenderMode.COMPASS);
+    }
+
+
+    private Company getCompany() {
+        return Select.from(Company.class).first();
     }
 
     private void init() {
         accountsList = new ArrayList<>();
 
-        accounts = new ArrayList<>();
-
-        binding.edtAddress.setText(Util.address);
-        binding.edtName.setText(Util.nameUser);
-
-        if (account != null)
-            binding.edtName.setText(account.getN());
-
 
         userName = getCompany().getUser();
         passWord = getCompany().getPass();
 
+        binding.ivBack.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
+    }
 
-        binding.radio1.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                radioValue = 1;// Choose As Woman gender Or Choose As Address1
-            }
-        });
-
-
-        binding.radio2.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                if (from.equals("PaymentFragment"))
-                    radioValue = 2;//Choose As Address2
-                else
-                    radioValue = 0;//Choose As Man Gender
-            }
-        });
-
-
+    private void onClickBtnRegister() {
         binding.btnRegisterInformation.setOnClickListener(v -> {
 
             if (binding.edtName.getText().toString().isEmpty()
@@ -579,28 +604,29 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                 return;
             }
 
+
             Account acc = new Account();
 
             //region Add Account
             if (from.equals("VerifyFragment")) {
-                String IMEI = Util.getAndroidID(getActivity());
                 acc.setVersion(applicationVersion);
                 acc.setI(UUID.randomUUID().toString());
                 acc.setN(binding.edtName.getText().toString());
                 acc.setM(mobile);
                 acc.PSW = mobile;
                 acc.setAdr(binding.edtAddress.getText().toString());
-                acc.LAT = String.valueOf(Util.latitude);
-                acc.LNG = String.valueOf(Util.longitude);
+                acc.LAT = String.valueOf(latitude);
+                acc.LNG = String.valueOf(longitude);
                 acc.S = String.valueOf(radioValue);
                 acc.PC = binding.edtCode.getText().toString();
                 acc.STAPP = ACCSTP;
+
                 accountsList.clear();
                 accountsList.add(acc);
+
                 companyViewModel.getSetting(userName, passWord);
             }
             //endregion Add Account
-
 
             //region Update Account
             else {
@@ -620,37 +646,32 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
                         PaymentFragment.ChooseAddress2 = false;
 
                     acc.setAdr(binding.edtAddress.getText().toString());
-                    acc.LAT = String.valueOf(Util.latitude);
-                    acc.LNG = String.valueOf(Util.longitude);
+                    acc.LAT = String.valueOf(latitude);
+                    acc.LNG = String.valueOf(longitude);
                 } else if (radioValue == 2) {
                     if (from.equals("PaymentFragment"))
                         PaymentFragment.ChooseAddress2 = true;
 
                     acc.setAdr2(binding.edtAddress.getText().toString());
-                    acc.LAT1 = String.valueOf(Util.latitude);
-                    acc.LNG1 = String.valueOf(Util.longitude);
+                    acc.LAT1 = String.valueOf(latitude);
+                    acc.LNG1 = String.valueOf(longitude);
                 }
 
 
-                accounts.clear();
-                accounts.add(acc);
+                accountsList.clear();
+                accountsList.add(acc);
 
                 binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
                 binding.btnRegisterInformation.setEnabled(false);
 
 
-                companyViewModel.updateAccount(userName, passWord, accounts);
+                companyViewModel.updateAccount(userName, passWord, accountsList);
 
             }
             //endregion Update Account
 
-
         });
-
-
-        binding.ivBack.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
     }
-
 
     private void addCustomerToSerVer() {
         Account account = Select.from(Account.class).first();
@@ -674,14 +695,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
-            Util.address = "";
-            Util.latitude = 0;
-            Util.longitude = 0;
-            Util.nameUser = "";
-
-            /*NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
-            Navigation.findNavController(binding.getRoot()).navigate(action);*/
-
             Bundle bundle = new Bundle();
             bundle.putString("Inv_GUID", "");
             Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToHomeFragment, bundle);
@@ -689,20 +702,25 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
 
     }
 
-
-    public void appVersion() {
-        try {
-            applicationVersion = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+    private void setIdServerToAccount(String id) {
+        sharedPreferences.edit().putString("idServer", id).apply();
     }
 
-    private void setIdServerToAccount(String id) {
-        if (account != null) {
-            account.setiServer(id);
-            account.save();
-        }
+    private void initRadioButton() {
+        binding.radio1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                radioValue = 1;// Choose As Woman gender Or Choose As Address1
+            }
+        });
+
+        binding.radio2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (from.equals("PaymentFragment"))
+                    radioValue = 2;//Choose As Address2
+                else
+                    radioValue = 0;//Choose As Man Gender
+            }
+        });
     }
 
 

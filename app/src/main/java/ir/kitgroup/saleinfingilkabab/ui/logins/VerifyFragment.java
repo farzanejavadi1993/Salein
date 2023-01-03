@@ -244,7 +244,6 @@ public class VerifyFragment extends Fragment {
         userName = company.getUser();
         passWord = company.getPass();
 
-
         binding.tvMessage.setText(getString(R.string.send_code_part1) + " " + mobile + " " + getString(R.string.send_code_part2));
 
 
@@ -364,10 +363,7 @@ public class VerifyFragment extends Fragment {
     }
 
     private void setIdServerToAccount(String id){
-        if (account!=null){
-            account.setiServer(id);
-            account.save();
-        }
+        sharedPreferences.edit().putString("idServer",id).apply();
     }
 
     //endregion Method

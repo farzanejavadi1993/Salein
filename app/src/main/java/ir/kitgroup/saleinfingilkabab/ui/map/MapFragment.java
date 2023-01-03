@@ -26,9 +26,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,7 +58,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 
 import com.mapbox.mapboxsdk.utils.ColorUtils;
-import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,15 +68,11 @@ import java.util.List;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import ir.kitgroup.saleinfingilkabab.Connect.CompanyViewModel;
 
 import ir.kitgroup.saleinfingilkabab.DataBase.Account;
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.R;
-import ir.kitgroup.saleinfingilkabab.classes.Util;
-import ir.kitgroup.saleinfingilkabab.classes.CustomProgress;
 import ir.kitgroup.saleinfingilkabab.databinding.FragmentMapBinding;
-import ir.kitgroup.saleinfingilkabab.DataBase.Company;
-import ir.kitgroup.saleinfingilkabab.ui.logins.RegisterFragmentDirections;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
@@ -91,12 +83,9 @@ import static android.os.Looper.getMainLooper;
 public class MapFragment extends Fragment implements PermissionsListener {
 
     //region Parameter
-    private CompanyViewModel myViewModel;
+
     private FragmentMapBinding binding;
 
-    private final List<Account> accounts = new ArrayList<>();
-    private Company company;
-    private CustomProgress customProgress;
     private final int LOCATION_PERMISSION_REQUEST_CODE = 99;
     private LocationManager locationManager;
     private MapboxMap mMapboxMap;
@@ -104,9 +93,11 @@ public class MapFragment extends Fragment implements PermissionsListener {
     private SearchViewAdapter mRecyclerAdapter;
     private State state = State.MAP;
     private CircleManager circleManager;
-    private String from;//this Variable Show From Which Fragment Did We Enter This Fragment?
-    private double latitude=0.0;
-    private double longitude=0.0;
+
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private String address="";
 
 
     private enum State {
@@ -115,6 +106,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
         SEARCHING,
         RESULTS
     }
+
 
 
     //endregion Parameter
@@ -127,218 +119,17 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
 
+
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         try {
-
-
-        //region Config
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(4);
-        customProgress = CustomProgress.getInstance();
-        //endregion Config
-
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-
-
-        //region Get Bundle
-        from = MapFragmentArgs.fromBundle(getArguments()).getFrom();
-        //endregion Get Bundle
-
-        //region Get The Company Is Save In The Database
-        company = Select.from(Company.class).first();
-        //endregion Get The Company Is Save In The Database
-
-        //region Action btnRegisterInformation
-
-        binding.btnRegisterInformation.setOnClickListener(v -> {
-            Util.longitude=longitude;
-            Util.latitude=latitude;
-            Navigation.findNavController(binding.getRoot()).popBackStack();
-        });
-        //endregion Action btnRegisterInformation
-
-
-        //region Config Map
-        try {
-            binding.mapView.onCreate(savedInstanceState);
-        } catch (Exception ignore) {
-        }
-
-
-
-
-
-        binding.mapView.getMapAsync(mapboxMap -> {
-            this.mMapboxMap = mapboxMap;
-
-
-            CedarMapsStyleConfigurator.configure(
-                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
-                        @Override
-                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
-
-
-                            mapboxMap.setStyle(styleBuilder, style -> {
-                                if (getActivity() == null) {
-                                    return;
-                                }
-
-                                circleManager = new CircleManager(binding.mapView, mMapboxMap, style);
-                                setupCurrentLocationButton();
-                                if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
-                                    enableLocationComponent(style);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull String errorMessage) {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-
-            this.mMapboxMap.setMaxZoomPreference(18);
-            this.mMapboxMap.setMinZoomPreference(6);
-            this.mMapboxMap.setCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(Util.VANAK_SQUARE)
-                            .zoom(12)
-                            .build());
-
-
-            reverseGeocode(mapboxMap.getCameraPosition());
-
-            mMapboxMap.addOnCameraIdleListener(() -> reverseGeocode(mMapboxMap.getCameraPosition()));
-
-            binding.floating.setOnClickListener(v -> setupCurrentLocationButton());
-
-        });
-
-
-
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        binding.recyclerView.setLayoutManager(mLinearLayoutManager);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(binding.recyclerView.getContext(), mLinearLayoutManager.getOrientation());
-        binding.recyclerView.addItemDecoration(mDividerItemDecoration);
-
-
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && state == State.MAP_PIN) {
-                setState(State.RESULTS);
-                return true;
-            }
-            return false;
-        });
-
-        binding.searchView.setIconifiedByDefault(false);
-        binding.searchView.setQueryHint("جستجو");
-        binding.searchView.setMaxWidth(Integer.MAX_VALUE);
-
-
-        List<ForwardGeocode> resultsLis = new ArrayList<>();
-        mRecyclerAdapter = new SearchViewAdapter(resultsLis);
-
-        binding.recyclerView.setAdapter(mRecyclerAdapter);
-
-        try {
-            LinearLayout linearLayout1 = (LinearLayout) binding.searchView.getChildAt(0);
-            LinearLayout linearLayout2;
-            try {
-                linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
-            } catch (Exception ignore) {
-                linearLayout2 = (LinearLayout) linearLayout1.getChildAt(0);
-            }
-
-            LinearLayout linearLayout3;
-            try {
-                linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
-            } catch (Exception ignore) {
-                linearLayout3 = (LinearLayout) linearLayout2.getChildAt(0);
-            }
-
-
-            AutoCompleteTextView autoComplete;
-            try {
-                autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
-            } catch (Exception ignore) {
-                autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(1);
-            }
-            autoComplete.setTextSize(12);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                autoComplete.setTextColor(getActivity().getColor(R.color.medium_color));
-            }
-            Typeface iranSansBold = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-            autoComplete.setTypeface(iranSansBold);
-        } catch (Exception ignore) {
-        }
-        binding.searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus && state == State.MAP_PIN) {
-                circleManager.deleteAll();
-                if (!TextUtils.isEmpty(binding.searchView.getQuery())) {
-                    setState(State.RESULTS);
-                } else {
-                    setState(State.MAP);
-                }
-            }
-        });
-        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                try {
-                    binding.searchView.clearFocus();
-                } catch (Exception ignored) {
-                }
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String newText) {
-
-                try {
-                    if (TextUtils.isEmpty(newText)) {
-                        circleManager.deleteAll();
-                        setState(State.MAP);
-                    } else {
-                        setState(State.SEARCHING);
-                        CedarMaps.getInstance().forwardGeocode(newText, new ForwardGeocodeResultsListener() {
-                            @SuppressLint("NotifyDataSetChanged")
-                            @Override
-                            public void onSuccess(@NonNull List<ForwardGeocode> results) {
-                                setState(State.RESULTS);
-                                if (results.size() > 0 && newText.equals(binding.searchView.getQuery().toString())) {
-                                    resultsLis.clear();
-                                    resultsLis.addAll(results);
-                                    mRecyclerAdapter.notifyDataSetChanged();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull String errorMessage) {
-                                setState(State.RESULTS);
-                                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                } catch (Exception ignored) {
-                }
-
-
-                return false;
-            }
-        });
-        mRecyclerAdapter.setOnClickItemListener(this::showItemOnMap);
-        //endregion Config Map
-
-        binding.ivBack.setOnClickListener(view1 -> Navigation.findNavController(binding.getRoot()).popBackStack());
-
-        }catch (Exception ignored){}
+            config();
+            init();
+            onClickBtnRegister();
+            initMap(savedInstanceState);
+            initSearchOnMap(view);
+        } catch (Exception ignored) {}
 
     }
 
@@ -362,32 +153,19 @@ public class MapFragment extends Fragment implements PermissionsListener {
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        myViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
-
-        myViewModel.getResultMessage().setValue(null);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 91) {
-
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-
                 if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2) {
                     Toast.makeText(getContext(), "مکان یاب باید روشن باشد", Toast.LENGTH_SHORT).show();
 
                 }
                 enableMyLocation();
-
             }
         }
-
-
     }
 
     @Override
@@ -439,28 +217,110 @@ public class MapFragment extends Fragment implements PermissionsListener {
         super.onDestroyView();
         binding.mapView.onDestroy();
         binding = null;
-        //  if (edit_address.equals("3"))
-        //((LauncherActivity) getActivity()).getVisibilityBottomBar(true);
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 
     @Override
     public void onExplanationNeeded(List<String> permissionsToExplain) {
-
     }
 
     @Override
     public void onPermissionResult(boolean granted) {
-
     }
 
 
     //region Method
+    private void config(){
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(4);
+    }
+
+    private void init(){
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        binding.ivBack.setOnClickListener(view1 -> Navigation.findNavController(binding.getRoot()).popBackStack());
+    }
+
+
+
+
+
+    private void onClickBtnRegister(){
+        binding.btnRegisterInformation.setOnClickListener(v -> {
+            setLocation();
+            Navigation.findNavController(binding.getRoot()).popBackStack();
+        });
+    }
+
+    private void initMap(Bundle savedInstanceState){
+
+        try {
+            binding.mapView.onCreate(savedInstanceState);
+        } catch (Exception ignore) {
+        }
+
+        binding.mapView.getMapAsync(mapboxMap -> {
+            this.mMapboxMap = mapboxMap;
+
+
+            CedarMapsStyleConfigurator.configure(
+                    CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
+                        @Override
+                        public void onSuccess(@NonNull Style.Builder styleBuilder) {
+
+
+                            mapboxMap.setStyle(styleBuilder, style -> {
+                                if (getActivity() == null) {
+                                    return;
+                                }
+                                circleManager = new CircleManager(binding.mapView, mMapboxMap, style);
+
+                                setupCurrentLocationButton();
+
+                                if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
+                                    enableLocationComponent(style);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull String errorMessage) {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            this.mMapboxMap.setMaxZoomPreference(18);
+            this.mMapboxMap.setMinZoomPreference(6);
+            this.mMapboxMap.setCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(new LatLng(latitude,longitude))
+                            .zoom(12)
+                            .build());
+
+
+            reverseGeocode(mapboxMap.getCameraPosition());
+
+            mMapboxMap.addOnCameraIdleListener(() -> reverseGeocode(mMapboxMap.getCameraPosition()));
+
+            binding.floating.setOnClickListener(v -> setupCurrentLocationButton());
+
+        });
+    }
+
+    private void setLocation(){
+        Locations.deleteAll(Locations.class);
+        Locations locations=new Locations();
+        locations.setLongitude(longitude);
+        locations.setLatitude(latitude);
+        locations.setAddress(address);
+        locations.save();
+    }
+
     private void enableMyLocation() {
 
         try {
@@ -513,20 +373,16 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     }
 
-    private void AlertPermission() {
+    private void setupCurrentLocationButton() {
+        if (getView() == null) {
+            return;
+        }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        if (mMapboxMap.getStyle() != null)
+            enableLocationComponent(mMapboxMap.getStyle());
 
-        builder.setMessage("برای استفاده از gps ، نرم افزار نیاز به دسترسی دارد.لطفا دسترسی لازم را با فشردن دکمه<<دسترسی دادن>> بدهید.")
-                .setCancelable(false)
-                .setPositiveButton("دسترسی دادن", (dialog, id) ->
-                        {
-                            PermissionsManager permissionsManager = new PermissionsManager(this);
-                            permissionsManager.requestLocationPermissions(getActivity());
-                        }
-                ).setNegativeButton("بستن", (dialog, which) -> dialog.dismiss());
-        AlertDialog alert = builder.create();
-        alert.show();
+        toggleCurrentLocationButton();
+
     }
 
     @SuppressLint("MissingPermission")
@@ -577,18 +433,20 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationEngine.getLastLocation(callback);
     }
 
-    private void setupCurrentLocationButton() {
-        if (getView() == null) {
-            return;
-        }
+    private void AlertPermission() {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        if (mMapboxMap.getStyle() != null) {
-
-            enableLocationComponent(mMapboxMap.getStyle());
-        }
-        toggleCurrentLocationButton();
-
+        builder.setMessage("برای استفاده از gps ، نرم افزار نیاز به دسترسی دارد.لطفا دسترسی لازم را با فشردن دکمه<<دسترسی دادن>> بدهید.")
+                .setCancelable(false)
+                .setPositiveButton("دسترسی دادن", (dialog, id) ->
+                        {
+                            PermissionsManager permissionsManager = new PermissionsManager(this);
+                            permissionsManager.requestLocationPermissions(getActivity());
+                        }
+                ).setNegativeButton("بستن", (dialog, which) -> dialog.dismiss());
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void toggleCurrentLocationButton() {
@@ -669,14 +527,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
                     public void onSuccess(@NonNull ReverseGeocode result) {
 
 
-                     latitude = position.target.getLatitude();
-                     longitude = position.target.getLongitude();
+                        latitude = position.target.getLatitude();
+                        longitude = position.target.getLongitude();
+                        address = result.getPlace() + " " + result.getCity() + " " + result.getAddress() + " " + result.getDistrict() + " ";
+
+                        binding.edtAddress.setText(address);
                         binding.edtAddress.setVisibility(View.VISIBLE);
                         binding.pro.setVisibility(View.GONE);
-
-
-                        String address = result.getPlace() + " " + result.getCity() + " " + result.getAddress() + " " + result.getDistrict() + " ";
-                        binding.edtAddress.setText(address);
                     }
 
                     @SuppressLint("SetTextI18n")
@@ -691,6 +548,121 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     }
 
+    private void  initSearchOnMap(View view){
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        binding.recyclerView.setLayoutManager(mLinearLayoutManager);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(binding.recyclerView.getContext(), mLinearLayoutManager.getOrientation());
+        binding.recyclerView.addItemDecoration(mDividerItemDecoration);
+
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && state == State.MAP_PIN) {
+                setState(State.RESULTS);
+                return true;
+            }
+            return false;
+        });
+
+        binding.searchView.setIconifiedByDefault(false);
+        binding.searchView.setQueryHint("جستجو");
+        binding.searchView.setMaxWidth(Integer.MAX_VALUE);
+
+
+        List<ForwardGeocode> resultsLis = new ArrayList<>();
+        mRecyclerAdapter = new SearchViewAdapter(resultsLis);
+
+        binding.recyclerView.setAdapter(mRecyclerAdapter);
+
+        try {
+            LinearLayout linearLayout1 = (LinearLayout) binding.searchView.getChildAt(0);
+            LinearLayout linearLayout2;
+            try {
+                linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
+            } catch (Exception ignore) {
+                linearLayout2 = (LinearLayout) linearLayout1.getChildAt(0);
+            }
+
+            LinearLayout linearLayout3;
+            try {
+                linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
+            } catch (Exception ignore) {
+                linearLayout3 = (LinearLayout) linearLayout2.getChildAt(0);
+            }
+
+
+            AutoCompleteTextView autoComplete;
+            try {
+                autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
+            } catch (Exception ignore) {
+                autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(1);
+            }
+            autoComplete.setTextSize(12);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                autoComplete.setTextColor(getActivity().getColor(R.color.medium_color));
+            }
+            Typeface iranSansBold = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+            autoComplete.setTypeface(iranSansBold);
+        } catch (Exception ignore) {}
+        binding.searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && state == State.MAP_PIN) {
+                circleManager.deleteAll();
+                if (!TextUtils.isEmpty(binding.searchView.getQuery())) {
+                    setState(State.RESULTS);
+                } else {
+                    setState(State.MAP);
+                }
+            }
+        });
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                try {
+                    binding.searchView.clearFocus();
+                } catch (Exception ignored) {
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String newText) {
+
+                try {
+                    if (TextUtils.isEmpty(newText)) {
+                        circleManager.deleteAll();
+                        setState(State.MAP);
+                    } else {
+                        setState(State.SEARCHING);
+                        CedarMaps.getInstance().forwardGeocode(newText, new ForwardGeocodeResultsListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onSuccess(@NonNull List<ForwardGeocode> results) {
+                                setState(State.RESULTS);
+                                if (results.size() > 0 && newText.equals(binding.searchView.getQuery().toString())) {
+                                    resultsLis.clear();
+                                    resultsLis.addAll(results);
+                                    mRecyclerAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull String errorMessage) {
+                                setState(State.RESULTS);
+                                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                } catch (Exception ignored) {
+                }
+
+
+                return false;
+            }
+        });
+        mRecyclerAdapter.setOnClickItemListener(this::showItemOnMap);
+    }
     private void setState(State state) {
 
         this.state = state;

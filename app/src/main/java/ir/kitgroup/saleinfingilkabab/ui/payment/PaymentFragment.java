@@ -45,6 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleinfingilkabab.Connect.CompanyViewModel;
 import ir.kitgroup.saleinfingilkabab.DataBase.Account;
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.DataBase.Product;
 import ir.kitgroup.saleinfingilkabab.DataBase.SaleinShop;
 import ir.kitgroup.saleinfingilkabab.classes.Utilities;
@@ -440,7 +441,6 @@ public class PaymentFragment extends Fragment {
         public List<PaymentRecieptDetail> PaymentRecieptDetail;
     }
 
-
     @SuppressLint("SetTextI18n")
     private void getTransportCost() {
         double mainCustomerLat;
@@ -475,7 +475,7 @@ public class PaymentFragment extends Fragment {
             binding.tvTransport.setVisibility(View.VISIBLE);
             binding.tvTransport.setText(format.format(transportCost) + " ریال ");
         } else
-            binding.tvTransport.setVisibility(View.GONE);
+            binding.layoutPeyk.setVisibility(View.GONE);
 
 
         binding.tvSumPurePrice.setText(format.format(sumPurePrice + transportCost) + "ریال");
@@ -491,6 +491,7 @@ public class PaymentFragment extends Fragment {
     }
 
     private void init() {
+        Locations.deleteAll(Locations.class);
         account = Select.from(Account.class).first();
         latitude1 = account.getLAT();
         longitude1 = account.getLNG();
@@ -606,6 +607,7 @@ public class PaymentFragment extends Fragment {
         });
 
         btnNewAddress.setOnClickListener(v -> {
+            Locations.deleteAll(Locations.class);
             dialogAddress.dismiss();
             if (account == null) {
                 Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
@@ -909,7 +911,6 @@ public class PaymentFragment extends Fragment {
     }
 
     private void sendOrder() {
-
         dialogSendOrder = dialogInstance.dialog(getActivity(), false, R.layout.custom_dialog);
 
         tvMessage = dialogSendOrder.findViewById(R.id.tv_message);
@@ -982,7 +983,8 @@ public class PaymentFragment extends Fragment {
 
                 if (transportCost != 0)
                     InvoiceDetail.save(invoiceDetailTransport);
-            } else {
+            }
+            else {
                 invoiceDetailTransport.INV_UID = Inv_GUID;
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(transportCost);
@@ -1074,26 +1076,26 @@ public class PaymentFragment extends Fragment {
                 clsPaymentRecieptDetails.add(cl);
             }
 
+
             customProgress.showProgress(getActivity(), "در حال ارسال سفارش...", false);
             myViewModel.sendOrder(userName, passWord, listInvoice, invoiceDetailList, clsPaymentRecieptDetails, "");
         });
-
 
         btnReturned.setOnClickListener(v -> {
             boolean saleinApp = Select.from(SaleinShop.class).first().isPublicApp();
 
             int size = Navigation.findNavController(binding.getRoot()).getBackQueue().size();
             int remain;
+
             if (saleinApp)
                 remain = size - 3;
             else
                 remain = size - 2;
 
-
             sharedPreferences.edit().putBoolean("vip", false).apply();
             sharedPreferences.edit().putBoolean("discount", false).apply();
             dialogSendOrder.dismiss();
-            for (int i = 0; i < remain; i++) {
+            for (int i = 0; i < 2; i++) {
                 Navigation.findNavController(binding.getRoot()).popBackStack();
             }
         });

@@ -47,24 +47,21 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="16dp"
-                android:textColor="@color/medium_color"
-                android:textSize="13dp"
-                android:textStyle="bold"
+              style="@style/bold_text"
                 tools:ignore="HardcodedText"
                 tools:text="55,000 ریال" />
+
             <TextView
-                android:layout_toRightOf="@+id/iv_more"
-                tools:text="در انتظار بررسی"
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="16dp"
-                android:textColor="@color/medium_color"
-                android:textSize="13dp"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                android:layout_toRightOf="@+id/iv_more"
+                style="@style/bold_text"
+                tools:ignore="HardcodedText"
+                tools:text="در انتظار بررسی" />
 
 
             <RelativeLayout
@@ -75,16 +72,15 @@
                 android:layout_marginLeft="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
-                    android:text="شماره فیش : "
-                    android:textStyle="bold"
                     android:id="@+id/txt_number_factor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/medium_color"
-                    android:textSize="@dimen/text_normal_mobile_size"
+                    android:layout_centerVertical="true"
+                    android:text="شماره فیش : "
+                    style="@style/bold_text"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_marginRight="@dimen/margin4"
@@ -126,14 +122,13 @@
 
                     <TextView
                         android:id="@+id/tv_date_delivery_order"
+                        style="@style/normal_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
-                     android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/iv_calendar1"
-                        android:textColor="@color/medium_color"
-                        android:textSize="@dimen/text_normal_mobile_size"
                         tools:ignore="HardcodedText" />
                 </RelativeLayout>
 
@@ -162,8 +157,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:layout_toLeftOf="@+id/iv_calendar"
-                        android:textColor="@color/medium_color"
-                        android:textSize="@dimen/text_normal_mobile_size"
+                        style="@style/normal_text"
                         tools:ignore="HardcodedText" />
 
 
@@ -197,8 +191,7 @@
                     android:layout_marginRight="4dp"
                     android:layout_toLeftOf="@+id/iv_location"
                     android:singleLine="true"
-                    android:textColor="@color/medium_color"
-                    android:textSize="@dimen/text_normal_mobile_size" />
+                   style="@style/normal_text" />
 
 
             </RelativeLayout>
@@ -252,8 +245,7 @@
                     android:fontFamily="@font/iransans"
                     android:hint="ارسال نظر به این سفارش"
                     android:inputType="textShortMessage|textMultiLine"
-                    android:textColor="@color/medium_color"
-                    android:textSize="12dp" />
+                   style="@style/normal_text" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 

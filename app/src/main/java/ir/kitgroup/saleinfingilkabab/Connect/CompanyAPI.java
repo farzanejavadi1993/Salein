@@ -3,7 +3,6 @@ package ir.kitgroup.saleinfingilkabab.Connect;
 import com.google.gson.JsonElement;
 
 
-
 import io.reactivex.Observable;
 
 import retrofit2.http.Body;
@@ -15,14 +14,13 @@ import retrofit2.http.Query;
 public interface CompanyAPI {
 
     @POST("SyncData")
-    Observable<String>  sendOrder(@Query("userName") String userName, @Query("password") String password,
-                          @Body() String jsonObject,
-                          @Query("virtualParam") String virtualParam,
-                          @Query("numberPos") String numberPos);
+    Observable<String> sendOrder(@Query("userName") String userName, @Query("password") String password,
+                                 @Body() String jsonObject,
+                                 @Query("virtualParam") String virtualParam,
+                                 @Query("numberPos") String numberPos);
 
     @GET("DeleteInvoice")
     Observable<String> getDeleteInvoice(@Query("userName") String userName, @Query("passWord") String passWord, @Query("InvoiceId") String InvoiceId);
-
 
 
     @GET("login")
@@ -37,12 +35,10 @@ public interface CompanyAPI {
     Observable<String> addAccount(@Query("userName") String userName, @Query("password") String password
             , @Body() String jsonObject, @Query("virtualParam") String virtualParam);
 
-    @POST("CalculateDelivery")
-    Observable<Integer> getTransportationCost(@Query("latCustomer") double latCustomer, @Query("longCustomer") double longCustomer,
-                                              @Query("latCompany") double latCompany,
+    @GET("CalculateDelivery")
+    Observable<Integer> getTransportationCost(@Query("latCustomer") double latCustomer, @Query("longCustomer") double longCustomer, @Query("latCompany") double latCompany,
                                               @Query("longCompany") double lonCompany,
                                               @Query("invoiceprice") double invoicePrice);
-
 
 
     @POST("UpdateInvoiceDesc")
@@ -55,7 +51,7 @@ public interface CompanyAPI {
 
 
     @POST("UpdateAccount")
-    Observable<String> updateAccount(@Query("userName") String userName, @Query("passWord") String passWord, @Body() String jsonAccount,@Query("virtualParam") String virtualParam);
+    Observable<String> updateAccount(@Query("userName") String userName, @Query("passWord") String passWord, @Body() String jsonAccount, @Query("virtualParam") String virtualParam);
 
     @GET("productSync")
     Observable<String> getProduct(@Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
@@ -65,12 +61,8 @@ public interface CompanyAPI {
     Observable<String> getInquiryAccount1(@Query("userName") String userName, @Query("password") String password, @Query("mobile") String mobile, @Query("code") String code, @Query("card") String card, @Query("task") int task, @Query("isShowPassWord") int isShowPassWord);
 
 
-
-
     @GET("SettingSync")
     Observable<String> getSetting1(@Query("userName") String userName, @Query("password") String password);
-
-
 
 
     @GET("GetAllInvoice")
@@ -89,12 +81,11 @@ public interface CompanyAPI {
 
 
     @GET("AccountSearch")
-    Observable<String>  getAccountSearch1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("word") String word);
+    Observable<String> getAccountSearch1(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("word") String word);
 
 
     @GET("DescriptionSync")
     Observable<String> getDescription1(@Query("userName") String userName, @Query("password") String password, @Query("productId") String productId);
-
 
 
     @GET("MaxSaleSync")
@@ -115,26 +106,19 @@ public interface CompanyAPI {
 
 
     @GET("ProductCustomSync")
-    Observable<JsonElement> getProductCustomSync(@Query("token") String token, @Query("userName") String userName, @Query("password") String password,@Query("tabNumber") int key);
-
-
+    Observable<JsonElement> getProductCustomSync(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("tabNumber") int key);
 
 
     @GET("ProductSearch")
-    Observable<String> getSearchProduct(@Query("token") String token,@Query("userName") String userName, @Query("password") String password, @Query("word") String word);
-
-
+    Observable<String> getSearchProduct(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("word") String word);
 
 
     @GET("ProductDiscountSync")
-    Observable<String> getProductDiscountSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password);
+    Observable<String> getProductDiscountSync(@Query("token") String token, @Query("userName") String userName, @Query("password") String password);
 
 
     @GET("ProductVipSync")
-    Observable<String> getProductVipSync(@Query("token") String token,@Query("userName") String userName, @Query("password") String password ,@Query("customerId") String customerId);
-
-
-
+    Observable<String> getProductVipSync(@Query("token") String token, @Query("userName") String userName, @Query("password") String password, @Query("customerId") String customerId);
 
 
 }

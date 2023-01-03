@@ -38,31 +38,23 @@
 
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/bold_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:text="@string/confirm_code"
-                android:textColor="@color/medium_color"
-                android:textSize="@dimen/text_normal_mobile_size"
-                android:textStyle="bold"
-                tools:ignore="RelativeOverlap" />
+                android:text="@string/confirm_code" />
         </RelativeLayout>
 
 
         <TextView
             android:id="@+id/tv_message"
+            style="@style/bold_text"
             android:layout_width="360dp"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/image_logo"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="22dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="22dp"
-
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_xx_large_mobile_size" />
+            android:gravity="center" />
 
         <ImageView
             android:id="@+id/image_logo"
@@ -74,6 +66,7 @@
 
         <TextView
             android:id="@+id/tvEnterCode"
+            style="@style/bold_text"
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayout"
@@ -82,10 +75,7 @@
             android:layout_marginTop="220dp"
             android:layout_marginRight="26dp"
             android:gravity="center"
-            android:text="@string/enter_code"
-            android:textColor="@color/medium_color"
-            android:textSize="@dimen/text_normal_mobile_size"
-            android:textStyle="bold" />
+            android:text="@string/enter_code" />
 
 
         <RelativeLayout
@@ -110,13 +100,14 @@
                 app:otp_box_background_error="@drawable/otp_error"
                 app:otp_box_background_inactive="@drawable/otp_inactive"
                 app:otp_box_background_success="@drawable/otp_success"
-                app:otp_text_size="12dp"
+                app:otp_text_size="@dimen/normal_size"
                 app:text_typeface="@font/iransans"
                 app:width="40dp" />
         </RelativeLayout>
 
 
         <ProgressBar
+            android:indeterminateTint="@color/color_accent"
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="30dp"
@@ -130,32 +121,30 @@
 
         <RelativeLayout
             android:layout_width="360dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="26dp"
-            android:layout_marginBottom="25dp"
-            android:layout_height="wrap_content">
+            android:layout_marginBottom="25dp">
+
             <ProgressBar
-                android:visibility="gone"
-                android:layout_marginRight="@dimen/margin10"
-                android:layout_centerVertical="true"
                 android:id="@+id/progressResendCode"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:layout_toLeftOf="@+id/tvTimer" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin10"
+                android:layout_toLeftOf="@+id/tvTimer"
+                android:visibility="gone" />
 
             <TextView
-                android:layout_centerVertical="true"
+                android:textColor="@color/color_accent"
                 android:id="@+id/tvTimer"
-                android:layout_centerInParent="true"
+                style="@style/bold_text_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="@string/enter_code"
-                android:textColor="@color/launcher_linear_order_textView_header_color"
-                android:textSize="@dimen/text_normal_mobile_size" />
+                android:layout_centerInParent="true"
+                android:gravity="center" />
         </RelativeLayout>
 
 

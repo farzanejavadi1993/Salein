@@ -42,6 +42,7 @@ import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleinfingilkabab.Connect.CompanyViewModel;
 
 
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.R;
 import ir.kitgroup.saleinfingilkabab.classes.Util;
 
@@ -105,9 +106,6 @@ public class LoginFragment extends Fragment {
             binding.btnLogin.setEnabled(true);
             if (result == null) return;
             Toasty.warning(requireActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
-
-            /*NavDirections action = LoginFragmentDirections.actionGoToVerifyFragment(mobile, code);
-            Navigation.findNavController(binding.getRoot()).navigate(action);*/
         });
 
         companyViewModel.getResultSmsLogin().observe(getViewLifecycleOwner(), result -> {
@@ -135,6 +133,7 @@ public class LoginFragment extends Fragment {
     //region Method
     @SuppressLint("SetTextI18n")
     private void init() {
+        Locations.deleteAll(Locations.class);
         userName = company.getUser();
         passWord = company.getPass();
 

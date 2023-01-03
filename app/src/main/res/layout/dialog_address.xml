@@ -1,71 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="340dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="12dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    app:cardCornerRadius="12dp">
+
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginRight="22dp"
-        android:layout_marginLeft="22dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:orientation="vertical">
+
         <TextView
+            style="@style/bold_text"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
             android:gravity="right"
             android:text="از بین آدرس های زیر یکی را انتخاب کنید"
-            android:textStyle="bold"
-            android:textColor="@color/medium_color"
-            android:layout_marginTop="14dp"
-            android:textSize="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+          />
+
         <RadioGroup
+            android:id="@+id/radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin8"
             android:layoutDirection="rtl"
-            android:id="@+id/radio"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
+
             <RadioButton
 
-                android:visibility="gone"
+                android:id="@+id/radioAddress1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/radio_btn_background"
+                android:button="?android:selectableItemBackground"
+                android:fontFamily="@font/iransans"
+                android:gravity="right|center_vertical"
                 android:paddingStart="@dimen/margin10"
                 android:paddingEnd="@dimen/margin10"
-                android:background="@drawable/radio_btn_background"
-                android:gravity="right|center_vertical"
-                android:textSize="12dp"
                 android:textColor="@color/medium_color"
-                android:fontFamily="@font/iransans"
-                android:id="@+id/radioAddress1"
-                android:button="?android:selectableItemBackground"
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:textSize="12dp"
+                android:visibility="gone">
 
             </RadioButton>
 
             <RadioButton
-                android:button="?android:selectableItemBackground"
-                android:visibility="gone"
-                android:paddingStart="@dimen/margin10"
-                android:paddingEnd="@dimen/margin10"
+                android:id="@+id/radioAddress2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginTop="@dimen/margin10"
                 android:background="@drawable/radio_btn_background"
-                android:gravity="right|center_vertical"
-                android:id="@+id/radioAddress2"
-                android:textDirection="rtl"
-                android:layoutDirection="rtl"
-                android:textSize="12dp"
-                android:textColor="@color/medium_color"
+                android:button="?android:selectableItemBackground"
                 android:fontFamily="@font/iransans"
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:gravity="right|center_vertical"
+                android:layoutDirection="rtl"
+                android:paddingStart="@dimen/margin10"
+                android:paddingEnd="@dimen/margin10"
+                android:textColor="@color/medium_color"
+                android:textDirection="rtl"
+                android:textSize="12dp"
+                android:visibility="gone">
 
             </RadioButton>
         </RadioGroup>
-
-
-
 
 
         <RelativeLayout
@@ -89,10 +90,10 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/iransans"
                 android:text=" آدرس جدید"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/color_accent"
                 android:textSize="11dp"
                 app:cornerRadius="15dp"
-                app:strokeColor="@color/purple_500"
+                app:strokeColor="@color/color_accent"
                 app:strokeWidth="1dp"
                 tools:ignore="UnusedAttribute" />
 

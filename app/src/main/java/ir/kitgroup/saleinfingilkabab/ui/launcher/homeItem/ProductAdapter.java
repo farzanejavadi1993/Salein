@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siyamed.shapeimageview.RoundedImageView;
@@ -205,8 +204,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             Picasso.get()
                     .load("http://" + ip + "/GetImage?productId=" + productsList
                             .get(holder.getAdapterPosition()).getI() + "&width=200&height=200")
-                    .error(R.drawable.nopic)
-                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.loading)
+                    .placeholder(R.drawable.loading)
                     .into(holder.productImage);
 
 

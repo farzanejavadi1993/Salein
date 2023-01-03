@@ -20,6 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/iv_back"
                 android:layout_width="@dimen/icon_normal_size"
@@ -31,10 +32,10 @@
                 android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -52,32 +53,27 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/large_bold_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:gravity="right"
                     android:lineSpacingExtra="16dp"
-                    android:text="آدرس و موقعیت را مشخص کنید."
-                    android:textColor="#474747"
-                    android:textSize="14dp"
-                    android:textStyle="bold" />
+                    android:text="آدرس و موقعیت را مشخص کنید." />
 
                 <RelativeLayout
-                    android:layout_marginTop="18dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
                     <TextView
                         android:id="@+id/address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/normal_text"
+
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="right"
                         android:lineSpacingExtra="9dp"
-                        android:text="آدرس "
-                        android:textColor="#474747"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
+                        android:text="آدرس " />
+
                     <TextView
 
                         android:layout_width="wrap_content"
@@ -93,39 +89,26 @@
                 </RelativeLayout>
 
 
-                <com.google.android.material.card.MaterialCardView
-
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
-                    android:layout_marginTop="5dp"
-                    android:backgroundTint="@color/launcher_linear_order_header_color"
-                    app:cardCornerRadius="10dp"
-                    app:strokeColor="@color/launcher_linear_order_header_color"
-                    app:strokeWidth="1dp">
+                    android:layout_marginTop="5dp">
 
-                    <RelativeLayout
+                    <EditText
+                        android:id="@+id/edtAddress"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/background_edittext"
+                        android:fontFamily="@font/iransans"
+                        android:gravity="right|center"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp" />
 
-                        <EditText
-                            android:id="@+id/edtAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="right|center"
-                            android:lineSpacingExtra="9dp"
-                            android:textColor="@color/medium_color"
-                            android:textSize="13dp"
-                            android:textStyle="normal" />
+                </RelativeLayout>
 
-                    </RelativeLayout>
-
-                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -139,23 +122,37 @@
                     android:textStyle="normal" />
 
 
-                <TextView
-                    android:id="@+id/tv_map"
+                <RelativeLayout
+                    android:id="@+id/layoutMap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:gravity="right"
-                    android:lineSpacingExtra="9dp"
-                    android:text="موقعیت خود را روی نقشه مشخص کنید."
-                    android:textColor="#474747"
-                    android:textSize="13dp"
-                    android:textStyle="normal" />
+                    android:layout_marginTop="18dp">
+
+                    <TextView
+                        android:id="@+id/tv_map"
+                        style="@style/normal_text"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="right"
+                        android:lineSpacingExtra="9dp"
+                        android:text="موقعیت خود را روی نقشه مشخص کنید." />
+
+                    <TextView
+                        android:id="@+id/tv_register_map"
+                        style="@style/bold_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="right"
+                        android:text="ثبت موقعیت"
+                        android:textColor="@color/color_accent" />
+                </RelativeLayout>
+
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btn_map"
                     android:layout_width="match_parent"
                     android:layout_height="155dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="8dp"
                     android:backgroundTint="@color/launcher_linear_order_header_color"
                     app:cardCornerRadius="10dp">
 
@@ -167,157 +164,112 @@
                         />
                 </com.google.android.material.card.MaterialCardView>
 
+
                 <LinearLayout
                     android:id="@+id/nameCard"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="21dp">
+                        android:layout_marginTop="12dp">
 
                         <TextView
                             android:id="@+id/tvN"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/normal_text"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:lineSpacingExtra="9dp"
-                            android:text="نام و نام خانوادگی"
-                            android:textColor="#474747"
-                            android:textSize="13dp"
-                            android:textStyle="normal" />
+                            android:text="نام و نام خانوادگی" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/normal_text"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/tvN"
                             android:lineSpacingExtra="9dp"
                             android:text="*"
-                            android:textColor="@color/red"
-                            android:textSize="13dp"
-                            android:textStyle="normal" />
+                            android:textColor="@color/red" />
                     </RelativeLayout>
-                    <com.google.android.material.card.MaterialCardView
+
+
+                    <EditText
+                        android:id="@+id/edtName"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/launcher_linear_order_header_color"
-                        android:strokeColor="@color/launcher_linear_order_header_color"
-                        app:cardCornerRadius="10dp"
-                        app:strokeWidth="1dp">
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/background_edittext"
+                        android:fontFamily="@font/iransans"
+                        android:gravity="right|center"
+                        android:inputType="text"
+                        android:lineSpacingExtra="9dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp" />
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
 
-                            <EditText
-                                android:id="@+id/edtName"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:layout_marginRight="16dp"
-                                android:background="@android:color/transparent"
-                                android:fontFamily="@font/iransans"
-                                android:gravity="right|center"
-                                android:inputType="text"
-                                android:lineSpacingExtra="9dp"
-                                android:textColor="@color/medium_color"
-                                android:textSize="13dp"
-                                android:textStyle="normal" />
-
-                        </RelativeLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
 
                 <LinearLayout
+                    android:layout_marginTop="12dp"
                     android:id="@+id/CodeId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/normal_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="21dp"
+
                         android:gravity="right"
                         android:lineSpacingExtra="9dp"
-                        android:text="کد معرف"
-                        android:textColor="#474747"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
+                        android:text="کد معرف" />
 
-                    <com.google.android.material.card.MaterialCardView
+
+                    <EditText
+                        android:id="@+id/edtCode"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/launcher_linear_order_header_color"
-                        android:strokeColor="@color/launcher_linear_order_header_color"
-                        app:cardCornerRadius="10dp"
-                        app:strokeWidth="1dp">
+                        android:layout_height="48dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/background_edittext"
+                        android:fontFamily="@font/iransans"
+                        android:gravity="right|center"
+                        android:inputType="number"
+                        android:lineSpacingExtra="9dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp" />
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp">
 
-                            <EditText
-                                android:id="@+id/edtCode"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:layout_marginRight="16dp"
-                                android:background="@android:color/transparent"
-                                android:fontFamily="@font/iransans"
-                                android:gravity="right|center"
-                                android:inputType="number"
-                                android:lineSpacingExtra="9dp"
-                                android:textColor="@color/medium_color"
-                                android:textSize="13dp"
-                                android:textStyle="normal" />
-
-                        </RelativeLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
 
                 <RelativeLayout
+
                     android:id="@+id/radioCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="21dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:id="@+id/tvRadioGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/normal_text"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="right"
-                        android:lineSpacingExtra="9dp"
-                        android:text="جنسیت"
-                        android:textColor="#474747"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
+                        android:text="جنسیت" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
+                        style="@style/normal_text"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/tvRadioGroup"
                         android:lineSpacingExtra="9dp"
                         android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
+                        android:textColor="@color/red" />
 
                     <RadioGroup
                         android:id="@+id/radioGroup"
@@ -327,27 +279,24 @@
                         android:layout_marginRight="@dimen/margin10"
                         android:layout_toLeftOf="@+id/tvRadioGroup"
                         android:orientation="horizontal">
-                        <RadioButton
 
-                            android:id="@+id/radio2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="22dp"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="center_vertical"
-                            android:text="@string/man"
-                            android:textColor="@color/medium_color"
-                            android:textSize="@dimen/text_medium_mobile_size" />
                         <RadioButton
-                            android:id="@+id/radio1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_accent"
+                            android:id="@+id/radio2"
+                            style="@style/bold_text"
                             android:layout_marginRight="22dp"
                             android:fontFamily="@font/iransans"
                             android:gravity="center_vertical"
-                            android:text="@string/woman"
-                            android:textColor="@color/medium_color"
-                            android:textSize="@dimen/text_medium_mobile_size" />
+                            android:text="@string/man" />
+
+                        <RadioButton
+                            android:buttonTint="@color/color_accent"
+                            android:id="@+id/radio1"
+                            style="@style/bold_text"
+                            android:layout_marginRight="22dp"
+                            android:fontFamily="@font/iransans"
+                            android:gravity="center_vertical"
+                            android:text="@string/woman" />
 
 
                     </RadioGroup>
@@ -366,29 +315,26 @@
 
 
             <RelativeLayout
-                android:layout_marginBottom="@dimen/margin10"
                 android:id="@+id/card_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/margin10"
 
                 >
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_register_information"
                     android:layout_width="132dp"
-                    android:layout_height="wrap_content"
+                    style="@style/bold_text_bottom"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="22dp"
                     android:layout_marginEnd="22dp"
-                    app:backgroundTint="@null"
                     android:background="@drawable/bottom_background"
                     android:fontFamily="@font/iransans"
                     android:lineSpacingExtra="10dp"
                     android:text="ثبت و ادامه"
-                    android:textColor="@color/medium_color"
-                    android:textSize="14dp"
-                    android:textStyle="bold"
+                    app:backgroundTint="@null"
                     app:cornerRadius="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

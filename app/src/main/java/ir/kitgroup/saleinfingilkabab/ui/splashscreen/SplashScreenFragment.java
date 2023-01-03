@@ -33,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleinfingilkabab.Connect.MainViewModel;
 import ir.kitgroup.saleinfingilkabab.DataBase.Account;
 
+import ir.kitgroup.saleinfingilkabab.DataBase.Locations;
 import ir.kitgroup.saleinfingilkabab.classes.ConnectToServer;
 import ir.kitgroup.saleinfingilkabab.classes.CustomDialog;
 import ir.kitgroup.saleinfingilkabab.classes.Util;
@@ -253,6 +254,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void init() {
+        Locations.deleteAll(Locations.class);
         IMEI = Util.getAndroidID(getActivity());
 
         binding.btnWarning.setOnClickListener(v -> {
@@ -350,10 +352,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void setIdServerToAccount(String id) {
-        if (account != null) {
-            account.setiServer(id);
-            account.save();
-        }
+        sharedPreferences.edit().putString("idServer",id).apply();
     }
     //endregion Custom Method
 

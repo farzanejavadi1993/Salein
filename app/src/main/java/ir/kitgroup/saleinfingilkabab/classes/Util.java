@@ -30,23 +30,23 @@ public class Util {
     public static double width = 0.0;
     public static double height = 0.0;
     public static double screenSize = 0.0;
-    /*public static String Main_URL = "http://api.kitgroup.ir/api/REST/";
-    public static String Main_Url_IMAGE = "http://api.kitgroup.ir";*/
+    public static String Main_URL = "http://api.kitgroup.ir/api/REST/";
+    public static String Main_Url_IMAGE = "http://api.kitgroup.ir";
 
-    public static String Main_URL = "http://2.180.28.6:1993/api/REST/";
-    public static String Main_Url_IMAGE = "2.180.28.6:1993";
+   /* public static String Main_URL = "http://2.180.28.6:1993/api/REST/";
+    public static String Main_Url_IMAGE = "2.180.28.6:1993";*/
 
 
     public static String APPLICATION_CODE = "12345678";
     public static String APPLICATION_ID = "";
     public static String PRODUCTION_BASE_URL = "";
-    public static double latitude = 0;
-    public static double longitude = 0;
+/*    public static double latitude = 0;
+    public static double longitude = 0;*/
     public static final String MARKERS_SOURCE = "markers-source";
     public static final String MARKERS_LAYER = "markers-layer";
     public static final String MARKER_ICON_ID = "marker-icon-id";
-    public static String address = "";
-    public static String nameUser = "";
+  /*  public static String address = "";
+    public static String nameUser = "";*/
 
 
     public static void ScreenSize(Activity activity) {
@@ -106,7 +106,7 @@ public class Util {
 
     }
 
-    public static final LatLng VANAK_SQUARE = new LatLng(36.310699, 59.599457);
+  //  public static final LatLng VANAK_SQUARE = new LatLng(0.0, 0.0);
 
 
     public static String toEnglishNumber(String input) {

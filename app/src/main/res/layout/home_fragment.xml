@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -20,7 +20,7 @@
 
 
             <RelativeLayout
-                android:background="@color/purple_700"
+                android:background="@color/color_primary_dark"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -38,27 +38,25 @@
 
                     <TextView
                         android:id="@+id/tvTitleStore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        style="@style/normal_text"
                         android:layout_marginRight="8dp"
                         android:layout_toLeftOf="@+id/iv_store_left"
                         android:singleLine="true"
                         android:text="خرید از فروشگاه"
-                        android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textColor="@color/color_accent" />
 
                     <TextView
+
                         android:id="@+id/tvNameStore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tvTitleStore"
+
                         android:layout_marginRight="8dp"
-                        android:layout_toLeftOf="@+id/iv_store_left"
+                        android:layout_toLeftOf="@+id/tvTitleStore"
                         android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        tools:text="گوشت دنیوی" />
+                        android:textColor="@color/color_accent"
+                        style="@style/bold_text" />
 
                     <ImageView
                         android:id="@+id/iv_store_left"
@@ -72,12 +70,12 @@
                 </RelativeLayout>
 
                 <ImageView
-                    android:layout_marginLeft="12dp"
                     android:id="@+id/iv_filter"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerInParent="true"
+                    android:layout_marginLeft="12dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
@@ -86,7 +84,7 @@
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:background="@color/purple_500"
+                android:background="@color/color_primary"
                 android:id="@+id/order_recyclerView_productLevel1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,6 +127,7 @@
 
 
                 <ProgressBar
+                    android:indeterminateTint="@color/color_accent"
                     android:id="@+id/progressbar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"

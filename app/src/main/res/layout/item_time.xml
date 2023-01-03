@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:background="@color/white"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/btn_time"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
     android:gravity="right"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
     <TextView
-        android:gravity="center_vertical"
         android:id="@+id/tv_time"
-        android:textColor="@color/medium_color"
-        android:textSize="12dp"
-        android:layout_width="wrap_content"
+        style="@style/bold_text"
         android:layout_height="46dp"
         android:layout_marginEnd="22dp"
-   />
+        android:gravity="center_vertical" />
+
     <View
 
-        android:background="#ccc"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="#ccc" />
 </LinearLayout>

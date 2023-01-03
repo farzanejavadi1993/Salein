@@ -10,7 +10,8 @@
     <string name="app_name_saleinbahraman"> زعفران بهرامن</string>
 
     <string name="app_name_salein">سالین </string>
-    <string name="app_name_saleinFingilKabab">فینگیلی کباب </string>
+    <string name="app_name_saleinFingilKabab">فینگیل کباب </string>
+    <string name="app_name_saleinkhavari">پخش مواد غذایی خاوری </string>
     <string name="app_name_saleinjam">بازرگانی جم پارت</string>
     <string name="login_register_text">ورود ثبت نام</string>
     <string name="welcome_text">به اپلیکیشن سفارش گیر سالین خوش آمدید</string>

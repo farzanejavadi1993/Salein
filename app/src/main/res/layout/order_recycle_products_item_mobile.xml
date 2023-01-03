@@ -18,7 +18,7 @@
         <com.github.siyamed.shapeimageview.RoundedImageView
             android:id="@+id/order_recycle_item_product_img"
             android:layout_width="match_parent"
-            android:layout_height="165dp"
+            android:layout_height="145dp"
             android:layout_centerHorizontal="true"
             app:siBorderColor="@color/white"
             app:siBorderWidth="0.5dp" />
@@ -27,8 +27,7 @@
             android:id="@+id/layout_discount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-           >
+            android:layout_alignParentLeft="true">
 
             <ImageView
                 android:id="@+id/iv_discount"
@@ -48,19 +47,17 @@
         </RelativeLayout>
 
         <TextView
-            android:singleLine="true"
             android:id="@+id/order_recycle_item_product_name"
+            style="@style/bold_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+
             android:layout_below="@+id/order_recycle_item_product_img"
             android:layout_marginStart="12dp"
             android:layout_marginTop="@dimen/margin10"
             android:layout_marginEnd="12dp"
             android:gravity="right|center"
             android:lineSpacingExtra="10dp"
-            android:textColor="@color/medium_color"
-            android:textSize="13dp"
-            android:textStyle="bold"
+            android:singleLine="true"
             tools:text="مواد غذایی سرشار از پروتیین " />
 
 
@@ -77,14 +74,12 @@
 
             <TextView
                 android:id="@+id/order_recycle_item_product_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+                style="@style/bold_text"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:gravity="right"
-                android:textColor="@color/purple_700"
-                android:textSize="13dp"
-                android:textStyle="bold"
+                android:textColor="@color/color_accent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/order_recycle_item_product_old_price"
                 app:layout_constraintTop_toTopOf="parent"
@@ -93,14 +88,12 @@
 
             <TextView
                 android:id="@+id/order_recycle_item_product_old_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+                style="@style/normal_text"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="right"
                 android:gravity="right"
-                android:textColor="@color/purple_200"
-                android:textSize="13dp"
-                android:textStyle="bold"
+                android:textColor="@color/black_l"
                 tools:text="25000 ریال"
 
                 />
@@ -121,6 +114,7 @@
 
             <TextView
                 android:id="@+id/edt_description_temp"
+                style="@style/normal_text"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_centerVertical="false"
@@ -130,7 +124,6 @@
                 android:fontFamily="@font/iransans"
                 android:hint="توضیحات شما"
                 android:singleLine="true"
-                android:textColor="#474747"
                 android:textSize="@dimen/text_medium_mobile_size" />
         </RelativeLayout>
 
@@ -153,6 +146,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/layoutAmount"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/error"
                 android:layout_width="wrap_content"
@@ -166,6 +160,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/unit"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <RelativeLayout
                 android:id="@+id/layoutAmount"
                 android:layout_width="wrap_content"
@@ -193,18 +188,16 @@
 
                     <TextView
                         android:id="@+id/unit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/normal_text"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin4"
                         android:layout_toLeftOf="@+id/order_recycle_item_product_txt_amount"
                         android:singleLine="true"
-                        android:textColor="@color/medium_color"
-                        android:textSize="11dp"
                         tools:text="کیلوگرم" />
 
                     <EditText
                         android:id="@+id/order_recycle_item_product_txt_amount"
+                        style="@style/normal_text"
                         android:layout_width="60dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
@@ -214,9 +207,7 @@
                         android:gravity="center"
                         android:inputType="numberDecimal"
                         android:text="0"
-                        android:textColor="@color/medium_color"
                         android:textDirection="ltr"
-                        android:textSize="11dp"
                         android:visibility="gone" />
 
                 </LinearLayout>

@@ -20,15 +20,6 @@ public class Account extends SugarRecord {
     private String i;
 
 
-    public String getiServer() {
-        return iServer;
-    }
-
-    public void setiServer(String iServer) {
-        this.iServer = iServer;
-    }
-
-    private String iServer;
 
     @SerializedName("C")
     @Expose
