@@ -749,7 +749,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(activity.getAssets(), "iransans.ttf");
         textView.setTypeface(face);
-        textView.setTextColor(activity.getResources().getColor(R.color.red_table));
+        textView.setTextColor(activity.getResources().getColor(R.color.red));
         textView.setTextSize(13);
     }
     //endregion Custom Method

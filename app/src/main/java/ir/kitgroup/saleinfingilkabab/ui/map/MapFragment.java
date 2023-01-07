@@ -701,8 +701,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
         circleManager.deleteAll();
         binding.searchView.clearFocus();
 
-        int color = ContextCompat.getColor(getActivity(), R.color.red_table);
-        int strokeColor = ContextCompat.getColor(getActivity(), R.color.green_table);
+        int color = ContextCompat.getColor(getActivity(), R.color.red);
+        int strokeColor = ContextCompat.getColor(getActivity(), R.color.green);
         CircleOptions circleOptions = new CircleOptions()
                 .withLatLng(item.getLocation().getCenter())
                 .withCircleColor(ColorUtils.colorToRgbaString(color))

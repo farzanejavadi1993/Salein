@@ -88,7 +88,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.viewHolder> {
 
 
         if (modelDate.Click)
-            holder.cardView.setStrokeColor(context.getResources().getColor(R.color.blue300));
+            holder.cardView.setStrokeColor(context.getResources().getColor(R.color.color_primary_dark));
         else
             holder.cardView.setStrokeColor(context.getResources().getColor(R.color.stroke_color));
     }

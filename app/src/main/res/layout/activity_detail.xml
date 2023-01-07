@@ -26,7 +26,6 @@
                     android:orientation="vertical">
                     <com.github.siyamed.shapeimageview.RoundedImageView
                         android:id="@+id/iv_product"
-                        android:src="@drawable/nopic"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:scaleType="fitXY"

@@ -235,7 +235,7 @@ public class MoreFragment extends Fragment {
 
                     binding.tvCredits.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
                 } else {
-                    binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                    binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.red));
                     binding.tvCredits.setText("خطا در بروز رسانی موجودی ");
                     disableAccount = sharedPreferences.getBoolean("disableAccount", false);
                     if (disableAccount)

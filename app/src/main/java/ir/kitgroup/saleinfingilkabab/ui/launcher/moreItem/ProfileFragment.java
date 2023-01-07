@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       // binding.ivBackFragment.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        binding.edtAddress2.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
         Account user = Select.from(Account.class).first();
         if (user != null) {
@@ -56,12 +56,15 @@ public class ProfileFragment extends Fragment {
                 binding.cardAddress1.setVisibility(View.GONE);
 
 
-            if (user.getAdr2() != null && !user.getAdr2().equals("")){
-                binding.cardAddress2.setVisibility(View.VISIBLE);
+            if (user.getAdr2() != null && !user.getAdr2().equals(""))
                 binding.edtAddress2.setText(user.getAdr2());
+
+            else{
+                binding.edit2.setImageResource(R.drawable.ic_plus_new);
+                binding.edtAddress2.setTextColor(getActivity().getResources().getColor(R.color.color_accent));
+                binding.edtAddress2.setText("افزودن آدرس");
             }
-            else
-                binding.cardAddress2.setVisibility(View.GONE);
+
 
 
             binding.cardAddress1.setOnClickListener(view1 -> {

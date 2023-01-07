@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Calendar;
 import java.util.Date;

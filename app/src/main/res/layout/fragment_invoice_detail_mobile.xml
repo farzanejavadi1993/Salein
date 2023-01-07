@@ -154,7 +154,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="8dp"
                                 android:text="جمع تخفیف"
-                                android:textColor="@color/green_table"
+                                android:textColor="@color/green"
                                 tools:ignore="RelativeOverlap" />
 
                             <TextView
@@ -334,7 +334,7 @@
                                 android:layout_marginLeft="2dp"
                                 android:layout_marginRight="4dp"
                                 android:layout_weight="0.33"
-                                android:backgroundTint="@color/red_table"
+                                android:backgroundTint="@color/red"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="center"
                                 android:paddingTop="7dp"
@@ -352,9 +352,9 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="4dp"
-                                android:layout_marginRight="@dimen/margin2"
+                                android:layout_marginRight="2dp"
                                 android:layout_weight="0.33"
-                                android:backgroundTint="@color/green_table"
+                                android:backgroundTint="@color/green"
                                 android:fontFamily="@font/iransans"
                                 android:gravity="center"
                                 android:paddingTop="7dp"

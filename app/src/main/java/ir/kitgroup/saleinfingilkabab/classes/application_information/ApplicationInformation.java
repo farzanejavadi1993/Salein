@@ -12,7 +12,7 @@ public class ApplicationInformation {
             switch (packageName.getPackageName(activity)) {
                 case "ir.kitgroup.salein":
                     appInfo.setApplication_code("1111");
-                    appInfo.setGif_url("file:///android_asset/donyavi.gif");
+                    appInfo.setGif_url("file:///android_asset/loading3.gif");
                     appInfo.setSaleinApp(true);
                     break;
                 case "ir.kitgroup.saleinmeat":
@@ -21,7 +21,7 @@ public class ApplicationInformation {
                     break;
                 case "ir.kitgroup.saleinjam":
                     appInfo.setApplication_code("1114");
-                    appInfo.setGif_url("file:///android_asset/donyavi.gif");
+                    appInfo.setGif_url("file:///android_asset/loading3.gif");
                     break;
 
                 case "ir.kitgroup.saleinfingilkabab":
@@ -31,7 +31,7 @@ public class ApplicationInformation {
 
                 case "ir.kitgroup.saleinkhavari":
                     appInfo.setApplication_code("1117");
-                    appInfo.setGif_url("file:///android_asset/donyavi.gif");
+                    appInfo.setGif_url("file:///android_asset/loading3.gif");
                     break;
             }
             return appInfo;

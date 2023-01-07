@@ -15,7 +15,7 @@
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="@dimen/login_toolbar_elevation"
+            android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/icon_normal_padding_size"
+                android:padding="5dp"
                 android:rotationY="180"
                 app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                 tools:ignore="ContentDescription" />

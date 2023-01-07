@@ -314,6 +314,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
     @Override
     public void onExplanationNeeded(List<String> permissionsToExplain) {
         Toast.makeText(getActivity(), "برنامه نیاز به دسترسی دارد", Toast.LENGTH_LONG).show();
@@ -392,7 +393,6 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
         locations.setAddress(address);
         locations.setLatitude(latitude);
         locations.setLongitude(longitude);
-
         location=locations;
         locations.save();
     }
@@ -484,7 +484,7 @@ public class RegisterFragment extends Fragment implements PermissionsListener {
             initializeLocationEngine();
         } else {
             permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(getActivity());
+            permissionsManager.requestLocationPermissions(requireActivity());
         }
     }
 

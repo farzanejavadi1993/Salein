@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="155dp"
                     android:layout_marginTop="8dp"
-                    android:backgroundTint="@color/launcher_linear_order_header_color"
+
                     app:cardCornerRadius="10dp">
 
                     <com.cedarstudios.cedarmapssdk.MapView
@@ -287,7 +287,7 @@
                             android:layout_marginRight="22dp"
                             android:fontFamily="@font/iransans"
                             android:gravity="center_vertical"
-                            android:text="@string/man" />
+                            android:text="مرد" />
 
                         <RadioButton
                             android:buttonTint="@color/color_accent"
@@ -296,7 +296,7 @@
                             android:layout_marginRight="22dp"
                             android:fontFamily="@font/iransans"
                             android:gravity="center_vertical"
-                            android:text="@string/woman" />
+                            android:text="زن" />
 
 
                     </RadioGroup>

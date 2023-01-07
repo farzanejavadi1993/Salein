@@ -335,7 +335,7 @@ public class PaymentFragment extends Fragment {
                     binding.tvCredit.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
                 }
             } else {
-                binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+                binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red));
                 binding.tvCredit.setText("خطا در بروز رسانی موجودی ");
             }
 
@@ -885,7 +885,7 @@ public class PaymentFragment extends Fragment {
         TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
         textView.setTypeface(face);
-        textView.setTextColor(getActivity().getResources().getColor(R.color.red_table));
+        textView.setTextColor(getActivity().getResources().getColor(R.color.red));
         textView.setTextSize(13);
     }
 

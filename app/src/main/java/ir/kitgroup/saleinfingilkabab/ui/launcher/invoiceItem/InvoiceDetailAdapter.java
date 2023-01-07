@@ -390,7 +390,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
     }
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(contex)
+        AlertDialog alertDialog = new AlertDialog.Builder(contex,R.style.AlertDialogTheme)
                 .setMessage(message)
                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                 .show();
@@ -398,7 +398,7 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
         TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(contex.getAssets(), "iransans.ttf");
         textView.setTypeface(face);
-        textView.setTextColor(contex.getResources().getColor(R.color.red_table));
+        textView.setTextColor(contex.getResources().getColor(R.color.red));
         textView.setTextSize(13);
     }
 

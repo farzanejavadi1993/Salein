@@ -739,7 +739,7 @@ public class InVoiceDetailFragment extends Fragment {
         TextView textView = alertDialog.findViewById(android.R.id.message);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
         textView.setTypeface(face);
-        textView.setTextColor(getResources().getColor(R.color.red_table));
+        textView.setTextColor(getResources().getColor(R.color.red));
         textView.setTextSize(13);
     }
 

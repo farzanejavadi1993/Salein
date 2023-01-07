@@ -42,7 +42,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.launcher_recycle_table_item, parent, false));
+        return new viewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.description_item, parent, false));
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

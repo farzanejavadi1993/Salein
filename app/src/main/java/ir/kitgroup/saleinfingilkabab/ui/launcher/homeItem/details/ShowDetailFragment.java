@@ -52,7 +52,7 @@ public class ShowDetailFragment extends Fragment {
 
         Picasso.get()
                 .load("http://" + ip + "/GetImage?productId=" + Id + "&width=" + 600 + "&height=" + 600)
-                .error(R.drawable.nopic)
+                .error(R.drawable.loading)
                 .placeholder(R.drawable.loading)
                 .into(binding.ivProduct);
 

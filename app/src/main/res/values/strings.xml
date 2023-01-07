@@ -1,135 +1,32 @@
 <resources>
-    <string name="app_name">گوشت دنیوی</string>
-    <string name="app_name_bahraman">زعفران بهرامن</string>
-    <string name="app_name_saleinOrder">SaleIn Order</string>
-    <string name="app_name_saleintop">تاپ کباب</string>
-    <string name="app_name_saleinmeat">گوشت دنیوی</string>
-    <string name="app_name_saleinhamsafar">پخش همسفر</string>
-    <string name="app_name_saleindemo">سالین دمو</string>
-    <string name="app_name_saleinkonj">پیتزا کنج</string>
-    <string name="app_name_saleinbahraman"> زعفران بهرامن</string>
-
     <string name="app_name_salein">سالین </string>
+    <string name="app_name_saleindemo">سالین دمو</string>
+    <string name="app_name_saleinmeat">گوشت دنیوی</string>
     <string name="app_name_saleinFingilKabab">فینگیل کباب </string>
     <string name="app_name_saleinkhavari">پخش مواد غذایی خاوری </string>
     <string name="app_name_saleinjam">بازرگانی جم پارت</string>
     <string name="login_register_text">ورود ثبت نام</string>
-    <string name="welcome_text">به اپلیکیشن سفارش گیر سالین خوش آمدید</string>
-    <string name="mobile_number">شماره تلفن همراه</string>
     <string name="get_code">تایید و دریافت کد</string>
     <string name="enter_number">لطفا شماره موبایل خود را وارد کنید</string>
     <string name="confirm_code">تایید کد دریافتی</string>
     <string name="send_code_part1">کد تایید برای شماره موبایل </string>
     <string name="send_code_part2">ارسال شد </string>
     <string name="enter_code">کد تایید 5 رقمی را وارد کنید </string>
-    <string name="phone_number">شماره تلفن همراه</string>
-    <string name="code_number">کد تایید</string>
-    <string name="order_saleIn_application">اپلیکیشن سفارش گیر سالین</string>
-    <string name="user_name_text">نام کاربری</string>
-    <string name="pass_word_text">رمز عبور</string>
-    <string name="ip_local_text">آی پی خارجی سازمان</string>
-    <string name="sale_code_text">کد سامانه فروش</string>
-    <string name="register">ثبت نام</string>
-    <string name="version">1.0.0.8</string>
-    <string name="login">ورود</string>
-    <string name="get_data_from_server">در حال دریافت اطلاعات از سرور</string>
-    <string name="complete_information">تکمیل اطلاعات</string>
-    <string name="no">خیر</string>
-    <string name="ok">بله</string>
-    <string name="returned">بازگشت</string>
-
-
-    <string name="firstname_lastname_customer">نام و نام خانواگی </string>
-    <string name="firstname_lastname_customer_description">نام و نام خانواگی </string>
-    <string name="phone_number_customer">شماره موبایل</string>
-    <string name="phone_number_customer_description">شماره موبایل تحویل گیرنده را وارد کنید</string>
-    <string name="address_customer">آدرس </string>
-    <string name="Plaque_customer">پلاک </string>
-    <string name="man">مرد </string>
-    <string name="woman">زن </string>
-    <string name="logout">خروج از حساب </string>
-    <string name="register_information">ثبت اطلاعات </string>
     <string name="register_gps">ثبت موقعیت </string>
-    <string name="info_account">اطلاعات کاربری </string>
-    <string name="setting">تنظیمات </string>
-    <string name="first_last_name">نام و نام خانوادگی </string>
     <string name="phone_number_account">شماره تلفن همراه </string>
-    <string name="add_credit">افزایش اعتبار کیف پول </string>
-    <string name="my_comment">نظرات من</string>
-    <string name="my_order">پیگیری سفارشات
-    </string>
-    <string name="search_product">جستجوی نام کالا</string>
-    <string name="name_customer">نام مشترک</string>
     <string name="sum_price">جمع مبلغ</string>
     <string name="rial_0">0 ریال</string>
-    <string name="pure_price">جمع خالص</string>
     <string name="description">توضیحات</string>
-    <string name="continue_">ادامه</string>
     <string name="confirm_pay">تایید نهایی و پرداخت</string>
     <string name="type_pay">روش پرداخت</string>
-    <string name="online_pay">پرداخت آنلاین</string>
-    <string name="online_pay_description">درگاه آسان پرداخت</string>
     <string name="pay_place">پرداخت در محل</string>
-    <string name="pay_place_description">پرداخت نقدی یا کارتخوان در محل مشتری</string>
-    <string name="pay_cash">پرداخت در صندوق</string>
-    <string name="pay_cash_description">پرداخت توسط اپراتور صندوق</string>
-    <string name="use_credit_club">استفاده از اعتبار باشگاه</string>
-    <string name="register_order">ثبت سفارش</string>
-    <string name="address">آدرس</string>
-    <string name="add_address"> افزودن آدرس</string>
-    <string name="choose_address">انتخاب آدرس</string>
-    <string name="title_address">عنوان آدرس</string>
-    <string name="detail_address">جزییات آدرس</string>
     <string name="type_order">نحوه تحویل سفارش</string>
-
-
     <string name="api_key">AIzaSyBtqQBKEW7fvUihpkqdPtoK4i39-WZGxRw</string>
-    <string name="launcher_toolbar_title">دریافت سفارشات</string>
-    <string name="launcher_toolbar_get_out_button">بیرون بر</string>
     <string name="launcher_toolbar_in_Organization">داخل سالن</string>
-    <string name="launcher_toolbar_edittext_hint">غذای مورد نظر را جستجو کنید</string>
-    <string name="header_order_name">نام</string>
-    <string name="header_order_count">تعداد </string>
-    <string name="header_order_sumPrice">جمع مبلغ </string>
-    <string name="header_order_number_table"> شماره میز </string>
-    <string name="bottom_header_order_totalPrice"> جمع خالص فاکتور</string>
-    <string name="bottom_header_order_discount">تخفیف</string>
-    <string name="bottom_header_order_service">سرویس</string>
-    <string name="bottom_header_order_sumPrice">جمع فاکتور</string>
-    <string name="bottom_header_order_people_count">تعداد</string>
-    <string name="launcher_order_delete">حذف فاکتور</string>
-    <string name="launcher_order_edit">ویرایش فاکتور</string>
-    <string name="launcher_order_delivery">تحویل میز</string>
-    <string name="launcher_order_print">چاپ</string>
-    <string name="complete_order">تکمیل سفارش</string>
-    <string name="launcher_order_editText_hint">توضیحات</string>
-    <string name="launcher_order_customer_title">توضیحات شما </string>
     <string name="show_detail_title_description">توضیحات</string>
     <string name="link_KitGroup">تولید شده توسط <a href="http://www.kitgroup.ir/">کیت گروپ</a></string>
-
-    <string name="show_detail_comment_customer_description1">سس مایونز کم چرب استفاده کنید</string>
-    <string name="show_detail_comment_customer_description2">
-        کم نمک بود دفعه قبل
-
-         \n
-
-        لطفا نمک بیشتر باشه و از فلفل هندی استفاد کنید....
-
-    </string>
-    <string name="show_detail_comment_customer_description3">لطفا مقدار پاستا کمتر باشه و گوشت بیشتری بزارید برام</string>
-    <string name="show_detail_text_description">اگر بخواهید کباب ها در زمان کمتری پخته شوند کباب ها را برای طعم دار کردن به مدت زیادتری در یخچال قرار دهید.
-اگر از زغال برای پخت کباب استفاده میکنید سعی کنید که اندازه زغال ها در منقل یک دست باشد تا حرارت در همه جا یکسان به کباب شما برسد.</string>
-    <string name="launcher_order_txt_error">برای مشاهده سفارش مشتری روی میز مورد نظر کلیک کنید </string>
-
-    <string name="show_detail_customer_title_description"> توضیحات شما</string>
-    <string name="name_customer_text">نام مشترک : </string>
-
     <string name="mapbox_access_token">pk.eyJ1IjoiZGV2ZWxvcGVyZ2lybDIwMTc3IiwiYSI6ImNrcmFieGN3azB3cGQydm1jOG9ienJheGMifQ._cTGNkLzOYMwCryu_YQnLw</string>
-
-
     <string name="passenger_not_find">چیزی یافت نشد!</string>
-    <string name="passenger_not_find_description">شما هنوز هیچ سفارشی ثبت نکرده‌اید. برای شروع روی دکمه سفارش آنلاین بزنید.</string>
     <string name="company_not_find_description">شما هنوز هیچ شرکتی ثبت نکرده‌اید. شرکت مورد نظر خود را از لیست شرکت ها ذخیره کنید.</string>
-
     <string name="application_version">نسخه</string>
 </resources>

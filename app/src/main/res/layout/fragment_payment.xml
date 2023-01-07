@@ -350,7 +350,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center"
-                android:textColor="@color/red_table"
+                android:textColor="@color/red"
                 android:textSize="13dp"
                 android:textStyle="bold" />
 
@@ -360,7 +360,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:gravity="center"
-                android:textColor="@color/green_table"
+                android:textColor="@color/green"
                 android:textSize="11dp" />
 
 

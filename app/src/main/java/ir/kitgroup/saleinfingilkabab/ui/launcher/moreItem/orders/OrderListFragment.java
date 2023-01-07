@@ -248,7 +248,7 @@ public class OrderListFragment extends Fragment {
                 TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
-                textView.setTextColor(getResources().getColor(R.color.green_table));
+                textView.setTextColor(getResources().getColor(R.color.green));
                 textView.setTextSize(13);
 
                 orderListAdapter.notifyDataSetChanged();
@@ -262,7 +262,7 @@ public class OrderListFragment extends Fragment {
                 TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
-                textView.setTextColor(getResources().getColor(R.color.red_table));
+                textView.setTextColor(getResources().getColor(R.color.red));
                 textView.setTextSize(13);
 
             }

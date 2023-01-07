@@ -22,10 +22,10 @@
 
             <ImageView
                 android:id="@+id/iv_icon_empty"
-                android:layout_width="@dimen/passenger_icon_empty_page"
-                android:layout_height="@dimen/passenger_icon_empty_page"
+                android:layout_width="@dimen/icon_empty_size"
+                android:layout_height="@dimen/icon_empty_size"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/passenger_icon_empty_page_top_margin"
+                android:layout_marginTop="@dimen/icon_empty_top_margin"
                 app:srcCompat="@drawable/ic_not_found"
                 tools:ignore="ContentDescription" />
 
@@ -38,7 +38,7 @@
                 android:lineSpacingExtra="10sp"
                 android:text="@string/passenger_not_find"
                 android:textColor="@color/invalid_name_color"
-                android:textSize="@dimen/not_find_size"
+                android:textSize="@dimen/normal_size"
 
                 tools:ignore="SpUsage" />
 
@@ -47,13 +47,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/not_find_description_left_right_margin"
-                android:layout_marginTop="@dimen/not_find_description_top_margin"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="@dimen/not_find_description_left_right_margin"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="9sp"
                 android:text="@string/company_not_find_description"
                 android:textColor="@color/invalid_name_color"
-                android:textSize="@dimen/not_find_description_size"
+                android:textSize="@dimen/large_size"
 
                 tools:ignore="SpUsage" />
 

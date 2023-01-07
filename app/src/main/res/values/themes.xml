@@ -1,31 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Theme.Salein" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-        <!-- Primary brand color. -->
+
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryVariant">@color/color_primary_dark</item>
         <item name="colorOnPrimary">@color/color_primary</item>
-        <!-- Secondary brand color. -->
         <item name="colorAccent">@color/color_primary</item>
         <item name="colorSecondary">@color/color_primary</item>
         <item name="colorSecondaryVariant">@color/color_text_screen</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:textViewStyle">@style/FontForWholeApp</item>
-
-
     </style>
+
+
+
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+
+
 
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
-
         <item name="colorControlActivated">@color/color_accent</item>
-
         <item name="colorSwitchThumbNormal">#eee</item>
-
         <item name="android:colorForeground">#42221f1f</item>
     </style>
+
+
+
 
     <style name="bold_text">
         <item name="android:layout_width">wrap_content</item>
@@ -35,10 +41,13 @@
         <item name="android:lineSpacingExtra">10dp</item>
         <item name="android:textColor">@color/medium_color</item>
     </style>
+
+
+
+
     <style name="normal_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-
         <item name="android:textSize">@dimen/normal_size</item>
         <item name="android:lineSpacingExtra">10dp</item>
         <item name="android:textColor">@color/medium_color</item>
@@ -55,14 +64,7 @@
         <item name="android:lineSpacingExtra">10dp</item>
         <item name="android:textColor">@color/medium_color</item>
     </style>
-    <style name="medium_normal_text">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/large_size</item>
-        <item name="android:lineSpacingExtra">10dp</item>
-        <item name="android:textColor">@color/medium_color</item>
-    </style>
+
 
 
 
@@ -78,17 +80,6 @@
 
 
 
-
-
-
-    <style name="H7Right">
-        <item name="android:gravity">end</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12dp</item>
-        <item name="android:lineSpacingExtra">9sp</item>
-        <item name="android:textColor">#474747</item>
-    </style>
-
     <style name="MyHelperTextInputLayout" >
         <item name="fontFamily">@font/iransans</item>
         <item name="android:textDirection">rtl</item>
@@ -97,39 +88,10 @@
         <item name="android:textColor">@color/medium_color</item>
     </style>
 
-    <style name="Widget.BottomNavigationView"
-        parent="Widget.Design.BottomNavigationView">
-        <item name="fontFamily">@font/iransans</item>
-        <item name="android:layoutDirection">ltr</item>
-    </style>
-
-
-
-    <style name="launcher_toolbar_TextView" >
-        <item name="android:textColor">@color/black_light</item>
-        <item name="android:textSize">12dp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-
 
     <style parent="android:Widget.TextView"
         name="FontForWholeApp">
         <item name="fontFamily">@font/font</item>
     </style>
-
-
-
-
-
-    <style name="H5Right">
-        <item name="android:gravity">end</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">13dp</item>
-        <item name="android:lineSpacingExtra">9dp</item>
-        <item name="android:textColor">#474747</item>
-    </style>
-
 
 </resources>

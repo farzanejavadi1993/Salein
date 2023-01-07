@@ -64,11 +64,11 @@
                         android:layout_marginBottom="8dp"
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/iransans"
-                        android:text="@string/no"
-                        android:textColor="@color/invite_friend_color"
+                        android:text="خیر"
+                        android:textColor="@color/red"
                         android:textSize="12dp"
                         app:cornerRadius="15dp"
-                        app:strokeColor="@color/invite_friend_color"
+                        app:strokeColor="@color/red"
                         app:strokeWidth="1dp"
                         tools:ignore="UnusedAttribute" />
 
@@ -81,11 +81,11 @@
                         android:layout_marginBottom="30dp"
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/iransans"
-                        android:text="@string/ok"
-                        android:textColor="@color/colorGreenLight"
+                        android:text="بله"
+                        android:textColor="@color/green"
                         android:textSize="12dp"
                         app:cornerRadius="15dp"
-                        app:strokeColor="@color/colorGreenLight"
+                        app:strokeColor="@color/green"
                         app:strokeWidth="1dp"
                         tools:ignore="UnusedAttribute" />
 
@@ -103,7 +103,7 @@
                     android:background="@drawable/bottom_background"
                     app:backgroundTint="@null"
                     android:fontFamily="@font/iransans"
-                    android:text="@string/returned"
+                    android:text="بازگشت"
                   style="@style/bold_text_bottom"
                     android:visibility="gone"
                     app:cornerRadius="@dimen/margin10" />

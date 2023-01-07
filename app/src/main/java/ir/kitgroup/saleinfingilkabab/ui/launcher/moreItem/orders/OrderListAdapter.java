@@ -85,13 +85,13 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         }
        else if (invoice.INV_STEP==4) {
             holder.tvStatus.setText("ارسال شده");
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.green_table));
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.green));
         } else if (invoice.INV_STEP==1) {
             holder.tvStatus.setText("در انتظار بررسی اپراتور");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.blue600));
         } else if (invoice.INV_STEP==2){
             holder.tvStatus.setText("تایید شده");
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.pink_table));
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.pink));
         }
 
 
@@ -148,7 +148,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
                 TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
                 Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
                 textView.setTypeface(face);
-                textView.setTextColor(context.getResources().getColor(R.color.red_table));
+                textView.setTextColor(context.getResources().getColor(R.color.red));
                 textView.setTextSize(13);
 
                 return;
