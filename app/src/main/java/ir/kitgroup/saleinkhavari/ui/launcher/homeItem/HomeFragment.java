@@ -209,16 +209,6 @@ public class HomeFragment extends Fragment {
             List<Setting> settingsList = new ArrayList<>(result);
 
             if (settingsList.size() > 0) {
-                //region menu
-                sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("") ? settingsList.get(0).MENU : "0").apply();
-
-                sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
-                checkRemainProduct = result.get(0).MAX_SALE;
-                sharedPreferences.edit().putString("maxSale", checkRemainProduct).apply();
-
-                getRequestBaseMenu();
-                //endregion menu
-
                 //region  closeDayList
                 String CloseDay = settingsList.get(0).CLOSE_DAY;
                 sharedPreferences.edit().putString("close_day", CloseDay).apply();
@@ -229,11 +219,9 @@ public class HomeFragment extends Fragment {
                 productAdapter.setCloseListDate(closeDayList);
                 //endregion  closeDayList
 
-
                 //region Default Account
                 sharedPreferences.edit().putString("Default_ACCOUNT", settingsList.get(0).DEFAULT_CUSTOMER).apply();
                 //endregion Default Account
-
 
                 if (settingsList.get(0).LINK_PAYMENT != null)
                     sharedPreferences.edit().putString("payment_link", settingsList.get(0).LINK_PAYMENT).apply();
@@ -241,6 +229,18 @@ public class HomeFragment extends Fragment {
                 sharedPreferences.edit().putString("coff", settingsList.get(0).COEF != null ? settingsList.get(0).COEF : "0").apply();
 
                 sharedPreferences.edit().putString("Transport_GUID", settingsList.get(0).PEYK).apply();
+
+                //region menu
+                sharedPreferences.edit().putString("menu", settingsList.get(0).MENU != null && !settingsList.get(0).MENU.equals("") ? settingsList.get(0).MENU : "0").apply();
+
+                sharedPreferences.edit().putString("priceProduct", result.get(0).DEFAULT_PRICE_INVOICE).apply();
+                checkRemainProduct = result.get(0).MAX_SALE;
+                sharedPreferences.edit().putString("maxSale", checkRemainProduct).apply();
+
+                getRequestBaseMenu();
+                //endregion menu
+
+
             }
         });
         myViewModel.getResultDescription().observe(getViewLifecycleOwner(), result -> {
