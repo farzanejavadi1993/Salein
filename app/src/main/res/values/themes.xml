@@ -56,7 +56,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/normal_size</item>
-        <item name="android:lineSpacingExtra">10dp</item>
+     <!--   <item name="android:lineSpacingExtra">10dp</item>-->
         <item name="android:textColor">@color/medium_color</item>
     </style>
 
@@ -67,7 +67,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/normal_size</item>
-        <item name="android:lineSpacingExtra">10dp</item>
+<!--        <item name="android:lineSpacingExtra">10dp</item>-->
         <item name="android:textColor">@color/medium_color</item>
     </style>
 
@@ -79,7 +79,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/large_size</item>
-        <item name="android:lineSpacingExtra">10dp</item>
+<!--        <item name="android:lineSpacingExtra">10dp</item>-->
         <item name="android:textColor">@color/medium_color</item>
     </style>
 
@@ -91,7 +91,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/normal_size</item>
-        <item name="android:lineSpacingExtra">10dp</item>
+<!--        <item name="android:lineSpacingExtra">10dp</item>-->
         <item name="android:textColor">@color/color_text_screen</item>
     </style>
 
