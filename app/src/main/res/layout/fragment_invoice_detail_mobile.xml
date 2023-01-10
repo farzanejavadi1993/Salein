@@ -94,7 +94,52 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/cardErrorSync"
+                     android:layout_margin="22dp"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            tools:text="خطا در دریافت تنظیمات"
+                            android:id="@+id/txtErrorSync"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:textColor="@color/red"
+                            android:textSize="@dimen/large_size" />
+                        <LinearLayout
 
+                            android:layout_marginTop="@dimen/margin10"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:layout_marginRight="22dp"
+                            android:layout_marginLeft="22dp"
+                            android:id="@+id/cardRequsetAgain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:layout_marginRight="5dp"
+                                android:tint="@color/red"
+                                android:src="@drawable/refresh"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"/>
+                            <TextView
+                                android:text="دریافت مجدد"
+                                android:id="@+id/txtRequestAgain"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:gravity="center"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/not_find_top_margin" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                     <LinearLayout
 
                         android:id="@+id/order_list_layout_sumPrice_detail_order"

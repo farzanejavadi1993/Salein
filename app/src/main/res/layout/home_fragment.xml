@@ -51,14 +51,14 @@
                         android:id="@+id/tvNameStore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_marginRight="8dp"
                         android:layout_toLeftOf="@+id/tvTitleStore"
                         android:singleLine="true"
-                        android:textColor="@color/color_accent"
+                        android:textColor="@color/color_text_screen"
                         style="@style/bold_text" />
 
                     <ImageView
+                        android:tint="@color/color_text_screen"
                         android:id="@+id/iv_store_left"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -66,7 +66,8 @@
                         android:layout_centerVertical="true"
                         android:padding="@dimen/margin4"
                         android:rotation="270"
-                        app:srcCompat="@drawable/ic_left_icon" />
+                        app:srcCompat="@drawable/ic_left_icon"
+                        tools:ignore="UseAppTint" />
                 </RelativeLayout>
 
                 <ImageView
@@ -136,7 +137,7 @@
                     android:layout_height="30dp"
                     android:layout_centerInParent="true" />
 
-                <ImageView
+              <!--  <ImageView
                     android:id="@+id/animation_view"
                     android:layout_width="180dp"
                     android:layout_height="180dp"
@@ -144,7 +145,7 @@
                     android:layout_marginTop="20dp"
                     app:lottie_autoPlay="true"
                     app:lottie_loop="true"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription" />-->
 
             </RelativeLayout>
 
@@ -161,5 +162,55 @@
             android:textColor="@color/black_l"
             android:textSize="@dimen/normal_size"
             android:visibility="gone" />
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/cardErrorSync"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                tools:text="خطا در دریافت تنظیمات"
+                android:id="@+id/txtErrorSync"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/red"
+                android:textSize="@dimen/large_size" />
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginRight="22dp"
+                android:layout_marginLeft="22dp"
+                android:id="@+id/cardRequsetAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_marginRight="5dp"
+                    android:tint="@color/red"
+                    android:src="@drawable/refresh"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"/>
+                <TextView
+                    android:text="دریافت مجدد"
+                    android:id="@+id/txtRequestAgain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/not_find_top_margin" />
+
+            </LinearLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 </layout>

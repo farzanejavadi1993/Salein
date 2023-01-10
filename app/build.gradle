@@ -11,7 +11,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinfingilkabab"
+        applicationId "ir.kitgroup.saleinkhavari"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
