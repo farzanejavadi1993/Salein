@@ -5,7 +5,6 @@
     <color name="medium_color">#474747</color>
 
     <!--belong to fingili-->
-
     <!--<color name="color_text_screen">#000000</color>
     <color name="color_accent">#FF018786</color>
     <color name="color_primary">#FCDC65</color>
@@ -13,18 +12,25 @@
 
 
     <!--belong to donyavi-->
-
     <!--        <color name="color_text_screen">#fff</color>-->
     <!--        <color name="color_primary">#ff8a80</color>-->
     <!--        <color name="color_primary_dark">#c85a54</color>-->
     <!--        <color name="color_accent">#fff</color>-->
 
 
-    <!--belong to khavari-->
-    <color name="color_text_screen">#FFFFFF</color>
+    <!--belong to bamgah-->
+   <!-- <color name="color_text_screen">#FFFFFF</color>
     <color name="color_accent">#02c39a</color>
     <color name="color_primary">#8BC34A</color>
-    <color name="color_primary_dark">#4CAF50</color>
+    <color name="color_primary_dark">#4CAF50</color>-->
+
+
+
+    <!--belong to khavari-->
+    <color name="color_text_screen">#FFFFFF</color>
+    <color name="color_accent">#A46DBD</color>
+    <color name="color_primary">#50D2CF</color>
+    <color name="color_primary_dark">#51ABB2</color>
 
 
     <color name="white">#FFFFFFFF</color>

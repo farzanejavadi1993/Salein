@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinbamgah;
+package ir.kitgroup.saleinkhavari;
 
 import android.content.Context;
 
