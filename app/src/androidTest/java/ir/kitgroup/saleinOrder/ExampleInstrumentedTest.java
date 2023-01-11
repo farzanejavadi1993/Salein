@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinkhavari;
+package ir.kitgroup.salein;
 
 import android.content.Context;
 
