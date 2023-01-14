@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_company_item"
+    android:orientation="horizontal"
+    android:layout_margin="@dimen/margin4"
+    android:layout_width="wrap_content"
+    android:layout_height="45dp">
+
+    <TextView
+        style="@style/bold_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="12dp"
+        android:id="@+id/tvNameCompanyTest"
+        tools:text="مجموعه گوشت دنیوی" />
+
+    <View
+        android:id="@+id/ivView"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/view_active_company"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"/>
+
+
+    </LinearLayout>

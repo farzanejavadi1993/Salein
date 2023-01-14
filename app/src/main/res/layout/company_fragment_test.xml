@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:background="#eee"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:id="@+id/rvCompany"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp">
+                <ImageView
+                    android:id="@+id/ivLocation"
+                    android:tint="@color/medium_color"
+                    android:src="@drawable/ic_location"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    tools:ignore="UseAppTint" />
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:text="آدرس شما"
+                    android:layout_marginRight="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/ivLocation"
+                    style="@style/bold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <ImageView
+                    android:rotation="270"
+                    android:padding="5dp"
+                    android:id="@+id/ivArrow"
+                    android:tint="@color/medium_color"
+                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    android:layout_marginRight="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/tvLocation"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    tools:ignore="UseAppTint" />
+
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_marginRight="16dp"
+                    android:background="#eee"
+                    android:layout_toLeftOf="@+id/ivArrow"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"/>
+
+
+                <TextView
+
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/txtLocation"
+                    tools:text="مشهد بولوار موسوی قوچانی چهارراه آخر خیام"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/view"
+                    style="@style/bold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.smarteist.autoimageslider.SliderView
+            android:layout_marginTop="5dp"
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_centerInParent="true"
+            android:scrollIndicators="bottom"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorEnabled="true"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="4dp"
+            app:sliderIndicatorRadius="1dp"
+            app:sliderIndicatorSelectedColor="@color/color_primary"
+            app:sliderIndicatorUnselectedColor="@color/gray"
+            app:sliderScrollTimeInSec="2" />
+
+    </LinearLayout>
+</layout>

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/SplashScreenFragment"
-        android:name="ir.kitgroup.salein.ui.splashscreen.SplashScreenFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.splashscreen.SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/actionGoToLoginFragment"
@@ -34,8 +34,8 @@
 
     <fragment
         android:id="@+id/CompanyFragment"
-        android:name="ir.kitgroup.salein.ui.companies.CompanyFragment"
-        tools:layout="@layout/fragment_company">
+        android:name="ir.kitgroup.saleinbamgah.ui.companies.CompanyFragmentTest"
+        tools:layout="@layout/company_fragment_test">
         <action
             android:id="@+id/actionGoToHomeFragment"
             app:destination="@id/HomeFragment" />
@@ -45,7 +45,7 @@
 
     <fragment
         android:id="@+id/AllCompanyFragment"
-        android:name="ir.kitgroup.salein.ui.companies.AllCompanyFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.companies.AllCompanyFragment"
         tools:layout="@layout/fragment_all_company">
         <action
             app:popUpTo="@id/HomeFragment"
@@ -61,7 +61,7 @@
 
     <fragment
         android:id="@+id/SearchFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.searchItem.SearchProductFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.searchItem.SearchProductFragment"
         tools:layout="@layout/fragment_search_product">
         <action
             android:id="@+id/actionGoToShowDetailFragment"
@@ -71,7 +71,7 @@
     <fragment
         android:label="login"
         android:id="@+id/LoginFragment"
-        android:name="ir.kitgroup.salein.ui.logins.LoginFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.logins.LoginFragment"
         tools:layout="@layout/fragment_login">
 
         <action
@@ -87,7 +87,7 @@
 
     <fragment
         android:id="@+id/PaymentFragment"
-        android:name="ir.kitgroup.salein.ui.payment.PaymentFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.payment.PaymentFragment"
         tools:layout="@layout/fragment_payment">
 
         <action
@@ -104,7 +104,7 @@
     <fragment
         android:tag="ShowDetailFragment"
         android:id="@+id/ShowDetailFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.homeItem.details.ShowDetailFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.homeItem.details.ShowDetailFragment"
         tools:layout="@layout/activity_detail">
 
         <argument
@@ -115,7 +115,7 @@
     <fragment
         android:tag="homeFragment"
         android:id="@+id/HomeFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.homeItem.HomeFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.homeItem.HomeFragment"
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/actionGoToFilterFragment"
@@ -136,7 +136,7 @@
 
     <fragment
         android:id="@+id/InvoiceFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.invoiceItem.InVoiceDetailFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.invoiceItem.InVoiceDetailFragment"
         tools:layout="@layout/invoice_list_item_recycle">
 
         <action
@@ -160,7 +160,7 @@
 
     <fragment
         android:id="@+id/FilterFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.homeItem.FilterFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.homeItem.FilterFragment"
         tools:layout="@layout/filter_fragment">
 
         <argument
@@ -172,7 +172,7 @@
 
     <fragment
         android:id="@+id/MoreFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.moreItem.MoreFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.moreItem.MoreFragment"
         tools:layout="@layout/more_fragment">
 
         <action
@@ -193,7 +193,7 @@
 
     <fragment
         android:id="@+id/ProfileFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.moreItem.ProfileFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.moreItem.ProfileFragment"
         tools:layout="@layout/fragment_profile">
 
 
@@ -205,7 +205,7 @@
 
     <fragment
         android:id="@+id/ContactUsFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.moreItem.ContactUsFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.moreItem.ContactUsFragment"
         tools:layout="@layout/contact_us_fragment">
         <argument
             android:name="show"
@@ -214,12 +214,12 @@
 
     <fragment
         android:id="@+id/AboutUsFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.moreItem.AboutUsFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.moreItem.AboutUsFragment"
         tools:layout="@layout/about_us_fragment" />
 
     <fragment
         android:id="@+id/OrderFragment"
-        android:name="ir.kitgroup.salein.ui.launcher.moreItem.orders.OrderListFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.launcher.moreItem.orders.OrderListFragment"
         tools:layout="@layout/fragment_order_list" >
 
         <action
@@ -231,7 +231,7 @@
 
     <fragment
         android:id="@+id/RegisterFragment"
-        android:name="ir.kitgroup.salein.ui.logins.RegisterFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.logins.RegisterFragment"
         tools:layout="@layout/register_fragment">
 
         <action
@@ -264,14 +264,14 @@
 
     <fragment
         android:id="@+id/RulesFragment"
-        android:name="ir.kitgroup.salein.ui.logins.RulesFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.logins.RulesFragment"
         tools:layout="@layout/fragment_rules">
 
     </fragment>
 
     <fragment
         android:id="@+id/MapFragment"
-        android:name="ir.kitgroup.salein.ui.map.MapFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.map.MapFragment"
         tools:layout="@layout/fragment_map">
         <argument
             android:name="from"
@@ -281,7 +281,7 @@
 
     <fragment
         android:id="@+id/VerifyFragment"
-        android:name="ir.kitgroup.salein.ui.logins.VerifyFragment"
+        android:name="ir.kitgroup.saleinbamgah.ui.logins.VerifyFragment"
         tools:layout="@layout/fragment_verify">
 
         <action

@@ -19,18 +19,18 @@
 
 
     <!--belong to bamgah-->
-   <!-- <color name="color_text_screen">#FFFFFF</color>
+    <color name="color_text_screen">#FFFFFF</color>
     <color name="color_accent">#02c39a</color>
     <color name="color_primary">#8BC34A</color>
-    <color name="color_primary_dark">#4CAF50</color>-->
+    <color name="color_primary_dark">#4CAF50</color>
 
 
 
     <!--belong to khavari-->
-    <color name="color_text_screen">#FFFFFF</color>
+    <!--<color name="color_text_screen">#FFFFFF</color>
     <color name="color_accent">#A46DBD</color>
     <color name="color_primary">#50D2CF</color>
-    <color name="color_primary_dark">#51ABB2</color>
+    <color name="color_primary_dark">#51ABB2</color>-->
 
 
     <color name="white">#FFFFFFFF</color>
