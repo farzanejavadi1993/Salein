@@ -311,7 +311,7 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void navigate() {
-      //  Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
+     // Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
 
         connectToServer();
 

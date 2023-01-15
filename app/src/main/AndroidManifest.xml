@@ -56,7 +56,7 @@
             android:value="SaleinDB.db" />
         <meta-data
             android:name="VERSION"
-            android:value="334" />
+            android:value="335" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -78,6 +78,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
 
         <receiver
             android:name="ir.kitgroup.saleinbamgah.classes.AppSMSBroadcastReceiver"

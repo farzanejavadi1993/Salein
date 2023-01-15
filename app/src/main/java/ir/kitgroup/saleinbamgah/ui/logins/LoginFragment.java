@@ -157,7 +157,11 @@ public class LoginFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> {
             if (acceptRule) {
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
-                String messageCode = String.valueOf(code);
+
+                String messageCode =  code +
+                        "\n" +
+                        "hjTpaJqXkPN";
+                //"hHrw0rIR9dsS";
                 mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
 
                 binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);

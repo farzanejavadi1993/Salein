@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0.0.0"
+        versionName "1.0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.google.android.gms:play-services-base:18.1.0'
-    implementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
+
     //noinspection GradleCompatible,GradleCompatible
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //noinspection GradleCompatibl
@@ -143,6 +143,8 @@ dependencies {
     //endregion Navigation Library
 
 
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
 
 
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ import ir.kitgroup.saleinbamgah.DataBase.Account;
 import ir.kitgroup.saleinbamgah.DataBase.SaleinShop;
 import ir.kitgroup.saleinbamgah.DataBase.Company;
 import ir.kitgroup.saleinbamgah.classes.AppSMSBroadcastReceiver;
+import ir.kitgroup.saleinbamgah.classes.AppSignatureHelper;
 import ir.kitgroup.saleinbamgah.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.saleinbamgah.R;
@@ -78,6 +80,8 @@ public class VerifyFragment extends Fragment {
 
     private String applicationVersion="";
     private Account account;
+
+    private AppSMSBroadcastReceiver appSMSBroadcastReceiver;
     //endregion Parameter
 
 
@@ -201,6 +205,7 @@ public class VerifyFragment extends Fragment {
         super.onDestroyView();
         countDownTimer.cancel();
         binding = null;
+        appSMSBroadcastReceiver.clearAbortBroadcast();
     }
     //endregion Override Method
 
@@ -240,6 +245,10 @@ public class VerifyFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void init() {
+
+        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(getActivity());
+
+        Toasty.success(getActivity(), appSignatureHelper.getAppSignatures().toString(),Toasty.LENGTH_SHORT).show();
 
         userName = company.getUser();
         passWord = company.getPass();
@@ -330,7 +339,7 @@ public class VerifyFragment extends Fragment {
 
     }
 
-    private void initBroadCast() {
+   /* private void initBroadCast() {
         AppSMSBroadcastReceiver appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
         appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
             binding.otpView.setOTP(code);
@@ -345,7 +354,7 @@ public class VerifyFragment extends Fragment {
 
         task.addOnFailureListener(e -> {
         });
-    }
+    }*/
 
     public void appVersion(){
     try {
@@ -365,6 +374,33 @@ public class VerifyFragment extends Fragment {
     private void setIdServerToAccount(String id){
         sharedPreferences.edit().putString("idServer",id).apply();
     }
+
+
+    private void initBroadCast() {
+
+        appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
+        appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
+
+            binding.otpView.setOTP(code);
+
+           /* new android.os.Handler(Looper.getMainLooper()).postDelayed(
+                    () -> binding.tvEnterCode.performClick(),
+                    600);*/
+        });
+    }
+
+    private void smsListener() {
+        SmsRetrieverClient client = SmsRetriever.getClient(getContext());
+        Task<Void> task = client.startSmsRetriever();
+
+        task.addOnSuccessListener(aVoid -> {
+        });
+
+        task.addOnFailureListener(e -> {
+        });
+    }
+
+
 
     //endregion Method
 

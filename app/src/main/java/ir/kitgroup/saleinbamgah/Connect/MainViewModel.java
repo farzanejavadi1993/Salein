@@ -186,7 +186,7 @@ public class MainViewModel extends ViewModel {
 
 
     public void getAdvsByCompanyId(List<String> companiesId, int page, String appId, String customerId) {
-//        compositeDisposable.clear();
+      compositeDisposable.clear();
         compositeDisposable.add(
                 mainRepository.getAdvsByCompanyId(companiesId, page, appId, customerId)
                         .subscribeOn(Schedulers.io())

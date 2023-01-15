@@ -2,13 +2,14 @@
 <layout>
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
-        android:background="#eee"
+        android:background="@color/white"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
+            app:cardElevation="@dimen/margin4"
             android:layout_height="wrap_content">
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginRight="12dp"
@@ -22,6 +23,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
+            app:cardElevation="@dimen/margin4"
             android:layout_marginTop="5dp"
             android:layout_height="wrap_content">
             <RelativeLayout
@@ -75,38 +77,44 @@
 
                 <TextView
 
-                    android:layout_marginLeft="16dp"
                     android:id="@+id/txtLocation"
-                    tools:text="مشهد بولوار موسوی قوچانی چهارراه آخر خیام"
-                    android:layout_marginRight="16dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/view"
                     style="@style/bold_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/view"
+                    android:text="مشهد بولوار موسوی قوچانی چهارراه آخر خیام" />
             </RelativeLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-        <com.smarteist.autoimageslider.SliderView
-            android:layout_marginTop="5dp"
-            android:id="@+id/slider"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_centerInParent="true"
-            android:scrollIndicators="bottom"
-            app:sliderAnimationDuration="600"
-            app:sliderAutoCycleDirection="back_and_forth"
-            app:sliderIndicatorAnimationDuration="600"
-            app:sliderIndicatorEnabled="true"
-            app:sliderIndicatorGravity="center_horizontal|bottom"
-            app:sliderIndicatorMargin="15dp"
-            app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorPadding="4dp"
-            app:sliderIndicatorRadius="1dp"
-            app:sliderIndicatorSelectedColor="@color/color_primary"
-            app:sliderIndicatorUnselectedColor="@color/gray"
-            app:sliderScrollTimeInSec="2" />
+            app:cardElevation="@dimen/margin4"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content">
+            <com.smarteist.autoimageslider.SliderView
+                android:layout_marginTop="5dp"
+                android:id="@+id/slider"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_centerInParent="true"
+                android:scrollIndicators="bottom"
+                app:sliderAnimationDuration="600"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorEnabled="true"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="3dp"
+                app:sliderIndicatorRadius="2dp"
+                app:sliderIndicatorSelectedColor="@color/color_primary"
+                app:sliderIndicatorUnselectedColor="@color/gray"
+                app:sliderScrollTimeInSec="2" />
+        </com.google.android.material.card.MaterialCardView>
+
 
     </LinearLayout>
 </layout>

@@ -81,12 +81,12 @@ public class CompanyAdapterList extends RecyclerView.Adapter<CompanyAdapterList.
 
 
         holder.itemView.setOnClickListener(v -> {
-            if (!company.Open){
-                company.Open=true;
+            if (!company.click){
+                company.click =true;
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),false);
 
             }else {
-                company.Open=false;
+                company.click =false;
                 clickItem.onRowClick(company,company.Parent!=null ? company.Parent : false,holder.getAdapterPosition(),true);
 
             }

@@ -107,12 +107,12 @@ public class Company extends SugarRecord {
         Parent = parent;
     }
 
-    public Boolean getOpen() {
-        return Open;
+    public Boolean getClick() {
+        return click;
     }
 
-    public void setOpen(Boolean open) {
-        Open = open;
+    public void setClick(Boolean click) {
+        this.click = click;
     }
 
     private String version;
@@ -297,5 +297,5 @@ public class Company extends SugarRecord {
 
     public Boolean Parent;
 
-    public Boolean Open=false;
+    public Boolean click =false;
 }

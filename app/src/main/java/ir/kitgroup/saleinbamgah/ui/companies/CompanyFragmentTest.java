@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -24,8 +26,10 @@ import ir.kitgroup.saleinbamgah.Connect.CompanyViewModel;
 import ir.kitgroup.saleinbamgah.Connect.MainViewModel;
 import ir.kitgroup.saleinbamgah.DataBase.Company;
 import ir.kitgroup.saleinbamgah.classes.HostSelectionInterceptor;
+import ir.kitgroup.saleinbamgah.classes.Util;
 import ir.kitgroup.saleinbamgah.databinding.CompanyFragmentTestBinding;
 import ir.kitgroup.saleinbamgah.models.Advertise;
+import ir.kitgroup.saleinbamgah.models.ProductLevel1;
 
 @AndroidEntryPoint
 public class CompanyFragmentTest extends Fragment {
@@ -52,6 +56,8 @@ public class CompanyFragmentTest extends Fragment {
     private SliderAdapter adapterBanner;
     private final ArrayList<Advertise> bannerList = new ArrayList<>();
     private int height;
+    ArrayList<String> companiesId=new ArrayList<>();
+
 
     //region Override Method
 
@@ -79,9 +85,8 @@ public class CompanyFragmentTest extends Fragment {
 
 
         mainViewModel.getAllCompany("", pageMain);
-        ArrayList<String> companiesId=new ArrayList<>();
-        companiesId.add("DDC0CF80-2613-ED11-9B6C-000C29D9B371");
-        mainViewModel.getAdvsByCompanyId(companiesId, pageMain, "CB0F6319-5C4C-ED11-9BC9-000C29D9B371", "7883274E-0536-4A48-BF02-81F6F6A4163E");
+
+
 
 
         companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
@@ -107,14 +112,11 @@ public class CompanyFragmentTest extends Fragment {
             if (pageMain == 1)
                 allCompanies.clear();
 
+            if (result.size() > 0) {
 
-            allCompanies.addAll(result);
+                allCompanies.addAll(result);
 
-
-
-            /*if (result.size() > 0) {
-
-                //region Find Parent Items Of All Company And Set Parent Variable True
+              /*  //region Find Parent Items Of All Company And Set Parent Variable True
                 for (int i = 0; i < result.size(); i++) {
                     ArrayList<Company> companyArrayList = new ArrayList<>(result);
                     int finalI = i;
@@ -125,11 +127,7 @@ public class CompanyFragmentTest extends Fragment {
                             allCompanies.addAll(companyArrayList);
                     }
                 }
-                //endregion Find Parent Items Of All Company And Set Parent Variable True
-
-
-
-
+                //endregion Find Parent Items Of All Company And Set Parent Variable True*/
 
 
                 //region Filter list according to companyId That come From Pakhshyab
@@ -143,10 +141,18 @@ public class CompanyFragmentTest extends Fragment {
                 //endregion Filter list according to companyId That come From Pakhshyab
 
 
+                if (allCompanies.size()>0){
+                    allCompanies.get(0).click=true;
+                    companiesId.clear();
+                    companiesId.add("4982DD86-2613-ED11-9B6C-000C29D9B371");
 
-            }*/
-            /*else if (result.size() == 0)
-                Toasty.error(getContext(), "هیچ شرکتی یافت نشد", Toasty.LENGTH_SHORT).show();*/
+                    mainViewModel.getAdvsByCompanyId(companiesId, pageMain, "CB0F6319-5C4C-ED11-9BC9-000C29D9B371", "7883274E-0536-4A48-BF02-81F6F6A4163E");
+                }
+
+            }
+            else if (result.size() == 0)
+                Toasty.error(getContext(), "هیچ شرکتی یافت نشد", Toasty.LENGTH_SHORT).show();
+
 
 
             companyAdapter.notifyDataSetChanged();
@@ -231,9 +237,10 @@ public class CompanyFragmentTest extends Fragment {
     //endregion Override Method
 
     //region Method
+    @SuppressLint("NotifyDataSetChanged")
     private void initRecyclerView() {
 
-        companyAdapter = new CompanyAdapterTest(allCompanies);
+        companyAdapter = new CompanyAdapterTest(allCompanies,getActivity());
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -241,6 +248,35 @@ public class CompanyFragmentTest extends Fragment {
 
         binding.rvCompany.setLayoutManager(manager);
         binding.rvCompany.setAdapter(companyAdapter);
+
+        companyAdapter.setOnClickItemListener(modelCompany -> {
+
+            //region UnClick Old Item ProductLevel1 And Item ProductLevel2
+            ArrayList<Company> resultPrdGrp1 = new ArrayList<>(allCompanies);
+            CollectionUtils.filter(resultPrdGrp1, r -> r.click);
+            if (resultPrdGrp1.size() > 0) {
+                allCompanies.get(allCompanies.indexOf(resultPrdGrp1.get(0))).click = false;
+            }
+            //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
+
+
+            //region Click New Item ProductLevel1
+            ArrayList<Company> resultPrdGroup1_ = new ArrayList<>(allCompanies);
+            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(modelCompany.getI()));
+            if (resultPrdGroup1_.size() > 0) {
+                allCompanies.get(allCompanies.indexOf(resultPrdGroup1_.get(0))).click = true;
+            }
+            //endregion Click New Item ProductLevel1
+
+            companyAdapter.notifyDataSetChanged();
+
+            companiesId.clear();
+           // companiesId.add(modelCompany.getI());
+
+            companiesId.add("4982DD86-2613-ED11-9B6C-000C29D9B371");
+
+            mainViewModel.getAdvsByCompanyId(companiesId, pageMain, "CB0F6319-5C4C-ED11-9BC9-000C29D9B371", "7883274E-0536-4A48-BF02-81F6F6A4163E");
+        });
 
 
 

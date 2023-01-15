@@ -1,9 +1,14 @@
 package ir.kitgroup.saleinbamgah.ui.companies;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +19,7 @@ import ir.kitgroup.saleinbamgah.R;
 
 public class CompanyAdapterTest extends RecyclerView.Adapter<CompanyAdapterTest.viewHolder> {
     private final List<Company> list;
+    private final Context context;
 
 
 
@@ -22,14 +28,15 @@ public class CompanyAdapterTest extends RecyclerView.Adapter<CompanyAdapterTest.
         this.clickItem = clickItem;
     }
     public interface ClickItem {
-        void onRowClick(Company modelCompany,Boolean parent,int index,boolean delete);
+        void onRowClick(Company modelCompany);
     }
     private ClickItem clickItem;
     //endregion Interface
 
 
-    public CompanyAdapterTest(List<Company> list) {
+    public CompanyAdapterTest(List<Company> list,Context context) {
         this.list = list;
+        this.context=context;
     }
 
     @Override
@@ -38,13 +45,32 @@ public class CompanyAdapterTest extends RecyclerView.Adapter<CompanyAdapterTest.
         return new viewHolder(view);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final @NotNull viewHolder holder, final int position) {
         final Company company = list.get(position);
 
 
         holder.tvNameCompany.setText(company.getN());
+        holder.tvDescription.setText(company.getDesc());
 
+
+
+        if (company.click){
+            holder.layoutCompany.setBackground(context.getResources().getDrawable(R.drawable.background_active_company_item));
+            holder.tvNameCompany.setTextColor(context.getResources().getColor(R.color.white));
+            holder.tvDescription.setTextColor(context.getResources().getColor(R.color.white));
+
+        }
+
+        else {
+            holder.layoutCompany.setBackground(context.getResources().getDrawable(R.drawable.background_inactive_company_item));
+            holder.tvNameCompany.setTextColor(context.getResources().getColor(R.color.color_primary_very_dark));
+            holder.tvDescription.setTextColor(context.getResources().getColor(R.color.color_primary_very_dark));
+
+        }
+
+        holder.itemView.setOnClickListener(view -> clickItem.onRowClick(company));
 
 
 /*        holder.itemView.setOnClickListener(v -> {
@@ -67,11 +93,17 @@ public class CompanyAdapterTest extends RecyclerView.Adapter<CompanyAdapterTest.
 
     class viewHolder extends RecyclerView.ViewHolder {
         private final  TextView tvNameCompany;
+        private final  TextView tvDescription;
+        private final ConstraintLayout layoutCompany;
+        private final  View ivView;
 
 
         public viewHolder(View itemView) {
             super(itemView);
             tvNameCompany = itemView.findViewById(R.id.tvNameCompanyTest);
+            layoutCompany = itemView.findViewById(R.id.layoutCompany);
+            tvDescription = itemView.findViewById(R.id.tvDescription);
+            ivView = itemView.findViewById(R.id.ivView);
         }
     }
 }
