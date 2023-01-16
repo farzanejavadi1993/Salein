@@ -9,21 +9,21 @@
     <!--    <color name="color_accent">#FF018786</color>-->
     <!--    <color name="color_primary">#FCDC65</color>-->
     <!--    <color name="color_primary_dark">#FDC300</color>-->
-        <color name="color_primary_very_dark">#FF9800</color>
+    <color name="color_primary_very_dark">#FF9800</color>
 
 
     <!--belong to donyavi-->
-    <!--        <color name="color_text_screen">#fff</color>-->
-    <!--        <color name="color_primary">#ff8a80</color>-->
-    <!--        <color name="color_primary_dark">#c85a54</color>-->
-    <!--        <color name="color_accent">#fff</color>-->
+    <!--       <color name="color_text_screen">#fff</color>
+           <color name="color_primary">#ff8a80</color>
+           <color name="color_primary_dark">#c85a54</color>
+           <color name="color_accent">#fff</color>-->
 
 
     <!--belong to bamgah-->
-    <color name="color_text_screen">#FFFFFF</color>
-    <color name="color_accent">#776699</color>
-    <color name="color_primary">#F7B702</color>
-    <color name="color_primary_dark">#776699</color>
+    <!-- <color name="color_text_screen">#FFFFFF</color>
+     <color name="color_accent">#776699</color>
+     <color name="color_primary">#F7B702</color>
+     <color name="color_primary_dark">#776699</color>-->
 
 
     <!--belong to khavari-->
@@ -31,6 +31,13 @@
     <color name="color_accent">#A46DBD</color>
     <color name="color_primary">#50D2CF</color>
     <color name="color_primary_dark">#51ABB2</color>-->
+
+
+    <!--belong to jampart-->
+    <color name="color_text_screen">#fff</color>
+    <color name="color_primary">#03A9F4</color>
+    <color name="color_primary_dark">#2196F3</color>
+    <color name="color_accent">#fff</color>
 
     <color name="edittext_color">#607d8b</color>
     <color name="white">#FFFFFFFF</color>
