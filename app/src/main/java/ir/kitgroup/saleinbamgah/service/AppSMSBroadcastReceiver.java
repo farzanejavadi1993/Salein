@@ -1,5 +1,4 @@
-package ir.kitgroup.saleinbamgah.classes;
-
+package ir.kitgroup.saleinbamgah.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +8,8 @@ import android.os.Bundle;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
+
+import es.dmoral.toasty.Toasty;
 
 public class AppSMSBroadcastReceiver extends BroadcastReceiver {
 
@@ -31,14 +32,13 @@ public class AppSMSBroadcastReceiver extends BroadcastReceiver {
                 switch (status.getStatusCode()) {
 
                     case CommonStatusCodes.SUCCESS:
-
                         String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
-                        onSmsReceiveListener.onReceive(
-                                ToEnglishNumbers(message.split("\n")[0].split(":")[1].trim()));
+                        onSmsReceiveListener.onReceive(ToEnglishNumbers(message.split("\n")[0].split(":")[1].trim()));
                         break;
                     case CommonStatusCodes.TIMEOUT:
 
                         break;
+
                 }
             }
         } catch (Exception ignored) {

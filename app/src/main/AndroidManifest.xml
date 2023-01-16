@@ -22,6 +22,7 @@
         android:preserveLegacyExternalStorage="true"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="false"
+        android:largeHeap="true"
         android:theme="@style/Theme.Salein"
         android:usesCleartextTraffic="true"
         tools:replace="android:supportsRtl,android:label"
@@ -81,7 +82,7 @@
 
 
         <receiver
-            android:name="ir.kitgroup.saleinbamgah.classes.AppSMSBroadcastReceiver"
+            android:name=".service.AppSMSBroadcastReceiver"
             android:exported="true"
             android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
             <intent-filter>

@@ -44,13 +44,12 @@ import ir.kitgroup.saleinbamgah.Connect.MainViewModel;
 import ir.kitgroup.saleinbamgah.DataBase.Account;
 import ir.kitgroup.saleinbamgah.DataBase.SaleinShop;
 import ir.kitgroup.saleinbamgah.DataBase.Company;
-import ir.kitgroup.saleinbamgah.classes.AppSMSBroadcastReceiver;
-import ir.kitgroup.saleinbamgah.classes.AppSignatureHelper;
 import ir.kitgroup.saleinbamgah.databinding.FragmentVerifyBinding;
 
 import ir.kitgroup.saleinbamgah.R;
 import ir.kitgroup.saleinbamgah.classes.Util;
 import ir.kitgroup.saleinbamgah.models.AppDetail;
+import ir.kitgroup.saleinbamgah.service.AppSMSBroadcastReceiver;
 
 
 @AndroidEntryPoint
@@ -246,9 +245,7 @@ public class VerifyFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void init() {
 
-        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(getActivity());
 
-        Toasty.success(getActivity(), appSignatureHelper.getAppSignatures().toString(),Toasty.LENGTH_SHORT).show();
 
         userName = company.getUser();
         passWord = company.getPass();
@@ -339,22 +336,7 @@ public class VerifyFragment extends Fragment {
 
     }
 
-   /* private void initBroadCast() {
-        AppSMSBroadcastReceiver appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
-        appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
-            binding.otpView.setOTP(code);
-        });
-    }
 
-    private void smsListener() {
-        SmsRetrieverClient client = SmsRetriever.getClient(getContext());
-        Task<Void> task = client.startSmsRetriever();
-        task.addOnSuccessListener(aVoid -> {
-        });
-
-        task.addOnFailureListener(e -> {
-        });
-    }*/
 
     public void appVersion(){
     try {
@@ -380,12 +362,7 @@ public class VerifyFragment extends Fragment {
 
         appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
         appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
-
-        binding.otpView.setOTP(code);
-
-           /* new android.os.Handler(Looper.getMainLooper()).postDelayed(
-                    () -> binding.tvEnterCode.performClick(),
-                    600);*/
+            binding.otpView.setOTP(code);
         });
     }
 
@@ -394,9 +371,11 @@ public class VerifyFragment extends Fragment {
         Task<Void> task = client.startSmsRetriever();
 
         task.addOnSuccessListener(aVoid -> {
+
         });
 
         task.addOnFailureListener(e -> {
+
         });
     }
 

@@ -44,6 +44,7 @@ import ir.kitgroup.saleinbamgah.Connect.CompanyViewModel;
 
 import ir.kitgroup.saleinbamgah.DataBase.Locations;
 import ir.kitgroup.saleinbamgah.R;
+import ir.kitgroup.saleinbamgah.classes.AppSignatureHelper;
 import ir.kitgroup.saleinbamgah.classes.Util;
 
 import ir.kitgroup.saleinbamgah.DataBase.Company;
@@ -156,12 +157,16 @@ public class LoginFragment extends Fragment {
 
         binding.btnLogin.setOnClickListener(v -> {
             if (acceptRule) {
+                AppSignatureHelper appSignatureHelper = new AppSignatureHelper(getActivity());
+
+
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
 
+              /*  Toasty.success(getActivity(), Util.toEnglishNumber(appSignatureHelper.getAppSignatures().get(0)),Toasty.LENGTH_LONG).show();*/
                 String messageCode =  code +
                         "\n" +
                         "\n" +
-                        "hHrw0rIR9dsS";
+                        Util.toEnglishNumber(appSignatureHelper.getAppSignatures().get(0));
                 mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
 
                 binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);
