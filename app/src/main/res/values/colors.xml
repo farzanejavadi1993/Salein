@@ -37,7 +37,7 @@
     <color name="color_text_screen">#fff</color>
     <color name="color_primary">#03A9F4</color>
     <color name="color_primary_dark">#2196F3</color>
-    <color name="color_accent">#fff</color>
+    <color name="color_accent">#FF9800</color>
 
     <color name="edittext_color">#607d8b</color>
     <color name="white">#FFFFFFFF</color>

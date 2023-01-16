@@ -54,10 +54,13 @@ public class ProductLevel1Adapter extends RecyclerView.Adapter<ProductLevel1Adap
         holder.groupName.setText(productGroupLevel1.getN());
 
 
-        if (productGroupLevel1.Click)
-           holder.view.setBackground(context.getResources().getDrawable(R.drawable.background_view));
-        else
+        if (productGroupLevel1.Click) {
+            holder.view.setBackground(context.getResources().getDrawable(R.drawable.background_view));
+
+        }
+        else {
             holder.view.setBackgroundColor(context.getResources().getColor(R.color.color_primary));
+        }
 
         holder.itemView.setOnClickListener(view -> {
             clickItem.onRowClick(productGroupLevel1s.get(position).getI());

@@ -172,7 +172,7 @@ public class HomeFragment extends Fragment {
             binding.progressbar.setVisibility(View.GONE);
             customProgress.hideProgress();
             if (result.getCode() == -4) {
-                binding.ivFilter.setImageResource(R.drawable.ic_filter_active);
+                binding.ivFilter.setImageResource(R.drawable.ic_filter);
                 sharedPreferences.edit().putBoolean("vip", false).apply();
                 sharedPreferences.edit().putBoolean("discount", false).apply();
             }

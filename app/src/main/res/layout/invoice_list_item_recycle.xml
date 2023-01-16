@@ -20,8 +20,8 @@
             android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
-            app:siBorderColor="@color/white"
-            app:siBorderWidth="0.5dp"
+            app:siBorderColor="#eee"
+            app:siBorderWidth="1dp"
             app:siRadius="@dimen/margin8" />
 
         <RelativeLayout
