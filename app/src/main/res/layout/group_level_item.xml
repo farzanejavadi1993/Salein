@@ -17,7 +17,7 @@
         <com.github.siyamed.shapeimageview.ShapeImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/ghalat"
+            app:srcCompat="@drawable/ghalat"
             app:siBorderColor="#fff" />
 
         <TextView

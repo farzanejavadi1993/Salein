@@ -55,7 +55,8 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/profile" />
+                    app:srcCompat="@drawable/profile" />
+
 
                 <TextView
                     android:id="@+id/txtName"
@@ -134,7 +135,7 @@
                             android:id="@+id/edit1"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_edit"
+                            app:srcCompat="@drawable/ic_edit"
                             android:layout_width="24dp"
                             android:layout_height="24dp"/>
                     </RelativeLayout>
@@ -177,7 +178,7 @@
                             android:id="@+id/edit2"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_edit"
+                            app:srcCompat="@drawable/ic_edit"
                             android:layout_width="24dp"
                             android:layout_height="24dp"/>
                     </RelativeLayout>

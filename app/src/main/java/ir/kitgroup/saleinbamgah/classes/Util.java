@@ -6,11 +6,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -170,6 +177,20 @@ public class Util {
 
 
         return id;
+    }
+
+    public static void setTextFontToSpecialPart(String description, Typeface typeface, int start, int end, int color, TextView textView) {
+        SpannableString spannable = new SpannableString(description);
+        SpannableString sb = setTypeface(spannable, typeface, start, end, color);
+        textView.setText(sb);
+    }
+
+    private static SpannableString setTypeface(SpannableString sb, Typeface typeface, int start, int end, int color) {
+        TypefaceSpan robotoRegularSpan = new CustomTypefaceSpan("", typeface);
+        sb.setSpan(robotoRegularSpan, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        sb.setSpan(typeface, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(color), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        return sb;
     }
 
     public static class JsonObjectAccount {

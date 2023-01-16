@@ -196,7 +196,7 @@
                 <ImageView
                     android:layout_marginRight="5dp"
                     android:tint="@color/red"
-                    android:src="@drawable/refresh"
+                    app:srcCompat="@drawable/refresh"
                     android:layout_width="16dp"
                     android:layout_height="16dp"/>
                 <TextView

@@ -34,7 +34,7 @@ public class AppSMSBroadcastReceiver extends BroadcastReceiver {
 
                         String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
                         onSmsReceiveListener.onReceive(
-                                ToEnglishNumbers(message.split("\\n")[1].split(":")[1].trim()));
+                                ToEnglishNumbers(message.split("\n")[0].split(":")[1].trim()));
                         break;
                     case CommonStatusCodes.TIMEOUT:
 

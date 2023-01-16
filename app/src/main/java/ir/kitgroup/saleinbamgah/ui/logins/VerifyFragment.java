@@ -381,7 +381,7 @@ public class VerifyFragment extends Fragment {
         appSMSBroadcastReceiver = new AppSMSBroadcastReceiver();
         appSMSBroadcastReceiver.setOnSmsReceiveListener(code -> {
 
-            binding.otpView.setOTP(code);
+        binding.otpView.setOTP(code);
 
            /* new android.os.Handler(Looper.getMainLooper()).postDelayed(
                     () -> binding.tvEnterCode.performClick(),

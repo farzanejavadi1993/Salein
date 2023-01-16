@@ -160,8 +160,8 @@ public class LoginFragment extends Fragment {
 
                 String messageCode =  code +
                         "\n" +
-                        "hjTpaJqXkPN";
-                //"hHrw0rIR9dsS";
+                        "\n" +
+                        "hHrw0rIR9dsS";
                 mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
 
                 binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);

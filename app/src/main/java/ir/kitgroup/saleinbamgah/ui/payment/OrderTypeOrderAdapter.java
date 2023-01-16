@@ -52,11 +52,11 @@ public class OrderTypeOrderAdapter extends RecyclerView.Adapter<OrderTypeOrderAd
 
         if (orderType.Click) {
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_bottom_low_radius));
-            //holder.name.setTextColor(context.getResources().getColor(R.color.white));
+            holder.name.setTextColor(context.getResources().getColor(R.color.color_text_screen));
 
         } else if (!orderType.Click) {
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.background_subgroup_mobile));
-          //  holder.name.setTextColor(context.getResources().getColor(R.color.medium_color));
+           holder.name.setTextColor(context.getResources().getColor(R.color.medium_color));
         }
 
         holder.itemView.setOnClickListener(view -> clickItem.onRowClick(orderType.getI(),orderType.getC()));

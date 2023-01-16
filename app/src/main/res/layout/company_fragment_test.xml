@@ -34,7 +34,7 @@
                 <ImageView
                     android:id="@+id/ivLocation"
                     android:tint="@color/medium_color"
-                    android:src="@drawable/ic_location"
+                    app:srcCompat="@drawable/ic_location"
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
@@ -57,7 +57,7 @@
                     android:padding="5dp"
                     android:id="@+id/ivArrow"
                     android:tint="@color/medium_color"
-                    android:src="@drawable/ic_fi_rr_angle_small_left"
+                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
                     android:layout_marginRight="45dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/tvLocation"

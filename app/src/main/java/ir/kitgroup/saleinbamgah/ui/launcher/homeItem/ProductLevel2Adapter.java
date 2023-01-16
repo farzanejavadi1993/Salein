@@ -55,8 +55,9 @@ public class ProductLevel2Adapter extends RecyclerView.Adapter<ProductLevel2Adap
         if (subGroup.Click) {
 
             holder.cardView.setBackground(context.getResources().getDrawable(R.drawable.order_item_recycle_group__card_background));
-
+            holder.subGroupName.setTextColor(context.getResources().getColor(R.color.color_text_screen));
             holder.animationView.setVisibility(View.VISIBLE);
+
         } else if (!subGroup.Click) {
             holder.animationView.setVisibility(View.GONE);
             holder.cardView.setBackground(null);

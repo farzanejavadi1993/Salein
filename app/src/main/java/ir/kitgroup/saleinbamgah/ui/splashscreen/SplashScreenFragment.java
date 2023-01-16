@@ -311,15 +311,15 @@ public class SplashScreenFragment extends Fragment {
     }
 
     private void navigate() {
-     // Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
+        //Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
 
-        connectToServer();
+       connectToServer();
 
         if (account != null) {
             if (saleinShop.isPublicApp())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
             else {
-                NavDirections action = (NavDirections) SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
                 Navigation.findNavController(getView()).navigate(action);
             }
         } else

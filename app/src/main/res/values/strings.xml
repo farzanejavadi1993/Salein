@@ -11,6 +11,8 @@
     <string name="enter_number">لطفا شماره موبایل خود را وارد کنید</string>
     <string name="confirm_code">تایید کد دریافتی</string>
     <string name="send_code_part1">کد تایید برای شماره موبایل </string>
+    <string name="rule">در صورت وارد نمودن شماره همراه خود با قوانین و مقررات موافق هستید. </string>
+
     <string name="send_code_part2">ارسال شد </string>
     <string name="enter_code">کد تایید 5 رقمی را وارد کنید </string>
     <string name="register_gps">ثبت موقعیت </string>

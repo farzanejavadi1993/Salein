@@ -40,6 +40,9 @@ public class ApplicationModule {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+
+
+
     @Provides
     @Singleton
     Context provideContext(@ApplicationContext Context context) {
