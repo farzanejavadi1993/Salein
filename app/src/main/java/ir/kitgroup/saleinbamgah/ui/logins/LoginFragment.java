@@ -163,10 +163,12 @@ public class LoginFragment extends Fragment {
                 code = new Random(System.nanoTime()).nextInt(89000) + 10000;
 
               /*  Toasty.success(getActivity(), Util.toEnglishNumber(appSignatureHelper.getAppSignatures().get(0)),Toasty.LENGTH_LONG).show();*/
+
                 String messageCode =  code +
                         "\n" +
                         "\n" +
                         Util.toEnglishNumber(appSignatureHelper.getAppSignatures().get(0));
+
                 mobile = Objects.requireNonNull(binding.edtMobile.getText()).toString();
 
                 binding.btnLogin.setBackgroundResource(R.drawable.inactive_bottom);
