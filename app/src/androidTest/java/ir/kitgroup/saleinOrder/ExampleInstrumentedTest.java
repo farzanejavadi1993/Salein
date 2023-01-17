@@ -1,4 +1,4 @@
-package ir.kitgroup.saleinjam;
+package ir.kitgroup.saleindemo;
 
 import android.content.Context;
 

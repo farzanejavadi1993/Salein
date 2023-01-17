@@ -1,351 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
 
+    <LinearLayout
+        android:clickable="true"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:clickable="true"
-        android:focusable="true"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
 
             <ImageView
+                android:layout_marginRight="12dp"
                 android:id="@+id/iv_back"
                 android:layout_width="@dimen/icon_normal_size"
                 android:layout_height="@dimen/icon_normal_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
                 android:padding="8dp"
                 android:rotationY="180"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_fi_rr_angle_small_left" />
 
+        </RelativeLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
+            android:gravity="center|top"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="22dp">
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/image_logo"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/login"
+                tools:ignore="ContentDescription" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/large_bold_text"
-                    android:layout_width="match_parent"
-                    android:gravity="right"
-                    android:lineSpacingExtra="16dp"
-                    android:text="آدرس و موقعیت را مشخص کنید." />
+                android:layout_height="70dp"
+                android:padding="2dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/address"
-                        style="@style/normal_text"
-
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="right"
-                        android:lineSpacingExtra="9dp"
-                        android:text="آدرس " />
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/address"
-                        android:lineSpacingExtra="9dp"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="13dp"
-                        android:textStyle="normal" />
-
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginTop="5dp">
-
-                    <EditText
-                        android:id="@+id/edtAddress"
-                        style="@style/bold_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/background_edittext"
-                        android:fontFamily="@font/iransans"
-                        android:gravity="right|center"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp" />
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="right"
-                    android:lineSpacingExtra="10dp"
-                    android:text=" ساختار آدرس را برای خوانایی بهتر به این شکل وارد کنید: نام شهر ، نام خیابان یا بولوار، نام کوچه، پلاک، واحد."
-                    android:textColor="#8a8a8a"
-                    android:textSize="12dp"
-                    android:textStyle="normal" />
-
-
-                <RelativeLayout
-                    android:id="@+id/layoutMap"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp">
-
-                    <TextView
-                        android:id="@+id/tv_map"
-                        style="@style/normal_text"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="right"
-                        android:lineSpacingExtra="9dp"
-                        android:text="موقعیت خود را روی نقشه مشخص کنید." />
-
-                    <TextView
-                        android:id="@+id/tv_register_map"
-                        style="@style/bold_text"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="right"
-                        android:text="ثبت موقعیت"
-                        android:textColor="@color/color_accent" />
-                </RelativeLayout>
-
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/btn_map"
-                    android:layout_width="match_parent"
-                    android:layout_height="155dp"
-                    android:layout_marginTop="8dp"
-
-                    app:cardCornerRadius="10dp">
-
-                    <com.cedarstudios.cedarmapssdk.MapView
-                        android:id="@+id/mapView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-
-                        />
-                </com.google.android.material.card.MaterialCardView>
-
-
-                <LinearLayout
-                    android:id="@+id/nameCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:id="@+id/tvN"
-                            style="@style/normal_text"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:text="نام و نام خانوادگی" />
-
-                        <TextView
-                            style="@style/normal_text"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/tvN"
-                            android:lineSpacingExtra="9dp"
-                            android:text="*"
-                            android:textColor="@color/red" />
-                    </RelativeLayout>
-
+                    android:layout_height="55dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/background_edittext_test"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteX="2dp">
 
                     <EditText
                         android:id="@+id/edtName"
                         style="@style/bold_text"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/background_edittext"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
                         android:fontFamily="@font/iransans"
-                        android:gravity="right|center"
-                        android:inputType="text"
-                        android:lineSpacingExtra="9dp"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp" />
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textCursorDrawable="@drawable/color_cursor" />
+                </RelativeLayout>
 
+                <TextView
+                    style="@style/normal_text"
+                    android:textColor="@color/edittext_color"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="24dp"
+                    android:background="@color/white"
+                    android:inputType="text"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="نام"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:padding="2dp">
 
-
-                <LinearLayout
-                    android:layout_marginTop="12dp"
-                    android:id="@+id/CodeId"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="55dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/background_edittext_test"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteX="2dp">
 
-                    <TextView
-                        style="@style/normal_text"
+                    <EditText
+                        android:id="@+id/edtLastName"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/iransans"
+                        android:inputType="text"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textCursorDrawable="@drawable/color_cursor" />
+                </RelativeLayout>
 
-                        android:gravity="right"
-                        android:lineSpacingExtra="9dp"
-                        android:text="کد معرف" />
+                <TextView
+                    style="@style/normal_text"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="24dp"
+                    android:background="@color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="نام خانوادگی"
+                    android:textColor="@color/edittext_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+
+                android:padding="2dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/background_edittext_test"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteX="2dp">
 
                     <EditText
                         android:id="@+id/edtCode"
                         style="@style/bold_text"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/background_edittext"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/view"
+                        android:background="@android:color/transparent"
                         android:fontFamily="@font/iransans"
-                        android:gravity="right|center"
+                        android:gravity="center"
                         android:inputType="number"
-                        android:lineSpacingExtra="9dp"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp" />
-
-
-                </LinearLayout>
-
-
-                <RelativeLayout
-
-                    android:id="@+id/radioCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp">
-
-                    <TextView
-                        android:id="@+id/tvRadioGroup"
-                        style="@style/normal_text"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="right"
-                        android:text="جنسیت" />
-
-                    <TextView
-
-                        style="@style/normal_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tvRadioGroup"
-                        android:lineSpacingExtra="9dp"
-                        android:text="*"
-                        android:textColor="@color/red" />
-
-                    <RadioGroup
-                        android:id="@+id/radioGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/margin10"
-                        android:layout_toLeftOf="@+id/tvRadioGroup"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:buttonTint="@color/color_accent"
-                            android:id="@+id/radio2"
-                            style="@style/bold_text"
-                            android:layout_marginRight="22dp"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="center_vertical"
-                            android:text="مرد" />
-
-                        <RadioButton
-                            android:buttonTint="@color/color_accent"
-                            android:id="@+id/radio1"
-                            style="@style/bold_text"
-                            android:layout_marginRight="22dp"
-                            android:fontFamily="@font/iransans"
-                            android:gravity="center_vertical"
-                            android:text="زن" />
-
-
-                    </RadioGroup>
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textCursorDrawable="@drawable/color_cursor" />
                 </RelativeLayout>
 
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
+                <TextView
+                    style="@style/normal_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="24dp"
+                    android:background="@color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="کد معرف"
+                    android:textColor="@color/edittext_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
-                android:id="@+id/card_button"
+                android:id="@+id/radioCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/margin10"
+                android:layout_marginTop="12dp">
 
-                >
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_register_information"
-                    style="@style/bold_text_bottom"
-                    android:layout_width="132dp"
+                <TextView
+                    android:id="@+id/tvRadioGroup"
+                    style="@style/normal_text"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="22dp"
-                    android:layout_marginEnd="22dp"
-                    android:background="@drawable/bottom_background"
-                    android:fontFamily="@font/iransans"
-                    android:lineSpacingExtra="10dp"
-                    android:text="ثبت و ادامه"
-                    app:backgroundTint="@null"
-                    app:cornerRadius="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:gravity="right"
+                    android:text="جنسیت"
+                    android:textColor="@color/edittext_color" />
 
+                <TextView
+                    style="@style/normal_text"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/tvRadioGroup"
+                    android:lineSpacingExtra="9dp"
+                    android:text="*"
+                    android:textColor="@color/red" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin10"
+                    android:layout_toLeftOf="@+id/tvRadioGroup"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio2"
+                        style="@style/bold_text"
+                        android:layout_marginRight="22dp"
+                        android:buttonTint="@color/color_accent"
+                        android:fontFamily="@font/iransans"
+                        android:gravity="center_vertical"
+                        android:text="مرد" />
+
+                    <RadioButton
+                        android:id="@+id/radio1"
+                        style="@style/bold_text"
+                        android:layout_marginRight="22dp"
+                        android:buttonTint="@color/color_accent"
+                        android:fontFamily="@font/iransans"
+                        android:gravity="center_vertical"
+                        android:text="زن" />
+
+
+                </RadioGroup>
             </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:indeterminateTint="@color/color_accent"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegisterInformation"
+                style="@style/bold_text_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/inactive_bottom"
+                android:fontFamily="@font/iransans"
+                android:lineSpacingExtra="10dp"
+                android:text="ثبت و ادامه"
+                app:backgroundTint="@null"
+                app:cornerRadius="12dp" />
         </LinearLayout>
 
-
-    </RelativeLayout>
-
+    </LinearLayout>
 
 </layout>
