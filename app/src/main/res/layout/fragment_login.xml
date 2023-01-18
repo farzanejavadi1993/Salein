@@ -160,11 +160,11 @@
                 android:textSize="11dp" />
 
             <CheckBox
-                android:buttonTint="@color/color_accent"
                 android:id="@+id/checkbox"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginLeft="1dp"
+                android:buttonTint="@color/color_accent"
                 android:checked="true" />
         </LinearLayout>
 

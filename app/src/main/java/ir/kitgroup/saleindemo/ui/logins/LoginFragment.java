@@ -180,7 +180,7 @@ public class LoginFragment extends Fragment {
         });
 
 
-        binding.loginTvRules.setOnClickListener(v -> {
+        binding.layoutRule.setOnClickListener(v -> {
             NavDirections action = LoginFragmentDirections.actionGoToRulesFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });

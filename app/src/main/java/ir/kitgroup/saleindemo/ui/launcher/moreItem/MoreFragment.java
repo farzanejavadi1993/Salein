@@ -126,7 +126,7 @@ public class MoreFragment extends Fragment {
 
         btnOkDialog.setOnClickListener(v -> {
             dialogSync.dismiss();
-            sharedPreferences.edit().clear();
+            sharedPreferences.edit().clear().apply();
 
             if (Account.count(Account.class) > 0)
                 Account.deleteAll(Account.class);

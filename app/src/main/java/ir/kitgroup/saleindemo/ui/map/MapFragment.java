@@ -506,7 +506,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             PermissionsManager permissionsManager = new PermissionsManager(this);
                             permissionsManager.requestLocationPermissions(getActivity());
                         }
-                ).setNegativeButton("بستن", (dialog, which) -> dialog.dismiss());
+                );
         AlertDialog alert = builder.create();
         alert.show();
 
