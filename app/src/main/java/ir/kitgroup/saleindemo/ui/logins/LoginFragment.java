@@ -42,7 +42,7 @@ import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Connect.CompanyViewModel;
 
 
-import ir.kitgroup.saleindemo.DataBase.Locations;
+
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.classes.AppSignatureHelper;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
     //region Method
     @SuppressLint("SetTextI18n")
     private void init() {
-        Locations.deleteAll(Locations.class);
+
         userName = company.getUser();
         passWord = company.getPass();
 

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/SplashScreenFragment">
+
 
     <fragment
         android:id="@+id/SplashScreenFragment"
@@ -34,7 +36,7 @@
 
     <fragment
         android:id="@+id/CompanyFragment"
-        android:name="ir.kitgroup.saleindemo.ui.companies.CompanyFragmentTest"
+        android:name="ir.kitgroup.saleindemo.ui.companies.test.CompanyFragmentTest"
         tools:layout="@layout/company_fragment_test">
         <action
             android:id="@+id/actionGoToHomeFragment"
@@ -91,14 +93,21 @@
         tools:layout="@layout/fragment_payment">
 
         <action
-            android:id="@+id/actionGoToRegisterFragment"
-            app:destination="@id/RegisterFragment" />
+            android:id="@+id/actionGoToMapActivity"
+            app:destination="@id/MapFragment" />
 
         <argument
             android:name="Edit"
             app:argType="boolean" />
+    </fragment>
 
-
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
+        tools:layout="@layout/activity_map">
+        <argument
+            android:name="from"
+            app:argType="integer" />
     </fragment>
 
     <fragment
@@ -198,8 +207,8 @@
 
 
         <action
-            android:id="@+id/actionGoToRegisterFragment"
-            app:destination="@id/RegisterFragment" />
+            android:id="@+id/actionGoToMapActivity"
+            app:destination="@id/MapFragment" />
 
     </fragment>
 
@@ -244,9 +253,7 @@
             app:popUpToInclusive="true"
             android:id="@+id/actionGoToHomeFragment"
             app:destination="@id/HomeFragment" />
-        <action
-            android:id="@+id/actionGoToMapFragment"
-            app:destination="@id/MapFragment" />
+
         <argument
             android:name="from"
             app:argType="string" />
@@ -266,16 +273,6 @@
         android:id="@+id/RulesFragment"
         android:name="ir.kitgroup.saleindemo.ui.logins.RulesFragment"
         tools:layout="@layout/fragment_rules">
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/MapFragment"
-        android:name="ir.kitgroup.saleindemo.ui.map.MapFragment"
-        tools:layout="@layout/fragment_map">
-        <argument
-            android:name="from"
-            app:argType="string" />
 
     </fragment>
 

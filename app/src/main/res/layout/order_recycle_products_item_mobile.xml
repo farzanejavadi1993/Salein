@@ -111,7 +111,7 @@
 
 
             <TextView
-
+                android:visibility="gone"
                 android:id="@+id/edt_description_temp"
                 style="@style/normal_text"
 

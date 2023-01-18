@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
@@ -45,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.saleindemo.Connect.CompanyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
-import ir.kitgroup.saleindemo.DataBase.Locations;
+
 import ir.kitgroup.saleindemo.DataBase.Product;
 import ir.kitgroup.saleindemo.DataBase.SaleinShop;
 import ir.kitgroup.saleindemo.classes.Utilities;
@@ -103,7 +104,7 @@ public class PaymentFragment extends Fragment {
     private double longitude1 = 0.0;
     private double latitude2 = 0.0;
     private double longitude2 = 0.0;
-    public static boolean ChooseAddress2 = false;
+    private boolean ChooseAddress2 = false;
     private int transportCost = 0;
     private int tempTransportCost = 0;
     //endregion Dialog Address
@@ -168,8 +169,6 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         init();
         castDialogRequestAgain();
         castDialogAddress();
@@ -200,7 +199,7 @@ public class PaymentFragment extends Fragment {
             isCalculateTransport = true;
             myViewModel.getResultTransportationCost().setValue(null);
 
-            tempTransportCost=result;
+            tempTransportCost = result;
 
             setDataTransport(result);
         });
@@ -290,7 +289,7 @@ public class PaymentFragment extends Fragment {
 
             myViewModel.getResultTypeOrder().setValue(null);
 
-           // CollectionUtils.filter(result.getOrderTypes(), i -> i.getTy() == 2);
+            // CollectionUtils.filter(result.getOrderTypes(), i -> i.getTy() == 2);
 
             deliveryList.addAll(result.getOrderTypes());
 
@@ -305,7 +304,6 @@ public class PaymentFragment extends Fragment {
 
             if ((deliveryList.size() == 1))
                 setDataTransport(tempTransportCost);
-
 
 
             //region Get Credit Club
@@ -330,9 +328,9 @@ public class PaymentFragment extends Fragment {
                 Account.deleteAll(Account.class);
                 Account.saveInTx(result);
                 account = Select.from(Account.class).first();
-                if (account != null && account.CRDT != null) {
+                if (account != null ) {
                     binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-                    binding.tvCredit.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
+                    binding.tvCredit.setText("موجودی : " + format.format(account.getCRDT()) + " ریال ");
                 }
             } else {
                 binding.tvCredit.setTextColor(getActivity().getResources().getColor(R.color.red));
@@ -418,19 +416,21 @@ public class PaymentFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        ChooseAddress2 = false;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+
+        if (!sharedPreferences.getBoolean("loginSuccess", false)) {
+            sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // sharedPreferences.edit().putBoolean("loginSuccess", false).apply();
+        sharedPreferences.edit().putBoolean("loginSuccess", false).apply();
     }
     //endregion Override Method
 
@@ -477,6 +477,8 @@ public class PaymentFragment extends Fragment {
         } else
             binding.layoutPeyk.setVisibility(View.GONE);
 
+        if (account.getCRDT()<sumPurePrice + transportCost && deliveryType.equals("4"))
+            resetDeliveryType();
 
         binding.tvSumPurePrice.setText(format.format(sumPurePrice + transportCost) + "ریال");
     }
@@ -491,7 +493,8 @@ public class PaymentFragment extends Fragment {
     }
 
     private void init() {
-        Locations.deleteAll(Locations.class);
+
+
         account = Select.from(Account.class).first();
         latitude1 = account.getLAT();
         longitude1 = account.getLNG();
@@ -539,7 +542,6 @@ public class PaymentFragment extends Fragment {
     }
 
     private void castDialogRequestAgain() {
-
         dialogRequestAgain = dialogInstance.dialog(getActivity(), false, R.layout.custom_dialog);
 
         textMessageDialog = dialogRequestAgain.findViewById(R.id.tv_message);
@@ -607,14 +609,13 @@ public class PaymentFragment extends Fragment {
         });
 
         btnNewAddress.setOnClickListener(v -> {
-            Locations.deleteAll(Locations.class);
+
             dialogAddress.dismiss();
             if (account == null) {
                 Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             }
-            NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(), -1);
-            Navigation.findNavController(binding.getRoot()).navigate(action);
+            intentToMapActivity();
         });
     }
 
@@ -635,26 +636,19 @@ public class PaymentFragment extends Fragment {
                 radioAddress2.setVisibility(View.GONE);
 
 
-            if (!ChooseAddress2) {
-                if (latitude1 == 0.0 || longitude1 == 0.0)
-                    showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
+            if (latitude2 == 0.0 || longitude2 == 0.0) {
 
-                if (!account.getAdr().equals("")) {
+                if (latitude1 != 0.0 && longitude1 != 0.0) {
                     binding.edtAddress.setText(account.getAdr());
                     typeAddress = 1;
                     ValidAddress = account.getAdr();
-                }
 
+                }
 
             } else {
-                if ((latitude2 == 0.0 || longitude2 == 0.0))
-                    showAlert("طول و عرض جغرافیایی شما ثبت نشده لطفا برای محاسبه دقیق هزینه توزیع موقعیت خود را در نقشه ثبت کنید.");
-
-                if (!account.getAdr2().equals("")) {
-                    binding.edtAddress.setText(account.getAdr2());
-                    typeAddress = 2;
-                    ValidAddress = account.getAdr2();
-                }
+                binding.edtAddress.setText(account.getAdr2());
+                typeAddress = 2;
+                ValidAddress = account.getAdr2();
             }
 
         }
@@ -667,8 +661,7 @@ public class PaymentFragment extends Fragment {
                 Toast.makeText(getActivity(), "مشتری نامعتبر است", Toast.LENGTH_SHORT).show();
                 return;
             }
-            NavDirections action = PaymentFragmentDirections.actionGoToRegisterFragment("PaymentFragment", account.getM(), -1);
-            Navigation.findNavController(binding.getRoot()).navigate(action);
+            intentToMapActivity();
         });
     }
 
@@ -754,7 +747,7 @@ public class PaymentFragment extends Fragment {
         });
 
         binding.layoutTime.setOnClickListener(v -> {
-
+            binding.edtTime.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
             availableDateDelivery.clear();
 
@@ -798,6 +791,14 @@ public class PaymentFragment extends Fragment {
                     availableDateDelivery.remove(0);
 
                 timeDeliveryAdapter.notifyDataSetChanged();
+
+
+                if (availableTimeDelivery.size()==0)
+                {
+                    binding.edtTime.setTextColor(getActivity().getResources().getColor(R.color.red));
+                  binding.edtTime.setText("پایان زمان سفارش");
+                }
+                else
                 dialogTime.show();
             }
         });
@@ -815,7 +816,6 @@ public class PaymentFragment extends Fragment {
 
         deliveryOrderAdapter.setOnClickListener((GUID, code) -> {
 
-            resetDeliveryType();
             Ord_TYPE = code;
 
             //region UnClick Old Item
@@ -838,7 +838,7 @@ public class PaymentFragment extends Fragment {
 
             deliveryOrderAdapter.notifyDataSetChanged();
 
-           setDataTransport(tempTransportCost);
+            setDataTransport(tempTransportCost);
 
         });
     }
@@ -852,8 +852,8 @@ public class PaymentFragment extends Fragment {
             binding.tvSuccessFullPayOnline.setText("");
             binding.ivOkClubPayment.setVisibility(View.GONE);
 
-            if (account != null && account.CRDT != null) {
-                binding.tvCredit.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
+            if (account != null) {
+                binding.tvCredit.setText("موجودی : " + format.format(account.getCRDT()) + " ریال ");
             }
             binding.ivOkOnSitePayment.setVisibility(View.VISIBLE);
         });
@@ -863,9 +863,9 @@ public class PaymentFragment extends Fragment {
 
             binding.ivOkOnSitePayment.setVisibility(View.GONE);
 
-            if (account != null && account.CRDT != null && account.CRDT >= (sumPurePrice + transportCost)) {
+            if (account != null && account.getCRDT() >= (sumPurePrice + transportCost)) {
                 binding.tvSuccessFullPayOnline.setText("پرداخت موفقیت آمیز");
-                binding.tvCredit.setText(format.format(account.CRDT - (sumPurePrice + transportCost)));
+                binding.tvCredit.setText(format.format(account.getCRDT() - (sumPurePrice + transportCost)));
                 deliveryType = "4";
                 binding.ivOkClubPayment.setVisibility(View.VISIBLE);
             } else
@@ -875,18 +875,31 @@ public class PaymentFragment extends Fragment {
     }
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity(),R.style.AlertDialogTheme)
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(message)
                 .setPositiveButton("بستن", (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .show();
 
-        TextView textView = alertDialog.findViewById(android.R.id.message);
+        setStyleTextAlert(alertDialog);
+    }
+
+    private void setStyleTextAlert(AlertDialog alert) {
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
         textView.setTypeface(face);
         textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
         textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
     }
 
     @SuppressLint("SetTextI18n")
@@ -983,8 +996,7 @@ public class PaymentFragment extends Fragment {
 
                 if (transportCost != 0)
                     InvoiceDetail.save(invoiceDetailTransport);
-            }
-            else {
+            } else {
                 invoiceDetailTransport.INV_UID = Inv_GUID;
                 invoiceDetailTransport.INV_DET_QUANTITY = 1.0;
                 invoiceDetailTransport.INV_DET_PRICE_PER_UNIT = String.valueOf(transportCost);
@@ -1108,6 +1120,11 @@ public class PaymentFragment extends Fragment {
         binding.ivOkOnSitePayment.setVisibility(View.GONE);
     }
 
+    private void intentToMapActivity() {
+        NavDirections action = PaymentFragmentDirections.actionGoToMapActivity(0);
+        Navigation.findNavController(binding.getRoot()).navigate(action);
+
+    }
 
 
     //endregion Custom Method

@@ -32,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.Connect.MainViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
 
-import ir.kitgroup.saleindemo.DataBase.Locations;
+
 import ir.kitgroup.saleindemo.classes.ConnectToServer;
 import ir.kitgroup.saleindemo.classes.CustomDialog;
 import ir.kitgroup.saleindemo.classes.Util;
@@ -254,7 +254,6 @@ public class SplashScreenFragment extends Fragment {
 
     private void init() {
         SaleinShop.deleteAll(SaleinShop.class);
-        Locations.deleteAll(Locations.class);
         IMEI = Util.getAndroidID(getActivity());
 
         binding.btnWarning.setOnClickListener(v -> {

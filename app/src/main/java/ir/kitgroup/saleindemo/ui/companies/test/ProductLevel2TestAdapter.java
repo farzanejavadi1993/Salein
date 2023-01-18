@@ -1,4 +1,4 @@
-package ir.kitgroup.saleindemo.ui.companies;
+package ir.kitgroup.saleindemo.ui.companies.test;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

@@ -1,13 +1,17 @@
 package ir.kitgroup.saleindemo.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -26,6 +30,8 @@ import ir.kitgroup.saleindemo.DataBase.SaleinShop;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.databinding.ActivityLauncherBinding;
 import ir.kitgroup.saleindemo.ui.launcher.homeItem.HomeFragment;
+import ir.kitgroup.saleindemo.ui.map.MapFragment;
+import ir.kitgroup.saleindemo.ui.payment.PaymentFragment;
 
 
 @AndroidEntryPoint
@@ -99,8 +105,31 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (Select.from(Account.class).first() != null)
-            sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+      /*  if (Select.from(Account.class).first() != null)
+            sharedPreferences.edit().putBoolean("loginSuccess", true).apply();*/
+    }
+
+
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+
+        if (
+                ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        &&
+                        ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED
+        ) {
+
+          getDoActionInMapFragment();
+        } else {
+            Toasty.warning(getApplicationContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toasty.LENGTH_SHORT).show();
+        }
+
     }
 
     //endregion Override Method
@@ -193,6 +222,16 @@ public class LauncherActivity extends AppCompatActivity {
             ((HomeFragment) fragment).showData();
         }
     }
+
+    private void getDoActionInMapFragment() {
+        Fragment fragment = getFragment();
+
+        if (fragment instanceof MapFragment) {
+            ((MapFragment) fragment).onRequestPermissionsResults();
+        }
+    }
+
+
     //endregion Custom Method
 
 }

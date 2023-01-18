@@ -27,6 +27,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,6 +60,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import com.orm.query.Select;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,11 +71,12 @@ import java.util.List;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
-
+import es.dmoral.toasty.Toasty;
+import ir.kitgroup.saleindemo.Connect.CompanyViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
-import ir.kitgroup.saleindemo.DataBase.Locations;
+import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
-import ir.kitgroup.saleindemo.databinding.FragmentMapBinding;
+import ir.kitgroup.saleindemo.databinding.ActivityMapBinding;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.os.Looper.getMainLooper;
@@ -85,12 +88,17 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     //region Parameter
 
-    private FragmentMapBinding binding;
+    private int from=0;
+    private CompanyViewModel companyViewModel;
 
-    private final int LOCATION_PERMISSION_REQUEST_CODE = 99;
+
+    private ActivityMapBinding binding;
+    private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
     private LocationManager locationManager;
     private MapboxMap mMapboxMap;
-    private final MapFragmentLocationCallback callback = new MapFragmentLocationCallback(this);
+
+
+
     private SearchViewAdapter mRecyclerAdapter;
     private State state = State.MAP;
     private CircleManager circleManager;
@@ -98,24 +106,20 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private String address="";
 
 
-    private enum State {
-        MAP,
-        MAP_PIN,
-        SEARCHING,
-        RESULTS
-    }
+    private Account account;
+    private ArrayList<Account> accountsList;
 
-
+    private Company company;
 
     //endregion Parameter
+
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentMapBinding.inflate(getLayoutInflater());
+        binding = ActivityMapBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -125,49 +129,32 @@ public class MapFragment extends Fragment implements PermissionsListener {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            config();
+            getBundle();
             init();
             onClickBtnRegister();
             initMap(savedInstanceState);
-            initSearchOnMap(view);
-        } catch (Exception ignored) {}
+            initSearchOnMap(binding.getRoot());
+            showDataFromServer();
+        } catch (Exception ignored) {
+        }
 
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            return;
-        }
-
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            enableMyLocation();
-        } else {
-
-            Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
-            requireActivity().finish();
-        }
-    }
-
-
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 91) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2) {
-                    Toast.makeText(getContext(), "مکان یاب باید روشن باشد", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(getContext(), "مکان یاب باید روشن باشد", Toast.LENGTH_SHORT).show();
 
                 }
-                enableMyLocation();
+                setupCurrentLocationButton();
             }
         }
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -213,17 +200,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
         binding.mapView.onLowMemory();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding.mapView.onDestroy();
-        binding = null;
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        //binding = null;
     }
 
     @Override
@@ -231,34 +213,113 @@ public class MapFragment extends Fragment implements PermissionsListener {
     }
 
     @Override
-    public void onPermissionResult(boolean granted) {
-    }
+    public void onPermissionResult(boolean granted) {}
 
 
     //region Method
-    private void config(){
+
+    private void showDataFromServer(){
+        companyViewModel = new ViewModelProvider(this).get(CompanyViewModel.class);
+
+        companyViewModel.getResultMessage().setValue(null);
+
+        companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+
+            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnRegisterInformation.setEnabled(true);
+            Toasty.error(getContext(), result.getName(), Toast.LENGTH_SHORT, true).show();
+        });
+
+
+        companyViewModel.getResultUpdateAccount().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+
+            binding.btnRegisterInformation.setBackgroundResource(R.drawable.bottom_background);
+            binding.btnRegisterInformation.setEnabled(true);
+            companyViewModel.getResultUpdateAccount().setValue(null);
+            if (result != null) {
+                int message = result.getLogs().get(0).getMessage();
+
+                if (message == 1) {
+                    Account.deleteAll(Account.class);
+                    Account.saveInTx(accountsList);
+                    Navigation.findNavController(binding.getRoot()).popBackStack();
+                }
+                else {
+                    Toasty.error(getContext(), "خطا در بروز رسانی اطلاعات کاربر", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else {
+                Toasty.error(getContext(), "خطا در بروز رسانی اطلاعات کاربر", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+    }
+    private void updateAccount(){
+        Account acc = new Account();
+        acc.setI(account.getI());
+        acc.setN(account.getN());
+        acc.setM(account.getM());
+        acc.setAdr(account.getAdr());
+        acc.setAdr2(account.getAdr2());
+        acc.CRDT = account.getCRDT() ;
+        acc.LAT = account.LAT != null && !account.LAT.equals("") && !account.LAT.equals("-") ? account.LAT : "0.0";
+        acc.LNG = account.LNG != null && !account.LNG.equals("") && !account.LNG.equals("-") ? account.LNG : "0.0";
+        acc.LAT1 = account.LAT1 != null && !account.LAT1.equals("") && !account.LAT1.equals("-") ? account.LAT1 : "0.0";
+        acc.LNG1 = account.LNG1 != null && !account.LNG1.equals("") && !account.LNG1.equals("-") ? account.LNG1 : "0.0";
+
+
+        if (from==0){
+            if (account.getLAT()==0.0 && acc.getLAT()==0.0)
+                from=1;
+            else
+                from=2;
+
+        }
+
+
+
+        if (from==1)
+        {
+            acc.setAdr(binding.detailAddress.getText().toString());
+            acc.LAT = String.valueOf(latitude);
+            acc.LNG = String.valueOf(longitude);
+        }else {
+            acc.setAdr2(binding.detailAddress.getText().toString());
+            acc.LAT1 = String.valueOf(latitude);
+            acc.LNG1 = String.valueOf(longitude);
+        }
+
+        accountsList.clear();
+        accountsList.add(acc);
+
+        binding.btnRegisterInformation.setBackgroundResource(R.drawable.inactive_bottom);
+        binding.btnRegisterInformation.setEnabled(false);
+
+
+        companyViewModel.updateAccount(company.getUser(), company.getPass(), accountsList);
+    }
+    private void getBundle(){
+        from = MapFragmentArgs.fromBundle(getArguments()).getFrom();
+    }
+    private void init() {
+        accountsList=new ArrayList<>();
+        account= Select.from(Account.class).first();
+        company= Select.from(Company.class).first();
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(4);
-    }
 
-    private void init(){
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         binding.ivBack.setOnClickListener(view1 -> Navigation.findNavController(binding.getRoot()).popBackStack());
     }
 
-
-
-
-
-    private void onClickBtnRegister(){
-        binding.btnRegisterInformation.setOnClickListener(v -> {
-            setLocation();
-            Navigation.findNavController(binding.getRoot()).popBackStack();
-        });
-    }
-
-    private void initMap(Bundle savedInstanceState){
-
+    private void initMap(Bundle savedInstanceState) {
         try {
             binding.mapView.onCreate(savedInstanceState);
         } catch (Exception ignore) {
@@ -266,7 +327,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         binding.mapView.getMapAsync(mapboxMap -> {
             this.mMapboxMap = mapboxMap;
-
 
             CedarMapsStyleConfigurator.configure(
                     CedarMapsStyle.VECTOR_LIGHT, new OnStyleConfigurationListener() {
@@ -282,15 +342,12 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                                 setupCurrentLocationButton();
 
-                                if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
-                                    enableLocationComponent(style);
-                                }
                             });
                         }
 
                         @Override
                         public void onFailure(@NonNull String errorMessage) {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -299,7 +356,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
             this.mMapboxMap.setMinZoomPreference(6);
             this.mMapboxMap.setCameraPosition(
                     new CameraPosition.Builder()
-                            .target(new LatLng(latitude,longitude))
+                            .target(new LatLng(latitude, longitude))
                             .zoom(12)
                             .build());
 
@@ -313,53 +370,62 @@ public class MapFragment extends Fragment implements PermissionsListener {
         });
     }
 
-    private void setLocation(){
-        Locations.deleteAll(Locations.class);
-        Locations locations=new Locations();
-        locations.setLongitude(longitude);
-        locations.setLatitude(latitude);
-        locations.setAddress(address);
-        locations.save();
-    }
+    private static class MapFragmentLocationCallback implements LocationEngineCallback<LocationEngineResult> {
+        private final WeakReference<MapFragment> fragmentWeakReference;
 
-    private void enableMyLocation() {
-
-        try {
+        MapFragmentLocationCallback(MapFragment activity) {
+            fragmentWeakReference = new WeakReference<>(activity);
+        }
 
 
-            if (ActivityCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(getContext(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        @Override
+        public void onSuccess(LocationEngineResult result) {
+            MapFragment activity = fragmentWeakReference.get();
+            if (activity != null) {
+                Location location = result.getLastLocation();
 
+                if (location == null) {
+                    return;
+                }
 
-                ActivityCompat.requestPermissions(requireActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LOCATION_PERMISSION_REQUEST_CODE);
-
-            } else if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2) {
-
-                AlertNoGPS();
-            } else {
-
-                try {
-
-
-                } catch (Exception ex) {
-
-                    Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
-                    requireActivity().finish();
+                if (activity.mMapboxMap != null && result.getLastLocation() != null) {
+                    activity.mMapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
                 }
             }
-        } catch (Exception ex) {
+        }
 
-            Toast.makeText(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toast.LENGTH_SHORT).show();
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+
         }
     }
 
+    private enum State {
+        MAP,
+        MAP_PIN,
+        SEARCHING,
+        RESULTS
+    }
+
+
+    private void onClickBtnRegister() {
+        binding.btnRegisterInformation.setOnClickListener(v -> {
+            if (binding.detailAddress.getText().toString().trim().isEmpty()){
+                Toasty.error(getActivity()
+                ,"جزییات آدرس خود را وارد کنید.",Toasty.LENGTH_SHORT).show();
+                return;
+            }
+            updateAccount();
+        });
+    }
+
+
+
+
+
     private void AlertNoGPS() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setMessage("برای استفاده مکان یاب دستگاه باید روشن باشد. لطفا با تایید آنرا روشن نمایید.")
                 .setCancelable(false)
@@ -367,24 +433,13 @@ public class MapFragment extends Fragment implements PermissionsListener {
         AlertDialog alert = builder.create();
         alert.show();
 
-
-        TextView textView = alert.findViewById(android.R.id.message);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-        textView.setTypeface(face);
-        textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
-        textView.setTextSize(13);
+        setStyleTextAlert(alert);
     }
 
-    public static class JsonObjectAccount {
-
-        public List<Account> Account;
-
-    }
 
     private void setupCurrentLocationButton() {
-        if (getView() == null) {
+        if (mMapboxMap.getStyle() == null)
             return;
-        }
 
         if (mMapboxMap.getStyle() != null)
             enableLocationComponent(mMapboxMap.getStyle());
@@ -395,34 +450,33 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
     @SuppressLint("MissingPermission")
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-        if (getActivity() == null) {
+        if (mMapboxMap.getStyle() == null)
             return;
-        }
 
-        if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
+        if (!PermissionsManager.areLocationPermissionsGranted(getActivity()))
+            AlertPermission();
 
+        else if (Objects.requireNonNull(locationManager).getProviders(true).size() < 2)
+            AlertNoGPS();
+
+        else if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
             LocationComponent locationComponent = mMapboxMap.getLocationComponent();
+
             LocationComponentActivationOptions locationComponentActivationOptions =
                     LocationComponentActivationOptions.builder(getActivity(), loadedMapStyle)
                             .useDefaultLocationEngine(true)
                             .build();
 
             locationComponent.activateLocationComponent(locationComponentActivationOptions);
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                getActivity().finish();
-                return;
-            }
             locationComponent.setLocationComponentEnabled(true);
-
             initializeLocationEngine();
-        } else {
-            AlertPermission();
         }
     }
 
+
     @SuppressLint("MissingPermission")
     private void initializeLocationEngine() {
-        if (getActivity() == null) {
+        if (mMapboxMap.getStyle() == null) {
             return;
         }
 
@@ -441,9 +495,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
         locationEngine.getLastLocation(callback);
     }
 
-    private void AlertPermission() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
+    private void AlertPermission() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setMessage("برای استفاده از gps ، نرم افزار نیاز به دسترسی دارد.لطفا دسترسی لازم را با فشردن دکمه<<دسترسی دادن>> بدهید.")
                 .setCancelable(false)
@@ -456,11 +510,26 @@ public class MapFragment extends Fragment implements PermissionsListener {
         AlertDialog alert = builder.create();
         alert.show();
 
-        TextView textView = alert.findViewById(android.R.id.message);
+
+        setStyleTextAlert(alert);
+    }
+
+
+    private void setStyleTextAlert(AlertDialog alert){
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
         textView.setTypeface(face);
         textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
         textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
     }
 
     private void toggleCurrentLocationButton() {
@@ -471,7 +540,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
         if (location != null) {
             animateToCoordinate(new LatLng(location.getLatitude(), location.getLongitude()));
             //addMarkerToMapViewAtPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-
         }
 
         switch (mMapboxMap.getLocationComponent().getRenderMode()) {
@@ -493,46 +561,9 @@ public class MapFragment extends Fragment implements PermissionsListener {
         mMapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
-    private static class MapFragmentLocationCallback implements LocationEngineCallback<LocationEngineResult> {
-
-        private final WeakReference<MapFragment> fragmentWeakReference;
-
-        MapFragmentLocationCallback(MapFragment fragment) {
-            fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-
-        @Override
-        public void onSuccess(LocationEngineResult result) {
-            MapFragment fragment = fragmentWeakReference.get();
-
-            if (fragment != null) {
-                Location location = result.getLastLocation();
-
-                if (location == null) {
-                    return;
-                }
-
-                if (fragment.mMapboxMap != null && result.getLastLocation() != null) {
-                    fragment.mMapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(@NonNull Exception exception) {
-
-        }
-    }
-
     private void reverseGeocode(CameraPosition position) {
 
-        if (TextUtils.isEmpty(binding.edtAddress.getText().toString())) {
-            binding.edtAddress.setVisibility(View.GONE);
-        } else {
-            binding.edtAddress.setVisibility(View.VISIBLE);
-        }
-        binding.pro.setVisibility(View.VISIBLE);
+
 
         CedarMaps.getInstance().reverseGeocode(
                 new LatLng(position.target.getLatitude(), position.target.getLongitude()),
@@ -543,26 +574,21 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
                         latitude = position.target.getLatitude();
                         longitude = position.target.getLongitude();
-                        address = result.getPlace() + " " + result.getCity() + " " + result.getAddress() + " " + result.getDistrict() + " ";
+                        String address = result.getPlace() + " " + result.getCity() + " " + result.getAddress() + " " + result.getDistrict() + " ";
 
-                        binding.edtAddress.setText(address);
-                        binding.edtAddress.setVisibility(View.VISIBLE);
-                        binding.pro.setVisibility(View.GONE);
+
                     }
 
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onFailure(@NonNull String errorMessage) {
-                        binding.edtAddress.setVisibility(View.VISIBLE);
-                        binding.pro.setVisibility(View.GONE);
-                        binding.edtAddress.setText("PARS ERROR");
                     }
                 });
 
 
     }
 
-    private void  initSearchOnMap(View view){
+    private void initSearchOnMap(View view) {
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(mLinearLayoutManager);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(binding.recyclerView.getContext(), mLinearLayoutManager.getOrientation());
@@ -618,7 +644,8 @@ public class MapFragment extends Fragment implements PermissionsListener {
             }
             Typeface iranSansBold = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
             autoComplete.setTypeface(iranSansBold);
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         binding.searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (hasFocus && state == State.MAP_PIN) {
                 circleManager.deleteAll();
@@ -664,7 +691,7 @@ public class MapFragment extends Fragment implements PermissionsListener {
                             @Override
                             public void onFailure(@NonNull String errorMessage) {
                                 setState(State.RESULTS);
-                                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                              /*  Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();*/
                             }
                         });
                     }
@@ -675,8 +702,10 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 return false;
             }
         });
+
         mRecyclerAdapter.setOnClickItemListener(this::showItemOnMap);
     }
+
     private void setState(State state) {
 
         this.state = state;
@@ -684,20 +713,20 @@ public class MapFragment extends Fragment implements PermissionsListener {
             case MAP:
 
             case MAP_PIN:
-                binding.cardAddress.setVisibility(View.VISIBLE);
+                //binding.cardAddress.setVisibility(View.VISIBLE);
                 binding.floating.setVisibility(View.VISIBLE);
                 binding.searchResultsLinearLayout.setVisibility(View.GONE);
                 break;
             case SEARCHING:
 
-                binding.cardAddress.setVisibility(View.GONE);
+               // binding.cardAddress.setVisibility(View.GONE);
                 binding.floating.setVisibility(View.GONE);
                 binding.searchResultsLinearLayout.setVisibility(View.VISIBLE);
                 binding.recyclerView.setVisibility(View.INVISIBLE);
                 binding.searchProgressBar.setVisibility(View.VISIBLE);
                 break;
             case RESULTS:
-                binding.cardAddress.setVisibility(View.GONE);
+               // binding.cardAddress.setVisibility(View.GONE);
                 binding.floating.setVisibility(View.GONE);
                 binding.searchResultsLinearLayout.setVisibility(View.VISIBLE);
                 binding.recyclerView.setVisibility(View.VISIBLE);
@@ -705,7 +734,6 @@ public class MapFragment extends Fragment implements PermissionsListener {
                 break;
         }
     }
-
     public void showItemOnMap(final ForwardGeocode item) {
         setState(State.MAP_PIN);
         if (getActivity() == null || item.getLocation().getCenter() == null) {
@@ -736,6 +764,22 @@ public class MapFragment extends Fragment implements PermissionsListener {
 
         if (item.getLocation().getCenter() != null) {
             mMapboxMap.easeCamera(CameraUpdateFactory.newLatLng(item.getLocation().getCenter()), 1000);
+        }
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void onRequestPermissionsResults() {
+        if (
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        &&
+                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED
+        ) {
+            setupCurrentLocationButton();
+        } else {
+            Toasty.warning(getContext(), "نرم افزار به مکان یاب دستگاه دسترسی ندارد", Toasty.LENGTH_SHORT).show();
         }
     }
     //endregion Method

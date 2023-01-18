@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -696,18 +697,30 @@ public class InVoiceDetailFragment extends Fragment {
 
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme)
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(message)
                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                 .show();
 
-        TextView textView = alertDialog.findViewById(android.R.id.message);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-        textView.setTypeface(face);
-        textView.setTextColor(getResources().getColor(R.color.medium_color));
-        textView.setTextSize(13);
+       setStyleTextAlert(alertDialog);
     }
 
+    private void setStyleTextAlert(AlertDialog alert){
+        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
+        textView.setTypeface(face);
+        textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+        textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
+    }
 
     @SuppressLint("SetTextI18n")
     private void calculate(int positionStart, String type) {

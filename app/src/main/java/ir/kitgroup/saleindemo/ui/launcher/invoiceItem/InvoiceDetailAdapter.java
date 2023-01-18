@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siyamed.shapeimageview.RoundedImageView;
@@ -404,18 +405,30 @@ public class InvoiceDetailAdapter extends RecyclerView.Adapter<InvoiceDetailAdap
     }
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(contex,R.style.AlertDialogTheme)
+        AlertDialog alertDialog = new AlertDialog.Builder(contex)
                 .setMessage(message)
                 .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
                 .show();
 
-        TextView textView = alertDialog.findViewById(android.R.id.message);
+       setStyleTextAlert(alertDialog);
+    }
+
+    private void setStyleTextAlert(AlertDialog alert){
         Typeface face = Typeface.createFromAsset(contex.getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
         textView.setTypeface(face);
         textView.setTextColor(contex.getResources().getColor(R.color.medium_color));
         textView.setTextSize(13);
-    }
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(contex, R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(contex, R.color.color_accent));
 
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
+    }
     private void doAction(int position, String s, int MinOrPlus) {
 
         String Prd_GUID = orderDetailList.get(position).PRD_UID;

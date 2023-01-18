@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siyamed.shapeimageview.RoundedImageView;
@@ -759,18 +760,30 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(activity,R.style.AlertDialogTheme)
+        AlertDialog alertDialog = new AlertDialog.Builder(activity)
                 .setMessage(message)
                 .setPositiveButton("بستن", (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .show();
 
-        TextView textView = alertDialog.findViewById(android.R.id.message);
+       setStyleTextAlert(alertDialog);
+    }
+    private void setStyleTextAlert(AlertDialog alert){
         Typeface face = Typeface.createFromAsset(activity.getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
         textView.setTypeface(face);
         textView.setTextColor(activity.getResources().getColor(R.color.medium_color));
         textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(activity, R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(activity, R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
     }
     //endregion Custom Method
 

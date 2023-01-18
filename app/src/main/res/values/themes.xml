@@ -25,18 +25,11 @@
     </style>-->
 
 
-    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColor">@color/medium_color</item>
-        <item name="colorAccent">@color/color_accent</item>
-    </style>
+<!--    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">-->
+<!--        <item name="android:textColor">@color/medium_color</item>-->
+<!--        <item name="colorAccent">@color/color_accent</item>-->
+<!--    </style>-->
 
-    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/color_accent</item>
-    </style>
-
-    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/color_accent</item>
-    </style>
 
 
 

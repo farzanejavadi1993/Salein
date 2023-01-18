@@ -196,8 +196,8 @@ public class MoreFragment extends Fragment {
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToOrderFragment));
 
 
-        if (account != null && account.CRDT != null) {
-            binding.tvCredits.setText("موجودی : " + format.format(account.CRDT) + " ریال ");
+        if (account != null ) {
+            binding.tvCredits.setText("موجودی : " + format.format(account.getCRDT()) + " ریال ");
         } else {
             binding.tvCredits.setText("موجودی : " + "0" + " ریال ");
         }
@@ -230,10 +230,10 @@ public class MoreFragment extends Fragment {
                     Account.saveInTx(result);
 
                     Account acc = Select.from(Account.class).first();
-                    if (acc != null && acc.CRDT != null)
+                    if (acc != null )
                         binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
 
-                    binding.tvCredits.setText("موجودی : " + format.format(acc.CRDT) + " ریال ");
+                    binding.tvCredits.setText("موجودی : " + format.format(acc.getCRDT()) + " ریال ");
                 } else {
                     binding.tvCredits.setTextColor(getActivity().getResources().getColor(R.color.red));
                     binding.tvCredits.setText("خطا در بروز رسانی موجودی ");

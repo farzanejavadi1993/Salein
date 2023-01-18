@@ -38,6 +38,11 @@ public class ApplicationInformation {
                     appInfo.setApplication_code("1120");
                     appInfo.setGif_url("splash_screen.json");
                     break;
+
+                case "ir.kitgroup.saleindemo":
+                    appInfo.setApplication_code("1121");
+                    appInfo.setGif_url("splash_screen.json");
+                    break;
             }
             return appInfo;
 

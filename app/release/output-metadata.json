@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "ir.kitgroup.saleinjam",
+  "applicationId": "ir.kitgroup.saleindemo",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 4,
-      "versionName": "1.0.0.4",
+      "versionCode": 1,
+      "versionName": "1.0.0.2",
       "outputFile": "app-release.apk"
     }
   ],

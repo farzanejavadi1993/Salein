@@ -1,5 +1,6 @@
 package ir.kitgroup.saleindemo.ui.launcher.moreItem;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,9 +20,11 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ir.kitgroup.saleindemo.DataBase.Account;
-import ir.kitgroup.saleindemo.DataBase.Locations;
 import ir.kitgroup.saleindemo.R;
 import ir.kitgroup.saleindemo.databinding.FragmentProfileBinding;
+import ir.kitgroup.saleindemo.ui.payment.PaymentFragmentDirections;
+
+
 @AndroidEntryPoint
 public class ProfileFragment extends Fragment {
     @Inject
@@ -68,15 +71,11 @@ public class ProfileFragment extends Fragment {
 
 
             binding.cardAddress1.setOnClickListener(view1 -> {
-                Locations.deleteAll(Locations.class);
-              NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),1);
-              Navigation.findNavController(binding.getRoot()).navigate(action);
+                intentToMapActivity(1);
           });
 
             binding.cardAddress2.setOnClickListener(view1 -> {
-                Locations.deleteAll(Locations.class);
-                NavDirections action = ProfileFragmentDirections.actionGoToRegisterFragment("ProfileFragment",user.getM(),2);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+                intentToMapActivity(2);
             });
 
             binding.ivBackFragment.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).popBackStack());
@@ -84,11 +83,17 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    private void intentToMapActivity(int from) {
+        NavDirections action = PaymentFragmentDirections.actionGoToMapActivity(from);
+        Navigation.findNavController(binding.getRoot()).navigate(action);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
     }
+
 
 
 }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -60,6 +61,7 @@ import ir.kitgroup.saleindemo.classes.Util;
 import ir.kitgroup.saleindemo.classes.DateConverter;
 
 import ir.kitgroup.saleindemo.models.PaymentRecieptDetail;
+
 
 
 @AndroidEntryPoint
@@ -240,32 +242,16 @@ public class OrderListFragment extends Fragment {
 
             message = result.getLogs().get(0).getMessage();
             if (message == 1) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity(),R.style.AlertDialogTheme)
-                        .setMessage("نظر شما با موفقیت ارسال شد.")
-                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                        .show();
-
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                textView.setTypeface(face);
-                textView.setTextColor(getResources().getColor(R.color.green));
-                textView.setTextSize(13);
-
+                showAlert("نظر شما با موفقیت ارسال شد.");
                 orderListAdapter.notifyDataSetChanged();
 
-            } else {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity(),R.style.AlertDialogTheme)
-                        .setMessage("خطا در ارسال نظر")
-                        .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
-                        .show();
-
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
-                textView.setTypeface(face);
-                textView.setTextColor(getResources().getColor(R.color.medium_color));
-                textView.setTextSize(13);
-
             }
+            else
+                showAlert("خطا در ارسال نظر");
+
+
+
+
 
             binding.progressBar.setVisibility(View.GONE);
             customProgress.hideProgress();
@@ -311,5 +297,29 @@ public class OrderListFragment extends Fragment {
         public List<ir.kitgroup.saleindemo.models.PaymentRecieptDetail> PaymentRecieptDetail;
     }
 
+
+    private void showAlert(String message){
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveButton("بستن", (dialog, which) -> dialog.dismiss())
+                .show();
+        setStyleTextAlert(alertDialog);
+    }
+    private void setStyleTextAlert(AlertDialog alert){
+        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "iransans.ttf");
+
+        TextView textView = alert.findViewById(android.R.id.message);
+        textView.setTypeface(face);
+        textView.setTextColor(getActivity().getResources().getColor(R.color.medium_color));
+        textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
+    }
 
 }

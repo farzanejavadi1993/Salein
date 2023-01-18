@@ -34,9 +34,10 @@ import ir.kitgroup.saleindemo.Connect.MainViewModel;
 import ir.kitgroup.saleindemo.DataBase.Account;
 import ir.kitgroup.saleindemo.DataBase.SaleinShop;
 import ir.kitgroup.saleindemo.classes.Util;
-import ir.kitgroup.saleindemo.databinding.RegisterFragmentBinding;
+
 import ir.kitgroup.saleindemo.DataBase.Company;
 import ir.kitgroup.saleindemo.R;
+import ir.kitgroup.saleindemo.databinding.RegisterFragmentBinding;
 import ir.kitgroup.saleindemo.models.AppDetail;
 import ir.kitgroup.saleindemo.models.Setting;
 
@@ -54,6 +55,7 @@ public class RegisterFragment extends Fragment {
     private RegisterFragmentBinding binding;
 
     private String userName;
+
     private String passWord;
 
     private List<Account> accountsList;
@@ -88,7 +90,8 @@ public class RegisterFragment extends Fragment {
             init();
             onClickBtnRegister();
             initRadioButton();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
     }
 
@@ -222,10 +225,10 @@ public class RegisterFragment extends Fragment {
             if (binding.edtName.getText().toString().isEmpty()
                     ||
                     binding.edtLastName.getText().toString().isEmpty()
-                    ||
-                    radioValue == -1
+                    /*||
+                    radioValue == -1*/
             ) {
-                Toasty.error(requireActivity(), "لطفا فیلدهای ستاره دار را پر کنید.", Toast.LENGTH_SHORT, true).show();
+                Toasty.error(requireActivity(), "فیلد نام و نام خانوادگی را پر کنید.", Toast.LENGTH_SHORT, true).show();
                 return;
             }
 
@@ -233,10 +236,9 @@ public class RegisterFragment extends Fragment {
 
             //region Add Account
 
-//            acc.setAdr("");
-//            acc.LAT = String.valueOf(0.0);
-//            acc.LNG = String.valueOf(0.0);
-
+            acc.setAdr("");
+            acc.LAT = String.valueOf(0.0);
+            acc.LNG = String.valueOf(0.0);
             acc.setVersion(applicationVersion);
             acc.setI(UUID.randomUUID().toString());
             acc.setN(binding.edtName.getText().toString());

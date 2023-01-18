@@ -148,11 +148,11 @@ public class CompanyRepository {
 
 
     public Observable<String> updateAccount(String user,String passWord,List<Account> accounts) {
-        MapFragment.JsonObjectAccount jsonObjectAcc = new MapFragment.JsonObjectAccount();
+        Util.JsonObjectAccount jsonObjectAcc = new Util.JsonObjectAccount();
         jsonObjectAcc.Account = accounts;
 
         Gson gson = new Gson();
-        Type typeJsonObject = new TypeToken<MapFragment.JsonObjectAccount>() {
+        Type typeJsonObject = new TypeToken<Util.JsonObjectAccount>() {
         }.getType();
         return api.updateAccount(user,passWord,gson.toJson(jsonObjectAcc, typeJsonObject),"");
     }

@@ -226,6 +226,18 @@ public class ContactUsFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_TEXT, my_string);
         startActivity(Intent.createChooser(intent, "اشتراک این برنامه با"));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sharedPreferences.edit().putBoolean("loginSuccess", true).apply();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sharedPreferences.edit().putBoolean("loginSuccess", false).apply();
+    }
 }
 
 

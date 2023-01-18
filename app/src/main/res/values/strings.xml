@@ -25,6 +25,9 @@
     <string name="pay_place">پرداخت در محل</string>
     <string name="type_order">نحوه تحویل سفارش</string>
     <string name="api_key">AIzaSyBtqQBKEW7fvUihpkqdPtoK4i39-WZGxRw</string>
+    <string name="detail_address">جزییات آدرس خود را وارد کنید.برای مثال
+
+نام شهر ، نام خیابان یا بولوار ، نام کوچه ، پلاک ، واحد</string>
     <string name="launcher_toolbar_in_Organization">داخل سالن</string>
     <string name="show_detail_title_description">توضیحات</string>
     <string name="link_KitGroup">تولید شده توسط <a href="http://www.kitgroup.ir/">کیت گروپ</a></string>

@@ -120,7 +120,10 @@ public class Account extends SugarRecord {
     }
 
     public Double getCRDT() {
-        return CRDT;
+        double crd=0;
+        if (CRDT!=null)
+            crd=CRDT;
+        return crd;
     }
 
     public void setCRDT(Double CRDT) {

@@ -3,6 +3,7 @@ package ir.kitgroup.saleindemo.ui.launcher.moreItem.orders;
 
 import android.annotation.SuppressLint;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -39,7 +41,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
 
 
     private final List<Invoice> list;
-    private final Context context;
+    private final Activity context;
     private final DecimalFormat format = new DecimalFormat("#,###,###,###");
 
 
@@ -54,7 +56,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
     private ClickItem clickItem;
 
 
-    public OrderListAdapter(Context context, List<Invoice> list) {
+    public OrderListAdapter(Activity context, List<Invoice> list) {
         this.context = context;
         this.list = list;
 
@@ -138,18 +140,14 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
         holder.ivSend.setOnClickListener(v ->{
             if (holder.edtDescription.getText().toString().equals(""))
             {
-                AlertDialog alertDialog=  new AlertDialog.Builder(context,R.style.AlertDialogTheme)
+                AlertDialog alertDialog=  new AlertDialog.Builder(context)
                         .setMessage("هیچ نظری موجود نمی باشد")
                         .setPositiveButton("بستن", (dialog, which) -> {
                             dialog.dismiss();
                         })
                         .show();
 
-                TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
-                Typeface face=Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
-                textView.setTypeface(face);
-                textView.setTextColor(context.getResources().getColor(R.color.medium_color));
-                textView.setTextSize(13);
+             setStyleTextAlert(alertDialog);
 
                 return;
             }
@@ -199,7 +197,22 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.view
     }
 
 
+    private void setStyleTextAlert(AlertDialog alert){
+        Typeface face = Typeface.createFromAsset(context.getAssets(), "iransans.ttf");
 
+        TextView textView = alert.findViewById(android.R.id.message);
+        textView.setTypeface(face);
+        textView.setTextColor(context.getResources().getColor(R.color.medium_color));
+        textView.setTextSize(13);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.color_accent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.color_accent));
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(face);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(face);
+
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(12);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(12);
+    }
 
 
 

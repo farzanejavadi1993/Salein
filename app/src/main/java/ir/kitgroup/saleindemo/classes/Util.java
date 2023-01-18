@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ir.kitgroup.saleindemo.DataBase.Account;
+
 
 public class Util {
 
@@ -195,4 +197,5 @@ public class Util {
     public static class JsonObjectAccount {
         public List<ir.kitgroup.saleindemo.DataBase.Account> Account;
     }
+
 }
