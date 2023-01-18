@@ -8,12 +8,12 @@
     <!--belong to fingili-->
     <!--belong to saleindemo-->
     <!--belong to salein-->
- <!--   <color name="color_text_screen">#000000</color>
-    <color name="color_accent">#FF018786</color>
-    <color name="color_primary">#FCDC65</color>
-    <color name="color_primary_dark">#FDC300</color>
+    <!--   <color name="color_text_screen">#000000</color>
+       <color name="color_accent">#FF018786</color>
+       <color name="color_primary">#FCDC65</color>
+       <color name="color_primary_dark">#FDC300</color>
 
--->
+   -->
 
     <!--belong to donyavi-->
     <!--       <color name="color_text_screen">#fff</color>
@@ -23,24 +23,22 @@
 
 
     <!--belong to bamgah-->
-     <!--<color name="color_text_screen">#FFFFFF</color>
-     <color name="color_accent">#776699</color>
-     <color name="color_primary">#F7B702</color>
-     <color name="color_primary_dark">#776699</color>-->
+    <!--<color name="color_text_screen">#FFFFFF</color>
+    <color name="color_accent">#776699</color>
+    <color name="color_primary">#F7B702</color>
+    <color name="color_primary_dark">#776699</color>-->
+
+
 
 
     <!--belong to khavari-->
-    <color name="color_text_screen">#FFFFFF</color>
-       <color name="color_accent">#2196F3</color>
-       <color name="color_primary">#F7B702</color>
-       <color name="color_primary_dark">#2196F3</color>
-
-
     <!--belong to jampart-->
-    <!--<color name="color_text_screen">#fff</color>
+    <color name="color_text_screen">#fff</color>
     <color name="color_primary">#03A9F4</color>
     <color name="color_primary_dark">#2196F3</color>
-    <color name="color_accent">#FF9800</color>-->
+    <color name="color_accent">#FF9800</color>
+
+
 
     <color name="edittext_color">#607d8b</color>
     <color name="white">#FFFFFFFF</color>
