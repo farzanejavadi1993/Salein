@@ -8,12 +8,11 @@
     <!--belong to fingili-->
     <!--belong to saleindemo-->
     <!--belong to salein-->
-    <!--   <color name="color_text_screen">#000000</color>
+       <color name="color_text_screen">#000000</color>
        <color name="color_accent">#FF018786</color>
        <color name="color_primary">#FCDC65</color>
        <color name="color_primary_dark">#FDC300</color>
 
-   -->
 
     <!--belong to donyavi-->
     <!--       <color name="color_text_screen">#fff</color>
@@ -33,10 +32,10 @@
 
     <!--belong to khavari-->
     <!--belong to jampart-->
-    <color name="color_text_screen">#fff</color>
+<!--    <color name="color_text_screen">#fff</color>
     <color name="color_primary">#03A9F4</color>
     <color name="color_primary_dark">#2196F3</color>
-    <color name="color_accent">#FF9800</color>
+    <color name="color_accent">#FF9800</color>-->
 
 
 
