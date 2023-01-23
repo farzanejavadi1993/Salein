@@ -36,8 +36,8 @@
 
     <fragment
         android:id="@+id/CompanyFragment"
-        android:name="ir.kitgroup.salein.ui.companies.CompanyFragment"
-        tools:layout="@layout/fragment_company">
+        android:name="ir.kitgroup.salein.ui.companies.test.CompanyFragmentTest"
+        tools:layout="@layout/company_fragment_test">
         <action
             android:id="@+id/actionGoToHomeFragment"
             app:destination="@id/HomeFragment" />
@@ -141,6 +141,13 @@
         <argument
             android:name="Inv_GUID"
             app:argType="string" />
+        <argument
+            android:name="guid_prd_level1"
+            app:argType="string" />
+        <argument
+            android:name="guid_prd_level2"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

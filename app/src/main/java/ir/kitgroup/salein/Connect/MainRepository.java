@@ -12,7 +12,6 @@ import ir.kitgroup.salein.models.AppDetail;
 import ir.kitgroup.salein.models.Log;
 
 public class MainRepository {
-
     private final MainApi api;
 
     @Inject
@@ -32,7 +31,6 @@ public class MainRepository {
         return api.getCustomerFromServer(mobile);
     }
 
-
     public Observable<List<Company>> getCompany(String id) {
         return api.getCompany(id);
     }
@@ -40,6 +38,7 @@ public class MainRepository {
     public Observable<String> getAllCompany(String parentAccountId,int page) {
         return api.getAllCompany(parentAccountId,1,page);
     }
+
     public Observable<List<Advertise>> getAdvsByCompanyId(List<String> companiesId, int page, String appId, String customerId) {
         return api.getAdvsByCompanyId(companiesId, page,appId,customerId);
     }

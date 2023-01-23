@@ -279,9 +279,7 @@ public class RegisterFragment extends Fragment {
             NavDirections action = RegisterFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
-            Bundle bundle = new Bundle();
-            bundle.putString("Inv_GUID", "");
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToHomeFragment, bundle);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.actionGoToHomeFragment);
         }
 
     }

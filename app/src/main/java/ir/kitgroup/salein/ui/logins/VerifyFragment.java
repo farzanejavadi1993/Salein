@@ -322,7 +322,7 @@ public class VerifyFragment extends Fragment {
             NavDirections action = VerifyFragmentDirections.actionGoToCompanyFragment();
             Navigation.findNavController(binding.getRoot()).navigate(action);
         } else {
-            NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("");
+            NavDirections action = VerifyFragmentDirections.actionGoToHomeFragment("","","");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         }
     }

@@ -1,22 +1,34 @@
 package ir.kitgroup.salein.ui.companies.test;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.button.MaterialButton;
+import com.orm.query.Select;
 
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,10 +36,20 @@ import dagger.hilt.android.AndroidEntryPoint;
 import es.dmoral.toasty.Toasty;
 import ir.kitgroup.salein.Connect.CompanyViewModel;
 import ir.kitgroup.salein.Connect.MainViewModel;
+import ir.kitgroup.salein.DataBase.Account;
 import ir.kitgroup.salein.DataBase.Company;
+import ir.kitgroup.salein.DataBase.Unit;
+import ir.kitgroup.salein.R;
+import ir.kitgroup.salein.classes.ConnectToServer;
 import ir.kitgroup.salein.classes.HostSelectionInterceptor;
+import ir.kitgroup.salein.classes.Util;
 import ir.kitgroup.salein.databinding.CompanyFragmentTestBinding;
 import ir.kitgroup.salein.models.Advertise;
+import ir.kitgroup.salein.models.ProductLevel1;
+import ir.kitgroup.salein.models.ProductLevel2;
+import ir.kitgroup.salein.models.Setting;
+import ir.kitgroup.salein.ui.companies.AllCompanyFragmentDirections;
+import ir.kitgroup.salein.ui.launcher.homeItem.ProductLevel2Adapter;
 
 @AndroidEntryPoint
 public class CompanyFragmentTest extends Fragment {
@@ -43,19 +65,34 @@ public class CompanyFragmentTest extends Fragment {
     private CompanyViewModel companyViewModel;
 
 
-    private int pageMain = 1;
-
+    private Account account;
+    private ConnectToServer connectToServer;
 
     private ArrayList<Company> allCompanies = new ArrayList<>();
     private CompanyAdapterTest companyAdapter;
+    private Company companySelect;
+    private boolean ACCSTP = false;
 
+    private String idAccountServer;
+
+    private Dialog dialog;
+    private TextView textExitDialog;
+    private String error = "";
+
+
+    private int pageMain = 1;
 
 
     private SliderAdapter adapterBanner;
     private final ArrayList<Advertise> bannerList = new ArrayList<>();
-    private int height;
-    ArrayList<String> companiesId=new ArrayList<>();
+    ArrayList<String> companiesId = new ArrayList<>();
 
+    private ProductLevel1TestAdapter adapterProductLevel1;
+    private ArrayList<ProductLevel1> productLevel1s = new ArrayList<>();
+
+
+    private ProductLevel2TestAdapter adapterProductLevel2;
+    private ArrayList<ProductLevel2> productLevel2s = new ArrayList<>();
 
     //region Override Method
 
@@ -69,8 +106,13 @@ public class CompanyFragmentTest extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecyclerView();
+
+        init();
+        initRecyclerViewCompany();
         initSpecial();
+        initRecyclerViewProductLevel();
+        initRecyclerViewProductLeve2();
+        castDialog();
     }
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
@@ -82,9 +124,11 @@ public class CompanyFragmentTest extends Fragment {
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
 
 
-        mainViewModel.getAllCompany("", pageMain);
-
-
+        String companyId = sharedPreferences.getString("companyId", "");
+        if (!companyId.equals(""))
+            mainViewModel.getCompany(companyId);
+        else
+            mainViewModel.getAllCompany("", pageMain);
 
 
         companyViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
@@ -106,56 +150,39 @@ public class CompanyFragmentTest extends Fragment {
 
             mainViewModel.getResultAllCompany().setValue(null);
 
-
             if (pageMain == 1)
                 allCompanies.clear();
 
             if (result.size() > 0) {
 
-                allCompanies.addAll(result);
+                CollectionUtils.filter(result, r -> !r.getInskId().equals("ir.kitgroup.salein"));
 
-              /*  //region Find Parent Items Of All Company And Set Parent Variable True
-                for (int i = 0; i < result.size(); i++) {
-                    ArrayList<Company> companyArrayList = new ArrayList<>(result);
-                    int finalI = i;
-                    CollectionUtils.filter(companyArrayList, r -> result.get(finalI).getI().equals(r.getPi()));
-                    if (companyArrayList.size() > 0) {
-                        result.get(finalI).Parent = true;
-                        if (!allCompanies.containsAll(companyArrayList))
-                            allCompanies.addAll(companyArrayList);
-                    }
-                }
-                //endregion Find Parent Items Of All Company And Set Parent Variable True*/
+                ArrayList<Company> demo = new ArrayList<>(result);
+                CollectionUtils.filter(demo, r -> r.getInskId().equals("ir.kitgroup.saleindemo"));
+                if (demo.size() > 0) {
+                    companySelect = demo.get(0);
+                    Company.deleteAll(Company.class);
+                    Company.saveInTx(demo);
+                    String url = "http://" + demo.get(0).getIp1() + "/api/REST/";
+                    connectToServer(url);
+                    allCompanies.add(demo.get(0));
 
-
-                //region Filter list according to companyId That come From Pakhshyab
-                String companyId = sharedPreferences.getString("companyId", "");
-                if (!companyId.equals("")) {
-                    CollectionUtils.filter(result, r -> r.getI().contains(companyId));
-                    sharedPreferences.edit().putString("companyId", "").apply();
-                    allCompanies.clear();
-                    allCompanies.addAll(result);
-                }
-                //endregion Filter list according to companyId That come From Pakhshyab
-
-
-                if (allCompanies.size()>0){
-                    allCompanies.get(0).click=true;
-                    companiesId.clear();
-                    companiesId.add("4982DD86-2613-ED11-9B6C-000C29D9B371");
-
-                    mainViewModel.getAdvsByCompanyId(companiesId, pageMain, "CB0F6319-5C4C-ED11-9BC9-000C29D9B371", "7883274E-0536-4A48-BF02-81F6F6A4163E");
                 }
 
-            }
-            else if (result.size() == 0)
-                Toasty.error(getContext(), "هیچ شرکتی یافت نشد", Toasty.LENGTH_SHORT).show();
 
+                CollectionUtils.filter(result, r -> !r.getInskId().equals("ir.kitgroup.saleindemo"));
+                allCompanies.addAll(1, result);
+                allCompanies.get(0).click = true;
+
+                companyAdapter.notifyDataSetChanged();
+                getCompanyData();
+
+            } else if (result.size() == 0)
+                binding.txtError.setText("هیچ شرکتی یافت نشد");
 
 
             companyAdapter.notifyDataSetChanged();
         });
-
 
         mainViewModel.getResultCompanyAdvertisement().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
@@ -166,6 +193,7 @@ public class CompanyFragmentTest extends Fragment {
             bannerList.clear();
 
             if (result.size() > 0) {
+                binding.layoutSlider.setVisibility(View.VISIBLE);
                 bannerList.addAll(result);
             }
 
@@ -174,8 +202,33 @@ public class CompanyFragmentTest extends Fragment {
 
         });
 
+        companyViewModel.getResultProductLevel1().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            companyViewModel.getResultProductLevel1().setValue(null);
+            if (result.size() == 1) {
+                binding.rvProductLevel1.setVisibility(View.GONE);
+                companyViewModel.getProductLevel2(companySelect.getUser(), companySelect.getPass(), result.get(0).getI());
+            } else {
+                productLevel1s.clear();
+                productLevel1s.addAll(result);
+                binding.progressbar.setVisibility(View.GONE);
+                adapterProductLevel1.notifyDataSetChanged();
+            }
+        });
 
-        /*companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
+
+        companyViewModel.getResultProductLevel2().observe(getViewLifecycleOwner(), result -> {
+            if (result == null)
+                return;
+            companyViewModel.getResultProductLevel2().setValue(null);
+            binding.progressbar.setVisibility(View.GONE);
+            productLevel2s.clear();
+            productLevel2s.addAll(result);
+            adapterProductLevel2.notifyDataSetChanged();
+        });
+
+        companyViewModel.getResultInquiryAccount().observe(getViewLifecycleOwner(), result -> {
 
             if (result == null)
                 return;
@@ -184,21 +237,22 @@ public class CompanyFragmentTest extends Fragment {
 
             //user is register
             if (result.size() > 0) {
+                resetFilter();
+
                 Account.deleteAll(Account.class);
                 Account.saveInTx(result);
 
                 Company.deleteAll(Company.class);
                 Company.saveInTx(companySelect);
 
-                sharedPreferences.edit().putString(NAME, "login").apply();
-                resetFilter();
-
-                // NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
-                // Navigation.findNavController(binding.getRoot()).navigate(action);
+                sharedPreferences.edit().putString(companySelect.getN(), "").apply();
+                getCompanyData();
             }
+
             //user not register
             else {
-                textExitDialog.setText(" شما مشترک " + NAME + " نیستید.آیا مشترک میشوید؟ ");
+                error = " شما مشترک " + companySelect.getN() + " نیستید.آیا مشترک میشوید؟ ";
+                textExitDialog.setText(error);
                 dialog.show();
             }
         });
@@ -222,23 +276,32 @@ public class CompanyFragmentTest extends Fragment {
             binding.progressbar.setVisibility(View.GONE);
             if (result == null)
                 return;
+            Toasty.success(getActivity(), "حساب شما با موفقیت ایجاد شد.", Toasty.LENGTH_SHORT).show();
             companyViewModel.getResultAddAccount().setValue(null);
             Company.deleteAll(Company.class);
             Company.saveInTx(companySelect);
-            resetFilter();
-            //  NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
-            // Navigation.findNavController(binding.getRoot()).navigate(action);
-        });*/
+
+            getCompanyData();
+        });
 
     }
 
     //endregion Override Method
 
     //region Method
-    @SuppressLint("NotifyDataSetChanged")
-    private void initRecyclerView() {
+    private void init() {
+        connectToServer = new ConnectToServer();
 
-        companyAdapter = new CompanyAdapterTest(allCompanies,getActivity());
+        account = Select.from(Account.class).first();
+
+        idAccountServer = sharedPreferences.getString("idServer", "");
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void initRecyclerViewCompany() {
+
+        companyAdapter = new CompanyAdapterTest(allCompanies, getActivity());
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -247,101 +310,83 @@ public class CompanyFragmentTest extends Fragment {
         binding.rvCompany.setLayoutManager(manager);
         binding.rvCompany.setAdapter(companyAdapter);
 
-        companyAdapter.setOnClickItemListener(modelCompany -> {
+        companyAdapter.setOnClickItemListener(company -> {
+            binding.rvProductLevel1.setVisibility(View.VISIBLE);
+            reset();
+            binding.progressbar.setVisibility(View.VISIBLE);
+            account.STAPP = false;
+            companySelect = company;
+            String url = "http://" + company.getIp1() + "/api/REST/";
+            connectToServer(url);
 
-            //region UnClick Old Item ProductLevel1 And Item ProductLevel2
+            //region UnClick Old CompanyItem
             ArrayList<Company> resultPrdGrp1 = new ArrayList<>(allCompanies);
             CollectionUtils.filter(resultPrdGrp1, r -> r.click);
             if (resultPrdGrp1.size() > 0) {
                 allCompanies.get(allCompanies.indexOf(resultPrdGrp1.get(0))).click = false;
             }
-            //endregion UnClick Old Item ProductLevel1 And Item ProductLevel2
+            //endregion UnClick Old CompanyItem
 
-
-            //region Click New Item ProductLevel1
+            //region Click New Item CompanyItem
             ArrayList<Company> resultPrdGroup1_ = new ArrayList<>(allCompanies);
-            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(modelCompany.getI()));
+            CollectionUtils.filter(resultPrdGroup1_, r -> r.getI().equals(company.getI()));
             if (resultPrdGroup1_.size() > 0) {
                 allCompanies.get(allCompanies.indexOf(resultPrdGroup1_.get(0))).click = true;
             }
-            //endregion Click New Item ProductLevel1
+            //endregion Click New Item CompanyItem
 
             companyAdapter.notifyDataSetChanged();
 
-            companiesId.clear();
-           // companiesId.add(modelCompany.getI());
-
-            companiesId.add("4982DD86-2613-ED11-9B6C-000C29D9B371");
-
-            mainViewModel.getAdvsByCompanyId(companiesId, pageMain, "CB0F6319-5C4C-ED11-9BC9-000C29D9B371", "7883274E-0536-4A48-BF02-81F6F6A4163E");
-        });
-
-
-
-/*
-        companyAdapter.setOnClickItemListener((company, parent, index, delete) ->
-        {
-            account.STAPP = false;
-
-            //region Get Child From This Parent
-            if (parent) {
-                ArrayList<Company> childs = new ArrayList<>(childCompany);
-                CollectionUtils.filter(childs, ch -> ch.getPi().equals(company.getI()));
-
-                if (childs.size() > 0  ) {
-                    if (parentCompanies.containsAll(childs)){
-                        parentCompanies.removeAll(childs);
-                        companyAdapterList.notifyItemRangeRemoved(index + 1, childs.size());
-                    }
-                    else{
-                        parentCompanies.addAll(index + 1, childs);
-                        companyAdapterList.notifyItemRangeInserted(index + 1, childs.size());
-                    }
-
-                }
-                return;
-            }
-            //endregion Get Child From This Parent
-
-
-            //region Enter To Home Fragment
-            String url = "http://" + company.getIp1() + "/api/REST/";
-            connectToServer(url);
-            companySelect = company;
-
-
             //region If User Login To Company Selected
             String nameSave = sharedPreferences.getString(company.getN(), "");
-            if (!nameSave.equals("")) {
-                Company.deleteAll(Company.class);
-                Company.saveInTx(company);
+            if (nameSave.equals(""))
+                companyViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
+            else
+                getCompanyData();
 
-                resetFilter();
-                NavDirections action;
-                if (!ParentId.equals("")) {
-                    action = AllCompanyFragmentDirections.actionGoToHomeFragment("");
-                }
-                //else
-                //action = CompanyFragmentDirections.actionGoToHomeFragment("");
-
-
-                //  Navigation.findNavController(binding.getRoot()).navigate(action);
-            }
             //endregion If User Login To Company Selected
 
 
-            //region If User Is Not Login To Company Selected
-            else {
-                binding.progressbar.setVisibility(View.VISIBLE);
-                NAME = companySelect.getN();
-                companyViewModel.getInquiryAccount(companySelect.getUser(), companySelect.getPass(), account.getM());
+        });
+
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void initRecyclerViewProductLevel() {
+        adapterProductLevel1 = new ProductLevel1TestAdapter(getActivity(), productLevel1s);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 3) {
+            @Override
+            protected boolean isLayoutRTL() {
+                return true;
             }
-            //endregion If User Is Not Login To Company Selected
+        };
+        binding.rvProductLevel1.setLayoutManager(linearLayoutManager);
+        binding.rvProductLevel1.setAdapter(adapterProductLevel1);
+        adapterProductLevel1.SetOnItemClickListener(GUID -> {
+            resetFilter();
+            NavDirections action = CompanyFragmentTestDirections.actionGoToHomeFragment("", GUID, "");
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
+    }
 
 
-            //endregion Enter To Home Fragment
-        });*/
-
+    @SuppressLint("NotifyDataSetChanged")
+    private void initRecyclerViewProductLeve2() {
+        adapterProductLevel2 = new ProductLevel2TestAdapter(getActivity(), productLevel2s);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 3) {
+            @Override
+            protected boolean isLayoutRTL() {
+                return true;
+            }
+        };
+        binding.rvProductLevel2.setLayoutManager(linearLayoutManager);
+        binding.rvProductLevel2.setAdapter(adapterProductLevel2);
+        adapterProductLevel2.SetOnItemClickListener(GUID -> {
+            resetFilter();
+            NavDirections action = CompanyFragmentTestDirections.actionGoToHomeFragment("", "", GUID);
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        });
     }
 
     private void initSpecial() {
@@ -359,6 +404,72 @@ public class CompanyFragmentTest extends Fragment {
         binding.slider.setAutoCycle(true);
         binding.slider.startAutoCycle();
 
+
+    }
+
+    private void connectToServer(String url) {
+        connectToServer.connect(sharedPreferences, hostSelectionInterceptor, true, url);
+    }
+
+    private void resetFilter() {
+        Company.deleteAll(Company.class);
+        Company.saveInTx(companySelect);
+
+
+        sharedPreferences.edit().putBoolean("vip", false).apply();
+        sharedPreferences.edit().putBoolean("discount", false).apply();
+    }
+
+    private void getCompanyData() {
+        companyViewModel.getProductLevel1(companySelect.getUser(), companySelect.getPass());
+        companiesId.clear();
+        companiesId.add(companySelect.getI());
+        mainViewModel.getAdvsByCompanyId(companiesId, pageMain, Util.APPLICATION_ID, idAccountServer);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void reset() {
+        error = "";
+        binding.txtError.setText("");
+        binding.txtError.setVisibility(View.GONE);
+
+        binding.progressbar.setVisibility(View.VISIBLE);
+
+        bannerList.clear();
+        adapterBanner.notifyDataSetChanged();
+        binding.layoutSlider.setVisibility(View.GONE);
+
+        productLevel1s.clear();
+        adapterProductLevel1.notifyDataSetChanged();
+
+        productLevel2s.clear();
+        adapterProductLevel2.notifyDataSetChanged();
+
+    }
+
+    private void castDialog() {
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(false);
+        textExitDialog = dialog.findViewById(R.id.tv_message);
+        MaterialButton btnOk = dialog.findViewById(R.id.btn_ok);
+        MaterialButton btnNo = dialog.findViewById(R.id.btn_cancel);
+        btnNo.setOnClickListener(v ->
+                {
+                    dialog.dismiss();
+                    binding.txtError.setText(error);
+                    binding.txtError.setVisibility(View.VISIBLE);
+                    binding.progressbar.setVisibility(View.GONE);
+                }
+
+        );
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+            binding.progressbar.setVisibility(View.VISIBLE);
+            companyViewModel.getSetting(companySelect.getUser(), companySelect.getPass());
+        });
 
     }
     //endregion Method

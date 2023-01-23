@@ -141,8 +141,8 @@ public class AllCompanyFragment extends Fragment {
         });
 
         mainViewModel.getResultMessage().observe(getViewLifecycleOwner(), result -> {
-
-            if (result == null) return;
+            if (result == null)
+                return;
             binding.progressbar.setVisibility(View.GONE);
             mainViewModel.getResultMessage().setValue(null);
             Toasty.warning(getActivity(), result.getName(), Toast.LENGTH_SHORT, true).show();
@@ -237,8 +237,8 @@ public class AllCompanyFragment extends Fragment {
                 sharedPreferences.edit().putString(NAME, "login").apply();
                 resetFilter();
 
-                NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+//                NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
+//                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
             //user not register
             else {
@@ -358,12 +358,13 @@ public class AllCompanyFragment extends Fragment {
                 resetFilter();
                 NavDirections action;
                 if (!ParentId.equals("")) {
-                    action = AllCompanyFragmentDirections.actionGoToHomeFragment("");
-                } else
-                    action = CompanyFragmentDirections.actionGoToHomeFragment("");
+                    action = AllCompanyFragmentDirections.actionGoToHomeFragment("","","");
+                }
+                //else
+                 //   action = CompanyFragmentDirections.actionGoToHomeFragment("");
 
 
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+              //  Navigation.findNavController(binding.getRoot()).navigate(action);
             }
             //endregion If User Login To Company Selected
 
@@ -397,8 +398,8 @@ public class AllCompanyFragment extends Fragment {
                     binding.progressbar.setVisibility(View.GONE);
                     Company.deleteAll(Company.class);
                     Company.saveInTx(companyDemo);
-                    NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
-                    Navigation.findNavController(binding.getRoot()).navigate(action);
+                    //NavDirections action = CompanyFragmentDirections.actionGoToHomeFragment("");
+                   // Navigation.findNavController(binding.getRoot()).navigate(action);
                 } else {
                     NAME = companyDemo.getN();
                     companyViewModel.getInquiryAccount(companyDemo.getUser(), companyDemo.getPass(), account.getM());

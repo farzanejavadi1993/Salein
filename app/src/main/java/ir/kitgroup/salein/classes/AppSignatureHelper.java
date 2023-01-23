@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 public class AppSignatureHelper extends ContextWrapper {
     public static final String TAG = AppSignatureHelper.class.getSimpleName();
-
     private static final String HASH_TYPE = "SHA-256";
     public static final int NUM_HASHED_BYTES = 9;
     public static final int NUM_BASE64_CHAR = 11;
@@ -24,11 +23,6 @@ public class AppSignatureHelper extends ContextWrapper {
         super(context);
     }
 
-    /**
-     * Get all the app signatures for the current package
-     *
-     * @return
-     */
     public ArrayList<String> getAppSignatures() {
         ArrayList<String> appCodes = new ArrayList<>();
 

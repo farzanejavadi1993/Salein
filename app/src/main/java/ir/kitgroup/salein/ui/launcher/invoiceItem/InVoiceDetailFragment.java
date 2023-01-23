@@ -443,7 +443,7 @@ public class InVoiceDetailFragment extends Fragment {
                 showAlert("سفارشی وجود ندارد");
                 return;
             }
-            NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID);
+            NavDirections action = InVoiceDetailFragmentDirections.actionGoToHomeFragment(Inv_GUID,"","");
             Navigation.findNavController(binding.getRoot()).navigate(action);
         });
 

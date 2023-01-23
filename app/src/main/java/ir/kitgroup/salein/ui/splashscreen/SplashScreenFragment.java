@@ -321,7 +321,7 @@ public class SplashScreenFragment extends Fragment {
             if (saleinShop.isPublicApp())
                 Navigation.findNavController(getView()).navigate(R.id.actionGoToCompanyFragment);
             else {
-                NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("");
+                NavDirections action = SplashScreenFragmentDirections.actionGoToHomeFragment("","","");
                 Navigation.findNavController(getView()).navigate(action);
             }
         } else

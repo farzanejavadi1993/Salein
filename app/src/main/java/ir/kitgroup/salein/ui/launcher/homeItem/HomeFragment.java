@@ -124,6 +124,9 @@ public class HomeFragment extends Fragment {
     private boolean vip = false;
     private boolean discount = false;
 
+
+    String guidPrdLvl1="";
+    String guidPrdLvl2="";
     //endregion Parameter
 
 
@@ -144,6 +147,7 @@ public class HomeFragment extends Fragment {
 
 
             init();
+            getBundle();
             createOrder();
             setNumberOfOrderRow();
             castDialogDescription();
@@ -275,15 +279,29 @@ public class HomeFragment extends Fragment {
 
             productLevel1Adapter.notifyDataSetChanged();
 
-            if (productLevel1List.size() > 0) {
+
+            if (!guidPrdLvl1.equals("")){
+                ArrayList<ProductLevel1> res=new ArrayList<>(productLevel1List);
+                CollectionUtils.filter(res,r->r.getI().equals(guidPrdLvl1));
+                if (res.size()>0)
+                {
+                    int position=productLevel1List.indexOf(res.get(0));
+                    productLevel1List.get(position).Click=true;
+                    myViewModel.getProductLevel2(userName, passWord, productLevel1List.get(position).getI());
+                    binding.orderRecyclerViewProductLevel1.post(() -> binding.orderRecyclerViewProductLevel1.scrollToPosition(position));
+                }
+
+            }
+            else if (productLevel1List.size() > 0) {
                 productLevel1List.get(0).Click = true;
                 myViewModel.getProductLevel2(userName, passWord, productLevel1List.get(0).getI());
             } else {
                 binding.progressbar.setVisibility(View.GONE);
-            //    binding.animationView.setVisibility(View.GONE);
                 binding.orderTxtError.setText("هیچ گروهی از کالاها موجود نیست");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
             }
+
+
         });
         myViewModel.getResultProductLevel2().observe(getViewLifecycleOwner(), result -> {
             if (result == null)
@@ -324,15 +342,30 @@ public class HomeFragment extends Fragment {
                     }
 
                 }
-                if (productLevel2List.size() > 0) {
-                    productLevel2List.get(0).Click = true;
+
+
+                if (!guidPrdLvl2.equals("")){
+                    ArrayList<ProductLevel2> res=new ArrayList<>(productLevel2List);
+                    CollectionUtils.filter(res,r->r.getI().equals(guidPrdLvl2));
+                    if (res.size()>0)
+                    {
+                        int position=productLevel2List.indexOf(res.get(0));
+                        productLevel2List.get(position).Click=true;
+                        binding.orderRecyclerViewProductLevel2.post(() -> binding.orderRecyclerViewProductLevel2.scrollToPosition(position));
+                    }
+
                 }
+
+               else
+                    productLevel2List.get(0).Click = true;
+
 
                 //region Full ProductList Because First Item ProductLevel2 Is True
                 GuidProductLvl2 = productLevel2List.get(0).getI();
                 getSettingPrice();
                 //endregion Full ProductList Because First Item ProductLevel2 Is True
-            } else {
+            }
+            else {
                 binding.orderTxtError.setText("هیچ زیرگروهی برای این گروه کالایی وجود ندارد.");
                 binding.orderTxtError.setVisibility(View.VISIBLE);
                 binding.progressbar.setVisibility(View.GONE);
@@ -594,6 +627,17 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void getBundle(){
+        try {
+            guidPrdLvl1 = HomeFragmentArgs.fromBundle(getArguments()).getGuidPrdLevel1();
+            guidPrdLvl2 = HomeFragmentArgs.fromBundle(getArguments()).getGuidPrdLevel2();
+        }catch (Exception ignored){
+            guidPrdLvl1 = "";
+            guidPrdLvl2 = "";
+        }
+
+    }
+
     private void resetFilter() {
         sharedPreferences.edit().putBoolean("vip", false).apply();
         sharedPreferences.edit().putBoolean("discount", false).apply();
@@ -605,7 +649,6 @@ public class HomeFragment extends Fragment {
     private void createOrder() {
         try {
             Inv_GUID = HomeFragmentArgs.fromBundle(getArguments()).getInvGUID();
-//            getArguments().clear();
         } catch (Exception ignored) {
             Inv_GUID = "";
         }

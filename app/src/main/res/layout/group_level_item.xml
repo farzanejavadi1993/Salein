@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -14,10 +15,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.github.siyamed.shapeimageview.ShapeImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:srcCompat="@drawable/ghalat"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:id="@+id/ivImage"
+           android:src="@drawable/ghalat"
             app:siBorderColor="#fff" />
 
         <TextView
@@ -25,7 +27,10 @@
             style="@style/bold_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin10"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="@dimen/margin10"
+            android:layout_marginRight="@dimen/margin10"
             android:gravity="center"
             tools:text="پخش مواد غذایی" />
 

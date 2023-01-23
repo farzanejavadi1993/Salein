@@ -1,120 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:background="@color/white"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-        <com.google.android.material.card.MaterialCardView
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            app:cardElevation="@dimen/margin4"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="@dimen/margin4">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCompany"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:cardElevation="@dimen/margin4">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:id="@+id/ivLocation"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:tint="@color/medium_color"
+                        app:srcCompat="@drawable/ic_location"
+                        tools:ignore="UseAppTint" />
+
+                    <TextView
+                        android:id="@+id/tvLocation"
+                        style="@style/bold_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@+id/ivLocation"
+                        android:text="آدرس شما" />
+
+
+                    <ImageView
+                        android:id="@+id/ivArrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="45dp"
+                        android:layout_toLeftOf="@+id/tvLocation"
+                        android:padding="5dp"
+                        android:rotation="270"
+                        android:tint="@color/medium_color"
+                        app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
+                        tools:ignore="UseAppTint" />
+
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/ivArrow"
+                        android:background="#eee" />
+
+
+                    <TextView
+
+                        android:id="@+id/txtLocation"
+                        style="@style/bold_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/view"
+                        android:text="مشهد بولوار موسوی قوچانی چهارراه آخر خیام" />
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                app:cardElevation="@dimen/margin4">
+
+                <com.smarteist.autoimageslider.SliderView
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="5dp"
+                    android:scrollIndicators="bottom"
+                    app:sliderAnimationDuration="600"
+                    app:sliderAutoCycleDirection="back_and_forth"
+                    app:sliderIndicatorAnimationDuration="600"
+                    app:sliderIndicatorEnabled="true"
+                    app:sliderIndicatorGravity="center_horizontal|bottom"
+                    app:sliderIndicatorMargin="15dp"
+                    app:sliderIndicatorOrientation="horizontal"
+                    app:sliderIndicatorPadding="3dp"
+                    app:sliderIndicatorRadius="2dp"
+                    app:sliderIndicatorSelectedColor="@color/color_primary"
+                    app:sliderIndicatorUnselectedColor="@color/gray"
+                    app:sliderScrollTimeInSec="2" />
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginRight="12dp"
+
+                android:id="@+id/rvProductLevel1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:id="@+id/rvCompany"
-                android:layout_height="match_parent"/>
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="10dp" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            app:cardElevation="@dimen/margin4"
-            android:layout_marginTop="5dp"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:layout_marginBottom="5dp"
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProductLevel2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="55dp">
-                <ImageView
-                    android:id="@+id/ivLocation"
-                    android:tint="@color/medium_color"
-                    app:srcCompat="@drawable/ic_location"
-                    android:layout_marginRight="16dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    tools:ignore="UseAppTint" />
-                <TextView
-                    android:id="@+id/tvLocation"
-                    android:text="آدرس شما"
-                    android:layout_marginRight="8dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/ivLocation"
-                    style="@style/bold_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="10dp" />
+        </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_circle"
+            android:indeterminateTint="@color/color_accent"
+            android:visibility="gone" />
 
-                <ImageView
-                    android:rotation="270"
-                    android:padding="5dp"
-                    android:id="@+id/ivArrow"
-                    android:tint="@color/medium_color"
-                    app:srcCompat="@drawable/ic_fi_rr_angle_small_left"
-                    android:layout_marginRight="45dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/tvLocation"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    tools:ignore="UseAppTint" />
+        <TextView
+            android:id="@+id/txtError"
+            style="@style/bold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/red"
+            android:visibility="gone" />
+    </RelativeLayout>
 
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_marginRight="16dp"
-                    android:background="#eee"
-                    android:layout_toLeftOf="@+id/ivArrow"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"/>
-
-
-                <TextView
-
-                    android:id="@+id/txtLocation"
-                    style="@style/bold_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_toLeftOf="@+id/view"
-                    android:text="مشهد بولوار موسوی قوچانی چهارراه آخر خیام" />
-            </RelativeLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            app:cardElevation="@dimen/margin4"
-            android:layout_marginTop="5dp"
-            android:layout_height="wrap_content">
-            <com.smarteist.autoimageslider.SliderView
-                android:layout_marginTop="5dp"
-                android:id="@+id/slider"
-                android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:layout_centerInParent="true"
-                android:scrollIndicators="bottom"
-                app:sliderAnimationDuration="600"
-                app:sliderAutoCycleDirection="back_and_forth"
-                app:sliderIndicatorAnimationDuration="600"
-                app:sliderIndicatorEnabled="true"
-                app:sliderIndicatorGravity="center_horizontal|bottom"
-                app:sliderIndicatorMargin="15dp"
-                app:sliderIndicatorOrientation="horizontal"
-                app:sliderIndicatorPadding="3dp"
-                app:sliderIndicatorRadius="2dp"
-                app:sliderIndicatorSelectedColor="@color/color_primary"
-                app:sliderIndicatorUnselectedColor="@color/gray"
-                app:sliderScrollTimeInSec="2" />
-        </com.google.android.material.card.MaterialCardView>
-
-
-    </LinearLayout>
 </layout>

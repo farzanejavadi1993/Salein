@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.siyamed.shapeimageview.ShapeImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,12 +62,13 @@ public class ProductLevel1TestAdapter extends RecyclerView.Adapter<ProductLevel1
     }
     static class viewHolder extends RecyclerView.ViewHolder {
         private final TextView tvGroupLevel;
-
+        private final ImageView ivImage;
 
         public viewHolder(View itemView) {
             super(itemView);
 
             tvGroupLevel = itemView.findViewById(R.id.tvGroupLevel);
+            ivImage = itemView.findViewById(R.id.ivImage);
         }
     }
 }

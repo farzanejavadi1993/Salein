@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,10 +63,12 @@ public class ProductLevel2TestAdapter extends RecyclerView.Adapter<ProductLevel2
     static class viewHolder extends RecyclerView.ViewHolder {
         private String GUID;
         private final TextView tvGroupLevel;
+        private final ImageView ivImage;
 
         public viewHolder(View itemView) {
             super(itemView);
             tvGroupLevel = itemView.findViewById(R.id.tvGroupLevel);
+            ivImage = itemView.findViewById(R.id.ivImage);
         }
     }
 
