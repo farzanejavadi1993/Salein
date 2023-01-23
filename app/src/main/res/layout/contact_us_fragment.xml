@@ -159,7 +159,7 @@
                 android:id="@+id/socialcommunicate"
                 style="@style/bold_text"
                 android:gravity="right"
-                android:text="ما را در شبکه های جتماعی دنبال کنید."
+                android:text="ما را در شبکه های اجتماعی دنبال کنید."
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

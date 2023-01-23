@@ -5,6 +5,7 @@
     <string name="app_name_saleinFingilKabab">فینگیل کباب </string>
     <string name="app_name_saleinkhavari">پخش مواد غذایی خاوری </string>
     <string name="app_name_saleinbamgah">سبزیجات بامگاه</string>
+    <string name="app_name_saleinPakhshKourosh">پخش کوروش</string>
     <string name="app_name_saleinjam">بازرگانی جم پارت</string>
     <string name="login_register_text">ورود ثبت نام</string>
     <string name="get_code">تایید و دریافت کد</string>
@@ -25,9 +26,7 @@
     <string name="pay_place">پرداخت در محل</string>
     <string name="type_order">نحوه تحویل سفارش</string>
     <string name="api_key">AIzaSyBtqQBKEW7fvUihpkqdPtoK4i39-WZGxRw</string>
-    <string name="detail_address">جزییات آدرس خود را وارد کنید.برای مثال
-
-نام شهر ، نام خیابان یا بولوار ، نام کوچه ، پلاک ، واحد</string>
+    <string name="detail_address">جزییات آدرس خود را وارد کنید....</string>
     <string name="launcher_toolbar_in_Organization">داخل سالن</string>
     <string name="show_detail_title_description">توضیحات</string>
     <string name="link_KitGroup">تولید شده توسط <a href="http://www.kitgroup.ir/">کیت گروپ</a></string>
