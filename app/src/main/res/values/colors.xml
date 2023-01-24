@@ -8,10 +8,10 @@
 
 
     <!--belong to pakhsh kourosh-->
-    <color name="color_text_screen">#FFFFFF</color>
-    <color name="color_accent">#AE5529</color>
-    <color name="color_primary">#9b775f</color>
-    <color name="color_primary_dark">#624933</color>
+<!--    <color name="color_text_screen">#FFFFFF</color>-->
+<!--    <color name="color_accent">#AE5529</color>-->
+<!--    <color name="color_primary">#9b775f</color>-->
+<!--    <color name="color_primary_dark">#624933</color>-->
 
 
 
@@ -20,10 +20,10 @@
     <!--belong to fingili-->
     <!--belong to saleindemo-->
     <!--belong to salein-->
-<!--       <color name="color_text_screen">#000000</color>-->
-<!--       <color name="color_accent">#FF018786</color>-->
-<!--       <color name="color_primary">#FCDC65</color>-->
-<!--       <color name="color_primary_dark">#FDC300</color>-->
+       <color name="color_text_screen">#000000</color>
+       <color name="color_accent">#FF018786</color>
+       <color name="color_primary">#FCDC65</color>
+       <color name="color_primary_dark">#FDC300</color>
 
 
     <!--belong to donyavi-->

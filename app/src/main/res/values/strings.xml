@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name_saleinAlin">Alin</string>
     <string name="app_name_salein">سالین </string>
     <string name="app_name_saleindemo">سالین دمو</string>
     <string name="app_name_saleinmeat">گوشت دنیوی</string>

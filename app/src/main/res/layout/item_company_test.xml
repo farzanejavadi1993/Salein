@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutCompany"
-    android:layout_width="145dp"
-    android:layout_height="45dp"
-    android:layout_margin="@dimen/margin4"
-    android:background="@drawable/background_inactive_company_item"
-    android:orientation="horizontal"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp">
+    app:cardCornerRadius="12dp"
+    android:layout_width="wrap_content"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/green"
+    android:layout_marginLeft="@dimen/margin4"
+    android:layout_marginTop="@dimen/margin4"
+    android:layout_marginRight="@dimen/margin8"
+    android:layout_marginBottom="@dimen/margin4"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_marginTop="2dp"
-        android:id="@+id/tvDescription"
-        style="@style/normal_text"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:singleLine="true"
-        android:text=" فروش انواع مواد پروتیینی و "
-        android:textColor="@color/color_primary_very_dark"
-        android:textSize="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivView"
-        app:layout_constraintHorizontal_bias="0.551"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivView" />
-
-    <View
-        android:id="@+id/ivView"
-        android:layout_width="2dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCompany"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7.5dp"
-        android:layout_marginBottom="7.5dp"
-        android:background="@drawable/view_active_company"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvNameCompanyTest"
-        style="@style/bold_text"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/color_primary_very_dark"
-        android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivView"
-        app:layout_constraintEnd_toStartOf="@+id/ivView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
-        tools:text="مجموعه گوشت دنیوی" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.github.siyamed.shapeimageview.CircularImageView
+            android:id="@+id/ivCompany"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:src="@mipmap/ic_fingili_kabab_round"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:siBorderColor="#fff"
+            app:siBorderWidth="1dp" />
+
+
+        <TextView
+            android:id="@+id/tvNameCompanyTest"
+            style="@style/bold_text"
+            android:layout_gravity="right"
+            android:layout_marginEnd="8dp"
+            android:singleLine="true"
+            android:text="گوشت دنیوی"
+            app:layout_constraintEnd_toStartOf="@+id/ivCompany"
+            app:layout_constraintTop_toTopOf="@+id/ivCompany" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/normal_text"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="right"
+            android:text=" فروش انواع مواد پروتیینی و مواد لبنی در مشهد"
+            app:layout_constraintBottom_toBottomOf="@+id/ivCompany"
+            app:layout_constraintEnd_toStartOf="@+id/ivCompany"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNameCompanyTest" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+

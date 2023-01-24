@@ -129,7 +129,7 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/home_fragment.xml" value="0.25" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/invoice_list_item_recycle.xml" value="0.22" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_company.xml" value="0.22" />
-        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_company_test.xml" value="0.67" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_company_test.xml" value="0.5" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_date.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_new_table.xml" value="0.140625" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/item_recycle_type_order.xml" value="0.1" />
@@ -143,8 +143,11 @@
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/progress_loading.xml" value="0.1" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/layout/register_fragment.xml" value="0.25" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_alin_background.xml" value="0.204" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_alin_background_round.xml" value="0.128" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_bahraman.xml" value="0.1175" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_bahraman_round.xml" value="0.164453125" />
+        <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_fingili_kabab_round.xml" value="0.128" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_konj.xml" value="0.164453125" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_konj_round.xml" value="0.164453125" />
         <entry key="..\:/SaleInApp folder/Salein/app/src/main/res/mipmap-anydpi-v26/ic_top_round.xml" value="0.1" />
