@@ -12,7 +12,7 @@ android {
 
 
     defaultConfig {
-        applicationId "ir.kitgroup.saleinpakhshyab"
+        applicationId "ir.kitgroup.salein"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
