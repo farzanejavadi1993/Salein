@@ -57,7 +57,6 @@
                     android:layout_height="80dp"
                     app:srcCompat="@drawable/profile" />
 
-
                 <TextView
                     android:id="@+id/txtName"
                     android:layout_marginTop="5dp"
